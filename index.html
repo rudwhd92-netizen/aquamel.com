@@ -185,6 +185,11 @@ body {
   font-family: '맑은 고딕', 'Malgun Gothic', Arial, sans-serif;
   background: var(--bg); min-height: 100vh; color: var(--text);
   font-size: 13px; line-height: 1.5;
+  /* v1.36: 단어 중간 줄바꿈 절대 금지 — 한국어는 공백/구두점에서만, 영어 단어 유지 */
+  word-break: keep-all;
+  overflow-wrap: normal;
+  -webkit-hyphens: none;
+  hyphens: none;
 }
 .container { max-width: 1500px; margin: 0 auto; padding: 24px 20px 60px; min-width: 0; }
 
@@ -656,9 +661,10 @@ table.archive thead th.num { text-align: right; }
 table.archive thead th:hover { background: var(--bg); color: var(--text); }
 table.archive thead th.sorted::after { content: ' ▾'; color: var(--accent); font-size: 9px; }
 table.archive thead th.sorted-asc::after { content: ' ▴'; color: var(--accent); font-size: 9px; }
-table.archive tbody td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
+table.archive tbody td { padding: 0 8px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; height: 44px; }
 table.archive tbody td.num { text-align: right; font-family: Consolas, monospace; }
 table.archive tbody tr:hover { background: var(--bg-3); }
+table.archive tbody tr:last-child { /* 마지막행 border 제거는 td에서 */ }
 table.archive tbody tr:last-child td { border-bottom: none; }
 table.archive .ticker-cell {
   font-weight: 700; color: var(--accent); font-family: Consolas, monospace;
@@ -666,7 +672,31 @@ table.archive .ticker-cell {
   transition: text-decoration-color 0.15s;
 }
 table.archive .ticker-cell:hover { text-decoration-color: var(--accent); }
-table.archive .desc-cell { color: var(--text-dim); font-size: 11px; max-width: 200px; white-space: normal; }
+/* v1.35: 설명 셀 — 2줄 max + ellipsis */
+table.archive .desc-cell {
+  color: var(--text-dim); font-size: 11px;
+  max-width: 220px;
+  white-space: normal;
+  line-height: 1.4;
+  overflow: hidden;
+}
+table.archive .desc-cell .desc-inner {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: calc(1.4em * 2);
+  word-break: keep-all;
+}
+/* v1.35: Signal_Type 셀 — 한 줄에 배지들이 가로로 + 넘치면 잘림 (행 균등 보장) */
+table.archive td[data-col="Signal_Type"] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 280px;
+}
 /* ✅/❌ Boolean 컬럼 — 가운데 정렬 + 약간 큰 폰트 */
 table.archive thead th.check,
 table.archive tbody td.check {
@@ -686,8 +716,9 @@ table.archive .mfi-high { color: var(--danger); font-weight: 600; }
 
 .sig-badge {
   display: inline-block; padding: 2px 7px; border-radius: 9px;
-  font-size: 10px; font-weight: 600; margin: 1px 2px 1px 0;
+  font-size: 10px; font-weight: 600; margin: 0 3px 0 0;
   border: 1px solid;
+  vertical-align: middle;
 }
 .sig-badge.V_Main         { color: var(--v-main);         border-color: var(--v-main);         background: rgba(250,82,82,0.1); }
 .sig-badge.V_Panic        { color: #ff8a80;               border-color: var(--v-panic);        background: rgba(183,28,28,0.15); }
@@ -918,15 +949,15 @@ table.sheet tbody tr.drop-below td:last-child {
   .modal-content .modal-close { display: none; }
 }
 
-/* v1.34: 새 헤더 구조 */
+/* v1.34: 새 헤더 구조 / v1.35: 줄간격 넉넉히 + 위계 명확 */
 .modal-title {
   font-size: 26px;
   font-weight: 800;
   color: var(--text-hi);
-  margin-bottom: 6px;
-  line-height: 1.15;
+  margin-bottom: 14px;     /* v1.35: 답답함 해소 */
+  line-height: 1.2;
   letter-spacing: -0.5px;
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 14px;
   flex-wrap: wrap;
 }
 .modal-title .company-name { color: var(--text-hi); }
@@ -940,37 +971,39 @@ table.sheet tbody tr.drop-below td:last-child {
   font-size: 38px;
   font-weight: 800;
   color: var(--text-hi);
-  margin-bottom: 6px;
-  line-height: 1.05;
+  margin-bottom: 14px;     /* v1.35 */
+  line-height: 1.1;
   letter-spacing: -1px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Pretendard', 'Inter', sans-serif;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
-  display: flex; align-items: baseline; gap: 10px;
+  display: flex; align-items: baseline; gap: 12px;
+  flex-wrap: wrap;
 }
 .modal-price .price-chg {
-  font-size: 14px; font-weight: 700;
+  font-size: 15px; font-weight: 700;
   letter-spacing: -0.2px;
 }
 .modal-price .price-chg.up { color: var(--kr-up); }
 .modal-price .price-chg.down { color: var(--kr-down); }
 .modal-subtitle {
-  font-size: 12px; color: var(--text-dim);
-  margin-bottom: 10px;
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  font-size: 12.5px; color: var(--text-dim);
+  margin-bottom: 14px;     /* v1.35 */
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  line-height: 1.4;
 }
 .modal-subtitle .pos { color: var(--kr-up); font-weight: 600; }
 .modal-subtitle .neg { color: var(--kr-down); font-weight: 600; }
-.modal-subtitle .sep { color: var(--text-mute); opacity: 0.5; }
+.modal-subtitle .sep { color: var(--text-mute); opacity: 0.45; }
 .modal-desc {
-  font-size: 11px;
-  color: var(--text-mute);
-  line-height: 1.55;
-  margin-bottom: 16px;
-  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.65;
+  margin-bottom: 22px;     /* v1.35: 차트와 간격 확보 */
+  padding: 12px 14px;
   background: var(--bg);
-  border-left: 2px solid var(--accent);
-  border-radius: 0 4px 4px 0;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 5px 5px 0;
   word-break: keep-all;
 }
 .modal-desc:empty { display: none; }
@@ -1068,7 +1101,7 @@ table.sheet tbody tr.drop-below td:last-child {
   color: #ff7676;
   margin-bottom: 14px;
   font-family: 'SF Mono', 'Consolas', monospace;
-  word-break: break-word;
+  word-break: keep-all;
   line-height: 1.5;
   padding: 0 10px;
 }
@@ -1222,6 +1255,7 @@ table.sheet tbody tr.drop-below td:last-child {
   gap: 16px;
   margin-bottom: 16px;
   min-width: 0; max-width: 100%;
+  align-items: stretch;   /* v1.36: 두 컬럼이 같은 row 높이로 stretch */
 }
 .dash-top-left {
   display: flex; flex-direction: column; gap: 16px;
@@ -1320,12 +1354,15 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 
 /* History row (3 cards) */
+/* v1.36: flex:1로 hist-row가 dash-top-left 남는 공간 모두 채움 → 도넛 카드 끝선과 정렬 */
 .dash-hist-row {
   display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+  flex: 1;             /* 부모(dash-top-left) flex column에서 남는 공간 채움 */
+  min-height: 130px;   /* 안전 최소 높이 */
 }
-.dash-hist { padding: 12px 14px; min-height: 130px; }
+.dash-hist { padding: 12px 14px; }  /* min-height는 hist-row에서 보장 */
 .dash-hist .dash-card-title { font-size: 12px; margin-bottom: 8px; }
-.dash-hist-body { display: flex; flex-direction: column; gap: 4px; }
+.dash-hist-body { display: flex; flex-direction: column; gap: 4px; flex: 1; }
 .dash-hist-row-item {
   display: flex; justify-content: space-between;
   font-size: 12px;
@@ -1378,6 +1415,8 @@ table.sheet tbody tr.drop-below td:last-child {
 /* v1.33: dashboard 카드 본체 overflow 차단 (그리드 자식이 트랙 늘리는 것 방지) */
 #dashboardCard > .card-body { min-width: 0; max-width: 100%; overflow: hidden; }
 #dashboardCard .dash-card { min-width: 0; max-width: 100%; }
+/* v1.36: subtitle 음수 마진 + overflow:hidden 조합으로 글자 위쪽이 잘리는 문제 fix */
+#dashboardCard > .card-body > .subtitle:first-child { margin-top: 0; padding-top: 2px; }
 
 /* Holdings list */
 .dash-holdings-card { min-height: 440px; max-height: 440px; }
@@ -2193,6 +2232,7 @@ footer .accent { color: var(--accent-2); }
 table.sec-modal-table {
   width: 100%; border-collapse: collapse;
   font-size: 12px;
+  table-layout: fixed;  /* v1.35: 균등 높이 확보 */
 }
 table.sec-modal-table thead th {
   background: var(--bg-3); padding: 8px 10px;
@@ -2203,10 +2243,16 @@ table.sec-modal-table thead th {
   white-space: nowrap;
 }
 table.sec-modal-table thead th.num { text-align: right; }
+/* v1.35: 컬럼 폭 명시 — 균등 행 높이를 위해 fixed layout 필요 */
+table.sec-modal-table thead th:nth-child(1),
+table.sec-modal-table tbody td:nth-child(1) { width: 110px; }
+table.sec-modal-table thead th:nth-child(3),
+table.sec-modal-table tbody td:nth-child(3) { width: 100px; }
 table.sec-modal-table tbody td {
-  padding: 7px 10px;
+  padding: 0 10px;            /* 패딩은 inner에서 */
   border-bottom: 1px solid var(--line);
   vertical-align: middle;
+  height: 64px;               /* v1.35: 행 균등 높이 */
 }
 table.sec-modal-table tbody td.num { text-align: right; font-family: Consolas, monospace; }
 table.sec-modal-table tbody td.ticker {
@@ -2217,14 +2263,28 @@ table.sec-modal-table tbody td.ticker {
   text-decoration: underline;
   text-decoration-color: transparent;
   transition: text-decoration-color 0.15s, color 0.15s;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 table.sec-modal-table tbody td.ticker:hover {
   text-decoration-color: var(--accent);
   color: var(--accent-2);
 }
+/* v1.35: 설명 셀 — 2줄 max + ellipsis (행 균등 보장) */
 table.sec-modal-table tbody td.desc {
   color: var(--text-dim); font-size: 11px;
-  line-height: 1.4;
+  line-height: 1.45;
+  overflow: hidden;
+}
+table.sec-modal-table tbody td.desc .desc-inner {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: calc(1.45em * 2);
+  word-break: keep-all;
 }
 table.sec-modal-table tbody td.num.up   { color: var(--kr-up);   font-weight: 700; }
 table.sec-modal-table tbody td.num.down { color: var(--kr-down); font-weight: 700; }
@@ -2268,12 +2328,12 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     border-radius: 0; padding: 14px 12px 24px;
     overflow-x: hidden;
   }
-  .modal-title { font-size: 19px; padding-right: 36px; word-break: keep-all; }
+  .modal-title { font-size: 19px; padding-right: 36px; word-break: keep-all; margin-bottom: 10px; }
   .modal-title .ticker-paren { font-size: 14px; }
-  .modal-price { font-size: 26px; }
-  .modal-price .price-chg { font-size: 11px; }
-  .modal-subtitle { font-size: 10px; line-height: 1.6; word-break: break-word; }
-  .modal-desc { font-size: 10.5px; padding: 8px 10px; line-height: 1.5; }
+  .modal-price { font-size: 26px; margin-bottom: 10px; }
+  .modal-price .price-chg { font-size: 12px; }
+  .modal-subtitle { font-size: 11px; line-height: 1.6; word-break: keep-all; margin-bottom: 10px; }
+  .modal-desc { font-size: 11px; padding: 9px 11px; line-height: 1.55; margin-bottom: 16px; }
   .chart-wrap { height: 380px; padding: 4px; }
 
   /* Chart mode toggle visible only on mobile */
@@ -2361,6 +2421,12 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .sec-modal-def { font-size: 12px; padding: 8px 10px; }
   table.sec-modal-table { font-size: 11px; }
   table.sec-modal-table tbody td.desc { font-size: 10px; }
+  /* v1.35: 모바일 행 높이 약간 축소 */
+  table.sec-modal-table tbody td { height: 56px; }
+  table.sec-modal-table thead th:nth-child(1),
+  table.sec-modal-table tbody td:nth-child(1) { width: 88px; }
+  table.sec-modal-table thead th:nth-child(3),
+  table.sec-modal-table tbody td:nth-child(3) { width: 70px; }
 
   /* ============================================================== */
   /* v1.19 — 종합 모바일 정보 밀도 정리                              */
@@ -3046,7 +3112,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.34</div>
+      <div class="v">v1.37</div>
     </div>
   </header>
 
@@ -3377,7 +3443,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.34 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.37 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -4830,7 +4896,9 @@ async function autoLoadData() {
     if (!listRes.sheets || listRes.sheets.length === 0) throw new Error('폴더에 시트가 없습니다.');
 
     // KJP300 ticker → sector 매핑 + sector → [tickers+desc] 빌드 (실패해도 진행)
-    // v1.34: 회사명(D컬럼) + 상세설명(E컬럼) 추가 추출
+    // v1.34: 회사명(D컬럼=idx 3) + 상세설명(E컬럼=idx 4) 추가 추출
+    // v1.35: 헤더 이름 매칭 실패 시 컬럼 위치 기반 fallback (Apps Script가 헤더를 키로 객체화하지만
+    //        시트 헤더 이름이 변경되어도 idx 3/4로 안전 추출)
     const kjpMap = {};
     const kjpSectorMap = {};
     const kjpDescMap = {};
@@ -4839,10 +4907,15 @@ async function autoLoadData() {
       kjpRes.rows.forEach(r => {
         const tk = (r['티커명'] || r['Ticker'] || r['ticker'] || '').toString().toUpperCase().trim();
         const sec = (r['섹터명'] || r['Sector'] || '').toString().trim();
-        // v1.34: D컬럼 회사명 - 가능한 헤더 후보 다수
-        const company = (r['회사명'] || r['Company'] || r['기업명'] || r['회사'] || r['Name'] || '').toString().trim();
-        // v1.34: E컬럼 상세설명 - 가능한 헤더 후보 다수 (기존 '간단 설명'도 fallback)
-        const desc = (r['상세설명'] || r['상세 설명'] || r['Description'] || r['설명'] || r['간단 설명'] || r['간단설명'] || r['desc'] || '').toString().trim();
+        // v1.35: 헤더 이름 매칭 → 실패 시 컬럼 위치 기반 fallback
+        const keys = Object.keys(r);
+        const colAt = (i) => (i < keys.length ? (r[keys[i]] || '') : '').toString().trim();
+        // D컬럼 = idx 3 (회사명)
+        const companyByHeader = (r['회사명'] || r['Company'] || r['기업명'] || r['회사'] || r['Name'] || r['한글명'] || r['이름'] || '').toString().trim();
+        const company = companyByHeader || colAt(3);
+        // E컬럼 = idx 4 (상세설명) — 기존 '간단 설명'도 호환
+        const descByHeader = (r['상세설명'] || r['상세 설명'] || r['Description'] || r['설명'] || r['간단 설명'] || r['간단설명'] || r['desc'] || '').toString().trim();
+        const desc = descByHeader || colAt(4);
         if (tk && sec) {
           kjpMap[tk] = sec;
           kjpDescMap[tk] = desc;
@@ -7849,7 +7922,7 @@ function openSectorModal(sectorKey) {
       }
       html += `<tr>
         <td class="ticker" data-ticker="${escapeAttr(t.ticker)}">${tickerLogoHtml(t.ticker, sectorKey)}${escapeHtml(t.ticker)}</td>
-        <td class="desc">${escapeHtml(t.desc || '')}</td>
+        <td class="desc"><div class="desc-inner">${escapeHtml(t.desc || '')}</div></td>
         <td class="num ${cls}">${txt}</td>
       </tr>`;
     });
@@ -8116,6 +8189,11 @@ function renderArchiveTable() {
       if (c.key === 'MFI_14' && v != null) {
         const mcls = v < 20 ? 'mfi-low' : v > 80 ? 'mfi-high' : '';
         html += `<td data-col="MFI_14" class="num ${mcls}">${escapeHtml(disp)}</td>`;
+        return;
+      }
+      // v1.35: Description 셀 — line-clamp 2줄을 위해 inner div 래핑
+      if (c.key === 'Description') {
+        html += `<td data-col="Description" class="${cls.trim()}"><div class="desc-inner">${escapeHtml(disp || '')}</div></td>`;
         return;
       }
       // 일반 fallback — null 값(미래 데이터 없음 등)인 셀에 is-null 클래스 부여 → 모바일 카드뷰에서 깔끔히 숨김
