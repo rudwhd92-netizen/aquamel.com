@@ -124,6 +124,63 @@ if ('serviceWorker' in navigator) {
 [data-theme="light"] table.sheet tbody td select { background: var(--bg-2); color: var(--text); }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { overflow-x: hidden; max-width: 100%; }
+
+/* ============ SCROLLBAR — slim & refined (v1.25) ============ */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.18) transparent;
+}
+[data-theme="light"] * {
+  scrollbar-color: rgba(40,30,15,0.22) transparent;
+}
+
+/* WebKit (Chrome / Safari / Edge / iOS PWA) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.14);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.18s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.32);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:active {
+  background: rgba(255,255,255,0.5);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner { background: transparent; }
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(40,30,15,0.20);
+  background-clip: padding-box;
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(40,30,15,0.38);
+  background-clip: padding-box;
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb:active {
+  background: rgba(40,30,15,0.55);
+  background-clip: padding-box;
+}
+
+/* 좁은 컨테이너용 더 슬림한 스크롤바 (테이블 가로 스크롤 등) */
+.sheet-wrap::-webkit-scrollbar,
+.sec-modal-table-wrap::-webkit-scrollbar,
+table.combo-eval::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 body {
   font-family: '맑은 고딕', 'Malgun Gothic', Arial, sans-serif;
   background: var(--bg); min-height: 100vh; color: var(--text);
@@ -216,12 +273,10 @@ section.card .card-header .toggle-icon {
 section.card .card-body { margin-top: 12px; }
 section.card .card-body > .subtitle:first-child { margin-top: -8px; }
 
-section.card.collapsed { padding: 0; }
-section.card.collapsed .card-header {
-  margin: 0; border-radius: 6px;
-}
-section.card.collapsed .card-body { display: none; }
-section.card.collapsed .card-header .toggle-icon { transform: rotate(-90deg); }
+/* 카드 토글 — padding/margin 변동 없이 body만 hide → 헤더 위치 고정 */
+section.card.collapsed > .card-body { display: none; }
+section.card.collapsed > .card-header .toggle-icon { transform: rotate(-90deg); }
+section.card.collapsed > .card-header { border-radius: 6px; margin-bottom: 0; }
 
 /* ============ PWA STANDALONE MODE — iOS safe-area + 미세 조정 ============ */
 @supports (padding-top: env(safe-area-inset-top)) {
@@ -836,6 +891,33 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .modal-content .modal-close:hover { color: var(--danger); background: var(--bg-3); }
 
+/* v1.23: 모달 하단 닫기 버튼 + 스와이프 다운 핸들 */
+.modal-content .modal-bottom-close {
+  display: block; width: 100%; margin-top: 18px;
+  padding: 14px 16px;
+  background: var(--bg-3); color: var(--text);
+  border: 1px solid var(--line); border-radius: 8px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.modal-content .modal-bottom-close:hover {
+  background: var(--danger); color: white; border-color: var(--danger);
+}
+.modal-content .modal-bottom-close:active { transform: scale(0.985); }
+/* 모달 상단 swipe 핸들 (모바일 표시) — 시각적 안내 */
+.modal-content .modal-drag-handle {
+  display: none;
+  width: 40px; height: 4px; border-radius: 2px;
+  background: var(--text-mute); opacity: 0.4;
+  margin: 0 auto 10px;
+}
+@media (max-width: 640px) {
+  .modal-content .modal-drag-handle { display: block; }
+  /* 모바일에서는 우상단 X 비활성화 — 손가락 닿기 어려운 위치 */
+  .modal-content .modal-close { display: none; }
+}
+
 .modal-title { font-size: 18px; font-weight: 700; color: var(--text-hi); margin-bottom: 4px; }
 .modal-subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 16px; }
 .modal-subtitle .pos { color: var(--green-2); font-weight: 600; }
@@ -1366,6 +1448,27 @@ footer .accent { color: var(--accent-2); }
   font-size: 11px; color: var(--text-mute);
   margin-bottom: 8px;
   padding: 0 2px;
+}
+/* v1.24 — 섹터 모달 차트 (레퍼런스 v1.20 1:1 이식) */
+.sec-modal-chart-wrap {
+  margin: 14px 0;
+  padding: 12px;
+  background: var(--bg-3);
+  border-radius: 6px;
+  border: 1px solid var(--line);
+}
+.sec-modal-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--text-mute);
+  margin-bottom: 8px;
+}
+.sec-modal-chart-canvas-wrap {
+  position: relative;
+  height: 220px;
+  width: 100%;
 }
 .sec-modal-empty {
   padding: 32px 20px; text-align: center;
@@ -1963,6 +2066,8 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     min-width: 42px;
     text-align: right;
   }
+  /* v1.24: 모바일 섹터 차트 캔버스 높이 (레퍼런스 일치) */
+  .sec-modal-chart-canvas-wrap { height: 180px; }
 }
 
 /* ============================================================== */
@@ -2128,14 +2233,14 @@ table.combo-eval tbody td .nodata {
   /* 시그널 필터 — 480px 이하에선 라벨 컬럼 더 축소 */
   .signal-filter-grouped { grid-template-columns: 50px 1fr 1fr; gap: 6px 6px; padding: 6px; }
 
-  /* 콤보 평가 셀 너비 더 컴팩트 */
-  table.combo-eval { font-size: 9px; }
-  table.combo-eval thead th { padding: 4px 2px; font-size: 8px; }
-  table.combo-eval tbody td { padding: 5px 2px; }
-  table.combo-eval tbody td.combo { max-width: 60px; }
-  table.combo-eval .nsmall { font-size: 7px; }
-  .sig-badge { font-size: 8px; padding: 1px 4px; }
-  .combo-mode-tag { font-size: 7px !important; padding: 1px 3px; }
+  /* 콤보 평가 셀 — 모바일 간격 여유 (v1.23) */
+  table.combo-eval { font-size: 10px; min-width: 760px; }
+  table.combo-eval thead th { padding: 8px 7px; font-size: 9px; }
+  table.combo-eval tbody td { padding: 9px 7px; }
+  table.combo-eval tbody td.combo { max-width: 80px; }
+  table.combo-eval .nsmall { font-size: 8px; }
+  .sig-badge { font-size: 9px; padding: 2px 5px; }
+  .combo-mode-tag { font-size: 8px !important; padding: 2px 4px; }
 
   /* 아카이브 카드 — 더 작은 화면에서도 시각적 위계 유지 */
   table.archive tbody tr { padding: 8px 10px; gap: 3px 8px; }
@@ -2172,7 +2277,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.22</div>
+      <div class="v">v1.25</div>
     </div>
   </header>
 
@@ -2359,6 +2464,7 @@ table.combo-eval tbody td .nodata {
   <!-- ============ MODAL ============ -->
   <div class="modal-overlay" id="chartModal" onclick="closeModalIfOverlay(event)">
     <div class="modal-content">
+      <div class="modal-drag-handle"></div>
       <button class="modal-close" onclick="closeModal()">×</button>
       <div class="modal-title" id="modalTitle">—</div>
       <div class="modal-subtitle" id="modalSubtitle">—</div>
@@ -2375,19 +2481,22 @@ table.combo-eval tbody td .nodata {
         <h4 class="ticker-history-title">📜 이 종목의 시그널 이력</h4>
         <div id="tickerHistoryArea"></div>
       </div>
+      <button class="modal-bottom-close" onclick="closeModal()">닫기</button>
     </div>
   </div>
 
   <!-- ============ SECTOR DETAIL MODAL (섹터 클릭 시) ============ -->
   <div class="modal-overlay" id="sectorModal" onclick="closeSectorModalIfOverlay(event)">
     <div class="modal-content sec-modal-content">
+      <div class="modal-drag-handle"></div>
       <button class="modal-close" onclick="closeSectorModal()">×</button>
       <div id="sectorModalBody"></div>
+      <button class="modal-bottom-close" onclick="closeSectorModal()">닫기</button>
     </div>
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.22 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.25 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -4176,8 +4285,8 @@ function renderComboEval(rows) {
   };
   const fmtPct = (v, n) => {
     if (v == null) return '<span class="nodata">N/A</span>';
-    const nStr = n != null ? `<span class="nsmall">(${n})</span>` : '';
-    return `<span class="pct-main">${v.toFixed(1)}%</span>${nStr}`;
+    // n(모수) 표시 제거 — 헤더의 "건수" 컬럼에 이미 표시됨
+    return `<span class="pct-main">${v.toFixed(1)}%</span>`;
   };
   const fmtRet = (v) => {
     if (v == null) return '<span class="nodata">N/A</span>';
@@ -4728,10 +4837,9 @@ function refreshLayerReturns() {
       el.title = `${period}일 평균 등락률 — 데이터 부족${r && r.missing ? ` (${r.missing}개 티커)` : ''}`;
       return;
     }
-    const arrow = r.avg >= 0 ? '▲' : '▼';
     const sign  = r.avg >= 0 ? '+' : '';
-    // ▲▼ 화살표는 별도 span으로 감싸 모바일에서 CSS로 숨김 가능 (색상으로 방향 구분되므로)
-    el.innerHTML = `<span class="sf-arrow-glyph">${arrow}</span> ${sign}${r.avg.toFixed(1)}%`;
+    // ▲▼ 화살표 제거 — 색상으로 방향 구분 (PC/모바일 동일)
+    el.textContent = `${sign}${r.avg.toFixed(1)}%`;
     if (r.avg > 0.05)       el.className = 'sf-layer-return pos';
     else if (r.avg < -0.05) el.className = 'sf-layer-return neg';
     else                    el.className = 'sf-layer-return neutral';
@@ -5137,6 +5245,203 @@ function getSectorGrowthData(sectorKey) {
   };
 }
 
+// v1.24: 섹터별 90일 균등평균 누적 시리즈 — 레퍼런스(v1.20) 1:1 이식
+//   _state.tickerSectorMap + USER_SECTOR_MAP을 합쳐 역매핑으로 티커 필터링
+//   (sectorKey ↔ _state.sectors 키 미스매치 회피)
+function computeSectorSeries(sectorKey, maxDays = 90) {
+  const baseSec = _state.tickerSectorMap || {};
+  const userSec = lsGet(LS.USER_SECTOR_MAP, {});
+  const allMap = { ...baseSec, ...userSec };
+  const tickersInSec = Object.keys(allMap).filter(t => allMap[t] === sectorKey);
+  if (tickersInSec.length === 0) return null;
+
+  const tickerRows = {};
+  Object.values(_state.sectors || {}).forEach(rows => {
+    rows.forEach(r => {
+      if (!r.Ticker) return;
+      if (!tickerRows[r.Ticker]) tickerRows[r.Ticker] = [];
+      tickerRows[r.Ticker].push(r);
+    });
+  });
+  Object.keys(tickerRows).forEach(tk => {
+    tickerRows[tk].sort((a, b) => (a.Date || '').localeCompare(b.Date || ''));
+  });
+
+  const dateChanges = {};
+  tickersInSec.forEach(tk => {
+    const rows = tickerRows[tk];
+    if (!rows || rows.length < 2) return;
+    for (let i = 1; i < rows.length; i++) {
+      const prev = rows[i - 1], curr = rows[i];
+      if (!prev.Close || prev.Close === 0 || isNaN(prev.Close) || isNaN(curr.Close)) continue;
+      const chg = curr.Close / prev.Close - 1;
+      if (!dateChanges[curr.Date]) dateChanges[curr.Date] = { sum: 0, count: 0 };
+      dateChanges[curr.Date].sum += chg;
+      dateChanges[curr.Date].count++;
+    }
+  });
+  const dates = Object.keys(dateChanges).sort();
+  if (dates.length < 5) return null;
+
+  const win = dates.slice(-maxDays);
+  const dailyAvgs = win.map(d => dateChanges[d].sum / dateChanges[d].count);
+
+  const values = [1];
+  for (let i = 1; i < win.length; i++) {
+    values.push(values[i - 1] * (1 + dailyAvgs[i]));
+  }
+  const lastVal = values[values.length - 1];
+  const scale = 1000 / lastVal;
+  return win.map((d, i) => ({ date: d, value: values[i] * scale }));
+}
+
+// v1.24: drawSectorChart — 레퍼런스(v1.20) 1:1 이식
+//   빈 placeholder div(#sectorChartWrap)에 헤더 + 캔버스를 통째로 삽입한 뒤 Chart.js 호출
+let _sectorChart = null;
+function drawSectorChart(sectorKey, sectorName) {
+  const wrap = document.getElementById('sectorChartWrap');
+  if (!wrap) return;
+  const series = computeSectorSeries(sectorKey, 90);
+  if (!series || series.length < 5) {
+    wrap.innerHTML = '<div style="text-align:center;color:var(--text-mute);font-size:11px;padding:30px;">📊 차트 표시할 데이터가 부족합니다.</div>';
+    return;
+  }
+  const dates = series.map(s => s.date);
+  const closes = series.map(s => s.value);
+  const chgPct = ((closes[closes.length - 1] / closes[0]) - 1) * 100;
+  const chgColor = chgPct >= 0 ? 'var(--kr-up)' : 'var(--kr-down)';
+
+  wrap.innerHTML = `
+    <div class="sec-modal-chart-header">
+      <span>📈 90일 평균 추이 (마지막 = 1,000)</span>
+      <span style="color:${chgColor};font-weight:700;">${chgPct >= 0 ? '+' : ''}${chgPct.toFixed(2)}%</span>
+    </div>
+    <div class="sec-modal-chart-canvas-wrap"><canvas id="sectorChartCanvas"></canvas></div>
+  `;
+
+  const canvas = document.getElementById('sectorChartCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (_sectorChart) { _sectorChart.destroy(); _sectorChart = null; }
+
+  const light = (typeof getCurrentTheme === 'function' && getCurrentTheme() === 'light');
+  const lineColor = chgPct >= 0 ? '#ff6b6b' : '#4dabf7';
+  const fillColor = chgPct >= 0 ? 'rgba(255,107,107,0.12)' : 'rgba(77,171,247,0.12)';
+
+  _sectorChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: sectorName,
+        data: closes,
+        borderColor: lineColor,
+        backgroundColor: fillColor,
+        fill: true,
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        tension: 0.2,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: light ? 'rgba(255,255,255,0.95)' : 'rgba(20,24,32,0.95)',
+          titleColor: light ? '#222' : '#fff',
+          bodyColor: light ? '#444' : '#ddd',
+          borderColor: light ? '#ddd' : '#444',
+          borderWidth: 1,
+          padding: 8,
+          callbacks: {
+            label: (ctx) => `지수: ${ctx.parsed.y.toFixed(2)}`,
+          },
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: light ? '#888' : '#888', maxRotation: 0, autoSkip: true, maxTicksLimit: 6, font: { size: 10 } },
+          grid: { display: false },
+        },
+        y: {
+          ticks: { color: light ? '#888' : '#888', font: { size: 10 } },
+          grid: { color: light ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' },
+        },
+      },
+    },
+  });
+}
+
+// 단순 영역 차트 (모바일 매크로 모달 전용) — 섹터 차트와 별도 인스턴스
+let _miniChart = null;
+function drawMiniSeriesChart(canvas, series, opts = {}) {
+  if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
+  if (!series || series.length < 2) return null;
+
+  const light = (typeof getCurrentTheme === 'function' && getCurrentTheme() === 'light');
+  const dates = series.map(s => s.date);
+  const values = series.map(s => s.value);
+  const first = values[0], last = values[values.length - 1];
+  const chgPct = ((last / first) - 1) * 100;
+  const isUp = chgPct >= 0;
+
+  const lineCol = isUp ? '#fa5252' : '#339af0';
+  const fillCol = isUp ? 'rgba(250,82,82,0.18)' : 'rgba(51,154,240,0.18)';
+  const gridCol = light ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+  const tickCol = light ? '#5c5c5c' : '#9d9d9d';
+
+  _miniChart = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        data: values,
+        borderColor: lineCol,
+        borderWidth: 1.5,
+        fill: true,
+        backgroundColor: fillCol,
+        tension: 0.15,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: true, mode: 'index', intersect: false,
+          callbacks: {
+            title: ctx => ctx[0].label,
+            label: ctx => `값: ${ctx.parsed.y.toFixed(2)}`,
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            color: tickCol, font: { size: 10 },
+            maxRotation: 0, autoSkip: true, maxTicksLimit: 5,
+          }
+        },
+        y: {
+          grid: { color: gridCol, drawBorder: false },
+          ticks: { color: tickCol, font: { size: 10 } },
+        }
+      },
+      interaction: { mode: 'index', intersect: false },
+    }
+  });
+  return { chgPct, isUp };
+}
+
 function openSectorModal(sectorKey) {
   const found = _findSFCellByKey(sectorKey);
   if (!found) {
@@ -5177,6 +5482,8 @@ function openSectorModal(sectorKey) {
     ];
     if (data.dataMissing > 0) metaParts.push(`<span style="opacity:0.7;">(${data.dataMissing}개는 가격 데이터 없음)</span>`);
     html += `<div class="sec-modal-meta">${metaParts.join(' · ')}</div>`;
+    // v1.24: 차트 영역 placeholder — openSectorModal 끝에서 drawSectorChart로 채움
+    html += `<div class="sec-modal-chart-wrap" id="sectorChartWrap"></div>`;
     html += `<div class="sec-modal-table-wrap"><table class="sec-modal-table"><thead><tr>
       <th>티커</th><th>간단 설명</th><th class="num">최근일 등락</th>
     </tr></thead><tbody>`;
@@ -5198,6 +5505,11 @@ function openSectorModal(sectorKey) {
   $('sectorModalBody').innerHTML = html;
   $('sectorModal').classList.add('active');
 
+  // v1.24: 차트 영역에 90일 평균 추이 그리기 — 레퍼런스 1:1 (setTimeout 50ms)
+  if (data.status === 'ok') {
+    setTimeout(() => drawSectorChart(sectorKey, longName), 50);
+  }
+
   // 티커 클릭 → 섹터 모달 닫고 차트 모달 열기 (한 번만 부착)
   const body = $('sectorModalBody');
   if (!body._tickerClickBound) {
@@ -5215,6 +5527,9 @@ function openSectorModal(sectorKey) {
 
 function closeSectorModal() {
   $('sectorModal').classList.remove('active');
+  // v1.24: 차트 정리 (레퍼런스 패턴)
+  if (_sectorChart) { _sectorChart.destroy(); _sectorChart = null; }
+  if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
 }
 function closeSectorModalIfOverlay(e) {
   if (e.target.id === 'sectorModal') closeSectorModal();
@@ -5707,13 +6022,84 @@ async function openChart(ticker) {
 function closeModal() {
   $('chartModal').classList.remove('active');
   if (_chart) { _chart.destroy(); _chart = null; }
+  // v1.23: 모바일 미니 차트도 정리
+  if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
   // v1.19: 매크로 모드 정리 — 다음 일반 ticker 열기 위해 영역들 복원
   $('modalSignalFilterArea').parentElement.style.display = '';
   $('tickerHistoryWrap').style.display = '';
+  // v1.23: 모바일 매크로 차트용 스타일 원복
+  const modeBtn = $('modeToggleBtn');
+  if (modeBtn) modeBtn.style.display = '';
+  const canvas = $('chartCanvas');
+  if (canvas && canvas.parentElement) canvas.parentElement.style.height = '';
   _state.openTicker = null;
   _state.openMacro = null;
 }
 function closeModalIfOverlay(e) { if (e.target.id === 'chartModal') closeModal(); }
+
+// ============================================================================
+// v1.23: Swipe-down 제스처로 모달 닫기 (모바일 친화)
+//   modal-content 위에서 아래로 스와이프하면 닫힘.
+//   드래그 거리 100px 이상 또는 빠른 플릭(속도 0.5px/ms)에 트리거.
+// ============================================================================
+function attachSwipeToClose(modalEl, closeFn) {
+  const content = modalEl.querySelector('.modal-content');
+  if (!content || content._swipeBound) return;
+  content._swipeBound = true;
+
+  let startY = null, startTime = 0, currentY = 0, dragging = false;
+
+  const onStart = (e) => {
+    // 차트 캔버스나 스크롤 가능 영역 위에서는 비활성 (페이지 스크롤 우선)
+    const t = e.target;
+    if (t.closest('canvas, .chart-wrap, .sec-modal-chart-canvas-wrap, .ticker-history-wrap, .modal-filter-block, table')) return;
+    if (content.scrollTop > 0) return;  // 모달 내부 스크롤이 위쪽이 아니면 무시
+
+    const touch = e.touches ? e.touches[0] : e;
+    startY = touch.clientY;
+    currentY = startY;
+    startTime = Date.now();
+    dragging = true;
+  };
+  const onMove = (e) => {
+    if (!dragging) return;
+    const touch = e.touches ? e.touches[0] : e;
+    currentY = touch.clientY;
+    const dy = currentY - startY;
+    if (dy > 0) {
+      content.style.transform = `translateY(${Math.min(dy, 300)}px)`;
+      content.style.transition = 'none';
+      if (dy > 10 && e.cancelable) e.preventDefault();
+    }
+  };
+  const onEnd = () => {
+    if (!dragging) return;
+    dragging = false;
+    const dy = currentY - startY;
+    const dt = Date.now() - startTime;
+    const velocity = dy / Math.max(dt, 1);
+    content.style.transition = 'transform 0.2s ease-out';
+    if (dy > 100 || velocity > 0.5) {
+      content.style.transform = `translateY(100vh)`;
+      setTimeout(() => {
+        content.style.transform = '';
+        content.style.transition = '';
+        closeFn();
+      }, 180);
+    } else {
+      content.style.transform = '';
+    }
+  };
+
+  content.addEventListener('touchstart', onStart, { passive: true });
+  content.addEventListener('touchmove', onMove, { passive: false });
+  content.addEventListener('touchend', onEnd);
+  content.addEventListener('touchcancel', onEnd);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  attachSwipeToClose($('chartModal'), closeModal);
+  attachSwipeToClose($('sectorModal'), closeSectorModal);
+});
 
 // ============================================================================
 // v1.19: MACRO CHART — 매크로 카드 클릭 → 라인 차트
@@ -5832,6 +6218,27 @@ async function openMacroChart(macroName) {
 
   _state.openTicker = null;
   _state.openMacro = macroName;
+
+  // v1.23: 모바일에서는 간단한 영역 차트(섹터 모달과 동일 포맷)로 표시
+  if (isMobileViewport()) {
+    // chart-wrap의 canvas에 mini chart 그리기
+    const canvas = $('chartCanvas');
+    const cwrap = canvas ? canvas.parentElement : null;
+    if (cwrap) {
+      // 기존 모드 토글 버튼 숨김 (모바일 영역 차트엔 불필요)
+      const modeBtn = $('modeToggleBtn');
+      if (modeBtn) modeBtn.style.display = 'none';
+      // chart-wrap 높이 조정 (모바일)
+      cwrap.style.height = '260px';
+      // 라벨 영역을 modalSubtitle에 표기 (이미 위에서 설정됨)
+      $('modalSubtitle').innerHTML = `<span style="color:var(--text-mute);">📈 90일 추이 · 마지막 = ${isKJP ? '1,000 (정규화)' : lastPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>`;
+      requestAnimationFrame(() => {
+        drawMiniSeriesChart(canvas, series);
+      });
+    }
+    $('chartModal').classList.add('active');
+    return;
+  }
 
   drawChart({
     dates, closes, highs, lows, ma20, adN, vols,
