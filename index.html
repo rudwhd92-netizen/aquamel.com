@@ -1038,11 +1038,8 @@ table.sheet tbody tr.drop-below td:last-child {
   width: 180px; height: 180px;
   object-fit: contain;
   margin-bottom: 28px;
-  /* v1.42: 후광 효과 강화 — PC와 모바일 모두 명확하게 보이도록 다중 drop-shadow (이전 alpha 0.06은 너무 미세해서 모바일에선 안 보임) */
-  filter:
-    drop-shadow(0 0 64px rgba(255,255,255,0.32))
-    drop-shadow(0 0 28px rgba(255,255,255,0.28))
-    drop-shadow(0 0 10px rgba(255,255,255,0.45));
+  /* v1.43: PC는 원래의 미세한 후광 복구 (이전 v1.41 이하 수준이 딱 좋았다는 피드백) */
+  filter: drop-shadow(0 4px 32px rgba(255,255,255,0.06));
   animation: splash-pulse 2.6s ease-in-out infinite;
   user-select: none; -webkit-user-drag: none; pointer-events: none;
   /* 모바일 GPU 가속 보장 — filter 렌더링 안정화 */
@@ -1050,20 +1047,16 @@ table.sheet tbody tr.drop-below td:last-child {
   transform: translateZ(0);
 }
 @keyframes splash-pulse {
-  /* v1.42: 후광이 펄스에 맞춰 호흡 — 게임 부트 로더 느낌 강화 */
-  0%, 100% {
-    opacity: 0.95; transform: scale(1) translateZ(0);
+  /* v1.43: 호흡은 opacity + scale로만 (PC 원본 동작) — filter는 base에서 고정 */
+  0%, 100% { opacity: 0.95; transform: scale(1) translateZ(0); }
+  50%      { opacity: 1;    transform: scale(1.025) translateZ(0); }
+}
+/* v1.43: 모바일에서만 살짝 강화 — PC 수준(alpha 0.06)이 작은 화면에선 안 보여서 살짝만 보이게 */
+@media (max-width: 640px) {
+  .splash-logo {
     filter:
-      drop-shadow(0 0 64px rgba(255,255,255,0.32))
-      drop-shadow(0 0 28px rgba(255,255,255,0.28))
-      drop-shadow(0 0 10px rgba(255,255,255,0.45));
-  }
-  50% {
-    opacity: 1; transform: scale(1.025) translateZ(0);
-    filter:
-      drop-shadow(0 0 88px rgba(255,255,255,0.48))
-      drop-shadow(0 0 38px rgba(255,255,255,0.38))
-      drop-shadow(0 0 14px rgba(255,255,255,0.6));
+      drop-shadow(0 0 24px rgba(255,255,255,0.12))
+      drop-shadow(0 0 10px rgba(255,255,255,0.15));
   }
 }
 .splash-brand {
@@ -3139,7 +3132,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.42</div>
+      <div class="v">v1.43</div>
     </div>
   </header>
 
@@ -3470,7 +3463,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.42 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.43 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
