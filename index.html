@@ -55,7 +55,8 @@ if ('serviceWorker' in navigator) {
 :root {
   --bg: #1e1e1e; --bg-2: #252526; --bg-3: #2d2d30;
   --panel: #252526; --panel-hi: #2d2d30;
-  --line: #3e3e42; --line-2: #464647;
+  /* v1.41: 영역 구분 테두리 제거 — transparent로 (border: 1px solid var(--line) 유지 시 1px 공간은 남아 layout 시프트 없음) */
+  --line: transparent; --line-2: transparent;
   --text: #d4d4d4; --text-hi: #ffffff; --text-dim: #9d9d9d; --text-mute: #6a6a6a;
   --accent: #569cd6; --accent-2: #4ec9b0; --string: #ce9178;
   --number: #b5cea8; --func: #dcdcaa; --const: #4fc1ff;
@@ -83,8 +84,9 @@ if ('serviceWorker' in navigator) {
   --bg-3: #e0d8c0;        /* deeper warm (inputs) */
   --panel: #f3eddd;       /* cards */
   --panel-hi: #ece6d3;
-  --line: #c9bfa3;
-  --line-2: #b8ad8a;
+  /* v1.41: 영역 구분 테두리 제거 (다크와 동일) */
+  --line: transparent;
+  --line-2: transparent;
   --text: #3a3220;
   --text-hi: #1f1810;
   --text-dim: #6b5d3f;
@@ -1036,13 +1038,33 @@ table.sheet tbody tr.drop-below td:last-child {
   width: 180px; height: 180px;
   object-fit: contain;
   margin-bottom: 28px;
-  filter: drop-shadow(0 4px 32px rgba(255,255,255,0.06));
+  /* v1.42: 후광 효과 강화 — PC와 모바일 모두 명확하게 보이도록 다중 drop-shadow (이전 alpha 0.06은 너무 미세해서 모바일에선 안 보임) */
+  filter:
+    drop-shadow(0 0 64px rgba(255,255,255,0.32))
+    drop-shadow(0 0 28px rgba(255,255,255,0.28))
+    drop-shadow(0 0 10px rgba(255,255,255,0.45));
   animation: splash-pulse 2.6s ease-in-out infinite;
   user-select: none; -webkit-user-drag: none; pointer-events: none;
+  /* 모바일 GPU 가속 보장 — filter 렌더링 안정화 */
+  will-change: filter, transform, opacity;
+  transform: translateZ(0);
 }
 @keyframes splash-pulse {
-  0%, 100% { opacity: 0.95; transform: scale(1); }
-  50%      { opacity: 1;    transform: scale(1.025); }
+  /* v1.42: 후광이 펄스에 맞춰 호흡 — 게임 부트 로더 느낌 강화 */
+  0%, 100% {
+    opacity: 0.95; transform: scale(1) translateZ(0);
+    filter:
+      drop-shadow(0 0 64px rgba(255,255,255,0.32))
+      drop-shadow(0 0 28px rgba(255,255,255,0.28))
+      drop-shadow(0 0 10px rgba(255,255,255,0.45));
+  }
+  50% {
+    opacity: 1; transform: scale(1.025) translateZ(0);
+    filter:
+      drop-shadow(0 0 88px rgba(255,255,255,0.48))
+      drop-shadow(0 0 38px rgba(255,255,255,0.38))
+      drop-shadow(0 0 14px rgba(255,255,255,0.6));
+  }
 }
 .splash-brand {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
@@ -3117,7 +3139,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.40</div>
+      <div class="v">v1.42</div>
     </div>
   </header>
 
@@ -3448,7 +3470,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.40 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.42 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
