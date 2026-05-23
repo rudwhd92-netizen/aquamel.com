@@ -2304,12 +2304,13 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     display: block;  /* 모바일에서도 보이게 */
   }
-  .hero .meta { flex-shrink: 0; gap: 6px; }
-  .hero .meta .v { font-size: 11px; }
+  .hero .meta { flex-shrink: 0; gap: 8px; }
+  .hero .meta .v { font-size: 11px; padding-left: 2px; }
   .hero-refresh { width: 26px; height: 26px; font-size: 14px; }
+  /* v1.37: 모바일 슬라이더 transform 값 PC 31px → 모바일 폭에 맞게 28px (안 그러면 v 텍스트 침범) */
   .theme-switch { width: 54px; height: 26px; }
-  .theme-switch .theme-slider { width: 24px; height: 22px; }
-  .theme-switch[data-state] { /* placeholder */ }
+  .theme-switch .theme-slider { width: 24px; height: 22px; transform: translateX(28px); }
+  [data-theme="light"] .theme-switch .theme-slider { transform: translateX(1px); }
   .hero p { font-size: 11px; }
   section.card { padding: 14px; margin-bottom: 12px; max-width: 100%; min-width: 0; overflow: hidden; }
   section.card .card-header { margin: -14px -14px 0 -14px; padding: 12px 14px; }
@@ -3011,11 +3012,12 @@ table.combo-eval tbody td .nodata {
   .container { padding: 10px 8px 32px; }
   .hero h1 { font-size: 17px; }
   .hero-tagline { font-size: 8px; }
-  .hero .meta { gap: 4px; }
-  .hero .meta .v { font-size: 10px; }
+  .hero .meta { gap: 6px; }
+  .hero .meta .v { font-size: 10px; padding-left: 1px; }
   .hero-refresh { width: 24px; height: 24px; font-size: 13px; }
+  /* v1.37: ≤480 폭에서 슬라이더 translate도 더 작게 (안 그러면 컨테이너 밖으로 삐져나옴) */
   .theme-switch { width: 48px; height: 24px; }
-  .theme-switch .theme-slider { width: 22px; height: 20px; }
+  .theme-switch .theme-slider { width: 22px; height: 20px; transform: translateX(24px); }
   .theme-switch .theme-icon { font-size: 11px; }
   section.card { padding: 12px 10px; }
   section.card h2 { font-size: 13px; }
@@ -3112,7 +3114,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.37</div>
+      <div class="v">v1.39</div>
     </div>
   </header>
 
@@ -3240,15 +3242,15 @@ table.combo-eval tbody td .nodata {
           <!-- History 3 cards row -->
           <div class="dash-hist-row">
             <div class="dash-card dash-hist">
-              <div class="dash-card-title">📅 월간 History (Flow)</div>
+              <div class="dash-card-title">📅 월간 History</div>
               <div class="dash-hist-body" id="dashHistMonth"></div>
             </div>
             <div class="dash-card dash-hist">
-              <div class="dash-card-title">📅 주간 History (Flow)</div>
+              <div class="dash-card-title">📅 주간 History</div>
               <div class="dash-hist-body" id="dashHistWeek"></div>
             </div>
             <div class="dash-card dash-hist">
-              <div class="dash-card-title">📅 일간 History (Flow)</div>
+              <div class="dash-card-title">📅 일간 History</div>
               <div class="dash-hist-body" id="dashHistDay"></div>
             </div>
           </div>
@@ -3443,7 +3445,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.37 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.39 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -5413,9 +5415,9 @@ function computeFlowsCalendar() {
     getProfitOnOrBefore(toStr(twoWeeksAgoFri)) - getProfitOnOrBefore(toStr(threeWeeksAgoFri)), // W-2
     getProfitOnOrBefore(toStr(threeWeeksAgoFri)) - getProfitOnOrBefore(fmtDate(threeWeeksAgoMon.getFullYear(), threeWeeksAgoMon.getMonth()+1, threeWeeksAgoMon.getDate()-3)), // W-3
   ];
-  // 주차 라벨: 월/일 ~ 월/일
+  // 주차 라벨: v1.37 — 끝 날짜만 (예: "~5/15") — 짧게
   function weekLabel(monDate, friDate) {
-    return `${monDate.getMonth()+1}/${monDate.getDate()}~${friDate.getMonth()+1}/${friDate.getDate()}`;
+    return `~${friDate.getMonth()+1}/${friDate.getDate()}`;
   }
   const histWeekLabels = [
     weekLabel(lastWeekMon, lastWeekFri),
@@ -8415,19 +8417,29 @@ async function openChart(ticker) {
   const pos = computePortfolioFromTrades(trades);
   const buyAvg = pos[ticker]?.avg || 0;
 
-  // Trade markers
-  const tradeMarkers = trades.filter(t => (t.ticker || '').toUpperCase() === ticker && t.date >= cutoffStr)
-    .map(t => ({ x: t.date, y: parseFloat(t.price) || 0, action: t.action, qty: t.qty }));
+  // v1.39 BUGFIX: 매수/매도 마커가 잘못된 일자에 찍히는 문제 — t.date를 normalizeDate로 변환 (LS에 'YYYY/MM/DD', Date object, ISO string 등 다양한 형식 혼재 가능)
+  const tradeMarkers = trades
+    .filter(t => (t.ticker || '').toUpperCase() === ticker)
+    .map(t => ({
+      x: normalizeDate(t.date) || '',
+      y: parseFloat(t.price) || 0,
+      action: t.action,
+      qty: t.qty,
+    }))
+    .filter(t => t.x && t.x >= cutoffStr);
 
   // Signal markers from archive — respect global signal filter
+  // v1.39 BUGFIX: r.Date도 안전망 normalize (이미 normalizeArchiveRow를 거치지만 방어적)
   const sigMarkersByType = {};
   SIGNAL_TYPES.forEach(s => sigMarkersByType[s] = []);
-  _state.archive.filter(r => r.Ticker === ticker && r.Date >= cutoffStr).forEach(r => {
+  _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
+    const dateStr = normalizeDate(r.Date);
+    if (!dateStr || dateStr < cutoffStr) return;
     const sigs = (r.Signal_Type || '').split('+').map(s => s.trim()).filter(Boolean);
     // priority: V_Panic > V_Vol > V_Main > T_Claude_Sharp > T_Claude_Wide > T_KJP_Sharp > T_KJP_Wide
     const priority = ['V_Panic','V_Vol','V_Main','T_Claude_Sharp','T_Claude_Wide','T_KJP_Sharp','T_KJP_Wide'];
     const primary = priority.find(p => sigs.includes(p) && _state.signalFilter.has(p));
-    if (primary) sigMarkersByType[primary].push({ x: r.Date, y: r.Close_Price, pred: r.Pred_5d });
+    if (primary) sigMarkersByType[primary].push({ x: dateStr, y: r.Close_Price, pred: r.Pred_5d });
   });
 
   // Ticker signal history table (below chart)
@@ -8487,6 +8499,9 @@ function closeModal() {
   if (modeBtn) modeBtn.style.display = '';
   const canvas = $('chartCanvas');
   if (canvas && canvas.parentElement) canvas.parentElement.style.height = '';
+  // v1.39: 새 헤더 필드 잔재 제거 (다음 모달 — 특히 매크로 차트 — 에서 이전 ticker 잔상 방지)
+  const mp = $('modalPrice'); if (mp) mp.innerHTML = '';
+  const md = $('modalDesc'); if (md) md.textContent = '';
   _state.openTicker = null;
   _state.openMacro = null;
 }
@@ -8761,15 +8776,35 @@ function drawChart(d) {
     return COL.volStops[4];
   });
 
-  // Signal scatter datasets — 모두 동그라미, 색상만 다름
+  // v1.39 CRITICAL BUGFIX: Chart.js scatter type은 부모 line chart의 category x축에서
+  // string x값을 numeric으로 변환 시도 → NaN → 0번 인덱스 (가장 왼쪽 날짜)로 fallback.
+  // 5/19 시그널이 2/23에 표시되는 버그의 원인.
+  // 해결: dataset type 제거 (부모 line 상속) + labels와 같은 길이 sparse array (해당 인덱스만 값, 나머지 null)
+  // + showLine: false로 점만 표시.
+  // 추가 보강: indexOf로 매칭 안 되는 경우 그 점은 skip (잘못 찍히지 않음).
+
+  // Helper: 마커 배열 → sparse y array (labels 길이만큼, indexOf로 인덱스 찾아 채움)
+  const buildSparse = (markerArr) => {
+    const out = new Array(d.dates.length).fill(null);
+    let dropped = 0;
+    markerArr.forEach(p => {
+      const idx = d.dates.indexOf(p.x);
+      if (idx >= 0) out[idx] = p.y;
+      else dropped++;
+    });
+    if (dropped > 0) console.warn(`[drawChart] ${dropped} marker(s) dropped (date not in OHLCV window):`, markerArr);
+    return out;
+  };
+
+  // Signal scatter datasets — sparse array로 변환 (v1.39 fix)
   const sigDatasets = [];
   SIGNAL_TYPES.forEach(s => {
     const arr = d.sigMarkersByType[s] || [];
     if (!arr.length) return;
     sigDatasets.push({
       label: s,
-      type: 'scatter',
-      data: arr.map(p => ({ x: p.x, y: p.y })),
+      data: buildSparse(arr),
+      showLine: false,       // 점만 표시
       backgroundColor: SIGNAL_COLORS[s],
       borderColor: '#ffffff',
       borderWidth: 1.2,
@@ -8778,18 +8813,19 @@ function drawChart(d) {
       pointHoverRadius: simple ? 7 : 8,
       yAxisID: 'yPrice',
       order: 0,
+      spanGaps: false,
     });
   });
 
-  // Trade markers — 매수: 빨강 정사각형, 매도: 파랑 정사각형 (각각 별도 dataset)
+  // Trade markers — sparse array로 변환 (v1.39 fix)
   if (d.tradeMarkers.length) {
     const buyMarkers  = d.tradeMarkers.filter(t => t.action === '매수');
     const sellMarkers = d.tradeMarkers.filter(t => t.action === '매도');
     if (buyMarkers.length) {
       sigDatasets.push({
         label: '매수',
-        type: 'scatter',
-        data: buyMarkers.map(t => ({ x: t.x, y: t.y })),
+        data: buildSparse(buyMarkers),
+        showLine: false,
         backgroundColor: COL.trade_buy,
         borderColor: '#fff',
         borderWidth: 1,
@@ -8798,13 +8834,14 @@ function drawChart(d) {
         pointHoverRadius: 6,
         yAxisID: 'yPrice',
         order: 1,
+        spanGaps: false,
       });
     }
     if (sellMarkers.length) {
       sigDatasets.push({
         label: '매도',
-        type: 'scatter',
-        data: sellMarkers.map(t => ({ x: t.x, y: t.y })),
+        data: buildSparse(sellMarkers),
+        showLine: false,
         backgroundColor: COL.trade_sell,
         borderColor: '#fff',
         borderWidth: 1,
@@ -8813,6 +8850,7 @@ function drawChart(d) {
         pointHoverRadius: 6,
         yAxisID: 'yPrice',
         order: 1,
+        spanGaps: false,
       });
     }
   }
