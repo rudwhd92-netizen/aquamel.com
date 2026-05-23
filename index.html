@@ -190,6 +190,12 @@ body {
   overflow-wrap: normal;
   -webkit-hyphens: none;
   hyphens: none;
+  /* v1.40: iOS safe-area — viewport-fit=cover + black-translucent 조합이라 status bar 영역까지
+     콘텐츠가 확장됨. 항상 적용 (브라우저든 PWA든, 안드로이드는 0이라 영향 없음) */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
 }
 .container { max-width: 1500px; margin: 0 auto; padding: 24px 20px 60px; min-width: 0; }
 
@@ -283,15 +289,7 @@ section.card.collapsed > .card-body { display: none; }
 section.card.collapsed > .card-header .toggle-icon { transform: rotate(-90deg); }
 section.card.collapsed > .card-header { border-radius: 6px; margin-bottom: 0; }
 
-/* ============ PWA STANDALONE MODE — iOS safe-area + 미세 조정 ============ */
-@supports (padding-top: env(safe-area-inset-top)) {
-  .pwa-standalone body {
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
-}
+/* ============ PWA STANDALONE MODE — iOS safe-area는 body에서 항상 처리 (v1.40), 여기는 추가 미세 조정 ============ */
 .pwa-standalone .hero { padding-top: 8px; }
 
 /* 카드 헤더 안 사용자 저장 컨트롤 (포트폴리오 카드용) */
@@ -2326,7 +2324,9 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .modal-overlay { padding: 0; }
   .modal-content {
     width: 100vw; height: 100vh; max-width: none; max-height: none;
-    border-radius: 0; padding: 14px 12px 24px;
+    border-radius: 0;
+    /* v1.40: iOS safe-area — 모달은 fixed/full-screen이라 body padding 영향 안 받음 → 직접 적용 */
+    padding: calc(14px + env(safe-area-inset-top, 0px)) calc(12px + env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px));
     overflow-x: hidden;
   }
   .modal-title { font-size: 19px; padding-right: 36px; word-break: keep-all; margin-bottom: 10px; }
@@ -2415,7 +2415,10 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .user-save-controls input { flex: 1 1 120px; min-width: 0; }
 
   /* Sector detail modal — 모바일 풀스크린 + 글자 조정 */
-  .sec-modal-content { padding: 14px 12px 24px; }
+  /* v1.40: safe-area 처리 (modal-content base를 override하므로 여기에도 명시) */
+  .sec-modal-content {
+    padding: calc(14px + env(safe-area-inset-top, 0px)) calc(12px + env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px));
+  }
   .sec-modal-title { font-size: 16px; }
   .sec-modal-emoji { font-size: 22px; }
   .sec-modal-avg { font-size: 14px; margin-left: 0; }
@@ -3114,7 +3117,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.39</div>
+      <div class="v">v1.40</div>
     </div>
   </header>
 
@@ -3445,7 +3448,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.39 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.40 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
