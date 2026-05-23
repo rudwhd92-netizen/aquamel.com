@@ -928,6 +928,132 @@ table.sheet tbody tr.drop-below td:last-child {
 .chart-legend .lg-item { display: flex; align-items: center; gap: 6px; }
 .chart-legend .lg-shape { width: 12px; height: 12px; display: inline-block; }
 
+/* ============ SPLASH OVERLAY (v1.26 — game-style boot loader) ============ */
+.splash-overlay {
+  position: fixed; inset: 0;
+  background: #000;
+  z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.55s ease-out;
+  /* iOS PWA notch / home indicator 안전 영역 */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.splash-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+.splash-inner {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 20px 24px;
+  width: 100%; max-width: 420px;
+}
+.splash-logo {
+  width: 180px; height: 180px;
+  object-fit: contain;
+  margin-bottom: 28px;
+  filter: drop-shadow(0 4px 32px rgba(255,255,255,0.06));
+  animation: splash-pulse 2.6s ease-in-out infinite;
+  user-select: none; -webkit-user-drag: none; pointer-events: none;
+}
+@keyframes splash-pulse {
+  0%, 100% { opacity: 0.95; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.025); }
+}
+.splash-brand {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-size: 22px;
+  color: #ffffff;
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+  display: flex; gap: 8px; align-items: baseline;
+}
+.splash-brand-strong { font-weight: 700; }
+.splash-brand-thin   { font-weight: 200; opacity: 0.78; }
+.splash-tagline {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.42);
+  letter-spacing: 0.6px;
+  text-align: center;
+  margin-bottom: 64px;
+}
+.splash-loader {
+  width: 100%; max-width: 280px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 14px;
+}
+.splash-progress-bar {
+  width: 100%; height: 2px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+.splash-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.95) 100%);
+  width: 0%;
+  transition: width 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+  box-shadow: 0 0 10px rgba(255,255,255,0.35), 0 0 4px rgba(255,255,255,0.5);
+}
+.splash-progress-text {
+  font-family: 'SF Mono', 'Consolas', 'Roboto Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.splash-error {
+  margin-top: 28px;
+  text-align: center;
+  width: 100%;
+}
+.splash-error-msg {
+  font-size: 11px;
+  color: #ff7676;
+  margin-bottom: 14px;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  word-break: break-word;
+  line-height: 1.5;
+  padding: 0 10px;
+}
+.splash-retry {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #ffffff;
+  padding: 9px 22px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  letter-spacing: 1px;
+  transition: background 0.18s, border-color 0.18s;
+}
+.splash-retry:hover  { background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.32); }
+.splash-retry:active { background: rgba(255,255,255,0.20); transform: scale(0.98); }
+
+/* hero meta refresh button (v1.26) */
+.hero-refresh {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text-mute);
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: transform 0.4s ease, background 0.18s, color 0.18s, border-color 0.18s;
+  font-family: inherit;
+  padding: 0;
+}
+.hero-refresh:hover  { background: var(--bg-3); color: var(--text-hi); border-color: var(--line-2); }
+.hero-refresh:active { transform: scale(0.92); }
+.hero-refresh.spinning { animation: hero-refresh-spin 1.1s linear infinite; }
+@keyframes hero-refresh-spin { to { transform: rotate(360deg); } }
+
 /* ============ LOADING OVERLAY ============ */
 .loading-overlay {
   display: none; position: fixed; inset: 0;
@@ -2263,6 +2389,39 @@ table.combo-eval tbody td .nodata {
 </style>
 </head>
 <body>
+
+<!-- ============ SPLASH OVERLAY (v1.26 — game-style loading) ============ -->
+<div class="splash-overlay" id="splashOverlay">
+  <div class="splash-inner">
+    <img class="splash-logo" id="splashLogo" alt="" />
+    <script>
+      // head의 apple-touch-icon에 인라인된 base64 PNG를 즉시 splash 로고에 적용
+      // (외부 ./icon-512.png 파일 fetch 실패 시에도 항상 로고 표시 보장)
+      (function() {
+        try {
+          var link = document.querySelector('link[rel="apple-touch-icon"]');
+          var logo = document.getElementById('splashLogo');
+          if (link && logo) logo.src = link.href;
+        } catch (e) {}
+      })();
+    </script>
+    <div class="splash-brand">
+      <span class="splash-brand-strong">AQUAMEL</span><span class="splash-brand-thin">INVESTMENT</span>
+    </div>
+    <div class="splash-tagline">The blueprint for the next 10-year structural paradigm</div>
+    <div class="splash-loader" id="splashLoader">
+      <div class="splash-progress-bar">
+        <div class="splash-progress-fill" id="splashProgressFill"></div>
+      </div>
+      <div class="splash-progress-text" id="splashProgressText">0%</div>
+    </div>
+    <div class="splash-error" id="splashError" style="display:none;">
+      <div class="splash-error-msg" id="splashErrorMsg"></div>
+      <button class="splash-retry" onclick="autoLoadData()">다시 시도</button>
+    </div>
+  </div>
+</div>
+
 <div class="container">
 
   <!-- ============ HEADER (AQUAMEL) ============ -->
@@ -2272,31 +2431,16 @@ table.combo-eval tbody td .nodata {
       <div class="hero-tagline">The blueprint for the next 10-year structural paradigm</div>
     </div>
     <div class="meta">
+      <button class="hero-refresh" id="heroRefreshBtn" onclick="autoLoadData()" title="데이터 새로고침" aria-label="데이터 새로고침">↻</button>
       <button class="theme-switch" id="themeToggle" onclick="toggleTheme()" aria-label="라이트/다크 전환">
         <span class="theme-slider"></span>
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.25</div>
+      <div class="v">v1.26</div>
     </div>
   </header>
 
-  <!-- ============ DATA SYNC (merged) ============ -->
-  <section class="card">
-    <div class="card-header" onclick="toggleCard(this)">
-      <h2>🔄 데이터 업데이트 & 분석</h2>
-      <span class="toggle-icon">▼</span>
-    </div>
-    <div class="card-body">
-      <p class="subtitle">구글 시트에서 최신 V_Shape_Archive + 40개 섹터 OHLCV + 매크로를 자동 로드합니다. 백엔드 연결 정보는 HTML 안에 박제되어 있습니다.</p>
-      <div id="connBanner"></div>
-      <div class="btn-row">
-        <button class="btn secondary" id="testConnBtn">🔌 연결 테스트</button>
-        <button class="btn" id="updateBtn">📥 업데이트 & 분석</button>
-        <span class="status" id="updateStatus">대기</span>
-      </div>
-    </div>
-  </section>
 
   <!-- ============ MACRO (after load) ============ -->
   <section class="card" id="macroCard" style="display:none;">
@@ -2496,7 +2640,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.25 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.26 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -2709,30 +2853,9 @@ async function apiCall(action, params = {}) {
 }
 
 // ============================================================================
-// CONNECTION TEST
+// CONNECTION TEST — v1.26: 데이터 업데이트 카드 제거됨. 핸들러 삭제.
+//   (백엔드 헬스체크는 autoLoadData 내부의 try/catch가 담당)
 // ============================================================================
-$('testConnBtn').addEventListener('click', async () => {
-  $('updateStatus').textContent = '연결 테스트 중...';
-  $('updateStatus').className = 'status warn';
-  if (!backendReady()) {
-    $('updateStatus').textContent = '✗ Apps Script URL 미설정 — HTML 안의 BACKEND.URL 값을 본인 배포 URL로 교체하세요.';
-    $('updateStatus').className = 'status err';
-    return;
-  }
-  try {
-    const r = await apiCall('ping');
-    if (r.ok) {
-      $('updateStatus').textContent = `✓ 연결 성공 (백엔드 v${r.version || '?'})`;
-      $('updateStatus').className = 'status ok';
-    } else {
-      $('updateStatus').textContent = '✗ ' + (r.error || '연결 실패');
-      $('updateStatus').className = 'status err';
-    }
-  } catch (err) {
-    $('updateStatus').textContent = '✗ ' + err.message;
-    $('updateStatus').className = 'status err';
-  }
-});
 
 // ============================================================================
 // SPREADSHEET WIDGET (Excel-like with copy-paste)
@@ -3865,7 +3988,7 @@ function toggleChartMode() {
 }
 window.toggleChartMode = toggleChartMode;
 
-// ---- Loading overlay helpers ----
+// ---- Loading overlay helpers (in-app operations e.g. ticker fetch) ----
 function showLoading(sub, progressText, percent) {
   $('loadingOverlay').classList.add('active');
   if (sub !== undefined) $('loadingSub').textContent = sub;
@@ -3877,22 +4000,73 @@ function hideLoading() {
   $('loadingBarFill').style.width = '0%';
 }
 
-$('updateBtn').addEventListener('click', async () => {
+// ============================================================================
+// SPLASH BOOT LOADER (v1.26) — game-style fullscreen loading
+//   퍼센티지만 단순하게 표시. 텍스트 메시지/병렬 정보 일체 없음.
+// ============================================================================
+let _autoLoadInProgress = false;
+
+function splashUpdate(percent) {
+  const fill = document.getElementById('splashProgressFill');
+  const text = document.getElementById('splashProgressText');
+  const p = Math.min(100, Math.max(0, percent));
+  if (fill) fill.style.width = p + '%';
+  if (text) text.textContent = Math.round(p) + '%';
+}
+function splashShow() {
+  const el = document.getElementById('splashOverlay');
+  if (!el) return;
+  el.style.display = 'flex';
+  el.classList.remove('fade-out');
+  // reset error + loader
+  const err = document.getElementById('splashError');
+  const loader = document.getElementById('splashLoader');
+  if (err) err.style.display = 'none';
+  if (loader) loader.style.display = '';
+  splashUpdate(0);
+}
+function splashHide() {
+  const el = document.getElementById('splashOverlay');
+  if (!el) return;
+  el.classList.add('fade-out');
+  setTimeout(() => { el.style.display = 'none'; }, 600);
+}
+function splashError(msg) {
+  const err = document.getElementById('splashError');
+  const errMsg = document.getElementById('splashErrorMsg');
+  const loader = document.getElementById('splashLoader');
+  if (errMsg) errMsg.textContent = msg || '데이터 로드 실패';
+  if (err) err.style.display = 'block';
+  if (loader) loader.style.display = 'none';
+}
+
+// ============================================================================
+// AUTO LOAD DATA (v1.26) — 앱 부팅 시 자동 호출. 새로고침 버튼도 동일 함수 호출.
+// ============================================================================
+async function autoLoadData() {
+  if (_autoLoadInProgress) return;
+  _autoLoadInProgress = true;
+
+  // 새로고침 버튼이라면 splash 다시 보여주기
+  splashShow();
+
+  // hero refresh 버튼 스피닝 (있을 때만)
+  const refreshBtn = document.getElementById('heroRefreshBtn');
+  if (refreshBtn) refreshBtn.classList.add('spinning');
+
   if (!backendReady()) {
-    $('updateStatus').textContent = '✗ Apps Script URL 미설정 — HTML 안의 BACKEND.URL 값을 본인 배포 URL로 교체하세요.';
-    $('updateStatus').className = 'status err';
+    splashError('Apps Script URL 미설정 — HTML 안의 BACKEND.URL 값을 본인 배포 URL로 교체하세요.');
+    if (refreshBtn) refreshBtn.classList.remove('spinning');
+    _autoLoadInProgress = false;
     return;
   }
   const cfg = getConfig();
-  $('updateBtn').disabled = true;
-  $('updateStatus').textContent = '실행 중...';
-  $('updateStatus').className = 'status warn';
-  $('connBanner').innerHTML = '';
-  showLoading('데이터 불러오는 중', '시작 중...', 2);
 
   try {
+    splashUpdate(2);
+
     // 1) Archive + sector list + KJP400 매핑 — 병렬로 동시에
-    showLoading('아카이브 + 시트 목록 + KJP400 동시 로드', '연결 중...', 5);
+    splashUpdate(5);
     const [arcRes, listRes, kjpRes] = await Promise.all([
       apiCall('getBuyList', { sheetId: cfg.archiveSheetId, tab: cfg.archiveTab }),
       apiCall('listSheetNames', { folderId: cfg.folderId }),
@@ -3905,8 +4079,8 @@ $('updateBtn').addEventListener('click', async () => {
 
     // KJP300 ticker → sector 매핑 + sector → [tickers+desc] 빌드 (실패해도 진행)
     const kjpMap = {};
-    const kjpSectorMap = {};   // 섹터명 → [{ticker, desc}, ...]
-    const kjpDescMap = {};      // 티커 → 간단설명
+    const kjpSectorMap = {};
+    const kjpDescMap = {};
     if (kjpRes && kjpRes.ok && kjpRes.rows) {
       kjpRes.rows.forEach(r => {
         const tk = (r['티커명'] || r['Ticker'] || r['ticker'] || '').toString().toUpperCase().trim();
@@ -3933,8 +4107,7 @@ $('updateBtn').addEventListener('click', async () => {
     const failed = [];
     const total = listRes.sheets.length;
     let done = 0;
-    const t0 = Date.now();
-    showLoading(`섹터 + 매크로 다운로드 중 (병렬 6)`, `0 / ${total}`, 10);
+    splashUpdate(10);
 
     const fetchOne = async (sh) => {
       for (let attempt = 1; attempt <= 3; attempt++) {
@@ -3959,15 +4132,14 @@ $('updateBtn').addEventListener('click', async () => {
         const ok = await fetchOne(sh);
         done++;
         if (!ok) failed.push({ name: sh.name });
-        const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-        showLoading(undefined, `${done} / ${total}  ·  ${elapsed}s  ·  병렬 ${CONCURRENCY}`, 10 + (done/total)*80);
+        // 진행도: 10% → 90% (시트 다운로드)
+        splashUpdate(10 + (done / total) * 80);
       }
     });
     await Promise.all(workers);
-    const totalSec = ((Date.now() - t0) / 1000).toFixed(1);
 
-    showLoading('렌더링 중...', `${done} / ${total} 완료 (${totalSec}s)`, 95);
-
+    // 3) 렌더링
+    splashUpdate(92);
     Object.keys(allSheets).forEach(name => {
       if (/매크로|macro/i.test(name)) {
         macroRows = allSheets[name];
@@ -3977,7 +4149,7 @@ $('updateBtn').addEventListener('click', async () => {
     });
     _state.macro = macroRows ? macroRows.map(normalizeOhlcvRow).filter(r => r.Ticker && r.Date) : [];
 
-    // 모든 OHLCV에서 가장 최근 일자 계산 (sectors + macro)
+    // 모든 OHLCV에서 가장 최근 일자 계산
     let latestDate = '';
     Object.values(_state.sectors).forEach(rows => {
       rows.forEach(r => { if (r.Date && r.Date > latestDate) latestDate = r.Date; });
@@ -3985,39 +4157,31 @@ $('updateBtn').addEventListener('click', async () => {
     _state.macro.forEach(r => { if (r.Date && r.Date > latestDate) latestDate = r.Date; });
     _state.latestDataDate = latestDate;
 
-    if (failed.length > 0) {
-      $('connBanner').innerHTML = `<div class="conn-banner warn"><span class="icon">⚠</span><span class="label">${totalSec}s 완료 / 실패:</span> <span class="val">${failed.length}개</span>${latestDate ? ` <span class="label">/ 기준일:</span> <span class="val">${escapeHtml(latestDate)}</span>` : ''}</div>`;
-    } else {
-      const kjpCount = Object.keys(_state.tickerSectorMap || {}).length;
-      $('connBanner').innerHTML = `<div class="conn-banner"><span class="icon">✓</span><span class="label">${totalSec}s</span> <span class="label">· 기준일:</span> <span class="val data-date">${escapeHtml(latestDate || '-')}</span> <span class="label">· 아카이브:</span> <span class="val">${_state.archive.length}건</span> <span class="label">/ 섹터:</span> <span class="val">${Object.keys(_state.sectors).length}개</span> <span class="label">/ KJP400:</span> <span class="val">${kjpCount}개</span> <span class="label">/ 매크로:</span> <span class="val">${_state.macro.length ? '있음' : '없음'}</span></div>`;
-    }
-
-    $('updateStatus').textContent = '렌더링 중...';
-    computeSignalReturns();   // CASE 1~4 + 1d/5d/10d 미래 수익률 계산 (1회 캐시)
+    splashUpdate(95);
+    computeSignalReturns();
     renderMacro();
     renderSectorFilter();
     renderSignalFilter();
     applyFilterAndRender();
-    // 새 OHLCV 데이터 도착 → 12계층 등락률 재계산
     try { refreshLayerReturns(); } catch (e) {}
-    // 40섹터 일간 동향 분석 재렌더 (균등평균 막대 + 30일 σ 히트맵)
     try { renderSectorAnalysis(); } catch (e) {}
 
-    $('macroCard').style.display = _state.macro.length ? '' : 'none';
-    $('filterCard').style.display = '';
-    $('archiveCard').style.display = '';
-    $('updateStatus').textContent = latestDate ? `✓ 완료 (기준일 ${latestDate} · ${_state.archive.length}건)` : `✓ 완료 (${_state.archive.length}건)`;
-    $('updateStatus').className = 'status ok';
+    if ($('macroCard')) $('macroCard').style.display = _state.macro.length ? '' : 'none';
+    if ($('filterCard')) $('filterCard').style.display = '';
+    if ($('archiveCard')) $('archiveCard').style.display = '';
+
+    splashUpdate(100);
+    // 잠깐 100% 보여주고 fade-out
+    setTimeout(() => splashHide(), 450);
   } catch (err) {
     console.error(err);
-    $('updateStatus').textContent = '✗ ' + err.message;
-    $('updateStatus').className = 'status err';
-    $('connBanner').innerHTML = `<div class="error-box">${escapeHtml(err.message)}</div>`;
+    splashError(err.message || '데이터 로드 실패');
   } finally {
-    $('updateBtn').disabled = false;
-    hideLoading();
+    if (refreshBtn) refreshBtn.classList.remove('spinning');
+    _autoLoadInProgress = false;
   }
-});
+}
+window.autoLoadData = autoLoadData;
 
 // ============================================================================
 // NORMALIZERS
@@ -5472,7 +5636,7 @@ function openSectorModal(sectorKey) {
   <div class="sec-modal-def" style="--c-rgb:${layer.rgb};">${escapeHtml(cell.def)}</div>`;
 
   if (data.status === 'no-kjp') {
-    html += `<div class="sec-modal-empty">📥 먼저 상단의 <b>"업데이트 & 분석"</b> 버튼으로 KJP300 + OHLCV 데이터를 로드하세요.<br><span style="font-size:10px;opacity:0.7;">로드 후 이 섹터에 속한 티커와 최근일 등락률이 표시됩니다.</span></div>`;
+    html += `<div class="sec-modal-empty">📥 데이터 로드 중이거나 실패했습니다. 우측 상단의 <b>↻ 새로고침</b> 버튼으로 다시 시도하세요.<br><span style="font-size:10px;opacity:0.7;">로드 후 이 섹터에 속한 티커와 최근일 등락률이 표시됩니다.</span></div>`;
   } else if (data.status === 'no-tickers') {
     html += `<div class="sec-modal-empty">이 섹터에 매핑된 티커가 KJP300_LIST에 없습니다.<br><span style="font-size:10px;opacity:0.7;">시트의 섹터명 표기와 framework 섹터명이 일치하는지 확인하세요. (찾는 키: <code>${escapeHtml(sectorKey)}</code>)</span></div>`;
   } else {
@@ -6614,10 +6778,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (savedUserId && $('userIdInput')) $('userIdInput').value = savedUserId;
   // 모바일이면 디폴트 simple-mode 클래스 적용 (범례 등 숨김)
   if (isMobileViewport()) document.body.classList.add('simple-mode');
-  // Backend status hint on first load
-  if (!backendReady()) {
-    $('connBanner').innerHTML = `<div class="conn-banner err"><span class="icon">⚠</span><span class="label">설정 필요:</span> <span class="val">HTML 안의 <code style="background:#1e1e1e;padding:1px 5px;border-radius:2px;color:#ce9178;">BACKEND.URL</code> 상수를 본인 Apps Script 배포 URL로 교체하세요. (그 외 ID·탭 이름은 박제됨)</span></div>`;
-  }
+  // v1.26: 백엔드 URL 미설정 안내 → splash 에러로 처리 (autoLoadData 진입 시점)
   portfolioSheet = new SpreadsheetTable('portfolioSheetMount', PORTFOLIO_COLS, LS.PORTFOLIO, portfolioSummary, autoFillSector);
   tradesSheet    = new SpreadsheetTable('tradesSheetMount',    TRADE_COLS,     LS.TRADES,    tradesSummary,    autoFillSector);
   // 저장된 기간 선택 복원 (framework 등락률용)
@@ -6632,6 +6793,8 @@ window.addEventListener('DOMContentLoaded', () => {
   requestAnimationFrame(() => document.body.classList.add('transitions-ready'));
   // PWA 설치 안내 (모바일 브라우저에서 standalone이 아닐 때 한 번만)
   maybeShowPwaInstallHint();
+  // v1.26: 앱 부팅 → 자동 데이터 로드 (splash 위에서 진행)
+  autoLoadData();
 });
 
 const LS_PWA_HINT_DISMISSED = 'aquamel_vshape_pwa_hint_dismissed';
