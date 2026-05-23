@@ -918,10 +918,62 @@ table.sheet tbody tr.drop-below td:last-child {
   .modal-content .modal-close { display: none; }
 }
 
-.modal-title { font-size: 18px; font-weight: 700; color: var(--text-hi); margin-bottom: 4px; }
-.modal-subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 16px; }
-.modal-subtitle .pos { color: var(--green-2); font-weight: 600; }
-.modal-subtitle .neg { color: var(--danger); font-weight: 600; }
+/* v1.34: 새 헤더 구조 */
+.modal-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-hi);
+  margin-bottom: 6px;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap;
+}
+.modal-title .company-name { color: var(--text-hi); }
+.modal-title .ticker-paren {
+  color: var(--text-mute); font-weight: 600; font-size: 18px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Pretendard', 'Inter', sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.modal-price {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--text-hi);
+  margin-bottom: 6px;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Pretendard', 'Inter', sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.modal-price .price-chg {
+  font-size: 14px; font-weight: 700;
+  letter-spacing: -0.2px;
+}
+.modal-price .price-chg.up { color: var(--kr-up); }
+.modal-price .price-chg.down { color: var(--kr-down); }
+.modal-subtitle {
+  font-size: 12px; color: var(--text-dim);
+  margin-bottom: 10px;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+}
+.modal-subtitle .pos { color: var(--kr-up); font-weight: 600; }
+.modal-subtitle .neg { color: var(--kr-down); font-weight: 600; }
+.modal-subtitle .sep { color: var(--text-mute); opacity: 0.5; }
+.modal-desc {
+  font-size: 11px;
+  color: var(--text-mute);
+  line-height: 1.55;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 4px 4px 0;
+  word-break: keep-all;
+}
+.modal-desc:empty { display: none; }
 
 .chart-wrap { background: var(--bg); border-radius: 4px; padding: 12px; position: relative; height: 520px; }
 .chart-legend { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-dim); }
@@ -1066,17 +1118,18 @@ table.sheet tbody tr.drop-below td:last-child {
   background: var(--bg-3);
   flex-shrink: 0;
 }
-/* 모달 타이틀에서는 좀 더 크게 */
+/* v1.34: 모달 타이틀 — 더 크고 자연스러운 정렬 (flex로 alignment) */
 .modal-title .ticker-logo {
-  width: 24px; height: 24px;
-  border-radius: 5px;
-  vertical-align: -7px;
-  margin-right: 11px;
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  vertical-align: middle;
+  margin-right: 0;
+  flex-shrink: 0;
 }
 /* 모바일에서는 약간 작게 */
 @media (max-width: 640px) {
   .ticker-logo { width: 16px; height: 16px; vertical-align: -4px; margin-right: 8px; }
-  .modal-title .ticker-logo { width: 22px; height: 22px; vertical-align: -6px; margin-right: 10px; }
+  .modal-title .ticker-logo { width: 32px; height: 32px; border-radius: 6px; }
 }
 
 /* ============ LOADING OVERLAY ============ */
@@ -1168,17 +1221,21 @@ table.sheet tbody tr.drop-below td:last-child {
   grid-template-columns: 2fr 1fr;
   gap: 16px;
   margin-bottom: 16px;
+  min-width: 0; max-width: 100%;
 }
 .dash-top-left {
   display: flex; flex-direction: column; gap: 16px;
+  min-width: 0;
 }
 .dash-top-row {
   display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  min-width: 0;
 }
 .dash-side-stack {
   display: flex; flex-direction: column; gap: 16px;
+  min-width: 0;
 }
-.dash-side-stack .dash-mini { flex: 1; }
+.dash-side-stack .dash-mini { flex: 1; min-width: 0; }
 
 /* KPI Total — big card on top-left */
 .dash-kpi-total { min-height: 240px; }
@@ -1285,11 +1342,13 @@ table.sheet tbody tr.drop-below td:last-child {
 .dash-donut-card {
   display: flex; flex-direction: column;
   padding: 16px 14px;
+  min-width: 0; max-width: 100%; overflow: hidden;
 }
 .dash-donut-wrap {
   flex: 1; min-height: 240px;
   position: relative;
   display: flex; align-items: center; justify-content: center;
+  min-width: 0; max-width: 100%; overflow: hidden;
 }
 .dash-donut-legend {
   display: flex; flex-wrap: wrap; gap: 4px 10px;
@@ -1308,20 +1367,26 @@ table.sheet tbody tr.drop-below td:last-child {
 /* BOTTOM SECTION (2 columns × 2 rows) */
 .dash-bottom-section {
   display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  min-width: 0; max-width: 100%;
 }
 .dash-bottom-col {
   display: flex; flex-direction: column; gap: 16px;
+  min-width: 0;
 }
-.dash-chart-card { min-height: 280px; }
-.dash-chart-wrap { flex: 1; position: relative; min-height: 220px; }
+.dash-chart-card { min-height: 280px; min-width: 0; max-width: 100%; overflow: hidden; }
+.dash-chart-wrap { flex: 1; position: relative; min-height: 220px; min-width: 0; max-width: 100%; overflow: hidden; }
+/* v1.33: dashboard 카드 본체 overflow 차단 (그리드 자식이 트랙 늘리는 것 방지) */
+#dashboardCard > .card-body { min-width: 0; max-width: 100%; overflow: hidden; }
+#dashboardCard .dash-card { min-width: 0; max-width: 100%; }
 
 /* Holdings list */
 .dash-holdings-card { min-height: 440px; max-height: 440px; }
 .dash-holdings-card .dash-card-header { margin-bottom: 8px; }
 .dash-holdings-body {
-  flex: 1; overflow-y: auto;
+  flex: 1; overflow-y: auto; overflow-x: hidden;
   display: flex; flex-direction: column; gap: 6px;
   padding-right: 4px;
+  min-width: 0; max-width: 100%;
 }
 .dash-hold-row {
   display: flex; align-items: center; justify-content: space-between;
@@ -1333,6 +1398,7 @@ table.sheet tbody tr.drop-below td:last-child {
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+  min-width: 0;
 }
 .dash-hold-row:hover { background: var(--panel-hi); }
 .dash-hold-row:active { transform: scale(0.985); }
@@ -1352,8 +1418,8 @@ table.sheet tbody tr.drop-below td:last-child {
 .dash-hold-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .dash-hold-ticker {
   font-weight: 700; font-size: 13px; color: var(--text-hi);
-
   line-height: 1.2;
+  text-overflow: ellipsis; overflow: hidden; white-space: nowrap;
 }
 .dash-hold-meta {
   font-size: 10px; color: var(--text-mute);
@@ -1534,7 +1600,14 @@ table.sheet tbody tr.drop-below td:last-child {
 [data-theme="light"] .dash-ctx-item[data-action="hide"] { color: #d63838; }
 [data-theme="light"] .dash-ctx-item[data-action="hide"]:hover { background: rgba(214,56,56,0.12); }
 
-/* MOBILE (≤640px) — 단일 컬럼 stack */
+/* v1.33: TABLET (≤960px) — 하단 2열을 1열로 (좁은 폭에선 차트가 답답함) */
+@media (max-width: 960px) {
+  .dash-bottom-section { grid-template-columns: 1fr; }
+  .dash-holdings-card { min-height: 380px; max-height: 380px; }
+  .dash-matrix-card { min-height: 420px; max-height: 420px; }
+}
+
+/* MOBILE (≤768px) — 상단도 단일 컬럼 stack */
 @media (max-width: 768px) {
   .dash-top-section { grid-template-columns: 1fr; }
   .dash-top-row { grid-template-columns: 1fr; }
@@ -2195,8 +2268,12 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     border-radius: 0; padding: 14px 12px 24px;
     overflow-x: hidden;
   }
-  .modal-title { font-size: 15px; padding-right: 36px; word-break: keep-all; }
+  .modal-title { font-size: 19px; padding-right: 36px; word-break: keep-all; }
+  .modal-title .ticker-paren { font-size: 14px; }
+  .modal-price { font-size: 26px; }
+  .modal-price .price-chg { font-size: 11px; }
   .modal-subtitle { font-size: 10px; line-height: 1.6; word-break: break-word; }
+  .modal-desc { font-size: 10.5px; padding: 8px 10px; line-height: 1.5; }
   .chart-wrap { height: 380px; padding: 4px; }
 
   /* Chart mode toggle visible only on mobile */
@@ -2904,8 +2981,11 @@ table.combo-eval tbody td .nodata {
   table.archive tbody td[data-col="Current_Return(%)"] { font-size: 14px; }
 
   /* 모달 헤더 더 컴팩트 */
-  .modal-title { font-size: 14px; padding-right: 32px; }
+  .modal-title { font-size: 17px; padding-right: 32px; }
+  .modal-title .ticker-paren { font-size: 13px; }
+  .modal-price { font-size: 23px; }
   .modal-subtitle { font-size: 9px; line-height: 1.5; }
+  .modal-desc { font-size: 10px; }
 
   /* 사용자 저장 슬롯 — 480px 이하에선 한 컬럼 */
   .user-save-controls { gap: 6px; }
@@ -2966,7 +3046,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.32</div>
+      <div class="v">v1.34</div>
     </div>
   </header>
 
@@ -3264,8 +3344,11 @@ table.combo-eval tbody td .nodata {
     <div class="modal-content">
       <div class="modal-drag-handle"></div>
       <button class="modal-close" onclick="closeModal()">×</button>
+      <!-- v1.34: 새 헤더 구조 — 회사명+티커, 종가, 메타, 상세설명 -->
       <div class="modal-title" id="modalTitle">—</div>
+      <div class="modal-price" id="modalPrice"></div>
       <div class="modal-subtitle" id="modalSubtitle">—</div>
+      <div class="modal-desc" id="modalDesc"></div>
       <div class="chart-wrap">
         <button class="chart-mode-toggle" id="modeToggleBtn" onclick="toggleChartMode()">🔬 상세보기</button>
         <canvas id="chartCanvas"></canvas>
@@ -3294,7 +3377,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.32 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.34 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -3378,7 +3461,8 @@ const LS = {
   CARDS: 'aquamel_vshape_cards',
   KJP_MAP: 'aquamel_vshape_kjp_map',          // KJP400 ticker → sector
   KJP_SECTOR_MAP: 'aquamel_vshape_kjp_sec',   // sector → [{ticker, desc}]
-  KJP_DESC_MAP: 'aquamel_vshape_kjp_desc',    // ticker → desc
+  KJP_DESC_MAP: 'aquamel_vshape_kjp_desc',    // ticker → desc (E컬럼: 상세설명)
+  KJP_COMPANY_MAP: 'aquamel_vshape_kjp_company', // ticker → company name (D컬럼: 회사명) — v1.34
   USER_SECTOR_MAP: 'aquamel_vshape_user_sec', // 사용자 수동 매핑 (KJP400 외)
   USER_ID: 'aquamel_vshape_user_id',          // 사용자 ID (백엔드 저장용 키)
   LAYER_RETURN_PERIOD: 'aquamel_vshape_layer_return_period', // framework 등락률 조회 기간
@@ -4746,27 +4830,35 @@ async function autoLoadData() {
     if (!listRes.sheets || listRes.sheets.length === 0) throw new Error('폴더에 시트가 없습니다.');
 
     // KJP300 ticker → sector 매핑 + sector → [tickers+desc] 빌드 (실패해도 진행)
+    // v1.34: 회사명(D컬럼) + 상세설명(E컬럼) 추가 추출
     const kjpMap = {};
     const kjpSectorMap = {};
     const kjpDescMap = {};
+    const kjpCompanyMap = {};
     if (kjpRes && kjpRes.ok && kjpRes.rows) {
       kjpRes.rows.forEach(r => {
         const tk = (r['티커명'] || r['Ticker'] || r['ticker'] || '').toString().toUpperCase().trim();
         const sec = (r['섹터명'] || r['Sector'] || '').toString().trim();
-        const desc = (r['간단 설명'] || r['간단설명'] || r['Description'] || r['desc'] || '').toString().trim();
+        // v1.34: D컬럼 회사명 - 가능한 헤더 후보 다수
+        const company = (r['회사명'] || r['Company'] || r['기업명'] || r['회사'] || r['Name'] || '').toString().trim();
+        // v1.34: E컬럼 상세설명 - 가능한 헤더 후보 다수 (기존 '간단 설명'도 fallback)
+        const desc = (r['상세설명'] || r['상세 설명'] || r['Description'] || r['설명'] || r['간단 설명'] || r['간단설명'] || r['desc'] || '').toString().trim();
         if (tk && sec) {
           kjpMap[tk] = sec;
           kjpDescMap[tk] = desc;
+          if (company) kjpCompanyMap[tk] = company;
           if (!kjpSectorMap[sec]) kjpSectorMap[sec] = [];
-          kjpSectorMap[sec].push({ ticker: tk, desc });
+          kjpSectorMap[sec].push({ ticker: tk, desc, company });
         }
       });
       _state.tickerSectorMap = kjpMap;
       _state.kjpSectorMap = kjpSectorMap;
       _state.tickerDescMap = kjpDescMap;
+      _state.tickerCompanyMap = kjpCompanyMap;
       lsSet(LS.KJP_MAP, kjpMap);
       lsSet(LS.KJP_SECTOR_MAP, kjpSectorMap);
       lsSet(LS.KJP_DESC_MAP, kjpDescMap);
+      lsSet(LS.KJP_COMPANY_MAP, kjpCompanyMap);
     }
 
     // 2) Sector sheets — 병렬 다운로드 (v1.27: concurrency 6→10, retry 800→400ms)
@@ -8266,10 +8358,31 @@ async function openChart(ticker) {
   // Modal-level signal filter buttons (synced with main filter)
   renderSignalFilterInto($('modalSignalFilterArea'));
 
-  // Render
+  // v1.34: 새 헤더 구조 — 회사명 + (티커) / 종가 / 메타 / 상세설명
   const sec = _state.archive.find(r => r.Ticker === ticker)?.Sector || found.sector;
-  $('modalTitle').innerHTML = `${tickerLogoHtml(ticker, sec)}📊 ${escapeHtml(ticker)} V-Shape Analysis`;
-  $('modalSubtitle').innerHTML = `[${escapeHtml(sec)}] · <span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span> · Data: ${escapeHtml(dates[dates.length-1])} · 현재가: <b>$${lastPrice.toFixed(2)}</b>`;
+  const company = (_state.tickerCompanyMap || {})[ticker] || '';
+  const desc = (_state.tickerDescMap || {})[ticker] || '';
+
+  // 전일 대비 변동
+  const prevClose = closes.length >= 2 ? closes[closes.length - 2] : lastPrice;
+  const dayChg = lastPrice - prevClose;
+  const dayChgPct = prevClose > 0 ? (dayChg / prevClose * 100) : 0;
+  const chgCls = dayChg > 0 ? 'up' : dayChg < 0 ? 'down' : '';
+  const chgSign = dayChg >= 0 ? '+' : '';
+  const chgHtml = `<span class="price-chg ${chgCls}">${chgSign}$${Math.abs(dayChg).toFixed(2)} (${chgSign}${dayChgPct.toFixed(2)}%)</span>`;
+
+  // 1줄: 로고 + 회사명 + (티커)  — 회사명 없으면 티커만 크게
+  if (company) {
+    $('modalTitle').innerHTML = `${tickerLogoHtml(ticker, sec)}<span class="company-name">${escapeHtml(company)}</span><span class="ticker-paren">(${escapeHtml(ticker)})</span>`;
+  } else {
+    $('modalTitle').innerHTML = `${tickerLogoHtml(ticker, sec)}<span class="company-name">${escapeHtml(ticker)}</span>`;
+  }
+  // 2줄: 최근 종가 + 전일 대비
+  $('modalPrice').innerHTML = `$${lastPrice.toFixed(2)} ${chgHtml}`;
+  // 3줄: 섹터 + 고점 대비 + 데이터 일자
+  $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span><span class="sep">·</span><span>Data: ${escapeHtml(dates[dates.length-1])}</span>`;
+  // 4줄: 상세설명 (있으면 표시)
+  $('modalDesc').textContent = desc;
 
   // Save current ticker for re-render on filter change
   _state.openTicker = ticker;
@@ -8873,6 +8986,7 @@ window.addEventListener('DOMContentLoaded', () => {
   _state.tickerSectorMap = lsGet(LS.KJP_MAP, {});
   _state.kjpSectorMap    = lsGet(LS.KJP_SECTOR_MAP, {});
   _state.tickerDescMap   = lsGet(LS.KJP_DESC_MAP, {});
+  _state.tickerCompanyMap = lsGet(LS.KJP_COMPANY_MAP, {});  // v1.34
   // 사용자 수동 섹터 매핑 복원
   _state.userSectorMap = lsGet(LS.USER_SECTOR_MAP, {});
   // 저장된 사용자 ID 복원 (백엔드 백업용)
