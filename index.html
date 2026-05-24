@@ -132,64 +132,25 @@ if ('serviceWorker' in navigator) {
 html, body { overflow-x: hidden; max-width: 100%; }
 
 /* ============ SCROLLBAR — slim & refined (v1.25) ============ */
+/* v1.59: 모든 스크롤바 시각적으로 숨김 — 스크롤 기능은 유지
+   (디자인 깔끔하게, 토스 같은 모던 인상) */
 /* Firefox */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.18) transparent;
+  scrollbar-width: none;
 }
-[data-theme="light"] * {
-  scrollbar-color: rgba(40,30,15,0.22) transparent;
-}
-
 /* WebKit (Chrome / Safari / Edge / iOS PWA) */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 0;
+  height: 0;
+  display: none;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.14);
-  border-radius: 8px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  transition: background 0.18s ease;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.32);
-  background-clip: padding-box;
-}
-::-webkit-scrollbar-thumb:active {
-  background: rgba(255,255,255,0.5);
-  background-clip: padding-box;
-}
-::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-corner { display: none; }
 
-[data-theme="light"] ::-webkit-scrollbar-thumb {
-  background: rgba(40,30,15,0.20);
-  background-clip: padding-box;
-}
-[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(40,30,15,0.38);
-  background-clip: padding-box;
-}
-[data-theme="light"] ::-webkit-scrollbar-thumb:active {
-  background: rgba(40,30,15,0.55);
-  background-clip: padding-box;
-}
-
-/* 좁은 컨테이너용 더 슬림한 스크롤바 (테이블 가로 스크롤 등) */
-.sheet-wrap::-webkit-scrollbar,
-.sec-modal-table-wrap::-webkit-scrollbar,
-table.combo-eval::-webkit-scrollbar,
-.modal-content::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
 /* v1.55: iOS PWA — overscroll bounce 영역 색상 매칭 + 글로벌 tap highlight 제거 */
-html { background: var(--bg); -webkit-tap-highlight-color: transparent; }
-* { -webkit-tap-highlight-color: transparent; }
+html { background: var(--bg); -webkit-tap-highlight-color: transparent; -ms-overflow-style: none; }
+* { -webkit-tap-highlight-color: transparent; -ms-overflow-style: none; }
 
 body {
   font-family: '맑은 고딕', 'Malgun Gothic', Arial, sans-serif;
@@ -1180,7 +1141,111 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .archive-mobile-more:active { color: var(--text-hi); }
 
-/* ===== v1.52 종목 리스트 (탐색 탭) ===== */
+/* ============ v1.57 PC 사이드바 + 사이드 패널 (PC만, 모바일은 display:none) ============ */
+/* v1.58: data-pc-tab 단일 속성을 data-pc-page + data-pc-panel 두 속성으로 분리
+   - data-pc-page: "main" | "board" | "my" (메인 콘텐츠 영역 전환)
+   - data-pc-panel: "" | "discover" | "explore" (우측 사이드 패널 토글)
+   페이지 전환과 패널 토글이 독립적으로 동작 */
+.pc-sidebar {
+  display: none;  /* 모바일은 안 보임 (아래 @media에서 켜짐) */
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 64px;
+  background: var(--tab-bar-bg);
+  z-index: 90;
+  flex-direction: column;
+  padding: 16px 0;
+  gap: 6px;
+  border-left: 1px solid rgba(255,255,255,0.04);
+}
+[data-theme="light"] .pc-sidebar { border-left-color: rgba(0,0,0,0.06); }
+
+.pc-sidebar .pc-tab-btn {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 5px;
+  background: none; border: none;
+  width: 100%; padding: 12px 4px;
+  color: rgba(255, 255, 255, 0.42);
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.pc-sidebar .pc-tab-btn:hover { color: rgba(255, 255, 255, 0.7); }
+.pc-sidebar .pc-tab-btn.active { color: #ffffff; }
+.pc-sidebar .pc-tab-icon { width: 22px; height: 22px; }
+.pc-sidebar .pc-tab-label { font-size: 11px; font-weight: 500; }
+.pc-sidebar .pc-tab-btn.active .pc-tab-label { font-weight: 700; }
+
+[data-theme="light"] .pc-sidebar .pc-tab-btn { color: rgba(58, 50, 32, 0.5); }
+[data-theme="light"] .pc-sidebar .pc-tab-btn:hover { color: rgba(58, 50, 32, 0.8); }
+[data-theme="light"] .pc-sidebar .pc-tab-btn.active { color: var(--text-hi); }
+
+/* v1.58: 사이드 패널 — 항상 DOM에 있고 transform으로 슬라이드 인/아웃 */
+.pc-side-panel {
+  position: fixed;
+  top: 0; right: 64px;  /* 사이드바 폭만큼 안쪽 */
+  bottom: 0;
+  width: 420px;
+  background: var(--bg);
+  border-left: 1px solid rgba(255,255,255,0.06);
+  z-index: 80;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 18px 16px 32px;
+  box-sizing: border-box;
+  /* 디폴트: 화면 우측 밖으로 숨겨둠 (사이드바 폭 + 자기 폭만큼 우측으로) */
+  transform: translateX(calc(100% + 64px));
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-theme="light"] .pc-side-panel { border-left-color: rgba(0,0,0,0.08); }
+.pc-side-panel::-webkit-scrollbar { width: 6px; }
+.pc-side-panel::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 3px; }
+
+.pc-panel-content { display: none; }
+body[data-pc-panel="discover"] #pcPanelDiscover { display: block; }
+body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
+
+/* 사이드 패널 안 카드 — mobile-only 강제 표시 */
+.pc-side-panel section.card { margin-bottom: 14px; }
+.pc-side-panel section.card.mobile-only { display: block !important; }
+
+/* PC 전용 표시 컨트롤 */
+@media (min-width: 641px) {
+  .pc-sidebar { display: flex; }
+  /* 메인 컨테이너 — 정상: 사이드바 폭(64) + 살짝 여백(20) */
+  .container {
+    padding-right: calc(64px + 20px);
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* v1.58: 사이드 패널 열림 시 슬라이드 인 */
+  body[data-pc-panel="discover"] .pc-side-panel,
+  body[data-pc-panel="explore"] .pc-side-panel { transform: translateX(0); }
+
+  /* v1.62: 사이드 패널 열림 시 메인 콘텐츠 왼쪽 이동 — 가로 폭 유지!
+     이동량 = container의 좌측 여백(가운데 정렬 때문에 생긴 여유)만큼.
+     min(0px, (1500-vw)/2): vw>1500이면 음수 (좌측 이동), vw<=1500이면 0 (이동 X = 좌측 잘림 방지) */
+  body[data-pc-panel="discover"] .container,
+  body[data-pc-panel="explore"] .container {
+    transform: translateX(min(0px, calc((1500px - 100vw) / 2)));
+  }
+
+  /* === 페이지 전환 === */
+  /* 메인 페이지: AQUAMEL Dashboard와 보유주식 입력만 숨김 */
+  body[data-pc-page="main"] #dashboardCard,
+  body[data-pc-page="main"] #myPortfolioCard { display: none !important; }
+
+  /* 보드 페이지: dashboardCard만 표시 (다른 메인 카드 모두 숨김) */
+  body[data-pc-page="board"] .container > section.card { display: none !important; }
+  body[data-pc-page="board"] #dashboardCard { display: block !important; }
+
+  /* 마이 페이지: myPortfolioCard만 표시 + 시트 영역 크게 */
+  body[data-pc-page="my"] .container > section.card { display: none !important; }
+  body[data-pc-page="my"] #myPortfolioCard { display: block !important; }
+  body[data-pc-page="my"] .sheet-wrap { max-height: calc(100vh - 280px) !important; }
+}
 .stock-list-sort {
   position: relative;
   margin-left: auto;
@@ -3532,7 +3597,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.56</div>
+      <div class="v">v1.62</div>
     </div>
   </header>
 
@@ -3762,23 +3827,12 @@ table.combo-eval tbody td .nodata {
       </div>
 
       <div class="tabs-row">
-        <button class="tab-btn active" data-tab="portfolio">📊 현재 포트폴리오</button>
-        <button class="tab-btn" data-tab="trades">📜 매매이력</button>
+        <button class="tab-btn active" data-tab="trades">📜 매매이력</button>
+        <button class="tab-btn" data-tab="portfolio">📊 현재 포트폴리오</button>
       </div>
 
-      <!-- Portfolio tab -->
-      <div class="tab-content active" id="tab-portfolio">
-        <div class="sheet-toolbar">
-          <button class="btn sm secondary" onclick="portfolioSheet.addRow()">+ 행 추가</button>
-          <button class="btn sm secondary" onclick="portfolioSheet.clearAll()">🗑️ 전체 삭제</button>
-          <span class="sheet-help">엑셀 셀 복사 → 표 안에서 <kbd>Ctrl+V</kbd> 붙여넣기로 일괄 입력</span>
-        </div>
-        <div id="portfolioSheetMount"></div>
-        <div class="sheet-summary" id="portfolioSummary"></div>
-      </div>
-
-      <!-- Trades tab -->
-      <div class="tab-content" id="tab-trades">
+      <!-- Trades tab (v1.58: 디폴트) -->
+      <div class="tab-content active" id="tab-trades">
         <div class="sheet-toolbar">
           <button class="btn sm secondary" onclick="tradesSheet.addRow()">+ 행 추가</button>
           <button class="btn sm secondary" onclick="tradesSheet.clearAll()">🗑️ 전체 삭제</button>
@@ -3786,6 +3840,17 @@ table.combo-eval tbody td .nodata {
         </div>
         <div id="tradesSheetMount"></div>
         <div class="sheet-summary" id="tradesSummary"></div>
+      </div>
+
+      <!-- Portfolio tab -->
+      <div class="tab-content" id="tab-portfolio">
+        <div class="sheet-toolbar">
+          <button class="btn sm secondary" onclick="portfolioSheet.addRow()">+ 행 추가</button>
+          <button class="btn sm secondary" onclick="portfolioSheet.clearAll()">🗑️ 전체 삭제</button>
+          <span class="sheet-help">엑셀 셀 복사 → 표 안에서 <kbd>Ctrl+V</kbd> 붙여넣기로 일괄 입력</span>
+        </div>
+        <div id="portfolioSheetMount"></div>
+        <div class="sheet-summary" id="portfolioSummary"></div>
       </div>
     </div>
   </section>
@@ -3950,9 +4015,43 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.56 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.62 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
+
+<!-- v1.57 PC 사이드 패널 — 발견/탐색 클릭 시 표시 (모바일에선 display:none) -->
+<aside class="pc-side-panel" id="pcSidePanel" aria-label="PC 사이드 패널">
+  <div class="pc-panel-content" id="pcPanelDiscover" data-pc-tab="discover">
+    <!-- buyPointsCard + archiveMobileCard 가 JS로 여기로 이동 -->
+  </div>
+  <div class="pc-panel-content" id="pcPanelExplore" data-pc-tab="explore">
+    <!-- stockListCard 가 JS로 여기로 이동 -->
+  </div>
+</aside>
+
+<!-- v1.57 PC 우측 세로 사이드바 — 5개 메뉴 (모바일에선 display:none) -->
+<nav class="pc-sidebar" id="pcSidebar" aria-label="PC 네비게이션">
+  <button class="pc-tab-btn active" data-pc-tab="main" onclick="setPCTab('main')" aria-label="메인">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 4l9 8M5 10v10h14V10"/></svg>
+    <span class="pc-tab-label">메인</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="discover" onclick="setPCTab('discover')" aria-label="발견">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <span class="pc-tab-label">발견</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="explore" onclick="setPCTab('explore')" aria-label="탐색">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M16 8l-3 5-5 3 3-5z"/></svg>
+    <span class="pc-tab-label">탐색</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="board" onclick="setPCTab('board')" aria-label="보드">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+    <span class="pc-tab-label">보드</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="마이">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+    <span class="pc-tab-label">마이</span>
+  </button>
+</nav>
 
 <script>
 // ============================================================================
@@ -8607,6 +8706,16 @@ function applyFilterAndRender() {
     buildBuyPointsCard();
     buildArchiveMobileList();
   }
+  // v1.57: PC 사이드 패널이 열려 있으면 같이 재빌드 (v1.58: data-pc-panel 기준)
+  if (isPCViewport && isPCViewport()) {
+    const pcPanel = document.body.getAttribute('data-pc-panel');
+    if (pcPanel === 'discover') {
+      if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard();
+      if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
+    } else if (pcPanel === 'explore') {
+      if (typeof buildStockList === 'function') buildStockList();
+    }
+  }
 }
 
 // ============================================================================
@@ -9623,6 +9732,8 @@ window.addEventListener('DOMContentLoaded', () => {
   if (isMobileViewport()) document.body.classList.add('simple-mode');
   // v1.44: 모바일 탭 시스템 초기화 (디폴트 발견 탭)
   initMobileTabs();
+  // v1.57: PC 탭 시스템 초기화 (디폴트 메인 탭)
+  initPCTabs();
   // v1.26: 백엔드 URL 미설정 안내 → splash 에러로 처리 (autoLoadData 진입 시점)
   portfolioSheet = new SpreadsheetTable('portfolioSheetMount', PORTFOLIO_COLS, LS.PORTFOLIO, portfolioSummary, autoFillSector);
   tradesSheet    = new SpreadsheetTable('tradesSheetMount',    TRADE_COLS,     LS.TRADES,    tradesSummary,    autoFillSector);
@@ -9721,6 +9832,93 @@ function initMobileTabs() {
 }
 
 // ============================================================================
+// v1.57 PC 사이드바 + 사이드 패널
+// v1.58: page/panel 분리 — 페이지 전환과 패널 토글이 독립 동작
+//   page: "main" | "board" | "my" (메인/보드/마이 클릭 → 페이지 교체, 패널은 닫힘)
+//   panel: ""/null | "discover" | "explore" (발견/탐색 클릭 → 페이지 유지, 패널 토글)
+// ============================================================================
+function isPCViewport() { return window.matchMedia('(min-width: 641px)').matches; }
+
+// 페이지 전환 (메인 / 보드 / 마이) — 사이드 패널은 닫음
+function setPCPage(page) {
+  document.body.setAttribute('data-pc-page', page);
+  document.body.removeAttribute('data-pc-panel');  // 페이지 전환 시 패널 닫기
+  updatePCSidebarActive();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// 사이드 패널 토글 (발견 / 탐색) — 페이지는 유지
+function togglePCPanel(panel) {
+  const current = document.body.getAttribute('data-pc-panel');
+  if (current === panel) {
+    // 같은 패널 다시 클릭 → 닫기
+    document.body.removeAttribute('data-pc-panel');
+  } else {
+    document.body.setAttribute('data-pc-panel', panel);
+    // 패널 콘텐츠 빌드
+    if (panel === 'discover') {
+      if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard();
+      _archiveMobileShown = 10;
+      if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
+    } else if (panel === 'explore') {
+      if (typeof buildStockList === 'function') buildStockList();
+    }
+    // 패널 스크롤 맨 위로
+    const panelEl = document.getElementById('pcSidePanel');
+    if (panelEl) panelEl.scrollTop = 0;
+  }
+  updatePCSidebarActive();
+}
+
+// 사이드바 버튼 active 상태 갱신 — 현재 페이지 버튼 + (있다면) 현재 패널 버튼 둘 다
+function updatePCSidebarActive() {
+  const page = document.body.getAttribute('data-pc-page') || 'main';
+  const panel = document.body.getAttribute('data-pc-panel') || '';
+  document.querySelectorAll('.pc-tab-btn').forEach(b => {
+    const t = b.dataset.pcTab;
+    const isActive = (t === page) || (t === panel);
+    b.classList.toggle('active', isActive);
+  });
+}
+
+// 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
+function setPCTab(tab) {
+  if (tab === 'main' || tab === 'board' || tab === 'my') {
+    setPCPage(tab);
+  } else if (tab === 'discover' || tab === 'explore') {
+    togglePCPanel(tab);
+  }
+}
+
+// PC에서는 모바일 전용 카드(buyPoints/archiveMobile/stockList)를 사이드 패널 안으로 DOM 이동
+function relocateCardsForPC() {
+  if (!isPCViewport()) return;
+  const discoverPanel = document.getElementById('pcPanelDiscover');
+  const explorePanel = document.getElementById('pcPanelExplore');
+  if (discoverPanel) {
+    const bp = document.getElementById('buyPointsCard');
+    const am = document.getElementById('archiveMobileCard');
+    if (bp && bp.parentElement !== discoverPanel) discoverPanel.appendChild(bp);
+    if (am && am.parentElement !== discoverPanel) discoverPanel.appendChild(am);
+  }
+  if (explorePanel) {
+    const sl = document.getElementById('stockListCard');
+    if (sl && sl.parentElement !== explorePanel) explorePanel.appendChild(sl);
+  }
+}
+
+function initPCTabs() {
+  if (!isPCViewport()) return;
+  relocateCardsForPC();
+  if (!document.body.getAttribute('data-pc-page')) {
+    document.body.setAttribute('data-pc-page', 'main');
+  }
+  updatePCSidebarActive();
+}
+
+window.setPCTab = setPCTab;
+
+// ============================================================================
 // v1.44 매수 포인트 카드 (발견 탭 상단)
 // 최근 5거래일 시그널 + 활성 필터 + 현재 수익률 마이너스
 // ============================================================================
@@ -9766,7 +9964,7 @@ function buildBuyPointsCard() {
     const signalClose = r.Close_Price;
     if (!(signalClose > 0) || !(latestClose > 0)) return;
     const ret = (latestClose / signalClose - 1) * 100;
-    if (ret >= 0) return;
+    if (ret > 0) return;  // v1.57: 양수 아닌 것만 (0% 포함)
     items.push({
       ticker: r.Ticker,
       sector: r.Sector,
