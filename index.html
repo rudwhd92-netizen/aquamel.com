@@ -57,6 +57,8 @@ if ('serviceWorker' in navigator) {
   --panel: #252526; --panel-hi: #2d2d30;
   /* v1.41: 영역 구분 테두리 제거 — transparent로 (border: 1px solid var(--line) 유지 시 1px 공간은 남아 layout 시프트 없음) */
   --line: transparent; --line-2: transparent;
+  /* v1.48: 모바일 플로팅 탭바 배경 — 페이지 bg(#1e1e1e)보다 살짝 어둡게 */
+  --tab-bar-bg: #161616;
   --text: #d4d4d4; --text-hi: #ffffff; --text-dim: #9d9d9d; --text-mute: #6a6a6a;
   --accent: #569cd6; --accent-2: #4ec9b0; --string: #ce9178;
   --number: #b5cea8; --func: #dcdcaa; --const: #4fc1ff;
@@ -87,6 +89,8 @@ if ('serviceWorker' in navigator) {
   /* v1.41: 영역 구분 테두리 제거 (다크와 동일) */
   --line: transparent;
   --line-2: transparent;
+  /* v1.48: 라이트 탭바 배경 — 페이지 bg(#ece6d3)보다 살짝 어둡게 */
+  --tab-bar-bg: #dfd8c4;
   --text: #3a3220;
   --text-hi: #1f1810;
   --text-dim: #6b5d3f;
@@ -1012,6 +1016,242 @@ table.sheet tbody tr.drop-below td:last-child {
 .chart-legend { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-dim); }
 .chart-legend .lg-item { display: flex; align-items: center; gap: 6px; }
 .chart-legend .lg-shape { width: 12px; height: 12px; display: inline-block; }
+
+/* ============ v1.44 MOBILE TAB BAR + 탭별 카드 표시 ============ */
+/* PC 디폴트: 모바일 전용 카드/메뉴는 모두 숨김, PC는 기존 그대로 */
+.mobile-tab-bar { display: none; }
+.mobile-only { display: none; }
+
+/* ===== 매수 포인트 카드 (발견 탭 상단) — 토스 "관심 이벤트" 레퍼런스 ===== */
+.buy-points-scroll {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 0 4px;
+  scrollbar-width: none;
+}
+.buy-points-scroll::-webkit-scrollbar { display: none; }
+.buy-points-empty {
+  width: 100%; text-align: center;
+  color: var(--text-mute); font-size: 12px;
+  padding: 32px 12px;
+}
+.buy-point-item {
+  flex: 0 0 84px;
+  text-align: center;
+  cursor: pointer;
+  padding: 4px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.buy-point-item:active { opacity: 0.65; }
+.buy-point-item .bp-logo {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  object-fit: cover;
+  background: var(--bg-3);
+  display: block;
+}
+.buy-point-item .bp-name {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-hi);
+  font-family: Consolas, monospace;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+.buy-point-item .bp-date {
+  font-size: 11px;
+  color: var(--text-mute);
+  font-family: Consolas, monospace;
+}
+.buy-point-item .bp-ret {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--kr-down);
+  font-family: Consolas, monospace;
+  margin-top: 4px;
+}
+
+/* ===== 누적 신호 리스트 (발견 탭 하단) — 토스 "관심 종목" 레퍼런스 ===== */
+.archive-mobile-list {
+  display: flex; flex-direction: column;
+  /* 행 사이 자연스러운 간격 — 별도 박스 배경 없이 */
+}
+.archive-mobile-item {
+  display: grid;
+  /* [logo 48px | 티커+회사명 | 시그널 배지(가운데) | 날짜+수익률(우측)] */
+  grid-template-columns: 48px minmax(0, 96px) minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 4px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s;
+}
+.archive-mobile-item:active { opacity: 0.65; }
+.archive-mobile-item .am-logo {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-3);
+  display: block;
+}
+.archive-mobile-item .am-info { min-width: 0; }
+.archive-mobile-item .am-ticker {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-hi);
+  font-family: Consolas, monospace;
+  line-height: 1.15;
+  letter-spacing: 0.3px;
+}
+.archive-mobile-item .am-company {
+  font-size: 11px;
+  color: var(--text-mute);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 3px;
+}
+.archive-mobile-item .am-sigs {
+  display: flex; gap: 4px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  align-items: center;
+  min-width: 0;
+}
+.archive-mobile-item .am-sigs::-webkit-scrollbar { display: none; }
+.archive-mobile-item .am-sigs .sig-badge {
+  flex-shrink: 0;
+  font-size: 9px;
+  padding: 2px 6px;
+  margin: 0;
+}
+.archive-mobile-item .am-meta {
+  text-align: right;
+  font-family: Consolas, monospace;
+  flex-shrink: 0;
+}
+.archive-mobile-item .am-date {
+  font-size: 11px;
+  color: var(--text-mute);
+}
+.archive-mobile-item .am-ret {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 3px;
+}
+.archive-mobile-item .am-ret.up { color: var(--kr-up); }
+.archive-mobile-item .am-ret.down { color: var(--kr-down); }
+.archive-mobile-item .am-ret.zero { color: var(--text-mute); }
+.archive-mobile-more {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background: transparent;
+  color: var(--text-dim);
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.archive-mobile-more:active { color: var(--text-hi); }
+
+/* 탐색 탭 placeholder */
+.explore-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-mute);
+}
+.explore-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+.explore-empty-text { font-size: 14px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; }
+.explore-empty-sub { font-size: 11px; color: var(--text-mute); }
+
+/* 하단 플로팅 탭 메뉴 — v1.47 떠있는 위치 유지, 입체감(그림자/blur)만 제거 */
+.mobile-tab-bar {
+  position: fixed;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  left: calc(16px + env(safe-area-inset-left, 0px));
+  right: calc(16px + env(safe-area-inset-right, 0px));
+  background: var(--tab-bar-bg);
+  border-radius: 28px;
+  z-index: 100;
+  display: none;
+  justify-content: space-around;
+  align-items: stretch;
+  padding: 6px 4px;
+}
+.mobile-tab-bar .mtab-btn {
+  flex: 1;
+  background: none; border: none;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px;
+  padding: 8px 0 6px;
+  color: rgba(255, 255, 255, 0.42);
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 20px;
+}
+.mtab-btn .mtab-icon { width: 22px; height: 22px; display: block; }
+.mtab-btn .mtab-label { font-size: 10px; font-weight: 500; }
+.mtab-btn.active { color: #ffffff; }
+.mtab-btn.active .mtab-label { font-weight: 600; }
+.mtab-btn:active { opacity: 0.7; }
+
+/* 라이트모드 — 그림자 없음 (배경은 --tab-bar-bg 변수로 자동) */
+[data-theme="light"] .mobile-tab-bar .mtab-btn { color: rgba(58, 50, 32, 0.45); }
+[data-theme="light"] .mtab-btn.active { color: var(--text-hi); }
+
+/* ============ v1.44 MOBILE: 탭 전환 — 모바일에서만 적용 ============ */
+@media (max-width: 640px) {
+  /* 하단 플로팅 메뉴 표시 */
+  .mobile-tab-bar { display: flex; }
+
+  /* 메뉴 가리지 않게 body 하단 여백 (플로팅 메뉴 — 14px 띄움 + 메뉴 높이 + safe-area) */
+  body { padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)) !important; }
+
+  /* 모바일 전용 카드는 표시 (display:none → block) */
+  .mobile-only { display: block; }
+
+  /* v1.45: 인라인 display 우선순위 이기기 위해 !important 사용
+     (macroCard/dashboardCard/filterCard/archiveCard는 인라인 display:none/block을 갖기 때문에) */
+
+  /* 모든 카드 기본 숨김 */
+  /* v1.49 BUGFIX: 셀렉터 main.container → .container (HTML은 <div class="container">라 main이 아님 — 이거 때문에 탭 전환이 작동 안 했음) */
+  .container > section.card { display: none !important; }
+
+  /* 활성 탭에 매핑된 카드만 표시 */
+  body[data-mtab="discover"] section.card[data-mtab~="discover"] { display: block !important; }
+  body[data-mtab="sector"]   section.card[data-mtab~="sector"]   { display: block !important; }
+  body[data-mtab="explore"]  section.card[data-mtab~="explore"]  { display: block !important; }
+  body[data-mtab="board"]    section.card[data-mtab~="board"]    { display: block !important; }
+  body[data-mtab="my"]       section.card[data-mtab~="my"]       { display: block !important; }
+
+  /* 발견 탭에서는 PC용 archive 테이블 카드 숨기고 모바일 리스트만 */
+  body[data-mtab="discover"] #archiveCard { display: none !important; }
+
+  /* 카드 collapsed 무력화 — 모바일에선 항상 펼침. 단 #filterCard만 예외 (사용자가 토글 유지 요청) */
+  section.card:not(#filterCard).collapsed > .card-body { display: block !important; }
+  section.card:not(#filterCard) .toggle-icon { display: none !important; }
+  section.card:not(#filterCard) > .card-header { cursor: default !important; }
+  section.card:not(#filterCard).collapsed > .card-header { border-radius: 6px 6px 0 0 !important; margin-bottom: 0 !important; }
+}
 
 /* ============ SPLASH OVERLAY (v1.26 — game-style boot loader) ============ */
 .splash-overlay {
@@ -3132,13 +3372,13 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.43</div>
+      <div class="v">v1.51</div>
     </div>
   </header>
 
 
   <!-- ============ MACRO (after load) ============ -->
-  <section class="card" id="macroCard" style="display:none;">
+  <section class="card" id="macroCard" data-mtab="explore" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>🌍 매크로 지표</h2>
       <span class="toggle-icon">▼</span>
@@ -3149,7 +3389,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ SECTOR FRAMEWORK (정적 도식 + 정의) ============ -->
-  <section class="card" id="sectorFrameworkCard">
+  <section class="card" id="sectorFrameworkCard" data-mtab="sector">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>🗺️ AI 산업 12계층 40섹터 Framework</h2>
       <span class="toggle-icon">▼</span>
@@ -3177,7 +3417,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ SECTOR ANALYSIS (Equal-Weight Bars + 30D Cycle Heatmap) ============ -->
-  <section class="card" id="sectorAnalysisCard">
+  <section class="card" id="sectorAnalysisCard" data-mtab="sector">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>📊 40섹터 일간 동향 분석</h2>
       <span class="toggle-icon">▼</span>
@@ -3198,7 +3438,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ KJP INVESTMENT DASHBOARD (v1.29) ============ -->
-  <section class="card" id="dashboardCard" style="display:none;">
+  <section class="card" id="dashboardCard" data-mtab="board" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>📊 KJP Investment Dashboard</h2>
       <span class="dash-asof" id="dashAsof"></span>
@@ -3323,7 +3563,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <!-- ============ PORTFOLIO / TRADE HISTORY ============ -->
-  <section class="card">
+  <section class="card" id="myPortfolioCard" data-mtab="my">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>💼 개인 포트폴리오 & 매매이력</h2>
       <div class="user-save-controls" onclick="event.stopPropagation()">
@@ -3368,10 +3608,22 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+  <!-- ============ v1.44 MOBILE-ONLY: 매수 포인트 카드 (발견 탭 상단) ============ -->
+  <section class="card mobile-only" id="buyPointsCard" data-mtab="discover">
+    <div class="card-header">
+      <h2>매수 포인트</h2>
+    </div>
+    <div class="card-body">
+      <div class="buy-points-scroll" id="buyPointsScroll">
+        <div class="buy-points-empty">로딩 중…</div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ SIGNAL FILTER & 평가 ============ -->
-  <section class="card" id="filterCard" style="display:none;">
+  <section class="card" id="filterCard" data-mtab="discover" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
-      <h2>🎯 Signal Type 필터 & 평가</h2>
+      <h2>시그널 필터</h2>
       <span class="toggle-icon">▼</span>
     </div>
     <div class="card-body">
@@ -3403,7 +3655,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ ARCHIVE TABLE ============ -->
-  <section class="card" id="archiveCard" style="display:none;">
+  <section class="card" id="archiveCard" data-mtab="discover" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>📋 V-Shape Archive — 누적 신호</h2>
       <span class="toggle-icon">▼</span>
@@ -3413,6 +3665,59 @@ table.combo-eval tbody td .nodata {
       <div id="archiveTableArea"></div>
     </div>
   </section>
+
+  <!-- ============ v1.44 MOBILE-ONLY: 누적 신호 모바일 리스트 ============ -->
+  <section class="card mobile-only" id="archiveMobileCard" data-mtab="discover">
+    <div class="card-header">
+      <h2>누적 시그널</h2>
+    </div>
+    <div class="card-body">
+      <div class="archive-mobile-list" id="archiveMobileList">
+        <div class="buy-points-empty">로딩 중…</div>
+      </div>
+      <button class="archive-mobile-more" id="archiveMobileMore" onclick="loadMoreArchiveMobile()" style="display:none;">더 보기</button>
+    </div>
+  </section>
+
+  <!-- ============ v1.45 MOBILE-ONLY: 하단 플로팅 알약 메뉴 (그레이톤 SVG 아이콘) ============ -->
+  <nav class="mobile-tab-bar" id="mobileTabBar" aria-label="모바일 네비게이션">
+    <button class="mtab-btn" data-mtab="discover" onclick="switchMobileTab('discover')" aria-label="발견">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <span class="mtab-label">발견</span>
+    </button>
+    <button class="mtab-btn" data-mtab="sector" onclick="switchMobileTab('sector')" aria-label="섹터">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 20V10M9 20V4M15 20v-8M21 20V8"/>
+      </svg>
+      <span class="mtab-label">섹터</span>
+    </button>
+    <button class="mtab-btn" data-mtab="explore" onclick="switchMobileTab('explore')" aria-label="탐색">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M15.5 8.5l-2 5-5 2 2-5z"/>
+      </svg>
+      <span class="mtab-label">탐색</span>
+    </button>
+    <button class="mtab-btn" data-mtab="board" onclick="switchMobileTab('board')" aria-label="보드">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="9" rx="1.2"/>
+        <rect x="14" y="3" width="7" height="5" rx="1.2"/>
+        <rect x="14" y="12" width="7" height="9" rx="1.2"/>
+        <rect x="3" y="16" width="7" height="5" rx="1.2"/>
+      </svg>
+      <span class="mtab-label">보드</span>
+    </button>
+    <button class="mtab-btn" data-mtab="my" onclick="switchMobileTab('my')" aria-label="마이">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
+      </svg>
+      <span class="mtab-label">마이</span>
+    </button>
+  </nav>
 
   <!-- ============ LOADING OVERLAY ============ -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -3463,7 +3768,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.43 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.51 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -3584,6 +3889,7 @@ function autoCollapseHeavyCardsOnMobile() {
   const heavyCardH2s = [
     '🗺️ AI 산업 12계층 40섹터 Framework',
     '📊 40섹터 일간 동향 분석',
+    '시그널 필터',  // v1.51: 모바일에서 디폴트 축소
   ];
   heavyCardH2s.forEach(h2Text => {
     // 사용자가 한 번도 토글한 적 없으면 (state undefined) 기본 접힘
@@ -8114,6 +8420,11 @@ function applyFilterAndRender() {
   });
   $('filterCount').textContent = `${_state.filteredArchive.length} / ${_state.archive.length}건`;
   renderArchiveTable();
+  // v1.44: 모바일 발견 탭 컴포넌트도 재빌드 (필터 변경 반영)
+  if (isMobileViewport() && document.body.getAttribute('data-mtab') === 'discover') {
+    buildBuyPointsCard();
+    buildArchiveMobileList();
+  }
 }
 
 // ============================================================================
@@ -9128,6 +9439,8 @@ window.addEventListener('DOMContentLoaded', () => {
   if (savedUserId && $('userIdInput')) $('userIdInput').value = savedUserId;
   // 모바일이면 디폴트 simple-mode 클래스 적용 (범례 등 숨김)
   if (isMobileViewport()) document.body.classList.add('simple-mode');
+  // v1.44: 모바일 탭 시스템 초기화 (디폴트 발견 탭)
+  initMobileTabs();
   // v1.26: 백엔드 URL 미설정 안내 → splash 에러로 처리 (autoLoadData 진입 시점)
   portfolioSheet = new SpreadsheetTable('portfolioSheetMount', PORTFOLIO_COLS, LS.PORTFOLIO, portfolioSummary, autoFillSector);
   tradesSheet    = new SpreadsheetTable('tradesSheetMount',    TRADE_COLS,     LS.TRADES,    tradesSummary,    autoFillSector);
@@ -9185,7 +9498,231 @@ window.addEventListener('resize', () => {
   } else {
     document.body.classList.remove('simple-mode');
   }
+  // v1.44: 모바일 진입 시 탭 기본값 설정, PC 전환 시 data-mtab 제거
+  if (isMobileViewport()) {
+    if (!document.body.getAttribute('data-mtab')) switchMobileTab('discover');
+  } else {
+    document.body.removeAttribute('data-mtab');
+  }
 });
+
+// ============================================================================
+// v1.44 MOBILE TAB SYSTEM
+// ============================================================================
+let _archiveMobileShown = 10;
+
+function switchMobileTab(tab) {
+  document.body.setAttribute('data-mtab', tab);
+  document.querySelectorAll('.mtab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mtab === tab);
+  });
+  // 탭별 lazy 렌더링
+  if (tab === 'discover') {
+    buildBuyPointsCard();
+    _archiveMobileShown = 10;
+    buildArchiveMobileList();
+  }
+  // 스크롤 맨 위로
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function initMobileTabs() {
+  if (!isMobileViewport()) return;
+  // v1.45: data-mtab 즉시 설정 (CSS 탭 매칭이 바로 작동하도록)
+  if (!document.body.getAttribute('data-mtab')) {
+    document.body.setAttribute('data-mtab', 'discover');
+  }
+  // 디폴트 = 발견
+  switchMobileTab(document.body.getAttribute('data-mtab') || 'discover');
+}
+
+// ============================================================================
+// v1.44 매수 포인트 카드 (발견 탭 상단)
+// 최근 5거래일 시그널 + 활성 필터 + 현재 수익률 마이너스
+// ============================================================================
+function buildBuyPointsCard() {
+  const scrollEl = $('buyPointsScroll');
+  if (!scrollEl) return;
+  if (!_state.archive || !_state.archive.length) {
+    scrollEl.innerHTML = '<div class="buy-points-empty">데이터 로딩 중…</div>';
+    return;
+  }
+
+  // v1.51: "최근 5일" = 오늘 기준 calendar 5일 윈도우 (today, -1, -2, -3, -4)
+  // (이전: archive의 unique date 5개 — 거래일 띄엄띄엄 있으면 6일 전까지 포함되는 버그)
+  const todayStr = _state.latestDate
+    || _state.archive.map(r => r.Date).filter(Boolean).sort().slice(-1)[0];
+  if (!todayStr) {
+    scrollEl.innerHTML = '<div class="buy-points-empty">데이터 없음</div>';
+    return;
+  }
+  const todayDate = new Date(todayStr);
+  const cutoffDate = new Date(todayDate);
+  cutoffDate.setDate(todayDate.getDate() - 4);  // 4 빼서 5일 윈도우 (오늘 포함 5일)
+  const pad = n => String(n).padStart(2, '0');
+  const cutoff = `${cutoffDate.getFullYear()}-${pad(cutoffDate.getMonth()+1)}-${pad(cutoffDate.getDate())}`;
+
+  // 필터된 시그널 + 5일 윈도우 후보
+  const activeFilters = _state.signalFilter;
+  const candidates = [];
+  _state.archive.forEach(r => {
+    if (!r.Date || r.Date < cutoff) return;
+    const sigs = (r.Signal_Type || '').split('+').map(s => s.trim()).filter(Boolean);
+    const hasActive = sigs.some(s => activeFilters.has(s));
+    if (!hasActive) return;
+    candidates.push(r);
+  });
+
+  // 현재 수익률 계산 + 마이너스만
+  const items = [];
+  candidates.forEach(r => {
+    const found = findTickerSeries(r.Ticker);
+    if (!found || !found.rows || !found.rows.length) return;
+    const latestClose = found.rows[found.rows.length - 1].Close;
+    const signalClose = r.Close_Price;
+    if (!(signalClose > 0) || !(latestClose > 0)) return;
+    const ret = (latestClose / signalClose - 1) * 100;
+    if (ret >= 0) return;
+    items.push({
+      ticker: r.Ticker,
+      sector: r.Sector,
+      date: r.Date,
+      ret,
+    });
+  });
+
+  // 같은 티커가 여러 시그널 가지면 가장 최근 일자만
+  const byTicker = {};
+  items.forEach(it => {
+    if (!byTicker[it.ticker] || it.date > byTicker[it.ticker].date) byTicker[it.ticker] = it;
+  });
+  const dedup = Object.values(byTicker);
+
+  // v1.51: 정렬 — 최근일 순 (좌측이 가장 최근)
+  dedup.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  if (dedup.length === 0) {
+    scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 시그널 중 현재 마이너스 종목 없음 👌</div>';
+    return;
+  }
+
+  scrollEl.innerHTML = dedup.map(it => {
+    // 안전한 logo (handleLogoError 패턴)
+    const layer = SECTOR_TO_LAYER[it.sector] || '기타';
+    const layerFile = layerFileName(layer);
+    const tkFile = tickerFileName(it.ticker);
+    const logoHtml = tkFile
+      ? `<img class="bp-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+      : `<img class="bp-logo" src="./logos/layers/${encodeURIComponent(layerFile)}.png" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+    return `
+      <div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
+        ${logoHtml}
+        <div class="bp-name">${escapeHtml(it.ticker)}</div>
+        <div class="bp-date">${escapeHtml(it.date)}</div>
+        <div class="bp-ret">${it.ret.toFixed(1)}%</div>
+      </div>
+    `;
+  }).join('');
+
+  // 클릭 → 차트 모달
+  scrollEl.querySelectorAll('.buy-point-item').forEach(el => {
+    el.addEventListener('click', () => openChart(el.dataset.ticker));
+  });
+}
+
+// ============================================================================
+// v1.44 누적 신호 모바일 리스트 (발견 탭 하단)
+// ============================================================================
+function buildArchiveMobileList() {
+  const listEl = $('archiveMobileList');
+  const moreBtn = $('archiveMobileMore');
+  if (!listEl) return;
+  if (!_state.archive || !_state.archive.length) {
+    listEl.innerHTML = '<div class="buy-points-empty">데이터 로딩 중…</div>';
+    if (moreBtn) moreBtn.style.display = 'none';
+    return;
+  }
+
+  // 필터된 시그널만
+  const filtered = _state.archive.filter(r => {
+    const sigs = (r.Signal_Type || '').split('+').map(s => s.trim()).filter(Boolean);
+    return sigs.some(s => _state.signalFilter.has(s));
+  });
+
+  // 일자 desc 정렬
+  filtered.sort((a, b) => (b.Date || '').localeCompare(a.Date || ''));
+
+  const shown = filtered.slice(0, _archiveMobileShown);
+  if (shown.length === 0) {
+    listEl.innerHTML = '<div class="buy-points-empty">필터된 시그널 없음</div>';
+    if (moreBtn) moreBtn.style.display = 'none';
+    return;
+  }
+
+  // 각 항목의 현재 수익률 계산
+  const items = shown.map(r => {
+    const found = findTickerSeries(r.Ticker);
+    let ret = null;
+    if (found && found.rows && found.rows.length && r.Close_Price > 0) {
+      const latest = found.rows[found.rows.length - 1].Close;
+      if (latest > 0) ret = (latest / r.Close_Price - 1) * 100;
+    }
+    const company = (_state.tickerCompanyMap || {})[r.Ticker] || '';
+    const sigs = (r.Signal_Type || '').split('+').map(s => s.trim()).filter(Boolean);
+    return { ...r, company, ret, sigs };
+  });
+
+  listEl.innerHTML = items.map(it => {
+    // v1.50: 기존 안전 패턴 사용 (outerHTML escape 충돌 fix)
+    const layer = SECTOR_TO_LAYER[it.Sector] || '기타';
+    const layerFile = layerFileName(layer);
+    const tkFile = tickerFileName(it.Ticker);
+    const logoHtml = tkFile
+      ? `<img class="am-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+      : `<img class="am-logo" src="./logos/layers/${encodeURIComponent(layerFile)}.png" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+    const retCls = it.ret == null ? 'zero' : it.ret > 0 ? 'up' : it.ret < 0 ? 'down' : 'zero';
+    const retStr = it.ret == null ? '-' : (it.ret >= 0 ? '+' : '') + it.ret.toFixed(1) + '%';
+    return `
+      <div class="archive-mobile-item" data-ticker="${escapeAttr(it.Ticker)}">
+        ${logoHtml}
+        <div class="am-info">
+          <div class="am-ticker">${escapeHtml(it.Ticker)}</div>
+          <div class="am-company">${escapeHtml(it.company || '')}</div>
+        </div>
+        <div class="am-sigs">
+          ${it.sigs.map(s => `<span class="sig-badge ${escapeAttr(s)}" style="color:${SIGNAL_COLORS[s]||'#888'};border-color:${SIGNAL_COLORS[s]||'#888'};">${escapeHtml(s)}</span>`).join('')}
+        </div>
+        <div class="am-meta">
+          <div class="am-date">${escapeHtml((it.Date || '').slice(5))}</div>
+          <div class="am-ret ${retCls}">${retStr}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 더보기 버튼
+  if (moreBtn) {
+    if (filtered.length > _archiveMobileShown) {
+      moreBtn.style.display = '';
+      moreBtn.textContent = `더 보기 (${filtered.length - _archiveMobileShown}개 남음)`;
+    } else {
+      moreBtn.style.display = 'none';
+    }
+  }
+
+  // 클릭 → 차트 모달
+  listEl.querySelectorAll('.archive-mobile-item').forEach(el => {
+    el.addEventListener('click', () => openChart(el.dataset.ticker));
+  });
+}
+
+function loadMoreArchiveMobile() {
+  _archiveMobileShown += 10;
+  buildArchiveMobileList();
+}
+
+window.switchMobileTab = switchMobileTab;
+window.loadMoreArchiveMobile = loadMoreArchiveMobile;
 
 // Expose openChart globally for inline onclick
 window.openChart = openChart;
