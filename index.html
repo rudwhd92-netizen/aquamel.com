@@ -1039,7 +1039,7 @@ table.sheet tbody tr.drop-below td:last-child {
   padding: 32px 12px;
 }
 .buy-point-item {
-  flex: 0 0 84px;
+  flex: 0 0 76px;
   text-align: center;
   cursor: pointer;
   padding: 4px;
@@ -1048,15 +1048,15 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .buy-point-item:active { opacity: 0.65; }
 .buy-point-item .bp-logo {
-  width: 64px; height: 64px;
+  width: 56px; height: 56px;
   border-radius: 50%;
-  margin: 0 auto 10px;
+  margin: 0 auto 8px;
   object-fit: cover;
   background: var(--bg-3);
   display: block;
 }
 .buy-point-item .bp-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.2;
   color: var(--text-hi);
@@ -1065,19 +1065,19 @@ table.sheet tbody tr.drop-below td:last-child {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 .buy-point-item .bp-date {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-mute);
   font-family: Consolas, monospace;
 }
 .buy-point-item .bp-ret {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--kr-down);
   font-family: Consolas, monospace;
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 /* ===== 누적 신호 리스트 (발견 탭 하단) — 토스 "관심 종목" 레퍼런스 ===== */
@@ -1087,11 +1087,11 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .archive-mobile-item {
   display: grid;
-  /* [logo 48px | 티커+회사명 | 시그널 배지(가운데) | 날짜+수익률(우측)] */
-  grid-template-columns: 48px minmax(0, 96px) minmax(0, 1fr) auto;
-  gap: 12px;
+  /* [logo 42px | 티커+회사명 | 시그널 배지(가운데) | 날짜+수익률(우측)] */
+  grid-template-columns: 42px minmax(0, 92px) minmax(0, 1fr) auto;
+  gap: 10px;
   align-items: center;
-  padding: 14px 4px;
+  padding: 12px 4px;
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -1099,7 +1099,7 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .archive-mobile-item:active { opacity: 0.65; }
 .archive-mobile-item .am-logo {
-  width: 48px; height: 48px;
+  width: 42px; height: 42px;
   border-radius: 50%;
   object-fit: cover;
   background: var(--bg-3);
@@ -1107,15 +1107,15 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .archive-mobile-item .am-info { min-width: 0; }
 .archive-mobile-item .am-ticker {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-hi);
   font-family: Consolas, monospace;
   line-height: 1.15;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
 }
 .archive-mobile-item .am-company {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-mute);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1123,7 +1123,7 @@ table.sheet tbody tr.drop-below td:last-child {
   margin-top: 3px;
 }
 .archive-mobile-item .am-sigs {
-  display: flex; gap: 4px;
+  display: flex; gap: 3px;
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none;
@@ -1134,7 +1134,7 @@ table.sheet tbody tr.drop-below td:last-child {
 .archive-mobile-item .am-sigs .sig-badge {
   flex-shrink: 0;
   font-size: 9px;
-  padding: 2px 6px;
+  padding: 2px 5px;
   margin: 0;
 }
 .archive-mobile-item .am-meta {
@@ -1143,13 +1143,13 @@ table.sheet tbody tr.drop-below td:last-child {
   flex-shrink: 0;
 }
 .archive-mobile-item .am-date {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-mute);
 }
 .archive-mobile-item .am-ret {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  margin-top: 3px;
+  margin-top: 2px;
 }
 .archive-mobile-item .am-ret.up { color: var(--kr-up); }
 .archive-mobile-item .am-ret.down { color: var(--kr-down); }
@@ -1228,8 +1228,8 @@ table.sheet tbody tr.drop-below td:last-child {
 .stock-list-sector-header:first-child { padding-top: 6px; }
 .stock-list-row {
   display: grid;
-  /* 섹터명 | 로고 | 티커 | 종가+등락률(우측) */
-  grid-template-columns: minmax(60px, 88px) 36px minmax(0, 1fr) auto;
+  /* v1.54: 로고 | 티커 | 섹터 | 종가+등락률 (섹터를 티커 다음으로) */
+  grid-template-columns: 36px minmax(0, auto) minmax(0, 1fr) auto;
   gap: 10px;
   align-items: center;
   padding: 12px 4px;
@@ -1245,6 +1245,7 @@ table.sheet tbody tr.drop-below td:last-child {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 .stock-list-row .sl-logo {
   width: 36px; height: 36px;
@@ -1259,8 +1260,6 @@ table.sheet tbody tr.drop-below td:last-child {
   font-family: Consolas, monospace;
   letter-spacing: 0.2px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .stock-list-row .sl-meta {
   text-align: right;
@@ -1367,6 +1366,24 @@ table.sheet tbody tr.drop-below td:last-child {
   section.card:not(#filterCard) .toggle-icon { display: none !important; }
   section.card:not(#filterCard) > .card-header { cursor: default !important; }
   section.card:not(#filterCard).collapsed > .card-header { border-radius: 6px 6px 0 0 !important; margin-bottom: 0 !important; }
+
+  /* v1.54: 모바일 보드 탭 — AQUAMEL Dashboard 헤더 숨김 + 내부 sub-card 제목을 H2 수준으로 격상 */
+  body[data-mtab="board"] #dashboardCard > .card-header { display: none !important; }
+  body[data-mtab="board"] #dashboardCard > .card-body { margin-top: 0; }
+  body[data-mtab="board"] #dashboardCard > .card-body > .subtitle { display: none; }
+  /* 내부 dash-card-title을 발견 탭 매수 포인트 카드 헤더 수준으로 */
+  body[data-mtab="board"] #dashboardCard .dash-card-title {
+    font-size: 16px !important;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    color: var(--text-hi);
+    letter-spacing: -0.3px;
+  }
+  body[data-mtab="board"] #dashboardCard .dash-hist .dash-card-title {
+    font-size: 13px !important;
+    margin-bottom: 8px;
+  }
 }
 
 /* ============ SPLASH OVERLAY (v1.26 — game-style boot loader) ============ */
@@ -3488,7 +3505,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.52</div>
+      <div class="v">v1.54</div>
     </div>
   </header>
 
@@ -3496,7 +3513,7 @@ table.combo-eval tbody td .nodata {
   <!-- ============ MACRO (after load) ============ -->
   <section class="card" id="macroCard" data-mtab="explore" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
-      <h2>🌍 매크로 지표</h2>
+      <h2>매크로 지표</h2>
       <span class="toggle-icon">▼</span>
     </div>
     <div class="card-body">
@@ -3529,7 +3546,7 @@ table.combo-eval tbody td .nodata {
   <!-- ============ SECTOR FRAMEWORK (정적 도식 + 정의) ============ -->
   <section class="card" id="sectorFrameworkCard" data-mtab="sector">
     <div class="card-header" onclick="toggleCard(this)">
-      <h2>🗺️ AI 산업 12계층 40섹터 Framework</h2>
+      <h2>섹터 FRAME</h2>
       <span class="toggle-icon">▼</span>
     </div>
     <div class="card-body">
@@ -3557,17 +3574,17 @@ table.combo-eval tbody td .nodata {
   <!-- ============ SECTOR ANALYSIS (Equal-Weight Bars + 30D Cycle Heatmap) ============ -->
   <section class="card" id="sectorAnalysisCard" data-mtab="sector">
     <div class="card-header" onclick="toggleCard(this)">
-      <h2>📊 40섹터 일간 동향 분석</h2>
+      <h2>일간 섹터 동향</h2>
       <span class="toggle-icon">▼</span>
     </div>
     <div class="card-body">
       <div class="sa-layout">
         <div class="sa-left">
-          <div class="sa-panel-title">🏆 Custom Sectors (Equal-Weight)</div>
+          <div class="sa-panel-title">Custom Sectors (Equal-Weight)</div>
           <div id="saBarList" class="sa-bar-list"><div class="sa-empty">데이터 업데이트 후 표시됩니다.</div></div>
         </div>
         <div class="sa-right">
-          <div class="sa-panel-title">🌀 Cycle Analysis (30D Daily σ)</div>
+          <div class="sa-panel-title">Cycle Analysis (30D Daily σ)</div>
           <div id="saInsight"></div>
           <div id="saHeatmap" class="sa-heatmap-wrap"></div>
         </div>
@@ -3578,7 +3595,7 @@ table.combo-eval tbody td .nodata {
   <!-- ============ KJP INVESTMENT DASHBOARD (v1.29) ============ -->
   <section class="card" id="dashboardCard" data-mtab="board" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
-      <h2>📊 KJP Investment Dashboard</h2>
+      <h2>AQUAMEL Dashboard</h2>
       <span class="dash-asof" id="dashAsof"></span>
       <span class="toggle-icon">▼</span>
     </div>
@@ -3593,7 +3610,7 @@ table.combo-eval tbody td .nodata {
             <!-- 종합 수익금 -->
             <div class="dash-card dash-kpi-total">
               <div class="dash-card-header">
-                <div class="dash-card-title">💰 종합 수익금 (Total)</div>
+                <div class="dash-card-title">종합 수익금 (Total)</div>
                 <div class="dash-principal-info" id="dashPrincipalInfo">원금: $-</div>
               </div>
               <div class="dash-kpi-main-val">
@@ -3609,7 +3626,7 @@ table.combo-eval tbody td .nodata {
             <!-- 평가 + 운용원금 stack -->
             <div class="dash-side-stack">
               <div class="dash-card dash-mini">
-                <div class="dash-card-title">📉 평가 수익금 (Unrealized)</div>
+                <div class="dash-card-title">평가 수익금 (Unrealized)</div>
                 <div class="dash-mini-main">
                   <span class="dash-main-num" id="dashUnrealized">$0</span>
                   <span class="dash-main-sub" id="dashUnrealROI">(0.00%)</span>
@@ -3617,7 +3634,7 @@ table.combo-eval tbody td .nodata {
                 <div class="dash-mini-foot">확정 수익금: <span id="dashRealized">$0</span></div>
               </div>
               <div class="dash-card dash-mini">
-                <div class="dash-card-title">💵 운용 원금 (Principal)</div>
+                <div class="dash-card-title">운용 원금 (Principal)</div>
                 <div class="dash-mini-main">
                   <span class="dash-main-num" id="dashPrincipal">$0</span>
                   <span class="dash-main-sub" id="dashTotalAsset">총: $0</span>
@@ -3638,22 +3655,22 @@ table.combo-eval tbody td .nodata {
           <!-- History 3 cards row -->
           <div class="dash-hist-row">
             <div class="dash-card dash-hist">
-              <div class="dash-card-title">📅 월간 History</div>
+              <div class="dash-card-title">월간 History</div>
               <div class="dash-hist-body" id="dashHistMonth"></div>
             </div>
             <div class="dash-card dash-hist">
-              <div class="dash-card-title">📅 주간 History</div>
+              <div class="dash-card-title">주간 History</div>
               <div class="dash-hist-body" id="dashHistWeek"></div>
             </div>
             <div class="dash-card dash-hist">
-              <div class="dash-card-title">📅 일간 History</div>
+              <div class="dash-card-title">일간 History</div>
               <div class="dash-hist-body" id="dashHistDay"></div>
             </div>
           </div>
         </div>
         <!-- 오른쪽 도넛 -->
         <div class="dash-card dash-donut-card">
-          <div class="dash-card-title">🎨 주식 포트폴리오</div>
+          <div class="dash-card-title">주식 포트폴리오</div>
           <div class="dash-donut-wrap"><canvas id="dashDonutCanvas"></canvas></div>
           <div class="dash-donut-legend" id="dashDonutLegend"></div>
         </div>
@@ -3663,12 +3680,12 @@ table.combo-eval tbody td .nodata {
       <div class="dash-bottom-section">
         <div class="dash-bottom-col">
           <div class="dash-card dash-chart-card">
-            <div class="dash-card-title">📈 30일 평가수익금 추이 (보유 종목 × 종가 - 원금)</div>
+            <div class="dash-card-title">30일 평가수익금 추이</div>
             <div class="dash-chart-wrap"><canvas id="dashTrendCanvas"></canvas></div>
           </div>
           <div class="dash-card dash-holdings-card">
             <div class="dash-card-header">
-              <div class="dash-card-title">💼 보유 종목 현황</div>
+              <div class="dash-card-title">보유 종목 현황</div>
               <span class="dash-meta" id="dashHoldingsMeta">총 0종목</span>
             </div>
             <div class="dash-holdings-body" id="dashHoldingsBody"></div>
@@ -3677,12 +3694,12 @@ table.combo-eval tbody td .nodata {
         </div>
         <div class="dash-bottom-col">
           <div class="dash-card dash-chart-card">
-            <div class="dash-card-title">📊 섹터별 평가수익금 트렌드</div>
+            <div class="dash-card-title">섹터별 평가수익금 트렌드</div>
             <div class="dash-chart-wrap"><canvas id="dashSectorTrendCanvas"></canvas></div>
           </div>
           <div class="dash-card dash-matrix-card">
             <div class="dash-card-header" style="flex-direction:column; align-items:flex-start; gap:2px;">
-              <div class="dash-card-title">🦄 Decoupling Matrix</div>
+              <div class="dash-card-title">Decoupling Matrix</div>
               <div class="dash-meta" style="font-size:10px;">
                 X: 상관계수 / Y: Jensen Alpha · <span style="color:#fa5252;">빨강=익절</span> <span style="color:#339af0;">파랑=손절</span>
               </div>
@@ -3703,7 +3720,7 @@ table.combo-eval tbody td .nodata {
   <!-- ============ PORTFOLIO / TRADE HISTORY ============ -->
   <section class="card" id="myPortfolioCard" data-mtab="my">
     <div class="card-header" onclick="toggleCard(this)">
-      <h2>💼 개인 포트폴리오 & 매매이력</h2>
+      <h2>보유 주식 입력</h2>
       <div class="user-save-controls" onclick="event.stopPropagation()">
         <input type="text" id="userIdInput" placeholder="사용자ID (영문/숫자)" maxlength="20" autocomplete="off">
         <button class="btn sm" id="saveDataBtn" onclick="event.stopPropagation(); saveUserDataToBackend();" title="LocalStorage → 구글 시트로 백업 + 12계층 비중 재계산">💾 저장</button>
@@ -3795,7 +3812,7 @@ table.combo-eval tbody td .nodata {
   <!-- ============ ARCHIVE TABLE ============ -->
   <section class="card" id="archiveCard" data-mtab="discover" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
-      <h2>📋 V-Shape Archive — 누적 신호</h2>
+      <h2>V-Shape Archive — 누적 신호</h2>
       <span class="toggle-icon">▼</span>
     </div>
     <div class="card-body">
@@ -3906,7 +3923,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.52 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.54 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -4025,9 +4042,9 @@ function autoCollapseHeavyCardsOnMobile() {
   if (!window.matchMedia('(max-width: 640px)').matches) return;
   const states = lsGet(LS.CARDS, {});
   const heavyCardH2s = [
-    '🗺️ AI 산업 12계층 40섹터 Framework',
-    '📊 40섹터 일간 동향 분석',
-    '시그널 필터',  // v1.51: 모바일에서 디폴트 축소
+    '섹터 FRAME',       // v1.54 (ex: '🗺️ AI 산업 12계층 40섹터 Framework')
+    '일간 섹터 동향',    // v1.54 (ex: '📊 40섹터 일간 동향 분석')
+    '시그널 필터',
   ];
   heavyCardH2s.forEach(h2Text => {
     // 사용자가 한 번도 토글한 적 없으면 (state undefined) 기본 접힘
@@ -9957,9 +9974,9 @@ function renderStockRow(it) {
   const chgStr = (it.chg >= 0 ? '+' : '') + it.chg.toFixed(2) + '%';
   return `
     <div class="stock-list-row" data-ticker="${escapeAttr(it.ticker)}">
-      <div class="sl-sector">${escapeHtml(it.sector)}</div>
       ${logoHtml}
       <div class="sl-ticker">${escapeHtml(it.ticker)}</div>
+      <div class="sl-sector">${escapeHtml(it.sector)}</div>
       <div class="sl-meta">
         <div class="sl-price">$${it.close.toFixed(2)}</div>
         <div class="sl-chg ${chgCls}">${chgStr}</div>
