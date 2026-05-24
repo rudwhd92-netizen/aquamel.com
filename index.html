@@ -274,12 +274,14 @@ section.card.collapsed > .card-header { border-radius: 6px; margin-bottom: 0; }
   display: flex; gap: 6px; align-items: center;
   margin-left: auto; margin-right: 12px;
 }
-.user-save-controls input {
+.user-save-controls input { 
   padding: 6px 10px; font-size: 11px;
   background: var(--bg-3); color: var(--text);
   border: 1px solid var(--line); border-radius: 3px;
   width: 150px; font-family: inherit;
 }
+/* v1.64: 비밀번호 input — 좀 더 좁게 */
+.user-save-controls input#userPasswordInput { width: 120px; }
 .user-save-controls input:focus { outline: none; border-color: var(--accent); }
 .user-save-controls .btn.sm { padding: 6px 10px; font-size: 11px; white-space: nowrap; }
 .user-save-controls .btn.sm.secondary { padding: 6px 10px; }
@@ -3605,7 +3607,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.63</div>
+      <div class="v">v1.64</div>
     </div>
   </header>
 
@@ -3823,8 +3825,10 @@ table.combo-eval tbody td .nodata {
       <h2>보유 주식 입력</h2>
       <div class="user-save-controls" onclick="event.stopPropagation()">
         <input type="text" id="userIdInput" placeholder="사용자ID (영문/숫자)" maxlength="20" autocomplete="off">
+        <input type="password" id="userPasswordInput" placeholder="비밀번호 (선택)" maxlength="40" autocomplete="off">
         <button class="btn sm" id="saveDataBtn" onclick="event.stopPropagation(); saveUserDataToBackend();" title="LocalStorage → 구글 시트로 백업 + 12계층 비중 재계산">💾 저장</button>
         <button class="btn sm secondary" id="loadDataBtn" onclick="event.stopPropagation(); loadUserDataFromBackend();" title="구글 시트 백업 → LocalStorage로 복원 + 12계층 비중 재계산">📥 불러오기</button>
+        <button class="btn sm secondary" id="setPasswordBtn" onclick="event.stopPropagation(); openPasswordSetupModal();" title="비밀번호 설정 또는 변경">🔒 비밀번호</button>
       </div>
       <span class="toggle-icon">▼</span>
     </div>
@@ -3985,6 +3989,47 @@ table.combo-eval tbody td .nodata {
     </div>
   </div>
 
+  <!-- v1.64 비밀번호 설정/변경 모달 -->
+  <div class="modal-overlay" id="passwordSetupModal" onclick="closePasswordModalIfOverlay(event)">
+    <div class="modal-content" style="max-width:440px; padding:28px;">
+      <button class="modal-close" onclick="closePasswordSetupModal()">×</button>
+      <h2 style="margin:0 0 12px; font-size:18px;">🔒 비밀번호 설정</h2>
+      <p class="subtitle" style="margin:0 0 18px; font-size:12px;">
+        사용자 ID에 비밀번호를 걸어 저장된 데이터를 보호합니다. 한 번 설정하면 모든 저장/불러오기에 필요합니다.
+      </p>
+      <div id="passwordModalUserDisplay" style="font-size:12px; color:var(--text-mute); margin-bottom:14px;">
+        사용자 ID: <b id="passwordModalUserId" style="color:var(--text-hi); font-family:Consolas,monospace;">-</b>
+        <span id="passwordModalCurrentStatus" style="margin-left:8px;"></span>
+      </div>
+
+      <div id="passwordCurrentBlock" style="display:none; margin-bottom:14px;">
+        <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:4px;">현재 비밀번호</label>
+        <input type="password" id="passwordCurrentInput" maxlength="40" autocomplete="off"
+          style="width:100%; padding:8px 10px; box-sizing:border-box;">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:4px;">새 비밀번호 (4자 이상)</label>
+        <input type="password" id="passwordNewInput" maxlength="40" autocomplete="off"
+          style="width:100%; padding:8px 10px; box-sizing:border-box;">
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <label style="font-size:11px; color:var(--text-dim); display:block; margin-bottom:4px;">새 비밀번호 확인</label>
+        <input type="password" id="passwordNewConfirmInput" maxlength="40" autocomplete="off"
+          style="width:100%; padding:8px 10px; box-sizing:border-box;">
+      </div>
+
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button class="btn sm secondary" onclick="closePasswordSetupModal()">취소</button>
+        <button class="btn sm" onclick="submitPasswordSetup()">설정</button>
+      </div>
+      <p style="margin:14px 0 0; font-size:10px; color:var(--text-mute); line-height:1.5;">
+        ⚠ 비밀번호 분실 시 복구 불가. 시트 owner가 <code>users</code> 탭에서 해당 row 삭제 시 미설정 상태로 복귀.
+      </p>
+    </div>
+  </div>
+
   <!-- ============ MODAL ============ -->
   <div class="modal-overlay" id="chartModal" onclick="closeModalIfOverlay(event)">
     <div class="modal-content">
@@ -4023,7 +4068,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.63 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.64 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -4145,11 +4190,163 @@ const LS = {
   KJP_COMPANY_MAP: 'aquamel_vshape_kjp_company', // ticker → company name (D컬럼: 회사명) — v1.34
   USER_SECTOR_MAP: 'aquamel_vshape_user_sec', // 사용자 수동 매핑 (KJP400 외)
   USER_ID: 'aquamel_vshape_user_id',          // 사용자 ID (백엔드 저장용 키)
+  USER_PASSWORD_HASH: 'aquamel_vshape_user_pwd_hash',  // v1.64: 비밀번호 SHA-256 hash 캐시 (브라우저 별)
   LAYER_RETURN_PERIOD: 'aquamel_vshape_layer_return_period', // framework 등락률 조회 기간
   THEME: 'aquamel_vshape_theme',
 };
 function lsGet(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } }
 function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { console.error('LS save fail', e); } }
+
+// ============================================================================
+// v1.64: 비밀번호 관리 (SHA-256 hash + 백엔드 인증)
+// ============================================================================
+
+// 비밀번호 → SHA-256 hex (64자)
+async function sha256Hex(text) {
+  const buf = new TextEncoder().encode(String(text));
+  const hashBuf = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hashBuf))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+// 캐시된 비밀번호 hash 반환 (브라우저별 LocalStorage)
+function getCachedPasswordHash() {
+  return lsGet(LS.USER_PASSWORD_HASH, '') || '';
+}
+function setCachedPasswordHash(hash) {
+  if (hash) lsSet(LS.USER_PASSWORD_HASH, hash);
+  else localStorage.removeItem(LS.USER_PASSWORD_HASH);
+}
+
+// userIdInput + userPasswordInput 에서 현재 ID/비번 hash 가져옴
+// 비번 input이 비어 있고 캐시된 hash가 있으면 캐시 사용
+async function getCurrentUserAuth() {
+  const userId = ($('userIdInput')?.value || '').trim();
+  const rawPwd = ($('userPasswordInput')?.value || '');
+  let passwordHash = '';
+  if (rawPwd) {
+    passwordHash = await sha256Hex(rawPwd);
+    setCachedPasswordHash(passwordHash);  // 입력했으면 캐시 갱신
+  } else {
+    passwordHash = getCachedPasswordHash();
+  }
+  return { userId, passwordHash };
+}
+
+// 백엔드 응답이 needPassword/wrongPassword면 처리 (사용자에게 알림)
+function handlePasswordError(res) {
+  if (!res) return false;
+  if (res.needPassword) {
+    alert('🔒 이 사용자 ID는 비밀번호로 보호되어 있습니다.\n비밀번호를 입력하고 다시 시도하세요.');
+    $('userPasswordInput')?.focus();
+    return true;
+  }
+  if (res.wrongPassword) {
+    alert('🔒 비밀번호가 일치하지 않습니다.');
+    setCachedPasswordHash('');  // 캐시 무효화 (다음 시도 시 재입력 필요)
+    $('userPasswordInput').value = '';
+    $('userPasswordInput')?.focus();
+    return true;
+  }
+  return false;
+}
+
+// 비밀번호 설정 모달 열기
+async function openPasswordSetupModal() {
+  const userId = ($('userIdInput')?.value || '').trim();
+  if (!userId || !/^[a-zA-Z0-9_]{1,20}$/.test(userId)) {
+    alert('먼저 사용자 ID를 입력하세요 (영문/숫자/언더스코어 1~20자).');
+    $('userIdInput')?.focus();
+    return;
+  }
+  $('passwordModalUserId').textContent = userId;
+  $('passwordCurrentInput').value = '';
+  $('passwordNewInput').value = '';
+  $('passwordNewConfirmInput').value = '';
+
+  // 비밀번호 설정 여부 조회 (현재 상태에 따라 UI 분기)
+  $('passwordModalCurrentStatus').textContent = '확인 중...';
+  $('passwordCurrentBlock').style.display = 'none';
+  $('passwordSetupModal').classList.add('active');
+
+  try {
+    const res = await apiCall('userHasPassword', { userId });
+    if (res && res.ok) {
+      if (res.hasPassword) {
+        $('passwordModalCurrentStatus').innerHTML = '· <span style="color:var(--success);">비밀번호 설정됨</span> → 변경 모드';
+        $('passwordCurrentBlock').style.display = 'block';
+      } else {
+        $('passwordModalCurrentStatus').innerHTML = '· <span style="color:var(--text-dim);">아직 비밀번호 없음</span> → 신규 설정';
+      }
+    } else {
+      $('passwordModalCurrentStatus').innerHTML = '· <span style="color:var(--danger);">상태 조회 실패</span>';
+    }
+  } catch (err) {
+    $('passwordModalCurrentStatus').innerHTML = '· <span style="color:var(--danger);">백엔드 연결 실패</span>';
+  }
+}
+
+function closePasswordSetupModal() {
+  $('passwordSetupModal').classList.remove('active');
+}
+function closePasswordModalIfOverlay(e) {
+  if (e.target.id === 'passwordSetupModal') closePasswordSetupModal();
+}
+
+// 비밀번호 설정/변경 실행
+async function submitPasswordSetup() {
+  const userId = ($('passwordModalUserId').textContent || '').trim();
+  const cur = $('passwordCurrentInput').value;
+  const newPwd = $('passwordNewInput').value;
+  const newPwd2 = $('passwordNewConfirmInput').value;
+
+  if (!newPwd || newPwd.length < 4) {
+    alert('새 비밀번호는 4자 이상이어야 합니다.');
+    $('passwordNewInput').focus();
+    return;
+  }
+  if (newPwd !== newPwd2) {
+    alert('새 비밀번호 확인이 일치하지 않습니다.');
+    $('passwordNewConfirmInput').focus();
+    return;
+  }
+
+  const newHash = await sha256Hex(newPwd);
+  const currentBlockVisible = $('passwordCurrentBlock').style.display !== 'none';
+  let currentHash = '';
+  if (currentBlockVisible) {
+    if (!cur) {
+      alert('현재 비밀번호를 입력하세요.');
+      $('passwordCurrentInput').focus();
+      return;
+    }
+    currentHash = await sha256Hex(cur);
+  }
+
+  try {
+    const res = await apiCall('setUserPassword', {
+      userId,
+      currentHash,
+      newHash,
+    });
+    if (res && res.ok) {
+      alert('✅ 비밀번호가 ' + (res.action === 'created' || res.action === 'set_first_time' ? '설정' : '변경') + '되었습니다.');
+      setCachedPasswordHash(newHash);  // 캐시 갱신
+      $('userPasswordInput').value = '';  // 입력란 비움 (캐시 우선)
+      closePasswordSetupModal();
+    } else {
+      alert('❌ ' + (res?.error || '비밀번호 설정 실패'));
+    }
+  } catch (err) {
+    alert('❌ 백엔드 통신 실패: ' + err.message);
+  }
+}
+
+window.openPasswordSetupModal = openPasswordSetupModal;
+window.closePasswordSetupModal = closePasswordSetupModal;
+window.closePasswordModalIfOverlay = closePasswordModalIfOverlay;
+window.submitPasswordSetup = submitPasswordSetup;
 
 // ============================================================================
 // CARD TOGGLE
@@ -4966,6 +5163,9 @@ async function saveUserDataToBackend() {
   }
   lsSet(LS.USER_ID, userId);
 
+  // v1.64: 비밀번호 hash (입력란 또는 캐시)
+  const { passwordHash } = await getCurrentUserAuth();
+
   const btn = $('saveDataBtn');
   const origText = btn.textContent;
   btn.disabled = true;
@@ -5007,8 +5207,8 @@ async function saveUserDataToBackend() {
 
     // PF + HISTORY 병렬 (서로 다른 탭 — 충돌 없음)
     const [pfResult, trResult] = await Promise.all([
-      _deltaSync(userId, 'PF',      pfRows, makeCb('pf')),
-      _deltaSync(userId, 'HISTORY', trRows, makeCb('hist')),
+      _deltaSync(userId, 'PF',      pfRows, makeCb('pf'),   passwordHash),
+      _deltaSync(userId, 'HISTORY', trRows, makeCb('hist'), passwordHash),
     ]);
 
     // framework 비중 갱신 (트리거)
@@ -5058,7 +5258,7 @@ function _adaptiveChunkSize(json) {
   return Math.min(4000, Math.max(500, Math.floor(5500 / inflation)));
 }
 
-async function _sendDeltaToBackend(userId, dataType, upserts, deletes, onProgress) {
+async function _sendDeltaToBackend(userId, dataType, upserts, deletes, onProgress, passwordHash) {
   // payload = JSON 문자열로 만든 { upserts: [...], deletes: [...] }
   const payload = JSON.stringify({ upserts, deletes });
   const MAX_CHUNK = _adaptiveChunkSize(payload);
@@ -5069,8 +5269,12 @@ async function _sendDeltaToBackend(userId, dataType, upserts, deletes, onProgres
     const res = await apiCall('applyDeltaSave', {
       userId, dataType, payload,
       chunkId: '', seq: 0, total: 1,
+      passwordHash,
     });
-    if (!res || !res.ok) throw new Error(res && res.error || 'apply failed');
+    if (!res || !res.ok) {
+      if (handlePasswordError(res)) throw new Error('auth failed');
+      throw new Error(res && res.error || 'apply failed');
+    }
     if (onProgress) onProgress(1, 1, 'done');
     return res;
   }
@@ -5092,11 +5296,15 @@ async function _sendDeltaToBackend(userId, dataType, upserts, deletes, onProgres
       batch.push(apiCall('applyDeltaSave', {
         userId, dataType, payload: chunks[i],
         chunkId, seq: i, total: N,
+        passwordHash,
       }));
     }
     const results = await Promise.all(batch);
     results.forEach((res, idx) => {
-      if (!res || !res.ok) throw new Error(`chunk ${start+idx+1}/${N} failed: ${res && res.error}`);
+      if (!res || !res.ok) {
+        if (handlePasswordError(res)) throw new Error('auth failed');
+        throw new Error(`chunk ${start+idx+1}/${N} failed: ${res && res.error}`);
+      }
     });
     completed = end;
     if (onProgress) onProgress(completed, N, 'send');
@@ -5107,13 +5315,17 @@ async function _sendDeltaToBackend(userId, dataType, upserts, deletes, onProgres
   const res = await apiCall('applyDeltaSave', {
     userId, dataType, payload: chunks[N-1],
     chunkId, seq: N-1, total: N,
+    passwordHash,
   });
-  if (!res || !res.ok) throw new Error(`final commit failed: ${res && res.error}`);
+  if (!res || !res.ok) {
+    if (handlePasswordError(res)) throw new Error('auth failed');
+    throw new Error(`final commit failed: ${res && res.error}`);
+  }
   if (onProgress) onProgress(N, N, 'done');
   return res;
 }
 
-async function _deltaSync(userId, dataType, localRows, onProgress) {
+async function _deltaSync(userId, dataType, localRows, onProgress, passwordHash) {
   // 1) 로컬 _id 부여 보장 (행에 ticker 있는데 _id 없으면 마이그레이션)
   localRows.forEach(r => { if (!r._id) r._id = _genId(); });
 
@@ -5125,10 +5337,11 @@ async function _deltaSync(userId, dataType, localRows, onProgress) {
     localHashes[r._id] = _rowHash(r);
   });
 
-  // 3) 시트 매니페스트 fetch
+  // 3) 시트 매니페스트 fetch (v1.64: passwordHash 전달)
   if (onProgress) onProgress('manifest');
-  const mRes = await apiCall('getUserDataManifest', { userId, dataType });
+  const mRes = await apiCall('getUserDataManifest', { userId, dataType, passwordHash });
   if (!mRes || !mRes.ok) {
+    if (handlePasswordError(mRes)) throw new Error('auth failed');
     throw new Error(mRes && mRes.error || 'manifest fetch failed');
   }
 
@@ -5165,8 +5378,8 @@ async function _deltaSync(userId, dataType, localRows, onProgress) {
     if (!ok) throw new Error(`사용자 취소 (${dataType} 대량 삭제 방지)`);
   }
 
-  // 7) 변경분만 전송
-  await _sendDeltaToBackend(userId, dataType, toUpsert, toDelete, onProgress);
+  // 7) 변경분만 전송 (passwordHash 같이)
+  await _sendDeltaToBackend(userId, dataType, toUpsert, toDelete, onProgress, passwordHash);
 
   return {
     upserted: toUpsert.length,
@@ -5200,6 +5413,10 @@ async function loadUserDataFromBackend() {
   }
 
   lsSet(LS.USER_ID, userId);
+
+  // v1.64: 비밀번호 hash
+  const { passwordHash } = await getCurrentUserAuth();
+
   const btn = $('loadDataBtn');
   const origText = btn.textContent;
   btn.disabled = true;
@@ -5207,9 +5424,17 @@ async function loadUserDataFromBackend() {
 
   try {
     const [pfRes, trRes] = await Promise.all([
-      apiCall('loadUserData', { userId, dataType: 'PF' }),
-      apiCall('loadUserData', { userId, dataType: 'HISTORY' }),
+      apiCall('loadUserData', { userId, dataType: 'PF',      passwordHash }),
+      apiCall('loadUserData', { userId, dataType: 'HISTORY', passwordHash }),
     ]);
+
+    // v1.64: 비밀번호 에러 처리 (한쪽이라도 인증 실패면 안내)
+    if (pfRes && (pfRes.needPassword || pfRes.wrongPassword)) {
+      handlePasswordError(pfRes); return;
+    }
+    if (trRes && (trRes.needPassword || trRes.wrongPassword)) {
+      handlePasswordError(trRes); return;
+    }
 
     // 둘 다 실패한 경우만 throw — 하나만 없는 건 OK (예: PF만 저장된 사용자)
     if ((!pfRes || !pfRes.ok) && (!trRes || !trRes.ok)) {
