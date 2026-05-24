@@ -1232,6 +1232,14 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
     transform: translateX(min(0px, calc((1500px - 100vw) / 2)));
   }
 
+  /* v1.63: 차트 모달도 사이드 패널 열렸을 때 가용 영역(좌측)만 차지 → 모달이 사이드 패널에 안 가려짐
+     overlay 폭 자체를 줄이면 안의 modal-content가 자연스럽게 가용 영역 안에서 가운데 정렬됨 */
+  .modal-overlay { transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+  body[data-pc-panel="discover"] .modal-overlay,
+  body[data-pc-panel="explore"] .modal-overlay {
+    width: calc(100vw - 64px - 420px);
+  }
+
   /* === 페이지 전환 === */
   /* 메인 페이지: AQUAMEL Dashboard와 보유주식 입력만 숨김 */
   body[data-pc-page="main"] #dashboardCard,
@@ -3597,7 +3605,7 @@ table.combo-eval tbody td .nodata {
         <span class="theme-icon icon-light">☀️</span>
         <span class="theme-icon icon-dark">🌙</span>
       </button>
-      <div class="v">v1.62</div>
+      <div class="v">v1.63</div>
     </div>
   </header>
 
@@ -4015,7 +4023,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.62 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.63 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
