@@ -188,7 +188,7 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 12px;
 }
-.hero h1 { font-family: Arial, sans-serif; font-weight: 700; font-size: 34px; color: var(--text-hi); }
+.hero h1 { font-family: 'Pretendard Variable', Pretendard, Arial, sans-serif; font-weight: 700; font-size: 34px; color: var(--text-hi); letter-spacing: -0.5px; }
 .hero h1 .hl { color: var(--accent); }
 .hero-brand { display: flex; flex-direction: column; gap: 4px; }
 .hero-tagline {
@@ -294,6 +294,11 @@ body {
   .market-switch { padding: 2px; }
   .market-switch .mkt-btn { padding: 3px 8px 3px 3px; font-size: 11px; gap: 4px; }
   .market-switch .mkt-flag { width: 16px; height: 16px; }
+  /* v1.88: 모바일에서 hero 영역을 세로 배치 — 로고 가려지는 문제 해결 */
+  .hero { flex-direction: column; align-items: flex-start; gap: 10px; padding-bottom: 14px; margin-bottom: 18px; }
+  .hero h1 { font-size: 26px; }
+  .hero-brand { width: 100%; }
+  .hero .meta { width: 100%; justify-content: flex-end; }
 }
 
 /* ============ CARDS (collapsible) ============ */
@@ -301,7 +306,7 @@ section.card {
   background: var(--panel); border: 1px solid var(--line);
   border-radius: 6px; padding: 20px; margin-bottom: 16px;
 }
-section.card h2 { font-family: Arial, sans-serif; font-size: 16px; font-weight: 600; color: var(--text-hi); }
+section.card h2 { font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; font-size: 16px; font-weight: 600; color: var(--text-hi); letter-spacing: -0.2px; }
 section.card .subtitle { color: var(--text-dim); font-size: 11px; margin-bottom: 16px; }
 
 section.card .card-header {
@@ -1589,7 +1594,7 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
   }
 }
 .splash-brand {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   font-size: 22px;
   color: #ffffff;
   letter-spacing: 4px;
@@ -1599,7 +1604,7 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
 .splash-brand-strong { font-weight: 700; }
 .splash-brand-thin   { font-weight: 200; opacity: 0.78; }
 .splash-tagline {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   font-size: 10px;
   font-weight: 300;
   color: rgba(255,255,255,0.42);
@@ -2061,7 +2066,7 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
   white-space: nowrap;
   z-index: 3;
   opacity: 0.55;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
 }
 .dash-mtx-q-tl { top: 10px;    left: 12px;  color: #a78bfa; }
 .dash-mtx-q-tr { top: 10px;    right: 12px; color: #fa5252; }
@@ -3671,7 +3676,7 @@ table.combo-eval tbody td .nodata {
           <span class="mkt-label">KR</span>
         </button>
       </div>
-      <div class="v">v1.76</div>
+      <div class="v">v1.91</div>
     </div>
   </header>
 
@@ -4132,7 +4137,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.76 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.91 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -4353,43 +4358,46 @@ function fmtMoney(v) {
 }
 
 // ============================================================================
-// v1.71: 사용자 데이터 시장별 분리 — LS 키 + 백엔드 dataType suffix
-//   기존 LS.PORTFOLIO / LS.TRADES → 시장별로 _us / _kr 접미사
-//   기존 데이터는 페이지 로드 시 자동으로 _us로 마이그레이션 (US 가정)
+// v1.71: 사용자 데이터 시장별 분리
+// v1.85: US는 기존 'PF'/'HISTORY' + LS 키 그대로, KR만 'PF_KR'/'HISTORY_KR' + '_kr' LS 키
+//   사용자 입장에서 기존 데이터 그대로 사용 (마이그레이션 불필요)
 // ============================================================================
 function lsKeyPF(mkt) {
-  return 'aquamel_vshape_portfolio_' + (mkt || getCurrentMarket()).toLowerCase();
+  const m = mkt || getCurrentMarket();
+  return m === 'KR' ? 'aquamel_vshape_portfolio_kr' : 'aquamel_vshape_portfolio';
 }
 function lsKeyTrades(mkt) {
-  return 'aquamel_vshape_trades_' + (mkt || getCurrentMarket()).toLowerCase();
+  const m = mkt || getCurrentMarket();
+  return m === 'KR' ? 'aquamel_vshape_trades_kr' : 'aquamel_vshape_trades';
 }
-// 백엔드 dataType — saveUserData/loadUserData/getUserDataManifest/applyDeltaSave 호출 시 사용
-function dataTypePF()     { return 'PF'      + (getMarketConfig().dataTypeSuffix || '_US'); }
-function dataTypeTrades() { return 'HISTORY' + (getMarketConfig().dataTypeSuffix || '_US'); }
+// 백엔드 dataType — US: 'PF'/'HISTORY' (기존 탭), KR: 'PF_KR'/'HISTORY_KR' (새 탭)
+function dataTypePF()     { return getCurrentMarket() === 'KR' ? 'PF_KR'      : 'PF'; }
+function dataTypeTrades() { return getCurrentMarket() === 'KR' ? 'HISTORY_KR' : 'HISTORY'; }
 
-// 마이그레이션: 페이지 진입 시 기존 LS.PORTFOLIO / LS.TRADES → _us 로 이동
+// v1.85: v1.71~v1.83에서 강제로 _us로 옮긴 데이터를 원래 자리로 복원
+//   (사용자가 그동안 매매이력 저장 못 했을 수 있어 LS 데이터만 보존)
 function _migrateLegacyUserData() {
   try {
-    const legacyPF = localStorage.getItem('aquamel_vshape_portfolio');
-    const legacyTR = localStorage.getItem('aquamel_vshape_trades');
-    if (legacyPF) {
-      // 기존 _us 데이터가 비어있으면 마이그레이션, 있으면 그대로 (사용자 작업 우선)
-      const existing = localStorage.getItem(lsKeyPF('US'));
-      if (!existing || existing === '[]' || existing === 'null') {
-        localStorage.setItem(lsKeyPF('US'), legacyPF);
-      }
-      localStorage.removeItem('aquamel_vshape_portfolio');
+    // PF: _us → 원래 키
+    const usPF = localStorage.getItem('aquamel_vshape_portfolio_us');
+    const basePF = localStorage.getItem('aquamel_vshape_portfolio');
+    if (usPF && (!basePF || basePF === '[]' || basePF === 'null')) {
+      localStorage.setItem('aquamel_vshape_portfolio', usPF);
+      console.log('[Migration] aquamel_vshape_portfolio_us → aquamel_vshape_portfolio 되돌림');
     }
-    if (legacyTR) {
-      const existing = localStorage.getItem(lsKeyTrades('US'));
-      if (!existing || existing === '[]' || existing === 'null') {
-        localStorage.setItem(lsKeyTrades('US'), legacyTR);
-      }
-      localStorage.removeItem('aquamel_vshape_trades');
+    if (usPF) localStorage.removeItem('aquamel_vshape_portfolio_us');
+
+    // TRADES: _us → 원래 키
+    const usTR = localStorage.getItem('aquamel_vshape_trades_us');
+    const baseTR = localStorage.getItem('aquamel_vshape_trades');
+    if (usTR && (!baseTR || baseTR === '[]' || baseTR === 'null')) {
+      localStorage.setItem('aquamel_vshape_trades', usTR);
+      console.log('[Migration] aquamel_vshape_trades_us → aquamel_vshape_trades 되돌림');
     }
+    if (usTR) localStorage.removeItem('aquamel_vshape_trades_us');
   } catch (e) { console.warn('Legacy 마이그레이션 실패:', e); }
 }
-// 즉시 실행 (LS 정의 직후, 다른 코드들이 키를 참조하기 전에)
+// 즉시 실행
 _migrateLegacyUserData();
 
 // v1.70: 시장에 맞는 종목 표시명
@@ -5244,8 +5252,10 @@ function openColMenu(table, colKey, anchorEl) {
   // 현재 필터
   const curFilter = table.colFilters[colKey];
 
+  // v1.90: dynamicLabel 평가
+  const colLabelMenu = (typeof col.dynamicLabel === 'function') ? col.dynamicLabel() : col.label;
   let html = `
-    <div class="cm-title">${escapeHtml(col.label)} — 정렬 및 필터</div>
+    <div class="cm-title">${escapeHtml(colLabelMenu)} — 정렬 및 필터</div>
     <div class="cm-sort">
       <button class="${sortAsc?'active':''}" data-cm-sort="asc">↑ 오름차순</button>
       <button class="${sortDesc?'active':''}" data-cm-sort="desc">↓ 내림차순</button>
@@ -5514,16 +5524,19 @@ async function saveUserDataToBackend() {
     };
     alert(
       `✓ 동기화 완료 (${elapsed}s)\n` +
-      summarize(`${userId}_PF`, pfResult) + '\n' +
-      summarize(`${userId}_HISTORY`, trResult) + '\n\n' +
+      summarize(`${userId}_${dataTypePF()}`,     pfResult) + '\n' +
+      summarize(`${userId}_${dataTypeTrades()}`, trResult) + '\n\n' +
       `12계층 framework 비중도 다시 계산됨.`
     );
   } catch (err) {
     const msg = String(err && err.message || err);
-    if (/unknown action|action.*not found|getUserDataManifest|applyDeltaSave/.test(msg)) {
-      alert(`백엔드에 델타 동기화 함수가 없습니다.\n\nApps Script를 v2.7 통합본으로 업데이트해주세요. (제공된 .gs 파일 전체를 Apps Script 에디터에 붙여넣고 재배포)\n\n원본 에러: ${msg}`);
+    // v1.82: 백엔드 v2.9 미배포 명확히 안내 (PF_US/PF_KR/HISTORY_US/HISTORY_KR validator)
+    if (/dataType은 PF 또는 HISTORY 만 가능|PF\/HISTORY 또는 PF_US/.test(msg)) {
+      alert(`❌ 백엔드 버전이 옛 버전입니다.\n\nApps Script Code.gs를 v2.9로 교체하고 재배포 해주세요.\n(매매이력 시장별 분리를 위해 dataType에 _US/_KR 접미사를 허용해야 함)\n\n원본 에러: ${msg}`);
+    } else if (/unknown action|action.*not found|getUserDataManifest|applyDeltaSave/.test(msg)) {
+      alert(`백엔드에 델타 동기화 함수가 없습니다.\n\nApps Script를 v2.9 통합본으로 업데이트해주세요. (제공된 .gs 파일 전체를 Apps Script 에디터에 붙여넣고 재배포)\n\n원본 에러: ${msg}`);
     } else if (/JSONP 요청 실패|청크 URL 길이/.test(msg)) {
-      alert(`저장 실패 (네트워크/URL 길이 이슈): ${msg}\n\n· Apps Script 재배포(편집→새 버전) 했는지 확인\n· 백엔드 코드가 v2.7 이상인지 ping action으로 확인 가능`);
+      alert(`저장 실패 (네트워크/URL 길이 이슈): ${msg}\n\n· Apps Script 재배포(편집→새 버전) 했는지 확인\n· 백엔드 코드가 v2.9 이상인지 확인 필요`);
     } else if (/사용자 취소/.test(msg)) {
       // 대량 삭제 confirm에서 cancel — 조용히 종료
     } else {
@@ -5543,17 +5556,26 @@ async function saveUserDataToBackend() {
 // ============================================================================
 
 // URL-encoded 청크 크기 적응 (한국어/이모지 비율에 따라)
+// v1.84: payload 전체를 encodeURIComponent로 측정 → 정확한 inflation
+//   목표: URL의 payload 부분 ≤ 4000자 (URL 전체 약 5500자, Apps Script 안전 임계)
+//   한글(emoji/CJK)은 인코딩 후 6배 inflation 가능 → raw 청크 작아짐 (예: 666자)
+//   영어 위주면 그대로 ~4000자
 function _adaptiveChunkSize(json) {
   if (json.length <= 200) return Math.max(json.length, 1);
-  const sample = json.slice(0, 1000);
-  const inflation = Math.max(1.0, encodeURIComponent(sample).length / sample.length);
-  return Math.min(4000, Math.max(500, Math.floor(5500 / inflation)));
+  // 전체 payload 인코딩 후 길이로 정확한 inflation 측정 (작은 비용, 1회만 호출)
+  const encoded = encodeURIComponent(json);
+  const inflation = Math.max(1.0, encoded.length / json.length);
+  // URL payload 슬롯 최대 4000자 → raw 청크 = 4000 / inflation
+  return Math.max(200, Math.min(4000, Math.floor(4000 / inflation)));
 }
 
 async function _sendDeltaToBackend(userId, dataType, upserts, deletes, onProgress, passwordHash) {
   // payload = JSON 문자열로 만든 { upserts: [...], deletes: [...] }
   const payload = JSON.stringify({ upserts, deletes });
   const MAX_CHUNK = _adaptiveChunkSize(payload);
+  // v1.84: 진단 로그 — JSONP 실패 시 청크 크기 적절성 확인용
+  const inflation = (encodeURIComponent(payload.slice(0, 500)).length / Math.min(payload.length, 500)).toFixed(2);
+  console.log(`[_sendDeltaToBackend/${dataType}] payload=${payload.length}자, MAX_CHUNK=${MAX_CHUNK}, inflation=${inflation}x, 청크수=${Math.ceil(payload.length / MAX_CHUNK)}`);
 
   // 단일 청크 (델타가 작을 때)
   if (payload.length <= MAX_CHUNK) {
@@ -5739,6 +5761,21 @@ async function loadUserDataFromBackend() {
     const pfRows = (pfRes && pfRes.ok) ? (pfRes.rows || []) : [];
     const trRows = (trRes && trRes.ok) ? (trRes.rows || []) : [];
 
+    // v1.87: KR 모드 — 시트에서 받은 ticker가 leading zero 잃은 경우 (1, 10, 100 등) 정규화
+    //   normalizeTicker가 ' 제거 + KR padding 자동 처리 → '000001' 등으로 복원
+    const currentMkt = getCurrentMarket();
+    [...pfRows, ...trRows].forEach(r => {
+      if (r.ticker != null) {
+        const fixed = normalizeTicker(r.ticker, currentMkt);
+        if (fixed && fixed !== String(r.ticker).trim()) {
+          console.log(`[loadUserData] ticker 정규화: '${r.ticker}' → '${fixed}'`);
+          r.ticker = fixed;
+        } else {
+          r.ticker = fixed;  // 그래도 ' 제거 등 적용
+        }
+      }
+    });
+
     // SpreadsheetTable은 빈 row가 최소 1개 있어야 렌더됨
     if (pfRows.length === 0) pfRows.push(portfolioSheet.emptyRow());
     if (trRows.length === 0) trRows.push(tradesSheet.emptyRow());
@@ -5766,8 +5803,11 @@ async function loadUserDataFromBackend() {
     alert(`✓ 불러오기 완료\n· ${userId}_${dataTypePF()}: ${pfMsg}\n· ${userId}_${dataTypeTrades()}: ${trMsg}\n\nLocalStorage 갱신됨, 12계층 비중 재계산됨.`);
   } catch (err) {
     const msg = String(err && err.message || err);
-    if (/unknown action|action.*not found|loadUserData/.test(msg)) {
-      alert(`백엔드에 'loadUserData' 함수가 없습니다.\n\nApps Script를 v2.6 통합본으로 업데이트해주세요. (제공된 .gs 파일 전체를 Apps Script 에디터에 붙여넣고 재배포)\n\n원본 에러: ${msg}`);
+    // v1.82: 백엔드 v2.9 미배포 명확히 안내
+    if (/dataType은 PF 또는 HISTORY 만 가능|PF\/HISTORY 또는 PF_US/.test(msg)) {
+      alert(`❌ 백엔드 버전이 옛 버전입니다.\n\nApps Script Code.gs를 v2.9로 교체하고 재배포 해주세요.\n(매매이력 시장별 분리를 위해 dataType에 _US/_KR 접미사를 허용해야 함)\n\n원본 에러: ${msg}`);
+    } else if (/unknown action|action.*not found|loadUserData/.test(msg)) {
+      alert(`백엔드에 'loadUserData' 함수가 없습니다.\n\nApps Script를 v2.9 통합본으로 업데이트해주세요. (제공된 .gs 파일 전체를 Apps Script 에디터에 붙여넣고 재배포)\n\n원본 에러: ${msg}`);
     } else {
       alert(`불러오기 실패: ${msg}`);
     }
@@ -5791,6 +5831,8 @@ function getSectorForTicker(ticker) {
   }
   // KJP300/KJP100 우선 (정의된 종목은 단일 source-of-truth)
   const kjp = (_state.tickerSectorMap || {})[tk];
+  // v1.85: 진단 로그
+  console.log(`[getSectorForTicker] '${ticker}' → 정규화 '${tk}' (mkt=${getCurrentMarket()}), 매핑=${kjp || 'null'}, mapSize=${Object.keys(_state.tickerSectorMap || {}).length}`);
   if (kjp) return kjp;
   // 그 외에는 사용자 수동 매핑
   const user = (_state.userSectorMap || {})[tk];
@@ -5893,13 +5935,17 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // ============================================================================
 let _state = {
   archive: [],        // V_Shape_Archive rows (normalized) — active 시장
-  sectors: {},        // {sectorName: [rows]} — 공통 (시장 무관)
-  macro: [],          // macro rows — 공통
+  sectors: {},        // {sectorName: [rows]} — active 시장 (v1.80 시장별 swap)
+  macro: [],          // active 시장 매크로 rows (v1.81 시장별 swap)
   filteredArchive: [],
 
   // v1.69: 시장별 데이터 저장소 — autoLoadData가 양쪽 동시에 채움
   //   setMarket 시 applyMarketState가 active 변수로 swap
   archives:          { US: [], KR: [] },           // → _state.archive
+  // v1.80: 한국도 섹터별 별도 시트 구조로 바뀜 → 시장별 sector OHLCV 저장
+  sectorsByMarket:   { US: {}, KR: {} },           // → _state.sectors
+  // v1.81: 매크로도 시장별 분리 (US: S&P/NASDAQ/KJP400, KR: KOSPI/KOSDAQ)
+  macroByMarket:     { US: [], KR: [] },           // → _state.macro
   tickerSectorMaps:  { US: {}, KR: {} },           // → _state.tickerSectorMap
   kjpSectorMaps:     { US: {}, KR: {} },           // → _state.kjpSectorMap
   tickerDescMaps:    { US: {}, KR: {} },           // → _state.tickerDescMap
@@ -5920,20 +5966,23 @@ let _state = {
 };
 
 // v1.69: active 시장 데이터로 _state swap — setMarket이 호출
-//   섹터/매크로는 공통이라 swap 불필요
 function applyMarketState(mkt) {
   if (mkt !== 'US' && mkt !== 'KR') mkt = 'US';
   _state.archive          = _state.archives[mkt] || [];
+  _state.sectors          = _state.sectorsByMarket[mkt] || {};   // v1.80
+  _state.macro            = _state.macroByMarket[mkt] || [];     // v1.81
   _state.tickerSectorMap  = _state.tickerSectorMaps[mkt] || {};
   _state.kjpSectorMap     = _state.kjpSectorMaps[mkt] || {};
   _state.tickerDescMap    = _state.tickerDescMaps[mkt] || {};
   _state.tickerCompanyMap = _state.tickerCompanyMaps[mkt] || {};
-  // 신호 필터도 시장에 맞는 default로 리셋 (시장마다 신호 종류 다름)
   _state.signalFilter = new Set(getSignalTypes());
-  // v1.70: data-market 속성 → CSS [data-market="KR"] 규칙 활성화
   document.documentElement.setAttribute('data-market', mkt);
-  // v1.76: USD/KRW 안내문 + 아이콘 갱신
   try { updateCcyBanner(); } catch (e) {}
+  // v1.88: dashboard simulation cache 무효화 — 새 시장 portfolio/trades로 즉시 재계산
+  try { if (typeof invalidateDashSim === 'function') invalidateDashSim(); } catch (e) {}
+
+  // v1.80: 시장 swap 후 상태 진단
+  console.log(`[applyMarketState/${mkt}] archive=${_state.archive.length}, sectors=${Object.keys(_state.sectors).length}, kjpSectorMap=${Object.keys(_state.kjpSectorMap).length}, tickerSectorMap=${Object.keys(_state.tickerSectorMap).length}`);
 }
 
 // v1.76: 마이 카드의 화폐 안내문/아이콘을 시장에 맞게 갱신
@@ -5957,6 +6006,11 @@ function rerenderAll() {
   try {
     // v1.73: 신호 미래수익률 재계산 (시장에 따라 OHLCV 소스 다름)
     if (typeof computeSignalReturns === 'function') computeSignalReturns();
+    // v1.81: 매크로 카드 (시장별 — US: S&P/NASDAQ/KJP400, KR: KOSPI/KOSDAQ)
+    if (typeof renderMacro === 'function') renderMacro();
+    // 매크로 카드 가시성 (매크로 데이터 없으면 숨김)
+    const macroCardEl = document.getElementById('macroCard');
+    if (macroCardEl) macroCardEl.style.display = (_state.macro && _state.macro.length) ? '' : 'none';
     // 신호 필터 카드 (시장에 따라 그룹 구조 다름)
     if (typeof renderSignalFilter === 'function') renderSignalFilter();
     if (typeof renderSectorFilter === 'function') renderSectorFilter();
@@ -6111,19 +6165,10 @@ function splashError(msg) {
 // v1.72: 티커/섹터에도 컬럼 위치 fallback 추가 (헤더 이름이 다르더라도 작동)
 //        6자리 KR 티커 leading zero 자동 padding ('5930' → '005930')
 function buildKjpMaps_(kjpRes, market) {
-  const tickerIdxFallback  = market === 'KR' ? 2 : 0;  // KR: C, US: A (US는 헤더가 거의 안 빠짐)
+  const tickerIdxFallback  = market === 'KR' ? 2 : 0;  // KR: C, US: A
   const sectorIdxFallback  = market === 'KR' ? 0 : -1; // KR: A
   const companyIdxFallback = market === 'KR' ? 1 : 3;
   const descIdxFallback    = market === 'KR' ? 3 : 4;
-
-  // 6자리 KR 티커 leading zero 보정
-  const padKrTicker = (s) => {
-    if (market !== 'KR') return s;
-    if (!s) return s;
-    // 숫자만 있고 6자리 미만이면 앞에 0 채움
-    if (/^\d{1,6}$/.test(s)) return s.padStart(6, '0');
-    return s;
-  };
 
   const kjpMap = {};
   const kjpSectorMap = {};
@@ -6139,11 +6184,9 @@ function buildKjpMaps_(kjpRes, market) {
       const tkByHeader  = (r['티커명'] || r['Ticker'] || r['ticker'] || r['종목코드'] || r['종목'] || '').toString().trim();
       const secByHeader = (r['섹터명'] || r['Sector'] || r['섹터']    || r['업종']    || '').toString().trim();
 
-      let tk  = (tkByHeader  || colAt(tickerIdxFallback)).toUpperCase().trim();
-      let sec = (secByHeader || colAt(sectorIdxFallback)).trim();
-
-      // 6자리 KR 티커 leading zero 보정
-      tk = padKrTicker(tk);
+      // v1.80: normalizeTicker로 통합 — ' 제거 + KR padding
+      const tk  = normalizeTicker(tkByHeader || colAt(tickerIdxFallback), market);
+      const sec = (secByHeader || colAt(sectorIdxFallback)).trim();
 
       const companyByHeader = (r['회사명'] || r['Company'] || r['기업명'] || r['회사'] || r['Name'] || r['한글명'] || r['이름'] || '').toString().trim();
       const company = companyByHeader || colAt(companyIdxFallback);
@@ -6226,53 +6269,9 @@ async function autoLoadData() {
     buildKjpMaps_(kjpUSRes, 'US');
     buildKjpMaps_(kjpKRRes, 'KR');
 
-    // v1.70: KR OHLCV 시트 fetch — 폴더 안 첫 시트 (있다고 가정)
-    //   결과: _state.krOhlcvByTicker = { '005930': [{Date, Open, ...}], ... }
-    _state.krOhlcvByTicker = {};
-    _state.krOhlcvLatest = {};   // { ticker: { Close, prevClose, chg, Date } }
-    if (krOhlcvFolderRes && krOhlcvFolderRes.ok && krOhlcvFolderRes.sheets && krOhlcvFolderRes.sheets.length > 0) {
-      const krOhlcvSheetId = krOhlcvFolderRes.sheets[0].id;
-      try {
-        const krOhlcvRes = await apiCall('getOneSheet', { sheetId: krOhlcvSheetId });
-        if (krOhlcvRes && krOhlcvRes.ok && krOhlcvRes.rows) {
-          const byTicker = {};
-          krOhlcvRes.rows.forEach(r => {
-            let tk = String(r['Ticker'] || r['ticker'] || '').toUpperCase().trim();
-            // v1.72: 6자리 KR 티커 leading zero 보정 (5930 → 005930)
-            if (/^\d{1,6}$/.test(tk) && tk.length < 6) tk = tk.padStart(6, '0');
-            const dt = normalizeDate(r['Date']);
-            if (!tk || !dt) return;
-            const row = {
-              Ticker: tk,
-              Date: dt,
-              Open:   Number(r['Open']  || 0),
-              Close:  Number(r['Close'] || 0),
-              High:   Number(r['High']  || 0),
-              Low:    Number(r['Low']   || 0),
-              Volume: Number(r['Volume']|| 0),
-              Retail:  Number(r['Retail']  || 0),
-              Foreign: Number(r['Foreign'] || 0),
-              Inst:    Number(r['Inst']    || 0),
-            };
-            if (!byTicker[tk]) byTicker[tk] = [];
-            byTicker[tk].push(row);
-          });
-          // 각 ticker의 시계열 날짜순 정렬 + 최신값 캐시
-          Object.keys(byTicker).forEach(tk => {
-            byTicker[tk].sort((a, b) => a.Date.localeCompare(b.Date));
-            const arr = byTicker[tk];
-            const n = arr.length;
-            const latest = arr[n - 1];
-            const prev = n > 1 ? arr[n - 2] : null;
-            const chg = (prev && prev.Close > 0) ? (latest.Close / prev.Close - 1) * 100 : 0;
-            _state.krOhlcvLatest[tk] = { Close: latest.Close, prevClose: prev ? prev.Close : 0, chg, Date: latest.Date };
-          });
-          _state.krOhlcvByTicker = byTicker;
-        }
-      } catch (e) {
-        console.warn('KR OHLCV fetch 실패:', e);
-      }
-    }
+    // v1.80: KR sector 폴더의 시트들도 미국 큐에 함께 추가 — 미국과 동일 방식으로 처리
+    //   각 시트에 market 정보 부착하여 분류
+    _state.sectorsByMarket = { US: {}, KR: {} };  // reset
 
     // active 시장으로 swap (현재 선택된 시장 데이터를 _state.archive 등에 노출)
     applyMarketState(getCurrentMarket());
@@ -6281,15 +6280,20 @@ async function autoLoadData() {
     const krArc = _state.archives.KR || [];
     const krSec = Object.keys(_state.kjpSectorMaps.KR || {}).length;
     const krTk  = Object.keys(_state.tickerSectorMaps.KR || {}).length;
-    const krOhTk = Object.keys(_state.krOhlcvByTicker || {}).length;
+    // v1.80: KR sector OHLCV — sectorsByMarket.KR 구조 (시장별 분리)
+    const krSecOhlcvNames = Object.keys(_state.sectorsByMarket.KR || {});
+    const krSecRows = krSecOhlcvNames.reduce((s, n) => s + _state.sectorsByMarket.KR[n].length, 0);
     console.log('━━━━━━━━━━ KR 데이터 상태 ━━━━━━━━━━');
     console.log(`KR Archive 시그널 행:    ${krArc.length}건`);
     console.log(`KR 티커 매핑(KJP100):    ${krTk}개`);
     console.log(`KR 섹터 그룹:            ${krSec}개`);
-    console.log(`KR OHLCV ticker:         ${krOhTk}개`);
-    if (krArc.length > 0)  console.log('  · 첫 KR Archive 행 샘플:', krArc[0]);
-    if (krOhTk > 0)        console.log('  · KR OHLCV ticker 샘플:', Object.keys(_state.krOhlcvByTicker).slice(0, 5));
-    if (krTk > 0)          console.log('  · KR KJP100 ticker 샘플:', Object.keys(_state.tickerSectorMaps.KR).slice(0, 5));
+    console.log(`KR Sector OHLCV 시트:    ${krSecOhlcvNames.length}개 (총 ${krSecRows}행)`);
+    if (krArc.length > 0)          console.log('  · 첫 KR Archive 행 샘플:', krArc[0]);
+    if (krSecOhlcvNames.length > 0) {
+      console.log('  · KR Sector 이름:', krSecOhlcvNames);
+      console.log('  · KR 첫 sector 첫 행:', _state.sectorsByMarket.KR[krSecOhlcvNames[0]][0]);
+    }
+    if (krTk > 0)                  console.log('  · KR KJP100 ticker 샘플:', Object.keys(_state.tickerSectorMaps.KR).slice(0, 5));
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     // 캐시에도 active 시장 데이터 LS 저장 (다음 로드 빠르게)
     lsSet(LS.KJP_MAP,         _state.tickerSectorMap);
@@ -6297,11 +6301,13 @@ async function autoLoadData() {
     lsSet(LS.KJP_DESC_MAP,    _state.tickerDescMap);
     lsSet(LS.KJP_COMPANY_MAP, _state.tickerCompanyMap);
 
-    // 2) Sector sheets — 병렬 다운로드 (v1.27: concurrency 6→10, retry 800→400ms)
-    const allSheets = {};
-    let macroRows = null;
+    // 2) Sector sheets — 병렬 다운로드 (US + KR 통합 큐, concurrency 10)
+    // v1.80: KR 폴더의 시트들도 같은 큐에 넣어 한 번에 fetch (Promise.all로 두 폴더 list 이미 받음)
+    const allSheets = {};   // { 'US:섹터명' or 'KR:섹터명': rows }
     const failed = [];
-    const total = listRes.sheets.length;
+    const usSheets = (listRes && listRes.sheets) || [];
+    const krSheets = (krOhlcvFolderRes && krOhlcvFolderRes.ok && krOhlcvFolderRes.sheets) || [];
+    const total = usSheets.length + krSheets.length;
     let done = 0;
     splashUpdate(10);
 
@@ -6311,7 +6317,7 @@ async function autoLoadData() {
         try {
           const r = await apiCall('getOneSheet', { sheetId: sh.id });
           if (r.ok && r.rows) {
-            allSheets[sh.name] = r.rows;
+            allSheets[sh.market + ':' + sh.name] = r.rows;
             return true;
           }
         } catch (e) { /* retry */ }
@@ -6319,7 +6325,10 @@ async function autoLoadData() {
       return false;
     };
 
-    const queue = [...listRes.sheets];
+    const queue = [
+      ...usSheets.map(s => ({ ...s, market: 'US' })),
+      ...krSheets.map(s => ({ ...s, market: 'KR' })),
+    ];
     const CONCURRENCY = 10;
     const workers = Array.from({ length: CONCURRENCY }, async () => {
       while (queue.length > 0) {
@@ -6327,31 +6336,71 @@ async function autoLoadData() {
         if (!sh) break;
         const ok = await fetchOne(sh);
         done++;
-        if (!ok) failed.push({ name: sh.name });
+        if (!ok) failed.push({ name: sh.name, market: sh.market });
         // 진행도: 10% → 90% (시트 다운로드)
-        splashUpdate(10 + (done / total) * 80);
+        splashUpdate(10 + (done / Math.max(total, 1)) * 80);
       }
     });
     await Promise.all(workers);
 
-    // 3) 렌더링
+    // 3) 렌더링 — 시장별 분류
     splashUpdate(92);
-    Object.keys(allSheets).forEach(name => {
+    // v1.81/v1.82: macroByMarket reset 
+    //   US: US 매크로 시트 원본 그대로
+    //   KR: US 매크로 시트 + KR 매크로 시트 병합 (사용자 요청: 한국은 미국 매크로와 동일하되 KOSPI/KOSDAQ 추가, KJP400 셀만 숨김)
+    _state.macroByMarket = { US: [], KR: [] };
+    Object.keys(allSheets).forEach(key => {
+      const colonIdx = key.indexOf(':');
+      const mkt = key.slice(0, colonIdx);
+      const name = key.slice(colonIdx + 1);
+      const rows = allSheets[key];
       if (/매크로|macro/i.test(name)) {
-        macroRows = allSheets[name];
+        // 일단 시장 원본 매크로 시트로 저장 (이후 KR 병합 단계에서 합침)
+        _state.macroByMarket[mkt] = rows
+          .map(r => normalizeOhlcvRow(r, mkt))
+          .filter(r => r.Ticker && r.Date);
       } else {
-        _state.sectors[name] = allSheets[name].map(normalizeOhlcvRow).filter(r => r.Ticker && r.Date && !isNaN(r.Close));
+        // v1.80: 한국 시트도 동일하게 normalizeOhlcvRow 사용 (market hint로 ticker padding)
+        _state.sectorsByMarket[mkt][name] = rows
+          .map(r => normalizeOhlcvRow(r, mkt))
+          .filter(r => r.Ticker && r.Date && !isNaN(r.Close));
+        // 시계열 정렬 (날짜 오름차순)
+        _state.sectorsByMarket[mkt][name].sort((a, b) => a.Date.localeCompare(b.Date));
       }
     });
-    _state.macro = macroRows ? macroRows.map(normalizeOhlcvRow).filter(r => r.Ticker && r.Date) : [];
 
-    // 모든 OHLCV에서 가장 최근 일자 계산
+    // v1.82: KR 모드 매크로 = US 매크로 + KR 매크로 시트 추가 병합 (ticker 중복 dedupe)
+    //   사용자 요청: 한국 매크로는 미국과 100% 동일하게 가되 KJP400만 제외 (셀에서 숨김), KOSPI/KOSDAQ 추가
+    const usMacro       = _state.macroByMarket.US || [];      // US 매크로 시트 원본
+    const krMacroSheet  = _state.macroByMarket.KR || [];      // KR 매크로 시트 원본 (KOSPI/KOSDAQ)
+    const usTickerSet   = new Set(usMacro.map(r => r.Ticker));
+    // US ticker와 겹치지 않는 KR ticker 행만 추가 (안전망)
+    const krOnlyRows    = krMacroSheet.filter(r => !usTickerSet.has(r.Ticker));
+    _state.macroByMarket.KR = [...usMacro, ...krOnlyRows];
+
+    // active 시장 sectors + macro swap
+    _state.sectors = _state.sectorsByMarket[getCurrentMarket()] || {};
+    _state.macro   = _state.macroByMarket[getCurrentMarket()] || [];
+
+    // 모든 OHLCV에서 가장 최근 일자 계산 (active 시장 기준)
     let latestDate = '';
     Object.values(_state.sectors).forEach(rows => {
       rows.forEach(r => { if (r.Date && r.Date > latestDate) latestDate = r.Date; });
     });
     _state.macro.forEach(r => { if (r.Date && r.Date > latestDate) latestDate = r.Date; });
     _state.latestDataDate = latestDate;
+
+    // v1.80: KR sector 빌드 진단 로그
+    const krSecNames = Object.keys(_state.sectorsByMarket.KR);
+    const krTotalRows = krSecNames.reduce((s, n) => s + _state.sectorsByMarket.KR[n].length, 0);
+    console.log(`[Sectors/US] ${Object.keys(_state.sectorsByMarket.US).length}개 시트, ${Object.values(_state.sectorsByMarket.US).reduce((s,a)=>s+a.length,0)}행`);
+    console.log(`[Sectors/KR] ${krSecNames.length}개 시트, ${krTotalRows}행`);
+    // v1.82: 매크로 시장별 진단 — KR은 US 매크로 + KR 매크로 시트 병합 결과
+    console.log(`[Macro/US] ${_state.macroByMarket.US.length}행 (티커: ${[...new Set(_state.macroByMarket.US.map(r => r.Ticker))].join(', ')})`);
+    console.log(`[Macro/KR] ${_state.macroByMarket.KR.length}행 (US 매크로 + KR 시트 병합, 티커: ${[...new Set(_state.macroByMarket.KR.map(r => r.Ticker))].join(', ')})`);
+    if (krSecNames.length > 0) console.log('  · KR 섹터 시트명:', krSecNames);
+    if (krTotalRows > 0)      console.log('  · KR 첫 sector 첫 행:', _state.sectorsByMarket.KR[krSecNames[0]][0]);
+    if (failed.length > 0)    console.warn('  · 다운로드 실패한 시트:', failed);
 
     splashUpdate(95);
     computeSignalReturns();
@@ -6413,6 +6462,7 @@ function toggleTickerHidden(ticker) {
 //   각 snapshot: { date, state, totalEval, totalCost, totalRealized, bySector }
 // ============================================================================
 let _dashSimCache = null;  // 메모리 캐시 (포트폴리오/매매이력 변경 시 invalidate)
+let _dashRenderInProgress = false;  // v1.88: prefetch 백그라운드 중복 진입 방지
 
 function invalidateDashSim() { _dashSimCache = null; }
 
@@ -6552,6 +6602,8 @@ function simulatePortfolioDaily() {
       const profit = (t.price - avgAtSell) * t.qty - t.fee - t.tax;
       acc.total += profit;
       acc.byTicker[tk] = (acc.byTicker[tk] || 0) + profit;
+      // v1.86: 매도 시 확정수익금 계산 진단 로그 (사용자가 콘솔에서 확인)
+      console.log(`[매도/${tk}] ${t.date} ${t.qty}주 @ ${t.price} (평단 ${avgAtSell.toFixed(2)}) · 수수료=${t.fee} 세금=${t.tax} → 확정수익 ${profit.toFixed(2)} (누적 ${acc.total.toFixed(2)})`);
       state[tk].qty -= t.qty;
       state[tk].cost = Math.max(0, state[tk].cost - avgAtSell * t.qty);
       if (state[tk].qty <= 1e-9) { state[tk].qty = 0; state[tk].cost = 0; state[tk].avgpx = 0; }
@@ -6684,6 +6736,38 @@ function getKJP400IndexSeries(daysBack = 90) {
   const raw = computeKJP400Series(Math.max(daysBack, 90));
   if (!raw || raw.length === 0) return [];
   return raw.slice(-daysBack);
+}
+
+// v1.86: KOSPI 90일 시리즈 (KR 모드 벤치마크) — 매크로 시트의 KOSPI ticker
+function getKospiIndexSeries(daysBack = 90) {
+  if (!_state.macro || _state.macro.length === 0) return null;
+  // KOSPI ticker 후보 (사용자 시트 ticker 명칭 다양성 대응)
+  const candidates = ['^KS11', 'KOSPI', 'KS11', '^KOSPI', 'KOSPI Composite'];
+  let rows = null;
+  for (const tk of candidates) {
+    const filtered = _state.macro.filter(r => r.Ticker === tk && r.Date && !isNaN(r.Close))
+      .sort((a, b) => (a.Date || '').localeCompare(b.Date || ''));
+    if (filtered.length > 1) { rows = filtered; break; }
+  }
+  // fallback: ticker가 'KOSPI'/'KS' 포함하는 것
+  if (!rows) {
+    const tickers = [...new Set(_state.macro.map(r => r.Ticker))];
+    const fallbackTk = tickers.find(t => /KOSPI|KS11|KS200/i.test(t));
+    if (fallbackTk) {
+      rows = _state.macro.filter(r => r.Ticker === fallbackTk && r.Date && !isNaN(r.Close))
+        .sort((a, b) => (a.Date || '').localeCompare(b.Date || ''));
+    }
+  }
+  if (!rows || rows.length < 2) return null;
+  return rows.slice(-daysBack).map(r => ({ date: r.Date, value: r.Close }));
+}
+
+// v1.86: 시장에 맞는 벤치마크 시리즈 (US: KJP400, KR: KOSPI) + 라벨
+function getBenchmarkSeries(daysBack) {
+  if (getCurrentMarket() === 'KR') {
+    return { series: getKospiIndexSeries(daysBack), label: 'KOSPI 동일원금 가상수익' };
+  }
+  return { series: getKJP400IndexSeries(daysBack), label: 'KJP400 동일원금 가상수익' };
 }
 
 // 캘린더 기반 KPI flow + history (Item 8 정공법)
@@ -6929,12 +7013,22 @@ async function renderDashboard() {
   }
   card.style.display = '';
 
-  // 1) 누락 OHLCV prefetch (백그라운드) — 진행률 splash 안 띄움
-  try {
-    await prefetchDashboardOhlcv();
-  } catch (e) { console.warn('prefetch error', e); }
+  // v1.88: 시장 스위치 즉각 반응을 위해 prefetch를 백그라운드로 (await 안 함)
+  //   1차 렌더 즉시 → prefetch 완료 후 자동 2차 렌더 (재귀 호출은 missing=0이면 즉시 return)
+  if (!_dashRenderInProgress) {  // 동시 재진입 방지
+    _dashRenderInProgress = true;
+    prefetchDashboardOhlcv()
+      .then(res => {
+        _dashRenderInProgress = false;
+        if (res && res.fetched > 0) {
+          // 새로 fetch된 ticker가 있을 때만 다시 렌더
+          if (typeof renderDashboard === 'function') renderDashboard().catch(() => {});
+        }
+      })
+      .catch(e => { _dashRenderInProgress = false; console.warn('prefetch error', e); });
+  }
 
-  // 2) 시뮬레이션 무효화 후 재계산 (prefetch 결과 반영)
+  // 2) 시뮬레이션 무효화 후 재계산 (새 시장 데이터 즉시 반영)
   invalidateDashSim();
 
   // 3) 상태 계산 (정공법: 전체 매매이력 forward simulation + 동일일 reorder)
@@ -7059,7 +7153,8 @@ function renderDashDonut(holdings) {
   });
   // 슬라이스의 ticker 매핑 (기타는 null)
   const tickerByIdx = main.map(h => h.ticker);
-  const labels = main.map(h => h.ticker);
+  // v1.86: 라벨은 displayName (KR은 회사명)
+  const labels = main.map(h => displayName(h.ticker));
   const data = main.map(h => h.evalVal);
   const bg = main.map((_, i) => DASH_PALETTE[i % DASH_PALETTE.length]);
   if (others > 0) {
@@ -7069,7 +7164,7 @@ function renderDashDonut(holdings) {
     tickerByIdx.push(null);  // 기타는 클릭/하이라이트 비활성
   }
   const baseBg = [...bg];  // hover dim 시 복원용
-  const light = (typeof getCurrentTheme === 'function' && getCurrentTheme() === 'light');
+  const light = false;  // v1.77: 다크 모드 고정 (v1.65에서 라이트 모드 제거)
 
   _dashCharts.donut = new Chart(ctx, {
     type: 'doughnut',
@@ -7136,19 +7231,24 @@ function renderDashTrend(snapshots, holdings) {
   // v1.31: 평가수익금(unrealized)만 표시 — 그 날 보유 × 그 날 종가 - 그 날 cost
   const myProfit = snapshots.map(s => s.unrealized);
 
-  // KJP400 비교 (시작점 정규화)
-  const kjpSeries = getKJP400IndexSeries(snapshots.length + 5);
-  let kjpLine = null;
-  if (kjpSeries && kjpSeries.length >= 2 && holdings.length > 0) {
+  // v1.86: 시장에 맞는 벤치마크 (US: KJP400 / KR: KOSPI) — 시작점 정규화
+  // v1.87: KOSPI 등 매크로 데이터 일부 날짜 결측 시 forward-fill로 라인 끊김 방지
+  const { series: benchmarkSeries, label: benchmarkLabel } = getBenchmarkSeries(snapshots.length + 5);
+  let benchmarkLine = null;
+  if (benchmarkSeries && benchmarkSeries.length >= 2 && holdings.length > 0) {
     const startProfit = myProfit[0];
     const startCost = snapshots[0].totalCost || 1;
-    const kjpByDate = {};
-    kjpSeries.forEach(k => kjpByDate[k.date] = k.value);
-    const kjpStart = kjpByDate[snapshots[0].date] || kjpSeries[0].value;
-    kjpLine = snapshots.map(s => {
-      const v = kjpByDate[s.date];
-      if (v == null) return null;
-      const chg = (v - kjpStart) / kjpStart;
+    const benchByDate = {};
+    benchmarkSeries.forEach(k => benchByDate[k.date] = k.value);
+    // v1.87: 결측 날짜 forward-fill (직전 거래일 값으로 채움)
+    let lastSeen = benchByDate[snapshots[0].date] || benchmarkSeries[0].value;
+    const benchStart = lastSeen;
+    benchmarkLine = snapshots.map(s => {
+      const v = benchByDate[s.date];
+      if (v != null) lastSeen = v;
+      // 결측이면 직전 값 그대로 → 라인이 끊기지 않음
+      const useV = lastSeen;
+      const chg = (useV - benchStart) / benchStart;
       return startProfit + startCost * chg;
     });
   }
@@ -7164,7 +7264,7 @@ function renderDashTrend(snapshots, holdings) {
   const minVal = myProfit[minIdx];
   const lastVal = myProfit[lastIdx];
 
-  const light = (typeof getCurrentTheme === 'function' && getCurrentTheme() === 'light');
+  const light = false;  // v1.77: 다크 모드 고정 (v1.65에서 라이트 모드 제거)
   const krUp = light ? '#c92a2a' : '#fa5252';
   const krDown = light ? '#1971c2' : '#339af0';
 
@@ -7186,14 +7286,15 @@ function renderDashTrend(snapshots, holdings) {
     pointRadius, pointBackgroundColor: pointBgColor, pointBorderColor, pointBorderWidth: 2,
     pointHoverRadius: 7,
   }];
-  if (kjpLine) {
+  if (benchmarkLine) {
     datasets.push({
-      label: 'KJP400 동일원금 가상수익',
-      data: kjpLine,
+      label: benchmarkLabel,
+      data: benchmarkLine,
       borderColor: '#a78bfa',
       backgroundColor: 'rgba(167,139,250,0.05)',
       fill: false, borderWidth: 1.4, tension: 0.25, pointRadius: 0, pointHoverRadius: 3,
       borderDash: [4, 3],
+      spanGaps: true,   // v1.87: 혹시 null이 남아도 끊김 없이 연결
     });
   }
 
@@ -7295,18 +7396,30 @@ function _getLayerIdxOfSector(sectorKey) {
   return { layer, idx };
 }
 
+// v1.86: framework에 없는 섹터 (KR 등) 용 hash 기반 파스텔 색상
+function _hashColorForSector(s) {
+  if (!s) return 'rgb(155,150,140)';
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  const hue = Math.abs(h) % 360;
+  // 파스텔: saturation 50%, lightness 60%
+  const [r, g, b] = _hslToRgb(hue, 0.50, 0.60);
+  return `rgb(${r},${g},${b})`;
+}
+
 function getSectorPastelColor(sectorKey) {
   const { layer, idx } = _getLayerIdxOfSector(sectorKey);
-  if (!layer || !layer.rgb) return '#9b968c';
+  if (!layer || !layer.rgb) {
+    // v1.86: framework에 없는 섹터 (KR 등) — hash 기반 자동 색상
+    return _hashColorForSector(sectorKey);
+  }
   const [r, g, b] = layer.rgb.split(',').map(s => parseInt(s.trim()));
   const [h, s, l] = _rgbToHsl(r, g, b);
   // v1.32: 인덱스별 hue ±, lightness ± 변형 — 같은 계층이지만 구분 가능
-  // 0: 원본 / 1: 어두움+huedown / 2: 밝음+hueup / 3: 더어두움+huedown2x / 4: 더밝음+hueup2x ...
   const lShifts = [0, -0.10, +0.10, -0.18, +0.18, -0.06, +0.06];
   const hShifts = [0, -10,    +10,   -20,    +20,    -5,    +5];
   const newL = Math.min(0.82, Math.max(0.28, l + lShifts[idx % lShifts.length]));
   const newH = (h + hShifts[idx % hShifts.length] + 360) % 360;
-  // saturation 약간 부스트 (너무 칙칙하지 않게)
   const newS = Math.min(0.7, s * 1.05);
   const [nr, ng, nb] = _hslToRgb(newH, newS, newL);
   return `rgb(${nr},${ng},${nb})`;
@@ -7335,7 +7448,7 @@ function renderDashSectorTrend(snapshots) {
   if (sectors.length === 0) return;
 
   const labels = snapshots.map(s => s.date.slice(5));
-  const light = (typeof getCurrentTheme === 'function' && getCurrentTheme() === 'light');
+  const light = false;  // v1.77: 다크 모드 고정 (v1.65에서 라이트 모드 제거)
 
   // 헬퍼: hover/click 하이라이트 적용
   function getDatasetsWithHighlight() {
@@ -7501,7 +7614,7 @@ function renderDashHoldingsList(holdings, hiddenHoldings) {
         <div class="dash-hold-left">
           ${logoBig}
           <div class="dash-hold-info">
-            <span class="dash-hold-ticker">${escapeHtml(h.ticker)}</span>
+            <span class="dash-hold-ticker" title="${escapeAttr(h.ticker)}">${escapeHtml(displayName(h.ticker))}</span>
             <span class="dash-hold-meta">${h.qty.toLocaleString(undefined,{maximumFractionDigits:2})}주 · ${escapeHtml(h.sector || '미분류')}</span>
           </div>
         </div>
@@ -7519,7 +7632,7 @@ function renderDashHoldingsList(holdings, hiddenHoldings) {
   if (hiddenHoldings.length === 0) {
     hiddenBar.style.display = 'none';
   } else {
-    const chips = hiddenHoldings.map(h => `<span class="dash-hidden-chip" data-ticker="${escapeAttr(h.ticker)}">${escapeHtml(h.ticker)}</span>`).join('');
+    const chips = hiddenHoldings.map(h => `<span class="dash-hidden-chip" data-ticker="${escapeAttr(h.ticker)}" title="${escapeAttr(h.ticker)}">${escapeHtml(displayName(h.ticker))}</span>`).join('');
     hiddenBar.innerHTML = `<span style="font-weight:600;">🚫 숨김 ${hiddenHoldings.length}개:</span>${chips}<span style="margin-left:auto;font-size:9px;opacity:0.7;">탭하여 복원</span>`;
     hiddenBar.style.display = '';
   }
@@ -7692,6 +7805,7 @@ function renderDashMatrix(holdings) {
 
   // v1.31: 버블 — flat, 입체감 제거. 단색 + alpha 0.55, 작은 그림자만
   // v1.32: data-ticker로 hover/click 핸들링
+  // v1.87: KR 회사명 표시 (label + title)
   const bubblesHtml = points.map(p => {
     const leftPct = Math.max(4, Math.min(96, ((p.x - xMin) / (xMax - xMin)) * 100));
     const bottomPct = Math.max(8, Math.min(92, ((p.y - yMin) / (yMax - yMin)) * 100));
@@ -7699,18 +7813,19 @@ function renderDashMatrix(holdings) {
     const baseColor = p.profit >= 0 ? '250,82,82' : '51,154,240';
     const bg = `rgba(${baseColor},0.55)`;
     const shadow = `0 1px 3px rgba(0,0,0,0.18)`;
-    return `<div class="dash-mtx-bubble" data-ticker="${escapeAttr(p.ticker)}" style="left:${leftPct}%; bottom:${bottomPct}%;" title="${escapeAttr(p.ticker)} / Corr ${p.x.toFixed(2)} / Alpha ${(p.y * 100).toFixed(1)}% / P&L ${fmtUSDPlus(p.profit)}">
+    const labelText = displayName(p.ticker);
+    return `<div class="dash-mtx-bubble" data-ticker="${escapeAttr(p.ticker)}" style="left:${leftPct}%; bottom:${bottomPct}%;" title="${escapeAttr(labelText)} (${escapeAttr(p.ticker)}) / Corr ${p.x.toFixed(2)} / Alpha ${(p.y * 100).toFixed(1)}% / P&L ${fmtUSDPlus(p.profit)}">
       <div class="dash-mtx-bubble-circ" style="width:${size}px; height:${size}px; background:${bg}; box-shadow:${shadow};"></div>
-      <div class="dash-mtx-bubble-label">${escapeHtml(p.ticker)}</div>
+      <div class="dash-mtx-bubble-label">${escapeHtml(labelText)}</div>
     </div>`;
   }).join('');
 
-  // 미표시 종목 안내
+  // 미표시 종목 안내 — v1.87 회사명
   let missingNote = '';
   if (missing.length > 0) {
-    const missingTickers = missing.slice(0, 8).map(m => m.ticker).join(', ');
+    const missingNames = missing.slice(0, 8).map(m => displayName(m.ticker)).join(', ');
     const moreMsg = missing.length > 8 ? ` 외 ${missing.length - 8}개` : '';
-    missingNote = `<div class="dash-mtx-missing-note">Matrix 미표시: ${escapeHtml(missingTickers)}${moreMsg} <span style="opacity:0.6;">(데이터 부족)</span></div>`;
+    missingNote = `<div class="dash-mtx-missing-note">Matrix 미표시: ${escapeHtml(missingNames)}${moreMsg} <span style="opacity:0.6;">(데이터 부족)</span></div>`;
   }
 
   wrap.innerHTML = `
@@ -7759,14 +7874,8 @@ function normalizeDate(d) {
 }
 function numOrNull(v) { const n = Number(v); return isNaN(n) ? null : n; }
 function normalizeArchiveRow(row, marketHint) {
-  // v1.72: 6자리 KR 티커 leading zero 자동 보정 (Google Sheets 숫자 변환 대응)
-  //   marketHint='KR'이면 padding, 미지정이면 현재 시장 기준
-  // v1.76: 한국어 헤더 fallback (시트가 한국어 컬럼명일 수 있음)
-  let tk = (row['Ticker'] || row['티커'] || row['티커명'] || row['종목코드'] || '').toString().toUpperCase().trim();
-  const m = marketHint || (typeof getCurrentMarket === 'function' ? getCurrentMarket() : 'US');
-  if (m === 'KR' && /^\d{1,6}$/.test(tk) && tk.length < 6) {
-    tk = tk.padStart(6, '0');
-  }
+  // v1.80: normalizeTicker로 공통 처리 — ' 제거 + KR padding
+  const tk = normalizeTicker(row['Ticker'] || row['티커'] || row['티커명'] || row['종목코드'], marketHint);
   return {
     Sector: row['Sector'] || row['섹터'] || row['섹터명'] || '',
     Ticker: tk,
@@ -7795,15 +7904,35 @@ function normalizeArchiveRow(row, marketHint) {
     Wide_C_Score: numOrNull(row['Wide_C_Score']),
   };
 }
-function normalizeOhlcvRow(row) {
+// v1.80: ticker 공통 정규화 — Google Sheets 텍스트 강제용 leading apostrophe (') 제거
+//   사용자가 한국 6자리 ticker 앞에 ' 붙임 (000001 → '000001) — 시트에서는 텍스트로 강제, 데이터에선 ' 가 그대로 남기도 함
+//   또한 KR 모드 + 1~6자리 숫자면 leading zero padding (5930 → 005930)
+function normalizeTicker(raw, marketHint) {
+  let s = (raw == null ? '' : String(raw)).trim();
+  // leading apostrophe 제거 (한 개든 여러 개든)
+  while (s.length > 0 && (s[0] === "'" || s[0] === '\u2019' || s[0] === '\u02BC')) s = s.slice(1);
+  s = s.trim().toUpperCase();
+  // KR 모드 — 6자리 미만 숫자면 leading zero padding
+  const m = marketHint || (typeof getCurrentMarket === 'function' ? getCurrentMarket() : 'US');
+  if (m === 'KR' && /^\d{1,6}$/.test(s) && s.length < 6) {
+    s = s.padStart(6, '0');
+  }
+  return s;
+}
+
+function normalizeOhlcvRow(row, marketHint) {
   return {
-    Ticker: (row['Ticker'] || row['ticker'] || '').toString().toUpperCase().trim(),
-    Date: normalizeDate(row['Date'] || row['date']),
-    Open: Number(row['Open'] || row['open']),
-    High: Number(row['High'] || row['high']),
-    Low: Number(row['Low'] || row['low']),
-    Close: Number(row['Close'] || row['close']),
-    Volume: Number(row['Volume'] || row['volume'] || 0),
+    Ticker: normalizeTicker(row['Ticker'] || row['ticker'] || row['티커'] || row['티커명'] || row['종목코드'], marketHint),
+    Date: normalizeDate(row['Date'] || row['date'] || row['일자'] || row['날짜']),
+    Open:   Number(row['Open']   || row['open']   || row['시가']   || 0),
+    High:   Number(row['High']   || row['high']   || row['고가']   || 0),
+    Low:    Number(row['Low']    || row['low']    || row['저가']   || 0),
+    Close:  Number(row['Close']  || row['close']  || row['종가']   || 0),
+    Volume: Number(row['Volume'] || row['volume'] || row['거래량'] || 0),
+    // v1.80: 한국 시트에 있는 추가 컬럼들 (수급 정보) — 미국엔 없음, 있으면 보존
+    Retail:  Number(row['Retail']  || row['개인'] || 0),
+    Foreign: Number(row['Foreign'] || row['외국인'] || 0),
+    Inst:    Number(row['Inst']    || row['기관'] || 0),
   };
 }
 
@@ -7812,24 +7941,18 @@ function normalizeOhlcvRow(row) {
 // 한 번 계산하고 _state.archive 행에 _returns 필드로 캐시
 // ============================================================================
 function computeSignalReturns() {
-  // v1.73: KR 모드는 단일 OHLCV 시트(krOhlcvByTicker)에서, US는 40 섹터 시트(_state.sectors)에서 빌드
-  let tickerOhlcv = {};
-  if (getCurrentMarket() === 'KR') {
-    // KR — 이미 ticker별 정렬된 시계열
-    tickerOhlcv = _state.krOhlcvByTicker || {};
-  } else {
-    // US — 40개 섹터 시트에서 ticker → OHLCV 시계열 빌드
-    Object.values(_state.sectors).forEach(rows => {
-      rows.forEach(r => {
-        if (!r.Ticker || !r.Date || isNaN(r.Close)) return;
-        if (!tickerOhlcv[r.Ticker]) tickerOhlcv[r.Ticker] = [];
-        tickerOhlcv[r.Ticker].push(r);
-      });
+  // v1.80: 시장 무관 — _state.sectors에서 ticker → OHLCV 시계열 빌드 (active 시장)
+  const tickerOhlcv = {};
+  Object.values(_state.sectors).forEach(rows => {
+    rows.forEach(r => {
+      if (!r.Ticker || !r.Date || isNaN(r.Close)) return;
+      if (!tickerOhlcv[r.Ticker]) tickerOhlcv[r.Ticker] = [];
+      tickerOhlcv[r.Ticker].push(r);
     });
-    Object.keys(tickerOhlcv).forEach(t => {
-      tickerOhlcv[t].sort((a,b) => a.Date.localeCompare(b.Date));
-    });
-  }
+  });
+  Object.keys(tickerOhlcv).forEach(t => {
+    tickerOhlcv[t].sort((a,b) => a.Date.localeCompare(b.Date));
+  });
   _state._tickerOhlcv = tickerOhlcv;
 
   // 2) 각 아카이브 시그널 행에 미래 수익률 + CASE 부착
@@ -8257,19 +8380,22 @@ function computeKJP400Avg() {
 function renderMacro() {
   if (!_state.macro.length) { $('macroArea').innerHTML = '<div class="empty-state">매크로 데이터 없음</div>'; return; }
 
-  // KJP400 균일평균 — 일반 매크로 셀들보다 앞에 배치
-  const kjp = computeKJP400Avg();
+  // v1.81: KJP400 균일평균 셀은 US 전용 (KJP400은 미국 시장 KJP300_LIST 종목들의 평균)
+  //   KR 모드에서는 매크로 시트 자체가 KOSPI/KOSDAQ만 포함이므로 KJP400 제외
   let kjpHtml = '';
-  if (kjp) {
-    const dir = kjp.avg >= 0 ? 'up' : 'down';
-    // v1.19: 날짜 포맷 26.05.22 (사용자 요청)
-    const dateShort = kjp.date ? kjp.date.slice(2).replace(/-/g, '.') : '-';
-    const subText = `${kjp.validCount}/${kjp.totalCount} · ${escapeHtml(dateShort)}`;
-    kjpHtml = `<div class="macro-cell ${dir} kjp400-cell" onclick="openMacroChart('KJP400')" title="KJP400 ${kjp.validCount}개 티커의 최근일 일간 등락률 균일평균 (탭하여 차트)">
-      <div class="name"><span class="emoji">📊</span><span>KJP400 <span class="kjp-tag">균일평균</span></span></div>
-      <div class="val ${dir}">${kjp.avg >= 0 ? '+' : ''}${kjp.avg.toFixed(2)}%</div>
-      <div class="chg ${dir}">${subText}</div>
-    </div>`;
+  if (getCurrentMarket() === 'US') {
+    const kjp = computeKJP400Avg();
+    if (kjp) {
+      const dir = kjp.avg >= 0 ? 'up' : 'down';
+      // v1.19: 날짜 포맷 26.05.22 (사용자 요청)
+      const dateShort = kjp.date ? kjp.date.slice(2).replace(/-/g, '.') : '-';
+      const subText = `${kjp.validCount}/${kjp.totalCount} · ${escapeHtml(dateShort)}`;
+      kjpHtml = `<div class="macro-cell ${dir} kjp400-cell" onclick="openMacroChart('KJP400')" title="KJP400 ${kjp.validCount}개 티커의 최근일 일간 등락률 균일평균 (탭하여 차트)">
+        <div class="name"><span class="emoji">📊</span><span>KJP400 <span class="kjp-tag">균일평균</span></span></div>
+        <div class="val ${dir}">${kjp.avg >= 0 ? '+' : ''}${kjp.avg.toFixed(2)}%</div>
+        <div class="chg ${dir}">${subText}</div>
+      </div>`;
+    }
   }
 
   // group by ticker, find latest 2 days
@@ -8691,71 +8817,7 @@ function computeSectorAnalysis() {
 
   const result = {};
 
-  // v1.71: 시장에 따라 다른 데이터 소스
-  //   US: _state.sectors[섹터명] = [모든 ticker의 OHLCV 섞인 배열]
-  //   KR: _state.kjpSectorMap[섹터명] = [{ticker, ...}] + _state.krOhlcvByTicker[ticker] = 시계열
-  if (getCurrentMarket() === 'KR') {
-    const krKjpSectorMap = _state.kjpSectorMap || {};
-    if (Object.keys(krKjpSectorMap).length === 0) return null;
-    if (!_state.krOhlcvByTicker || Object.keys(_state.krOhlcvByTicker).length === 0) return null;
-
-    Object.entries(krKjpSectorMap).forEach(([sectorKey, items]) => {
-      if (!items || items.length === 0) return;
-
-      // 섹터 내 종목들의 일일 수익률을 날짜별로 모음
-      const dateRets = {};
-      items.forEach(it => {
-        const trows = _state.krOhlcvByTicker[it.ticker];
-        if (!trows || trows.length < 2) return;
-        for (let i = 1; i < trows.length; i++) {
-          const c = trows[i].Close;
-          const p = trows[i-1].Close;
-          if (!isFinite(c) || !isFinite(p) || p <= 0) continue;
-          const d = trows[i].Date;
-          if (!dateRets[d]) dateRets[d] = [];
-          dateRets[d].push((c - p) / p);
-        }
-      });
-
-      const sortedDates = Object.keys(dateRets).sort();
-      if (sortedDates.length < 2) return;
-      const dailyRet = sortedDates.map(d => ({ date: d, ret: _mean(dateRets[d]) }));
-
-      const last60 = dailyRet.slice(-60).map(d => d.ret);
-      const std = _std(last60);
-      if (std <= 0) return;
-
-      const latest = dailyRet[dailyRet.length - 1];
-      const change = latest.ret * 100;
-      const sigma = latest.ret / std;
-
-      const last30 = dailyRet.slice(-30);
-      const sigmaHist30 = last30.slice().reverse().map(d => ({
-        date: d.date, sigma: d.ret / std,
-      }));
-
-      const fullSigmas = dailyRet.map(d => d.ret / std);
-      let adaptive = { avg: 0, delta: 0, window: 5 };
-      if (fullSigmas.length > 30) {
-        const std5  = _std(fullSigmas.slice(-5));
-        const std30 = _std(fullSigmas.slice(-30));
-        const kRatio = std5 > 0 ? std30 / std5 : 1.0;
-        const w = Math.floor(Math.max(3, Math.min(10, 5 * kRatio)));
-        const avgCurr = _mean(fullSigmas.slice(-w));
-        const avgPrev = _mean(fullSigmas.slice(-(w+1), -1));
-        adaptive = { avg: avgCurr, delta: avgCurr - avgPrev, window: w };
-      }
-
-      result[sectorKey] = {
-        change, sigma, sigmaHist30, adaptive,
-        latestDate: latest.date,
-        tickerCount: items.length,
-      };
-    });
-    return result;
-  }
-
-  // US — 기존 로직
+  // v1.80: 시장 무관 — _state.sectors (active 시장) 그대로 사용
   if (!_state.sectors || Object.keys(_state.sectors).length === 0) return null;
 
   Object.entries(_state.sectors).forEach(([sectorKey, rows]) => {
@@ -9209,7 +9271,7 @@ function drawSectorChart(sectorKey, sectorName) {
   const ctx = canvas.getContext('2d');
   if (_sectorChart) { _sectorChart.destroy(); _sectorChart = null; }
 
-  const light = (typeof getCurrentTheme === 'function' && getCurrentTheme() === 'light');
+  const light = false;  // v1.77: 다크 모드 고정 (v1.65에서 라이트 모드 제거)
   const lineColor = chgPct >= 0 ? '#ff6b6b' : '#4dabf7';
   const fillColor = chgPct >= 0 ? 'rgba(255,107,107,0.12)' : 'rgba(77,171,247,0.12)';
 
@@ -9267,7 +9329,7 @@ function drawMiniSeriesChart(canvas, series, opts = {}) {
   if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
   if (!series || series.length < 2) return null;
 
-  const light = (typeof getCurrentTheme === 'function' && getCurrentTheme() === 'light');
+  const light = false;  // v1.77: 다크 모드 고정 (v1.65에서 라이트 모드 제거)
   const dates = series.map(s => s.date);
   const values = series.map(s => s.value);
   const first = values[0], last = values[values.length - 1];
@@ -9328,6 +9390,11 @@ function drawMiniSeriesChart(canvas, series, opts = {}) {
 }
 
 function openSectorModal(sectorKey) {
+  // v1.79: KR 모드 — framework(미국 12계층) 없으므로 KJP100 섹터 그룹으로 별도 모달
+  if (getCurrentMarket() === 'KR') {
+    openSectorModalKR(sectorKey);
+    return;
+  }
   const found = _findSFCellByKey(sectorKey);
   if (!found) {
     console.warn('Sector not found in framework:', sectorKey);
@@ -9410,11 +9477,213 @@ function openSectorModal(sectorKey) {
   }
 }
 
+// v1.79: KR 섹터 모달 — KJP100 섹터 그룹 + _state.sectors[섹터명] 단순 표시
+//   미국과 달리 12계층 framework 없으므로 헤더에 계층 정보 표시 X
+// v1.80: _state.sectors (시장 swap된 active) 사용 — 미국과 동일 데이터 구조
+function openSectorModalKR(sectorKey) {
+  const items = (_state.kjpSectorMap || {})[sectorKey] || [];
+  if (items.length === 0) {
+    $('sectorModalBody').innerHTML = `<div class="sec-modal-empty">이 섹터에 매핑된 종목이 KJP100에 없습니다.<br><span style="font-size:10px;opacity:0.7;">키: <code>${escapeHtml(sectorKey)}</code></span></div>`;
+    $('sectorModal').classList.add('active');
+    return;
+  }
+
+  // v1.80: _state.sectors[sectorKey]에서 종목별 최근 2개 종가로 등락률 계산
+  const sectorRows = _state.sectors[sectorKey] || [];
+  const byTicker = {};
+  sectorRows.forEach(r => {
+    if (!byTicker[r.Ticker]) byTicker[r.Ticker] = [];
+    byTicker[r.Ticker].push(r);
+  });
+  // 종목별 최신 등락 계산
+  const tickerData = items.map(it => {
+    const trows = (byTicker[it.ticker] || []).slice().sort((a, b) => a.Date.localeCompare(b.Date));
+    let growth = null, latestDate = null;
+    if (trows.length >= 2) {
+      const cur = trows[trows.length - 1];
+      const prev = trows[trows.length - 2];
+      if (prev.Close > 0) growth = (cur.Close / prev.Close - 1) * 100;
+      latestDate = cur.Date;
+    } else if (trows.length === 1) {
+      latestDate = trows[0].Date;
+    }
+    return {
+      ticker: it.ticker,
+      company: it.company || '',
+      desc: it.desc || '',
+      growth,
+      date: latestDate,
+    };
+  });
+
+  // 평균 등락률 + 데이터 미보유 수
+  const valid = tickerData.filter(t => t.growth != null);
+  const avgGrowth = valid.length > 0 ? valid.reduce((s, t) => s + t.growth, 0) / valid.length : null;
+  const dataMissing = tickerData.length - valid.length;
+  const dates = valid.map(t => t.date).sort();
+  const latestDate = dates.length > 0 ? dates[dates.length - 1] : '-';
+
+  // 헤더
+  let avgHtml = '';
+  if (avgGrowth != null) {
+    const cls = avgGrowth > 0.05 ? 'up' : avgGrowth < -0.05 ? 'down' : 'flat';
+    avgHtml = `<span class="sec-modal-avg ${cls}">평균 ${avgGrowth >= 0 ? '+' : ''}${avgGrowth.toFixed(2)}%</span>`;
+  }
+
+  let html = `<div class="sec-modal-header" style="--c-rgb:120, 120, 200;">
+    <div class="sec-modal-title-row">
+      <span class="sec-modal-emoji">🇰🇷</span>
+      <span class="sec-modal-title">${escapeHtml(sectorKey)}</span>
+      ${avgHtml}
+    </div>
+    <span class="sec-modal-layer">한국 시장</span>
+  </div>`;
+
+  const metaParts = [
+    `기준일: <b>${escapeHtml(latestDate)}</b>`,
+    `티커 <b>${items.length}개</b>`,
+  ];
+  if (dataMissing > 0) metaParts.push(`<span style="opacity:0.7;">(${dataMissing}개는 가격 데이터 없음)</span>`);
+  html += `<div class="sec-modal-meta">${metaParts.join(' · ')}</div>`;
+
+  // 90일 평균 추이 차트 placeholder
+  html += `<div class="sec-modal-chart-wrap" id="sectorChartWrap"></div>`;
+
+  // 종목 테이블 — 등락률 내림차순
+  const sorted = tickerData.slice().sort((a, b) => {
+    if (a.growth == null && b.growth == null) return 0;
+    if (a.growth == null) return 1;
+    if (b.growth == null) return -1;
+    return b.growth - a.growth;
+  });
+
+  html += `<div class="sec-modal-table-wrap"><table class="sec-modal-table"><thead><tr>
+    <th>회사명</th><th>간단 설명</th><th class="num">최근일 등락</th>
+  </tr></thead><tbody>`;
+  sorted.forEach(t => {
+    let cls = 'nodata', txt = '—';
+    if (t.growth != null) {
+      cls = t.growth > 0.005 ? 'up' : t.growth < -0.005 ? 'down' : '';
+      txt = `${t.growth >= 0 ? '+' : ''}${t.growth.toFixed(2)}%`;
+    }
+    const displayLabel = t.company
+      ? `${escapeHtml(t.company)} <span style="opacity:0.55;font-size:10px;">(${escapeHtml(t.ticker)})</span>`
+      : escapeHtml(t.ticker);
+    html += `<tr>
+      <td class="ticker" data-ticker="${escapeAttr(t.ticker)}">${tickerLogoHtml(t.ticker, sectorKey)}${displayLabel}</td>
+      <td class="desc"><div class="desc-inner">${escapeHtml(t.desc)}</div></td>
+      <td class="num ${cls}">${txt}</td>
+    </tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  $('sectorModalBody').innerHTML = html;
+  $('sectorModal').classList.add('active');
+
+  // 90일 평균 추이 차트 (KR용) — _state.sectors[섹터] 사용
+  setTimeout(() => drawSectorChartKR(sectorKey, items, byTicker), 50);
+
+  // 티커 클릭 → 차트 모달 (한 번만 부착)
+  const body = $('sectorModalBody');
+  if (!body._tickerClickBound) {
+    body.addEventListener('click', (e) => {
+      const td = e.target.closest('td.ticker[data-ticker]');
+      if (!td) return;
+      const tk = td.getAttribute('data-ticker');
+      if (!tk) return;
+      closeSectorModal();
+      openChart(tk);
+    });
+    body._tickerClickBound = true;
+  }
+}
+
+// v1.80: KR 섹터 90일 평균 추이 — _state.sectors[섹터]에서 종목별 시계열로 정규화 평균
+function drawSectorChartKR(sectorKey, items, byTicker) {
+  const wrap = $('sectorChartWrap');
+  if (!wrap) return;
+
+  // 섹터 내 종목들의 시계열 모음 (byTicker는 openSectorModalKR에서 이미 계산)
+  const allDates = new Set();
+  const tickerSeries = {};
+  items.forEach(it => {
+    const rows = (byTicker[it.ticker] || []);
+    if (rows.length === 0) return;
+    tickerSeries[it.ticker] = {};
+    rows.forEach(r => {
+      tickerSeries[it.ticker][r.Date] = r.Close;
+      allDates.add(r.Date);
+    });
+  });
+  if (Object.keys(tickerSeries).length === 0) {
+    wrap.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-mute);font-size:11px;">차트 데이터 없음</div>';
+    return;
+  }
+  const sortedDates = Array.from(allDates).sort();
+  const last90 = sortedDates.slice(-90);
+  if (last90.length < 2) {
+    wrap.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-mute);font-size:11px;">데이터 부족</div>';
+    return;
+  }
+
+  // 각 종목 첫 거래일 종가를 100으로 정규화 후 일별 평균
+  const tickerNorm = {};
+  Object.entries(tickerSeries).forEach(([tk, m]) => {
+    let base = null;
+    for (const d of last90) {
+      if (m[d] != null) { base = m[d]; break; }
+    }
+    if (!base || base <= 0) return;
+    tickerNorm[tk] = last90.map(d => m[d] != null ? (m[d] / base * 100) : null);
+  });
+  const avgSeries = last90.map((d, i) => {
+    const vals = Object.values(tickerNorm).map(arr => arr[i]).filter(v => v != null);
+    return vals.length > 0 ? vals.reduce((a,b) => a+b, 0) / vals.length : null;
+  });
+
+  wrap.innerHTML = '<canvas id="sectorChartCanvasKR" style="width:100%;height:180px;"></canvas>';
+  const ctx = $('sectorChartCanvasKR').getContext('2d');
+  if (window._secChartKR) try { window._secChartKR.destroy(); } catch (e) {}
+  window._secChartKR = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: last90,
+      datasets: [{
+        label: sectorKey,
+        data: avgSeries,
+        borderColor: '#6a9955',
+        backgroundColor: 'rgba(106,153,85,0.1)',
+        fill: true,
+        tension: 0.1,
+        pointRadius: 0,
+        borderWidth: 1.8,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (c) => `${c.parsed.y != null ? c.parsed.y.toFixed(1) : '-'} (기준일=100)`,
+          },
+        },
+      },
+      scales: {
+        x: { ticks: { color: '#9d9d9d', maxTicksLimit: 6, font: { size: 10 } }, grid: { color: 'rgba(62,62,66,0.3)' } },
+        y: { ticks: { color: '#9d9d9d', font: { size: 10 } }, grid: { color: 'rgba(62,62,66,0.3)' } },
+      },
+    },
+  });
+}
+
 function closeSectorModal() {
   $('sectorModal').classList.remove('active');
   // v1.24: 차트 정리 (레퍼런스 패턴)
   if (_sectorChart) { _sectorChart.destroy(); _sectorChart = null; }
   if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
+  // v1.79: KR 섹터 차트도 정리
+  if (window._secChartKR) { try { window._secChartKR.destroy(); } catch (e) {} window._secChartKR = null; }
 }
 function closeSectorModalIfOverlay(e) {
   if (e.target.id === 'sectorModal') closeSectorModal();
@@ -9578,7 +9847,10 @@ const ARCHIVE_COLS = [
   { key: 'Description',       label: '설명',         t: 's', w: '180px', cls: 'desc-cell' },
   { key: 'Date',              label: '일자',         t: 's', w: '100px' },
   { key: 'Signal_Type',       label: '시그널',       t: 's', w: '220px' },
-  { key: 'Close_Price',       label: '종가($)',      t: 'n', w: '80px',  fmt: v => v != null ? '$' + v.toFixed(2) : '-' },
+  // v1.90: 종가 컬럼 — KR 모드면 원화 (정수 + 천 단위 콤마), US 모드면 $ + 소수 2자리
+  { key: 'Close_Price',       label: '종가',         t: 'n', w: '90px',
+    dynamicLabel: () => getCurrentMarket() === 'KR' ? '종가 (원)' : '종가 ($)',
+    fmt: v => v == null ? '-' : (getCurrentMarket() === 'KR' ? Math.round(v).toLocaleString() : '$' + v.toFixed(2)) },
   { key: 'Pred_5d',           label: '예측 5d',      t: 'n', w: '85px',  fmt: v => v != null ? '+' + v.toFixed(2) + '%' : '-' },
   { key: 'RSI_14',            label: 'RSI',          t: 'n', w: '55px',  fmt: v => v != null ? v.toFixed(1) : '-' },
   { key: 'MFI_14',            label: 'MFI',          t: 'n', w: '55px',  fmt: v => v != null ? v.toFixed(1) : '-' },
@@ -9614,7 +9886,9 @@ function renderArchiveTable() {
     const sortedCls = c.key === _state.sortKey ? (_state.sortDir === 'asc' ? 'sorted-asc' : 'sorted') : '';
     const thCls = (c.t === 'n' ? 'num' : '') + (c.cls === 'check' ? ' check' : '');
     const titleAttr = c.title ? ` title="${escapeAttr(c.title)}"` : '';
-    html += `<th class="${thCls} ${sortedCls}" data-sort="${c.key}" style="width:${c.w}"${titleAttr}>${c.label}</th>`;
+    // v1.90: dynamicLabel 지원 (시장별 통화 라벨)
+    const colLabel = (typeof c.dynamicLabel === 'function') ? c.dynamicLabel() : c.label;
+    html += `<th class="${thCls} ${sortedCls}" data-sort="${c.key}" style="width:${c.w}"${titleAttr}>${colLabel}</th>`;
   });
   html += '</tr></thead><tbody>';
   // v1.19: 점진적 로드 (50건씩) — 사용자가 "더 보기"로 추가 표시
@@ -9804,27 +10078,43 @@ let _chart = null;
 const _adhocOhlcv = {};
 
 function findTickerSeries(ticker) {
-  // v1.70: KR 모드 — krOhlcvByTicker 단일 시트에서 직접 조회
-  if (getCurrentMarket() === 'KR') {
-    const rows = (_state.krOhlcvByTicker || {})[ticker];
-    if (rows && rows.length) {
-      const sec = (_state.tickerSectorMap || {})[ticker] || '🇰🇷 한국';
-      return { sector: sec, rows };  // 이미 날짜순 정렬됨
-    }
-    return null;
-  }
-  // 1) 섹터 시트들 안에서 찾기
+  // v1.80: 시장 무관 — _state.sectors에서 찾음 (시장 swap 후 active sectors)
   for (const sec of Object.keys(_state.sectors)) {
     const rows = _state.sectors[sec].filter(r => r.Ticker === ticker);
-    if (rows.length > 0) return { sector: sec, rows: rows.sort((a,b) => a.Date.localeCompare(b.Date)) };
+    if (rows.length > 0) return { sector: sec, rows: rows.slice().sort((a,b) => a.Date.localeCompare(b.Date)) };
   }
-  // 2) 세션 캐시에서 찾기
+  // 세션 캐시 (Yahoo .KS/.KQ 결과)
   if (_adhocOhlcv[ticker]) return { sector: '🔍 외부 조회', rows: _adhocOhlcv[ticker] };
   return null;
 }
 
 async function fetchAdhocOhlcv(ticker) {
   if (_adhocOhlcv[ticker]) return _adhocOhlcv[ticker];
+
+  // v1.78: KR 모드 — Yahoo Finance는 한국 ticker에 .KS(코스피) / .KQ(코스닥) 접미사 필요
+  //   예: 005930 → 005930.KS (삼성전자 코스피)
+  //       483650 → 483650.KS (또는 .KQ — 둘 다 시도)
+  if (getCurrentMarket() === 'KR') {
+    const suffixes = ['.KS', '.KQ'];  // 코스피 우선, 실패 시 코스닥
+    let lastErr = null;
+    for (const sfx of suffixes) {
+      try {
+        const r = await apiCall('getOhlcv', { ticker: ticker + sfx });
+        if (r && r.ok && r.rows && r.rows.length) {
+          const rows = r.rows.map(normalizeOhlcvRow).filter(x => x.Date && !isNaN(x.Close));
+          // Yahoo 반환 ticker는 '005930.KS'지만 우리 매핑은 원본 ticker(6자리). normalize:
+          rows.forEach(row => { row.Ticker = ticker; });
+          _adhocOhlcv[ticker] = rows;
+          console.log(`[fetchAdhocOhlcv/KR] ${ticker}${sfx} → ${rows.length}행 fetched`);
+          return rows;
+        }
+        lastErr = new Error(`${sfx}: ${r && r.error || '데이터 없음'}`);
+      } catch (e) { lastErr = e; }
+    }
+    throw new Error(`한국 ticker 조회 실패 (.KS/.KQ 모두 시도): ${lastErr ? lastErr.message : ''}`);
+  }
+
+  // US — 기존 로직
   try {
     const r = await apiCall('getOhlcv', { ticker });
     if (!r.ok) throw new Error(r.error || 'fetch 실패');
@@ -9838,7 +10128,10 @@ async function fetchAdhocOhlcv(ticker) {
 }
 
 async function openChart(ticker) {
-  ticker = String(ticker).toUpperCase().trim();
+  // v1.88: KR 모드면 ticker 자동 정규화 (' 제거 + 6자리 padding)
+  //   사용자가 '5930' 입력해도 _state.sectors의 '005930'과 매칭되도록
+  //   회귀 방지: 여기서 한 번만 정규화하면 _state.sectors lookup, 매핑, 표시 모두 일관
+  ticker = normalizeTicker(ticker, getCurrentMarket());
   if (!ticker) return;
 
   let found = findTickerSeries(ticker);
@@ -9851,7 +10144,12 @@ async function openChart(ticker) {
       found = { sector: '🔍 외부 조회', rows };
     } catch (err) {
       hideLoading();
-      alert(`${ticker} 데이터를 찾을 수 없습니다.\n\n섹터 시트에 없고, 외부 조회도 실패: ${err.message}\n\nApps Script에 getOhlcv 함수가 추가되어 있는지 확인하세요. (자세한 내용은 챗 마지막 안내 참고)`);
+      // v1.78: 시장별 명확한 에러
+      if (getCurrentMarket() === 'KR') {
+        alert(`${ticker} OHLCV 데이터를 찾을 수 없습니다.\n\n• KR OHLCV 시트(폴더 안)에 이 종목 데이터가 없고\n• Yahoo Finance .KS/.KQ 조회도 실패: ${err.message}\n\n해결: KR OHLCV 시트에 이 종목의 시계열을 추가하거나, KJP100에서 이 종목을 제외하세요.`);
+      } else {
+        alert(`${ticker} 데이터를 찾을 수 없습니다.\n\n섹터 시트에 없고, 외부 조회도 실패: ${err.message}\n\nApps Script에 getOhlcv 함수가 추가되어 있는지 확인하세요.`);
+      }
       return;
     }
     hideLoading();
@@ -9910,15 +10208,16 @@ async function openChart(ticker) {
     .filter(t => t.x && t.x >= cutoffStr);
 
   // Signal markers from archive — respect global signal filter
-  // v1.39 BUGFIX: r.Date도 안전망 normalize (이미 normalizeArchiveRow를 거치지만 방어적)
+  // v1.81: priority도 시장별 — KR엔 'T' 한 종류만, US는 4가지 T_*
   const sigMarkersByType = {};
   getSignalTypes().forEach(s => sigMarkersByType[s] = []);
+  const priority = (getCurrentMarket() === 'KR')
+    ? ['V_Panic', 'V_Vol', 'V_Main', 'T']
+    : ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide'];
   _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
     const dateStr = normalizeDate(r.Date);
     if (!dateStr || dateStr < cutoffStr) return;
     const sigs = (r.Signal_Type || '').split('+').map(s => s.trim()).filter(Boolean);
-    // priority: V_Panic > V_Vol > V_Main > T_Claude_Sharp > T_Claude_Wide > T_KJP_Sharp > T_KJP_Wide
-    const priority = ['V_Panic','V_Vol','V_Main','T_Claude_Sharp','T_Claude_Wide','T_KJP_Sharp','T_KJP_Wide'];
     const primary = priority.find(p => sigs.includes(p) && _state.signalFilter.has(p));
     if (primary) sigMarkersByType[primary].push({ x: dateStr, y: r.Close_Price, pred: r.Pred_5d });
   });
@@ -9958,10 +10257,40 @@ async function openChart(ticker) {
   // Save current ticker for re-render on filter change
   _state.openTicker = ticker;
 
+  // v1.89: KR 모드 — 외국인/기관/개인 누적 수급선 (전체 시계열에서 cumsum 후 90일 윈도우만 잘라 min-max 정규화)
+  //   미국 차트의 A/D 라인 자리에 표시
+  let retailN = null, foreignN = null, instN = null;
+  if (getCurrentMarket() === 'KR') {
+    // 전체 시계열에서 cumsum (시트의 Retail/Foreign/Inst는 일별 순매수)
+    const sortedAll = all.slice().sort((a, b) => a.Date.localeCompare(b.Date));
+    let cumR = 0, cumF = 0, cumI = 0;
+    const cumByDate = {};
+    sortedAll.forEach(r => {
+      cumR += Number(r.Retail) || 0;
+      cumF += Number(r.Foreign) || 0;
+      cumI += Number(r.Inst) || 0;
+      cumByDate[r.Date] = { r: cumR, f: cumF, i: cumI };
+    });
+    // 90일 윈도우 cumsum 시리즈
+    const winR = win.map(r => (cumByDate[r.Date] || { r: 0 }).r);
+    const winF = win.map(r => (cumByDate[r.Date] || { f: 0 }).f);
+    const winI = win.map(r => (cumByDate[r.Date] || { i: 0 }).i);
+    // 각 시리즈 독립 min-max 정규화 (0~100)
+    const normalize = (arr) => {
+      const min = Math.min(...arr), max = Math.max(...arr);
+      if (max === min) return arr.map(() => 50);
+      return arr.map(v => (v - min) / (max - min) * 100);
+    };
+    retailN  = normalize(winR);
+    foreignN = normalize(winF);
+    instN    = normalize(winI);
+  }
+
   drawChart({
     dates, closes, highs, lows, ma20, adN, vols,
     supportMA20, supportRF, prevLow, lastPrice, recentHigh, recentHighIdx,
     buyAvg, tradeMarkers, sigMarkersByType,
+    retailN, foreignN, instN,   // v1.89: KR 모드면 값 있음, 아니면 null
   });
 
   $('chartModal').classList.add('active');
@@ -10211,7 +10540,9 @@ function drawChart(d) {
   if (_chart) _chart.destroy();
 
   const simple = useSimpleMode();  // 모바일 + detailMode OFF → 단순 모드
-  const light = getCurrentTheme() === 'light';
+  // v1.77 BUGFIX: getCurrentTheme이 v1.65에서 제거됨 → ReferenceError로 차트 전체 실패
+  //   다크 모드 고정이므로 light=false 고정
+  const light = false;
 
   const COL = {
     text: light ? '#2c2c2c' : '#d4d4d4',
@@ -10361,11 +10692,21 @@ function drawChart(d) {
   ];
   if (!simple) {
     datasets.push({ label: 'Volume', type: 'bar', data: d.vols, backgroundColor: volBarColors, borderColor: volBarColors, yAxisID: 'yVol', order: 10 });
-    datasets.push({ label: 'A/D Line', data: d.adN, borderColor: COL.ad, backgroundColor: 'transparent', borderWidth: 1, pointRadius: 0, yAxisID: 'yInd', order: 3 });
+    // v1.89: KR 모드면 A/D 라인 대신 외국인(빨강)/기관(파랑)/개인(노랑) 누적 수급선
+    if (getCurrentMarket() === 'KR' && d.foreignN && d.instN && d.retailN) {
+      datasets.push({ label: '외국인 누적', data: d.foreignN, borderColor: '#fa5252', backgroundColor: 'transparent', borderWidth: 1.2, pointRadius: 0, yAxisID: 'yInd', order: 3 });
+      datasets.push({ label: '기관 누적',   data: d.instN,    borderColor: '#339af0', backgroundColor: 'transparent', borderWidth: 1.2, pointRadius: 0, yAxisID: 'yInd', order: 3 });
+      datasets.push({ label: '개인 누적',   data: d.retailN,  borderColor: '#fab005', backgroundColor: 'transparent', borderWidth: 1.2, pointRadius: 0, yAxisID: 'yInd', order: 3 });
+    } else {
+      datasets.push({ label: 'A/D Line', data: d.adN, borderColor: COL.ad, backgroundColor: 'transparent', borderWidth: 1, pointRadius: 0, yAxisID: 'yInd', order: 3 });
+    }
   }
   datasets.push(...sigDatasets);
 
   // Scales — simple 모드에선 x축(일자) / yPrice(가격) 축 완전히 숨김
+  // v1.91: y축 + 라벨 시장별 통화 포맷
+  const isKR91 = getCurrentMarket() === 'KR';
+  const yAxisTitle = isKR91 ? '주가 (원)' : '주가 ($)';
   const scales = {
     x: simple
       ? { display: false }
@@ -10374,14 +10715,18 @@ function drawChart(d) {
       ? { position: 'left', display: false }
       : {
           position: 'left',
-          ticks: { color: COL.text, font: { size: 10 }, callback: v => '$' + v.toFixed(0) },
+          ticks: { color: COL.text, font: { size: 10 }, callback: v => isKR91 ? Math.round(v).toLocaleString() : '$' + v.toFixed(0) },
           grid: { color: COL.gridSoft },
-          title: { display: true, text: '주가 ($)', color: COL.textMute, font: { size: 10 } },
+          title: { display: true, text: yAxisTitle, color: COL.textMute, font: { size: 10 } },
         },
   };
   if (!simple) {
     scales.yVol = { position: 'right', display: false, beginAtZero: true, max: Math.max(...d.vols) * 6 };
-    scales.yInd = { position: 'right', min: 0, max: 100, ticks: { color: COL.textDim, font: { size: 9 } }, grid: { display: false }, title: { display: true, text: 'A/D Line (0-100 정규화)', color: COL.textMute, font: { size: 9 } } };
+    // v1.89: KR 모드면 축 라벨 "투자자 누적 (0-100)"
+    const indTitle = (getCurrentMarket() === 'KR' && d.foreignN)
+      ? '투자자 누적 순매수 (0-100 정규화)'
+      : 'A/D Line (0-100 정규화)';
+    scales.yInd = { position: 'right', min: 0, max: 100, ticks: { color: COL.textDim, font: { size: 9 } }, grid: { display: false }, title: { display: true, text: indTitle, color: COL.textMute, font: { size: 9 } } };
   }
 
   _chart = new Chart(ctx, {
@@ -10407,8 +10752,12 @@ function drawChart(d) {
             label: (c) => {
               const v = c.parsed.y;
               if (c.dataset.label === 'Volume') return simple ? '' : `Vol: ${typeof v === 'number' ? v.toLocaleString() : v}`;
-              const fmtV = typeof v === 'number' ? v.toFixed(2) : v;
-              return `${c.dataset.label}: ${getMarketConfig().currency}${fmtV}`;
+              // v1.91: 누적 수급선 (KR) — 정규화된 0~100 값이라 통화 표시 X
+              if (c.dataset.label === '외국인 누적' || c.dataset.label === '기관 누적' || c.dataset.label === '개인 누적' || c.dataset.label === 'A/D Line') {
+                return `${c.dataset.label}: ${typeof v === 'number' ? v.toFixed(1) : v}`;
+              }
+              // 종가/고가/저가/MA20/시그널 마커 등 — 시장별 통화 포맷
+              return `${c.dataset.label}: ${fmtPrice(v)}`;
             }
           }
         },
@@ -10420,14 +10769,23 @@ function drawChart(d) {
   });
 
   // Legend (HTML) — simple 모드에선 안 보이게 CSS로 숨김 (body.simple-mode .chart-legend)
+  // v1.89: KR 모드면 A/D 자리에 외국인/기관/개인 표시
   const legendItems = [
     { color: COL.close, label: '종가' },
     { color: COL.ma20, label: 'MA20' },
-    { color: COL.ad, label: 'A/D Line' },
+  ];
+  if (getCurrentMarket() === 'KR' && d.foreignN) {
+    legendItems.push({ color: '#fa5252', label: '외국인 누적' });
+    legendItems.push({ color: '#339af0', label: '기관 누적' });
+    legendItems.push({ color: '#fab005', label: '개인 누적' });
+  } else {
+    legendItems.push({ color: COL.ad, label: 'A/D Line' });
+  }
+  legendItems.push(
     { color: COL.sup1, label: 'MA20 지지', dash: true },
     { color: COL.sup2, label: 'Round 지지', dash: true },
     { color: COL.sup3, label: '전저점 지지', dash: true },
-  ];
+  );
   if (d.buyAvg > 0) legendItems.push({ color: COL.buyAvg, label: '평단가' });
   legendItems.push({ color: COL.volSpike, label: 'Volume Spike (≥2× MA30)' });
 
@@ -10514,7 +10872,9 @@ function buildTickerHistoryTable(ticker) {
   ARCHIVE_COLS.forEach(c => {
     const thCls = (c.t === 'n' ? 'num' : '') + (c.cls === 'check' ? ' check' : '');
     const titleAttr = c.title ? ` title="${escapeAttr(c.title)}"` : '';
-    html += `<th class="${thCls}" style="width:${c.w}"${titleAttr}>${c.label}</th>`;
+    // v1.90: dynamicLabel 지원
+    const colLabel = (typeof c.dynamicLabel === 'function') ? c.dynamicLabel() : c.label;
+    html += `<th class="${thCls}" style="width:${c.w}"${titleAttr}>${colLabel}</th>`;
   });
   html += '</tr></thead><tbody>';
 
