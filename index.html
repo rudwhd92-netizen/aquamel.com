@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>AQUAMEL — V-Shape Scanner</title>
 
+<!-- v1.74: Pretendard 한글 폰트 (preconnect로 빠른 로딩) -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
 <!-- ============ PWA META (v1.19) ============ -->
 <meta name="theme-color" content="#1e1e1e">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -153,7 +157,8 @@ html { background: var(--bg); -webkit-tap-highlight-color: transparent; -ms-over
 * { -webkit-tap-highlight-color: transparent; -ms-overflow-style: none; }
 
 body {
-  font-family: '맑은 고딕', 'Malgun Gothic', Arial, sans-serif;
+  /* v1.74: Pretendard 한글 폰트 우선 (CDN), fallback으로 system + Malgun Gothic */
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', 'Segoe UI', sans-serif;
   background: var(--bg);
   min-height: 100vh;
   min-height: 100dvh;  /* v1.55: iOS Safari address bar 동적 높이 */
@@ -183,7 +188,7 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 12px;
 }
-.hero h1 { font-family: Arial, sans-serif; font-weight: 700; font-size: 28px; color: var(--text-hi); }
+.hero h1 { font-family: Arial, sans-serif; font-weight: 700; font-size: 34px; color: var(--text-hi); }
 .hero h1 .hl { color: var(--accent); }
 .hero-brand { display: flex; flex-direction: column; gap: 4px; }
 .hero-tagline {
@@ -196,45 +201,100 @@ body {
 }
 .hero .meta { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--text-mute); }
 .hero .meta .v { color: var(--accent-2); font-weight: 600; font-size: 12px; }
-.theme-switch {
-  position: relative; display: inline-flex; align-items: stretch;
-  width: 62px; height: 28px;
+/* v1.65: 시장 스위치 (US / KR) — 다크/라이트 토글 자리 대체 */
+/* v1.70: KR 모드에서 섹터 FRAME 카드 숨김 */
+[data-market="KR"] #sectorFrameworkCard { display: none !important; }
+/* KR 모드에서 매크로 카드 안에 있는 매크로 표는 미국 데이터 그대로 사용 (사용자 확인) */
+
+/* ============================================================================
+   v1.74: KR 모드 한글 회사명 표시 — 글씨 크기 약간 작게 + truncate + tooltip
+   (Consolas/monospace 빼고 Pretendard 우선 — 한글 가독성 우선)
+   ============================================================================ */
+[data-market="KR"] .buy-point-item .bp-name {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  font-size: 11px;
+  letter-spacing: -0.2px;
+  /* bp-name은 이미 white-space:nowrap + overflow:hidden + text-overflow:ellipsis (1058~1060) */
+}
+[data-market="KR"] .archive-mobile-item .am-ticker {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  font-size: 13px;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* 부모 minmax(0, 92px) 안에 들어가야 */
+}
+[data-market="KR"] .stock-list-row .sl-ticker {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  font-size: 13px;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+[data-market="KR"] table.archive .ticker-cell {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  letter-spacing: -0.2px;
+  /* table cell 안에서 truncate: max-width + inline-block + ellipsis */
+  display: inline-block;
+  max-width: 140px;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* 모달 헤더 회사명 — KR 모드에서 약간 작게 (긴 한글 회사명 대응) */
+[data-market="KR"] .modal-title .company-name {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  letter-spacing: -0.3px;
+}
+
+/* v1.66: 국기 이미지 적용 */
+.market-switch {
+  display: inline-flex;
   background: var(--bg-3);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  cursor: pointer; padding: 0; margin: 0;
+  border-radius: 18px;
+  padding: 3px;
+  gap: 2px;
+  align-items: center;
+}
+.market-switch .mkt-btn {
+  background: none; border: none;
+  padding: 4px 10px 4px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mute);
   font-family: inherit;
+  cursor: pointer;
+  border-radius: 14px;
+  transition: background 0.18s, color 0.18s;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.market-switch .mkt-flag {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
   flex-shrink: 0;
 }
-.theme-switch .theme-icon {
-  flex: 1; height: 100%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; line-height: 1;
-  position: relative; z-index: 2;
-  user-select: none;
-  filter: grayscale(0.4);
-  transition: filter 0.2s;
-}
-.theme-switch .theme-slider {
-  position: absolute;
-  top: 1px;
-  width: 28px; height: 24px;
+.market-switch .mkt-btn:hover { color: var(--text); }
+.market-switch .mkt-btn.active {
   background: var(--accent);
-  border-radius: 12px;
-  z-index: 1;
-  /* default = dark mode → slider on right */
-  transform: translateX(31px);
+  color: #fff;
 }
-body.transitions-ready .theme-switch .theme-slider {
-  transition: transform 0.25s ease, background 0.2s;
+.market-switch .mkt-btn.active:hover { color: #fff; }
+@media (max-width: 640px) {
+  .market-switch { padding: 2px; }
+  .market-switch .mkt-btn { padding: 3px 8px 3px 3px; font-size: 11px; gap: 4px; }
+  .market-switch .mkt-flag { width: 16px; height: 16px; }
 }
-/* Dark mode active: emphasize moon */
-:root:not([data-theme="light"]) .theme-switch .icon-dark { filter: grayscale(0); }
-/* Light mode: slider on left, emphasize sun */
-[data-theme="light"] .theme-switch .theme-slider {
-  transform: translateX(1px);
-}
-[data-theme="light"] .theme-switch .icon-light { filter: grayscale(0); }
 
 /* ============ CARDS (collapsible) ============ */
 section.card {
@@ -361,6 +421,9 @@ section.card.collapsed > .card-header { border-radius: 6px; margin-bottom: 0; }
 .sig-btn[data-sig="T_Claude_Sharp"] .dot { background: var(--t-claude-sharp); }
 .sig-btn[data-sig="T_Claude_Wide"].on { border-color: var(--t-claude-wide); }
 .sig-btn[data-sig="T_Claude_Wide"] .dot { background: var(--t-claude-wide); }
+/* v1.68: 한국 T 신호 */
+.sig-btn[data-sig="T"].on { border-color: #0288d1; }
+.sig-btn[data-sig="T"] .dot { background: #0288d1; }
 
 .filter-controls {
   display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
@@ -704,6 +767,8 @@ table.archive .mfi-high { color: var(--danger); font-weight: 600; }
 .sig-badge.T_KJP_Wide     { color: #64b5f6;               border-color: var(--t-kjp-wide);     background: rgba(2,136,209,0.12); }
 .sig-badge.T_Claude_Sharp { color: #f48fb1;               border-color: var(--t-claude-sharp); background: rgba(173,20,87,0.15); }
 .sig-badge.T_Claude_Wide  { color: #ce93d8;               border-color: var(--t-claude-wide);  background: rgba(171,71,188,0.12); }
+/* v1.68: 한국 T 신호 배지 */
+.sig-badge.T              { color: #64b5f6;               border-color: #0288d1;               background: rgba(2,136,209,0.12); }
 
 /* ============ SPREADSHEET (Portfolio / Trade history) ============ */
 .tabs-row { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
@@ -940,7 +1005,7 @@ table.sheet tbody tr.drop-below td:last-child {
 .modal-title .company-name { color: var(--text-hi); }
 .modal-title .ticker-paren {
   color: var(--text-mute); font-weight: 600; font-size: 18px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Pretendard', 'Inter', sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Inter', sans-serif;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
 }
@@ -951,7 +1016,7 @@ table.sheet tbody tr.drop-below td:last-child {
   margin-bottom: 14px;     /* v1.35 */
   line-height: 1.1;
   letter-spacing: -1px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Pretendard', 'Inter', sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Inter', sans-serif;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
   display: flex; align-items: baseline; gap: 12px;
@@ -1690,7 +1755,7 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
 .dash-hold-meta,
 .dash-hidden-chip,
 .dash-mtx-bubble-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Pretendard', 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1, 'cv03' 1, 'cv04' 1, 'ss01' 1;
   letter-spacing: -0.2px;
@@ -2783,7 +2848,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   /* v1.32: 모바일에서도 hero는 한 줄로 — 좌측 brand + 우측 meta */
   .hero { padding-bottom: 14px; margin-bottom: 16px; flex-wrap: nowrap; align-items: center; gap: 8px; }
   .hero-brand { flex: 1; min-width: 0; }
-  .hero h1 { font-size: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hero h1 { font-size: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .hero-tagline {
     font-size: 9px; letter-spacing: 0.15px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -2792,10 +2857,6 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .hero .meta { flex-shrink: 0; gap: 8px; }
   .hero .meta .v { font-size: 11px; padding-left: 2px; }
   .hero-refresh { width: 26px; height: 26px; font-size: 14px; }
-  /* v1.37: 모바일 슬라이더 transform 값 PC 31px → 모바일 폭에 맞게 28px (안 그러면 v 텍스트 침범) */
-  .theme-switch { width: 54px; height: 26px; }
-  .theme-switch .theme-slider { width: 24px; height: 22px; transform: translateX(28px); }
-  [data-theme="light"] .theme-switch .theme-slider { transform: translateX(1px); }
   .hero p { font-size: 11px; }
   section.card { padding: 14px; margin-bottom: 12px; max-width: 100%; min-width: 0; overflow: hidden; }
   section.card .card-header { margin: -14px -14px 0 -14px; padding: 12px 14px; }
@@ -3503,15 +3564,11 @@ table.combo-eval tbody td .nodata {
 /* ============================================================== */
 @media (max-width: 480px) {
   .container { padding: 10px 8px 32px; }
-  .hero h1 { font-size: 17px; }
+  .hero h1 { font-size: 20px; }
   .hero-tagline { font-size: 8px; }
   .hero .meta { gap: 6px; }
   .hero .meta .v { font-size: 10px; padding-left: 1px; }
   .hero-refresh { width: 24px; height: 24px; font-size: 13px; }
-  /* v1.37: ≤480 폭에서 슬라이더 translate도 더 작게 (안 그러면 컨테이너 밖으로 삐져나옴) */
-  .theme-switch { width: 48px; height: 24px; }
-  .theme-switch .theme-slider { width: 22px; height: 20px; transform: translateX(24px); }
-  .theme-switch .theme-icon { font-size: 11px; }
   section.card { padding: 12px 10px; }
   section.card h2 { font-size: 13px; }
 
@@ -3602,12 +3659,19 @@ table.combo-eval tbody td .nodata {
     </div>
     <div class="meta">
       <button class="hero-refresh" id="heroRefreshBtn" onclick="autoLoadData()" title="데이터 새로고침" aria-label="데이터 새로고침">↻</button>
-      <button class="theme-switch" id="themeToggle" onclick="toggleTheme()" aria-label="라이트/다크 전환">
-        <span class="theme-slider"></span>
-        <span class="theme-icon icon-light">☀️</span>
-        <span class="theme-icon icon-dark">🌙</span>
-      </button>
-      <div class="v">v1.64</div>
+      <!-- v1.65: 다크/라이트 토글 제거 → 시장 스위치 (US / KR) -->
+      <!-- v1.66: 국기 이미지 적용 (./flags/US.png, KR.png) -->
+      <div class="market-switch" role="tablist" aria-label="시장 선택">
+        <button class="mkt-btn active" data-market="US" onclick="setMarket('US')" role="tab" aria-selected="true" title="미국 시장">
+          <img class="mkt-flag" src="./flags/US.png" alt="US" loading="lazy">
+          <span class="mkt-label">US</span>
+        </button>
+        <button class="mkt-btn" data-market="KR" onclick="setMarket('KR')" role="tab" aria-selected="false" title="한국 시장">
+          <img class="mkt-flag" src="./flags/KR.png" alt="KR" loading="lazy">
+          <span class="mkt-label">KR</span>
+        </button>
+      </div>
+      <div class="v">v1.76</div>
     </div>
   </header>
 
@@ -3834,8 +3898,8 @@ table.combo-eval tbody td .nodata {
     </div>
     <div class="card-body">
       <div class="usd-banner">
-        <span class="icon">$</span>
-        <span><b style="color:var(--text-hi);">모든 금액 단위는 USD (미국 달러)</b>입니다. 본 영역은 LocalStorage에 저장되어 <b>본인 PC에서만</b> 보입니다. "데이터 저장" 버튼으로 구글 시트에 백업하여 멀티디바이스 동기화 가능.</span>
+        <span class="icon" data-ccy-icon>$</span>
+        <span data-ccy-notice><b style="color:var(--text-hi);">모든 금액 단위는 USD (미국 달러)</b>입니다. 본 영역은 LocalStorage에 저장되어 <b>본인 PC에서만</b> 보입니다. "데이터 저장" 버튼으로 구글 시트에 백업하여 멀티디바이스 동기화 가능.</span>
       </div>
 
       <div class="tabs-row">
@@ -4068,7 +4132,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.64 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.76 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -4164,6 +4228,43 @@ const SIGNAL_GROUPS = [
 ];
 
 // ============================================================================
+// v1.68: 한국 시장 신호 정의
+//   V 알고리즘은 미국과 동일 (V_Main, V_Vol, V_Panic)
+//   Tree 알고리즘은 메인/서브 구분 없이 그냥 'T' 하나
+// ============================================================================
+const KR_SIGNAL_TYPES = ['V_Main','V_Panic','V_Vol','T'];
+const KR_SIGNAL_COLORS = {
+  'V_Main':  '#fa5252',
+  'V_Panic': '#b71c1c',
+  'V_Vol':   '#e65100',
+  'T':       '#0288d1',  // 청색 (미국 T_KJP_Wide 색감 차용)
+};
+const KR_SIGNAL_SHAPE = {
+  'V_Main':  'circle',
+  'V_Panic': 'triangle',
+  'V_Vol':   'rect',
+  'T':       'rectRot',  // ◆ diamond
+};
+const KR_SIGNAL_GROUPS = [
+  {
+    key: 'V', label: 'V 알고리즘',
+    core: ['V_Main', 'V_Vol'],
+    sub:  ['V_Panic'],
+  },
+  {
+    key: 'T', label: 'Tree 알고리즘',
+    core: ['T'],
+    sub:  [],
+  },
+];
+
+// 시장에 따라 적절한 신호 정의 반환
+function getSignalTypes()  { return getCurrentMarket() === 'KR' ? KR_SIGNAL_TYPES  : SIGNAL_TYPES; }
+function getSignalColors() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_COLORS : SIGNAL_COLORS; }
+function getSignalShapes() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_SHAPE  : SIGNAL_SHAPE; }
+function getSignalGroups() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_GROUPS : SIGNAL_GROUPS; }
+
+// ============================================================================
 // BACKEND (박제 — 절대 바뀌지 않는 값)
 // ============================================================================
 // ⚠️ Apps Script URL만 본인 배포 직후 한 번 교체하세요. 그 외는 손대지 않음.
@@ -4178,9 +4279,146 @@ const BACKEND = {
 };
 
 // ============================================================================
+// v1.66 MARKET_CONFIG — 시장별(US/KR) 데이터 소스 정의
+//   사용자가 시장 토글 시 getConfig()가 이 객체에서 값 가져옴
+// ============================================================================
+const MARKET_CONFIG = {
+  US: {
+    label: '미국',
+    flagIcon: './flags/US.png',
+    masterSheetId: BACKEND.ARCHIVE_SHEET_ID,
+    masterTab: 'KJP300_LIST',
+    archiveSheetId: BACKEND.ARCHIVE_SHEET_ID,
+    archiveTab: BACKEND.ARCHIVE_TAB,
+    sectorFolderId: BACKEND.SECTOR_FOLDER_ID,
+    displayMode: 'ticker',
+    descMode: 'detailed',
+    showSectorFrame: true,
+    dataTypeSuffix: '_US',
+    // v1.70: 화폐 표기
+    currency: '$',
+    currencyLocale: 'en-US',
+    priceDecimals: 2,  // $123.45
+  },
+  KR: {
+    label: '한국',
+    flagIcon: './flags/KR.png',
+    masterSheetId: '18pueE0s8My-VrxVbUcmEOExr8FWfhRn7J5fI1-Gml0o',
+    masterTab: 'KJP100',
+    archiveSheetId: '18pueE0s8My-VrxVbUcmEOExr8FWfhRn7J5fI1-Gml0o',
+    archiveTab: 'V_Shape_Archive_KOR',
+    sectorFolderId: BACKEND.SECTOR_FOLDER_ID,  // 매크로/섹터(40개)는 US 그대로 사용
+    displayMode: 'company',
+    descMode: 'simple',
+    showSectorFrame: false,
+    dataTypeSuffix: '_KR',
+    // v1.70: 한국 OHLCV — 단일 시트 long form (폴더 안 시트 1개)
+    //   컬럼: Ticker, Date, Open, Close, High, Low, Volume, Retail, Foreign, Inst
+    ohlcvFolderId: '1iBfIWc7NuP0ApqrGhSJwPR0al1OJMTMi',
+    // v1.74: 화폐 — 사용자 요청으로 원(₩) 기호 제거. 숫자만 표시 (천단위 콤마)
+    currency: '',
+    currencyLocale: 'ko-KR',
+    priceDecimals: 0,  // 123,000 (정수 + 천단위 콤마)
+  },
+};
+
+function getMarketConfig() {
+  const m = getCurrentMarket();
+  return MARKET_CONFIG[m] || MARKET_CONFIG.US;
+}
+
+// v1.70: 시장에 맞는 가격 포맷
+//   US: $123.45 (소수 2자리, $ 기호)
+//   KR: 123,000 (정수 + 천단위 콤마, 통화 기호 없음 — 사용자 요청 v1.74)
+function fmtPrice(v) {
+  if (v == null || !isFinite(v)) return '-';
+  const cfg = getMarketConfig();
+  // v1.74: priceDecimals=0이면 정수+콤마, 아니면 소수점 + 통화기호
+  if (cfg.priceDecimals === 0) {
+    return cfg.currency + Math.round(v).toLocaleString(cfg.currencyLocale);
+  }
+  return cfg.currency + Number(v).toFixed(cfg.priceDecimals);
+}
+
+// 큰 금액 포맷 (포트폴리오 합산, 손익 등)
+function fmtMoney(v) {
+  if (v == null || !isFinite(v)) return '-';
+  const cfg = getMarketConfig();
+  const sign = v < 0 ? '-' : '';
+  const abs = Math.abs(v);
+  if (cfg.priceDecimals === 0) {
+    return sign + cfg.currency + Math.round(abs).toLocaleString(cfg.currencyLocale);
+  }
+  return sign + cfg.currency + abs.toLocaleString(cfg.currencyLocale, { maximumFractionDigits: 2 });
+}
+
+// ============================================================================
+// v1.71: 사용자 데이터 시장별 분리 — LS 키 + 백엔드 dataType suffix
+//   기존 LS.PORTFOLIO / LS.TRADES → 시장별로 _us / _kr 접미사
+//   기존 데이터는 페이지 로드 시 자동으로 _us로 마이그레이션 (US 가정)
+// ============================================================================
+function lsKeyPF(mkt) {
+  return 'aquamel_vshape_portfolio_' + (mkt || getCurrentMarket()).toLowerCase();
+}
+function lsKeyTrades(mkt) {
+  return 'aquamel_vshape_trades_' + (mkt || getCurrentMarket()).toLowerCase();
+}
+// 백엔드 dataType — saveUserData/loadUserData/getUserDataManifest/applyDeltaSave 호출 시 사용
+function dataTypePF()     { return 'PF'      + (getMarketConfig().dataTypeSuffix || '_US'); }
+function dataTypeTrades() { return 'HISTORY' + (getMarketConfig().dataTypeSuffix || '_US'); }
+
+// 마이그레이션: 페이지 진입 시 기존 LS.PORTFOLIO / LS.TRADES → _us 로 이동
+function _migrateLegacyUserData() {
+  try {
+    const legacyPF = localStorage.getItem('aquamel_vshape_portfolio');
+    const legacyTR = localStorage.getItem('aquamel_vshape_trades');
+    if (legacyPF) {
+      // 기존 _us 데이터가 비어있으면 마이그레이션, 있으면 그대로 (사용자 작업 우선)
+      const existing = localStorage.getItem(lsKeyPF('US'));
+      if (!existing || existing === '[]' || existing === 'null') {
+        localStorage.setItem(lsKeyPF('US'), legacyPF);
+      }
+      localStorage.removeItem('aquamel_vshape_portfolio');
+    }
+    if (legacyTR) {
+      const existing = localStorage.getItem(lsKeyTrades('US'));
+      if (!existing || existing === '[]' || existing === 'null') {
+        localStorage.setItem(lsKeyTrades('US'), legacyTR);
+      }
+      localStorage.removeItem('aquamel_vshape_trades');
+    }
+  } catch (e) { console.warn('Legacy 마이그레이션 실패:', e); }
+}
+// 즉시 실행 (LS 정의 직후, 다른 코드들이 키를 참조하기 전에)
+_migrateLegacyUserData();
+
+// v1.70: 시장에 맞는 종목 표시명
+//   US: 티커 그대로 (NVDA)
+//   KR: 회사명 (삼성전자) — KJP100의 B컬럼. 매핑 없으면 ticker fallback
+function displayName(ticker) {
+  if (!ticker) return '';
+  const cfg = getMarketConfig();
+  if (cfg.displayMode === 'company') {
+    return ((_state.tickerCompanyMaps && _state.tickerCompanyMaps[getCurrentMarket()]) || _state.tickerCompanyMap || {})[ticker] || ticker;
+  }
+  return ticker;
+}
+
+// 보조 표시 (메인 옆 작게) — US: 회사명 / KR: 티커
+function displaySub(ticker) {
+  if (!ticker) return '';
+  const cfg = getMarketConfig();
+  if (cfg.displayMode === 'company') {
+    return ticker;  // KR은 회사명이 메인이고 티커가 보조
+  }
+  return (_state.tickerCompanyMap || {})[ticker] || '';
+}
+
+// ============================================================================
 // LOCALSTORAGE HELPERS
 // ============================================================================
 const LS = {
+  // v1.71: 시장별로 분리 — lsKeyPF() / lsKeyTrades() 사용. 아래는 마이그레이션 참조용 (직접 사용 X)
   PORTFOLIO: 'aquamel_vshape_portfolio',
   TRADES: 'aquamel_vshape_trades',
   CARDS: 'aquamel_vshape_cards',
@@ -4193,6 +4431,7 @@ const LS = {
   USER_PASSWORD_HASH: 'aquamel_vshape_user_pwd_hash',  // v1.64: 비밀번호 SHA-256 hash 캐시 (브라우저 별)
   LAYER_RETURN_PERIOD: 'aquamel_vshape_layer_return_period', // framework 등락률 조회 기간
   THEME: 'aquamel_vshape_theme',
+  MARKET: 'aquamel_vshape_market',            // v1.65: 시장 선택 ('US' | 'KR')
 };
 function lsGet(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } }
 function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { console.error('LS save fail', e); } }
@@ -4425,11 +4664,17 @@ function _rowHash(row) {
 // ============================================================================
 const $ = id => document.getElementById(id);
 function getConfig() {
+  // v1.66: 시장(US/KR)에 따라 시트 ID / 탭 / 마스터 분기
+  const mc = getMarketConfig();
   return {
     url: BACKEND.URL,
-    folderId: BACKEND.SECTOR_FOLDER_ID,
-    archiveSheetId: BACKEND.ARCHIVE_SHEET_ID,
-    archiveTab: BACKEND.ARCHIVE_TAB,
+    folderId: mc.sectorFolderId,
+    archiveSheetId: mc.archiveSheetId,
+    archiveTab: mc.archiveTab,
+    masterSheetId: mc.masterSheetId,
+    masterTab: mc.masterTab,
+    market: getCurrentMarket(),
+    config: mc,  // 전체 config 접근용
   };
 }
 function backendReady() {
@@ -4480,22 +4725,44 @@ class SpreadsheetTable {
   constructor(mountId, columns, lsKey, summaryFn, onCellChange) {
     this.mount = $(mountId);
     this.columns = columns; // [{key,label,type,options?,width?}]
-    this.lsKey = lsKey;
+    // v1.71: lsKey가 함수면 getter로 (시장 변경 시 자동 갱신), 아니면 고정 문자열
+    if (typeof lsKey === 'function') {
+      this._lsKeyFn = lsKey;
+      Object.defineProperty(this, 'lsKey', { get: () => this._lsKeyFn(), configurable: true });
+    } else {
+      this.lsKey = lsKey;
+    }
     this.summaryFn = summaryFn;
     this.onCellChange = onCellChange;  // (row, key, val) => { otherKey: newVal } | null
-    this.data = lsGet(lsKey, []);
+    this.data = lsGet(this.lsKey, []);
     // 마이그레이션: 기존 행에 _id 없으면 부여 (델타 동기화 기초)
     let mutated = false;
     this.data.forEach(r => {
       if (!r._id) { r._id = _genId(); mutated = true; }
     });
     if (this.data.length === 0) { this.data.push(this.emptyRow()); mutated = true; }
-    if (mutated) lsSet(lsKey, this.data);
+    if (mutated) lsSet(this.lsKey, this.data);
     this.sortKey = null;
     this.sortDir = 'asc';
     this.colFilters = {};   // {colKey: Set of allowed string values}
     this.viewIndices = [];  // 정렬/필터 적용 후 표시할 data 인덱스 배열
     this.render();
+  }
+  // v1.71: 시장 변경 시 호출 — lsKey getter라 자동으로 새 시장 키 가리킴
+  //   data 다시 로드 + 빈 행 보장 + 렌더링
+  reload() {
+    this.data = lsGet(this.lsKey, []);
+    let mutated = false;
+    this.data.forEach(r => {
+      if (!r._id) { r._id = _genId(); mutated = true; }
+    });
+    if (this.data.length === 0) { this.data.push(this.emptyRow()); mutated = true; }
+    if (mutated) lsSet(this.lsKey, this.data);
+    this.sortKey = null;
+    this.colFilters = {};
+    this.viewIndices = [];
+    this.render();
+    this.updateSummary();
   }
   emptyRow() {
     const r = { _id: _genId() };
@@ -4758,13 +5025,15 @@ class SpreadsheetTable {
       const filterOn = this.colFilters[c.key] != null;
       const isButton = c.type === 'button';
       const cls = c.type === 'number' ? 'num' : '';
+      // v1.75: 동적 라벨 지원 (시장에 따라 단가 ($/원) 등)
+      const colLabel = (typeof c.dynamicLabel === 'function') ? c.dynamicLabel() : c.label;
       if (isButton) {
         // 버튼 컬럼: 메뉴/정렬 없음
-        html += `<th class="${cls}" style="${c.width?'width:'+c.width:''}">${c.label}</th>`;
+        html += `<th class="${cls}" style="${c.width?'width:'+c.width:''}">${colLabel}</th>`;
       } else {
         html += `<th class="${cls}" style="${c.width?'width:'+c.width:''}">
           <span class="th-content">
-            <span class="th-label" data-col-sort="${c.key}">${escapeHtml(c.label)} ${sortInd}</span>
+            <span class="th-label" data-col-sort="${c.key}">${escapeHtml(colLabel)} ${sortInd}</span>
             <button class="th-menu-btn${filterOn?' filter-active':''}" data-col-menu="${c.key}" title="정렬·필터">▾</button>
           </span>
         </th>`;
@@ -4789,8 +5058,10 @@ class SpreadsheetTable {
             const enabled = c.enabled ? c.enabled(row) : true;
             html += `<td style="text-align:center;"><button class="row-btn ${enabled?'':'disabled'}" data-row="${dataIdx}" data-action="${c.action || ''}" ${enabled?'':'disabled'} title="${c.title || ''}">${c.label}</button></td>`;
           } else if (c.type === 'dropdown') {
+            // v1.75: 동적 옵션 지원 (시장에 따라 섹터 목록 다름)
+            const opts = (typeof c.dynamicOptions === 'function') ? c.dynamicOptions() : c.options;
             html += `<td><select data-row="${dataIdx}" data-key="${c.key}"><option value=""></option>`;
-            c.options.forEach(opt => {
+            opts.forEach(opt => {
               html += `<option value="${escapeHtml(opt)}" ${opt===v?'selected':''}>${escapeHtml(opt)}</option>`;
             });
             html += '</select></td>';
@@ -4931,7 +5202,9 @@ class SpreadsheetTable {
 
   updateSummary() {
     if (!this.summaryFn) return;
-    const el = $(this.lsKey === LS.PORTFOLIO ? 'portfolioSummary' : 'tradesSummary');
+    // v1.71: lsKey가 'aquamel_vshape_portfolio_*' 또는 'aquamel_vshape_trades_*' 형태
+    const isPortfolio = this.lsKey.indexOf('portfolio') >= 0;
+    const el = $(isPortfolio ? 'portfolioSummary' : 'tradesSummary');
     if (el) el.innerHTML = this.summaryFn(this.data);
   }
 }
@@ -5074,30 +5347,48 @@ function escapeAttr(s) { return escapeHtml(s); }
 // ============================================================================
 // PORTFOLIO + TRADES (LocalStorage)
 // ============================================================================
+// v1.75: _chart 컬럼을 맨 앞으로 (일자 앞), 단가 라벨은 시장에 따라 동적 ($/원)
+//   라벨은 단순 문자열이라 정적이지만, SpreadsheetTable 렌더 시점에 매번 평가되도록
+//   getter 사용 — 다만 정적 라벨 변경은 시장 변경 시 render() 재호출로 해결
+function _ccyLbl() {
+  // KR: 통화 기호 없으므로 '(원)', US: '($)'
+  return getCurrentMarket() === 'KR' ? '(원)' : '($)';
+}
+
+// v1.75: 섹터 dropdown 옵션 — 시장에 따라 (US: SECTORS_40 / KR: KJP100 섹터들)
+function getSectorOptions() {
+  if (getCurrentMarket() === 'KR') {
+    const krMap = (_state.kjpSectorMaps && _state.kjpSectorMaps.KR) || _state.kjpSectorMap || {};
+    const ks = Object.keys(krMap).filter(Boolean).sort();
+    return ks.length > 0 ? ks : SECTORS_40;  // KR 매핑 아직 안 됐으면 fallback
+  }
+  return SECTORS_40;
+}
+
 const PORTFOLIO_COLS = [
+  { key: '_chart',  label: '📊', type: 'button', action: 'chart', width: '40px',
+    onClick: (row) => { if (row.ticker) openChart(String(row.ticker).toUpperCase().trim()); },
+    enabled: (row) => !!row.ticker },
   { key: 'asof',    label: '종가기준일', type: 'date',     width: '110px' },
   { key: 'ticker',  label: '티커',       type: 'text',     width: '80px'  },
-  { key: '_chart',  label: '📊', type: 'button', action: 'chart', width: '40px',
-    onClick: (row) => { if (row.ticker) openChart(String(row.ticker).toUpperCase().trim()); },
-    enabled: (row) => !!row.ticker },
   { key: 'qty',     label: '보유수량',   type: 'number',   width: '90px'  },
-  { key: 'cost',    label: '투자원금 ($)', type: 'number', width: '110px' },
-  { key: 'mv',      label: '평가금액 ($)', type: 'number', width: '110px' },
-  { key: 'avgpx',   label: '평단가 ($)',  type: 'number',  width: '100px' },
-  { key: 'sector',  label: '섹터 (자동/수동)', type: 'dropdown', options: SECTORS_40, width: '170px' },
+  { key: 'cost',    label: '투자원금',   type: 'number',   width: '110px', dynamicLabel: () => '투자원금 ' + _ccyLbl() },
+  { key: 'mv',      label: '평가금액',   type: 'number',   width: '110px', dynamicLabel: () => '평가금액 ' + _ccyLbl() },
+  { key: 'avgpx',   label: '평단가',     type: 'number',   width: '100px', dynamicLabel: () => '평단가 '   + _ccyLbl() },
+  { key: 'sector',  label: '섹터 (자동/수동)', type: 'dropdown', options: SECTORS_40, dynamicOptions: getSectorOptions, width: '170px' },
 ];
 const TRADE_COLS = [
-  { key: 'date',    label: '일자',       type: 'date',     width: '110px' },
-  { key: 'ticker',  label: '티커',       type: 'text',     width: '80px'  },
   { key: '_chart',  label: '📊', type: 'button', action: 'chart', width: '40px',
     onClick: (row) => { if (row.ticker) openChart(String(row.ticker).toUpperCase().trim()); },
     enabled: (row) => !!row.ticker },
+  { key: 'date',    label: '일자',       type: 'date',     width: '110px' },
+  { key: 'ticker',  label: '티커',       type: 'text',     width: '80px'  },
   { key: 'action',  label: '액션',       type: 'dropdown', options: ['매수','매도'], width: '70px' },
   { key: 'qty',     label: '수량',       type: 'number',   width: '80px'  },
-  { key: 'price',   label: '단가 ($)',   type: 'number',   width: '90px'  },
-  { key: 'fee',     label: '수수료 ($)', type: 'number',   width: '90px'  },
-  { key: 'tax',     label: '세금 ($)',   type: 'number',   width: '90px'  },
-  { key: 'sector',  label: '섹터 (자동/수동)', type: 'dropdown', options: SECTORS_40, width: '170px' },
+  { key: 'price',   label: '단가',       type: 'number',   width: '90px',  dynamicLabel: () => '단가 '   + _ccyLbl() },
+  { key: 'fee',     label: '수수료',     type: 'number',   width: '90px',  dynamicLabel: () => '수수료 ' + _ccyLbl() },
+  { key: 'tax',     label: '세금',       type: 'number',   width: '90px',  dynamicLabel: () => '세금 '   + _ccyLbl() },
+  { key: 'sector',  label: '섹터 (자동/수동)', type: 'dropdown', options: SECTORS_40, dynamicOptions: getSectorOptions, width: '170px' },
 ];
 
 function portfolioSummary(rows) {
@@ -5115,9 +5406,9 @@ function portfolioSummary(rows) {
   // v1.29: 대시보드도 함께 갱신 (debounce)
   try { scheduleDashboardRefresh(); } catch (e) {}
   return `<div>보유 종목 <b>${count}</b>개</div>
-    <div>투자원금 <b>$${totalCost.toLocaleString(undefined,{maximumFractionDigits:2})}</b></div>
-    <div>평가금액 <b>$${totalMv.toLocaleString(undefined,{maximumFractionDigits:2})}</b></div>
-    <div>평가손익 <b class="${cls}">$${pnl.toLocaleString(undefined,{maximumFractionDigits:2})}</b> <span class="${cls}">(${pct.toFixed(2)}%)</span></div>`;
+    <div>투자원금 <b>${fmtMoney(totalCost)}</b></div>
+    <div>평가금액 <b>${fmtMoney(totalMv)}</b></div>
+    <div>평가손익 <b class="${cls}">${fmtMoney(pnl)}</b> <span class="${cls}">(${pct.toFixed(2)}%)</span></div>`;
 }
 function tradesSummary(rows) {
   let nBuy = 0, nSell = 0, totalBuyUsd = 0, totalSellUsd = 0;
@@ -5132,8 +5423,8 @@ function tradesSummary(rows) {
   try { refreshLayerWeights(); } catch (e) { /* 초기화 전 호출 무시 */ }
   // v1.29: 대시보드도 함께 갱신
   try { scheduleDashboardRefresh(); } catch (e) {}
-  return `<div>매수 <b>${nBuy}</b>건 · <b>$${totalBuyUsd.toLocaleString(undefined,{maximumFractionDigits:2})}</b></div>
-    <div>매도 <b>${nSell}</b>건 · <b>$${totalSellUsd.toLocaleString(undefined,{maximumFractionDigits:2})}</b></div>`;
+  return `<div>매수 <b>${nBuy}</b>건 · <b>${fmtMoney(totalBuyUsd)}</b></div>
+    <div>매도 <b>${nSell}</b>건 · <b>${fmtMoney(totalSellUsd)}</b></div>`;
 }
 
 // v1.29: 대시보드 재렌더 debounce — 매매이력 빠른 편집 시 과도한 호출 방지
@@ -5206,9 +5497,10 @@ async function saveUserDataToBackend() {
     };
 
     // PF + HISTORY 병렬 (서로 다른 탭 — 충돌 없음)
+    // v1.71: dataType에 시장 suffix 자동 추가 ('PF_US' / 'PF_KR' / 'HISTORY_US' / 'HISTORY_KR')
     const [pfResult, trResult] = await Promise.all([
-      _deltaSync(userId, 'PF',      pfRows, makeCb('pf'),   passwordHash),
-      _deltaSync(userId, 'HISTORY', trRows, makeCb('hist'), passwordHash),
+      _deltaSync(userId, dataTypePF(),     pfRows, makeCb('pf'),   passwordHash),
+      _deltaSync(userId, dataTypeTrades(), trRows, makeCb('hist'), passwordHash),
     ]);
 
     // framework 비중 갱신 (트리거)
@@ -5423,9 +5715,10 @@ async function loadUserDataFromBackend() {
   btn.textContent = '불러오는 중…';
 
   try {
+    // v1.71: dataType에 시장 suffix 자동 추가
     const [pfRes, trRes] = await Promise.all([
-      apiCall('loadUserData', { userId, dataType: 'PF',      passwordHash }),
-      apiCall('loadUserData', { userId, dataType: 'HISTORY', passwordHash }),
+      apiCall('loadUserData', { userId, dataType: dataTypePF(),     passwordHash }),
+      apiCall('loadUserData', { userId, dataType: dataTypeTrades(), passwordHash }),
     ]);
 
     // v1.64: 비밀번호 에러 처리 (한쪽이라도 인증 실패면 안내)
@@ -5470,7 +5763,7 @@ async function loadUserDataFromBackend() {
     const trN = trRows.filter(r => r.ticker).length;
     const pfMsg = (pfRes && pfRes.ok) ? `${pfN}건` : '저장된 데이터 없음';
     const trMsg = (trRes && trRes.ok) ? `${trN}건` : '저장된 데이터 없음';
-    alert(`✓ 불러오기 완료\n· ${userId}_PF: ${pfMsg}\n· ${userId}_HISTORY: ${trMsg}\n\nLocalStorage 갱신됨, 12계층 비중 재계산됨.`);
+    alert(`✓ 불러오기 완료\n· ${userId}_${dataTypePF()}: ${pfMsg}\n· ${userId}_${dataTypeTrades()}: ${trMsg}\n\nLocalStorage 갱신됨, 12계층 비중 재계산됨.`);
   } catch (err) {
     const msg = String(err && err.message || err);
     if (/unknown action|action.*not found|loadUserData/.test(msg)) {
@@ -5490,8 +5783,13 @@ window.loadUserDataFromBackend = loadUserDataFromBackend;
 // ============================================================================
 function getSectorForTicker(ticker) {
   if (!ticker) return null;
-  const tk = String(ticker).toUpperCase().trim();
-  // KJP400 우선 (정의된 종목은 단일 source-of-truth)
+  let tk = String(ticker).toUpperCase().trim();
+  // v1.75: KR 모드면 6자리 leading zero 자동 padding (5930 → 005930)
+  //   사용자가 '5930' 입력해도 KJP100의 '005930'과 매칭되도록
+  if (getCurrentMarket() === 'KR' && /^\d{1,6}$/.test(tk) && tk.length < 6) {
+    tk = tk.padStart(6, '0');
+  }
+  // KJP300/KJP100 우선 (정의된 종목은 단일 source-of-truth)
   const kjp = (_state.tickerSectorMap || {})[tk];
   if (kjp) return kjp;
   // 그 외에는 사용자 수동 매핑
@@ -5594,11 +5892,23 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // MAIN UPDATE FLOW
 // ============================================================================
 let _state = {
-  archive: [],        // V_Shape_Archive rows (normalized)
-  sectors: {},        // {sectorName: [rows]}
-  macro: [],          // macro rows
+  archive: [],        // V_Shape_Archive rows (normalized) — active 시장
+  sectors: {},        // {sectorName: [rows]} — 공통 (시장 무관)
+  macro: [],          // macro rows — 공통
   filteredArchive: [],
-  signalFilter: new Set(SIGNAL_TYPES),  // all on by default
+
+  // v1.69: 시장별 데이터 저장소 — autoLoadData가 양쪽 동시에 채움
+  //   setMarket 시 applyMarketState가 active 변수로 swap
+  archives:          { US: [], KR: [] },           // → _state.archive
+  tickerSectorMaps:  { US: {}, KR: {} },           // → _state.tickerSectorMap
+  kjpSectorMaps:     { US: {}, KR: {} },           // → _state.kjpSectorMap
+  tickerDescMaps:    { US: {}, KR: {} },           // → _state.tickerDescMap
+  tickerCompanyMaps: { US: {}, KR: {} },           // → _state.tickerCompanyMap
+
+  // v1.68: signalFilter default — 현재 시장의 신호 타입 모두 켬 (KR이면 KR_SIGNAL_TYPES)
+  signalFilter: new Set(
+    (lsGet('aquamel_vshape_market', 'US') === 'KR') ? KR_SIGNAL_TYPES : SIGNAL_TYPES
+  ),
   sortKey: 'Date',
   sortDir: 'desc',
   openTicker: null,
@@ -5606,28 +5916,122 @@ let _state = {
   tickerSectorMap: {},
   kjpSectorMap:    {},
   tickerDescMap:   {},
+  tickerCompanyMap: {},
 };
+
+// v1.69: active 시장 데이터로 _state swap — setMarket이 호출
+//   섹터/매크로는 공통이라 swap 불필요
+function applyMarketState(mkt) {
+  if (mkt !== 'US' && mkt !== 'KR') mkt = 'US';
+  _state.archive          = _state.archives[mkt] || [];
+  _state.tickerSectorMap  = _state.tickerSectorMaps[mkt] || {};
+  _state.kjpSectorMap     = _state.kjpSectorMaps[mkt] || {};
+  _state.tickerDescMap    = _state.tickerDescMaps[mkt] || {};
+  _state.tickerCompanyMap = _state.tickerCompanyMaps[mkt] || {};
+  // 신호 필터도 시장에 맞는 default로 리셋 (시장마다 신호 종류 다름)
+  _state.signalFilter = new Set(getSignalTypes());
+  // v1.70: data-market 속성 → CSS [data-market="KR"] 규칙 활성화
+  document.documentElement.setAttribute('data-market', mkt);
+  // v1.76: USD/KRW 안내문 + 아이콘 갱신
+  try { updateCcyBanner(); } catch (e) {}
+}
+
+// v1.76: 마이 카드의 화폐 안내문/아이콘을 시장에 맞게 갱신
+function updateCcyBanner() {
+  const mkt = getCurrentMarket();
+  const isKR = mkt === 'KR';
+  document.querySelectorAll('[data-ccy-icon]').forEach(el => {
+    el.textContent = isKR ? '₩' : '$';
+  });
+  document.querySelectorAll('[data-ccy-notice]').forEach(el => {
+    if (isKR) {
+      el.innerHTML = '<b style="color:var(--text-hi);">모든 금액 단위는 KRW (원화)</b>입니다. 본 영역은 LocalStorage에 저장되어 <b>본인 PC에서만</b> 보입니다. "데이터 저장" 버튼으로 구글 시트에 백업하여 멀티디바이스 동기화 가능.';
+    } else {
+      el.innerHTML = '<b style="color:var(--text-hi);">모든 금액 단위는 USD (미국 달러)</b>입니다. 본 영역은 LocalStorage에 저장되어 <b>본인 PC에서만</b> 보입니다. "데이터 저장" 버튼으로 구글 시트에 백업하여 멀티디바이스 동기화 가능.';
+    }
+  });
+}
+
+// v1.69: 시장 전환 시 모든 화면 재렌더링 — setMarket이 호출
+function rerenderAll() {
+  try {
+    // v1.73: 신호 미래수익률 재계산 (시장에 따라 OHLCV 소스 다름)
+    if (typeof computeSignalReturns === 'function') computeSignalReturns();
+    // 신호 필터 카드 (시장에 따라 그룹 구조 다름)
+    if (typeof renderSignalFilter === 'function') renderSignalFilter();
+    if (typeof renderSectorFilter === 'function') renderSectorFilter();
+    // V-Shape Archive 테이블 (Archive 행 swap 됨)
+    if (typeof applyFilterAndRender === 'function') applyFilterAndRender();
+    // 매수 포인트 카드
+    if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard();
+    // 누적 시그널 (모바일)
+    if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
+    // 종목 리스트
+    if (typeof buildStockList === 'function') buildStockList();
+    // 섹터 분석 카드 (티커 매핑 변경 영향)
+    if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis();
+    // 콤보 평가표 (시그널 종류가 시장마다 다름)
+    if (typeof renderComboEval === 'function') renderComboEval(_state.archive);
+    // 대시보드 (보유 종목 표시 — 현재는 통합이지만 추후 시장별 분리 가능)
+    if (typeof renderDashboard === 'function') renderDashboard().catch(() => {});
+    // 차트 모달이 열려있으면 닫음 (시장 다른 종목이라 데이터 안 맞음)
+    if (_state.openTicker && document.getElementById('chartModal')?.classList.contains('active')) {
+      if (typeof closeModal === 'function') closeModal();
+    }
+  } catch (err) {
+    console.error('rerenderAll 실패:', err);
+  }
+}
 
 function isMobileViewport() { return window.matchMedia('(max-width: 640px)').matches; }
 function useSimpleMode() { return isMobileViewport() && !_state.detailMode; }
 
-// ---- Theme (light/dark) ----
-function getCurrentTheme() {
-  return document.documentElement.getAttribute('data-theme') || 'dark';
-}
+// v1.65: 다크/라이트 토글 제거 → 항상 다크 강제
+//   기존 light 테마 CSS는 그대로 둠 (영향 없음 — data-theme 속성을 절대 설정 안 함)
 function applyTheme(t) {
-  if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
-  else document.documentElement.removeAttribute('data-theme');
-  lsSet(LS.THEME, t);
-  // 차트 열려있으면 새 테마 색상으로 다시 그림
-  if (_state.openTicker && $('chartModal').classList.contains('active')) {
-    openChart(_state.openTicker);
-  }
+  // 강제 다크 (인자 무시)
+  document.documentElement.removeAttribute('data-theme');
+  lsSet(LS.THEME, 'dark');
 }
-function toggleTheme() {
-  applyTheme(getCurrentTheme() === 'light' ? 'dark' : 'light');
+
+// v1.65: 시장 스위치 (US / KR)
+// v1.69: 페이지 reload 제거 — autoLoadData가 이미 양쪽 데이터를 다 갖고 있음
+//   setMarket = LS 저장 + 버튼 갱신 + 데이터 swap + 모든 화면 재렌더링 (< 50ms)
+function getCurrentMarket() {
+  return lsGet(LS.MARKET, 'US');
 }
-window.toggleTheme = toggleTheme;
+function setMarket(mkt) {
+  if (mkt !== 'US' && mkt !== 'KR') return;
+  const prev = getCurrentMarket();
+  if (prev === mkt) return;
+
+  // 1) 버튼 active 상태 갱신
+  document.querySelectorAll('.market-switch .mkt-btn').forEach(b => {
+    const isActive = b.dataset.market === mkt;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+
+  // 2) LocalStorage 저장
+  lsSet(LS.MARKET, mkt);
+
+  // 3) _state 데이터 swap (active 시장 → _state.archive 등)
+  applyMarketState(mkt);
+
+  // 4) LS 캐시 갱신 (다음 페이지 로드 시 첫 화면 그릴 때 사용)
+  lsSet(LS.KJP_MAP,         _state.tickerSectorMap);
+  lsSet(LS.KJP_SECTOR_MAP,  _state.kjpSectorMap);
+  lsSet(LS.KJP_DESC_MAP,    _state.tickerDescMap);
+  lsSet(LS.KJP_COMPANY_MAP, _state.tickerCompanyMap);
+
+  // 5) v1.71: 포트폴리오/매매이력 시트 재로드 (시장별 LS 키로 데이터 갱신)
+  try { if (typeof portfolioSheet !== 'undefined' && portfolioSheet) portfolioSheet.reload(); } catch (e) { console.warn(e); }
+  try { if (typeof tradesSheet !== 'undefined' && tradesSheet) tradesSheet.reload(); } catch (e) { console.warn(e); }
+
+  // 6) 모든 화면 재렌더링
+  rerenderAll();
+}
+window.setMarket = setMarket;
 
 function toggleChartMode() {
   _state.detailMode = !_state.detailMode;
@@ -5701,6 +6105,76 @@ function splashError(msg) {
 // ============================================================================
 // AUTO LOAD DATA (v1.26) — 앱 부팅 시 자동 호출. 새로고침 버튼도 동일 함수 호출.
 // ============================================================================
+// v1.69: KJP 마스터 시트 → 시장별 매핑 빌드 (autoLoadData에서 US/KR 각각 호출)
+//   US (KJP300_LIST): D=회사명(idx3), E=상세설명(idx4)
+//   KR (KJP100):       A=섹터명(idx0), B=회사명(idx1), C=티커(idx2), D=간단설명(idx3)
+// v1.72: 티커/섹터에도 컬럼 위치 fallback 추가 (헤더 이름이 다르더라도 작동)
+//        6자리 KR 티커 leading zero 자동 padding ('5930' → '005930')
+function buildKjpMaps_(kjpRes, market) {
+  const tickerIdxFallback  = market === 'KR' ? 2 : 0;  // KR: C, US: A (US는 헤더가 거의 안 빠짐)
+  const sectorIdxFallback  = market === 'KR' ? 0 : -1; // KR: A
+  const companyIdxFallback = market === 'KR' ? 1 : 3;
+  const descIdxFallback    = market === 'KR' ? 3 : 4;
+
+  // 6자리 KR 티커 leading zero 보정
+  const padKrTicker = (s) => {
+    if (market !== 'KR') return s;
+    if (!s) return s;
+    // 숫자만 있고 6자리 미만이면 앞에 0 채움
+    if (/^\d{1,6}$/.test(s)) return s.padStart(6, '0');
+    return s;
+  };
+
+  const kjpMap = {};
+  const kjpSectorMap = {};
+  const kjpDescMap = {};
+  const kjpCompanyMap = {};
+
+  if (kjpRes && kjpRes.ok && kjpRes.rows) {
+    kjpRes.rows.forEach(r => {
+      const keys = Object.keys(r);
+      const colAt = (i) => (i >= 0 && i < keys.length ? (r[keys[i]] || '') : '').toString().trim();
+
+      // 헤더 이름 매칭 → 실패 시 컬럼 위치 fallback (v1.72)
+      const tkByHeader  = (r['티커명'] || r['Ticker'] || r['ticker'] || r['종목코드'] || r['종목'] || '').toString().trim();
+      const secByHeader = (r['섹터명'] || r['Sector'] || r['섹터']    || r['업종']    || '').toString().trim();
+
+      let tk  = (tkByHeader  || colAt(tickerIdxFallback)).toUpperCase().trim();
+      let sec = (secByHeader || colAt(sectorIdxFallback)).trim();
+
+      // 6자리 KR 티커 leading zero 보정
+      tk = padKrTicker(tk);
+
+      const companyByHeader = (r['회사명'] || r['Company'] || r['기업명'] || r['회사'] || r['Name'] || r['한글명'] || r['이름'] || '').toString().trim();
+      const company = companyByHeader || colAt(companyIdxFallback);
+
+      const descByHeader = (r['상세설명'] || r['상세 설명'] || r['Description'] || r['설명'] || r['간단 설명'] || r['간단설명'] || r['desc'] || '').toString().trim();
+      const desc = descByHeader || colAt(descIdxFallback);
+
+      if (tk && sec) {
+        kjpMap[tk] = sec;
+        kjpDescMap[tk] = desc;
+        if (company) kjpCompanyMap[tk] = company;
+        if (!kjpSectorMap[sec]) kjpSectorMap[sec] = [];
+        kjpSectorMap[sec].push({ ticker: tk, desc, company });
+      }
+    });
+  }
+
+  // 시장별 저장소에 저장 (active swap은 applyMarketState가 처리)
+  _state.tickerSectorMaps[market]  = kjpMap;
+  _state.kjpSectorMaps[market]     = kjpSectorMap;
+  _state.tickerDescMaps[market]    = kjpDescMap;
+  _state.tickerCompanyMaps[market] = kjpCompanyMap;
+
+  // 디버그 로그 — 사용자가 콘솔 열어 확인 가능
+  console.log(`[KJP/${market}] 매핑 ${Object.keys(kjpMap).length}건, 섹터 ${Object.keys(kjpSectorMap).length}개`);
+  if (Object.keys(kjpMap).length === 0 && kjpRes && kjpRes.rows && kjpRes.rows.length > 0) {
+    console.warn(`[KJP/${market}] 매핑 빌드 실패. 시트 첫 행(헤더) 샘플:`, Object.keys(kjpRes.rows[0]));
+    console.warn(`[KJP/${market}] 데이터 첫 행 샘플:`, kjpRes.rows[0]);
+  }
+}
+
 async function autoLoadData() {
   if (_autoLoadInProgress) return;
   _autoLoadInProgress = true;
@@ -5723,56 +6197,105 @@ async function autoLoadData() {
   try {
     splashUpdate(2);
 
-    // 1) Archive + sector list + KJP400 매핑 — 병렬로 동시에
+    // v1.69: 양쪽 시장 (US + KR) Archive + KJP 매핑을 한 번에 fetch
+    //   섹터/매크로는 공통이라 그대로 1번만
+    // v1.70: KR OHLCV 시트도 함께 fetch — 단일 시트 long form
+    //   ohlcvFolderId의 폴더 안에 시트가 1개만 있다고 가정 → listSheetNames로 첫 시트 가져와 fetch
     splashUpdate(5);
-    const [arcRes, listRes, kjpRes] = await Promise.all([
-      apiCall('getBuyList', { sheetId: cfg.archiveSheetId, tab: cfg.archiveTab }),
+    const cfgUS = MARKET_CONFIG.US;
+    const cfgKR = MARKET_CONFIG.KR;
+    const [arcUSRes, arcKRRes, kjpUSRes, kjpKRRes, listRes, krOhlcvFolderRes] = await Promise.all([
+      apiCall('getBuyList',     { sheetId: cfgUS.archiveSheetId, tab: cfgUS.archiveTab }),
+      apiCall('getBuyList',     { sheetId: cfgKR.archiveSheetId, tab: cfgKR.archiveTab }),
+      apiCall('getOneSheet',    { sheetId: cfgUS.masterSheetId,  tab: cfgUS.masterTab  }),
+      apiCall('getOneSheet',    { sheetId: cfgKR.masterSheetId,  tab: cfgKR.masterTab  }),
       apiCall('listSheetNames', { folderId: cfg.folderId }),
-      apiCall('getOneSheet', { sheetId: cfg.archiveSheetId, tab: 'KJP300_LIST' }),
+      apiCall('listSheetNames', { folderId: cfgKR.ohlcvFolderId }),
     ]);
-    if (!arcRes.ok) throw new Error('아카이브 로드 실패: ' + (arcRes.error || ''));
-    _state.archive = (arcRes.rows || []).map(normalizeArchiveRow).filter(r => r.Ticker && r.Date);
+
+    // Archive 정규화 + 시장별 저장 — US는 필수, KR은 실패해도 진행 (시트 비어있을 수 있음)
+    // v1.72: KR archive는 market='KR' 명시 전달 → 6자리 ticker padding 보장
+    if (!arcUSRes.ok) throw new Error('미국 아카이브 로드 실패: ' + (arcUSRes.error || ''));
+    _state.archives.US = (arcUSRes.rows || []).map(r => normalizeArchiveRow(r, 'US')).filter(r => r.Ticker && r.Date);
+    _state.archives.KR = (arcKRRes && arcKRRes.ok ? (arcKRRes.rows || []).map(r => normalizeArchiveRow(r, 'KR')).filter(r => r.Ticker && r.Date) : []);
+
     if (!listRes.ok) throw new Error('시트 목록 로드 실패: ' + listRes.error);
     if (!listRes.sheets || listRes.sheets.length === 0) throw new Error('폴더에 시트가 없습니다.');
 
-    // KJP300 ticker → sector 매핑 + sector → [tickers+desc] 빌드 (실패해도 진행)
-    // v1.34: 회사명(D컬럼=idx 3) + 상세설명(E컬럼=idx 4) 추가 추출
-    // v1.35: 헤더 이름 매칭 실패 시 컬럼 위치 기반 fallback (Apps Script가 헤더를 키로 객체화하지만
-    //        시트 헤더 이름이 변경되어도 idx 3/4로 안전 추출)
-    const kjpMap = {};
-    const kjpSectorMap = {};
-    const kjpDescMap = {};
-    const kjpCompanyMap = {};
-    if (kjpRes && kjpRes.ok && kjpRes.rows) {
-      kjpRes.rows.forEach(r => {
-        const tk = (r['티커명'] || r['Ticker'] || r['ticker'] || '').toString().toUpperCase().trim();
-        const sec = (r['섹터명'] || r['Sector'] || '').toString().trim();
-        // v1.35: 헤더 이름 매칭 → 실패 시 컬럼 위치 기반 fallback
-        const keys = Object.keys(r);
-        const colAt = (i) => (i < keys.length ? (r[keys[i]] || '') : '').toString().trim();
-        // D컬럼 = idx 3 (회사명)
-        const companyByHeader = (r['회사명'] || r['Company'] || r['기업명'] || r['회사'] || r['Name'] || r['한글명'] || r['이름'] || '').toString().trim();
-        const company = companyByHeader || colAt(3);
-        // E컬럼 = idx 4 (상세설명) — 기존 '간단 설명'도 호환
-        const descByHeader = (r['상세설명'] || r['상세 설명'] || r['Description'] || r['설명'] || r['간단 설명'] || r['간단설명'] || r['desc'] || '').toString().trim();
-        const desc = descByHeader || colAt(4);
-        if (tk && sec) {
-          kjpMap[tk] = sec;
-          kjpDescMap[tk] = desc;
-          if (company) kjpCompanyMap[tk] = company;
-          if (!kjpSectorMap[sec]) kjpSectorMap[sec] = [];
-          kjpSectorMap[sec].push({ ticker: tk, desc, company });
+    // v1.69: KJP 매핑 빌드 — 시장별 호출 (헬퍼 함수)
+    buildKjpMaps_(kjpUSRes, 'US');
+    buildKjpMaps_(kjpKRRes, 'KR');
+
+    // v1.70: KR OHLCV 시트 fetch — 폴더 안 첫 시트 (있다고 가정)
+    //   결과: _state.krOhlcvByTicker = { '005930': [{Date, Open, ...}], ... }
+    _state.krOhlcvByTicker = {};
+    _state.krOhlcvLatest = {};   // { ticker: { Close, prevClose, chg, Date } }
+    if (krOhlcvFolderRes && krOhlcvFolderRes.ok && krOhlcvFolderRes.sheets && krOhlcvFolderRes.sheets.length > 0) {
+      const krOhlcvSheetId = krOhlcvFolderRes.sheets[0].id;
+      try {
+        const krOhlcvRes = await apiCall('getOneSheet', { sheetId: krOhlcvSheetId });
+        if (krOhlcvRes && krOhlcvRes.ok && krOhlcvRes.rows) {
+          const byTicker = {};
+          krOhlcvRes.rows.forEach(r => {
+            let tk = String(r['Ticker'] || r['ticker'] || '').toUpperCase().trim();
+            // v1.72: 6자리 KR 티커 leading zero 보정 (5930 → 005930)
+            if (/^\d{1,6}$/.test(tk) && tk.length < 6) tk = tk.padStart(6, '0');
+            const dt = normalizeDate(r['Date']);
+            if (!tk || !dt) return;
+            const row = {
+              Ticker: tk,
+              Date: dt,
+              Open:   Number(r['Open']  || 0),
+              Close:  Number(r['Close'] || 0),
+              High:   Number(r['High']  || 0),
+              Low:    Number(r['Low']   || 0),
+              Volume: Number(r['Volume']|| 0),
+              Retail:  Number(r['Retail']  || 0),
+              Foreign: Number(r['Foreign'] || 0),
+              Inst:    Number(r['Inst']    || 0),
+            };
+            if (!byTicker[tk]) byTicker[tk] = [];
+            byTicker[tk].push(row);
+          });
+          // 각 ticker의 시계열 날짜순 정렬 + 최신값 캐시
+          Object.keys(byTicker).forEach(tk => {
+            byTicker[tk].sort((a, b) => a.Date.localeCompare(b.Date));
+            const arr = byTicker[tk];
+            const n = arr.length;
+            const latest = arr[n - 1];
+            const prev = n > 1 ? arr[n - 2] : null;
+            const chg = (prev && prev.Close > 0) ? (latest.Close / prev.Close - 1) * 100 : 0;
+            _state.krOhlcvLatest[tk] = { Close: latest.Close, prevClose: prev ? prev.Close : 0, chg, Date: latest.Date };
+          });
+          _state.krOhlcvByTicker = byTicker;
         }
-      });
-      _state.tickerSectorMap = kjpMap;
-      _state.kjpSectorMap = kjpSectorMap;
-      _state.tickerDescMap = kjpDescMap;
-      _state.tickerCompanyMap = kjpCompanyMap;
-      lsSet(LS.KJP_MAP, kjpMap);
-      lsSet(LS.KJP_SECTOR_MAP, kjpSectorMap);
-      lsSet(LS.KJP_DESC_MAP, kjpDescMap);
-      lsSet(LS.KJP_COMPANY_MAP, kjpCompanyMap);
+      } catch (e) {
+        console.warn('KR OHLCV fetch 실패:', e);
+      }
     }
+
+    // active 시장으로 swap (현재 선택된 시장 데이터를 _state.archive 등에 노출)
+    applyMarketState(getCurrentMarket());
+
+    // v1.76: KR 상태 종합 진단 로그 (사용자가 콘솔에서 한눈에 확인)
+    const krArc = _state.archives.KR || [];
+    const krSec = Object.keys(_state.kjpSectorMaps.KR || {}).length;
+    const krTk  = Object.keys(_state.tickerSectorMaps.KR || {}).length;
+    const krOhTk = Object.keys(_state.krOhlcvByTicker || {}).length;
+    console.log('━━━━━━━━━━ KR 데이터 상태 ━━━━━━━━━━');
+    console.log(`KR Archive 시그널 행:    ${krArc.length}건`);
+    console.log(`KR 티커 매핑(KJP100):    ${krTk}개`);
+    console.log(`KR 섹터 그룹:            ${krSec}개`);
+    console.log(`KR OHLCV ticker:         ${krOhTk}개`);
+    if (krArc.length > 0)  console.log('  · 첫 KR Archive 행 샘플:', krArc[0]);
+    if (krOhTk > 0)        console.log('  · KR OHLCV ticker 샘플:', Object.keys(_state.krOhlcvByTicker).slice(0, 5));
+    if (krTk > 0)          console.log('  · KR KJP100 ticker 샘플:', Object.keys(_state.tickerSectorMaps.KR).slice(0, 5));
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    // 캐시에도 active 시장 데이터 LS 저장 (다음 로드 빠르게)
+    lsSet(LS.KJP_MAP,         _state.tickerSectorMap);
+    lsSet(LS.KJP_SECTOR_MAP,  _state.kjpSectorMap);
+    lsSet(LS.KJP_DESC_MAP,    _state.tickerDescMap);
+    lsSet(LS.KJP_COMPANY_MAP, _state.tickerCompanyMap);
 
     // 2) Sector sheets — 병렬 다운로드 (v1.27: concurrency 6→10, retry 800→400ms)
     const allSheets = {};
@@ -5896,8 +6419,8 @@ function invalidateDashSim() { _dashSimCache = null; }
 function simulatePortfolioDaily() {
   if (_dashSimCache) return _dashSimCache;
 
-  const portfolio = lsGet(LS.PORTFOLIO, []);
-  const rawTrades = lsGet(LS.TRADES, []);
+  const portfolio = lsGet(lsKeyPF(), []);
+  const rawTrades = lsGet(lsKeyTrades(), []);
 
   // 1) 포트폴리오 시드
   const state = {};  // ticker → { qty, cost, avgpx, sector, mv_fallback }
@@ -6117,8 +6640,8 @@ function computeHoldingsState() {
 
 // 누락 ticker prefetch — 매매이력/포트폴리오에 있는데 _state.sectors에 없는 종목
 async function prefetchDashboardOhlcv(onProgress) {
-  const portfolio = lsGet(LS.PORTFOLIO, []);
-  const trades = lsGet(LS.TRADES, []);
+  const portfolio = lsGet(lsKeyPF(), []);
+  const trades = lsGet(lsKeyTrades(), []);
   const tickerSet = new Set();
   portfolio.forEach(p => { if (p.ticker) tickerSet.add(String(p.ticker).toUpperCase().trim()); });
   trades.forEach(t => { if (t.ticker) tickerSet.add(String(t.ticker).toUpperCase().trim()); });
@@ -6378,17 +6901,18 @@ function computeMatrixPoints(holdings, kjpSeries) {
 // DASHBOARD RENDERING
 // ============================================================================
 
-const fmtUSD = (v) => {
-  const sign = v < 0 ? '-' : '';
-  const abs = Math.abs(v);
-  return `${sign}$${abs.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
+// v1.70: 시장에 맞는 통화 포맷 (US: $, KR: ₩)
+const fmtUSD = (v) => fmtMoney(v);
+const fmtUSDPlus = (v) => {
+  if (v == null || !isFinite(v)) return '-';
+  const formatted = fmtMoney(v);
+  return v >= 0 ? '+' + formatted : formatted;  // 음수는 fmtMoney가 이미 - 붙임
 };
-const fmtUSDPlus = (v) => v >= 0 ? `+${fmtUSD(v).slice(1)}` : fmtUSD(v);  // +$, -$
 const cls = (v) => v > 0 ? 'up' : v < 0 ? 'down' : '';
 
 // v1.31: 차트 폰트 패밀리 통일 (system font + tabular-nums)
 function getNumFont() {
-  return "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Pretendard', 'Inter', 'Helvetica Neue', sans-serif";
+  return "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif";
 }
 
 async function renderDashboard() {
@@ -6396,8 +6920,8 @@ async function renderDashboard() {
   if (!card) return;
 
   // 데이터 있는지 확인 (포트폴리오 or 매매이력)
-  const portfolio = lsGet(LS.PORTFOLIO, []);
-  const trades = lsGet(LS.TRADES, []);
+  const portfolio = lsGet(lsKeyPF(), []);
+  const trades = lsGet(lsKeyTrades(), []);
   const hasAnyData = portfolio.some(p => p.ticker) || trades.some(t => t.ticker);
   if (!hasAnyData) {
     card.style.display = 'none';
@@ -7234,18 +7758,26 @@ function normalizeDate(d) {
   return null;
 }
 function numOrNull(v) { const n = Number(v); return isNaN(n) ? null : n; }
-function normalizeArchiveRow(row) {
+function normalizeArchiveRow(row, marketHint) {
+  // v1.72: 6자리 KR 티커 leading zero 자동 보정 (Google Sheets 숫자 변환 대응)
+  //   marketHint='KR'이면 padding, 미지정이면 현재 시장 기준
+  // v1.76: 한국어 헤더 fallback (시트가 한국어 컬럼명일 수 있음)
+  let tk = (row['Ticker'] || row['티커'] || row['티커명'] || row['종목코드'] || '').toString().toUpperCase().trim();
+  const m = marketHint || (typeof getCurrentMarket === 'function' ? getCurrentMarket() : 'US');
+  if (m === 'KR' && /^\d{1,6}$/.test(tk) && tk.length < 6) {
+    tk = tk.padStart(6, '0');
+  }
   return {
-    Sector: row['Sector'] || '',
-    Ticker: (row['Ticker'] || '').toString().toUpperCase().trim(),
-    Description: row['Description'] || '',
-    Date: normalizeDate(row['Date']),
-    Signal_Type: row['Signal_Type'] || '',
-    Open_Price: numOrNull(row['Open_Price']),
-    High_Price: numOrNull(row['High_Price']),
-    Low_Price: numOrNull(row['Low_Price']),
-    Close_Price: numOrNull(row['Close_Price']),
-    Volume: numOrNull(row['Volume']),
+    Sector: row['Sector'] || row['섹터'] || row['섹터명'] || '',
+    Ticker: tk,
+    Description: row['Description'] || row['설명'] || row['상세설명'] || row['간단설명'] || '',
+    Date: normalizeDate(row['Date'] || row['일자'] || row['날짜']),
+    Signal_Type: row['Signal_Type'] || row['신호유형'] || row['신호종류'] || row['Signal'] || row['시그널'] || '',
+    Open_Price: numOrNull(row['Open_Price'] || row['Open'] || row['시가']),
+    High_Price: numOrNull(row['High_Price'] || row['High'] || row['고가']),
+    Low_Price: numOrNull(row['Low_Price'] || row['Low'] || row['저가']),
+    Close_Price: numOrNull(row['Close_Price'] || row['Close'] || row['종가']),
+    Volume: numOrNull(row['Volume'] || row['거래량']),
     Pred_5d: numOrNull(row['Pred_5d']),
     RSI_14: numOrNull(row['RSI_14']),
     MFI_14: numOrNull(row['MFI_14']),
@@ -7280,18 +7812,24 @@ function normalizeOhlcvRow(row) {
 // 한 번 계산하고 _state.archive 행에 _returns 필드로 캐시
 // ============================================================================
 function computeSignalReturns() {
-  // 1) ticker → sorted OHLCV map 한 번에 빌드
-  const tickerOhlcv = {};
-  Object.values(_state.sectors).forEach(rows => {
-    rows.forEach(r => {
-      if (!r.Ticker || !r.Date || isNaN(r.Close)) return;
-      if (!tickerOhlcv[r.Ticker]) tickerOhlcv[r.Ticker] = [];
-      tickerOhlcv[r.Ticker].push(r);
+  // v1.73: KR 모드는 단일 OHLCV 시트(krOhlcvByTicker)에서, US는 40 섹터 시트(_state.sectors)에서 빌드
+  let tickerOhlcv = {};
+  if (getCurrentMarket() === 'KR') {
+    // KR — 이미 ticker별 정렬된 시계열
+    tickerOhlcv = _state.krOhlcvByTicker || {};
+  } else {
+    // US — 40개 섹터 시트에서 ticker → OHLCV 시계열 빌드
+    Object.values(_state.sectors).forEach(rows => {
+      rows.forEach(r => {
+        if (!r.Ticker || !r.Date || isNaN(r.Close)) return;
+        if (!tickerOhlcv[r.Ticker]) tickerOhlcv[r.Ticker] = [];
+        tickerOhlcv[r.Ticker].push(r);
+      });
     });
-  });
-  Object.keys(tickerOhlcv).forEach(t => {
-    tickerOhlcv[t].sort((a,b) => a.Date.localeCompare(b.Date));
-  });
+    Object.keys(tickerOhlcv).forEach(t => {
+      tickerOhlcv[t].sort((a,b) => a.Date.localeCompare(b.Date));
+    });
+  }
   _state._tickerOhlcv = tickerOhlcv;
 
   // 2) 각 아카이브 시그널 행에 미래 수익률 + CASE 부착
@@ -7333,13 +7871,12 @@ function computeSignalReturns() {
       const w30 = futureCloses.slice(0, 30);
       c3 = Math.min.apply(null, w30) >= P;
     }
-    // C4는 데이터 있는 만큼만 — n이 작아도 의미 있게 계산
     c4 = Math.min.apply(null, futureCloses) >= P;
 
     arc._returns = { n, ret1, ret5, ret10, c1, c2, c3, c4 };
     withReturns++;
   });
-  console.log(`[computeSignalReturns] archive=${_state.archive.length}, with OHLCV match=${processed}, with returns=${withReturns}`);
+  console.log(`[computeSignalReturns/${getCurrentMarket()}] archive=${_state.archive.length}, OHLCV match=${processed}, with returns=${withReturns}`);
 }
 
 // ============================================================================
@@ -7391,7 +7928,7 @@ function computeComboMetrics(rows) {
   };
 
   const out = [];
-  SIGNAL_TYPES.forEach(sig => {
+  getSignalTypes().forEach(sig => {
     const anyRows  = parsed.filter(p => p.sigSet.has(sig)).map(p => p.row);
     const soloRows = parsed.filter(p => p.sigSet.has(sig) && p.sigCount === 1).map(p => p.row);
     if (anyRows.length  > 0) out.push(buildMetric(anyRows,  sig, 'any'));
@@ -7909,23 +8446,39 @@ function tickerFileName(ticker) {
   return (ticker || '').replace(/[^A-Za-z0-9.\-]/g, '');
 }
 
-// 티커 → <img> HTML. 회사 로고 시도 → 실패 시 계층 로고 → 실패 시 visibility hidden
+// 티커 → <img> HTML. 회사 로고 시도 → 실패 시 계층 로고 → 실패 시 국기(국가) → hidden
+// v1.67: KR 모드는 계층 로고 없음 → layerFile을 빈 값으로 넘겨 즉시 국기 fallback
 function tickerLogoHtml(ticker, sectorOverride) {
+  const market = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
   const sector = sectorOverride || (_state.tickerSectorMap || {})[ticker] || '';
   const layer = SECTOR_TO_LAYER[sector] || '기타';
-  const layerFile = layerFileName(layer);
+  const layerFile = (market === 'KR') ? '' : layerFileName(layer);  // KR은 계층 로고 없음
   const tkFile = tickerFileName(ticker);
   if (!tkFile) {
-    // 비정상 티커 → 바로 계층 로고
-    return `<img class="ticker-logo" src="./logos/layers/${encodeURIComponent(layerFile)}.png" onerror="this.style.visibility='hidden'" alt="" loading="lazy" />`;
+    // 비정상 티커 → 즉시 국기
+    return `<img class="ticker-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy" />`;
   }
   return `<img class="ticker-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy" />`;
 }
+// v1.67: 로고 fallback 체인 — ticker → layer → 국기(US/KR) → hidden
+//   미국: 계층 로고(layerFile)가 있으면 그걸로, 없으면 국기
+//   한국: layerFile이 빈 값이라 즉시 국기로 fallback
+//   국기도 실패하면 visibility:hidden
 window.handleLogoError = function(img, layerFile) {
-  if (!img.dataset.fb) {
+  const step = img.dataset.fb || '0';
+  if (step === '0' && layerFile) {
+    // 1차: ticker 실패 → layer 시도 (layerFile이 있을 때만)
     img.dataset.fb = '1';
     img.src = './logos/layers/' + encodeURIComponent(layerFile) + '.png';
+  } else if (step !== '2') {
+    // 2차: layer도 실패 (또는 layerFile 자체가 없음) → 국가 국기로
+    img.dataset.fb = '2';
+    const market = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
+    img.src = './flags/' + market + '.png';
+    // 국기는 약간 톤다운 (실제 로고와 시각적으로 구분 — 약간 투명)
+    img.style.opacity = '0.55';
   } else {
+    // 3차: 국기도 실패 → 숨김
     img.style.visibility = 'hidden';
   }
 };
@@ -7977,7 +8530,7 @@ function computeLayerWeights() {
   try {
     const trades = (typeof tradesSheet !== 'undefined' && tradesSheet)
       ? tradesSheet.data
-      : lsGet(LS.TRADES, []);
+      : lsGet(lsKeyTrades(), []);
     const derived = computePortfolioFromTrades(trades || []);
     // derived: { ticker: { qty, totalCost, avg, sector } }
     Object.entries(derived).forEach(([tk, p]) => {
@@ -8025,7 +8578,7 @@ function refreshLayerWeights() {
     el.textContent = `${pct}%`;
     if (pct > 0) el.classList.add('has-weight');
     else el.classList.remove('has-weight');
-    el.title = `투자원금 기준: $${cost.toLocaleString(undefined, {maximumFractionDigits: 2})} (${pctRaw.toFixed(2)}%)`;
+    el.title = `투자원금 기준: ${fmtMoney(cost)} (${pctRaw.toFixed(2)}%)`;
   });
 }
 
@@ -8129,8 +8682,6 @@ window.onLayerReturnPeriodChange = onLayerReturnPeriodChange;
 //   섹터명 클릭 → 기존 openSectorModal()로 연결
 // ============================================================================
 function computeSectorAnalysis() {
-  if (!_state.sectors || Object.keys(_state.sectors).length === 0) return null;
-
   const _mean = a => a.length === 0 ? 0 : a.reduce((s,v) => s+v, 0) / a.length;
   const _std = a => {
     if (a.length < 2) return 0;
@@ -8139,6 +8690,73 @@ function computeSectorAnalysis() {
   };
 
   const result = {};
+
+  // v1.71: 시장에 따라 다른 데이터 소스
+  //   US: _state.sectors[섹터명] = [모든 ticker의 OHLCV 섞인 배열]
+  //   KR: _state.kjpSectorMap[섹터명] = [{ticker, ...}] + _state.krOhlcvByTicker[ticker] = 시계열
+  if (getCurrentMarket() === 'KR') {
+    const krKjpSectorMap = _state.kjpSectorMap || {};
+    if (Object.keys(krKjpSectorMap).length === 0) return null;
+    if (!_state.krOhlcvByTicker || Object.keys(_state.krOhlcvByTicker).length === 0) return null;
+
+    Object.entries(krKjpSectorMap).forEach(([sectorKey, items]) => {
+      if (!items || items.length === 0) return;
+
+      // 섹터 내 종목들의 일일 수익률을 날짜별로 모음
+      const dateRets = {};
+      items.forEach(it => {
+        const trows = _state.krOhlcvByTicker[it.ticker];
+        if (!trows || trows.length < 2) return;
+        for (let i = 1; i < trows.length; i++) {
+          const c = trows[i].Close;
+          const p = trows[i-1].Close;
+          if (!isFinite(c) || !isFinite(p) || p <= 0) continue;
+          const d = trows[i].Date;
+          if (!dateRets[d]) dateRets[d] = [];
+          dateRets[d].push((c - p) / p);
+        }
+      });
+
+      const sortedDates = Object.keys(dateRets).sort();
+      if (sortedDates.length < 2) return;
+      const dailyRet = sortedDates.map(d => ({ date: d, ret: _mean(dateRets[d]) }));
+
+      const last60 = dailyRet.slice(-60).map(d => d.ret);
+      const std = _std(last60);
+      if (std <= 0) return;
+
+      const latest = dailyRet[dailyRet.length - 1];
+      const change = latest.ret * 100;
+      const sigma = latest.ret / std;
+
+      const last30 = dailyRet.slice(-30);
+      const sigmaHist30 = last30.slice().reverse().map(d => ({
+        date: d.date, sigma: d.ret / std,
+      }));
+
+      const fullSigmas = dailyRet.map(d => d.ret / std);
+      let adaptive = { avg: 0, delta: 0, window: 5 };
+      if (fullSigmas.length > 30) {
+        const std5  = _std(fullSigmas.slice(-5));
+        const std30 = _std(fullSigmas.slice(-30));
+        const kRatio = std5 > 0 ? std30 / std5 : 1.0;
+        const w = Math.floor(Math.max(3, Math.min(10, 5 * kRatio)));
+        const avgCurr = _mean(fullSigmas.slice(-w));
+        const avgPrev = _mean(fullSigmas.slice(-(w+1), -1));
+        adaptive = { avg: avgCurr, delta: avgCurr - avgPrev, window: w };
+      }
+
+      result[sectorKey] = {
+        change, sigma, sigmaHist30, adaptive,
+        latestDate: latest.date,
+        tickerCount: items.length,
+      };
+    });
+    return result;
+  }
+
+  // US — 기존 로직
+  if (!_state.sectors || Object.keys(_state.sectors).length === 0) return null;
 
   Object.entries(_state.sectors).forEach(([sectorKey, rows]) => {
     if (!rows || rows.length === 0) return;
@@ -8825,8 +9443,8 @@ function renderSignalFilterInto(container) {
   subH.innerHTML  = '<span class="long">⚪ 서브 (Sub)</span><span class="short">⚪ 서브</span>';
   container.appendChild(subH);
 
-  // 각 알고리즘 그룹별 행
-  SIGNAL_GROUPS.forEach(grp => {
+  // 각 알고리즘 그룹별 행 (v1.68: 시장에 따라 분기 — KR은 T 한 줄)
+  getSignalGroups().forEach(grp => {
     const lbl = document.createElement('div');
     lbl.className = 'sfg-rowlabel' + (grp.key === 'T' ? ' tree' : '');
     lbl.innerHTML = `<span class="long">${escapeHtml(grp.label)}</span><span class="short">${escapeHtml(grp.key)}</span>`;
@@ -9017,7 +9635,8 @@ function renderArchiveTable() {
       if (c.key === 'Ticker') {
         const tk = r.Ticker;
         const sec = r.Sector || '';
-        html += `<td data-col="Ticker"><span class="ticker-cell" onclick="openChart('${tk}')">${tickerLogoHtml(tk, sec)}${escapeHtml(disp)}</span></td>`;
+        const tickerDisp = displayName(tk);  // v1.70: KR이면 회사명, US면 티커
+        html += `<td data-col="Ticker"><span class="ticker-cell" title="${escapeAttr(tickerDisp)}" onclick="openChart('${tk}')">${tickerLogoHtml(tk, sec)}${escapeHtml(tickerDisp)}</span></td>`;
         return;
       }
       if (c.key === 'Signal_Type') {
@@ -9185,6 +9804,15 @@ let _chart = null;
 const _adhocOhlcv = {};
 
 function findTickerSeries(ticker) {
+  // v1.70: KR 모드 — krOhlcvByTicker 단일 시트에서 직접 조회
+  if (getCurrentMarket() === 'KR') {
+    const rows = (_state.krOhlcvByTicker || {})[ticker];
+    if (rows && rows.length) {
+      const sec = (_state.tickerSectorMap || {})[ticker] || '🇰🇷 한국';
+      return { sector: sec, rows };  // 이미 날짜순 정렬됨
+    }
+    return null;
+  }
   // 1) 섹터 시트들 안에서 찾기
   for (const sec of Object.keys(_state.sectors)) {
     const rows = _state.sectors[sec].filter(r => r.Ticker === ticker);
@@ -9266,7 +9894,7 @@ async function openChart(ticker) {
   }
 
   // Buy avg from portfolio or trades
-  const trades = lsGet(LS.TRADES, []);
+  const trades = lsGet(lsKeyTrades(), []);
   const pos = computePortfolioFromTrades(trades);
   const buyAvg = pos[ticker]?.avg || 0;
 
@@ -9284,7 +9912,7 @@ async function openChart(ticker) {
   // Signal markers from archive — respect global signal filter
   // v1.39 BUGFIX: r.Date도 안전망 normalize (이미 normalizeArchiveRow를 거치지만 방어적)
   const sigMarkersByType = {};
-  SIGNAL_TYPES.forEach(s => sigMarkersByType[s] = []);
+  getSignalTypes().forEach(s => sigMarkersByType[s] = []);
   _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
     const dateStr = normalizeDate(r.Date);
     if (!dateStr || dateStr < cutoffStr) return;
@@ -9312,7 +9940,7 @@ async function openChart(ticker) {
   const dayChgPct = prevClose > 0 ? (dayChg / prevClose * 100) : 0;
   const chgCls = dayChg > 0 ? 'up' : dayChg < 0 ? 'down' : '';
   const chgSign = dayChg >= 0 ? '+' : '';
-  const chgHtml = `<span class="price-chg ${chgCls}">${chgSign}$${Math.abs(dayChg).toFixed(2)} (${chgSign}${dayChgPct.toFixed(2)}%)</span>`;
+  const chgHtml = `<span class="price-chg ${chgCls}">${chgSign}${fmtPrice(Math.abs(dayChg))} (${chgSign}${dayChgPct.toFixed(2)}%)</span>`;
 
   // 1줄: 로고 + 회사명 + (티커)  — 회사명 없으면 티커만 크게
   if (company) {
@@ -9321,7 +9949,7 @@ async function openChart(ticker) {
     $('modalTitle').innerHTML = `${tickerLogoHtml(ticker, sec)}<span class="company-name">${escapeHtml(ticker)}</span>`;
   }
   // 2줄: 최근 종가 + 전일 대비
-  $('modalPrice').innerHTML = `$${lastPrice.toFixed(2)} ${chgHtml}`;
+  $('modalPrice').innerHTML = `${fmtPrice(lastPrice)} ${chgHtml}`;
   // 3줄: 섹터 + 고점 대비 + 데이터 일자
   $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span><span class="sep">·</span><span>Data: ${escapeHtml(dates[dates.length-1])}</span>`;
   // 4줄: 상세설명 (있으면 표시)
@@ -9525,7 +10153,7 @@ async function openMacroChart(macroName) {
 
   // 시그널/트레이드 마커 없음
   const sigMarkersByType = {};
-  SIGNAL_TYPES.forEach(s => sigMarkersByType[s] = []);
+  getSignalTypes().forEach(s => sigMarkersByType[s] = []);
 
   // 헤더
   const chgPct = closes.length > 1 ? (closes[closes.length - 1] / closes[0] - 1) * 100 : 0;
@@ -9651,14 +10279,14 @@ function drawChart(d) {
 
   // Signal scatter datasets — sparse array로 변환 (v1.39 fix)
   const sigDatasets = [];
-  SIGNAL_TYPES.forEach(s => {
+  getSignalTypes().forEach(s => {
     const arr = d.sigMarkersByType[s] || [];
     if (!arr.length) return;
     sigDatasets.push({
       label: s,
       data: buildSparse(arr),
       showLine: false,       // 점만 표시
-      backgroundColor: SIGNAL_COLORS[s],
+      backgroundColor: getSignalColors()[s],
       borderColor: '#ffffff',
       borderWidth: 1.2,
       pointStyle: 'circle',
@@ -9712,16 +10340,16 @@ function drawChart(d) {
   const labelDisp = !simple;
   const annotations = {
     sup1: { type: 'line', yMin: d.supportMA20, yMax: d.supportMA20, borderColor: COL.sup1, borderWidth: 1.2, borderDash: [6,4], yScaleID: 'yPrice',
-      label: { display: labelDisp, content: `MA20 $${d.supportMA20.toFixed(2)}`, position: 'end', backgroundColor: 'rgba(106,153,85,0.2)', color: COL.sup1, font: { size: 10 } } },
+      label: { display: labelDisp, content: `MA20 ${fmtPrice(d.supportMA20)}`, position: 'end', backgroundColor: 'rgba(106,153,85,0.2)', color: COL.sup1, font: { size: 10 } } },
     sup2: { type: 'line', yMin: d.supportRF, yMax: d.supportRF, borderColor: COL.sup2, borderWidth: 1.2, borderDash: [3,3,9,3], yScaleID: 'yPrice',
-      label: { display: labelDisp, content: `Round $${d.supportRF.toFixed(2)}`, position: 'end', backgroundColor: 'rgba(86,156,214,0.2)', color: COL.sup2, font: { size: 10 } } },
+      label: { display: labelDisp, content: `Round ${fmtPrice(d.supportRF)}`, position: 'end', backgroundColor: 'rgba(86,156,214,0.2)', color: COL.sup2, font: { size: 10 } } },
     sup3: { type: 'line', yMin: d.prevLow, yMax: d.prevLow, borderColor: COL.sup3, borderWidth: 1.2, borderDash: [2,4], yScaleID: 'yPrice',
-      label: { display: labelDisp, content: `전저점 $${d.prevLow.toFixed(2)}`, position: 'end', backgroundColor: 'rgba(157,106,217,0.2)', color: COL.sup3, font: { size: 10 } } },
+      label: { display: labelDisp, content: `전저점 ${fmtPrice(d.prevLow)}`, position: 'end', backgroundColor: 'rgba(157,106,217,0.2)', color: COL.sup3, font: { size: 10 } } },
   };
   if (d.buyAvg > 0) {
     // 평단가는 simple 모드에서도 라벨 유지 (사용자 본인 정보라 중요)
     annotations.buyAvg = { type: 'line', yMin: d.buyAvg, yMax: d.buyAvg, borderColor: COL.buyAvg, borderWidth: 2, yScaleID: 'yPrice',
-      label: { display: true, content: `평단가 $${d.buyAvg.toFixed(2)}`, position: 'start', backgroundColor: 'rgba(220,220,170,0.25)', color: COL.buyAvg, font: { size: 10, weight: 'bold' } } };
+      label: { display: true, content: `평단가 ${fmtPrice(d.buyAvg)}`, position: 'start', backgroundColor: 'rgba(220,220,170,0.25)', color: COL.buyAvg, font: { size: 10, weight: 'bold' } } };
   }
 
   // Datasets — simple 모드에선 A/D Line, Volume 제외
@@ -9780,7 +10408,7 @@ function drawChart(d) {
               const v = c.parsed.y;
               if (c.dataset.label === 'Volume') return simple ? '' : `Vol: ${typeof v === 'number' ? v.toLocaleString() : v}`;
               const fmtV = typeof v === 'number' ? v.toFixed(2) : v;
-              return `${c.dataset.label}: $${fmtV}`;
+              return `${c.dataset.label}: ${getMarketConfig().currency}${fmtV}`;
             }
           }
         },
@@ -9806,7 +10434,7 @@ function drawChart(d) {
   $('chartLegend').innerHTML = legendItems.map(it =>
     `<span class="lg-item"><span class="lg-shape" style="background:${it.color};${it.dash?'height:2px;':''}"></span>${escapeHtml(it.label)}</span>`
   ).join('') + ' · 신호 마커: ' +
-    SIGNAL_TYPES.map(s => `<span class="lg-item"><span class="lg-shape" style="background:${SIGNAL_COLORS[s]};border-radius:50%;width:10px;height:10px;border:1.2px solid #fff;"></span>${s}</span>`).join('');
+    getSignalTypes().map(s => `<span class="lg-item"><span class="lg-shape" style="background:${getSignalColors()[s]};border-radius:50%;width:10px;height:10px;border:1.2px solid #fff;"></span>${s}</span>`).join('');
 }
 
 // Chart.js 플러그인: 마우스 hover 시 가격에 가로 빨간 점선 + 가격 라벨 표시
@@ -9858,7 +10486,7 @@ const crosshairPlugin = {
 // ============================================================================
 function buildTickerHistoryTable(ticker) {
   // 시그널 필터 적용: 행의 시그널 중 하나라도 _state.signalFilter에 켜져 있어야 통과
-  const filter = _state.signalFilter || new Set(SIGNAL_TYPES);
+  const filter = _state.signalFilter || new Set(getSignalTypes());
   const allTickerRows = _state.archive.filter(r => r.Ticker === ticker);
   const rows = allTickerRows
     .filter(r => {
@@ -9947,8 +10575,15 @@ function buildTickerHistoryTable(ticker) {
 // INIT
 // ============================================================================
 window.addEventListener('DOMContentLoaded', () => {
-  // 저장된 테마 복원 (디폴트: dark)
-  applyTheme(lsGet(LS.THEME, 'dark'));
+  // v1.65: 다크 강제 (라이트 모드 제거)
+  applyTheme('dark');
+  // v1.65: 저장된 시장 복원 (디폴트 US) + 버튼 active 상태 동기화
+  const savedMarket = lsGet(LS.MARKET, 'US');
+  document.querySelectorAll('.market-switch .mkt-btn').forEach(b => {
+    const isActive = b.dataset.market === savedMarket;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
   restoreCardStates();
   autoCollapseHeavyCardsOnMobile();  // v1.19: 모바일 첫 방문 시 큰 카드 (Framework, 40섹터 분석) 자동 접기
   // KJP 매핑 LocalStorage 캐시 복원 (있으면)
@@ -9968,8 +10603,9 @@ window.addEventListener('DOMContentLoaded', () => {
   // v1.57: PC 탭 시스템 초기화 (디폴트 메인 탭)
   initPCTabs();
   // v1.26: 백엔드 URL 미설정 안내 → splash 에러로 처리 (autoLoadData 진입 시점)
-  portfolioSheet = new SpreadsheetTable('portfolioSheetMount', PORTFOLIO_COLS, LS.PORTFOLIO, portfolioSummary, autoFillSector);
-  tradesSheet    = new SpreadsheetTable('tradesSheetMount',    TRADE_COLS,     LS.TRADES,    tradesSummary,    autoFillSector);
+  // v1.71: lsKey를 함수로 전달 — 시장 변경 시 자동 갱신
+  portfolioSheet = new SpreadsheetTable('portfolioSheetMount', PORTFOLIO_COLS, lsKeyPF,     portfolioSummary, autoFillSector);
+  tradesSheet    = new SpreadsheetTable('tradesSheetMount',    TRADE_COLS,     lsKeyTrades, tradesSummary,    autoFillSector);
   // 저장된 기간 선택 복원 (framework 등락률용)
   const savedPeriod = lsGet(LS.LAYER_RETURN_PERIOD, '5');
   const periodSel = $('layerReturnPeriod');
@@ -10222,17 +10858,18 @@ function buildBuyPointsCard() {
   }
 
   scrollEl.innerHTML = dedup.map(it => {
-    // 안전한 logo (handleLogoError 패턴)
+    // 안전한 logo (handleLogoError 패턴) — v1.67: KR 모드는 layer 건너뜀 → 국기 fallback
+    const market = getCurrentMarket();
     const layer = SECTOR_TO_LAYER[it.sector] || '기타';
-    const layerFile = layerFileName(layer);
+    const layerFile = (market === 'KR') ? '' : layerFileName(layer);
     const tkFile = tickerFileName(it.ticker);
     const logoHtml = tkFile
       ? `<img class="bp-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
-      : `<img class="bp-logo" src="./logos/layers/${encodeURIComponent(layerFile)}.png" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+      : `<img class="bp-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
     return `
       <div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
         ${logoHtml}
-        <div class="bp-name">${escapeHtml(it.ticker)}</div>
+        <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
         <div class="bp-date">${escapeHtml(it.date)}</div>
         <div class="bp-ret">${it.ret.toFixed(1)}%</div>
       </div>
@@ -10288,24 +10925,25 @@ function buildArchiveMobileList() {
   });
 
   listEl.innerHTML = items.map(it => {
-    // v1.50: 기존 안전 패턴 사용 (outerHTML escape 충돌 fix)
+    // v1.50/v1.67: 안전 패턴 + KR 모드는 layer 건너뜀 → 국기 fallback
+    const market = getCurrentMarket();
     const layer = SECTOR_TO_LAYER[it.Sector] || '기타';
-    const layerFile = layerFileName(layer);
+    const layerFile = (market === 'KR') ? '' : layerFileName(layer);
     const tkFile = tickerFileName(it.Ticker);
     const logoHtml = tkFile
       ? `<img class="am-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
-      : `<img class="am-logo" src="./logos/layers/${encodeURIComponent(layerFile)}.png" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+      : `<img class="am-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
     const retCls = it.ret == null ? 'zero' : it.ret > 0 ? 'up' : it.ret < 0 ? 'down' : 'zero';
     const retStr = it.ret == null ? '-' : (it.ret >= 0 ? '+' : '') + it.ret.toFixed(1) + '%';
     return `
       <div class="archive-mobile-item" data-ticker="${escapeAttr(it.Ticker)}">
         ${logoHtml}
         <div class="am-info">
-          <div class="am-ticker">${escapeHtml(it.Ticker)}</div>
-          <div class="am-company">${escapeHtml(it.company || '')}</div>
+          <div class="am-ticker" title="${escapeAttr(displayName(it.Ticker))}">${escapeHtml(displayName(it.Ticker))}</div>
+          <div class="am-company">${escapeHtml(displaySub(it.Ticker))}</div>
         </div>
         <div class="am-sigs">
-          ${it.sigs.map(s => `<span class="sig-badge ${escapeAttr(s)}" style="color:${SIGNAL_COLORS[s]||'#888'};border-color:${SIGNAL_COLORS[s]||'#888'};">${escapeHtml(s)}</span>`).join('')}
+          ${(() => { const C = getSignalColors(); return it.sigs.map(s => `<span class="sig-badge ${escapeAttr(s)}" style="color:${C[s]||'#888'};border-color:${C[s]||'#888'};">${escapeHtml(s)}</span>`).join(''); })()}
         </div>
         <div class="am-meta">
           <div class="am-date">${escapeHtml((it.Date || '').slice(5))}</div>
@@ -10422,21 +11060,22 @@ function buildStockList() {
 }
 
 function renderStockRow(it) {
+  const market = getCurrentMarket();
   const layer = SECTOR_TO_LAYER[it.sector] || '기타';
-  const layerFile = layerFileName(layer);
+  const layerFile = (market === 'KR') ? '' : layerFileName(layer);
   const tkFile = tickerFileName(it.ticker);
   const logoHtml = tkFile
     ? `<img class="sl-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
-    : `<img class="sl-logo" src="./logos/layers/${encodeURIComponent(layerFile)}.png" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+    : `<img class="sl-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
   const chgCls = it.chg > 0 ? 'up' : it.chg < 0 ? 'down' : 'zero';
   const chgStr = (it.chg >= 0 ? '+' : '') + it.chg.toFixed(2) + '%';
   return `
     <div class="stock-list-row" data-ticker="${escapeAttr(it.ticker)}">
       ${logoHtml}
-      <div class="sl-ticker">${escapeHtml(it.ticker)}</div>
+      <div class="sl-ticker" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
       <div class="sl-sector">${escapeHtml(it.sector)}</div>
       <div class="sl-meta">
-        <div class="sl-price">$${it.close.toFixed(2)}</div>
+        <div class="sl-price">${fmtPrice(it.close)}</div>
         <div class="sl-chg ${chgCls}">${chgStr}</div>
       </div>
     </div>
