@@ -1572,8 +1572,10 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
   width: 180px; height: 180px;
   object-fit: contain;
   margin-bottom: 28px;
-  /* v1.43: PC는 원래의 미세한 후광 복구 (이전 v1.41 이하 수준이 딱 좋았다는 피드백) */
-  filter: drop-shadow(0 4px 32px rgba(255,255,255,0.06));
+  /* v1.93: PC 후광 복구 (v1.40 수준 — white glow + 살짝 푸른 ambient) */
+  filter:
+    drop-shadow(0 0 40px rgba(255,255,255,0.18))
+    drop-shadow(0 0 80px rgba(120,180,255,0.12));
   animation: splash-pulse 2.6s ease-in-out infinite;
   user-select: none; -webkit-user-drag: none; pointer-events: none;
   /* 모바일 GPU 가속 보장 — filter 렌더링 안정화 */
@@ -1581,16 +1583,15 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
   transform: translateZ(0);
 }
 @keyframes splash-pulse {
-  /* v1.43: 호흡은 opacity + scale로만 (PC 원본 동작) — filter는 base에서 고정 */
   0%, 100% { opacity: 0.95; transform: scale(1) translateZ(0); }
-  50%      { opacity: 1;    transform: scale(1.025) translateZ(0); }
+  50%      { opacity: 1;    transform: scale(1.04) translateZ(0); }
 }
-/* v1.43: 모바일에서만 살짝 강화 — PC 수준(alpha 0.06)이 작은 화면에선 안 보여서 살짝만 보이게 */
+/* v1.93: 모바일은 더 강하게 (작은 화면에서도 또렷이) */
 @media (max-width: 640px) {
   .splash-logo {
     filter:
-      drop-shadow(0 0 24px rgba(255,255,255,0.12))
-      drop-shadow(0 0 10px rgba(255,255,255,0.15));
+      drop-shadow(0 0 28px rgba(255,255,255,0.20))
+      drop-shadow(0 0 60px rgba(120,180,255,0.15));
   }
 }
 .splash-brand {
@@ -3676,7 +3677,7 @@ table.combo-eval tbody td .nodata {
           <span class="mkt-label">KR</span>
         </button>
       </div>
-      <div class="v">v1.91</div>
+      <div class="v">v1.94</div>
     </div>
   </header>
 
@@ -4137,7 +4138,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.91 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.94 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -6382,6 +6383,26 @@ async function autoLoadData() {
     _state.sectors = _state.sectorsByMarket[getCurrentMarket()] || {};
     _state.macro   = _state.macroByMarket[getCurrentMarket()] || [];
 
+    // v1.93: KJP100에 없는 ticker의 회사명도 archive/sector OHLCV에서 자동 보강
+    //   archive 시트나 sector OHLCV 시트에 'Company'/'회사명'/'Name' 컬럼이 있으면 자동 등록
+    ['US', 'KR'].forEach(mkt => {
+      if (!_state.tickerCompanyMaps[mkt]) _state.tickerCompanyMaps[mkt] = {};
+      const cMap = _state.tickerCompanyMaps[mkt];
+      // archive에서 보강
+      (_state.archives[mkt] || []).forEach(r => {
+        if (r.Ticker && r.Company && !cMap[r.Ticker]) cMap[r.Ticker] = r.Company;
+      });
+      // sector OHLCV에서 보강
+      Object.values(_state.sectorsByMarket[mkt] || {}).forEach(rows => {
+        rows.forEach(r => {
+          if (r.Ticker && r.Company && !cMap[r.Ticker]) cMap[r.Ticker] = r.Company;
+        });
+      });
+    });
+    // active 시장 reflection
+    _state.tickerCompanyMap = _state.tickerCompanyMaps[getCurrentMarket()] || {};
+    console.log(`[CompanyMap/KR] ${Object.keys(_state.tickerCompanyMaps.KR || {}).length}개 ticker → 회사명 매핑`);
+
     // 모든 OHLCV에서 가장 최근 일자 계산 (active 시장 기준)
     let latestDate = '';
     Object.values(_state.sectors).forEach(rows => {
@@ -6395,11 +6416,24 @@ async function autoLoadData() {
     const krTotalRows = krSecNames.reduce((s, n) => s + _state.sectorsByMarket.KR[n].length, 0);
     console.log(`[Sectors/US] ${Object.keys(_state.sectorsByMarket.US).length}개 시트, ${Object.values(_state.sectorsByMarket.US).reduce((s,a)=>s+a.length,0)}행`);
     console.log(`[Sectors/KR] ${krSecNames.length}개 시트, ${krTotalRows}행`);
-    // v1.82: 매크로 시장별 진단 — KR은 US 매크로 + KR 매크로 시트 병합 결과
+    // v1.92: 시장별 매크로 진단 — KR은 US 매크로 + KR 매크로 시트 병합 결과
     console.log(`[Macro/US] ${_state.macroByMarket.US.length}행 (티커: ${[...new Set(_state.macroByMarket.US.map(r => r.Ticker))].join(', ')})`);
     console.log(`[Macro/KR] ${_state.macroByMarket.KR.length}행 (US 매크로 + KR 시트 병합, 티커: ${[...new Set(_state.macroByMarket.KR.map(r => r.Ticker))].join(', ')})`);
-    if (krSecNames.length > 0) console.log('  · KR 섹터 시트명:', krSecNames);
-    if (krTotalRows > 0)      console.log('  · KR 첫 sector 첫 행:', _state.sectorsByMarket.KR[krSecNames[0]][0]);
+    // v1.92: KR sector 시트별 — 인식된 ticker 수 + 첫 행 (인식 실패 즉시 추적)
+    if (krSecNames.length > 0) {
+      console.log('━━━━━ [Sectors/KR] 시트별 상세 ━━━━━');
+      krSecNames.forEach(name => {
+        const rows = _state.sectorsByMarket.KR[name];
+        const tickers = [...new Set(rows.map(r => r.Ticker).filter(Boolean))];
+        const dates = [...new Set(rows.map(r => r.Date).filter(Boolean))];
+        const tag = tickers.length === 0 ? '⚠️ 인식 실패!' : (tickers.length < 3 ? '⚠️ 적음' : '✓');
+        console.log(`  ${tag} 「${name}」 → ${rows.length}행, ticker ${tickers.length}개, 날짜 ${dates.length}개`);
+        if (rows.length > 0 && tickers.length === 0) {
+          console.warn(`     ⚠️ 첫 행 (Ticker 비어있음, 컬럼명 확인 필요):`, rows[0]);
+        }
+      });
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    }
     if (failed.length > 0)    console.warn('  · 다운로드 실패한 시트:', failed);
 
     splashUpdate(95);
@@ -6594,16 +6628,22 @@ function simulatePortfolioDaily() {
     if (!state[tk]) state[tk] = { qty: 0, cost: 0, avgpx: 0, sector: t.sector || '', mv_fallback: 0 };
     if (!state[tk].sector && t.sector) state[tk].sector = t.sector;
     if (t.action === '매수') {
-      state[tk].cost += t.qty * t.price + t.fee;
+      // v1.94: Python KJP 코드와 동일 — 매수 수수료를 평단가에 포함하지 않음 (순수 매수단가의 가중평균)
+      //   cost(total_buy) = 누적 매수금액 (qty × price), 수수료 별도
+      //   avgpx = cost / qty = 순수 매수단가의 가중평균
+      state[tk].cost += t.qty * t.price;
       state[tk].qty += t.qty;
       state[tk].avgpx = state[tk].qty > 0 ? state[tk].cost / state[tk].qty : 0;
     } else if (t.action === '매도') {
+      // v1.94: Python KJP 방식 — gross = (매도가 - 순수평단가) × 수량, net = gross - 매도수수료 - 매도세금
+      //   매수 수수료는 평단가에 미포함이라 자동으로 안 빠짐 (Python과 일치)
       const avgAtSell = state[tk].avgpx;
-      const profit = (t.price - avgAtSell) * t.qty - t.fee - t.tax;
+      const gross = (t.price - avgAtSell) * t.qty;
+      const profit = gross - t.fee - t.tax;
       acc.total += profit;
       acc.byTicker[tk] = (acc.byTicker[tk] || 0) + profit;
-      // v1.86: 매도 시 확정수익금 계산 진단 로그 (사용자가 콘솔에서 확인)
-      console.log(`[매도/${tk}] ${t.date} ${t.qty}주 @ ${t.price} (평단 ${avgAtSell.toFixed(2)}) · 수수료=${t.fee} 세금=${t.tax} → 확정수익 ${profit.toFixed(2)} (누적 ${acc.total.toFixed(2)})`);
+      // v1.94: 진단 로그 — gross / net 분리 표시 (사용자가 명확히 확인 가능)
+      console.log(`[매도/${tk}] ${t.date} ${t.qty}주 @ ${t.price.toLocaleString()} (평단 ${avgAtSell.toFixed(0)}) · gross=${gross.toFixed(0)} − 매도수수료 ${t.fee} − 세금 ${t.tax} = 확정수익 ${profit.toFixed(0)} (누적 ${acc.total.toFixed(0)})`);
       state[tk].qty -= t.qty;
       state[tk].cost = Math.max(0, state[tk].cost - avgAtSell * t.qty);
       if (state[tk].qty <= 1e-9) { state[tk].qty = 0; state[tk].cost = 0; state[tk].avgpx = 0; }
@@ -7879,6 +7919,8 @@ function normalizeArchiveRow(row, marketHint) {
   return {
     Sector: row['Sector'] || row['섹터'] || row['섹터명'] || '',
     Ticker: tk,
+    // v1.93: 회사명 — archive 시트에 있으면 자동 회사명 매핑에 사용 (KJP100 외 종목용)
+    Company: row['Company'] || row['회사명'] || row['Name'] || row['기업명'] || row['이름'] || row['한글명'] || '',
     Description: row['Description'] || row['설명'] || row['상세설명'] || row['간단설명'] || '',
     Date: normalizeDate(row['Date'] || row['일자'] || row['날짜']),
     Signal_Type: row['Signal_Type'] || row['신호유형'] || row['신호종류'] || row['Signal'] || row['시그널'] || '',
@@ -7923,6 +7965,8 @@ function normalizeTicker(raw, marketHint) {
 function normalizeOhlcvRow(row, marketHint) {
   return {
     Ticker: normalizeTicker(row['Ticker'] || row['ticker'] || row['티커'] || row['티커명'] || row['종목코드'], marketHint),
+    // v1.93: 회사명 — sector OHLCV 시트에 있으면 자동 매핑 보강
+    Company: row['Company'] || row['회사명'] || row['Name'] || row['기업명'] || row['이름'] || row['한글명'] || '',
     Date: normalizeDate(row['Date'] || row['date'] || row['일자'] || row['날짜']),
     Open:   Number(row['Open']   || row['open']   || row['시가']   || 0),
     High:   Number(row['High']   || row['high']   || row['고가']   || 0),
@@ -9843,7 +9887,14 @@ function applyFilterAndRender() {
 // ============================================================================
 const ARCHIVE_COLS = [
   { key: 'Sector',            label: '섹터',         t: 's', w: '120px' },
-  { key: 'Ticker',            label: '티커',         t: 's', w: '70px'  },
+  { key: 'Ticker',            label: '티커',         t: 's', w: '110px',
+    dynamicLabel: () => getCurrentMarket() === 'KR' ? '종목' : '티커',
+    // v1.93: KR 모드면 회사명 우선 표시 (있으면), 없으면 ticker — title 속성으로 ticker도 보임
+    fmt: (v) => {
+      if (!v) return '';
+      const name = displayName(v);
+      return name === v ? escapeHtml(v) : `<span title="${escapeAttr(v)}">${escapeHtml(name)}</span>`;
+    } },
   { key: 'Description',       label: '설명',         t: 's', w: '180px', cls: 'desc-cell' },
   { key: 'Date',              label: '일자',         t: 's', w: '100px' },
   { key: 'Signal_Type',       label: '시그널',       t: 's', w: '220px' },
@@ -10825,8 +10876,8 @@ const crosshairPlugin = {
     ctx.lineTo(area.right, y);
     ctx.stroke();
     ctx.setLineDash([]);
-    // 가격 라벨 (우측 빨간 박스)
-    const labelText = '$' + yValue.toFixed(2);
+    // 가격 라벨 (우측 빨간 박스) — v1.92: 시장별 통화 포맷
+    const labelText = fmtPrice(yValue);
     ctx.font = 'bold 11px Consolas, monospace';
     const tw = ctx.measureText(labelText).width;
     ctx.fillStyle = '#ff3b30';
