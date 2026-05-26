@@ -1,6 +1,6 @@
-// AQUAMEL V-Shape Scanner — Service Worker v1.98
+// AQUAMEL V-Shape Scanner — Service Worker v1.99
 // Network-first 전략으로 항상 최신 버전 우선. 오프라인 fallback만 캐시 사용.
-const CACHE_NAME = 'aquamel-v1.98';
+const CACHE_NAME = 'aquamel-v1.99';
 const CACHE_FILES = ['./', './index.html', './sw.js'];
 
 self.addEventListener('install', (event) => {

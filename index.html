@@ -177,6 +177,10 @@ html, body { overflow-x: hidden; max-width: 100%; }
 ::-webkit-scrollbar-corner { display: none; }
 
 /* v1.55: iOS PWA — overscroll bounce 영역 색상 매칭 + 글로벌 tap highlight 제거 */
+/* v1.99: pull-to-refresh 차단을 모바일에만 적용 (PC에서 일부 스크롤 동작 막혔던 문제) */
+@media (max-width: 640px) {
+  html, body { overscroll-behavior-y: contain; }
+}
 html { background: var(--bg); -webkit-tap-highlight-color: transparent; -ms-overflow-style: none; }
 * { -webkit-tap-highlight-color: transparent; -ms-overflow-style: none; }
 
@@ -992,6 +996,24 @@ table.sheet tbody tr.drop-below td:last-child {
   transition: all 0.15s;
 }
 .modal-content .modal-close:hover { color: var(--danger); background: var(--bg-3); }
+
+/* v1.98: 토스증권 이동 버튼 — 모달 우상단 (닫기 ✕ 옆) */
+.modal-content .modal-toss {
+  position: absolute; top: 12px; right: 56px;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(50,108,255,0.12); color: #4d8cff; border: 1px solid rgba(50,108,255,0.35);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  padding: 6px 10px; height: 32px; border-radius: 6px;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.modal-content .modal-toss:hover { background: rgba(50,108,255,0.20); border-color: rgba(50,108,255,0.55); }
+.modal-content .modal-toss img { width: 18px; height: 18px; }
+@media (max-width: 640px) {
+  /* 모바일은 텍스트 숨기고 아이콘만 (공간 절약) */
+  .modal-content .modal-toss { right: 50px; padding: 6px; }
+  .modal-content .modal-toss span { display: none; }
+}
 
 /* v1.23: 모달 하단 닫기 버튼 + 스와이프 다운 핸들 */
 .modal-content .modal-bottom-close {
@@ -3031,6 +3053,16 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .sf-controls-hint { display: none; }
   .sf-controls select { font-size: 11px; padding: 4px 6px; }
 
+  /* v1.98: 모든 모바일 select 폰트 전역 통일 (iOS Safari user-agent default 16px override 방지)
+     — "계층별 등락률 기간" 같은 드롭다운들이 OS 기본 폰트로 크게 나오던 문제 해결
+     ※ input은 iOS 16px 미만 시 focus zoom-in 부작용 있어 손대지 않음 */
+  select {
+    font-size: 12px !important;
+    line-height: 1.4;
+    padding: 5px 8px;
+  }
+  /* select의 option (native dropdown 열렸을 때 항목)은 OS가 제어 — iOS는 CSS 무시함 */
+
   /* ─── 시그널 필터 라벨 짧게 ─── */
   .sfg-rowlabel .long, .sfg-header .long { display: none; }
   .sfg-rowlabel .short, .sfg-header .short { display: inline; }
@@ -3701,7 +3733,7 @@ table.combo-eval tbody td .nodata {
           <span class="mkt-label">KR</span>
         </button>
       </div>
-      <div class="v">v1.98</div>
+      <div class="v">v1.99</div>
     </div>
   </header>
 
@@ -4128,6 +4160,11 @@ table.combo-eval tbody td .nodata {
   <div class="modal-overlay" id="chartModal" onclick="closeModalIfOverlay(event)">
     <div class="modal-content">
       <div class="modal-drag-handle"></div>
+      <!-- v1.98: 토스증권 종목 페이지로 이동 (한국=tossinvest.com/stocks/A{ticker}, 미국=tossinvest.com/stocks/US{ticker}) -->
+      <button class="modal-toss" id="modalTossBtn" onclick="openTossInvest()" title="토스증권에서 보기">
+        <img src="./logos/toss.png" alt="토스증권" />
+        <span>토스증권</span>
+      </button>
       <button class="modal-close" onclick="closeModal()">×</button>
       <!-- v1.34: 새 헤더 구조 — 회사명+티커, 종가, 메타, 상세설명 -->
       <div class="modal-title" id="modalTitle">—</div>
@@ -4162,7 +4199,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.98 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.99 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -10225,6 +10262,14 @@ async function openChart(ticker) {
   ticker = normalizeTicker(ticker, getCurrentMarket());
   if (!ticker) return;
 
+  // v1.98: PC 발견/탐색 패널이 열렸을 때 .container에 걸린 transform 때문에
+  //   .container 안의 chartModal이 position:fixed인데도 viewport가 아닌 .container 기준으로 표시됨
+  //   → 모달을 body 직접 자식으로 이동시켜 transform 영향 영구 회피 (1회만 실행)
+  const _modalEl = document.getElementById('chartModal');
+  if (_modalEl && _modalEl.parentNode !== document.body) {
+    document.body.appendChild(_modalEl);
+  }
+
   let found = findTickerSeries(ticker);
 
   // 섹터 시트 + 세션 캐시 모두에 없으면 Apps Script로 ad-hoc fetch 시도
@@ -10385,6 +10430,26 @@ async function openChart(ticker) {
   });
 
   $('chartModal').classList.add('active');
+}
+
+// v1.98/v1.99: 현재 열린 종목 모달의 ticker를 토스증권 종목 페이지로 새 탭 이동
+//   사용자 Python 크롤러 코드 힌트: tossinvest.com/stocks/{ticker} 한 패턴으로 모두 작동
+//     - 한국: ticker = 6자리 숫자 ("005930") 또는 "A005930"
+//     - 미국: ticker 그대로 ("NVDA", "AAPL") — 토스가 자동 리디렉션
+function openTossInvest() {
+  const tk = _state.openTicker;
+  if (!tk) return;
+  const isKR = getCurrentMarket() === 'KR';
+  let code;
+  if (isKR) {
+    // 한국: A + 6자리 padding (사용자 확인 — A005930 형식 작동)
+    code = 'A' + String(tk).replace(/[^0-9]/g, '').padStart(6, '0');
+  } else {
+    // 미국: ticker 그대로 (NVDA → /stocks/NVDA → 토스가 알아서 productCode로 리디렉션)
+    code = String(tk).toUpperCase();
+  }
+  const url = `https://www.tossinvest.com/stocks/${code}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 function closeModal() {
