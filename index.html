@@ -1000,20 +1000,36 @@ table.sheet tbody tr.drop-below td:last-child {
   position: absolute; top: 12px; right: 178px;  /* 토스 버튼(우상단) 좌측 */
   display: inline-flex; align-items: center; justify-content: center;
   background: transparent; color: var(--text-mute); border: 1px solid var(--line);
-  font-size: 16px; cursor: pointer; height: 32px; min-width: 32px;
+  cursor: pointer; height: 32px; min-width: 32px;
   padding: 0 8px; border-radius: 6px;
   transition: all 0.15s;
   font-family: inherit;
-  filter: grayscale(100%);  /* 컬러 말고 흑백 */
 }
-.modal-content .modal-report:hover { color: var(--text); background: var(--bg-3); border-color: var(--text-mute); }
+.modal-content .modal-report svg { width: 18px; height: 18px; }
+.modal-content .modal-report:hover { color: var(--accent); background: var(--bg-3); border-color: var(--accent); }
 @media (max-width: 640px) {
+  /* v2.03: 모바일 — 분석/토스 버튼을 modal-title (회사명+티커) 줄과 같은 줄로
+     modal padding-top = 14px + safe-area-top → 버튼 top도 동일하게 → modal-title 시작점과 정렬 */
   .modal-content .modal-report {
-    top: 8px; right: 44px;  /* 모바일은 토스(8px) 옆 */
-    padding: 4px; height: 28px; min-width: 28px;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: 46px;
+    padding: 0; height: 28px; min-width: 28px;
     background: transparent; border: none;
-    font-size: 18px;
   }
+  .modal-content .modal-report svg { width: 20px; height: 20px; }
+  .modal-content .modal-report:hover { background: rgba(50,108,255,0.15); }
+  /* 토스 로고도 같은 줄로 */
+  .modal-content .modal-toss {
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: 12px;
+    padding: 0; height: 28px;
+    background: transparent; border: none;
+  }
+  .modal-content .modal-toss:hover { background: rgba(50,108,255,0.15); }
+  .modal-content .modal-toss span { display: none; }
+  .modal-content .modal-toss img { width: 26px; height: 26px; }
+  /* modal-title의 우측에 분석 + 토스 자리 확보 (긴 회사명이 안 가리도록) */
+  .modal-content #modalTitle { padding-right: 90px !important; }
 }
 
 /* v1.99: 보고서 패널 (모달 내부) */
@@ -1194,17 +1210,7 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .modal-content .modal-toss:hover { background: rgba(50,108,255,0.20); border-color: rgba(50,108,255,0.55); }
 .modal-content .modal-toss img { width: 18px; height: 18px; }
-@media (max-width: 640px) {
-  /* 모바일은 토스 로고 우상단 정확히 모서리에 (텍스트 숨김), 닫기 ✕는 그 아래로 */
-  .modal-content .modal-toss {
-    top: 8px; right: 8px;
-    padding: 4px; height: 28px;
-    background: transparent; border: none;
-  }
-  .modal-content .modal-toss:hover { background: rgba(50,108,255,0.15); }
-  .modal-content .modal-toss span { display: none; }
-  .modal-content .modal-toss img { width: 24px; height: 24px; }
-}
+/* 모바일 분석/토스 위치는 modal-report CSS 블록(아래)에서 통합 처리 — v2.03 */
 
 /* v1.23: 모달 하단 닫기 버튼 + 스와이프 다운 핸들 */
 .modal-content .modal-bottom-close {
@@ -1515,6 +1521,7 @@ table.sheet tbody tr.drop-below td:last-child {
 .pc-panel-content { display: none; }
 body[data-pc-panel="discover"] #pcPanelDiscover { display: block; }
 body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
+body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 
 /* 사이드 패널 안 카드 — mobile-only 강제 표시 */
 .pc-side-panel section.card { margin-bottom: 14px; }
@@ -1531,13 +1538,15 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
 
   /* v1.58: 사이드 패널 열림 시 슬라이드 인 */
   body[data-pc-panel="discover"] .pc-side-panel,
-  body[data-pc-panel="explore"] .pc-side-panel { transform: translateX(0); }
+  body[data-pc-panel="explore"] .pc-side-panel,
+  body[data-pc-panel="analysis"] .pc-side-panel { transform: translateX(0); }
 
   /* v1.62: 사이드 패널 열림 시 메인 콘텐츠 왼쪽 이동 — 가로 폭 유지!
      이동량 = container의 좌측 여백(가운데 정렬 때문에 생긴 여유)만큼.
      min(0px, (1500-vw)/2): vw>1500이면 음수 (좌측 이동), vw<=1500이면 0 (이동 X = 좌측 잘림 방지) */
   body[data-pc-panel="discover"] .container,
-  body[data-pc-panel="explore"] .container {
+  body[data-pc-panel="explore"] .container,
+  body[data-pc-panel="analysis"] .container {
     transform: translateX(min(0px, calc((1500px - 100vw) / 2)));
   }
 
@@ -1545,7 +1554,8 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
      overlay 폭 자체를 줄이면 안의 modal-content가 자연스럽게 가용 영역 안에서 가운데 정렬됨 */
   .modal-overlay { transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
   body[data-pc-panel="discover"] .modal-overlay,
-  body[data-pc-panel="explore"] .modal-overlay {
+  body[data-pc-panel="explore"] .modal-overlay,
+  body[data-pc-panel="analysis"] .modal-overlay {
     width: calc(100vw - 64px - 420px);
   }
 
@@ -1562,10 +1572,6 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
   body[data-pc-page="my"] .container > section.card { display: none !important; }
   body[data-pc-page="my"] #myPortfolioCard { display: block !important; }
   body[data-pc-page="my"] .sheet-wrap { max-height: calc(100vh - 280px) !important; }
-
-  /* v2.01 Phase 2: 분석 페이지 — analysisCard만 표시 */
-  body[data-pc-page="analysis"] .container > section.card { display: none !important; }
-  body[data-pc-page="analysis"] #analysisCard { display: block !important; }
 }
 .stock-list-sort {
   position: relative;
@@ -3909,7 +3915,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.02</div>
+      <div class="splash-version" id="splashVersion">v2.04</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4386,9 +4392,11 @@ table.combo-eval tbody td .nodata {
   <div class="modal-overlay" id="chartModal" onclick="closeModalIfOverlay(event)">
     <div class="modal-content">
       <div class="modal-drag-handle"></div>
-      <!-- v1.99: 분석 보고서 보기 (해당 ticker 보고서 있을 때만 표시) -->
+      <!-- v1.99/v2.03: 분석 보고서 보기 (해당 ticker 보고서 있을 때만 표시) — 분석 메뉴와 동일 SVG -->
       <button class="modal-report" id="modalReportBtn" onclick="openReportPanel()" title="분석 보고서" style="display:none">
-        <span>📊</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
+        </svg>
       </button>
       <!-- v1.98: 토스증권 종목 페이지로 이동 (한국=tossinvest.com/stocks/A{ticker}, 미국=tossinvest.com/stocks/US{ticker}) -->
       <button class="modal-toss" id="modalTossBtn" onclick="openTossInvest()" title="토스증권에서 보기">
@@ -4445,6 +4453,10 @@ table.combo-eval tbody td .nodata {
   </div>
   <div class="pc-panel-content" id="pcPanelExplore" data-pc-tab="explore">
     <!-- stockListCard 가 JS로 여기로 이동 -->
+  </div>
+  <!-- v2.03 Phase 2 재작업: 분석 사이드 패널 (탐색과 동일 UI) — analysisCard가 PC에선 여기로 이동 -->
+  <div class="pc-panel-content" id="pcPanelAnalysis" data-pc-tab="analysis">
+    <!-- analysisCard 가 JS로 여기로 이동 -->
   </div>
 </aside>
 
@@ -6297,6 +6309,8 @@ function applyMarketState(mkt) {
 
   // v1.80: 시장 swap 후 상태 진단
   console.log(`[applyMarketState/${mkt}] archive=${_state.archive.length}, sectors=${Object.keys(_state.sectors).length}, kjpSectorMap=${Object.keys(_state.kjpSectorMap).length}, tickerSectorMap=${Object.keys(_state.tickerSectorMap).length}`);
+  // v2.03 Phase 2: 분석 패널이 열려있으면 현재 시장 기준으로 그리드 재빌드
+  try { if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 
 // v1.76: 마이 카드의 화폐 안내문/아이콘을 시장에 맞게 갱신
@@ -6436,6 +6450,133 @@ function hideLoading() {
 // ============================================================================
 let _autoLoadInProgress = false;
 
+// ============================================================================
+// v2.04 / Code.gs v2.12: data.json fast path
+//   GitHub Actions cron이 10분마다 dumpAllToJson 호출 → ./data/data.json 갱신
+//   PWA는 CDN에서 data.json 1번 fetch → 2-3초에 모든 데이터 로드 완료
+//   실패 시 → autoLoadData가 자동으로 백엔드 직접 호출 fallback
+// ============================================================================
+async function tryLoadFromBundle() {
+  const t0 = performance.now();
+  try {
+    // cache-bust query — 새로고침 버튼 누를 땐 최신, 평소엔 SW 캐시 사용
+    const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
+    splashUpdate(15);
+    const res = await fetch(url, { cache: 'default' });
+    if (!res.ok) {
+      console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
+      return false;
+    }
+    splashUpdate(40);
+    const bundle = await res.json();
+    if (!bundle || !bundle.ok) {
+      console.warn('[tryLoadFromBundle] data.json invalid:', bundle);
+      return false;
+    }
+    splashUpdate(55);
+
+    // ─── _state 채우기 — 기존 autoLoadData 로직 모방 ───
+
+    // 1) Archive (정규화)
+    _state.archives.US = ((bundle.US && bundle.US.archive) || [])
+      .map(r => normalizeArchiveRow(r, 'US'))
+      .filter(r => r.Ticker && r.Date);
+    _state.archives.KR = ((bundle.KR && bundle.KR.archive) || [])
+      .map(r => normalizeArchiveRow(r, 'KR'))
+      .filter(r => r.Ticker && r.Date);
+
+    splashUpdate(65);
+
+    // 2) KJP 매핑
+    buildKjpMaps_({ ok: true, rows: (bundle.US && bundle.US.kjpMaster) || [] }, 'US');
+    buildKjpMaps_({ ok: true, rows: (bundle.KR && bundle.KR.kjpMaster) || [] }, 'KR');
+
+    splashUpdate(75);
+
+    // 3) Sectors (시장별 + ohlcv 정규화)
+    _state.sectorsByMarket = { US: {}, KR: {} };
+    ['US', 'KR'].forEach(mkt => {
+      const sectors = (bundle[mkt] && bundle[mkt].sectors) || {};
+      Object.keys(sectors).forEach(name => {
+        const rows = sectors[name] || [];
+        _state.sectorsByMarket[mkt][name] = rows
+          .map(r => normalizeOhlcvRow(r, mkt))
+          .filter(r => r.Ticker && r.Date && !isNaN(r.Close));
+        // 시계열 정렬 (날짜 오름차순)
+        _state.sectorsByMarket[mkt][name].sort((a, b) => a.Date.localeCompare(b.Date));
+      });
+    });
+
+    splashUpdate(85);
+
+    // 4) Macro (시장별)
+    _state.macroByMarket = { US: [], KR: [] };
+    const usMacroRaw = (bundle.US && bundle.US.macro) || [];
+    const krMacroRaw = (bundle.KR && bundle.KR.macro) || [];
+    _state.macroByMarket.US = usMacroRaw
+      .map(r => normalizeOhlcvRow(r, 'US'))
+      .filter(r => r.Ticker && r.Date);
+    const krMacroSheet = krMacroRaw
+      .map(r => normalizeOhlcvRow(r, 'KR'))
+      .filter(r => r.Ticker && r.Date);
+    // KR 매크로 = US 매크로 + KR 매크로 (중복 dedupe)
+    const usTickerSet = new Set(_state.macroByMarket.US.map(r => r.Ticker));
+    const krOnlyRows = krMacroSheet.filter(r => !usTickerSet.has(r.Ticker));
+    _state.macroByMarket.KR = [..._state.macroByMarket.US, ...krOnlyRows];
+
+    // 5) Active 시장 swap
+    applyMarketState(getCurrentMarket());
+
+    // 6) v1.93 회사명 자동 보강 (archive/sector OHLCV에 Company 컬럼 있으면 등록)
+    ['US', 'KR'].forEach(mkt => {
+      if (!_state.tickerCompanyMaps[mkt]) _state.tickerCompanyMaps[mkt] = {};
+      const cMap = _state.tickerCompanyMaps[mkt];
+      (_state.archives[mkt] || []).forEach(r => {
+        if (r.Ticker && r.Company && !cMap[r.Ticker]) cMap[r.Ticker] = r.Company;
+      });
+      Object.values(_state.sectorsByMarket[mkt] || {}).forEach(rows => {
+        rows.forEach(r => {
+          if (r.Ticker && r.Company && !cMap[r.Ticker]) cMap[r.Ticker] = r.Company;
+        });
+      });
+    });
+
+    // 7) LS 캐시
+    lsSet(LS.KJP_MAP,         _state.tickerSectorMap);
+    lsSet(LS.KJP_SECTOR_MAP,  _state.kjpSectorMap);
+    lsSet(LS.KJP_DESC_MAP,    _state.tickerDescMap);
+    lsSet(LS.KJP_COMPANY_MAP, _state.tickerCompanyMap);
+
+    splashUpdate(92);
+
+    // 8) 메인 화면 렌더
+    try { applyFilters(); } catch (e) { console.warn(e); }
+    try { buildMacroCard(); } catch (e) { console.warn(e); }
+    try { buildSignalFilterCard(); } catch (e) { console.warn(e); }
+    try { buildSectorFrameworkCard(); } catch (e) { console.warn(e); }
+    try { buildSectorAnalysisCard(); } catch (e) { console.warn(e); }
+    try { buildBuyPointsCard(); } catch (e) { console.warn(e); }
+    try { buildStockList(); } catch (e) { console.warn(e); }
+    try { _archiveMobileShown = 10; buildArchiveMobileList(); } catch (e) {}
+    try { renderDashboard(); } catch (e) { console.warn(e); }
+
+    if (document.getElementById('macroCard')) document.getElementById('macroCard').style.display = _state.macro.length ? '' : 'none';
+    if (document.getElementById('filterCard')) document.getElementById('filterCard').style.display = '';
+    if (document.getElementById('archiveCard')) document.getElementById('archiveCard').style.display = '';
+
+    const dt = (performance.now() - t0).toFixed(0);
+    const ts = bundle.timestamp || 'unknown';
+    const sizeKB = ((JSON.stringify(bundle).length) / 1024).toFixed(0);
+    console.log(`[tryLoadFromBundle] ✓ fast path 성공 — ${dt}ms, bundle ${sizeKB}KB, 빌드 ${ts}`);
+    console.log(`[tryLoadFromBundle] US: archive=${_state.archives.US.length}, sectors=${Object.keys(_state.sectorsByMarket.US).length}, KR: archive=${_state.archives.KR.length}, sectors=${Object.keys(_state.sectorsByMarket.KR).length}`);
+
+    return true;
+  } catch (e) {
+    console.warn('[tryLoadFromBundle] error:', e);
+    return false;
+  }
+}
+
 function splashUpdate(percent) {
   const fill = document.getElementById('splashProgressFill');
   const text = document.getElementById('splashProgressText');
@@ -6549,16 +6690,31 @@ async function autoLoadData() {
     _autoLoadInProgress = false;
     return;
   }
-  const cfg = getConfig();
 
   try {
-    splashUpdate(2);
+    splashUpdate(5);
+
+    // v2.04: data.json 우선 시도 (10분마다 GitHub Actions가 자동 빌드 → CDN에서 즉시)
+    //   data.json 성공 → 직접 _state 채움 (40+ Apps Script 호출 우회, 2-3초 완료)
+    //   data.json 실패 → 백엔드 직접 호출 (기존 방식, 10-20초)
+    const usedFastPath = await tryLoadFromBundle();
+    if (usedFastPath) {
+      splashUpdate(100);
+      setTimeout(() => splashHide(), 200);
+      // 보고서 인덱스도 백그라운드로
+      fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+      return;
+    }
+
+    // ─── Fallback: 기존 백엔드 직접 호출 (data.json 없거나 실패 시) ───
+    console.warn('[autoLoadData] data.json fast path 실패 → 백엔드 직접 호출 fallback (시간 더 걸림)');
+    splashUpdate(8);
 
     // v1.69: 양쪽 시장 (US + KR) Archive + KJP 매핑을 한 번에 fetch
     //   섹터/매크로는 공통이라 그대로 1번만
     // v1.70: KR OHLCV 시트도 함께 fetch — 단일 시트 long form
     //   ohlcvFolderId의 폴더 안에 시트가 1개만 있다고 가정 → listSheetNames로 첫 시트 가져와 fetch
-    splashUpdate(5);
+    splashUpdate(10);
     const cfgUS = MARKET_CONFIG.US;
     const cfgKR = MARKET_CONFIG.KR;
     const [arcUSRes, arcKRRes, kjpUSRes, kjpKRRes, listRes, krOhlcvFolderRes] = await Promise.all([
@@ -6566,7 +6722,7 @@ async function autoLoadData() {
       apiCall('getBuyList',     { sheetId: cfgKR.archiveSheetId, tab: cfgKR.archiveTab }),
       apiCall('getOneSheet',    { sheetId: cfgUS.masterSheetId,  tab: cfgUS.masterTab  }),
       apiCall('getOneSheet',    { sheetId: cfgKR.masterSheetId,  tab: cfgKR.masterTab  }),
-      apiCall('listSheetNames', { folderId: cfg.folderId }),
+      apiCall('listSheetNames', { folderId: cfgUS.sectorFolderId || BACKEND.SECTOR_FOLDER_ID }),
       apiCall('listSheetNames', { folderId: cfgKR.ohlcvFolderId }),
     ]);
 
@@ -7013,15 +7169,17 @@ function buildAnalysisGrid() {
   const area = document.getElementById('analysisGridArea');
   if (!area) return;
   const reports = _state.reports || { US: {}, KR: {} };
-  const usList = Object.entries(reports.US || {}).filter(([tk, dates]) => dates && dates.length);
-  const krList = Object.entries(reports.KR || {}).filter(([tk, dates]) => dates && dates.length);
+  // v2.03: 현재 시장의 보고서만 표시 (시장 전환 시 자동 재빌드)
+  const mkt = getCurrentMarket();
+  const list = Object.entries(reports[mkt] || {}).filter(([tk, dates]) => dates && dates.length);
+  const mktLabel = mkt === 'KR' ? '🇰🇷 한국' : '🇺🇸 미국';
 
-  if (usList.length === 0 && krList.length === 0) {
-    area.innerHTML = `<div class="analysis-empty">아직 등록된 보고서가 없습니다.<br><br>Google Drive 폴더에 <code>TICKER_YYYYMMDD.txt</code> 형식으로 TXT 파일을 업로드하세요.</div>`;
+  if (list.length === 0) {
+    area.innerHTML = `<div class="analysis-empty">${mktLabel} 시장에 등록된 보고서가 없습니다.<br><br>Google Drive 폴더에 <code>TICKER_YYYYMMDD.txt</code> 형식으로 TXT 파일을 업로드하세요.</div>`;
     return;
   }
 
-  const buildCard = (mkt, tk, dates) => {
+  const buildCard = (tk, dates) => {
     const tkUpper = String(tk).toUpperCase();
     const company = ((_state.tickerCompanyMaps || {})[mkt] || {})[tkUpper] || tkUpper;
     const latest = dates[0];
@@ -7046,20 +7204,10 @@ function buildAnalysisGrid() {
     `;
   };
 
-  const parts = [];
-  if (usList.length > 0) {
-    parts.push(`<div class="analysis-mkt-section">
-      <div class="analysis-mkt-header">🇺🇸 미국 <span class="analysis-mkt-count">${usList.length}</span></div>
-      <div class="analysis-grid">${usList.map(([tk, dates]) => buildCard('US', tk, dates)).join('')}</div>
-    </div>`);
-  }
-  if (krList.length > 0) {
-    parts.push(`<div class="analysis-mkt-section">
-      <div class="analysis-mkt-header">🇰🇷 한국 <span class="analysis-mkt-count">${krList.length}</span></div>
-      <div class="analysis-grid">${krList.map(([tk, dates]) => buildCard('KR', tk, dates)).join('')}</div>
-    </div>`);
-  }
-  area.innerHTML = parts.join('');
+  area.innerHTML = `<div class="analysis-mkt-section">
+    <div class="analysis-mkt-header">${mktLabel} <span class="analysis-mkt-count">${list.length}</span></div>
+    <div class="analysis-grid">${list.map(([tk, dates]) => buildCard(tk, dates)).join('')}</div>
+  </div>`;
 }
 window.buildAnalysisGrid = buildAnalysisGrid;
 
@@ -10993,32 +11141,67 @@ async function openChart(ticker) {
   $('chartModal').classList.add('active');
 }
 
-// v1.98/v1.99/v2.01: 토스증권 종목 페이지 이동
-//   사용자 Python 크롤러 코드 힌트: tossinvest.com/stocks/{ticker} 한 패턴
-//     - 한국: "A005930" 형식, 미국: "NVDA" 형식
-//   모바일 토스 앱 연계 (v2.01): 임시 <a target="_blank"> 요소 click() 시뮬레이션이
-//     window.location.href 또는 window.open 보다 universal link 트리거 가장 안정적
-//     (브라우저가 사용자 제스처로 인식 → iOS Universal Link / Android App Link 발동)
-//   PC: 새 탭
+// v1.98/v1.99/v2.01/v2.03: 토스증권 종목 페이지/앱 이동
+//   모바일 앱 연계 (v2.03): supertoss:// custom URL scheme 시도 → visibility 감지로 fallback
+//     - 토스 앱 설치되어 있으면: scheme 실행 → 앱 active → document.hidden=true → 웹 페이지로 안 넘어감
+//     - 토스 앱 없으면: scheme 실행 실패 → 600ms 후 fallback https URL 새 탭으로
+//   PC: <a target="_blank"> click — universal link 자연스럽게 트리거
 function openTossInvest() {
   const tk = _state.openTicker;
   if (!tk) return;
   const isKR = getCurrentMarket() === 'KR';
-  let code;
+  let code, scheme;
   if (isKR) {
     code = 'A' + String(tk).replace(/[^0-9]/g, '').padStart(6, '0');
+    scheme = `supertoss://stock?stockCode=${code}`;
   } else {
     code = String(tk).toUpperCase();
+    scheme = `supertoss://stock?ticker=${code}`;
   }
-  const url = `https://www.tossinvest.com/stocks/${code}`;
-  // <a> click 시뮬레이션 — universal link 가장 자연스럽게 트리거
-  const a = document.createElement('a');
-  a.href = url;
-  a.target = '_blank';
-  a.rel = 'noopener noreferrer';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const webUrl = `https://www.tossinvest.com/stocks/${code}`;
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // 1) 토스 앱 custom scheme 시도 (앱 있으면 즉시 앱 열림)
+    const startTime = Date.now();
+    const docHiddenAtStart = document.hidden;
+    let appOpened = false;
+    const onVisChange = () => {
+      // 페이지가 백그라운드 가면 = 앱 열린 것
+      if (document.hidden && !docHiddenAtStart) appOpened = true;
+    };
+    document.addEventListener('visibilitychange', onVisChange);
+
+    // iframe trick — 모바일 브라우저에서 가장 호환성 좋음
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:absolute;width:1px;height:1px;left:-10px;top:-10px;border:0;';
+    iframe.src = scheme;
+    document.body.appendChild(iframe);
+
+    setTimeout(() => {
+      document.removeEventListener('visibilitychange', onVisChange);
+      try { document.body.removeChild(iframe); } catch (e) {}
+      // 600ms 후에도 페이지가 active 이면 앱 안 열린 것 → 웹 fallback
+      if (!appOpened && !document.hidden && (Date.now() - startTime) < 1500) {
+        const a = document.createElement('a');
+        a.href = webUrl;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    }, 600);
+  } else {
+    // PC — 새 탭
+    const a = document.createElement('a');
+    a.href = webUrl;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
 }
 
 function closeModal() {
@@ -11847,12 +12030,12 @@ function updatePCSidebarActive() {
 
 // 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
 function setPCTab(tab) {
-  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'analysis') {
+  if (tab === 'main' || tab === 'board' || tab === 'my') {
     setPCPage(tab);
-    // v2.01 Phase 2: 분석 페이지 진입 시 그리드 빌드
-    if (tab === 'analysis') buildAnalysisGrid();
-  } else if (tab === 'discover' || tab === 'explore') {
+  } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis') {
+    // v2.03: analysis도 사이드 패널 (탐색과 동일 UI/UX)
     togglePCPanel(tab);
+    if (tab === 'analysis') buildAnalysisGrid();
   }
 }
 
@@ -11861,6 +12044,7 @@ function relocateCardsForPC() {
   if (!isPCViewport()) return;
   const discoverPanel = document.getElementById('pcPanelDiscover');
   const explorePanel = document.getElementById('pcPanelExplore');
+  const analysisPanel = document.getElementById('pcPanelAnalysis');
   if (discoverPanel) {
     const bp = document.getElementById('buyPointsCard');
     const am = document.getElementById('archiveMobileCard');
@@ -11870,6 +12054,15 @@ function relocateCardsForPC() {
   if (explorePanel) {
     const sl = document.getElementById('stockListCard');
     if (sl && sl.parentElement !== explorePanel) explorePanel.appendChild(sl);
+  }
+  // v2.03 Phase 2: analysisCard도 PC에선 사이드 패널 안으로 이동 (탐색과 동일 UX)
+  if (analysisPanel) {
+    const ac = document.getElementById('analysisCard');
+    if (ac && ac.parentElement !== analysisPanel) {
+      analysisPanel.appendChild(ac);
+      // PC 사이드 패널 안에서는 카드 force-display
+      ac.style.display = '';
+    }
   }
 }
 
