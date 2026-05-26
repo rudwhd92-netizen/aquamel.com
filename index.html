@@ -3701,7 +3701,7 @@ table.combo-eval tbody td .nodata {
           <span class="mkt-label">KR</span>
         </button>
       </div>
-      <div class="v">v1.96</div>
+      <div class="v">v1.97</div>
     </div>
   </header>
 
@@ -4162,7 +4162,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.96 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.97 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -5590,8 +5590,9 @@ function _adaptiveChunkSize(json) {
   // 전체 payload 인코딩 후 길이로 정확한 inflation 측정 (작은 비용, 1회만 호출)
   const encoded = encodeURIComponent(json);
   const inflation = Math.max(1.0, encoded.length / json.length);
-  // URL payload 슬롯 최대 4000자 → raw 청크 = 4000 / inflation
-  return Math.max(200, Math.min(4000, Math.floor(4000 / inflation)));
+  // v1.97: URL payload 슬롯 최대 2500자로 보수적으로 (이전 4000은 한국어 description 등 긴 데이터에서 JSONP URL 길이 초과)
+  //   2500자 → 인코딩 후 ~7500자 (한국어 3x inflation 가정) → 안전 마진 확보
+  return Math.max(200, Math.min(2500, Math.floor(2500 / inflation)));
 }
 
 async function _sendDeltaToBackend(userId, dataType, upserts, deletes, onProgress, passwordHash) {
