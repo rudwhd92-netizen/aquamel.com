@@ -7113,7 +7113,10 @@ async function renderDashboard() {
   const totalEval = holdings.reduce((s, h) => s + h.evalVal, 0);
   const totalCost = holdings.reduce((s, h) => s + h.cost, 0);
   const unrealized = totalEval - totalCost;
-  const realized = holdings.reduce((s, h) => s + (h.realized || 0), 0);
+  // v1.97: 확정수익 = totalRealized (모든 매도 전역 누적, 전량 매도된 종목도 포함)
+  //   기존 holdings.reduce(h.realized)는 현재 보유 중인 종목만 합산해서, 100% 매도한 종목의 확정수익이 누락됐음
+  //   Python KJP 코드의 cumulative_realized_profit과 동일
+  const realized = totalRealized;
   const totalProfit = realized + unrealized;
   const principal = totalCost;
   const totalAsset = principal + totalProfit;
