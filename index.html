@@ -1110,6 +1110,71 @@ table.sheet tbody tr.drop-below td:last-child {
 .rs-misc .report-icon { color: #868e96; }
 .rs-misc .report-item { border-left-color: #868e96; color: var(--text-mute); }
 
+/* v2.01 Phase 2: 분석 카드 ticker 그리드 */
+#analysisGridArea { padding: 4px 0; }
+.analysis-empty {
+  text-align: center; padding: 50px 20px; color: var(--text-mute); font-size: 13px;
+}
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.analysis-mkt-section { margin-bottom: 24px; }
+.analysis-mkt-header {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; color: var(--text-mute);
+  margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line);
+  letter-spacing: 0.5px;
+}
+.analysis-mkt-header .analysis-mkt-count {
+  font-size: 11px; color: var(--text-mute); font-weight: 500;
+  background: var(--bg-3); padding: 1px 8px; border-radius: 10px;
+}
+.analysis-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px;
+  cursor: pointer; transition: all 0.15s;
+}
+.analysis-card:hover { border-color: var(--accent); background: var(--bg-3); transform: translateY(-1px); }
+.analysis-card-logo {
+  width: 36px; height: 36px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-3); border-radius: 6px;
+  overflow: hidden;
+}
+.analysis-card-logo img { width: 100%; height: 100%; object-fit: contain; }
+.analysis-card-logo-fallback {
+  font-size: 12px; font-weight: 700; color: var(--text-mute);
+  font-family: Consolas, monospace;
+}
+.analysis-card-body { flex: 1; min-width: 0; }
+.analysis-card-name {
+  font-size: 13px; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.analysis-card-tk {
+  font-size: 11px; color: var(--text-mute); font-family: Consolas, monospace;
+  margin-top: 2px;
+}
+.analysis-card-meta {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; color: var(--text-mute); margin-top: 4px;
+}
+.analysis-card-meta .badge {
+  background: var(--accent); color: white; border-radius: 8px;
+  padding: 1px 6px; font-weight: 700; font-size: 9px;
+}
+.analysis-card-arrow { color: var(--text-mute); font-size: 18px; flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  .analysis-grid { grid-template-columns: 1fr; gap: 8px; }
+  .analysis-card { padding: 10px 12px; }
+  .analysis-card-logo { width: 32px; height: 32px; }
+  .analysis-card-name { font-size: 12px; }
+}
+
 @media (max-width: 640px) {
   .report-list-title, .report-detail-title { font-size: 14px; }
   .report-section { padding: 12px 14px; }
@@ -1497,6 +1562,10 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
   body[data-pc-page="my"] .container > section.card { display: none !important; }
   body[data-pc-page="my"] #myPortfolioCard { display: block !important; }
   body[data-pc-page="my"] .sheet-wrap { max-height: calc(100vh - 280px) !important; }
+
+  /* v2.01 Phase 2: 분석 페이지 — analysisCard만 표시 */
+  body[data-pc-page="analysis"] .container > section.card { display: none !important; }
+  body[data-pc-page="analysis"] #analysisCard { display: block !important; }
 }
 .stock-list-sort {
   position: relative;
@@ -1684,6 +1753,8 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
   body[data-mtab="explore"]  section.card[data-mtab~="explore"]  { display: block !important; }
   body[data-mtab="board"]    section.card[data-mtab~="board"]    { display: block !important; }
   body[data-mtab="my"]       section.card[data-mtab~="my"]       { display: block !important; }
+  /* v2.01 Phase 2: 분석 탭 — 분석 카드만 표시 */
+  body[data-mtab="analysis"] section.card[data-mtab~="analysis"] { display: block !important; }
 
   /* 발견 탭에서는 PC용 archive 테이블 카드 숨기고 모바일 리스트만 */
   body[data-mtab="discover"] #archiveCard { display: none !important; }
@@ -3838,7 +3909,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.01</div>
+      <div class="splash-version" id="splashVersion">v2.02</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4080,6 +4151,19 @@ table.combo-eval tbody td .nodata {
     <div class="dash-ctx-item" data-action="hide">🚫 숨기기</div>
   </div>
 
+  <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
+  <section class="card" id="analysisCard" data-mtab="analysis" style="display:none;">
+    <div class="card-header">
+      <h2>📊 분석 보고서</h2>
+    </div>
+    <div class="card-body">
+      <p class="subtitle">정량 보고서가 등록된 종목입니다. 클릭하면 보고서 일자 목록이 열립니다.</p>
+      <div id="analysisGridArea">
+        <div class="analysis-empty">보고서를 불러오는 중...</div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ PORTFOLIO / TRADE HISTORY ============ -->
   <section class="card" id="myPortfolioCard" data-mtab="my">
     <div class="card-header" onclick="toggleCard(this)">
@@ -4230,6 +4314,13 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">보드</span>
     </button>
+    <!-- v2.01 Phase 2: 분석 메뉴 — 정량 보고서 등록된 종목만 그리드로 -->
+    <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
+      </svg>
+      <span class="mtab-label">분석</span>
+    </button>
     <button class="mtab-btn" data-mtab="my" onclick="switchMobileTab('my')" aria-label="마이">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="8" r="4"/>
@@ -4297,7 +4388,7 @@ table.combo-eval tbody td .nodata {
       <div class="modal-drag-handle"></div>
       <!-- v1.99: 분석 보고서 보기 (해당 ticker 보고서 있을 때만 표시) -->
       <button class="modal-report" id="modalReportBtn" onclick="openReportPanel()" title="분석 보고서" style="display:none">
-        <span>📋</span>
+        <span>📊</span>
       </button>
       <!-- v1.98: 토스증권 종목 페이지로 이동 (한국=tossinvest.com/stocks/A{ticker}, 미국=tossinvest.com/stocks/US{ticker}) -->
       <button class="modal-toss" id="modalTossBtn" onclick="openTossInvest()" title="토스증권에서 보기">
@@ -4374,6 +4465,11 @@ table.combo-eval tbody td .nodata {
   <button class="pc-tab-btn" data-pc-tab="board" onclick="setPCTab('board')" aria-label="보드">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
     <span class="pc-tab-label">보드</span>
+  </button>
+  <!-- v2.01 Phase 2: 분석 메뉴 — 정량 보고서 등록된 종목만 그리드로 -->
+  <button class="pc-tab-btn" data-pc-tab="analysis" onclick="setPCTab('analysis')" aria-label="분석">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
+    <span class="pc-tab-label">분석</span>
   </button>
   <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="마이">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
@@ -6723,6 +6819,12 @@ async function fetchReportsIndex() {
       console.log(`[Reports] ✓ 인덱스 로드 완료 — US ${usList.length}개 (${usList.slice(0,5).join(',')}...), KR ${krList.length}개 (${krList.slice(0,5).join(',')}...)`);
       // 현재 열린 모달이 있으면 보고서 버튼 표시 상태 업데이트
       updateReportButtonVisibility();
+      // v2.01 Phase 2: 분석 페이지가 현재 보이고 있으면 그리드 재빌드
+      const mtab = document.body.getAttribute('data-mtab');
+      const pcPage = document.body.getAttribute('data-pc-page');
+      if (mtab === 'analysis' || pcPage === 'analysis') {
+        if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid();
+      }
     } else {
       console.warn('[Reports] ✗ listReports 실패. Apps Script가 v2.11로 새로 배포되었는지 확인하세요. error:', res && res.error);
     }
@@ -6859,7 +6961,7 @@ function renderReportList() {
   const titleHtml = company ? `${escapeHtml(company)} <span class="report-tk-sub">(${escapeHtml(tk)})</span>` : escapeHtml(tk);
   const html = `
     <div class="report-list-head">
-      <div class="report-list-title">📋 ${titleHtml} 분석 보고서</div>
+      <div class="report-list-title">📊 ${titleHtml} 분석 보고서</div>
       <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
     </div>
     <div class="report-list-body">
@@ -6886,7 +6988,7 @@ async function openReportDetail(date) {
     $('reportPanel').innerHTML = `
       <div class="report-detail-head">
         <button class="report-back-btn" onclick="renderReportList()">← 목록</button>
-        <div class="report-detail-title">📋 ${titleHtml}</div>
+        <div class="report-detail-title">📊 ${titleHtml}</div>
         <div class="report-detail-date">${escapeHtml(date)}</div>
       </div>
       <div class="report-detail-body">${renderReportContent(parsed)}</div>
@@ -6903,6 +7005,82 @@ window.openReportPanel = openReportPanel;
 window.closeReportPanel = closeReportPanel;
 window.renderReportList = renderReportList;
 window.openReportDetail = openReportDetail;
+
+// ============================================================================
+// v2.01 Phase 2: 분석 페이지 — 보고서 등록 ticker 그리드
+// ============================================================================
+function buildAnalysisGrid() {
+  const area = document.getElementById('analysisGridArea');
+  if (!area) return;
+  const reports = _state.reports || { US: {}, KR: {} };
+  const usList = Object.entries(reports.US || {}).filter(([tk, dates]) => dates && dates.length);
+  const krList = Object.entries(reports.KR || {}).filter(([tk, dates]) => dates && dates.length);
+
+  if (usList.length === 0 && krList.length === 0) {
+    area.innerHTML = `<div class="analysis-empty">아직 등록된 보고서가 없습니다.<br><br>Google Drive 폴더에 <code>TICKER_YYYYMMDD.txt</code> 형식으로 TXT 파일을 업로드하세요.</div>`;
+    return;
+  }
+
+  const buildCard = (mkt, tk, dates) => {
+    const tkUpper = String(tk).toUpperCase();
+    const company = ((_state.tickerCompanyMaps || {})[mkt] || {})[tkUpper] || tkUpper;
+    const latest = dates[0];
+    const logoUrl = `./logos/tickers/${tkUpper}.png`;
+    const initial = tkUpper.slice(0, 2);
+    return `
+      <div class="analysis-card" data-mkt="${mkt}" data-tk="${escapeAttr(tkUpper)}" onclick="openAnalysisTicker('${escapeAttr(mkt)}','${escapeAttr(tkUpper)}')">
+        <div class="analysis-card-logo">
+          <img src="${logoUrl}" alt="${escapeAttr(tkUpper)}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+          <span class="analysis-card-logo-fallback" style="display:none">${escapeHtml(initial)}</span>
+        </div>
+        <div class="analysis-card-body">
+          <div class="analysis-card-name">${escapeHtml(company)}</div>
+          <div class="analysis-card-tk">${escapeHtml(tkUpper)}</div>
+          <div class="analysis-card-meta">
+            <span class="badge">${dates.length}개</span>
+            <span>최신: ${escapeHtml(latest)}</span>
+          </div>
+        </div>
+        <div class="analysis-card-arrow">›</div>
+      </div>
+    `;
+  };
+
+  const parts = [];
+  if (usList.length > 0) {
+    parts.push(`<div class="analysis-mkt-section">
+      <div class="analysis-mkt-header">🇺🇸 미국 <span class="analysis-mkt-count">${usList.length}</span></div>
+      <div class="analysis-grid">${usList.map(([tk, dates]) => buildCard('US', tk, dates)).join('')}</div>
+    </div>`);
+  }
+  if (krList.length > 0) {
+    parts.push(`<div class="analysis-mkt-section">
+      <div class="analysis-mkt-header">🇰🇷 한국 <span class="analysis-mkt-count">${krList.length}</span></div>
+      <div class="analysis-grid">${krList.map(([tk, dates]) => buildCard('KR', tk, dates)).join('')}</div>
+    </div>`);
+  }
+  area.innerHTML = parts.join('');
+}
+window.buildAnalysisGrid = buildAnalysisGrid;
+
+// 분석 페이지에서 ticker 클릭 → 시장 자동 전환 + 모달 열기 + 보고서 패널 자동 진입
+async function openAnalysisTicker(mkt, ticker) {
+  // 시장이 다르면 자동 전환
+  if (getCurrentMarket() !== mkt) {
+    setMarket(mkt);
+    // 시장 전환 후 데이터 적용 (약간 기다리기)
+    await new Promise(r => setTimeout(r, 50));
+  }
+  // 모달 열기
+  await openChart(ticker);
+  // 모달이 떴으면 보고서 패널 자동 진입
+  setTimeout(() => {
+    if (_state.openTicker && document.getElementById('chartModal').classList.contains('active')) {
+      openReportPanel();
+    }
+  }, 100);
+}
+window.openAnalysisTicker = openAnalysisTicker;
 
 // ============================================================================
 // KJP INVESTMENT DASHBOARD (v1.29) — Data Layer
@@ -11599,6 +11777,9 @@ function switchMobileTab(tab) {
     buildArchiveMobileList();
   } else if (tab === 'explore') {
     buildStockList();
+  } else if (tab === 'analysis') {
+    // v2.01 Phase 2: 보고서 등록 ticker 그리드
+    buildAnalysisGrid();
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -11666,8 +11847,10 @@ function updatePCSidebarActive() {
 
 // 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
 function setPCTab(tab) {
-  if (tab === 'main' || tab === 'board' || tab === 'my') {
+  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'analysis') {
     setPCPage(tab);
+    // v2.01 Phase 2: 분석 페이지 진입 시 그리드 빌드
+    if (tab === 'analysis') buildAnalysisGrid();
   } else if (tab === 'discover' || tab === 'explore') {
     togglePCPanel(tab);
   }
