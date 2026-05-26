@@ -1006,6 +1006,7 @@ table.sheet tbody tr.drop-below td:last-child {
   font-family: inherit;
 }
 .modal-content .modal-report svg { width: 18px; height: 18px; }
+.modal-content .modal-report img { width: 22px; height: 22px; display: block; }
 .modal-content .modal-report:hover { color: var(--accent); background: var(--bg-3); border-color: var(--accent); }
 @media (max-width: 640px) {
   /* v2.03/v2.05: 모바일 — 분석/토스 버튼을 modal-title (회사명+티커) 줄과 같은 줄로 정렬
@@ -1018,6 +1019,7 @@ table.sheet tbody tr.drop-below td:last-child {
     background: transparent; border: none;
   }
   .modal-content .modal-report svg { width: 22px; height: 22px; }
+  .modal-content .modal-report img { width: 24px; height: 24px; }
   .modal-content .modal-report:hover { background: rgba(50,108,255,0.15); }
   /* 토스 로고도 같은 줄로 (보고서 다음 우측) */
   .modal-content .modal-toss {
@@ -3916,7 +3918,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.05</div>
+      <div class="splash-version" id="splashVersion">v2.06</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4393,12 +4395,9 @@ table.combo-eval tbody td .nodata {
   <div class="modal-overlay" id="chartModal" onclick="closeModalIfOverlay(event)">
     <div class="modal-content">
       <div class="modal-drag-handle"></div>
-      <!-- v1.99/v2.05: 분석 보고서 보기 (해당 ticker 보고서 있을 때만 표시)
-           아이콘: file-text fill (토스 V 로고와 어울리는 단단한 단색 도형) -->
+      <!-- v1.99/v2.05/v2.06: 분석 보고서 보기 (해당 ticker 보고서 있을 때만 표시) — 사용자 첨부 risk-analysis 아이콘 -->
       <button class="modal-report" id="modalReportBtn" onclick="openReportPanel()" title="분석 보고서" style="display:none">
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
-          <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-5 4h8v1.6H8V13zm0 3.2h8v1.6H8v-1.6zm0 3.2h5v1.6H8v-1.6z"/>
-        </svg>
+        <img src="./logos/report.png" alt="분석 보고서" />
       </button>
       <!-- v1.98: 토스증권 종목 페이지로 이동 (한국=tossinvest.com/stocks/A{ticker}, 미국=tossinvest.com/stocks/US{ticker}) -->
       <button class="modal-toss" id="modalTossBtn" onclick="openTossInvest()" title="토스증권에서 보기">
