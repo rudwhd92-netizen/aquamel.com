@@ -1008,19 +1008,20 @@ table.sheet tbody tr.drop-below td:last-child {
 .modal-content .modal-report svg { width: 18px; height: 18px; }
 .modal-content .modal-report:hover { color: var(--accent); background: var(--bg-3); border-color: var(--accent); }
 @media (max-width: 640px) {
-  /* v2.03: 모바일 — 분석/토스 버튼을 modal-title (회사명+티커) 줄과 같은 줄로
-     modal padding-top = 14px + safe-area-top → 버튼 top도 동일하게 → modal-title 시작점과 정렬 */
+  /* v2.03/v2.05: 모바일 — 분석/토스 버튼을 modal-title (회사명+티커) 줄과 같은 줄로 정렬
+     계산: modal padding-top (14px) + safe-area + drag-handle 영역 (14px) ≈ 28px → modal-title 시작
+     아이콘 28x28의 중심이 modal-title 첫 줄 중심과 맞도록 top 약 28-30px (drag-handle 후) */
   .modal-content .modal-report {
-    top: calc(14px + env(safe-area-inset-top, 0px));
-    right: 46px;
+    top: calc(28px + env(safe-area-inset-top, 0px));
+    right: 50px;
     padding: 0; height: 28px; min-width: 28px;
     background: transparent; border: none;
   }
-  .modal-content .modal-report svg { width: 20px; height: 20px; }
+  .modal-content .modal-report svg { width: 22px; height: 22px; }
   .modal-content .modal-report:hover { background: rgba(50,108,255,0.15); }
-  /* 토스 로고도 같은 줄로 */
+  /* 토스 로고도 같은 줄로 (보고서 다음 우측) */
   .modal-content .modal-toss {
-    top: calc(14px + env(safe-area-inset-top, 0px));
+    top: calc(28px + env(safe-area-inset-top, 0px));
     right: 12px;
     padding: 0; height: 28px;
     background: transparent; border: none;
@@ -3915,7 +3916,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.04</div>
+      <div class="splash-version" id="splashVersion">v2.05</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4311,6 +4312,13 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">탐색</span>
     </button>
+    <!-- v2.05: 분석 → 보드 순서 -->
+    <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
+      </svg>
+      <span class="mtab-label">분석</span>
+    </button>
     <button class="mtab-btn" data-mtab="board" onclick="switchMobileTab('board')" aria-label="보드">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="7" height="9" rx="1.2"/>
@@ -4319,13 +4327,6 @@ table.combo-eval tbody td .nodata {
         <rect x="3" y="16" width="7" height="5" rx="1.2"/>
       </svg>
       <span class="mtab-label">보드</span>
-    </button>
-    <!-- v2.01 Phase 2: 분석 메뉴 — 정량 보고서 등록된 종목만 그리드로 -->
-    <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
-      </svg>
-      <span class="mtab-label">분석</span>
     </button>
     <button class="mtab-btn" data-mtab="my" onclick="switchMobileTab('my')" aria-label="마이">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -4392,10 +4393,11 @@ table.combo-eval tbody td .nodata {
   <div class="modal-overlay" id="chartModal" onclick="closeModalIfOverlay(event)">
     <div class="modal-content">
       <div class="modal-drag-handle"></div>
-      <!-- v1.99/v2.03: 분석 보고서 보기 (해당 ticker 보고서 있을 때만 표시) — 분석 메뉴와 동일 SVG -->
+      <!-- v1.99/v2.05: 분석 보고서 보기 (해당 ticker 보고서 있을 때만 표시)
+           아이콘: file-text fill (토스 V 로고와 어울리는 단단한 단색 도형) -->
       <button class="modal-report" id="modalReportBtn" onclick="openReportPanel()" title="분석 보고서" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-5 4h8v1.6H8V13zm0 3.2h8v1.6H8v-1.6zm0 3.2h5v1.6H8v-1.6z"/>
         </svg>
       </button>
       <!-- v1.98: 토스증권 종목 페이지로 이동 (한국=tossinvest.com/stocks/A{ticker}, 미국=tossinvest.com/stocks/US{ticker}) -->
@@ -4474,14 +4476,14 @@ table.combo-eval tbody td .nodata {
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M16 8l-3 5-5 3 3-5z"/></svg>
     <span class="pc-tab-label">탐색</span>
   </button>
-  <button class="pc-tab-btn" data-pc-tab="board" onclick="setPCTab('board')" aria-label="보드">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-    <span class="pc-tab-label">보드</span>
-  </button>
-  <!-- v2.01 Phase 2: 분석 메뉴 — 정량 보고서 등록된 종목만 그리드로 -->
+  <!-- v2.05: 분석 → 보드 순서 (이전 보드 → 분석 → 마이를 분석 → 보드 → 마이로 변경) -->
   <button class="pc-tab-btn" data-pc-tab="analysis" onclick="setPCTab('analysis')" aria-label="분석">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
     <span class="pc-tab-label">분석</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="board" onclick="setPCTab('board')" aria-label="보드">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+    <span class="pc-tab-label">보드</span>
   </button>
   <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="마이">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
@@ -11141,57 +11143,30 @@ async function openChart(ticker) {
   $('chartModal').classList.add('active');
 }
 
-// v1.98/v1.99/v2.01/v2.03: 토스증권 종목 페이지/앱 이동
-//   모바일 앱 연계 (v2.03): supertoss:// custom URL scheme 시도 → visibility 감지로 fallback
-//     - 토스 앱 설치되어 있으면: scheme 실행 → 앱 active → document.hidden=true → 웹 페이지로 안 넘어감
-//     - 토스 앱 없으면: scheme 실행 실패 → 600ms 후 fallback https URL 새 탭으로
-//   PC: <a target="_blank"> click — universal link 자연스럽게 트리거
+// v1.98~v2.05: 토스증권 종목 페이지/앱 이동
+//   모바일 (v2.05): Universal Link 우선 — window.location.href = https://tossinvest.com/stocks/{ticker}
+//     · 토스 앱이 universal link 등록되어 있으면 자동으로 토스 앱의 해당 종목 상세 페이지로 전환 (가장 안정적)
+//     · 등록 안 되어 있어도 브라우저에서 토스 웹 종목 페이지로 이동 (fallback 자동)
+//     · 사용자가 토스 앱에서 작업 후 뒤로 가기 → 원래 AQUAMEL 페이지 (browser history)
+//   PC: <a target="_blank"> click — 새 탭에서 토스 웹
 function openTossInvest() {
   const tk = _state.openTicker;
   if (!tk) return;
   const isKR = getCurrentMarket() === 'KR';
-  let code, scheme;
+  let code;
   if (isKR) {
     code = 'A' + String(tk).replace(/[^0-9]/g, '').padStart(6, '0');
-    scheme = `supertoss://stock?stockCode=${code}`;
   } else {
     code = String(tk).toUpperCase();
-    scheme = `supertoss://stock?ticker=${code}`;
   }
   const webUrl = `https://www.tossinvest.com/stocks/${code}`;
   const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
   if (isMobile) {
-    // 1) 토스 앱 custom scheme 시도 (앱 있으면 즉시 앱 열림)
-    const startTime = Date.now();
-    const docHiddenAtStart = document.hidden;
-    let appOpened = false;
-    const onVisChange = () => {
-      // 페이지가 백그라운드 가면 = 앱 열린 것
-      if (document.hidden && !docHiddenAtStart) appOpened = true;
-    };
-    document.addEventListener('visibilitychange', onVisChange);
-
-    // iframe trick — 모바일 브라우저에서 가장 호환성 좋음
-    const iframe = document.createElement('iframe');
-    iframe.style.cssText = 'position:absolute;width:1px;height:1px;left:-10px;top:-10px;border:0;';
-    iframe.src = scheme;
-    document.body.appendChild(iframe);
-
-    setTimeout(() => {
-      document.removeEventListener('visibilitychange', onVisChange);
-      try { document.body.removeChild(iframe); } catch (e) {}
-      // 600ms 후에도 페이지가 active 이면 앱 안 열린 것 → 웹 fallback
-      if (!appOpened && !document.hidden && (Date.now() - startTime) < 1500) {
-        const a = document.createElement('a');
-        a.href = webUrl;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }
-    }, 600);
+    // 같은 탭 navigate — universal link 가장 강력 트리거
+    // 토스 앱이 universal link 등록되어 있으면 자동으로 토스 앱의 해당 종목 페이지로 전환됨
+    // 등록 안 되어 있으면 그냥 토스증권 웹사이트가 열림 (어느 쪽이든 종목 페이지)
+    window.location.href = webUrl;
   } else {
     // PC — 새 탭
     const a = document.createElement('a');
