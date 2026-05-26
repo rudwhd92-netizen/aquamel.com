@@ -3701,7 +3701,7 @@ table.combo-eval tbody td .nodata {
           <span class="mkt-label">KR</span>
         </button>
       </div>
-      <div class="v">v1.97</div>
+      <div class="v">v1.98</div>
     </div>
   </header>
 
@@ -4162,7 +4162,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.97 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner v1.98 · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -7171,6 +7171,8 @@ function renderDashKPI(d) {
   const urroiEl = $('dashUnrealROI');
   urroiEl.textContent = `(${d.unrealROI >= 0 ? '+' : ''}${d.unrealROI.toFixed(2)}%)`;
   urroiEl.className = `dash-main-sub ${cls(d.unrealROI)}`;
+  // v1.98: 진단 로그 — dashRealized에 표시되는 값 (콘솔 누적과 일치해야 정상)
+  console.log(`[dashRealized] 화면 표시값 = ${d.realized}, 콘솔 누적 acc.total = (위 매도 로그 마지막 줄 확인)`);
 
   const realEl = $('dashRealized');
   realEl.textContent = fmtUSDPlus(d.realized);
@@ -7392,7 +7394,17 @@ function renderDashTrend(snapshots, holdings) {
       },
       scales: {
         x: { ticks: { color: light ? '#888' : '#888', font: { size: 9 }, maxTicksLimit: 6, autoSkip: true }, grid: { display: false } },
-        y: { ticks: { color: light ? '#888' : '#888', font: { size: 9 }, callback: (v) => '$' + (v/1000).toFixed(1) + 'k' },
+        y: { ticks: { color: light ? '#888' : '#888', font: { size: 9 },
+             // v1.98: KR 모드 — 만/억 단위 (한국식). US 모드 — $1.5k 형식
+             callback: (v) => {
+               if (getCurrentMarket() === 'KR') {
+                 const abs = Math.abs(v);
+                 if (abs >= 100000000) return (v / 100000000).toFixed(1) + '억';
+                 if (abs >= 10000) return Math.round(v / 10000).toLocaleString() + '만';
+                 return Math.round(v).toLocaleString();
+               }
+               return '$' + (v/1000).toFixed(1) + 'k';
+             } },
              grid: { color: light ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' } },
       },
     },
