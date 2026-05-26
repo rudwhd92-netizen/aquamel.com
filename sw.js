@@ -1,34 +1,54 @@
-// AQUAMEL Service Worker — PWA 풀 설치(WebAPK) 요건 충족 + 오프라인 캐시 폴백
-// Chrome이 이 파일을 발견하면 "바로가기"가 아닌 진짜 앱으로 설치합니다.
-//
-// v1.23 변경:
-//   - cross-origin 요청(Apps Script 등)은 SW가 가로채지 않고 브라우저에 그대로 위임
-//     iOS WKWebView 환경에서 JSONP 호출이 차단되던 문제 해결
+// AQUAMEL V-Shape Scanner — Service Worker v1.95
+// Network-first 전략으로 항상 최신 버전 우선. 오프라인 fallback만 캐시 사용.
+const CACHE_NAME = 'aquamel-v1.95';
+const CACHE_FILES = ['./', './index.html', './sw.js'];
 
-const CACHE = 'aquamel-v1';
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.add('./'))
+self.addEventListener('install', (event) => {
+  // 새 SW 즉시 설치 (이전 SW가 페이지 제어 중이어도)
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(CACHE_FILES).catch(()=>{}))
   );
-  self.skipWaiting();
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(self.clients.claim());
+self.addEventListener('activate', (event) => {
+  // 이전 버전 캐시 정리
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    ).then(() => self.clients.claim())  // 즉시 모든 클라이언트 제어
+  );
 });
 
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
+// 메시지: SKIP_WAITING (페이지에서 새 SW 즉시 활성화 요청)
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
 
-  // cross-origin 요청은 SW가 절대 건드리지 않음
-  // (Apps Script, googleusercontent 등 외부 호출 보호)
-  const reqUrl = new URL(e.request.url);
-  if (reqUrl.origin !== self.location.origin) return;
+// Fetch 전략: Network-first (항상 최신 우선, 실패 시 캐시 fallback)
+//   index.html 같은 페이지 리소스는 캐시되더라도 매번 네트워크 시도 → 새 버전 자동 반영
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  // GET 요청만 캐싱
+  if (req.method !== 'GET') return;
+  // 외부 도메인 (CDN) 캐시 안함
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
 
-  // same-origin GET만 network-first + 캐시 폴백
-  e.respondWith(
-    fetch(e.request)
-      .catch(() => caches.match(e.request) || caches.match('./'))
+  event.respondWith(
+    fetch(req)
+      .then(res => {
+        // 성공 시 캐시에도 저장 (다음 오프라인 대비)
+        if (res && res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, clone).catch(()=>{}));
+        }
+        return res;
+      })
+      .catch(() => {
+        // 네트워크 실패 시 캐시 fallback
+        return caches.match(req).then(cached => cached || caches.match('./index.html'));
+      })
   );
 });
