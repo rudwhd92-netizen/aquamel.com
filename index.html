@@ -177,10 +177,8 @@ html, body { overflow-x: hidden; max-width: 100%; }
 ::-webkit-scrollbar-corner { display: none; }
 
 /* v1.55: iOS PWA — overscroll bounce 영역 색상 매칭 + 글로벌 tap highlight 제거 */
-/* v1.99: pull-to-refresh 차단을 모바일에만 적용 (PC에서 일부 스크롤 동작 막혔던 문제) */
-@media (max-width: 640px) {
-  html, body { overscroll-behavior-y: contain; }
-}
+/* v1.99 revert: overscroll-behavior 제거 — 모바일 일반 스크롤이 막히던 부작용. 
+   pull-to-refresh 차단은 더 신중한 JS 방식으로 별도 처리 가능 (지금은 우선순위 X) */
 html { background: var(--bg); -webkit-tap-highlight-color: transparent; -ms-overflow-style: none; }
 * { -webkit-tap-highlight-color: transparent; -ms-overflow-style: none; }
 
@@ -1010,9 +1008,15 @@ table.sheet tbody tr.drop-below td:last-child {
 .modal-content .modal-toss:hover { background: rgba(50,108,255,0.20); border-color: rgba(50,108,255,0.55); }
 .modal-content .modal-toss img { width: 18px; height: 18px; }
 @media (max-width: 640px) {
-  /* 모바일은 텍스트 숨기고 아이콘만 (공간 절약) */
-  .modal-content .modal-toss { right: 50px; padding: 6px; }
+  /* 모바일은 토스 로고 우상단 정확히 모서리에 (텍스트 숨김), 닫기 ✕는 그 아래로 */
+  .modal-content .modal-toss {
+    top: 8px; right: 8px;
+    padding: 4px; height: 28px;
+    background: transparent; border: none;
+  }
+  .modal-content .modal-toss:hover { background: rgba(50,108,255,0.15); }
   .modal-content .modal-toss span { display: none; }
+  .modal-content .modal-toss img { width: 24px; height: 24px; }
 }
 
 /* v1.23: 모달 하단 닫기 버튼 + 스와이프 다운 핸들 */
@@ -10432,24 +10436,32 @@ async function openChart(ticker) {
   $('chartModal').classList.add('active');
 }
 
-// v1.98/v1.99: 현재 열린 종목 모달의 ticker를 토스증권 종목 페이지로 새 탭 이동
+// v1.98/v1.99: 토스증권 종목 페이지 이동
 //   사용자 Python 크롤러 코드 힌트: tossinvest.com/stocks/{ticker} 한 패턴으로 모두 작동
-//     - 한국: ticker = 6자리 숫자 ("005930") 또는 "A005930"
-//     - 미국: ticker 그대로 ("NVDA", "AAPL") — 토스가 자동 리디렉션
+//     - 한국: ticker = "A005930" 형식 (확인됨)
+//     - 미국: ticker 그대로 ("NVDA") — 토스가 자동 productCode로 리디렉션
+//   모바일: 같은 탭에서 navigate → 토스증권의 universal link 트리거 → 앱 설치되어 있으면 토스 앱 자동 실행
+//          (새 탭 + universal link는 일부 브라우저에서 트리거 안 됨)
+//          사용자가 토스 앱에서 작업 후 브라우저로 돌아오면 원래 페이지 그대로 유지됨 (history)
+//   PC: 새 탭 (보던 화면 유지)
 function openTossInvest() {
   const tk = _state.openTicker;
   if (!tk) return;
   const isKR = getCurrentMarket() === 'KR';
   let code;
   if (isKR) {
-    // 한국: A + 6자리 padding (사용자 확인 — A005930 형식 작동)
     code = 'A' + String(tk).replace(/[^0-9]/g, '').padStart(6, '0');
   } else {
-    // 미국: ticker 그대로 (NVDA → /stocks/NVDA → 토스가 알아서 productCode로 리디렉션)
     code = String(tk).toUpperCase();
   }
   const url = `https://www.tossinvest.com/stocks/${code}`;
-  window.open(url, '_blank', 'noopener,noreferrer');
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  if (isMobile) {
+    // 같은 탭 navigate — universal link 트리거 강화 → 토스 앱 실행 (브라우저 history는 보존)
+    window.location.href = url;
+  } else {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
 }
 
 function closeModal() {
