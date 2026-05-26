@@ -1811,6 +1811,14 @@ body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
   letter-spacing: 2px;
   font-variant-numeric: tabular-nums;
 }
+/* v2.01: 버전 표시 — 로딩 % 바로 밑 */
+.splash-version {
+  margin-top: 6px;
+  font-family: 'SF Mono', 'Consolas', 'Roboto Mono', monospace;
+  font-size: 9px;
+  color: rgba(255,255,255,0.28);
+  letter-spacing: 1px;
+}
 .splash-error {
   margin-top: 28px;
   text-align: center;
@@ -3829,6 +3837,8 @@ table.combo-eval tbody td .nodata {
         <div class="splash-progress-fill" id="splashProgressFill"></div>
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
+      <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
+      <div class="splash-version" id="splashVersion">v2.01</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -3859,7 +3869,6 @@ table.combo-eval tbody td .nodata {
           <span class="mkt-label">KR</span>
         </button>
       </div>
-      <div class="v">v2.0</div>
     </div>
   </header>
 
@@ -4334,7 +4343,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner v2.0 · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner · Apps Script backend · LocalStorage 개인 데이터
   </footer>
 </div>
 
@@ -6675,37 +6684,65 @@ async function autoLoadData() {
 }
 window.autoLoadData = autoLoadData;
 
+// v2.01: pull-to-refresh JS 차단 — 페이지 최상단에서 아래로 swipe 시에만 차단
+//   (overscroll-behavior CSS는 모바일 일반 스크롤도 막아서 제거. JS로 정밀 차단)
+//   - scroll 위치가 0(맨 위)이 아니면 무시 → 일반 스크롤 영향 없음
+//   - 최상단에서 손가락 down swipe만 preventDefault → pull-to-refresh 차단
+(function setupPullToRefreshBlocker() {
+  if (!('ontouchstart' in window)) return;  // 터치 없는 환경(PC) 스킵
+  let startY = 0;
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches.length !== 1) return;
+    const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+    if (scrollTop > 0) return;  // 최상단 아니면 무시 — 일반 스크롤 정상 작동
+    const dy = e.touches[0].clientY - startY;
+    if (dy > 0) e.preventDefault();  // 위에서 아래로 당기는 동작만 차단
+  }, { passive: false });
+})();
+
 // ============================================================================
 // v1.99: 종목별 정량 보고서 — 백엔드 fetch, 본문 파싱, 모달 통합
 // ============================================================================
 async function fetchReportsIndex() {
-  if (!BACKEND.REPORTS_FOLDER_ID) return;
+  if (!BACKEND.REPORTS_FOLDER_ID) {
+    console.warn('[Reports] REPORTS_FOLDER_ID 미설정');
+    return;
+  }
+  console.log('[Reports] fetchReportsIndex 시작 — folderId:', BACKEND.REPORTS_FOLDER_ID);
   try {
     const res = await apiCall('listReports', { folderId: BACKEND.REPORTS_FOLDER_ID });
+    console.log('[Reports] listReports 응답:', res);
     if (res && res.ok && res.reports) {
       _state.reports = res.reports;
-      const usCount = Object.keys(res.reports.US || {}).length;
-      const krCount = Object.keys(res.reports.KR || {}).length;
-      console.log(`[Reports] 인덱스 로드 완료 — US ${usCount}개 ticker, KR ${krCount}개 ticker`);
+      const usList = Object.keys(res.reports.US || {});
+      const krList = Object.keys(res.reports.KR || {});
+      console.log(`[Reports] ✓ 인덱스 로드 완료 — US ${usList.length}개 (${usList.slice(0,5).join(',')}...), KR ${krList.length}개 (${krList.slice(0,5).join(',')}...)`);
       // 현재 열린 모달이 있으면 보고서 버튼 표시 상태 업데이트
       updateReportButtonVisibility();
     } else {
-      console.warn('[Reports] listReports 실패:', res && res.error);
+      console.warn('[Reports] ✗ listReports 실패. Apps Script가 v2.11로 새로 배포되었는지 확인하세요. error:', res && res.error);
     }
   } catch (e) {
-    console.warn('[Reports] fetch error:', e);
+    console.warn('[Reports] ✗ fetch error:', e);
   }
 }
 
 // 현재 모달의 ticker에 보고서 있으면 버튼 표시, 없으면 숨김
 function updateReportButtonVisibility() {
   const btn = document.getElementById('modalReportBtn');
-  if (!btn) return;
+  if (!btn) { console.warn('[Reports] modalReportBtn 요소 없음'); return; }
   const tk = _state.openTicker;
   if (!tk) { btn.style.display = 'none'; return; }
   const mkt = getCurrentMarket();
-  const list = (_state.reports[mkt] || {})[String(tk).toUpperCase()];
-  btn.style.display = (list && list.length > 0) ? '' : 'none';
+  const tkUpper = String(tk).toUpperCase();
+  const list = (_state.reports[mkt] || {})[tkUpper];
+  const hasReport = list && list.length > 0;
+  btn.style.display = hasReport ? '' : 'none';
+  console.log(`[Reports] 버튼 표시 갱신 — ticker=${tkUpper}, mkt=${mkt}, 보고서 ${list ? list.length : 0}개, 표시=${hasReport}`);
 }
 
 // 보고서 본문 fetch (캐시 사용)
@@ -10778,14 +10815,13 @@ async function openChart(ticker) {
   $('chartModal').classList.add('active');
 }
 
-// v1.98/v1.99: 토스증권 종목 페이지 이동
-//   사용자 Python 크롤러 코드 힌트: tossinvest.com/stocks/{ticker} 한 패턴으로 모두 작동
-//     - 한국: ticker = "A005930" 형식 (확인됨)
-//     - 미국: ticker 그대로 ("NVDA") — 토스가 자동 productCode로 리디렉션
-//   모바일: 같은 탭에서 navigate → 토스증권의 universal link 트리거 → 앱 설치되어 있으면 토스 앱 자동 실행
-//          (새 탭 + universal link는 일부 브라우저에서 트리거 안 됨)
-//          사용자가 토스 앱에서 작업 후 브라우저로 돌아오면 원래 페이지 그대로 유지됨 (history)
-//   PC: 새 탭 (보던 화면 유지)
+// v1.98/v1.99/v2.01: 토스증권 종목 페이지 이동
+//   사용자 Python 크롤러 코드 힌트: tossinvest.com/stocks/{ticker} 한 패턴
+//     - 한국: "A005930" 형식, 미국: "NVDA" 형식
+//   모바일 토스 앱 연계 (v2.01): 임시 <a target="_blank"> 요소 click() 시뮬레이션이
+//     window.location.href 또는 window.open 보다 universal link 트리거 가장 안정적
+//     (브라우저가 사용자 제스처로 인식 → iOS Universal Link / Android App Link 발동)
+//   PC: 새 탭
 function openTossInvest() {
   const tk = _state.openTicker;
   if (!tk) return;
@@ -10797,13 +10833,14 @@ function openTossInvest() {
     code = String(tk).toUpperCase();
   }
   const url = `https://www.tossinvest.com/stocks/${code}`;
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  if (isMobile) {
-    // 같은 탭 navigate — universal link 트리거 강화 → 토스 앱 실행 (브라우저 history는 보존)
-    window.location.href = url;
-  } else {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
+  // <a> click 시뮬레이션 — universal link 가장 자연스럽게 트리거
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 function closeModal() {
