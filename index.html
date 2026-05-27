@@ -1290,21 +1290,6 @@ table.sheet tbody tr.drop-below td:last-child {
   }
   .chart-wrap .modal-report img { width: 22px; height: 22px; }
 }
-@media (max-width: 640px) {
-  /* v2.13: 모바일 모달 상단 — 토스만 우상단 모서리에 딱 붙음
-     (보고서는 차트 우하단으로 이동, 위에 안 보이게) */
-  .modal-content .modal-toss {
-    top: calc(28px + env(safe-area-inset-top, 0px));
-    right: 6px;
-    padding: 0; height: 32px; min-width: 32px;
-    background: transparent; border: none;
-  }
-  .modal-content .modal-toss:hover { background: rgba(50,108,255,0.15); }
-  .modal-content .modal-toss span { display: none; }
-  .modal-content .modal-toss img { width: 30px; height: 30px; display: block; }
-  /* modal-title 우측에 토스 자리만 확보 (보고서 차트로 이동했으니 적게) */
-  .modal-content #modalTitle { padding-right: 44px !important; }
-}
 
 /* v1.99: 보고서 패널 (모달 내부) */
 #reportPanel { margin-top: 16px; }
@@ -1484,8 +1469,22 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .modal-content .modal-toss:hover { background: rgba(50,108,255,0.20); border-color: rgba(50,108,255,0.55); }
 .modal-content .modal-toss img { width: 18px; height: 18px; }
-/* 모바일 분석/토스 위치는 modal-report CSS 블록(아래)에서 통합 처리 — v2.03 */
-
+/* v2.14: 모바일 토스 override — base 정의 뒤에 위치해야 cascade 우선 (이전 v2.13까지는 base 앞에 있어서 적용 X) */
+@media (max-width: 640px) {
+  .modal-content .modal-toss {
+    top: calc(28px + env(safe-area-inset-top, 0px));
+    right: 4px;
+    padding: 0; height: 36px; min-width: 36px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    gap: 0;
+  }
+  .modal-content .modal-toss:hover { background: rgba(50,108,255,0.15); border-color: transparent; }
+  .modal-content .modal-toss span { display: none; }
+  .modal-content .modal-toss img { width: 32px; height: 32px; display: block; }
+  .modal-content #modalTitle { padding-right: 48px !important; }
+}
 /* v1.23: 모달 하단 닫기 버튼 + 스와이프 다운 핸들 */
 .modal-content .modal-bottom-close {
   display: block; width: 100%; margin-top: 18px;
@@ -4255,7 +4254,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.13</div>
+      <div class="splash-version" id="splashVersion">v2.14</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -11599,12 +11598,14 @@ async function openChart(ticker) {
   $('chartModal').classList.add('active');
 }
 
-// v1.98~v2.13: 토스증권 종목 페이지/앱 이동
-//   v2.13 재설계 — universal link만 사용한 v2.05는 모바일에서 webview로 들어가는 최악 UX
-//   해결: supertoss:// custom scheme을 iframe으로 trigger → 토스 앱이 설치되어 있으면 앱 열림
-//        앱 안 열리면 1.2초 후 web URL을 새 탭 (target=_blank rel=external)으로 → 외부 브라우저
-//   PC는 기존대로 새 탭
-//   스킴: supertoss://stocks/{code} 시도 (path 형태 — REST 스타일이 가장 일반적)
+// v1.98~v2.14: 토스증권 종목 페이지/앱 이동
+//   v2.14 — Android intent URL 사용 (토스 앱 package 명시, https URL을 intent로 변환)
+//     · Android Chrome이 intent URL 만나면 → package 명시된 앱(토스)으로 자동 라우팅
+//     · 앱 없음 → S.browser_fallback_url로 fallback
+//     · 토스 앱이 tossinvest.com/stocks/* path를 deep link로 처리하면 앱의 종목 페이지로 자동 이동
+//   iOS — supertoss:// custom scheme + universal link fallback
+//     · supertoss://stocks/{code} 시도 (path 형식) — 앱 열리면 종목 페이지 가능성
+//     · 1.2초 후 안 열렸으면 universal link로 fallback
 function openTossInvest() {
   const tk = _state.openTicker;
   if (!tk) return;
@@ -11616,11 +11617,18 @@ function openTossInvest() {
     code = String(tk).toUpperCase();
   }
   const webUrl = `https://www.tossinvest.com/stocks/${code}`;
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  if (isMobile) {
-    // 1) 토스 앱 custom scheme 시도 (iframe trick — 가장 호환성 좋음)
-    //    supertoss://stocks/{code} (path 형식 우선 시도)
+  if (isAndroid) {
+    // Android: intent URL — Chrome이 자동으로 토스 앱 trigger (package 명시)
+    //   토스 앱이 tossinvest.com 도메인을 deep link로 등록되어 있으면 → 앱 안 종목 페이지
+    //   앱 없음 또는 등록 X → fallback URL (브라우저 새 탭)
+    const intentUrl = `intent://www.tossinvest.com/stocks/${code}#Intent;scheme=https;package=viva.republica.toss;S.browser_fallback_url=${encodeURIComponent(webUrl)};end`;
+    window.location.href = intentUrl;
+  } else if (isIOS) {
+    // iOS: supertoss:// scheme iframe trick → 앱 trigger
+    //   1.2초 후 앱 안 열렸으면 새 탭으로 web URL
     const scheme = `supertoss://stocks/${code}`;
     const startTime = Date.now();
     let appOpened = false;
@@ -11632,12 +11640,10 @@ function openTossInvest() {
     iframe.src = scheme;
     document.body.appendChild(iframe);
 
-    // 1.2초 후 앱 안 열렸으면 새 탭으로 web URL → 외부 브라우저 trigger (universal link 가능)
     setTimeout(() => {
       document.removeEventListener('visibilitychange', visHandler);
       try { document.body.removeChild(iframe); } catch (e) {}
       if (!appOpened && !document.hidden && (Date.now() - startTime) < 2000) {
-        // 앱 안 열림 → 새 탭으로 web → 사용자가 토스 웹 또는 앱 선택
         const a = document.createElement('a');
         a.href = webUrl;
         a.target = '_blank';
@@ -11648,7 +11654,7 @@ function openTossInvest() {
       }
     }, 1200);
   } else {
-    // PC — 새 탭 (기존 그대로, 잘 작동 중)
+    // PC — 새 탭 (기존 그대로)
     const a = document.createElement('a');
     a.href = webUrl;
     a.target = '_blank';
