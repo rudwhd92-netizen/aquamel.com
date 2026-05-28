@@ -277,7 +277,7 @@ section.card {
   background: transparent;
   border-radius: 0;
   padding: 0;
-  margin-bottom: 44px;  /* v2.27: PC AQUAMEL INVESTMENT 헤더와 본 콘텐츠 간 여백 더 (28→44px) */
+  margin-bottom: 72px;  /* v2.27/v2.31: PC AQUAMEL INVESTMENT 헤더와 본 콘텐츠 간 여백 (44→72px) */
   border: none;
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 12px;
@@ -4341,7 +4341,39 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   }
 }
 
-/* ============ v2.25/v2.27/v2.28: 매크로 모달 상관관계 종목 라벨 ============
+/* ============ v2.31: V-Shape 알고리즘 버전 토글 (V1/V2) ============ */
+.vshape-ver-toggle {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg);
+  vertical-align: middle;
+}
+.vshape-ver-toggle button {
+  background: transparent;
+  border: none;
+  color: var(--text-mute);
+  padding: 4px 10px;
+  font-family: 'Pretendard Variable', Pretendard, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+  border-right: 1px solid var(--line);
+}
+.vshape-ver-toggle button:last-child { border-right: none; }
+.vshape-ver-toggle button:hover { background: var(--bg-3); color: var(--text); }
+.vshape-ver-toggle button.active {
+  background: var(--accent);
+  color: #fff;
+}
+@media (max-width: 640px) {
+  .vshape-ver-toggle button { padding: 3px 8px; font-size: 10px; }
+}
+/* end v2.31 vshape toggle */
+
    v2.28: wrap/header/background 완전 제거. sec-modal-table을 그대로 사용.
    양/음 라벨만 단순 텍스트 — 표 자체는 섹터 모달과 완전히 동일하게 보임. */
 .macro-corr-label {
@@ -4582,7 +4614,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.30</div>
+      <div class="splash-version" id="splashVersion">v2.31</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -5090,6 +5122,14 @@ table.combo-eval tbody td .nodata {
       <div class="modal-filter-block">
         <div class="modal-filter-label">🎯 Signal Type 필터 (메인 표와 동일하게 동기화):</div>
         <div class="signal-filter-area" id="modalSignalFilterArea"></div>
+        <!-- v2.31: V-Shape 알고리즘 버전 토글 (US만, V1 데이터 있을 때만 표시) -->
+        <div class="modal-vshape-ver" id="modalVshapeVerWrap" style="margin-top:10px;display:none;">
+          <span class="modal-filter-label" style="display:inline-block;margin-right:8px;">V-Shape 버전:</span>
+          <div class="vshape-ver-toggle" role="group">
+            <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
+            <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+          </div>
+        </div>
       </div>
       <div class="ticker-history-wrap" id="tickerHistoryWrap" style="display:none;">
         <h4 class="ticker-history-title">📜 이 종목의 시그널 이력</h4>
@@ -6922,7 +6962,8 @@ let _state = {
 
   // v1.69: 시장별 데이터 저장소 — autoLoadData가 양쪽 동시에 채움
   //   setMarket 시 applyMarketState가 active 변수로 swap
-  archives:          { US: [], KR: [] },           // → _state.archive
+  archives:          { US: [], KR: [] },           // → _state.archive (V2 / EMA 기본)
+  archivesV1:        { US: [] },                    // v2.31: V1 (옛 V_Shape_Archive) — US만, Code.gs가 보낼 때만 채워짐
   // v1.80: 한국도 섹터별 별도 시트 구조로 바뀜 → 시장별 sector OHLCV 저장
   sectorsByMarket:   { US: {}, KR: {} },           // → _state.sectors
   // v1.81: 매크로도 시장별 분리 (US: S&P/NASDAQ/KJP400, KR: KOSPI/KOSDAQ)
@@ -6955,6 +6996,8 @@ let _state = {
   openMacro: null,    // v2.10: 매크로 모달 열린 상태 식별
   openSector: null,   // v2.10: 섹터 모달 열린 상태 식별 {key, name}
   detailMode: false,  // 모바일 디폴트 = simple mode (false). 토글로 true 전환
+  // v2.31: V-Shape 알고리즘 버전 토글 (US만 적용. V1=V_Shape_Archive 옛, V2=V_Shape_Archive_EMA 새 기본)
+  vshapeVersion: lsGet('aquamel_vshape_version', 'V2'),
   tickerSectorMap: {},
   kjpSectorMap:    {},
   tickerDescMap:   {},
@@ -6964,7 +7007,12 @@ let _state = {
 // v1.69: active 시장 데이터로 _state swap — setMarket이 호출
 function applyMarketState(mkt) {
   if (mkt !== 'US' && mkt !== 'KR') mkt = 'US';
-  _state.archive          = _state.archives[mkt] || [];
+  // v2.31: US일 때만 vshapeVersion 적용. V1 선택 + V1 데이터 있으면 V1, 그 외엔 기본(V2)
+  if (mkt === 'US' && _state.vshapeVersion === 'V1' && _state.archivesV1.US && _state.archivesV1.US.length > 0) {
+    _state.archive = _state.archivesV1.US;
+  } else {
+    _state.archive          = _state.archives[mkt] || [];
+  }
   _state.sectors          = _state.sectorsByMarket[mkt] || {};   // v1.80
   _state.macro            = _state.macroByMarket[mkt] || [];     // v1.81
   _state.tickerSectorMap  = _state.tickerSectorMaps[mkt] || {};
@@ -6982,6 +7030,57 @@ function applyMarketState(mkt) {
   // v2.03 Phase 2: 분석 패널이 열려있으면 현재 시장 기준으로 그리드 재빌드
   try { if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
+
+// ============================================================================
+// v2.31: V-Shape 알고리즘 버전 토글 (US만)
+//   V1 = V_Shape_Archive (옛), V2 = V_Shape_Archive_EMA (새 기본)
+//   클라이언트 토글로 즉시 swap — Code.gs가 archive_v1을 보낼 때만 토글 표시
+// ============================================================================
+function hasVshapeV1Data() {
+  return !!(_state.archivesV1 && _state.archivesV1.US && _state.archivesV1.US.length > 0);
+}
+
+function setVshapeVersion(ver) {
+  if (ver !== 'V1' && ver !== 'V2') ver = 'V2';
+  if (ver === 'V1' && !hasVshapeV1Data()) return;  // V1 데이터 없으면 무시
+  _state.vshapeVersion = ver;
+  lsSet('aquamel_vshape_version', ver);
+  // 현재 시장의 archive 즉시 swap
+  applyMarketState(getCurrentMarket());
+  // 모든 archive-dependent view 재렌더
+  try { if (typeof renderArchiveTable === 'function') renderArchiveTable(); } catch (e) {}
+  try { if (typeof renderSignalsCard === 'function')  renderSignalsCard();  } catch (e) {}
+  try { if (typeof renderBuyPointsCard === 'function') renderBuyPointsCard(); } catch (e) {}
+  try { if (typeof renderTickerHistory === 'function' && _state.openTicker) renderTickerHistory(_state.openTicker); } catch (e) {}
+  // 차트 모달이 열려있으면 재그리기
+  try {
+    if (_state.openTicker && document.getElementById('chartModal').classList.contains('active')) {
+      openChart(_state.openTicker);
+    }
+  } catch (e) {}
+  // 모든 토글 UI 동기화
+  syncVshapeToggleUI();
+}
+
+function syncVshapeToggleUI() {
+  const isUS = getCurrentMarket() === 'US';
+  const has = hasVshapeV1Data();
+  document.querySelectorAll('.vshape-ver-toggle').forEach(t => {
+    t.style.display = (isUS && has) ? '' : 'none';
+    t.querySelectorAll('button[data-ver]').forEach(b => {
+      b.classList.toggle('active', b.dataset.ver === _state.vshapeVersion);
+    });
+  });
+}
+
+// 토글 컴포넌트 HTML 생성 — 어디든 같은 구조 사용
+function vshapeToggleHtml() {
+  return `<div class="vshape-ver-toggle" role="group" aria-label="V-Shape 버전">
+    <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
+    <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+  </div>`;
+}
+window.setVshapeVersion = setVshapeVersion;
 
 // v1.76: 마이 카드의 화폐 안내문/아이콘을 시장에 맞게 갱신
 function updateCcyBanner() {
@@ -7082,6 +7181,17 @@ function setMarket(mkt) {
 
   // 6) 모든 화면 재렌더링
   rerenderAll();
+
+  // v2.31: 시장 전환 후 vshape 토글 표시 갱신 (KR이면 숨김)
+  try {
+    if (typeof syncVshapeToggleUI === 'function') {
+      const modalWrap = document.getElementById('modalVshapeVerWrap');
+      const isUS = mkt === 'US';
+      const has = (typeof hasVshapeV1Data === 'function') && hasVshapeV1Data();
+      if (modalWrap) modalWrap.style.display = (isUS && has) ? '' : 'none';
+      syncVshapeToggleUI();
+    }
+  } catch (e) {}
 }
 window.setMarket = setMarket;
 
@@ -7148,7 +7258,12 @@ async function tryLoadFromBundle() {
     // ─── _state 채우기 — 기존 autoLoadData 로직 모방 ───
 
     // 1) Archive (정규화)
+    //    v2.31: US는 V_Shape_Archive_EMA(V2)가 기본 archive, V_Shape_Archive(V1)는 archive_v1
+    //    KR은 한 가지 (V_Shape_Archive_KOR)
     _state.archives.US = ((bundle.US && bundle.US.archive) || [])
+      .map(r => normalizeArchiveRow(r, 'US'))
+      .filter(r => r.Ticker && r.Date);
+    _state.archivesV1.US = ((bundle.US && bundle.US.archive_v1) || [])
       .map(r => normalizeArchiveRow(r, 'US'))
       .filter(r => r.Ticker && r.Date);
     _state.archives.KR = ((bundle.KR && bundle.KR.archive) || [])
@@ -7239,6 +7354,8 @@ async function tryLoadFromBundle() {
     const sizeKB = ((JSON.stringify(bundle).length) / 1024).toFixed(0);
     console.log(`[tryLoadFromBundle] ✓ fast path 성공 — ${dt}ms, bundle ${sizeKB}KB, 빌드 ${ts}`);
     console.log(`[tryLoadFromBundle] US: archive=${_state.archives.US.length}, sectors=${Object.keys(_state.sectorsByMarket.US).length}, KR: archive=${_state.archives.KR.length}, sectors=${Object.keys(_state.sectorsByMarket.KR).length}`);
+    // v2.31: 데이터 로드 완료 신호 — vshape 토글 UI 등 데이터-의존 UI 갱신
+    try { window.dispatchEvent(new CustomEvent('aquamel:data-loaded')); } catch (e) {}
 
     return true;
   } catch (e) {
@@ -11812,6 +11929,10 @@ async function fetchAdhocOhlcv(ticker) {
 }
 
 async function openChart(ticker) {
+  // v2.31: 매크로 상관관계 종목 리스트 잔상 제거 (일반 종목 모달엔 표시 X)
+  const _oldCorr = document.getElementById('macroCorrWrap');
+  if (_oldCorr) _oldCorr.remove();
+
   // v1.88: KR 모드면 ticker 자동 정규화 (' 제거 + 6자리 padding)
   //   사용자가 '5930' 입력해도 _state.sectors의 '005930'과 매칭되도록
   //   회귀 방지: 여기서 한 번만 정규화하면 _state.sectors lookup, 매핑, 표시 모두 일관
@@ -12083,6 +12204,9 @@ function closeModal() {
   // v1.19: 매크로 모드 정리 — 다음 일반 ticker 열기 위해 영역들 복원
   $('modalSignalFilterArea').parentElement.style.display = '';
   $('tickerHistoryWrap').style.display = '';
+  // v2.31: 매크로 상관관계 종목 리스트 제거 (다음 일반 종목 모달에 잔상 방지)
+  const corrWrap = document.getElementById('macroCorrWrap');
+  if (corrWrap) corrWrap.remove();
   // v1.23: 모바일 매크로 차트용 스타일 원복
   const modeBtn = $('modeToggleBtn');
   if (modeBtn) modeBtn.style.display = '';
@@ -12999,6 +13123,53 @@ window.addEventListener('resize', () => {
     document.body.removeAttribute('data-mtab');
   }
 });
+
+// ============================================================================
+// v2.31: V-Shape 버전 토글 — archive 카드 헤더에 동적 삽입 + 초기 UI 동기화
+// ============================================================================
+(function setupVshapeToggleInjection() {
+  function inject() {
+    // archive 카드 (PC) + archive 카드 (모바일) 두 곳 헤더에 토글 삽입
+    ['archiveCard', 'archiveMobileCard'].forEach(id => {
+      const card = document.getElementById(id);
+      if (!card) return;
+      const hdr = card.querySelector('.card-header');
+      if (!hdr || hdr.querySelector('.vshape-ver-toggle')) return;
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'display:inline-block;margin-left:12px;vertical-align:middle;';
+      wrap.innerHTML = `<div class="vshape-ver-toggle" role="group">
+        <button type="button" data-ver="V1" onclick="event.stopPropagation();setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
+        <button type="button" data-ver="V2" onclick="event.stopPropagation();setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+      </div>`;
+      // h2 다음에 삽입 (toggle-icon 앞)
+      const h2 = hdr.querySelector('h2');
+      if (h2) h2.insertAdjacentElement('afterend', wrap.firstElementChild);
+    });
+    // 모달 안 wrap 표시 분기는 syncVshapeToggleUI에서 처리
+    if (typeof syncVshapeToggleUI === 'function') {
+      const modalWrap = document.getElementById('modalVshapeVerWrap');
+      const isUS = (typeof getCurrentMarket === 'function' ? getCurrentMarket() : 'US') === 'US';
+      const has = (typeof hasVshapeV1Data === 'function') && hasVshapeV1Data();
+      if (modalWrap) modalWrap.style.display = (isUS && has) ? '' : 'none';
+      syncVshapeToggleUI();
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inject);
+  } else {
+    inject();
+  }
+  // 데이터 로드 후 다시 호출 (V1 데이터 도착 시 토글 표시 갱신)
+  window.addEventListener('aquamel:data-loaded', () => {
+    if (typeof syncVshapeToggleUI === 'function') {
+      const modalWrap = document.getElementById('modalVshapeVerWrap');
+      const isUS = getCurrentMarket() === 'US';
+      const has = hasVshapeV1Data();
+      if (modalWrap) modalWrap.style.display = (isUS && has) ? '' : 'none';
+      syncVshapeToggleUI();
+    }
+  });
+})();
 
 // ============================================================================
 // v2.28: Android 뒤로가기 버튼 → 모달 닫기 (앱 종료 방지)
