@@ -5,46 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>AQUAMEL — V-Shape Scanner</title>
 
-<!-- v2.24 NUCLEAR RESET: 옛 SW(v2.21 SWR 캐시 함정)에 갇힌 사용자 디바이스를 한 번 깨끗하게 정리.
-     localStorage 플래그로 한 번만 실행. 다음 visit부터는 정상 SW 갱신 흐름. -->
-<script>
-(function () {
-  try {
-    var KEY = '__aquamel_reset_v24__';
-    if (!localStorage.getItem(KEY) && 'serviceWorker' in navigator) {
-      localStorage.setItem(KEY, '1');
-      navigator.serviceWorker.getRegistrations().then(function (regs) {
-        Promise.all(regs.map(function (r) { return r.unregister(); })).then(function () {
-          if ('caches' in window) {
-            caches.keys().then(function (keys) {
-              return Promise.all(keys.map(function (k) { return caches.delete(k); }));
-            }).then(function () { window.location.reload(); });
-          } else { window.location.reload(); }
-        });
-      }).catch(function () {});
-    }
-  } catch (e) {}
-})();
-</script>
-
 <!-- v1.74: Pretendard 한글 폰트 (preconnect로 빠른 로딩) -->
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link rel="dns-prefetch" href="https://script.google.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-
-<!-- v2.21: 데이터 + Chart.js를 HTML 파싱과 병렬 fetch (로딩 ~500ms 단축) -->
-<link rel="preload" as="fetch" href="./data/data.json" crossorigin>
-<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin>
-<script>
-// v2.21: HTML 파싱 시작과 동시에 data.json fetch 시작 → autoLoadData에서 재사용
-//   preload는 fetch trigger만, 이 promise는 실제 결과 재사용 (중복 fetch 방지)
-try {
-  window.__earlyDataPromise = fetch('./data/data.json', { cache: 'default' })
-    .then(res => res.ok ? res.json() : null)
-    .catch(() => null);
-} catch (e) { window.__earlyDataPromise = null; }
-</script>
 
 <!-- ============ PWA META (v1.19) ============ -->
 <meta name="theme-color" content="#1e1e1e">
@@ -85,7 +48,7 @@ try {
 // v1.95: 새 버전 감지 시 자동 reload (캐시로 옛 버전 표시되는 문제 해결)
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(reg => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
       // 페이지 로드 시 즉시 update 체크
       reg.update();
       // 1시간마다 update 체크 (장시간 PWA 열어둔 경우)
@@ -3587,11 +3550,13 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 
 /* ============ MOBILE (≤640px) — 폰만 대상. 태블릿 (iPad Mini 744px+ 포함) 은 PC 레이아웃 ============ */
 @media (max-width: 640px) {
-  .container { padding: 18px 18px 40px; }
+  .container { padding: 16px 16px 40px; }
   /* v1.32 / v2.11 / v2.17 / v2.19 / v2.20: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단 정렬
      끝선 정렬 X (사용자 요청: PC랑 똑같은 폰트로 적되 줄바꿈만 유지) */
+  /* v1.32 / v2.11 / v2.17 / v2.19 / v2.25: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단
+     여백: padding-top 12px로 위쪽 답답함 해소 */
   .hero {
-    padding: 18px 0 6px 0;  /* v2.22: 위 여백 더 확보 (12→18px) */
+    padding: 12px 0 6px 0;
     margin-bottom: 18px;
     display: flex; flex-direction: row; align-items: flex-start; gap: 10px;
     flex-wrap: nowrap;
@@ -4203,27 +4168,28 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   /* v1.24: 모바일 섹터 차트 캔버스 높이 (레퍼런스 일치) */
   .sec-modal-chart-canvas-wrap { height: 180px; }
 
-  /* ============ v2.20/v2.22: 섹터 프레임워크 — 모바일 세로 가치사슬 ============
-     v2.22: block 기반 단순화 — transform/flex collapse로 인한 다른 카드 침범 버그 fix
-     PC는 grid 그대로 / 모바일은 모든 자식을 block으로 통일 + normal flow */
+  /* ============ v2.25: 섹터 프레임워크 — 모바일 단순화 ============
+     v2.20에서 transform: scale(1.015) + flex column이 stacking context 만들어
+     다음 카드 영역 침범하던 버그 fix. 모든 자식 block + transform 완전 제거. */
   .sf-diagram-scroll {
-    overflow-x: visible !important; overflow-y: visible !important;
+    overflow: visible !important;
     padding: 8px 4px;
-    background: transparent; border: none;
+    background: transparent;
+    border: none;
   }
   .sf-diagram { min-width: 0 !important; }
 
-  /* 방향 라벨 PC 숨김 + 자체 라벨 */
   .sf-dir-row { display: none; }
 
-  /* AI 코어 7계층 — block stack (flex/grid 사용 X) */
-  .sf-core {
+  /* sf-core, sf-external — 모두 block stack (flex/grid 사용 X) */
+  .sf-core,
+  .sf-external {
     display: block !important;
+    grid-template: none !important;
     grid-template-columns: none !important;
     grid-template-rows: none !important;
-    grid-template: none !important;
     gap: 0 !important;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .sf-core::before {
     content: "⬇  AI 가치사슬  ⬇";
@@ -4231,28 +4197,35 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     font-size: 11px; font-weight: 700; color: var(--text-mute);
     letter-spacing: 1.5px;
     margin-bottom: 10px; padding: 6px 0;
-    background: color-mix(in srgb, var(--accent) 5%, transparent);
+    background: rgba(255,255,255,0.04);
     border-radius: 8px;
   }
 
-  /* 화살표 — block, transform으로 ↓ */
+  /* 화살표 — block, transform 사용 X (원래 → 회전 대신 새 ↓ 표시) */
   .sf-arrow {
     display: block !important;
     text-align: center;
     margin: 4px auto !important;
     padding: 0;
-    font-size: 16px;
+    font-size: 0 !important;  /* 원본 → 텍스트 숨김 */
+    line-height: 1;
     color: color-mix(in srgb, var(--text-mute) 70%, transparent);
-    transform: rotate(90deg);
+    transform: none !important;
+  }
+  .sf-arrow::before {
+    content: "↓";
+    font-size: 18px;
+    font-weight: 700;
   }
 
-  /* layer 카드 — width 100%, transform 절대 사용 X */
+  /* layer 카드 — width 100%, transform 절대 X */
   .sf-layer {
     width: 100% !important;
     min-width: 0;
     border-radius: 10px;
-    margin: 0 0 4px 0 !important;
+    margin: 0 0 6px 0 !important;
     transform: none !important;
+    position: static !important;
   }
   .sf-layer-title {
     font-size: 13px; padding: 8px 10px;
@@ -4260,13 +4233,13 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     border-radius: 9px 9px 0 0;
   }
 
-  /* L4 데이터센터 — transform 없이 border + background로 강조 */
+  /* L4 데이터센터 — transform 없이 border/background로만 강조 */
   .sf-layer.sf-center {
     border-width: 2.5px !important;
     background: rgba(150,120,201, 0.10) !important;
+    box-shadow: 0 2px 10px rgba(150,120,201,0.20) !important;
+    margin: 8px 0 !important;
     transform: none !important;
-    box-shadow: 0 4px 14px rgba(150,120,201,0.20) !important;
-    margin: 6px 0 !important;
   }
   .sf-layer.sf-center .sf-layer-title {
     font-size: 14px; font-weight: 800; padding: 10px 12px;
@@ -4278,13 +4251,14 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     font-size: 10px; font-weight: 500; opacity: 0.85;
   }
 
-  /* sector cells — flex chip (1단계 안전한 flex만 사용) */
+  /* sector cells — flex chip */
   .sf-layer-grid {
     display: flex !important; flex-wrap: wrap !important;
     grid-template: none !important;
     grid-template-columns: none !important;
     grid-template-rows: none !important;
-    gap: 6px !important; padding: 8px !important;
+    gap: 6px !important;
+    padding: 8px !important;
   }
   .sf-sub {
     grid-column: auto !important; grid-row: auto !important;
@@ -4296,6 +4270,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     border-radius: 14px !important;
     background: rgba(var(--c-rgb), 0.12) !important;
     border: 1px solid rgba(var(--c-rgb), 0.35);
+    transform: none !important;
   }
   .sf-sub-emoji { font-size: 13px !important; margin: 0 !important; }
   .sf-sub-name {
@@ -4304,24 +4279,16 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     line-height: 1.2;
   }
 
-  /* 외부 5계층 — block stack (2-col grid 제거 — 안전성 우선) */
+  /* 외부 5계층 헤더 */
   .sf-external-header {
     font-size: 11px; font-weight: 700; color: var(--text-mute);
-    text-align: center; margin: 14px 0 8px 0; padding: 6px 0;
+    text-align: center;
+    margin: 14px 0 8px 0; padding: 6px 0;
     border-top: 1px dashed var(--line);
     letter-spacing: 0.3px;
   }
-  .sf-external {
-    display: block !important;
-    grid-template: none !important;
-    grid-template-columns: none !important;
-    gap: 0 !important;
-  }
-  .sf-external .sf-layer {
-    margin-bottom: 6px !important;
-  }
 
-  /* footer (등락률/비중) — 더 크게 */
+  /* layer footer (등락률/비중) — 더 크게 */
   .sf-layer-footer {
     font-size: 11px !important; padding: 6px 10px !important;
     gap: 6px;
@@ -4330,7 +4297,85 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     font-size: 12px !important; font-weight: 700; padding: 8px 12px !important;
   }
 }
-/* end v2.22 sector framework mobile */
+/* end v2.25 sector framework mobile */
+
+/* ============ v2.25: 매크로 모달 상관관계 종목 리스트 ============ */
+.macro-corr-wrap {
+  margin-top: 18px;
+  padding: 16px;
+  background: var(--bg-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+}
+.macro-corr-header {
+  font-size: 13px; font-weight: 700; color: var(--text-mute);
+  margin-bottom: 14px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  letter-spacing: 0.3px;
+}
+.macro-corr-section { margin-bottom: 14px; }
+.macro-corr-section:last-child { margin-bottom: 0; }
+.macro-corr-title {
+  font-size: 13px; font-weight: 700;
+  margin: 0 0 8px 0; padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+.macro-corr-title.pos { color: var(--kr-up); background: rgba(220,53,69,0.08); }
+.macro-corr-title.neg { color: var(--kr-down); background: rgba(86,156,214,0.10); }
+.macro-corr-list {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.macro-corr-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+}
+.macro-corr-item:hover {
+  background: var(--bg-3);
+  border-color: var(--accent);
+}
+.macro-corr-item:active { transform: scale(0.985); }
+.macro-corr-item .ticker-logo {
+  width: 28px; height: 28px;
+  vertical-align: middle;
+  margin: 0;
+}
+.macro-corr-info {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.macro-corr-tk {
+  font-size: 13px; font-weight: 700; color: var(--text-hi);
+  font-family: Consolas, monospace;
+}
+.macro-corr-co {
+  font-size: 11px; color: var(--text-mute);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.macro-corr-val {
+  font-size: 14px; font-weight: 800;
+  font-family: Consolas, monospace;
+  flex-shrink: 0;
+  min-width: 56px; text-align: right;
+}
+.macro-corr-val.pos { color: var(--kr-up); }
+.macro-corr-val.neg { color: var(--kr-down); }
+
+@media (max-width: 640px) {
+  .macro-corr-wrap { margin-top: 14px; padding: 12px; }
+  .macro-corr-header { font-size: 12px; margin-bottom: 10px; }
+  .macro-corr-title { font-size: 12px; }
+  .macro-corr-item { padding: 7px 9px; gap: 8px; }
+  .macro-corr-item .ticker-logo { width: 24px; height: 24px; }
+  .macro-corr-tk { font-size: 12px; }
+  .macro-corr-co { font-size: 10px; }
+  .macro-corr-val { font-size: 13px; min-width: 50px; }
+}
 
 /* ============================================================== */
 /* v1.19 — 데스크탑에도 적용되는 글로벌 추가                       */
@@ -4479,7 +4524,7 @@ table.combo-eval tbody td .nodata {
 /* v1.19 — 추가 작은 화면 (≤480px) — 최소 단말 미세조정              */
 /* ============================================================== */
 @media (max-width: 480px) {
-  .container { padding: 16px 16px 32px; }
+  .container { padding: 14px 14px 32px; }
   .hero h1 { font-size: 20px; }
   .hero-tagline { font-size: 8px; }
   .hero .meta { gap: 6px; }
@@ -4558,7 +4603,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.24</div>
+      <div class="splash-version" id="splashVersion">v2.25</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7112,25 +7157,16 @@ let _autoLoadInProgress = false;
 async function tryLoadFromBundle() {
   const t0 = performance.now();
   try {
+    // cache-bust query — 새로고침 버튼 누를 땐 최신, 평소엔 SW 캐시 사용
+    const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
     splashUpdate(15);
-    // v2.21: HTML head에서 시작된 __earlyDataPromise 우선 사용 (중복 fetch 방지)
-    //   sw.js v2.21이 SWR 모드로 캐싱 (ignoreSearch) → query 없어도 stale 캐시 즉시 반환
-    let bundle = null;
-    if (window.__earlyDataPromise) {
-      try { bundle = await window.__earlyDataPromise; } catch (e) { bundle = null; }
-      window.__earlyDataPromise = null;  // 한 번만 사용
-    }
-    if (!bundle) {
-      // fallback: 직접 fetch (early promise 실패 시)
-      const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);
-      const res = await fetch(url, { cache: 'default' });
-      if (!res.ok) {
-        console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
-        return false;
-      }
-      bundle = await res.json();
+    const res = await fetch(url, { cache: 'default' });
+    if (!res.ok) {
+      console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
+      return false;
     }
     splashUpdate(40);
+    const bundle = await res.json();
     if (!bundle || !bundle.ok) {
       console.warn('[tryLoadFromBundle] data.json invalid:', bundle);
       return false;
@@ -12315,6 +12351,8 @@ async function openMacroChart(macroName) {
       });
     }
     $('chartModal').classList.add('active');
+    // v2.25: 모바일에도 상관관계 종목 리스트 (US 한정)
+    renderMacroCorrelationList(macroName);
     return;
   }
 
@@ -12330,8 +12368,164 @@ async function openMacroChart(macroName) {
   });
 
   $('chartModal').classList.add('active');
+
+  // v2.25: 매크로 모달에 상관관계 종목 리스트 (US만)
+  renderMacroCorrelationList(macroName);
 }
 window.openMacroChart = openMacroChart;
+
+// ============================================================================
+// v2.25: 매크로 × KJP400 종목 상관관계 (60일 일간 수익률 Pearson correlation)
+//   US만, 클라이언트 사이드 계산 + 세션 캐시
+// ============================================================================
+let _macroCorrelationsCache = null;
+
+function _macroPearson(x, y) {
+  const n = Math.min(x.length, y.length);
+  if (n < 2) return NaN;
+  let sx = 0, sy = 0;
+  for (let i = 0; i < n; i++) { sx += x[i]; sy += y[i]; }
+  const mx = sx / n, my = sy / n;
+  let num = 0, dx2 = 0, dy2 = 0;
+  for (let i = 0; i < n; i++) {
+    const dx = x[i] - mx, dy = y[i] - my;
+    num += dx * dy; dx2 += dx * dx; dy2 += dy * dy;
+  }
+  const denom = Math.sqrt(dx2 * dy2);
+  return denom === 0 ? NaN : num / denom;
+}
+
+function computeMacroCorrelations() {
+  if (_macroCorrelationsCache) return _macroCorrelationsCache;
+
+  const sectorsUS = (_state.sectorsByMarket && _state.sectorsByMarket.US) || {};
+  const macrosUS = (_state.macroByMarket && _state.macroByMarket.US) || [];
+  if (!macrosUS.length || !Object.keys(sectorsUS).length) {
+    _macroCorrelationsCache = {};
+    return {};
+  }
+
+  // 종목별 close 시리즈 (최근 65일)
+  const tickerByDate = {};  // { ticker: { date: close } }
+  Object.values(sectorsUS).forEach(rows => {
+    const byTk = {};
+    rows.forEach(r => {
+      if (!r.Ticker || !r.Date || !isFinite(r.Close)) return;
+      (byTk[r.Ticker] ||= []).push(r);
+    });
+    Object.entries(byTk).forEach(([tk, list]) => {
+      list.sort((a, b) => a.Date.localeCompare(b.Date));
+      if (list.length < 60) return;
+      const recent = list.slice(-65);
+      const map = {};
+      recent.forEach(r => { map[r.Date] = r.Close; });
+      tickerByDate[tk] = map;
+    });
+  });
+
+  // 매크로별 시리즈
+  const macroTickers = [...new Set(macrosUS.map(r => r.Ticker))];
+  const companyMap = _state.tickerCompanyMap || {};
+  const results = {};
+
+  macroTickers.forEach(macroTk => {
+    const macroRows = macrosUS
+      .filter(r => r.Ticker === macroTk && r.Date && isFinite(r.Close))
+      .sort((a, b) => a.Date.localeCompare(b.Date));
+    if (macroRows.length < 60) return;
+    const recentMacro = macroRows.slice(-65);
+    const macroByDate = {};
+    recentMacro.forEach(r => { macroByDate[r.Date] = r.Close; });
+    const macroDates = recentMacro.map(r => r.Date);
+
+    const correlations = [];
+    Object.entries(tickerByDate).forEach(([tk, tkMap]) => {
+      // 공통 날짜만 사용
+      const common = macroDates.filter(d => tkMap[d] != null);
+      if (common.length < 30) return;
+      const macroRet = [], tkRet = [];
+      for (let i = 1; i < common.length; i++) {
+        const m0 = macroByDate[common[i - 1]], m1 = macroByDate[common[i]];
+        const t0 = tkMap[common[i - 1]], t1 = tkMap[common[i]];
+        if (m0 > 0 && t0 > 0) {
+          macroRet.push(m1 / m0 - 1);
+          tkRet.push(t1 / t0 - 1);
+        }
+      }
+      if (macroRet.length < 30) return;
+      const corr = _macroPearson(macroRet, tkRet);
+      if (isFinite(corr)) {
+        correlations.push({ ticker: tk, company: companyMap[tk] || '', corr });
+      }
+    });
+
+    if (correlations.length === 0) return;
+    correlations.sort((a, b) => b.corr - a.corr);
+    results[macroTk] = {
+      positive: correlations.slice(0, 5),
+      negative: correlations.slice(-5).reverse(),
+    };
+  });
+
+  _macroCorrelationsCache = results;
+  return results;
+}
+
+function renderMacroCorrelationList(macroName) {
+  // 기존 리스트 제거
+  const existing = document.getElementById('macroCorrWrap');
+  if (existing) existing.remove();
+
+  // US 한정 + KJP400은 제외 (자기 자신과 상관관계 무의미)
+  if (getCurrentMarket() !== 'US' || macroName === 'KJP400') return;
+
+  const correlations = computeMacroCorrelations();
+  const data = correlations[macroName];
+  if (!data || (!data.positive.length && !data.negative.length)) return;
+
+  const renderRow = (item, isPos) => {
+    const valCls = isPos ? 'pos' : 'neg';
+    const sign = isPos ? '+' : '';
+    return `<div class="macro-corr-item" data-ticker="${escapeAttr(item.ticker)}">
+      ${tickerLogoHtml(item.ticker)}
+      <div class="macro-corr-info">
+        <div class="macro-corr-tk">${escapeHtml(item.ticker)}</div>
+        <div class="macro-corr-co">${escapeHtml(item.company || '')}</div>
+      </div>
+      <div class="macro-corr-val ${valCls}">${sign}${item.corr.toFixed(2)}</div>
+    </div>`;
+  };
+
+  let html = `<div class="macro-corr-wrap" id="macroCorrWrap">
+    <div class="macro-corr-header">📊 최근 60일 상관관계 종목 (US)</div>
+    <div class="macro-corr-section">
+      <h4 class="macro-corr-title pos">📈 양의 상관관계 TOP 5</h4>
+      <div class="macro-corr-list">${data.positive.map(it => renderRow(it, true)).join('')}</div>
+    </div>
+    <div class="macro-corr-section">
+      <h4 class="macro-corr-title neg">📉 음의 상관관계 TOP 5</h4>
+      <div class="macro-corr-list">${data.negative.map(it => renderRow(it, false)).join('')}</div>
+    </div>
+  </div>`;
+
+  // chart-wrap 다음에 삽입 (modal-content 안)
+  const chartWrap = document.querySelector('#chartModal .chart-wrap');
+  if (!chartWrap) return;
+  chartWrap.insertAdjacentHTML('afterend', html);
+
+  // 클릭 → 해당 종목 차트
+  const wrap = document.getElementById('macroCorrWrap');
+  if (wrap) {
+    wrap.addEventListener('click', (e) => {
+      const item = e.target.closest('.macro-corr-item[data-ticker]');
+      if (!item) return;
+      const tk = item.getAttribute('data-ticker');
+      if (!tk) return;
+      closeModal();
+      setTimeout(() => openChart(tk), 50);
+    });
+  }
+}
 
 function drawChart(d) {
   const ctx = $('chartCanvas').getContext('2d');
