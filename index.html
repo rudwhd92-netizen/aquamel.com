@@ -5,6 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>AQUAMEL — V-Shape Scanner</title>
 
+<!-- v2.24 NUCLEAR RESET: 옛 SW(v2.21 SWR 캐시 함정)에 갇힌 사용자 디바이스를 한 번 깨끗하게 정리.
+     localStorage 플래그로 한 번만 실행. 다음 visit부터는 정상 SW 갱신 흐름. -->
+<script>
+(function () {
+  try {
+    var KEY = '__aquamel_reset_v24__';
+    if (!localStorage.getItem(KEY) && 'serviceWorker' in navigator) {
+      localStorage.setItem(KEY, '1');
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        Promise.all(regs.map(function (r) { return r.unregister(); })).then(function () {
+          if ('caches' in window) {
+            caches.keys().then(function (keys) {
+              return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+            }).then(function () { window.location.reload(); });
+          } else { window.location.reload(); }
+        });
+      }).catch(function () {});
+    }
+  } catch (e) {}
+})();
+</script>
+
 <!-- v1.74: Pretendard 한글 폰트 (preconnect로 빠른 로딩) -->
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -63,7 +85,7 @@ try {
 // v1.95: 새 버전 감지 시 자동 reload (캐시로 옛 버전 표시되는 문제 해결)
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').then(reg => {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(reg => {
       // 페이지 로드 시 즉시 update 체크
       reg.update();
       // 1시간마다 update 체크 (장시간 PWA 열어둔 경우)
@@ -4536,7 +4558,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.23</div>
+      <div class="splash-version" id="splashVersion">v2.24</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
