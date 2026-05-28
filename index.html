@@ -272,22 +272,18 @@ section.card {
 }
 
 /* (5) Hero — 평면 텍스트 → 미묘한 그라데이션 배경 + 좌측 액센트 */
+/* (5) Hero — v2.19: 음영/배경 제거 (이전 그라데이션 박스) — 깔끔한 텍스트 표현 */
 .hero {
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--accent) 4%, var(--bg)) 0%,
-    var(--bg) 70%);
-  border-radius: var(--radius-lg);
-  padding: 22px 24px;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
   margin-bottom: 28px;
-  border: 1px solid transparent;
-  border-bottom-color: transparent;
+  border: none;
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 12px;
 }
 [data-theme="light"] .hero {
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--accent) 7%, var(--bg)) 0%,
-    var(--bg) 70%);
+  background: transparent;
 }
 .hero h1 {
   font-family: 'Pretendard Variable', Pretendard, Arial, sans-serif;
@@ -354,10 +350,35 @@ section.card {
   opacity: 1;
 }
 
-/* v2.11/v2.18: 대시보드 카드 — 프레임 제거 일관성에 맞춰 그라데이션 제거 */
+/* v2.11/v2.18/v2.19: 대시보드 카드만 배경 + 프레임 복원 (다른 카드는 transparent 유지) */
 #dashboardCard {
-  background: transparent;
-  box-shadow: none;
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--accent) 5%, transparent) 0%,
+      transparent 60%),
+    linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 88%, var(--bg) 12%) 100%) !important;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-2),
+              inset 0 1px 0 0 color-mix(in srgb, white 5%, transparent);
+}
+[data-theme="light"] #dashboardCard {
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--accent) 8%, transparent) 0%,
+      transparent 60%),
+    linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 92%, var(--bg-3) 8%) 100%) !important;
+}
+#dashboardCard > .card-header {
+  margin: -24px -24px 0 -24px;
+  padding: 20px 24px;
+}
+#dashboardCard > .card-body { padding: 0 0 4px 0; }
+
+@media (max-width: 640px) {
+  #dashboardCard { padding: 16px; }
+  #dashboardCard > .card-header { margin: -16px -16px 0 -16px; padding: 14px 16px; }
 }
 /* v2.11: .hero h1 / .hero h1 .hl 는 위(.hero 그라데이션 블록 안)에서 정의 — 중복 제거 */
 .hero-brand { display: flex; flex-direction: column; gap: 4px; }
@@ -3126,8 +3147,10 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 /* ============ MACRO GRID ============ */
 .macro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
 .macro-cell {
-  /* v2.12: 평면 → 미세 그라데이션 + 큰 radius + 통일된 transition */
-  background: linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 90%, var(--bg-3) 10%) 100%);
+  /* v2.12/v2.19: 평면 → 옅은 panel 톤 그라데이션 (페이지 배경과 명확히 구분) */
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--panel) 92%, var(--bg-3) 8%) 0%,
+    color-mix(in srgb, var(--panel) 80%, var(--bg-3) 20%) 100%);
   padding: 14px 16px; border-radius: var(--radius-md);
   border-left: 3px solid var(--line-2);
   transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
@@ -3528,44 +3551,37 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 /* ============ MOBILE (≤640px) — 폰만 대상. 태블릿 (iPad Mini 744px+ 포함) 은 PC 레이아웃 ============ */
 @media (max-width: 640px) {
   .container { padding: 14px 10px 40px; }
-  /* v1.32 / v2.11 / v2.17: 모바일 hero — AQUAMEL/INVESTMENT 두 줄 + 우측 meta는 AQUAMEL 줄 옆
-     align-items: flex-start → meta가 첫 줄(AQUAMEL)과 정렬됨
-     INVESTMENT(10글자)가 AQUAMEL(7글자)보다 길어서 AQUAMEL을 더 큰 폰트로 폭 매칭 */
+  /* v1.32 / v2.11 / v2.17 / v2.19: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단 정렬
+     끝선 정렬 X (사용자 요청: PC랑 똑같은 폰트로 적되 줄바꿈만 유지) */
   .hero {
-    padding: 14px 16px;
-    margin-bottom: 18px;
-    flex-wrap: nowrap; align-items: flex-start; gap: 8px;
-    border-radius: var(--radius-md);
+    padding: 0;
+    margin-bottom: 20px;
+    display: flex; flex-direction: row; align-items: flex-start; gap: 8px;
+    flex-wrap: nowrap;
+    background: transparent;
+    border: none;
+    border-radius: 0;
   }
-  .hero-brand { flex: 1; min-width: 0; }
+  .hero-brand { flex: 1 1 auto; min-width: 0; }
   .hero h1 {
     line-height: 1.05;
-    /* 두 span을 block으로 → 두 줄 */
+    font-family: 'Pretendard Variable', Pretendard, Arial, sans-serif;
+    font-weight: 700;
+    /* PC와 같은 폰트 사이즈, 다만 두 span을 block으로 → 줄바꿈 */
   }
   .hero h1 .brand-aquamel,
   .hero h1 .brand-investment {
     display: block;
-    font-family: 'Pretendard Variable', Pretendard, Arial, sans-serif;
-    font-weight: 800;
+    /* PC와 동일한 폰트 (font-size/weight/letter-spacing 모두 .hero h1 기본 inherit) */
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
   }
-  /* AQUAMEL — 큰 폰트, 좁은 letter-spacing (7글자) */
-  .hero h1 .brand-aquamel {
-    font-size: 36px;
-    letter-spacing: -1.4px;
-  }
-  /* INVESTMENT — 작은 폰트, 넓은 letter-spacing (10글자) → 끝선 맞춤 */
-  .hero h1 .brand-investment {
-    font-size: 22px;
-    letter-spacing: 2.4px;
-    font-weight: 600;
-    color: var(--text-mute);
-    margin-top: 2px;
-  }
-  /* meta: AQUAMEL 줄 옆 (상단 정렬) */
+  /* meta: AQUAMEL 첫 줄 옆 우상단 정렬 (절대 안 떨어지도록 flex-shrink: 0) */
   .meta {
+    flex: 0 0 auto;
     align-self: flex-start;
-    margin-top: 4px;
-    flex-shrink: 0;
+    margin-top: 2px;
   }
   .hero-tagline {
     font-size: 9px; letter-spacing: 0.15px;
@@ -4377,7 +4393,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.18</div>
+      <div class="splash-version" id="splashVersion">v2.19</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4622,7 +4638,7 @@ table.combo-eval tbody td .nodata {
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
   <section class="card" id="analysisCard" data-mtab="analysis" style="display:none;">
     <div class="card-header">
-      <h2>📊 분석 보고서</h2>
+      <h2>분석 보고서</h2>
     </div>
     <div class="card-body">
       <p class="subtitle">정량 보고서가 등록된 종목입니다. 클릭하면 보고서 일자 목록이 열립니다.</p>
