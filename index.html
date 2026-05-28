@@ -2051,6 +2051,21 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   letter-spacing: 0.3px;
 }
 .stock-list-sector-header:first-child { padding-top: 6px; }
+/* v2.37: 평가 유형순 그룹 헤더 — 이모지 포함 큰 글자, 카테고리 구분감 강조 */
+.stock-list-eval-header {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-hi);
+  padding: 18px 4px 8px;
+  letter-spacing: 0;
+}
+.stock-list-eval-header:first-child { padding-top: 8px; }
+/* v2.37: 종목 모달 — '고점대비'와 'Data' 사이의 평가 항목 */
+.modal-eval {
+  font-weight: 700;
+  color: var(--text-hi);
+  letter-spacing: 0;
+}
 .stock-list-row {
   display: grid;
   /* v1.54: 로고 | 티커 | 섹터 | 종가+등락률 (섹터를 티커 다음으로) */
@@ -4641,7 +4656,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.36</div>
+      <div class="splash-version" id="splashVersion">v2.37</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4699,6 +4714,7 @@ table.combo-eval tbody td .nodata {
         <div class="sort-menu" id="sortMenu" style="display:none;">
           <button onclick="event.stopPropagation(); setStockSort('return');" data-mode="return" class="active">등락률 높은순</button>
           <button onclick="event.stopPropagation(); setStockSort('sector');" data-mode="sector">섹터 강한순</button>
+          <button onclick="event.stopPropagation(); setStockSort('eval');" data-mode="eval">평가 유형순</button>
         </div>
       </div>
     </div>
@@ -7040,6 +7056,10 @@ let _state = {
   //   setMarket 시 applyMarketState가 active 변수로 swap
   archives:          { US: [], KR: [] },           // → _state.archive (V2 / EMA 기본)
   archivesV1:        { US: [] },                    // v2.31: V1 (옛 V_Shape_Archive) — US만, Code.gs가 보낼 때만 채워짐
+  // v2.37: 매수매력도 (Buy Attractiveness Evaluation) — '판단' 컬럼 매핑
+  //   구조: { US: { 'AAPL': '💎 기회', 'MSFT': '🟢 우호', ... }, KR: {} }
+  //   매일 덮어씌워지는 시트. US만 존재. data.json에 없으면 lazy fetch.
+  evaluations:       { US: {}, KR: {} },
   // v1.80: 한국도 섹터별 별도 시트 구조로 바뀜 → 시장별 sector OHLCV 저장
   sectorsByMarket:   { US: {}, KR: {} },           // → _state.sectors
   // v1.81: 매크로도 시장별 분리 (US: S&P/NASDAQ/KJP400, KR: KOSPI/KOSDAQ)
@@ -7177,6 +7197,108 @@ async function _lazyFetchVshapeV1() {
     }
   })();
   return _vshapeV1FetchPromise;
+}
+
+// ============================================================================
+// v2.37: 매수매력도 (Buy Attractiveness Evaluation) — 시트 fetch + 헬퍼
+// ============================================================================
+
+// 정렬 우선순위 (사용자 지정): 💎 기회 → 🟢 우호 → 🟡 주의 → 🟠 보류 → 🔴 경계 → ⚪ 무난 → ➖ 중립
+const EVAL_ORDER = ['💎 기회', '🟢 우호', '🟡 주의', '🟠 보류', '🔴 경계', '⚪ 무난', '➖ 중립'];
+
+// 정규화: 이모지 첫 글자 + 공백 무시 → 7개 카테고리 중 하나로 매칭
+function _normalizeEval(text) {
+  if (!text) return '';
+  const t = String(text).trim();
+  for (let i = 0; i < EVAL_ORDER.length; i++) {
+    const emoji = EVAL_ORDER[i].split(' ')[0];  // '💎', '🟢', ...
+    if (t.startsWith(emoji) || t === EVAL_ORDER[i]) return EVAL_ORDER[i];
+  }
+  return '';
+}
+// 종목의 평가 카테고리 반환 (정규화된 형태). 없으면 ''
+function getTickerEval(ticker) {
+  if (!ticker) return '';
+  const mkt = getCurrentMarket();
+  if (mkt !== 'US') return '';  // 현재는 US만 매수매력도 존재
+  const raw = _state.evaluations.US[String(ticker).toUpperCase()];
+  return _normalizeEval(raw);
+}
+function getEvalRank(ticker) {
+  const ev = getTickerEval(ticker);
+  if (!ev) return 999;
+  const idx = EVAL_ORDER.indexOf(ev);
+  return idx >= 0 ? idx : 999;
+}
+
+let _evalFetchPromise = null;
+async function _lazyFetchEvaluations() {
+  if (_evalFetchPromise) return _evalFetchPromise;
+  if (Object.keys(_state.evaluations.US).length > 0) return true;
+  _evalFetchPromise = (async () => {
+    try {
+      const cfg = MARKET_CONFIG.US;
+      const res = await apiCall('getOneSheet', { sheetId: cfg.archiveSheetId, tab: '매수매력도' });
+      if (!res || !res.ok || !Array.isArray(res.rows)) {
+        console.warn('[_lazyFetchEvaluations] failed:', res && res.error);
+        return false;
+      }
+      res.rows.forEach(r => {
+        const tk = String(r.Ticker || '').toUpperCase().trim();
+        const judge = String(r['판단'] || '').trim();
+        if (tk && judge) _state.evaluations.US[tk] = judge;
+      });
+      const n = Object.keys(_state.evaluations.US).length;
+      console.log(`[_lazyFetchEvaluations] ✓ 매수매력도 lazy fetch: ${n}건`);
+      // 모달 열려있으면 평가 항목 다시 그리기 + 종목 리스트가 'eval' 모드면 재렌더
+      try {
+        if (_state.openTicker && document.getElementById('chartModal')?.classList.contains('active')) {
+          if (typeof refreshModalEvaluation === 'function') refreshModalEvaluation(_state.openTicker);
+        }
+        if (_stockSortMode === 'eval' && typeof buildStockList === 'function') buildStockList();
+      } catch (e) {}
+      return n > 0;
+    } catch (e) {
+      console.warn('[_lazyFetchEvaluations] error:', e);
+      return false;
+    }
+  })();
+  return _evalFetchPromise;
+}
+// 외부에서 강제 갱신 필요 시 (예: 시장 swap)
+function _resetEvalFetchPromise() { _evalFetchPromise = null; }
+
+// v2.37: 모달이 열려있을 때 평가 항목만 다시 그리기 (lazy fetch 도착 직후 호출)
+function refreshModalEvaluation(ticker) {
+  const subtitleEl = document.getElementById('modalSubtitle');
+  if (!subtitleEl) return;
+  // modal-eval 노드 있으면 제거. 그 후 새로 평가 있으면 sep+modal-eval 삽입.
+  subtitleEl.querySelectorAll('.modal-eval').forEach(el => {
+    const prevSep = el.previousElementSibling;
+    if (prevSep && prevSep.classList.contains('sep')) prevSep.remove();
+    el.remove();
+  });
+  const evalText = getTickerEval(ticker);
+  if (!evalText) return;
+  // 'Data:' span 찾기 — 그 직전에 sep + modal-eval 삽입
+  const spans = subtitleEl.querySelectorAll('span');
+  let dataSpan = null;
+  spans.forEach(s => {
+    if (s.textContent && s.textContent.startsWith('Data:')) dataSpan = s;
+  });
+  if (!dataSpan) return;
+  const dataSep = dataSpan.previousElementSibling;  // sep 직전에 삽입
+  const sepEl = document.createElement('span');
+  sepEl.className = 'sep';
+  sepEl.textContent = '·';
+  const evalEl = document.createElement('span');
+  evalEl.className = 'modal-eval';
+  evalEl.title = '매수매력도';
+  evalEl.textContent = evalText;
+  if (dataSep && dataSep.classList.contains('sep')) {
+    dataSep.insertAdjacentElement('beforebegin', evalEl);
+    evalEl.insertAdjacentElement('beforebegin', sepEl);
+  }
 }
 
 function syncVshapeToggleUI() {
@@ -7383,6 +7505,14 @@ async function tryLoadFromBundle() {
     _state.archives.KR = ((bundle.KR && bundle.KR.archive) || [])
       .map(r => normalizeArchiveRow(r, 'KR'))
       .filter(r => r.Ticker && r.Date);
+    // v2.37: 매수매력도 (data.json에 있으면 즉시 채움, 없으면 autoLoadData 끝나고 lazy fetch)
+    _state.evaluations.US = {};
+    const evalRows = (bundle.US && bundle.US.evaluations) || [];
+    evalRows.forEach(r => {
+      const tk = String(r.Ticker || '').toUpperCase().trim();
+      const judge = String(r['판단'] || '').trim();
+      if (tk && judge) _state.evaluations.US[tk] = judge;
+    });
 
     splashUpdate(65);
 
@@ -7470,6 +7600,10 @@ async function tryLoadFromBundle() {
     console.log(`[tryLoadFromBundle] US: archive=${_state.archives.US.length}, sectors=${Object.keys(_state.sectorsByMarket.US).length}, KR: archive=${_state.archives.KR.length}, sectors=${Object.keys(_state.sectorsByMarket.KR).length}`);
     // v2.31: 데이터 로드 완료 신호 — vshape 토글 UI 등 데이터-의존 UI 갱신
     try { window.dispatchEvent(new CustomEvent('aquamel:data-loaded')); } catch (e) {}
+    // v2.37: 매수매력도가 data.json에 없으면 background lazy fetch (UI 블록 X)
+    if (Object.keys(_state.evaluations.US).length === 0) {
+      setTimeout(() => _lazyFetchEvaluations(), 600);
+    }
 
     return true;
   } catch (e) {
@@ -12191,8 +12325,12 @@ async function openChart(ticker) {
   }
   // 2줄: 최근 종가 + 전일 대비
   $('modalPrice').innerHTML = `${fmtPrice(lastPrice)} ${chgHtml}`;
-  // 3줄: 섹터 + 고점 대비 + 데이터 일자
-  $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span><span class="sep">·</span><span>Data: ${escapeHtml(dates[dates.length-1])}</span>`;
+  // 3줄: 섹터 + 고점 대비 + (v2.37 평가) + 데이터 일자
+  const evalText = getTickerEval(ticker);
+  const evalHtml = evalText
+    ? `<span class="sep">·</span><span class="modal-eval" title="매수매력도">${escapeHtml(evalText)}</span>`
+    : '';
+  $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span>${evalHtml}<span class="sep">·</span><span>Data: ${escapeHtml(dates[dates.length-1])}</span>`;
   // 4줄: 상세설명 (있으면 표시)
   $('modalDesc').textContent = desc;
 
@@ -13746,6 +13884,30 @@ function buildStockList() {
     // 등락률 desc — 단순 정렬
     items.sort((a, b) => b.chg - a.chg);
     renderHtml = items.map(renderStockRow).join('');
+  } else if (_stockSortMode === 'eval') {
+    // v2.37: 평가 유형순 — 💎 → 🟢 → 🟡 → 🟠 → 🔴 → ⚪ → ➖ → 평가없음
+    //   카테고리 내: 등락률 desc
+    items.forEach(it => { it.evalRank = getEvalRank(it.ticker); it.evalLabel = getTickerEval(it.ticker); });
+    items.sort((a, b) => {
+      if (a.evalRank !== b.evalRank) return a.evalRank - b.evalRank;
+      return b.chg - a.chg;
+    });
+    // 카테고리 헤더 함께 렌더
+    let currentEval = null;
+    renderHtml = items.map(it => {
+      let prefix = '';
+      const evalKey = it.evalLabel || '__none__';
+      if (evalKey !== currentEval) {
+        const headerText = it.evalLabel || '평가 없음';
+        prefix = `<div class="stock-list-sector-header stock-list-eval-header">${escapeHtml(headerText)}</div>`;
+        currentEval = evalKey;
+      }
+      return prefix + renderStockRow(it);
+    }).join('');
+    // 데이터 아직 도착 안 했을 가능성 — background fetch trigger
+    if (items.length > 0 && items.every(it => it.evalRank === 999)) {
+      _lazyFetchEvaluations();  // 도착하면 자동 재렌더
+    }
   } else {
     // 섹터 강한순: 섹터 평균 chg desc → 섹터 내 종목 chg desc
     const sectorAvg = {};
@@ -13813,7 +13975,12 @@ function setStockSort(mode) {
   _stockSortMode = mode;
   // 라벨 업데이트
   const label = $('sortToggleLabel');
-  if (label) label.textContent = mode === 'return' ? '등락률 높은순' : '섹터 강한순';
+  if (label) {
+    label.textContent = mode === 'return' ? '등락률 높은순'
+                     : mode === 'sector' ? '섹터 강한순'
+                     : mode === 'eval'   ? '평가 유형순'
+                     : '등락률 높은순';
+  }
   // 활성 표시
   document.querySelectorAll('#sortMenu button').forEach(b => {
     b.classList.toggle('active', b.dataset.mode === mode);
