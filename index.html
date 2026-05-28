@@ -4387,6 +4387,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 }
 /* end v2.31 vshape toggle */
 
+<<<<<<< HEAD
 /* ============ v2.25/v2.27/v2.28/v2.36: 매크로 모달 상관관계 종목 라벨 ============
    v2.28: wrap/header/background 완전 제거. sec-modal-table을 그대로 사용.
    v2.36: 양/음 영역 사이 명확한 정보 위계 — 라벨 위 큰 마진 + 첫 라벨 위 상단 구분선 */
@@ -4413,6 +4414,20 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 @media (max-width: 640px) {
   #macroCorrWrap { margin-top: 20px; padding-top: 16px; }
   .macro-corr-label { font-size: 13px; margin: 20px 0 8px 0; }
+=======
+   v2.28: wrap/header/background 완전 제거. sec-modal-table을 그대로 사용.
+   양/음 라벨만 단순 텍스트 — 표 자체는 섹터 모달과 완전히 동일하게 보임. */
+.macro-corr-label {
+  font-size: 14px; font-weight: 700;
+  margin: 18px 0 8px 0;
+  padding: 0;
+  letter-spacing: 0.2px;
+}
+.macro-corr-label.pos { color: var(--kr-up); }
+.macro-corr-label.neg { color: var(--kr-down); }
+@media (max-width: 640px) {
+  .macro-corr-label { font-size: 13px; margin: 14px 0 6px 0; }
+>>>>>>> 4fdae13643951c943f8bd286f2c35f2306521729
 }
 
 /* ============================================================== */
@@ -4641,7 +4656,11 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
+<<<<<<< HEAD
       <div class="splash-version" id="splashVersion">v2.36</div>
+=======
+      <div class="splash-version" id="splashVersion">v2.35</div>
+>>>>>>> 4fdae13643951c943f8bd286f2c35f2306521729
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -13253,16 +13272,26 @@ window.addEventListener('resize', () => {
       const hdr = card.querySelector('.card-header');
       if (!hdr || hdr.querySelector('.vshape-ver-toggle')) return;
       const wrap = document.createElement('div');
+<<<<<<< HEAD
       // v2.36: 우측 정렬 — flex justify-content:space-between 안에서 margin-left:auto로 push
       wrap.style.cssText = 'margin-left:auto;display:flex;align-items:center;';
+=======
+      wrap.style.cssText = 'display:inline-block;margin-left:12px;vertical-align:middle;';
+>>>>>>> 4fdae13643951c943f8bd286f2c35f2306521729
       wrap.innerHTML = `<div class="vshape-ver-toggle" role="group">
         <button type="button" data-ver="V1" onclick="event.stopPropagation();setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
         <button type="button" data-ver="V2" onclick="event.stopPropagation();setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
       </div>`;
+<<<<<<< HEAD
       // toggle-icon 있으면 그 직전, 없으면 헤더 끝
       const toggleIcon = hdr.querySelector('.toggle-icon');
       if (toggleIcon) toggleIcon.insertAdjacentElement('beforebegin', wrap);
       else hdr.appendChild(wrap);
+=======
+      // h2 다음에 삽입 (toggle-icon 앞)
+      const h2 = hdr.querySelector('h2');
+      if (h2) h2.insertAdjacentElement('afterend', wrap.firstElementChild);
+>>>>>>> 4fdae13643951c943f8bd286f2c35f2306521729
     });
     // 모달 안 wrap 표시 분기는 syncVshapeToggleUI에서 처리
     if (typeof syncVshapeToggleUI === 'function') {
