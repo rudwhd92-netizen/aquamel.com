@@ -685,9 +685,18 @@ section.card.collapsed > .card-header { border-radius: 0; margin-bottom: 0; }
 .sig-btn[data-sig="V_Panic"] .dot { background: var(--v-panic); }
 .sig-btn[data-sig="V_Vol"].on { border-color: var(--v-vol); }
 .sig-btn[data-sig="V_Vol"] .dot { background: var(--v-vol); }
-/* v1.68/v2.30: T 신호 — US/KR 통합 */
+/* v1.68/v2.30: T 신호 — US V2 / KR 통합 */
 .sig-btn[data-sig="T"].on { border-color: #0288d1; }
 .sig-btn[data-sig="T"] .dot { background: #0288d1; }
+/* v2.35: V1 모드(옛 V_Shape_Archive) — T_KJP_* + T_Claude_* 4개 분리 */
+.sig-btn[data-sig="T_KJP_Sharp"].on { border-color: var(--t-kjp-sharp); }
+.sig-btn[data-sig="T_KJP_Sharp"] .dot { background: var(--t-kjp-sharp); }
+.sig-btn[data-sig="T_KJP_Wide"].on { border-color: var(--t-kjp-wide); }
+.sig-btn[data-sig="T_KJP_Wide"] .dot { background: var(--t-kjp-wide); }
+.sig-btn[data-sig="T_Claude_Sharp"].on { border-color: var(--t-claude-sharp); }
+.sig-btn[data-sig="T_Claude_Sharp"] .dot { background: var(--t-claude-sharp); }
+.sig-btn[data-sig="T_Claude_Wide"].on { border-color: var(--t-claude-wide); }
+.sig-btn[data-sig="T_Claude_Wide"] .dot { background: var(--t-claude-wide); }
 
 .filter-controls {
   display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
@@ -1027,8 +1036,13 @@ table.archive .mfi-high { color: var(--danger); font-weight: 600; }
 .sig-badge.V_Main         { color: var(--v-main);         border-color: var(--v-main);         background: rgba(250,82,82,0.1); }
 .sig-badge.V_Panic        { color: #ff8a80;               border-color: var(--v-panic);        background: rgba(183,28,28,0.15); }
 .sig-badge.V_Vol          { color: #ffb74d;               border-color: var(--v-vol);          background: rgba(230,81,0,0.12); }
-/* v1.68/v2.30: T 신호 배지 (US/KR 통합) */
+/* v1.68/v2.30: T 신호 배지 (US V2/KR 통합) */
 .sig-badge.T              { color: #64b5f6;               border-color: #0288d1;               background: rgba(2,136,209,0.12); }
+/* v2.35: V1 모드 — T 4개 분리 배지 */
+.sig-badge.T_KJP_Sharp    { color: #4dd0e1;               border-color: var(--t-kjp-sharp);    background: rgba(0,131,143,0.12); }
+.sig-badge.T_KJP_Wide     { color: #64b5f6;               border-color: var(--t-kjp-wide);     background: rgba(2,136,209,0.12); }
+.sig-badge.T_Claude_Sharp { color: #f48fb1;               border-color: var(--t-claude-sharp); background: rgba(173,20,87,0.15); }
+.sig-badge.T_Claude_Wide  { color: #ce93d8;               border-color: var(--t-claude-wide);  background: rgba(171,71,188,0.12); }
 
 /* ============ SPREADSHEET (Portfolio / Trade history) ============ */
 .tabs-row { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
@@ -4614,7 +4628,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.34</div>
+      <div class="splash-version" id="splashVersion">v2.35</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -5251,6 +5265,36 @@ const SIGNAL_GROUPS = [
 ];
 
 // ============================================================================
+// v2.35: V1 시그널 체계 (옛 V_Shape_Archive 시트 호환)
+//   US 시장 + vshapeVersion='V1' 일 때 사용. T_*가 4개로 세분화 (KJP/Claude × Sharp/Wide)
+// ============================================================================
+const SIGNAL_TYPES_V1 = ['V_Main','V_Panic','V_Vol','T_KJP_Sharp','T_KJP_Wide','T_Claude_Sharp','T_Claude_Wide'];
+const SIGNAL_COLORS_V1 = {
+  'V_Main':         '#fa5252',
+  'V_Panic':        '#b71c1c',
+  'V_Vol':          '#e65100',
+  'T_KJP_Sharp':    '#00838f',
+  'T_KJP_Wide':     '#0288d1',
+  'T_Claude_Sharp': '#ad1457',
+  'T_Claude_Wide':  '#ab47bc',
+};
+const SIGNAL_SHAPE_V1 = {
+  'V_Main':         'circle',
+  'V_Panic':        'triangle',
+  'V_Vol':          'rect',
+  'T_KJP_Sharp':    'rectRot',
+  'T_KJP_Wide':     'rectRot',
+  'T_Claude_Sharp': 'star',
+  'T_Claude_Wide':  'crossRot',
+};
+const SIGNAL_GROUPS_V1 = [
+  { key: 'V', label: 'V 알고리즘',
+    core: ['V_Main', 'V_Vol'],     sub: ['V_Panic'] },
+  { key: 'T', label: 'Tree 알고리즘',
+    core: ['T_KJP_Sharp', 'T_Claude_Sharp'], sub: ['T_KJP_Wide', 'T_Claude_Wide'] },
+];
+
+// ============================================================================
 // v1.68: 한국 시장 신호 정의
 //   V 알고리즘은 미국과 동일 (V_Main, V_Vol, V_Panic)
 //   Tree 알고리즘은 메인/서브 구분 없이 그냥 'T' 하나
@@ -5282,10 +5326,29 @@ const KR_SIGNAL_GROUPS = [
 ];
 
 // 시장에 따라 적절한 신호 정의 반환
-function getSignalTypes()  { return getCurrentMarket() === 'KR' ? KR_SIGNAL_TYPES  : SIGNAL_TYPES; }
-function getSignalColors() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_COLORS : SIGNAL_COLORS; }
-function getSignalShapes() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_SHAPE  : SIGNAL_SHAPE; }
-function getSignalGroups() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_GROUPS : SIGNAL_GROUPS; }
+// v2.35: 시장 + V-Shape 버전(US 한정)에 따라 시그널 체계 선택
+//   KR → KR_SIGNAL_* (T 한 가지)
+//   US + V1 → SIGNAL_*_V1 (T_KJP_Sharp/Wide, T_Claude_Sharp/Wide 4개)
+//   US + V2 → SIGNAL_* (T 한 가지, V_Shape_Archive_EMA 호환)
+function _isV1Mode() {
+  return getCurrentMarket() === 'US' && _state && _state.vshapeVersion === 'V1';
+}
+function getSignalTypes()  {
+  if (getCurrentMarket() === 'KR') return KR_SIGNAL_TYPES;
+  return _isV1Mode() ? SIGNAL_TYPES_V1 : SIGNAL_TYPES;
+}
+function getSignalColors() {
+  if (getCurrentMarket() === 'KR') return KR_SIGNAL_COLORS;
+  return _isV1Mode() ? SIGNAL_COLORS_V1 : SIGNAL_COLORS;
+}
+function getSignalShapes() {
+  if (getCurrentMarket() === 'KR') return KR_SIGNAL_SHAPE;
+  return _isV1Mode() ? SIGNAL_SHAPE_V1 : SIGNAL_SHAPE;
+}
+function getSignalGroups() {
+  if (getCurrentMarket() === 'KR') return KR_SIGNAL_GROUPS;
+  return _isV1Mode() ? SIGNAL_GROUPS_V1 : SIGNAL_GROUPS;
+}
 
 // ============================================================================
 // BACKEND (박제 — 절대 바뀌지 않는 값)
@@ -7058,8 +7121,11 @@ function setVshapeVersion(ver) {
   _state.vshapeVersion = ver;
   lsSet('aquamel_vshape_version', ver);
   applyMarketState(getCurrentMarket());
+  // v2.35: V1↔V2 swap 시 시그널 타입이 다르므로 signalFilter 재초기화 (옛 타입 잔재 제거)
+  _state.signalFilter = new Set(getSignalTypes());
   // v2.34: filteredArchive 재계산 + 모든 archive 의존 view 갱신 (단순 renderArchiveTable로는 filteredArchive 안 바뀜)
   try { if (typeof computeSignalReturns === 'function') computeSignalReturns(); } catch (e) {}
+  try { if (typeof renderSignalFilter === 'function') renderSignalFilter(); } catch (e) {}
   try { if (typeof applyFilterAndRender === 'function') applyFilterAndRender(); } catch (e) {}
   try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
   try { if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList(); } catch (e) {}
@@ -12072,7 +12138,10 @@ async function openChart(ticker) {
   const sigMarkersByType = {};
   getSignalTypes().forEach(s => sigMarkersByType[s] = []);
   if (tf !== '1Y') {
-    const priority = ['V_Panic', 'V_Vol', 'V_Main', 'T'];  // v2.30: US/KR 통합
+    // v2.35: V1 모드면 4개 T_*, 그 외 T 하나
+    const priority = _isV1Mode()
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
       const dateStr = normalizeDate(r.Date);
       if (!dateStr || dateStr < cutoffStr) return;
