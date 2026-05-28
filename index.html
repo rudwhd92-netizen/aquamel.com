@@ -263,31 +263,27 @@ body {
    v2.11: 진짜 앱 느낌 — 탭 indicator + 카드 그라데이션 + hero 그라데이션 + 페이지 전환
    ============================================================================ */
 
-/* (4) 카드 — 평면 회색 박스 → 미세 그라데이션으로 깊이감 */
+/* v2.18: 카드 그라데이션 제거 (프레임 제거 일관성) */
 section.card {
-  background: linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 88%, var(--bg) 12%) 100%);
+  background: transparent !important;
 }
 [data-theme="light"] section.card {
-  background: linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 92%, var(--bg-3) 8%) 100%);
+  background: transparent !important;
 }
 
 /* (5) Hero — 평면 텍스트 → 미묘한 그라데이션 배경 + 좌측 액센트 */
+/* (5) Hero — v2.19: 음영/배경 제거 (이전 그라데이션 박스) — 깔끔한 텍스트 표현 */
 .hero {
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--accent) 4%, var(--bg)) 0%,
-    var(--bg) 70%);
-  border-radius: var(--radius-lg);
-  padding: 22px 24px;
-  margin-bottom: 28px;
-  border: 1px solid transparent;
-  border-bottom-color: transparent;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 72px;  /* v2.27/v2.31: PC AQUAMEL INVESTMENT 헤더와 본 콘텐츠 간 여백 (44→72px) */
+  border: none;
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 12px;
 }
 [data-theme="light"] .hero {
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--accent) 7%, var(--bg)) 0%,
-    var(--bg) 70%);
+  background: transparent;
 }
 .hero h1 {
   font-family: 'Pretendard Variable', Pretendard, Arial, sans-serif;
@@ -354,13 +350,16 @@ section.card {
   opacity: 1;
 }
 
-/* v2.11: 대시보드 카드 — 강조 (액센트 그라데이션으로 메인 카드 위계 표현) */
+/* v2.11/v2.18/v2.19: 대시보드 카드만 배경 + 프레임 복원 (다른 카드는 transparent 유지) */
 #dashboardCard {
   background:
     linear-gradient(135deg,
       color-mix(in srgb, var(--accent) 5%, transparent) 0%,
       transparent 60%),
-    linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 88%, var(--bg) 12%) 100%);
+    linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 88%, var(--bg) 12%) 100%) !important;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
   box-shadow: var(--shadow-2),
               inset 0 1px 0 0 color-mix(in srgb, white 5%, transparent);
 }
@@ -369,7 +368,17 @@ section.card {
     linear-gradient(135deg,
       color-mix(in srgb, var(--accent) 8%, transparent) 0%,
       transparent 60%),
-    linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 92%, var(--bg-3) 8%) 100%);
+    linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 92%, var(--bg-3) 8%) 100%) !important;
+}
+#dashboardCard > .card-header {
+  margin: -24px -24px 0 -24px;
+  padding: 20px 24px;
+}
+#dashboardCard > .card-body { padding: 0 0 4px 0; }
+
+@media (max-width: 640px) {
+  #dashboardCard { padding: 16px; }
+  #dashboardCard > .card-header { margin: -16px -16px 0 -16px; padding: 14px 16px; }
 }
 /* v2.11: .hero h1 / .hero h1 .hl 는 위(.hero 그라데이션 블록 안)에서 정의 — 중복 제거 */
 .hero-brand { display: flex; flex-direction: column; gap: 4px; }
@@ -485,11 +494,15 @@ section.card {
 
 /* ============ CARDS (collapsible) ============ */
 section.card {
-  background: var(--panel); border: 1px solid var(--line);
-  /* v2.08: radius 6px → 14px (더 부드러운 둥근 모서리), padding 20→24px, margin-bottom 16→20px */
-  border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px;
-  transition: box-shadow var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-out);
-  /* v2.11: 카드 enter 애니메이션 — 진입 시 살짝 떠오름 (페이지/탭 전환에서도 재실행) */
+  /* v2.18: 영역 구분 프레임 모두 제거 — 답답함 해소
+     background/border/shadow 모두 투명, padding은 유지하되 가로 padding은 줄여 호흡 */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0; margin-bottom: 32px;
+  transition: none;
+  /* v2.11: 카드 enter 애니메이션은 유지 — 페이지/탭 전환에서도 재실행 */
   animation: card-enter 0.32s var(--ease-out) both;
 }
 @keyframes card-enter {
@@ -546,25 +559,25 @@ section.card .subtitle { color: var(--text-dim); font-size: var(--text-sm); marg
 section.card .card-header {
   display: flex; align-items: center; justify-content: space-between;
   cursor: pointer; user-select: none;
-  /* v2.08: padding 16→20px (more breathing room) */
-  margin: -24px -24px 0 -24px; padding: 20px 24px;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  transition: background var(--t-fast) var(--ease-out);
+  /* v2.18: 프레임 제거 — margin 음수, hover bg 제거 + 헤더 padding 단순 */
+  margin: 0 0 6px 0; padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
-section.card .card-header:hover { background: var(--bg); }
+section.card .card-header:hover { background: transparent; }
 section.card .card-header h2 { margin: 0; }
 section.card .card-header .toggle-icon {
   font-size: var(--text-sm); color: var(--text-mute);
   transition: transform var(--t-base) var(--ease-out);
   margin-left: 12px; flex-shrink: 0;
 }
-section.card .card-body { margin-top: 18px; }
-section.card .card-body > .subtitle:first-child { margin-top: -8px; }
+section.card .card-body { margin-top: 14px; }
+section.card .card-body > .subtitle:first-child { margin-top: -4px; }
 
 /* 카드 토글 */
 section.card.collapsed > .card-body { display: none; }
 section.card.collapsed > .card-header .toggle-icon { transform: rotate(-90deg); }
-section.card.collapsed > .card-header { border-radius: var(--radius-lg); margin-bottom: 0; }
+section.card.collapsed > .card-header { border-radius: 0; margin-bottom: 0; }
 
 /* ============ PWA STANDALONE MODE — iOS safe-area는 body에서 항상 처리 (v1.40), 여기는 추가 미세 조정 ============ */
 .pwa-standalone .hero { padding-top: 8px; }
@@ -672,6 +685,10 @@ section.card.collapsed > .card-header { border-radius: var(--radius-lg); margin-
 .sig-btn[data-sig="V_Panic"] .dot { background: var(--v-panic); }
 .sig-btn[data-sig="V_Vol"].on { border-color: var(--v-vol); }
 .sig-btn[data-sig="V_Vol"] .dot { background: var(--v-vol); }
+/* v1.68/v2.30: T 신호 — US V2 / KR 통합 */
+.sig-btn[data-sig="T"].on { border-color: #0288d1; }
+.sig-btn[data-sig="T"] .dot { background: #0288d1; }
+/* v2.35: V1 모드(옛 V_Shape_Archive) — T_KJP_* + T_Claude_* 4개 분리 */
 .sig-btn[data-sig="T_KJP_Sharp"].on { border-color: var(--t-kjp-sharp); }
 .sig-btn[data-sig="T_KJP_Sharp"] .dot { background: var(--t-kjp-sharp); }
 .sig-btn[data-sig="T_KJP_Wide"].on { border-color: var(--t-kjp-wide); }
@@ -680,9 +697,6 @@ section.card.collapsed > .card-header { border-radius: var(--radius-lg); margin-
 .sig-btn[data-sig="T_Claude_Sharp"] .dot { background: var(--t-claude-sharp); }
 .sig-btn[data-sig="T_Claude_Wide"].on { border-color: var(--t-claude-wide); }
 .sig-btn[data-sig="T_Claude_Wide"] .dot { background: var(--t-claude-wide); }
-/* v1.68: 한국 T 신호 */
-.sig-btn[data-sig="T"].on { border-color: #0288d1; }
-.sig-btn[data-sig="T"] .dot { background: #0288d1; }
 
 .filter-controls {
   display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
@@ -1022,12 +1036,13 @@ table.archive .mfi-high { color: var(--danger); font-weight: 600; }
 .sig-badge.V_Main         { color: var(--v-main);         border-color: var(--v-main);         background: rgba(250,82,82,0.1); }
 .sig-badge.V_Panic        { color: #ff8a80;               border-color: var(--v-panic);        background: rgba(183,28,28,0.15); }
 .sig-badge.V_Vol          { color: #ffb74d;               border-color: var(--v-vol);          background: rgba(230,81,0,0.12); }
+/* v1.68/v2.30: T 신호 배지 (US V2/KR 통합) */
+.sig-badge.T              { color: #64b5f6;               border-color: #0288d1;               background: rgba(2,136,209,0.12); }
+/* v2.35: V1 모드 — T 4개 분리 배지 */
 .sig-badge.T_KJP_Sharp    { color: #4dd0e1;               border-color: var(--t-kjp-sharp);    background: rgba(0,131,143,0.12); }
 .sig-badge.T_KJP_Wide     { color: #64b5f6;               border-color: var(--t-kjp-wide);     background: rgba(2,136,209,0.12); }
 .sig-badge.T_Claude_Sharp { color: #f48fb1;               border-color: var(--t-claude-sharp); background: rgba(173,20,87,0.15); }
 .sig-badge.T_Claude_Wide  { color: #ce93d8;               border-color: var(--t-claude-wide);  background: rgba(171,71,188,0.12); }
-/* v1.68: 한국 T 신호 배지 */
-.sig-badge.T              { color: #64b5f6;               border-color: #0288d1;               background: rgba(2,136,209,0.12); }
 
 /* ============ SPREADSHEET (Portfolio / Trade history) ============ */
 .tabs-row { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
@@ -1385,6 +1400,107 @@ table.sheet tbody tr.drop-below td:last-child {
 .rs-misc .report-icon { color: #868e96; }
 .rs-misc .report-item { border-left-color: #868e96; color: var(--text-mute); }
 
+/* ============ v2.18: 신설 3개 영역 ============ */
+
+/* 🎯 추천 ACTION — 최상단 강조 박스, 액션별 색상 분기 */
+.rs-action {
+  border-left: 4px solid #5c7cfa;
+  background: linear-gradient(135deg, rgba(92,124,250,0.12), rgba(92,124,250,0.02) 60%);
+}
+.rs-action .report-icon { color: #5c7cfa; font-size: 22px; }
+.rs-action .report-section-title { font-size: 16px; }
+.report-action {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 4px 0;
+}
+.report-action-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 18px; font-weight: 800; letter-spacing: -0.3px;
+  font-family: 'Pretendard Variable', Pretendard, sans-serif;
+  box-shadow: var(--shadow-2);
+}
+.report-action-reason {
+  font-size: 14px; line-height: 1.65; color: var(--text);
+  padding: 2px 4px;
+}
+/* 액션별 배지 색상 */
+.report-action-strong-buy .report-action-badge {
+  background: linear-gradient(135deg, #2f9e44, #51cf66);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(47,158,68,0.45);
+}
+.report-action-buy .report-action-badge {
+  background: linear-gradient(135deg, #51cf66, #94d82d);
+  color: #1a1a1a;
+}
+.report-action-hold .report-action-badge {
+  background: linear-gradient(135deg, #fab005, #fcc419);
+  color: #1a1a1a;
+}
+.report-action-avoid .report-action-badge {
+  background: linear-gradient(135deg, #e03131, #fa5252);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(224,49,49,0.45);
+}
+.report-action-neutral .report-action-badge {
+  background: linear-gradient(135deg, #868e96, #adb5bd);
+  color: #ffffff;
+}
+
+/* ↓ 악재 진단 — 호재의 짝, 다홍색 */
+.rs-negative { border-left: 3px solid #fd7e14; background: linear-gradient(90deg, rgba(253,126,20,0.08), transparent 30%); }
+.rs-negative .report-icon { color: #fd7e14; font-size: 20px; font-weight: 800; }
+.rs-negative .report-item { border-left-color: #fd7e14; }
+
+/* 🤔 시장의 걱정과 진실 — 짝 카드 형식 */
+.rs-worry { border-left: 3px solid #15aabf; background: linear-gradient(90deg, rgba(21,170,191,0.08), transparent 30%); }
+.rs-worry .report-icon { color: #15aabf; }
+.report-pair {
+  display: flex; flex-direction: column; gap: 0;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  margin-bottom: 4px;
+}
+.report-pair-worry, .report-pair-truth {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 14px;
+  font-size: 13px; line-height: 1.6;
+}
+.report-pair-worry {
+  background: rgba(250,82,82,0.06);
+  border-bottom: 1px solid var(--line);
+}
+.report-pair-truth {
+  background: rgba(81,207,102,0.06);
+}
+.report-pair-label {
+  flex-shrink: 0; padding: 2px 10px;
+  font-size: 11px; font-weight: 700; border-radius: 4px;
+  white-space: nowrap;
+  min-width: 56px; text-align: center;
+}
+.report-pair-worry .report-pair-label {
+  background: rgba(250,82,82,0.2); color: #fa5252;
+}
+.report-pair-truth .report-pair-label {
+  background: rgba(81,207,102,0.2); color: #51cf66;
+}
+.report-pair-text { flex: 1; color: var(--text); }
+
+@media (max-width: 640px) {
+  .rs-action .report-action-badge { font-size: 16px; padding: 8px 18px; }
+  .rs-action .report-action-reason { font-size: 13px; }
+  .report-pair-worry, .report-pair-truth {
+    flex-direction: column; gap: 6px; padding: 10px 12px;
+  }
+  .report-pair-label { min-width: 0; align-self: flex-start; }
+}
+
 /* v2.01 Phase 2: 분석 카드 ticker 그리드 */
 #analysisGridArea { padding: 4px 0; }
 .analysis-empty {
@@ -1416,10 +1532,10 @@ table.sheet tbody tr.drop-below td:last-child {
 .analysis-card-logo {
   width: 36px; height: 36px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  background: var(--bg-3); border-radius: 6px;
+  background: var(--bg-3); border-radius: 50%;  /* v2.17: 원형 통일 */
   overflow: hidden;
 }
-.analysis-card-logo img { width: 100%; height: 100%; object-fit: contain; }
+.analysis-card-logo img { width: 100%; height: 100%; object-fit: cover; }  /* contain → cover (원형 안 채움) */
 .analysis-card-logo-fallback {
   font-size: 12px; font-weight: 700; color: var(--text-mute);
   font-family: Consolas, monospace;
@@ -2252,29 +2368,29 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 @keyframes hero-refresh-spin { to { transform: rotate(360deg); } }
 
 /* ============ TICKER LOGOS (v1.28) ============ */
-/* 모든 곳의 티커명 왼쪽에 사용. 모서리 라운딩 4px (직각 정사각형 아님) */
+/* v2.17: 모든 곳의 티커 로고 — 원형으로 통일 (이전 라운딩된 사각형) */
 .ticker-logo {
   display: inline-block;
   width: 18px; height: 18px;
-  border-radius: 4px;
+  border-radius: 50%;
   vertical-align: -5px;
   margin-right: 9px;
   object-fit: cover;
   background: var(--bg-3);
   flex-shrink: 0;
 }
-/* v1.34: 모달 타이틀 — 더 크고 자연스러운 정렬 (flex로 alignment) */
+/* v1.34/v2.17: 모달 타이틀 — 더 크고 자연스러운 정렬 (flex), 원형 */
 .modal-title .ticker-logo {
   width: 40px; height: 40px;
-  border-radius: 8px;
+  border-radius: 50%;
   vertical-align: middle;
   margin-right: 0;
   flex-shrink: 0;
 }
-/* 모바일에서는 약간 작게 */
+/* 모바일에서는 약간 작게 (radius 그대로 50%) */
 @media (max-width: 640px) {
   .ticker-logo { width: 16px; height: 16px; vertical-align: -4px; margin-right: 8px; }
-  .modal-title .ticker-logo { width: 32px; height: 32px; border-radius: 6px; }
+  .modal-title .ticker-logo { width: 32px; height: 32px; }
 }
 
 /* ============ LOADING OVERLAY ============ */
@@ -2434,10 +2550,9 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 .dash-mini {
   min-height: 112px;
   display: flex; flex-direction: column;
-  /* v2.12: 미세 그라데이션 + radius + hover transform */
-  background: linear-gradient(180deg,
-    color-mix(in srgb, var(--panel) 96%, var(--accent) 4%) 0%,
-    var(--panel) 100%);
+  /* v2.36: 다른 dash-card와 배경 일관성 — 그라데이션 제거, 단색 + border */
+  background: var(--bg);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: 14px 16px;
   transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
@@ -2574,7 +2689,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 }
 .dash-hold-logo {
   width: 32px; height: 32px;
-  border-radius: 6px;
+  border-radius: 50%;  /* v2.17: 원형 통일 */
   object-fit: cover;
   background: var(--bg);
   flex-shrink: 0;
@@ -2804,7 +2919,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   .dash-asof { display: none; }
   .dash-holdings-card, .dash-matrix-card { min-height: 380px; max-height: 380px; }
   .dash-hold-row { padding: 8px 9px; }
-  .dash-hold-logo { width: 28px; height: 28px; border-radius: 5px; }
+  .dash-hold-logo { width: 28px; height: 28px; border-radius: 50%; }
   .dash-hold-ticker { font-size: 12px; }
   .dash-hold-eval { font-size: 12px; }
   .dash-hold-meta { font-size: 9px; }
@@ -3033,8 +3148,10 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 /* ============ MACRO GRID ============ */
 .macro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
 .macro-cell {
-  /* v2.12: 평면 → 미세 그라데이션 + 큰 radius + 통일된 transition */
-  background: linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 90%, var(--bg-3) 10%) 100%);
+  /* v2.12/v2.19: 평면 → 옅은 panel 톤 그라데이션 (페이지 배경과 명확히 구분) */
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--panel) 92%, var(--bg-3) 8%) 0%,
+    color-mix(in srgb, var(--panel) 80%, var(--bg-3) 20%) 100%);
   padding: 14px 16px; border-radius: var(--radius-md);
   border-left: 3px solid var(--line-2);
   transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
@@ -3434,16 +3551,41 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 
 /* ============ MOBILE (≤640px) — 폰만 대상. 태블릿 (iPad Mini 744px+ 포함) 은 PC 레이아웃 ============ */
 @media (max-width: 640px) {
-  .container { padding: 14px 10px 40px; }
-  /* v1.32 / v2.11: 모바일에서도 hero는 한 줄로 — 좌측 brand + 우측 meta + 그라데이션 박스 */
+  .container { padding: 16px 20px 40px; }
+  /* v1.32 / v2.11 / v2.17 / v2.19 / v2.20: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단 정렬
+     끝선 정렬 X (사용자 요청: PC랑 똑같은 폰트로 적되 줄바꿈만 유지) */
+  /* v1.32 / v2.11 / v2.17 / v2.19 / v2.25: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단
+     여백: padding-top 12px로 위쪽 답답함 해소 */
   .hero {
-    padding: 14px 16px;
+    padding: 18px 0 8px 0;
     margin-bottom: 18px;
-    flex-wrap: nowrap; align-items: center; gap: 8px;
-    border-radius: var(--radius-md);
+    display: flex; flex-direction: row; align-items: flex-start; gap: 12px;
+    flex-wrap: nowrap;
+    background: transparent;
+    border: none;
+    border-radius: 0;
   }
-  .hero-brand { flex: 1; min-width: 0; }
-  .hero h1 { font-size: 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.5px; }
+  .hero-brand { flex: 1 1 auto; min-width: 0; }
+  .hero h1 {
+    line-height: 1.05;
+    font-family: 'Pretendard Variable', Pretendard, Arial, sans-serif;
+    font-weight: 700;
+    /* PC와 같은 폰트 사이즈, 다만 두 span을 block으로 → 줄바꿈 */
+  }
+  .hero h1 .brand-aquamel,
+  .hero h1 .brand-investment {
+    display: block;
+    /* PC와 동일한 폰트 (font-size/weight/letter-spacing 모두 .hero h1 기본 inherit) */
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  /* meta: AQUAMEL 첫 줄 옆 우상단 정렬 (절대 안 떨어지도록 flex-shrink: 0) */
+  .meta {
+    flex: 0 0 auto;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
   .hero-tagline {
     font-size: 9px; letter-spacing: 0.15px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -3453,12 +3595,12 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .hero .meta .v { font-size: 11px; padding-left: 2px; }
   .hero-refresh { width: 26px; height: 26px; font-size: 14px; }
   .hero p { font-size: 11px; }
-  section.card { padding: 18px; margin-bottom: 14px; max-width: 100%; min-width: 0; overflow: hidden; border-radius: var(--radius-md); }
-  section.card .card-header { margin: -18px -18px 0 -18px; padding: 16px 18px; border-radius: var(--radius-md) var(--radius-md) 0 0; }
-  section.card.collapsed > .card-header { border-radius: var(--radius-md); }
+  /* v2.08/v2.18: 모바일 카드 — 프레임 제거 일관성. padding 0, margin만 유지 */
+  section.card { padding: 0; margin-bottom: 24px; max-width: 100%; min-width: 0; overflow: visible; }
+  section.card .card-header { margin: 0 0 4px 0; padding: 0; }
   /* v2.08: 모바일 헤더 18px (PC 22px의 비율 유지) */
   section.card h2 { font-size: var(--text-xl); }
-  section.card .card-body { max-width: 100%; min-width: 0; margin-top: 14px; }
+  section.card .card-body { max-width: 100%; min-width: 0; margin-top: 12px; }
 
   /* Buttons stack better */
   .btn-row { gap: 8px; }
@@ -3952,13 +4094,13 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .ticker-history-wrap table.archive tbody td[data-col="Pred_5d"]::before {
     content: "예측 5d: "; opacity: 0.7; font-size: 10px;
   }
-  /* Row 4: 평가지표 6개 동일 간격 [1d+][5d+][C1][C2][C3][C4] */
+  /* Row 4: 평가지표 6개 동일 간격 [1d+][5d+][SR][C1][C2][C3] — v2.16: C4 → SR (5d+ 다음) */
   .ticker-history-wrap table.archive tbody td[data-col="_ret1pos"] { grid-column: 1; grid-row: 4; }
   .ticker-history-wrap table.archive tbody td[data-col="_ret5pos"] { grid-column: 2; grid-row: 4; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c1"] { grid-column: 3; grid-row: 4; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c2"] { grid-column: 4; grid-row: 4; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c3"] { grid-column: 5; grid-row: 4; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c4"] { grid-column: 6; grid-row: 4; }
+  .ticker-history-wrap table.archive tbody td[data-col="_sniping"] { grid-column: 3; grid-row: 4; }
+  .ticker-history-wrap table.archive tbody td[data-col="_c1"] { grid-column: 4; grid-row: 4; }
+  .ticker-history-wrap table.archive tbody td[data-col="_c2"] { grid-column: 5; grid-row: 4; }
+  .ticker-history-wrap table.archive tbody td[data-col="_c3"] { grid-column: 6; grid-row: 4; }
   .ticker-history-wrap table.archive tbody td[data-col^="_"] {
     text-align: center;
     font-size: 11px;
@@ -3978,10 +4120,10 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   }
   .ticker-history-wrap table.archive tbody td[data-col="_ret1pos"]::before { content: "1d+"; }
   .ticker-history-wrap table.archive tbody td[data-col="_ret5pos"]::before { content: "5d+"; }
+  .ticker-history-wrap table.archive tbody td[data-col="_sniping"]::before { content: "SR"; }
   .ticker-history-wrap table.archive tbody td[data-col="_c1"]::before { content: "C1"; }
   .ticker-history-wrap table.archive tbody td[data-col="_c2"]::before { content: "C2"; }
   .ticker-history-wrap table.archive tbody td[data-col="_c3"]::before { content: "C3"; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c4"]::before { content: "C4"; }
   /* N/A 셀은 흐릿하게 */
   .ticker-history-wrap table.archive tbody td[data-col^="_"].is-null { opacity: 0.45; }
   /* 다른 필드들 숨김 */
@@ -4026,6 +4168,251 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   }
   /* v1.24: 모바일 섹터 차트 캔버스 높이 (레퍼런스 일치) */
   .sec-modal-chart-canvas-wrap { height: 180px; }
+
+  /* ============ v2.25: 섹터 프레임워크 — 모바일 단순화 ============
+     v2.20에서 transform: scale(1.015) + flex column이 stacking context 만들어
+     다음 카드 영역 침범하던 버그 fix. 모든 자식 block + transform 완전 제거. */
+  .sf-diagram-scroll {
+    overflow: visible !important;
+    padding: 8px 4px;
+    background: transparent;
+    border: none;
+  }
+  .sf-diagram { min-width: 0 !important; }
+
+  .sf-dir-row { display: none; }
+
+  /* sf-core, sf-external — 모두 block stack (flex/grid 사용 X) */
+  .sf-core,
+  .sf-external {
+    display: block !important;
+    grid-template: none !important;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+    gap: 0 !important;
+    margin-bottom: 14px;
+  }
+  .sf-core::before {
+    content: "⬇  AI 가치사슬  ⬇";
+    display: block; text-align: center;
+    font-size: 11px; font-weight: 700; color: var(--text-mute);
+    letter-spacing: 1.5px;
+    margin-bottom: 10px; padding: 6px 0;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+  }
+
+  /* 화살표 — block, transform 사용 X (원래 → 회전 대신 새 ↓ 표시) */
+  .sf-arrow {
+    display: block !important;
+    text-align: center;
+    margin: 4px auto !important;
+    padding: 0;
+    font-size: 0 !important;  /* 원본 → 텍스트 숨김 */
+    line-height: 1;
+    color: color-mix(in srgb, var(--text-mute) 70%, transparent);
+    transform: none !important;
+  }
+  .sf-arrow::before {
+    content: "↓";
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  /* layer 카드 — width 100%, transform 절대 X */
+  .sf-layer {
+    width: 100% !important;
+    min-width: 0;
+    border-radius: 10px;
+    margin: 0 0 6px 0 !important;
+    transform: none !important;
+    position: static !important;
+  }
+  .sf-layer-title {
+    font-size: 13px; padding: 8px 10px;
+    text-align: left;
+    border-radius: 9px 9px 0 0;
+  }
+
+  /* L4 데이터센터 — transform 없이 border/background로만 강조 */
+  .sf-layer.sf-center {
+    border-width: 2.5px !important;
+    background: rgba(150,120,201, 0.10) !important;
+    box-shadow: 0 2px 10px rgba(150,120,201,0.20) !important;
+    margin: 8px 0 !important;
+    transform: none !important;
+  }
+  .sf-layer.sf-center .sf-layer-title {
+    font-size: 14px; font-weight: 800; padding: 10px 12px;
+    letter-spacing: 0.3px;
+  }
+  .sf-layer.sf-center .sf-layer-title::before { content: "⭐ "; }
+  .sf-layer.sf-center .sf-layer-title::after {
+    content: " · 중심축";
+    font-size: 10px; font-weight: 500; opacity: 0.85;
+  }
+
+  /* sector cells — flex chip */
+  .sf-layer-grid {
+    display: flex !important; flex-wrap: wrap !important;
+    grid-template: none !important;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+    gap: 6px !important;
+    padding: 8px !important;
+  }
+  .sf-sub {
+    grid-column: auto !important; grid-row: auto !important;
+    flex: 0 0 auto;
+    min-height: 0 !important; min-width: 0 !important;
+    flex-direction: row !important;
+    gap: 5px;
+    padding: 6px 10px !important;
+    border-radius: 14px !important;
+    background: rgba(var(--c-rgb), 0.12) !important;
+    border: 1px solid rgba(var(--c-rgb), 0.35);
+    transform: none !important;
+  }
+  .sf-sub-emoji { font-size: 13px !important; margin: 0 !important; }
+  .sf-sub-name {
+    font-size: 11px !important; font-weight: 600;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+
+  /* 외부 5계층 헤더 */
+  .sf-external-header {
+    font-size: 11px; font-weight: 700; color: var(--text-mute);
+    text-align: center;
+    margin: 14px 0 8px 0; padding: 6px 0;
+    border-top: 1px dashed var(--line);
+    letter-spacing: 0.3px;
+  }
+
+  /* layer footer (등락률/비중) — 더 크게 */
+  .sf-layer-footer {
+    font-size: 11px !important; padding: 6px 10px !important;
+    gap: 6px;
+  }
+  .sf-layer.sf-center .sf-layer-footer {
+    font-size: 12px !important; font-weight: 700; padding: 8px 12px !important;
+  }
+}
+/* end v2.25 sector framework mobile */
+
+/* ============ v2.27: 섹터 프레임 카드 — 자식이 다음 카드 침범 방지 ============
+   v2.26 overflow:hidden은 자식을 잘랐던 실수. 이번엔 카드 height을 자식 합산만큼 확실히 늘림 */
+#sectorFrameworkCard {
+  display: flow-root;          /* 새 BFC — margin collapse 방지, 자식 layout 자기 안에서 결정 */
+  overflow: visible;           /* 자식 visual 안 자름 */
+  contain: none;
+  height: auto !important;
+  min-height: auto;
+  max-height: none !important;
+}
+#sectorFrameworkCard .card-body,
+#sectorFrameworkCard .sf-wrap,
+#sectorFrameworkCard .sf-diagram-scroll,
+#sectorFrameworkCard .sf-diagram {
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  contain: none !important;
+}
+
+@media (max-width: 640px) {
+  /* 모바일에서 SF 카드는 명시적으로 자식 합산 + 충분한 bottom padding으로 다음 카드와 격리 */
+  #sectorFrameworkCard {
+    padding: 0 0 24px 0 !important;
+    margin-bottom: 32px !important;
+  }
+  /* 모바일 — 모든 SF 자식 중앙 정렬 (사용자 요청) */
+  #sectorFrameworkCard .sf-core,
+  #sectorFrameworkCard .sf-external {
+    text-align: center;
+  }
+  #sectorFrameworkCard .sf-core::before {
+    text-align: center;
+  }
+  #sectorFrameworkCard .sf-layer {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: left;  /* layer 안 텍스트는 좌측 정렬 유지 (제목 등) */
+  }
+  #sectorFrameworkCard .sf-layer-title {
+    text-align: center !important;
+  }
+  #sectorFrameworkCard .sf-layer-grid {
+    justify-content: center !important;
+  }
+  #sectorFrameworkCard .sf-layer-footer {
+    justify-content: center !important;
+  }
+  #sectorFrameworkCard .sf-external-header {
+    text-align: center !important;
+  }
+}
+
+/* ============ v2.31: V-Shape 알고리즘 버전 토글 (V1/V2) ============ */
+.vshape-ver-toggle {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg);
+  vertical-align: middle;
+}
+.vshape-ver-toggle button {
+  background: transparent;
+  border: none;
+  color: var(--text-mute);
+  padding: 4px 10px;
+  font-family: 'Pretendard Variable', Pretendard, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+  border-right: 1px solid var(--line);
+}
+.vshape-ver-toggle button:last-child { border-right: none; }
+.vshape-ver-toggle button:hover { background: var(--bg-3); color: var(--text); }
+.vshape-ver-toggle button.active {
+  background: var(--accent);
+  color: #fff;
+}
+@media (max-width: 640px) {
+  .vshape-ver-toggle button { padding: 3px 8px; font-size: 10px; }
+}
+/* end v2.31 vshape toggle */
+
+/* ============ v2.25/v2.27/v2.28/v2.36: 매크로 모달 상관관계 종목 라벨 ============
+   v2.28: wrap/header/background 완전 제거. sec-modal-table을 그대로 사용.
+   v2.36: 양/음 영역 사이 명확한 정보 위계 — 라벨 위 큰 마진 + 첫 라벨 위 상단 구분선 */
+#macroCorrWrap {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+.macro-corr-label {
+  font-size: 15px; font-weight: 800;
+  margin: 28px 0 12px 0;
+  padding: 0;
+  letter-spacing: 0.2px;
+  line-height: 1.3;
+}
+#macroCorrWrap .macro-corr-label:first-child {
+  margin-top: 0;  /* 첫 라벨은 wrap padding-top이 이미 여백 제공 */
+}
+.macro-corr-label.pos { color: var(--kr-up); }
+.macro-corr-label.neg { color: var(--kr-down); }
+#macroCorrWrap .sec-modal-table-wrap {
+  margin-bottom: 4px;
+}
+@media (max-width: 640px) {
+  #macroCorrWrap { margin-top: 20px; padding-top: 16px; }
+  .macro-corr-label { font-size: 13px; margin: 20px 0 8px 0; }
 }
 
 /* ============================================================== */
@@ -4175,7 +4562,7 @@ table.combo-eval tbody td .nodata {
 /* v1.19 — 추가 작은 화면 (≤480px) — 최소 단말 미세조정              */
 /* ============================================================== */
 @media (max-width: 480px) {
-  .container { padding: 10px 8px 32px; }
+  .container { padding: 14px 18px 32px; }
   .hero h1 { font-size: 20px; }
   .hero-tagline { font-size: 8px; }
   .hero .meta { gap: 6px; }
@@ -4254,7 +4641,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.15</div>
+      <div class="splash-version" id="splashVersion">v2.36</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4268,7 +4655,7 @@ table.combo-eval tbody td .nodata {
   <!-- ============ HEADER (AQUAMEL) ============ -->
   <header class="hero">
     <div class="hero-brand">
-      <h1><span class="hl">AQUA</span>MEL INVESTMENT</h1>
+      <h1><span class="brand-aquamel"><span class="hl">AQUA</span>MEL</span> <span class="brand-investment">INVESTMENT</span></h1>
       <div class="hero-tagline">The blueprint for the next 10-year structural paradigm</div>
     </div>
     <div class="meta">
@@ -4499,7 +4886,7 @@ table.combo-eval tbody td .nodata {
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
   <section class="card" id="analysisCard" data-mtab="analysis" style="display:none;">
     <div class="card-header">
-      <h2>📊 분석 보고서</h2>
+      <h2>분석 보고서</h2>
     </div>
     <div class="card-body">
       <p class="subtitle">정량 보고서가 등록된 종목입니다. 클릭하면 보고서 일자 목록이 열립니다.</p>
@@ -4762,6 +5149,14 @@ table.combo-eval tbody td .nodata {
       <div class="modal-filter-block">
         <div class="modal-filter-label">🎯 Signal Type 필터 (메인 표와 동일하게 동기화):</div>
         <div class="signal-filter-area" id="modalSignalFilterArea"></div>
+        <!-- v2.31/v2.32: V-Shape 알고리즘 버전 토글 (US만, syncVshapeToggleUI가 표시 관리) -->
+        <div class="modal-vshape-ver" id="modalVshapeVerWrap" style="margin-top:10px;">
+          <span class="modal-filter-label" style="display:inline-block;margin-right:8px;">V-Shape 버전:</span>
+          <div class="vshape-ver-toggle" role="group">
+            <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
+            <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+          </div>
+        </div>
       </div>
       <div class="ticker-history-wrap" id="tickerHistoryWrap" style="display:none;">
         <h4 class="ticker-history-title">📜 이 종목의 시그널 이력</h4>
@@ -4852,30 +5247,23 @@ const SECTORS_40 = [
   '🧪 화학소재','🌐 소셜 인프라','⚖️ 디펜시브 유틸'
 ];
 
-const SIGNAL_TYPES = ['V_Main','V_Panic','V_Vol','T_KJP_Sharp','T_KJP_Wide','T_Claude_Sharp','T_Claude_Wide'];
+// v2.30: T_* 4개를 'T' 하나로 통일 (KR과 동일 — 백엔드 V_Shape_Archive_EMA에서 'T'로 들어옴)
+const SIGNAL_TYPES = ['V_Main','V_Panic','V_Vol','T'];
 const SIGNAL_COLORS = {
-  'V_Main':         '#fa5252',
-  'V_Panic':        '#b71c1c',
-  'V_Vol':          '#e65100',
-  'T_KJP_Sharp':    '#00838f',
-  'T_KJP_Wide':     '#0288d1',
-  'T_Claude_Sharp': '#ad1457',
-  'T_Claude_Wide':  '#ab47bc',
+  'V_Main':  '#fa5252',
+  'V_Panic': '#b71c1c',
+  'V_Vol':   '#e65100',
+  'T':       '#0288d1',  // 청색 (구 T_KJP_Wide 색감 계승)
 };
 // matplotlib marker → Chart.js pointStyle
 const SIGNAL_SHAPE = {
-  'V_Main':         'circle',
-  'V_Panic':        'triangle',   // ▼ (Chart.js triangle, rotated by us to look like ▼)
-  'V_Vol':          'rect',
-  'T_KJP_Sharp':    'rectRot',    // ◆ diamond
-  'T_KJP_Wide':     'rectRot',
-  'T_Claude_Sharp': 'star',
-  'T_Claude_Wide':  'crossRot',
+  'V_Main':  'circle',
+  'V_Panic': 'triangle',   // ▼ (Chart.js triangle, rotated by us to look like ▼)
+  'V_Vol':   'rect',
+  'T':       'rectRot',    // ◆ diamond
 };
 
-// 그룹화: V/Tree 알고리즘 × Core/Sub 분류
-// Core: V_Main, V_Vol, T_KJP_Sharp, T_Claude_Sharp
-// Sub : V_Panic, T_KJP_Wide, T_Claude_Wide
+// 그룹화: V 알고리즘 / Tree 알고리즘
 const SIGNAL_GROUPS = [
   {
     key: 'V', label: 'V 알고리즘',
@@ -4884,9 +5272,39 @@ const SIGNAL_GROUPS = [
   },
   {
     key: 'T', label: 'Tree 알고리즘',
-    core: ['T_KJP_Sharp', 'T_Claude_Sharp'],
-    sub:  ['T_KJP_Wide',  'T_Claude_Wide'],
+    core: ['T'],
+    sub:  [],
   },
+];
+
+// ============================================================================
+// v2.35: V1 시그널 체계 (옛 V_Shape_Archive 시트 호환)
+//   US 시장 + vshapeVersion='V1' 일 때 사용. T_*가 4개로 세분화 (KJP/Claude × Sharp/Wide)
+// ============================================================================
+const SIGNAL_TYPES_V1 = ['V_Main','V_Panic','V_Vol','T_KJP_Sharp','T_KJP_Wide','T_Claude_Sharp','T_Claude_Wide'];
+const SIGNAL_COLORS_V1 = {
+  'V_Main':         '#fa5252',
+  'V_Panic':        '#b71c1c',
+  'V_Vol':          '#e65100',
+  'T_KJP_Sharp':    '#00838f',
+  'T_KJP_Wide':     '#0288d1',
+  'T_Claude_Sharp': '#ad1457',
+  'T_Claude_Wide':  '#ab47bc',
+};
+const SIGNAL_SHAPE_V1 = {
+  'V_Main':         'circle',
+  'V_Panic':        'triangle',
+  'V_Vol':          'rect',
+  'T_KJP_Sharp':    'rectRot',
+  'T_KJP_Wide':     'rectRot',
+  'T_Claude_Sharp': 'star',
+  'T_Claude_Wide':  'crossRot',
+};
+const SIGNAL_GROUPS_V1 = [
+  { key: 'V', label: 'V 알고리즘',
+    core: ['V_Main', 'V_Vol'],     sub: ['V_Panic'] },
+  { key: 'T', label: 'Tree 알고리즘',
+    core: ['T_KJP_Sharp', 'T_Claude_Sharp'], sub: ['T_KJP_Wide', 'T_Claude_Wide'] },
 ];
 
 // ============================================================================
@@ -4921,10 +5339,29 @@ const KR_SIGNAL_GROUPS = [
 ];
 
 // 시장에 따라 적절한 신호 정의 반환
-function getSignalTypes()  { return getCurrentMarket() === 'KR' ? KR_SIGNAL_TYPES  : SIGNAL_TYPES; }
-function getSignalColors() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_COLORS : SIGNAL_COLORS; }
-function getSignalShapes() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_SHAPE  : SIGNAL_SHAPE; }
-function getSignalGroups() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_GROUPS : SIGNAL_GROUPS; }
+// v2.35: 시장 + V-Shape 버전(US 한정)에 따라 시그널 체계 선택
+//   KR → KR_SIGNAL_* (T 한 가지)
+//   US + V1 → SIGNAL_*_V1 (T_KJP_Sharp/Wide, T_Claude_Sharp/Wide 4개)
+//   US + V2 → SIGNAL_* (T 한 가지, V_Shape_Archive_EMA 호환)
+function _isV1Mode() {
+  return getCurrentMarket() === 'US' && _state && _state.vshapeVersion === 'V1';
+}
+function getSignalTypes()  {
+  if (getCurrentMarket() === 'KR') return KR_SIGNAL_TYPES;
+  return _isV1Mode() ? SIGNAL_TYPES_V1 : SIGNAL_TYPES;
+}
+function getSignalColors() {
+  if (getCurrentMarket() === 'KR') return KR_SIGNAL_COLORS;
+  return _isV1Mode() ? SIGNAL_COLORS_V1 : SIGNAL_COLORS;
+}
+function getSignalShapes() {
+  if (getCurrentMarket() === 'KR') return KR_SIGNAL_SHAPE;
+  return _isV1Mode() ? SIGNAL_SHAPE_V1 : SIGNAL_SHAPE;
+}
+function getSignalGroups() {
+  if (getCurrentMarket() === 'KR') return KR_SIGNAL_GROUPS;
+  return _isV1Mode() ? SIGNAL_GROUPS_V1 : SIGNAL_GROUPS;
+}
 
 // ============================================================================
 // BACKEND (박제 — 절대 바뀌지 않는 값)
@@ -4933,9 +5370,9 @@ function getSignalGroups() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_GROU
 const BACKEND = {
   // Apps Script Web App URL (배포 후 받은 .../exec URL)
   URL: 'https://script.google.com/macros/s/AKfycbzBCVv5txxprNM-1WxB1YZrawu4sjGernf5Y5AD10xYwqF-8XxsS7L6jLTthP8FT6wO/exec',
-  // V_Shape_Archive 탭이 들어있는 구글 시트
+  // V_Shape_Archive_EMA 탭이 들어있는 구글 시트 (v2.30: EMA 기반 알고리즘으로 교체)
   ARCHIVE_SHEET_ID: '1KsyEM7DEODYFVgki7NEb_9gmYmF8a6dtL8B55J5i1XI',
-  ARCHIVE_TAB: 'V_Shape_Archive',
+  ARCHIVE_TAB: 'V_Shape_Archive_EMA',
   // 40개 섹터 + 매크로 시트가 들어있는 구글 드라이브 폴더
   SECTOR_FOLDER_ID: '1fBHnX5gJ8MvL14Q29AVBP5RwmFChJ6cB',
   // v1.99: 종목별 정량 보고서 TXT 파일 폴더 (파일명: TICKER_YYYYMMDD.txt)
@@ -6601,7 +7038,8 @@ let _state = {
 
   // v1.69: 시장별 데이터 저장소 — autoLoadData가 양쪽 동시에 채움
   //   setMarket 시 applyMarketState가 active 변수로 swap
-  archives:          { US: [], KR: [] },           // → _state.archive
+  archives:          { US: [], KR: [] },           // → _state.archive (V2 / EMA 기본)
+  archivesV1:        { US: [] },                    // v2.31: V1 (옛 V_Shape_Archive) — US만, Code.gs가 보낼 때만 채워짐
   // v1.80: 한국도 섹터별 별도 시트 구조로 바뀜 → 시장별 sector OHLCV 저장
   sectorsByMarket:   { US: {}, KR: {} },           // → _state.sectors
   // v1.81: 매크로도 시장별 분리 (US: S&P/NASDAQ/KJP400, KR: KOSPI/KOSDAQ)
@@ -6634,6 +7072,8 @@ let _state = {
   openMacro: null,    // v2.10: 매크로 모달 열린 상태 식별
   openSector: null,   // v2.10: 섹터 모달 열린 상태 식별 {key, name}
   detailMode: false,  // 모바일 디폴트 = simple mode (false). 토글로 true 전환
+  // v2.31: V-Shape 알고리즘 버전 토글 (US만 적용. V1=V_Shape_Archive 옛, V2=V_Shape_Archive_EMA 새 기본)
+  vshapeVersion: lsGet('aquamel_vshape_version', 'V2'),
   tickerSectorMap: {},
   kjpSectorMap:    {},
   tickerDescMap:   {},
@@ -6643,7 +7083,12 @@ let _state = {
 // v1.69: active 시장 데이터로 _state swap — setMarket이 호출
 function applyMarketState(mkt) {
   if (mkt !== 'US' && mkt !== 'KR') mkt = 'US';
-  _state.archive          = _state.archives[mkt] || [];
+  // v2.31: US일 때만 vshapeVersion 적용. V1 선택 + V1 데이터 있으면 V1, 그 외엔 기본(V2)
+  if (mkt === 'US' && _state.vshapeVersion === 'V1' && _state.archivesV1.US && _state.archivesV1.US.length > 0) {
+    _state.archive = _state.archivesV1.US;
+  } else {
+    _state.archive          = _state.archives[mkt] || [];
+  }
   _state.sectors          = _state.sectorsByMarket[mkt] || {};   // v1.80
   _state.macro            = _state.macroByMarket[mkt] || [];     // v1.81
   _state.tickerSectorMap  = _state.tickerSectorMaps[mkt] || {};
@@ -6661,6 +7106,101 @@ function applyMarketState(mkt) {
   // v2.03 Phase 2: 분석 패널이 열려있으면 현재 시장 기준으로 그리드 재빌드
   try { if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
+
+// ============================================================================
+// v2.31: V-Shape 알고리즘 버전 토글 (US만)
+//   V1 = V_Shape_Archive (옛), V2 = V_Shape_Archive_EMA (새 기본)
+//   클라이언트 토글로 즉시 swap — Code.gs가 archive_v1을 보낼 때만 토글 표시
+// ============================================================================
+function hasVshapeV1Data() {
+  return !!(_state.archivesV1 && _state.archivesV1.US && _state.archivesV1.US.length > 0);
+}
+
+function setVshapeVersion(ver) {
+  if (ver !== 'V1' && ver !== 'V2') ver = 'V2';
+  if (ver === 'V1' && !hasVshapeV1Data()) {
+    // v2.33: alert 안 띄움 — lazy fetch로 즉시 가져옴 (Code.gs 배포/cron 대기 불필요)
+    _lazyFetchVshapeV1().then(ok => {
+      if (ok) {
+        // 데이터 도착 → 다시 V1 swap 시도
+        setVshapeVersion('V1');
+      } else {
+        alert('V1 데이터를 가져올 수 없습니다. 백엔드/네트워크 확인 필요.');
+        syncVshapeToggleUI();
+      }
+    });
+    return;
+  }
+  _state.vshapeVersion = ver;
+  lsSet('aquamel_vshape_version', ver);
+  applyMarketState(getCurrentMarket());
+  // v2.35: V1↔V2 swap 시 시그널 타입이 다르므로 signalFilter 재초기화 (옛 타입 잔재 제거)
+  _state.signalFilter = new Set(getSignalTypes());
+  // v2.34: filteredArchive 재계산 + 모든 archive 의존 view 갱신 (단순 renderArchiveTable로는 filteredArchive 안 바뀜)
+  try { if (typeof computeSignalReturns === 'function') computeSignalReturns(); } catch (e) {}
+  try { if (typeof renderSignalFilter === 'function') renderSignalFilter(); } catch (e) {}
+  try { if (typeof applyFilterAndRender === 'function') applyFilterAndRender(); } catch (e) {}
+  try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
+  try { if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList(); } catch (e) {}
+  // 차트 모달이 열려있으면 같은 종목 다시 그리기 (시그널 마커 + 시그널 이력 V1/V2 변경 반영)
+  try {
+    if (_state.openTicker && document.getElementById('chartModal').classList.contains('active')) {
+      openChart(_state.openTicker);
+    }
+  } catch (e) {}
+  syncVshapeToggleUI();
+}
+
+// v2.33: V1 데이터가 data.json에 없을 때 Apps Script로 직접 fetch (lazy)
+let _vshapeV1FetchPromise = null;
+async function _lazyFetchVshapeV1() {
+  if (_vshapeV1FetchPromise) return _vshapeV1FetchPromise;
+  _vshapeV1FetchPromise = (async () => {
+    try {
+      const cfg = MARKET_CONFIG.US;
+      // V1 시트 = 'V_Shape_Archive' (옛). 클라이언트 ARCHIVE_TAB은 v2.30에서 EMA로 변경됨.
+      const res = await apiCall('getBuyList', { sheetId: cfg.archiveSheetId, tab: 'V_Shape_Archive' });
+      if (!res || !res.ok) {
+        console.warn('[_lazyFetchVshapeV1] failed:', res && res.error);
+        return false;
+      }
+      const rows = (res.rows || []).map(r => normalizeArchiveRow(r, 'US')).filter(r => r.Ticker && r.Date);
+      _state.archivesV1.US = rows;
+      console.log(`[_lazyFetchVshapeV1] ✓ V1 archive lazy fetch: ${rows.length}건`);
+      return rows.length > 0;
+    } catch (e) {
+      console.warn('[_lazyFetchVshapeV1] error:', e);
+      return false;
+    } finally {
+      // 다음 클릭에서 재시도 가능하도록 promise 해제 (실패한 경우만)
+      // 성공 시엔 _state.archivesV1.US 채워졌으니 hasVshapeV1Data가 true → 재호출 X
+    }
+  })();
+  return _vshapeV1FetchPromise;
+}
+
+function syncVshapeToggleUI() {
+  // v2.32: 토글 자체는 US일 때 항상 표시 (V1 데이터 유무와 무관). KR이면 숨김.
+  const isUS = getCurrentMarket() === 'US';
+  document.querySelectorAll('.vshape-ver-toggle').forEach(t => {
+    t.style.display = isUS ? '' : 'none';
+    t.querySelectorAll('button[data-ver]').forEach(b => {
+      b.classList.toggle('active', b.dataset.ver === _state.vshapeVersion);
+    });
+  });
+  // 모달 내 wrap도 US일 때 항상 표시
+  const modalWrap = document.getElementById('modalVshapeVerWrap');
+  if (modalWrap) modalWrap.style.display = isUS ? '' : 'none';
+}
+
+// 토글 컴포넌트 HTML 생성 — 어디든 같은 구조 사용
+function vshapeToggleHtml() {
+  return `<div class="vshape-ver-toggle" role="group" aria-label="V-Shape 버전">
+    <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
+    <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+  </div>`;
+}
+window.setVshapeVersion = setVshapeVersion;
 
 // v1.76: 마이 카드의 화폐 안내문/아이콘을 시장에 맞게 갱신
 function updateCcyBanner() {
@@ -6761,6 +7301,11 @@ function setMarket(mkt) {
 
   // 6) 모든 화면 재렌더링
   rerenderAll();
+
+  // v2.31/v2.32: 시장 전환 후 vshape 토글 표시 갱신 (KR이면 숨김)
+  try {
+    if (typeof syncVshapeToggleUI === 'function') syncVshapeToggleUI();
+  } catch (e) {}
 }
 window.setMarket = setMarket;
 
@@ -6827,7 +7372,12 @@ async function tryLoadFromBundle() {
     // ─── _state 채우기 — 기존 autoLoadData 로직 모방 ───
 
     // 1) Archive (정규화)
+    //    v2.31: US는 V_Shape_Archive_EMA(V2)가 기본 archive, V_Shape_Archive(V1)는 archive_v1
+    //    KR은 한 가지 (V_Shape_Archive_KOR)
     _state.archives.US = ((bundle.US && bundle.US.archive) || [])
+      .map(r => normalizeArchiveRow(r, 'US'))
+      .filter(r => r.Ticker && r.Date);
+    _state.archivesV1.US = ((bundle.US && bundle.US.archive_v1) || [])
       .map(r => normalizeArchiveRow(r, 'US'))
       .filter(r => r.Ticker && r.Date);
     _state.archives.KR = ((bundle.KR && bundle.KR.archive) || [])
@@ -6918,6 +7468,8 @@ async function tryLoadFromBundle() {
     const sizeKB = ((JSON.stringify(bundle).length) / 1024).toFixed(0);
     console.log(`[tryLoadFromBundle] ✓ fast path 성공 — ${dt}ms, bundle ${sizeKB}KB, 빌드 ${ts}`);
     console.log(`[tryLoadFromBundle] US: archive=${_state.archives.US.length}, sectors=${Object.keys(_state.sectorsByMarket.US).length}, KR: archive=${_state.archives.KR.length}, sectors=${Object.keys(_state.sectorsByMarket.KR).length}`);
+    // v2.31: 데이터 로드 완료 신호 — vshape 토글 UI 등 데이터-의존 UI 갱신
+    try { window.dispatchEvent(new CustomEvent('aquamel:data-loaded')); } catch (e) {}
 
     return true;
   } catch (e) {
@@ -7428,11 +7980,15 @@ async function fetchReportContent(ticker, date) {
 }
 
 // 보고서 TXT 본문 → 섹션별 구조화
-//   알려진 7개 섹션 헤더로 분리. 5WHYS는 줄별 (라벨) 본문 패턴 파싱.
+//   v2.18: 10개 섹션 (이전 7개 + 신설 3: 🎯 추천 ACTION / 악재 진단 / 시장의 걱정과 진실)
+//   5WHYS는 (라벨) 본문 패턴 파싱. 시장의 걱정과 진실은 "걱정:" / "진실:" 짝 파싱.
 const REPORT_SECTIONS = [
+  { key: 'action',       header: '🎯 추천 ACTION',                                                      icon: '🎯', cls: 'rs-action' },
   { key: 'summary',      header: '핵심 요약',                                                          icon: '★', cls: 'rs-summary' },
   { key: 'misunder',     header: '대중의 오해',                                                        icon: '⚠', cls: 'rs-misunder' },
+  { key: 'negative',     header: '악재 진단',                                                          icon: '↓', cls: 'rs-negative' },
   { key: 'positive',     header: '호재 진단',                                                          icon: '⊕', cls: 'rs-positive' },
+  { key: 'worry_truth',  header: '시장의 걱정과 진실',                                                  icon: '🤔', cls: 'rs-worry' },
   { key: 'why5_down',    header: '5WHYS: "왜 이 주식은 하락하고 있는가?"',                              icon: '⬇', cls: 'rs-why-down' },
   { key: 'why5_partner', header: '5WHYS: "나는 왜 이 기업의 동업자가 되어야 하는가?"',                  icon: '🤝', cls: 'rs-why-partner' },
   { key: 'opportunity',  header: '나의 기회 영역',                                                     icon: '◆', cls: 'rs-opp' },
@@ -7466,6 +8022,44 @@ function parseReportText(text) {
       const m = clean.match(/^(?:\d+\.\s*)?\(([^)]+)\)\s*(.*)$/);
       if (m) { out.sections[current].push({ label: m[1], text: m[2] }); continue; }
     }
+    // v2.18: 시장의 걱정과 진실 — "걱정:" / "진실:" 짝 파싱
+    if (current === 'worry_truth') {
+      const mWorry = clean.match(/^걱정\s*[:：]\s*"?([^"]*?)"?\s*→?\s*$/);
+      const mInline = clean.match(/^걱정\s*[:：]\s*"?(.+?)"?\s*→\s*진실\s*[:：]\s*"?(.+?)"?\s*$/);
+      const mTruth = clean.match(/^진실\s*[:：]\s*"?(.+?)"?\s*$/);
+      if (mInline) {
+        out.sections[current].push({ type: 'pair', worry: mInline[1], truth: mInline[2] });
+        continue;
+      }
+      if (mWorry) {
+        out.sections[current].push({ type: 'pair', worry: mWorry[1], truth: '' });
+        continue;
+      }
+      if (mTruth) {
+        // 직전 worry 짝과 합침
+        const last = out.sections[current][out.sections[current].length - 1];
+        if (last && last.type === 'pair' && !last.truth) last.truth = mTruth[1];
+        else out.sections[current].push({ type: 'pair', worry: '', truth: mTruth[1] });
+        continue;
+      }
+    }
+    // v2.18: 🎯 추천 ACTION — "[액션] — [이유]" 패턴 분리
+    if (current === 'action') {
+      // "적극 매수 — 이유" / "매수 금지 — 이유" / "관망 — 이유"
+      const m = clean.match(/^([^—\-]+?)\s*[—\-]\s*(.+)$/);
+      if (m) {
+        const actionRaw = m[1].trim();
+        const reason = m[2].trim();
+        // 액션 종류 분류 (자동 색상용)
+        let actionType = 'neutral';
+        if (/적극\s*매수|강력\s*매수|매수\s*추천/.test(actionRaw))      actionType = 'strong-buy';
+        else if (/매수\s*금지|매도|회피/.test(actionRaw))                actionType = 'avoid';
+        else if (/매수/.test(actionRaw))                                  actionType = 'buy';
+        else if (/관망|보류|대기/.test(actionRaw))                        actionType = 'hold';
+        out.sections[current].push({ type: 'action', action: actionRaw, reason, actionType });
+        continue;
+      }
+    }
     out.sections[current].push(clean);
   }
   return out;
@@ -7484,6 +8078,18 @@ function renderReportContent(parsed) {
     items.forEach(it => {
       if (typeof it === 'string') {
         parts.push(`<div class="report-item">${escapeHtml(it)}</div>`);
+      } else if (it.type === 'action') {
+        // v2.18: 추천 ACTION — 큰 배지 + 이유
+        parts.push(`<div class="report-action report-action-${it.actionType}">
+          <div class="report-action-badge">${escapeHtml(it.action)}</div>
+          <div class="report-action-reason">${escapeHtml(it.reason)}</div>
+        </div>`);
+      } else if (it.type === 'pair') {
+        // v2.18: 시장의 걱정과 진실 — 짝 카드
+        parts.push(`<div class="report-pair">
+          <div class="report-pair-worry"><span class="report-pair-label">😰 걱정</span><span class="report-pair-text">${escapeHtml(it.worry)}</span></div>
+          <div class="report-pair-truth"><span class="report-pair-label">✓ 진실</span><span class="report-pair-text">${escapeHtml(it.truth)}</span></div>
+        </div>`);
       } else {
         // 5WHYS labeled item
         parts.push(`<div class="report-item report-item-labeled"><span class="report-label">(${escapeHtml(it.label)})</span> <span class="report-text">${escapeHtml(it.text)}</span></div>`);
@@ -9232,6 +9838,44 @@ function computeSignalReturns() {
     withReturns++;
   });
   console.log(`[computeSignalReturns/${getCurrentMarket()}] archive=${_state.archive.length}, OHLCV match=${processed}, with returns=${withReturns}`);
+  // v2.16: 스나이핑 플래그 계산 (returns 다음 — ret1 정보 필요)
+  computeSnipingFlags();
+}
+
+// ============================================================================
+// v2.16: 스나이핑률 (SR) — "한 번에 잘 잡은 매수 자리" 비율
+//   각 신호별로 _sniping 부여 (true = 직전 5거래일에 같은 종목 실패 신호 없음)
+//   같은 ticker로 group → Date 정렬 → 직전 5일 calendar window 안에 ret1 < 0 신호 있나 검사
+// ============================================================================
+function computeSnipingFlags() {
+  if (!_state.archive || !_state.archive.length) return;
+  const byTicker = new Map();
+  _state.archive.forEach(r => {
+    if (!r.Ticker || !r.Date) return;
+    if (!byTicker.has(r.Ticker)) byTicker.set(r.Ticker, []);
+    byTicker.get(r.Ticker).push(r);
+  });
+  byTicker.forEach(rows => {
+    rows.sort((a, b) => String(a.Date).localeCompare(String(b.Date)));
+    rows.forEach((r, idx) => {
+      // 직전 5 calendar day 안에 같은 ticker 실패(ret1 < 0) 신호 검사
+      const currDate = new Date(r.Date);
+      const lower = new Date(currDate); lower.setDate(lower.getDate() - 5);
+      const lowerStr = lower.toISOString().split('T')[0];
+      let hasFailedRecent = false;
+      for (let i = idx - 1; i >= 0; i--) {
+        const prev = rows[i];
+        if (!prev.Date || prev.Date < lowerStr) break;  // 5일 넘으면 종료
+        if (prev.Date >= r.Date) continue;
+        const prevRet1 = (prev._returns && prev._returns.ret1 != null) ? prev._returns.ret1 : null;
+        if (prevRet1 !== null && prevRet1 < 0) {
+          hasFailedRecent = true;
+          break;
+        }
+      }
+      r._sniping = !hasFailedRecent;
+    });
+  });
 }
 
 // ============================================================================
@@ -9255,6 +9899,7 @@ function computeComboMetrics(rows) {
   const buildMetric = (arr, sig, mode) => {
     const ret1s  = []; const ret5s  = []; const ret10s = [];
     const c1s = []; const c2s = []; const c3s = []; const c4s = [];
+    const srs = [];   // v2.16: 스나이핑
     arr.forEach(r => {
       const R = r._returns;
       if (!R) return;
@@ -9265,6 +9910,8 @@ function computeComboMetrics(rows) {
       if (R.c2 != null) c2s.push(R.c2);
       if (R.c3 != null) c3s.push(R.c3);
       if (R.c4 != null) c4s.push(R.c4);
+      // v2.16: 스나이핑 boolean
+      if (r._sniping !== undefined) srs.push(r._sniping);
     });
     return {
       combo: sig,          // 시그널 이름 (badge 색용)
@@ -9279,6 +9926,7 @@ function computeComboMetrics(rows) {
       c2: trueRate(c2s),  c2N: c2s.length,
       c3: trueRate(c3s),  c3N: c3s.length,
       c4: trueRate(c4s),  c4N: c4s.length,
+      sr: trueRate(srs),  srN: srs.length,   // v2.16
     };
   };
 
@@ -9417,7 +10065,7 @@ function renderComboEval(rows) {
   const C1_DEF = 'Case 1 — 10일 정점 도달\n조건: max(close[t+1..t+10]) > P\n매수 후 10거래일 안에 종가가 매수가보다 한 번이라도 위로 올라감.\n의미: "단기에 일단 +로 갔는가" (대부분 90% 안팎)';
   const C2_DEF = 'Case 2 — 10일 매수가 보존 (단기 안정)\n조건: min(close[t+1..t+10]) >= P\n매수 후 10거래일 동안 종가가 매수가 밑으로 한 번도 안 떨어짐.\n의미: "10일 무손실" — 실용적으로 가장 중요한 지표';
   const C3_DEF = 'Case 3 — 30일 매수가 보존 (장기 안정)\n조건: min(close[t+1..t+30]) >= P\n매수 후 30거래일 동안 P 밑으로 안 떨어짐.\n의미: "한 달 무손실"';
-  const C4_DEF = 'Case 4 — 전체 매수가 보존 (완전 안정)\n조건: min(close[t+1..end]) >= P\n매수 후 데이터 끝까지 P 밑으로 한 번도 안 떨어짐.\n의미: "지금까지 한 번도 손실 안 남" — 이상적 매수\n\n관계: C4 ⊂ C3 ⊂ C2 · C1과 C2는 독립';
+  const SR_DEF = '스나이핑률 (Sniping Rate) — 한 번에 잘 잡은 매수 자리 비율\n조건: 직전 5거래일 안에 같은 종목에서 1d 음수(실패) 신호가 하나도 없었던 신호의 비율\n분자 = 직전 5일 같은 종목 실패 신호 0건\n분모 = 전체 신호 수\n100% = 모든 신호가 cluster 없이 깨끗한 단발 진입\n낮음 = 신호가 며칠씩 연속 발생 + 실패가 끼어 있음';
 
   let html = `<div class="combo-eval-wrap">
     <div class="combo-eval-title">
@@ -9431,10 +10079,10 @@ function renderComboEval(rows) {
         ${headCell('n',       '건수')}
         ${headCell('ret1Pos', '1d+%')}
         ${headCell('ret5Pos', '5d+%')}
+        ${headCell('sr',      'SR', SR_DEF, '스나이핑률 (Sniping Rate)')}
         ${headCell('c1',      'C1', C1_DEF, 'Case 1 — 10일 정점 도달')}
         ${headCell('c2',      'C2', C2_DEF, 'Case 2 — 10일 매수가 보존')}
         ${headCell('c3',      'C3', C3_DEF, 'Case 3 — 30일 매수가 보존')}
-        ${headCell('c4',      'C4', C4_DEF, 'Case 4 — 전체 매수가 보존')}
         ${headCell('ret5Avg', '5d평균')}
         ${headCell('ret10Avg','10d평균')}
       </tr></thead>
@@ -9447,10 +10095,10 @@ function renderComboEval(rows) {
       <td class="num"><b>${m.n}</b></td>
       <td class="num ${rateClass(m.ret1Pos, 'pos')}">${fmtPct(m.ret1Pos, m.ret1N)}</td>
       <td class="num ${rateClass(m.ret5Pos, 'pos')}">${fmtPct(m.ret5Pos, m.ret5N)}</td>
+      <td class="num ${rateClass(m.sr, 'c2')}">${fmtPct(m.sr, m.srN)}</td>
       <td class="num ${rateClass(m.c1, 'c1')}">${fmtPct(m.c1, m.c1N)}</td>
       <td class="num ${rateClass(m.c2, 'c2')}">${fmtPct(m.c2, m.c2N)}</td>
       <td class="num ${rateClass(m.c3, 'c3')}">${fmtPct(m.c3, m.c3N)}</td>
-      <td class="num ${rateClass(m.c4, 'c4')}">${fmtPct(m.c4, m.c4N)}</td>
       <td class="num">${fmtRet(m.ret5Avg)}</td>
       <td class="num">${fmtRet(m.ret10Avg)}</td>
     </tr>`;
@@ -9461,12 +10109,13 @@ function renderComboEval(rows) {
       <b>그룹 정의</b> (각 시그널별로 두 그룹씩 평가):<br>
       • <span class="combo-mode-tag mode-any">포함</span> 해당 시그널이 들어있는 모든 행 — 다른 시그널이 같이 발생했어도 OK (같은 행이 여러 "포함" 그룹에 중복 카운트됨)<br>
       • <span class="combo-mode-tag mode-solo">단독</span> 해당 시그널 하나만 발생한 행 (중복 없음)<br>
-      <b>Case 정의</b> (종가 기준, 매수가 P = 시그널 당일 종가) — 헤더의 <span class="case-info" style="cursor:default;">i</span> 아이콘 탭 시에도 표시:<br>
+      <b>지표 정의</b> — 헤더의 <span class="case-info" style="cursor:default;">i</span> 아이콘 탭 시에도 표시:<br>
+      • <b>1d+%, 5d+%:</b> 매수 후 1일/5일 종가가 매수가보다 + 인 비율<br>
+      • <b>SR (스나이핑률):</b> 직전 5거래일 안에 같은 종목 실패(1d 음수) 신호가 없었던 신호의 비율 — "cluster 없이 깨끗한 단발 진입" 비율. 100% = 모든 신호가 단발, 낮을수록 연속 발생 + 실패 섞임<br>
       • <b>C1 (10d정점):</b> 매수 후 10거래일 안에 종가가 P 위로 한 번이라도 도달 — "단기에 일단 +로 갔는가"<br>
       • <b>C2 (10d보존):</b> 매수 후 10거래일 동안 종가가 P 밑으로 안 떨어짐 — "10일 무손실" <i>(실용적으로 가장 중요)</i><br>
       • <b>C3 (30d보존):</b> 매수 후 30거래일 동안 P 밑으로 안 떨어짐 — "한 달 무손실"<br>
-      • <b>C4 (전체보존):</b> 매수 후 데이터 끝까지 P 밑으로 안 떨어짐 — "지금까지 무손실 = 이상적 매수"<br>
-      <b>관계:</b> C4 ⊂ C3 ⊂ C2 (strict → 느슨함) · C1과 C2는 독립<br>
+      <b>Case 관계:</b> C3 ⊂ C2 (strict → 느슨함) · C1과 C2는 독립<br>
       <span style="color:var(--text-mute);">건수 옆 (n) = 해당 지표 계산 가능한 표본 수 (최근 신호는 미래 데이터 부족으로 일부 지표 제외). 표본 5건 미만은 흐리게 표시 · 헤더 클릭 시 정렬 (디폴트: C1 ↓).</span>
     </div>
   </div>`;
@@ -11125,14 +11774,15 @@ const ARCHIVE_COLS = [
     get: r => (r._returns && r._returns.ret1 != null) ? (r._returns.ret1 > 0) : null },
   { key: '_ret5pos', label: '5d+', t: 'b', w: '45px', cls: 'check', title: '매수 후 5거래일 종가가 매수가 위 (ret5 > 0)',
     get: r => (r._returns && r._returns.ret5 != null) ? (r._returns.ret5 > 0) : null },
+  // v2.16: 스나이핑률 (SR) — 5d+ 다음 위치
+  { key: '_sniping', label: 'SR',  t: 'b', w: '45px', cls: 'check', title: '스나이핑 — 직전 5거래일 안에 같은 종목 실패(1d 음수) 신호 없으면 ✅ (cluster 없는 단발 진입)',
+    get: r => (r._sniping !== undefined) ? r._sniping : null },
   { key: '_c1',      label: 'C1',  t: 'b', w: '40px', cls: 'check', title: 'Case 1 — 10일 정점 도달 (10거래일 안에 P 위 한 번이라도)',
     get: r => r._returns ? r._returns.c1 : null },
   { key: '_c2',      label: 'C2',  t: 'b', w: '40px', cls: 'check', title: 'Case 2 — 10일 매수가 보존 (10거래일 동안 P 밑 안 떨어짐)',
     get: r => r._returns ? r._returns.c2 : null },
   { key: '_c3',      label: 'C3',  t: 'b', w: '40px', cls: 'check', title: 'Case 3 — 30일 매수가 보존',
     get: r => r._returns ? r._returns.c3 : null },
-  { key: '_c4',      label: 'C4',  t: 'b', w: '40px', cls: 'check', title: 'Case 4 — 전체 매수가 보존 (데이터 끝까지)',
-    get: r => r._returns ? r._returns.c4 : null },
 ];
 
 // ✅/❌/N/A 포맷터 (Boolean 컬럼 공용)
@@ -11393,6 +12043,10 @@ async function fetchAdhocOhlcv(ticker) {
 }
 
 async function openChart(ticker) {
+  // v2.31: 매크로 상관관계 종목 리스트 잔상 제거 (일반 종목 모달엔 표시 X)
+  const _oldCorr = document.getElementById('macroCorrWrap');
+  if (_oldCorr) _oldCorr.remove();
+
   // v1.88: KR 모드면 ticker 자동 정규화 (' 제거 + 6자리 padding)
   //   사용자가 '5930' 입력해도 _state.sectors의 '005930'과 매칭되도록
   //   회귀 방지: 여기서 한 번만 정규화하면 _state.sectors lookup, 매핑, 표시 모두 일관
@@ -11497,9 +12151,10 @@ async function openChart(ticker) {
   const sigMarkersByType = {};
   getSignalTypes().forEach(s => sigMarkersByType[s] = []);
   if (tf !== '1Y') {
-    const priority = (getCurrentMarket() === 'KR')
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T']
-      : ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide'];
+    // v2.35: V1 모드면 4개 T_*, 그 외 T 하나
+    const priority = _isV1Mode()
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
       const dateStr = normalizeDate(r.Date);
       if (!dateStr || dateStr < cutoffStr) return;
@@ -11666,6 +12321,9 @@ function closeModal() {
   // v1.19: 매크로 모드 정리 — 다음 일반 ticker 열기 위해 영역들 복원
   $('modalSignalFilterArea').parentElement.style.display = '';
   $('tickerHistoryWrap').style.display = '';
+  // v2.31: 매크로 상관관계 종목 리스트 제거 (다음 일반 종목 모달에 잔상 방지)
+  const corrWrap = document.getElementById('macroCorrWrap');
+  if (corrWrap) corrWrap.remove();
   // v1.23: 모바일 매크로 차트용 스타일 원복
   const modeBtn = $('modeToggleBtn');
   if (modeBtn) modeBtn.style.display = '';
@@ -11904,6 +12562,8 @@ async function openMacroChart(macroName) {
       });
     }
     $('chartModal').classList.add('active');
+    // v2.25: 모바일에도 상관관계 종목 리스트 (US 한정)
+    renderMacroCorrelationList(macroName);
     return;
   }
 
@@ -11919,8 +12579,174 @@ async function openMacroChart(macroName) {
   });
 
   $('chartModal').classList.add('active');
+
+  // v2.25: 매크로 모달에 상관관계 종목 리스트 (US만)
+  renderMacroCorrelationList(macroName);
 }
 window.openMacroChart = openMacroChart;
+
+// ============================================================================
+// v2.25: 매크로 × KJP400 종목 상관관계 (60일 일간 수익률 Pearson correlation)
+//   US만, 클라이언트 사이드 계산 + 세션 캐시
+// ============================================================================
+let _macroCorrelationsCache = null;
+
+function _macroPearson(x, y) {
+  const n = Math.min(x.length, y.length);
+  if (n < 2) return NaN;
+  let sx = 0, sy = 0;
+  for (let i = 0; i < n; i++) { sx += x[i]; sy += y[i]; }
+  const mx = sx / n, my = sy / n;
+  let num = 0, dx2 = 0, dy2 = 0;
+  for (let i = 0; i < n; i++) {
+    const dx = x[i] - mx, dy = y[i] - my;
+    num += dx * dy; dx2 += dx * dx; dy2 += dy * dy;
+  }
+  const denom = Math.sqrt(dx2 * dy2);
+  return denom === 0 ? NaN : num / denom;
+}
+
+function computeMacroCorrelations() {
+  if (_macroCorrelationsCache) return _macroCorrelationsCache;
+
+  const sectorsUS = (_state.sectorsByMarket && _state.sectorsByMarket.US) || {};
+  const macrosUS = (_state.macroByMarket && _state.macroByMarket.US) || [];
+  if (!macrosUS.length || !Object.keys(sectorsUS).length) {
+    _macroCorrelationsCache = {};
+    return {};
+  }
+
+  // 종목별 close 시리즈 + 최근일 등락
+  const tickerByDate = {};   // { ticker: { date: close } }
+  const tickerLastChange = {};  // { ticker: lastDailyReturn % }
+  Object.values(sectorsUS).forEach(rows => {
+    const byTk = {};
+    rows.forEach(r => {
+      if (!r.Ticker || !r.Date || !isFinite(r.Close)) return;
+      (byTk[r.Ticker] ||= []).push(r);
+    });
+    Object.entries(byTk).forEach(([tk, list]) => {
+      list.sort((a, b) => a.Date.localeCompare(b.Date));
+      if (list.length < 60) return;
+      const recent = list.slice(-65);
+      const map = {};
+      recent.forEach(r => { map[r.Date] = r.Close; });
+      tickerByDate[tk] = map;
+      // 최근일 등락 (마지막 2일)
+      const n = list.length;
+      if (n >= 2 && list[n - 2].Close > 0) {
+        tickerLastChange[tk] = (list[n - 1].Close / list[n - 2].Close - 1) * 100;
+      }
+    });
+  });
+
+  const macroTickers = [...new Set(macrosUS.map(r => r.Ticker))];
+  // v2.29 fix: 섹터 모달의 'desc' 컬럼과 동일 데이터 소스 사용 (_state.tickerDescMap)
+  const descMap = _state.tickerDescMap || {};
+  const results = {};
+
+  macroTickers.forEach(macroTk => {
+    const macroRows = macrosUS
+      .filter(r => r.Ticker === macroTk && r.Date && isFinite(r.Close))
+      .sort((a, b) => a.Date.localeCompare(b.Date));
+    if (macroRows.length < 60) return;
+    const recentMacro = macroRows.slice(-65);
+    const macroByDate = {};
+    recentMacro.forEach(r => { macroByDate[r.Date] = r.Close; });
+    const macroDates = recentMacro.map(r => r.Date);
+
+    const correlations = [];
+    Object.entries(tickerByDate).forEach(([tk, tkMap]) => {
+      const common = macroDates.filter(d => tkMap[d] != null);
+      if (common.length < 30) return;
+      const macroRet = [], tkRet = [];
+      for (let i = 1; i < common.length; i++) {
+        const m0 = macroByDate[common[i - 1]], m1 = macroByDate[common[i]];
+        const t0 = tkMap[common[i - 1]], t1 = tkMap[common[i]];
+        if (m0 > 0 && t0 > 0) {
+          macroRet.push(m1 / m0 - 1);
+          tkRet.push(t1 / t0 - 1);
+        }
+      }
+      if (macroRet.length < 30) return;
+      const corr = _macroPearson(macroRet, tkRet);
+      if (isFinite(corr)) {
+        correlations.push({
+          ticker: tk,
+          desc: descMap[tk] || '',
+          corr,
+          lastChange: tickerLastChange[tk] != null ? tickerLastChange[tk] : null,
+        });
+      }
+    });
+
+    if (correlations.length === 0) return;
+    correlations.sort((a, b) => b.corr - a.corr);
+    results[macroTk] = {
+      positive: correlations.slice(0, 5),
+      negative: correlations.slice(-5).reverse(),
+    };
+  });
+
+  _macroCorrelationsCache = results;
+  return results;
+}
+
+function renderMacroCorrelationList(macroName) {
+  const existing = document.getElementById('macroCorrWrap');
+  if (existing) existing.remove();
+
+  if (getCurrentMarket() !== 'US' || macroName === 'KJP400') return;
+
+  const correlations = computeMacroCorrelations();
+  const data = correlations[macroName];
+  if (!data || (!data.positive.length && !data.negative.length)) return;
+
+  // 섹터 모달의 sec-modal-table과 완전 동일 (티커 / 간단 설명 / 최근일 등락)
+  const renderTable = (items) => {
+    let html = `<div class="sec-modal-table-wrap"><table class="sec-modal-table"><thead><tr>
+      <th>티커</th><th>간단 설명</th><th class="num">최근일 등락</th>
+    </tr></thead><tbody>`;
+    items.forEach(t => {
+      let cls = '', txt = '—';
+      if (t.lastChange != null) {
+        cls = t.lastChange > 0.005 ? 'up' : t.lastChange < -0.005 ? 'down' : '';
+        txt = `${t.lastChange >= 0 ? '+' : ''}${t.lastChange.toFixed(2)}%`;
+      }
+      html += `<tr>
+        <td class="ticker" data-ticker="${escapeAttr(t.ticker)}">${tickerLogoHtml(t.ticker)}${escapeHtml(t.ticker)}</td>
+        <td class="desc"><div class="desc-inner">${escapeHtml(t.desc || '')}</div></td>
+        <td class="num ${cls}">${txt}</td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+    return html;
+  };
+
+  // 양/음 라벨만 + 표 단독 (섹터 모달과 완전 같은 표)
+  let html = `<div id="macroCorrWrap">
+    <div class="macro-corr-label pos">📈 양의 상관관계 TOP 5</div>
+    ${renderTable(data.positive)}
+    <div class="macro-corr-label neg">📉 음의 상관관계 TOP 5</div>
+    ${renderTable(data.negative)}
+  </div>`;
+
+  const chartWrap = document.querySelector('#chartModal .chart-wrap');
+  if (!chartWrap) return;
+  chartWrap.insertAdjacentHTML('afterend', html);
+
+  const wrap = document.getElementById('macroCorrWrap');
+  if (wrap) {
+    wrap.addEventListener('click', (e) => {
+      const td = e.target.closest('td.ticker[data-ticker]');
+      if (!td) return;
+      const tk = td.getAttribute('data-ticker');
+      if (!tk) return;
+      closeModal();
+      setTimeout(() => openChart(tk), 50);
+    });
+  }
+}
 
 function drawChart(d) {
   const ctx = $('chartCanvas').getContext('2d');
@@ -12414,6 +13240,97 @@ window.addEventListener('resize', () => {
     document.body.removeAttribute('data-mtab');
   }
 });
+
+// ============================================================================
+// v2.31: V-Shape 버전 토글 — archive 카드 헤더에 동적 삽입 + 초기 UI 동기화
+// ============================================================================
+(function setupVshapeToggleInjection() {
+  function inject() {
+    // archive 카드 (PC) + archive 카드 (모바일) 두 곳 헤더에 토글 삽입
+    ['archiveCard', 'archiveMobileCard'].forEach(id => {
+      const card = document.getElementById(id);
+      if (!card) return;
+      const hdr = card.querySelector('.card-header');
+      if (!hdr || hdr.querySelector('.vshape-ver-toggle')) return;
+      const wrap = document.createElement('div');
+      // v2.36: 우측 정렬 — flex justify-content:space-between 안에서 margin-left:auto로 push
+      wrap.style.cssText = 'margin-left:auto;display:flex;align-items:center;';
+      wrap.innerHTML = `<div class="vshape-ver-toggle" role="group">
+        <button type="button" data-ver="V1" onclick="event.stopPropagation();setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
+        <button type="button" data-ver="V2" onclick="event.stopPropagation();setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+      </div>`;
+      // toggle-icon 있으면 그 직전, 없으면 헤더 끝
+      const toggleIcon = hdr.querySelector('.toggle-icon');
+      if (toggleIcon) toggleIcon.insertAdjacentElement('beforebegin', wrap);
+      else hdr.appendChild(wrap);
+    });
+    // 모달 안 wrap 표시 분기는 syncVshapeToggleUI에서 처리
+    if (typeof syncVshapeToggleUI === 'function') {
+      syncVshapeToggleUI();
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inject);
+  } else {
+    inject();
+  }
+  // 데이터 로드 후 다시 호출 (V1 데이터 도착 시 active 버튼 갱신용)
+  window.addEventListener('aquamel:data-loaded', () => {
+    if (typeof syncVshapeToggleUI === 'function') syncVshapeToggleUI();
+  });
+})();
+
+// ============================================================================
+// v2.28/v2.32: Android 뒤로가기 버튼 → 모달 닫기 (앱 종료 방지)
+//   v2.32: active=false 처리 제거 — closeSectorModal+openChart 같은 전환 흐름에서
+//   history.back의 popstate가 새로 열린 모달을 닫아버리던 버그 fix.
+//   이제 observer는 active=true만 처리 (pushState만), active=false는 무시.
+//   X 버튼 직접 닫기 시 history 동기화는 자연스럽게 일어남 (사용자가 한 번 더 뒤로가기 시 base로).
+// ============================================================================
+(function setupBackButton() {
+  if (typeof history === 'undefined' || typeof MutationObserver === 'undefined') return;
+  try { history.replaceState({ aqBase: true }, ''); } catch (e) {}
+
+  let _suppressBack = false;
+
+  window.addEventListener('popstate', () => {
+    const actives = document.querySelectorAll('.modal-overlay.active');
+    if (actives.length > 0) {
+      _suppressBack = true;
+      actives.forEach(m => m.classList.remove('active'));
+      setTimeout(() => { _suppressBack = false; }, 0);
+    }
+  });
+
+  function attachObserver() {
+    const modals = document.querySelectorAll('.modal-overlay');
+    if (modals.length === 0) { setTimeout(attachObserver, 100); return; }
+    const obs = new MutationObserver((mutations) => {
+      mutations.forEach(m => {
+        if (m.attributeName !== 'class') return;
+        if (!m.target.classList || !m.target.classList.contains('modal-overlay')) return;
+        const wasActive = (m.oldValue || '').includes('active');
+        const isActive = m.target.classList.contains('active');
+        // active=true (모달 열림)만 pushState — active=false는 무시 (모달 전환 흐름 보호)
+        if (!wasActive && isActive) {
+          try { history.pushState({ aqModal: m.target.id }, ''); } catch (e) {}
+        }
+      });
+    });
+    modals.forEach(m => {
+      obs.observe(m, {
+        attributes: true,
+        attributeOldValue: true,
+        attributeFilter: ['class'],
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attachObserver);
+  } else {
+    attachObserver();
+  }
+})();
 
 // ============================================================================
 // v1.44 MOBILE TAB SYSTEM
