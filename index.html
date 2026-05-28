@@ -277,7 +277,7 @@ section.card {
   background: transparent;
   border-radius: 0;
   padding: 0;
-  margin-bottom: 28px;
+  margin-bottom: 44px;  /* v2.27: PC AQUAMEL INVESTMENT 헤더와 본 콘텐츠 간 여백 더 (28→44px) */
   border: none;
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 12px;
@@ -4297,20 +4297,64 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     font-size: 12px !important; font-weight: 700; padding: 8px 12px !important;
   }
 }
-/* ============ v2.26: 섹터 프레임 카드 자식 contain 강제 ============
-   자식이 카드 박스 밖으로 절대 못 나가도록 — 다음 카드(.sa-card)와 겹침 차단
-   display: flow-root → 새 BFC + margin collapse 방지
-   overflow: hidden → 자식 visual도 카드 박스 안에서만 표시
-   contain: layout → 자식 layout effect를 부모 영역에 격리 */
-#sectorFrameworkCard {
-  display: flow-root;
-  overflow: hidden;
-  contain: layout;
-}
-
 /* end v2.25 sector framework mobile */
 
-/* ============ v2.25: 매크로 모달 상관관계 종목 리스트 ============ */
+/* ============ v2.27: 섹터 프레임 카드 — 자식이 다음 카드 침범 방지 ============
+   v2.26 overflow:hidden은 자식을 잘랐던 실수. 이번엔 카드 height을 자식 합산만큼 확실히 늘림 */
+#sectorFrameworkCard {
+  display: flow-root;          /* 새 BFC — margin collapse 방지, 자식 layout 자기 안에서 결정 */
+  overflow: visible;           /* 자식 visual 안 자름 */
+  contain: none;
+  height: auto !important;
+  min-height: auto;
+  max-height: none !important;
+}
+#sectorFrameworkCard .card-body,
+#sectorFrameworkCard .sf-wrap,
+#sectorFrameworkCard .sf-diagram-scroll,
+#sectorFrameworkCard .sf-diagram {
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  contain: none !important;
+}
+
+@media (max-width: 640px) {
+  /* 모바일에서 SF 카드는 명시적으로 자식 합산 + 충분한 bottom padding으로 다음 카드와 격리 */
+  #sectorFrameworkCard {
+    padding: 0 0 24px 0 !important;
+    margin-bottom: 32px !important;
+  }
+  /* 모바일 — 모든 SF 자식 중앙 정렬 (사용자 요청) */
+  #sectorFrameworkCard .sf-core,
+  #sectorFrameworkCard .sf-external {
+    text-align: center;
+  }
+  #sectorFrameworkCard .sf-core::before {
+    text-align: center;
+  }
+  #sectorFrameworkCard .sf-layer {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: left;  /* layer 안 텍스트는 좌측 정렬 유지 (제목 등) */
+  }
+  #sectorFrameworkCard .sf-layer-title {
+    text-align: center !important;
+  }
+  #sectorFrameworkCard .sf-layer-grid {
+    justify-content: center !important;
+  }
+  #sectorFrameworkCard .sf-layer-footer {
+    justify-content: center !important;
+  }
+  #sectorFrameworkCard .sf-external-header {
+    text-align: center !important;
+  }
+}
+
+/* ============ v2.25/v2.27: 매크로 모달 상관관계 종목 리스트 ============
+   sec-modal-table 동일 형식 사용 (티커 / 간단 설명 / 최근일 등락) */
 .macro-corr-wrap {
   margin-top: 18px;
   padding: 16px;
@@ -4324,68 +4368,21 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   border-bottom: 1px solid var(--line);
   letter-spacing: 0.3px;
 }
-.macro-corr-section { margin-bottom: 14px; }
+.macro-corr-section { margin-bottom: 16px; }
 .macro-corr-section:last-child { margin-bottom: 0; }
 .macro-corr-title {
   font-size: 13px; font-weight: 700;
-  margin: 0 0 8px 0; padding: 4px 8px;
+  margin: 0 0 10px 0; padding: 5px 10px;
   border-radius: 6px;
   display: inline-block;
 }
-.macro-corr-title.pos { color: var(--kr-up); background: rgba(220,53,69,0.08); }
-.macro-corr-title.neg { color: var(--kr-down); background: rgba(86,156,214,0.10); }
-.macro-corr-list {
-  display: flex; flex-direction: column; gap: 6px;
-}
-.macro-corr-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 10px;
-  background: var(--bg);
-  border-radius: 8px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
-}
-.macro-corr-item:hover {
-  background: var(--bg-3);
-  border-color: var(--accent);
-}
-.macro-corr-item:active { transform: scale(0.985); }
-.macro-corr-item .ticker-logo {
-  width: 28px; height: 28px;
-  vertical-align: middle;
-  margin: 0;
-}
-.macro-corr-info {
-  flex: 1; min-width: 0;
-  display: flex; flex-direction: column; gap: 2px;
-}
-.macro-corr-tk {
-  font-size: 13px; font-weight: 700; color: var(--text-hi);
-  font-family: Consolas, monospace;
-}
-.macro-corr-co {
-  font-size: 11px; color: var(--text-mute);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.macro-corr-val {
-  font-size: 14px; font-weight: 800;
-  font-family: Consolas, monospace;
-  flex-shrink: 0;
-  min-width: 56px; text-align: right;
-}
-.macro-corr-val.pos { color: var(--kr-up); }
-.macro-corr-val.neg { color: var(--kr-down); }
+.macro-corr-title.pos { color: var(--kr-up); background: rgba(220,53,69,0.10); }
+.macro-corr-title.neg { color: var(--kr-down); background: rgba(86,156,214,0.12); }
 
 @media (max-width: 640px) {
   .macro-corr-wrap { margin-top: 14px; padding: 12px; }
   .macro-corr-header { font-size: 12px; margin-bottom: 10px; }
   .macro-corr-title { font-size: 12px; }
-  .macro-corr-item { padding: 7px 9px; gap: 8px; }
-  .macro-corr-item .ticker-logo { width: 24px; height: 24px; }
-  .macro-corr-tk { font-size: 12px; }
-  .macro-corr-co { font-size: 10px; }
-  .macro-corr-val { font-size: 13px; min-width: 50px; }
 }
 
 /* ============================================================== */
@@ -4614,7 +4611,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.26</div>
+      <div class="splash-version" id="splashVersion">v2.27</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -12416,8 +12413,9 @@ function computeMacroCorrelations() {
     return {};
   }
 
-  // 종목별 close 시리즈 (최근 65일)
-  const tickerByDate = {};  // { ticker: { date: close } }
+  // 종목별 close 시리즈 + 최근일 등락
+  const tickerByDate = {};   // { ticker: { date: close } }
+  const tickerLastChange = {};  // { ticker: lastDailyReturn % }
   Object.values(sectorsUS).forEach(rows => {
     const byTk = {};
     rows.forEach(r => {
@@ -12431,10 +12429,14 @@ function computeMacroCorrelations() {
       const map = {};
       recent.forEach(r => { map[r.Date] = r.Close; });
       tickerByDate[tk] = map;
+      // 최근일 등락 (마지막 2일)
+      const n = list.length;
+      if (n >= 2 && list[n - 2].Close > 0) {
+        tickerLastChange[tk] = (list[n - 1].Close / list[n - 2].Close - 1) * 100;
+      }
     });
   });
 
-  // 매크로별 시리즈
   const macroTickers = [...new Set(macrosUS.map(r => r.Ticker))];
   const companyMap = _state.tickerCompanyMap || {};
   const results = {};
@@ -12451,7 +12453,6 @@ function computeMacroCorrelations() {
 
     const correlations = [];
     Object.entries(tickerByDate).forEach(([tk, tkMap]) => {
-      // 공통 날짜만 사용
       const common = macroDates.filter(d => tkMap[d] != null);
       if (common.length < 30) return;
       const macroRet = [], tkRet = [];
@@ -12466,7 +12467,12 @@ function computeMacroCorrelations() {
       if (macroRet.length < 30) return;
       const corr = _macroPearson(macroRet, tkRet);
       if (isFinite(corr)) {
-        correlations.push({ ticker: tk, company: companyMap[tk] || '', corr });
+        correlations.push({
+          ticker: tk,
+          company: companyMap[tk] || '',
+          corr,
+          lastChange: tickerLastChange[tk] != null ? tickerLastChange[tk] : null,
+        });
       }
     });
 
@@ -12483,43 +12489,48 @@ function computeMacroCorrelations() {
 }
 
 function renderMacroCorrelationList(macroName) {
-  // 기존 리스트 제거
   const existing = document.getElementById('macroCorrWrap');
   if (existing) existing.remove();
 
-  // US 한정 + KJP400은 제외 (자기 자신과 상관관계 무의미)
   if (getCurrentMarket() !== 'US' || macroName === 'KJP400') return;
 
   const correlations = computeMacroCorrelations();
   const data = correlations[macroName];
   if (!data || (!data.positive.length && !data.negative.length)) return;
 
-  const renderRow = (item, isPos) => {
-    const valCls = isPos ? 'pos' : 'neg';
-    const sign = isPos ? '+' : '';
-    return `<div class="macro-corr-item" data-ticker="${escapeAttr(item.ticker)}">
-      ${tickerLogoHtml(item.ticker)}
-      <div class="macro-corr-info">
-        <div class="macro-corr-tk">${escapeHtml(item.ticker)}</div>
-        <div class="macro-corr-co">${escapeHtml(item.company || '')}</div>
-      </div>
-      <div class="macro-corr-val ${valCls}">${sign}${item.corr.toFixed(2)}</div>
-    </div>`;
+  // sec-modal-table과 동일한 구조 (티커 / 간단 설명 / 최근일 등락)
+  const renderTable = (items) => {
+    let html = `<div class="sec-modal-table-wrap"><table class="sec-modal-table"><thead><tr>
+      <th>티커</th><th>간단 설명</th><th class="num">최근일 등락</th>
+    </tr></thead><tbody>`;
+    items.forEach(t => {
+      let cls = '', txt = '—';
+      if (t.lastChange != null) {
+        cls = t.lastChange > 0.005 ? 'up' : t.lastChange < -0.005 ? 'down' : '';
+        txt = `${t.lastChange >= 0 ? '+' : ''}${t.lastChange.toFixed(2)}%`;
+      }
+      html += `<tr>
+        <td class="ticker" data-ticker="${escapeAttr(t.ticker)}">${tickerLogoHtml(t.ticker)}${escapeHtml(t.ticker)}</td>
+        <td class="desc"><div class="desc-inner">${escapeHtml(t.company || '')}</div></td>
+        <td class="num ${cls}">${txt}</td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+    return html;
   };
 
   let html = `<div class="macro-corr-wrap" id="macroCorrWrap">
     <div class="macro-corr-header">📊 최근 60일 상관관계 종목 (US)</div>
     <div class="macro-corr-section">
       <h4 class="macro-corr-title pos">📈 양의 상관관계 TOP 5</h4>
-      <div class="macro-corr-list">${data.positive.map(it => renderRow(it, true)).join('')}</div>
+      ${renderTable(data.positive)}
     </div>
     <div class="macro-corr-section">
       <h4 class="macro-corr-title neg">📉 음의 상관관계 TOP 5</h4>
-      <div class="macro-corr-list">${data.negative.map(it => renderRow(it, false)).join('')}</div>
+      ${renderTable(data.negative)}
     </div>
   </div>`;
 
-  // chart-wrap 다음에 삽입 (modal-content 안)
   const chartWrap = document.querySelector('#chartModal .chart-wrap');
   if (!chartWrap) return;
   chartWrap.insertAdjacentHTML('afterend', html);
@@ -12528,9 +12539,9 @@ function renderMacroCorrelationList(macroName) {
   const wrap = document.getElementById('macroCorrWrap');
   if (wrap) {
     wrap.addEventListener('click', (e) => {
-      const item = e.target.closest('.macro-corr-item[data-ticker]');
-      if (!item) return;
-      const tk = item.getAttribute('data-ticker');
+      const td = e.target.closest('td.ticker[data-ticker]');
+      if (!td) return;
+      const tk = td.getAttribute('data-ticker');
       if (!tk) return;
       closeModal();
       setTimeout(() => openChart(tk), 50);
