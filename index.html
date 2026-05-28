@@ -3550,15 +3550,15 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 
 /* ============ MOBILE (≤640px) — 폰만 대상. 태블릿 (iPad Mini 744px+ 포함) 은 PC 레이아웃 ============ */
 @media (max-width: 640px) {
-  .container { padding: 16px 16px 40px; }
+  .container { padding: 16px 20px 40px; }
   /* v1.32 / v2.11 / v2.17 / v2.19 / v2.20: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단 정렬
      끝선 정렬 X (사용자 요청: PC랑 똑같은 폰트로 적되 줄바꿈만 유지) */
   /* v1.32 / v2.11 / v2.17 / v2.19 / v2.25: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단
      여백: padding-top 12px로 위쪽 답답함 해소 */
   .hero {
-    padding: 12px 0 6px 0;
+    padding: 18px 0 8px 0;
     margin-bottom: 18px;
-    display: flex; flex-direction: row; align-items: flex-start; gap: 10px;
+    display: flex; flex-direction: row; align-items: flex-start; gap: 12px;
     flex-wrap: nowrap;
     background: transparent;
     border: none;
@@ -4297,6 +4297,17 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     font-size: 12px !important; font-weight: 700; padding: 8px 12px !important;
   }
 }
+/* ============ v2.26: 섹터 프레임 카드 자식 contain 강제 ============
+   자식이 카드 박스 밖으로 절대 못 나가도록 — 다음 카드(.sa-card)와 겹침 차단
+   display: flow-root → 새 BFC + margin collapse 방지
+   overflow: hidden → 자식 visual도 카드 박스 안에서만 표시
+   contain: layout → 자식 layout effect를 부모 영역에 격리 */
+#sectorFrameworkCard {
+  display: flow-root;
+  overflow: hidden;
+  contain: layout;
+}
+
 /* end v2.25 sector framework mobile */
 
 /* ============ v2.25: 매크로 모달 상관관계 종목 리스트 ============ */
@@ -4524,7 +4535,7 @@ table.combo-eval tbody td .nodata {
 /* v1.19 — 추가 작은 화면 (≤480px) — 최소 단말 미세조정              */
 /* ============================================================== */
 @media (max-width: 480px) {
-  .container { padding: 14px 14px 32px; }
+  .container { padding: 14px 18px 32px; }
   .hero h1 { font-size: 20px; }
   .hero-tagline { font-size: 8px; }
   .hero .meta { gap: 6px; }
@@ -4603,7 +4614,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.25</div>
+      <div class="splash-version" id="splashVersion">v2.26</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
