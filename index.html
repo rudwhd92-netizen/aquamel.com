@@ -3550,12 +3550,12 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 
 /* ============ MOBILE (≤640px) — 폰만 대상. 태블릿 (iPad Mini 744px+ 포함) 은 PC 레이아웃 ============ */
 @media (max-width: 640px) {
-  .container { padding: 14px 10px 40px; }
-  /* v1.32 / v2.11 / v2.17 / v2.19: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단 정렬
+  .container { padding: 14px 16px 40px; }
+  /* v1.32 / v2.11 / v2.17 / v2.19 / v2.20: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단 정렬
      끝선 정렬 X (사용자 요청: PC랑 똑같은 폰트로 적되 줄바꿈만 유지) */
   .hero {
-    padding: 0;
-    margin-bottom: 20px;
+    padding: 12px 0 4px 0;  /* v2.20: 상단 여백 추가 (이전 padding 0 → 답답함 해소) */
+    margin-bottom: 16px;
     display: flex; flex-direction: row; align-items: flex-start; gap: 8px;
     flex-wrap: nowrap;
     background: transparent;
@@ -4165,7 +4165,130 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   }
   /* v1.24: 모바일 섹터 차트 캔버스 높이 (레퍼런스 일치) */
   .sec-modal-chart-canvas-wrap { height: 180px; }
+
+  /* ============ v2.20: 섹터 프레임워크 — 모바일 세로 가치사슬 ============
+     PC: 좌→우 가치사슬 매트릭스 / 모바일: 위→아래 세로 흐름 (방향성 보존)
+     L4 데이터센터는 중심축으로 더 강조, 자금 흐름은 ⬇ 화살표
+     각 layer의 sector cell들은 chip 형식 (PC grid 무시) */
+  .sf-diagram-scroll {
+    overflow-x: visible !important; overflow-y: visible !important;
+    padding: 10px 8px;
+    background: transparent; border: none;
+  }
+  .sf-diagram { min-width: 0 !important; }
+
+  /* 방향 라벨 — PC ← → 를 모바일에선 ⬇ 자금 흐름으로 */
+  .sf-dir-row { display: none; }
+  .sf-core::before {
+    content: "⬇  AI 가치사슬  ⬇";
+    display: block; text-align: center;
+    font-size: 11px; font-weight: 700; color: var(--text-mute);
+    letter-spacing: 1.5px;
+    margin-bottom: 12px; padding: 4px 0;
+    background: rgba(var(--accent-rgb, 86,156,214), 0.05);
+    border-radius: 8px;
+  }
+
+  /* AI 코어 7계층 — 세로 stack + 사이 ⬇ 화살표 */
+  .sf-core {
+    display: flex !important; flex-direction: column !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+    margin-bottom: 18px;
+  }
+  .sf-arrow {
+    transform: rotate(90deg);
+    margin: 4px auto;
+    font-size: 18px;
+    color: color-mix(in srgb, var(--text-mute) 80%, transparent);
+  }
+
+  /* 각 layer 카드 — width 100% */
+  .sf-layer {
+    width: 100%; min-width: 0;
+    border-radius: 10px;
+  }
+  .sf-layer-title {
+    font-size: 13px; padding: 8px 10px;
+    text-align: left;
+    border-radius: 9px 9px 0 0;
+  }
+
+  /* L4 데이터센터 — 중심축 강조 (더 두꺼운 border + 강한 글로우 + 큰 폰트) */
+  .sf-layer.sf-center {
+    border-width: 2.5px;
+    box-shadow: 0 0 0 3px rgba(150,120,201,0.25),
+                0 6px 22px rgba(150,120,201,0.32);
+    transform: scale(1.015);
+    margin: 4px 0;
+  }
+  .sf-layer.sf-center .sf-layer-title {
+    font-size: 14px; font-weight: 800; padding: 10px 12px;
+    letter-spacing: 0.3px;
+  }
+  .sf-layer.sf-center .sf-layer-title::before {
+    content: "⭐ ";
+  }
+  .sf-layer.sf-center .sf-layer-title::after {
+    content: " · 중심축";
+    font-size: 10px; font-weight: 500; opacity: 0.85;
+  }
+
+  /* sector cells — PC grid 무시, 모바일은 chip 형식 (flex wrap) */
+  .sf-layer-grid {
+    display: flex !important; flex-wrap: wrap;
+    grid-template: none !important;
+    gap: 6px !important; padding: 8px !important;
+  }
+  .sf-sub {
+    grid-column: auto !important; grid-row: auto !important;
+    flex: 0 0 auto;
+    min-height: 0 !important; min-width: 0;
+    flex-direction: row !important;
+    gap: 5px;
+    padding: 6px 10px !important;
+    border-radius: 14px !important;
+    background: rgba(var(--c-rgb), 0.12) !important;
+    border: 1px solid rgba(var(--c-rgb), 0.35);
+  }
+  .sf-sub-emoji {
+    font-size: 13px !important;
+    margin: 0 !important;
+  }
+  .sf-sub-name {
+    font-size: 11px !important; font-weight: 600;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+
+  /* 외부 5계층 — 헤더 + 2-column compact grid */
+  .sf-external-header {
+    font-size: 11px; font-weight: 700; color: var(--text-mute);
+    text-align: center; margin: 16px 0 10px 0; padding: 6px 0;
+    border-top: 1px dashed var(--line);
+    letter-spacing: 0.5px;
+  }
+  .sf-external {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .sf-external .sf-layer { font-size: 10px; }
+  .sf-external .sf-layer-title { font-size: 11px; padding: 6px 8px; }
+  .sf-external .sf-sub { padding: 4px 8px !important; }
+  .sf-external .sf-sub-emoji { font-size: 12px !important; }
+  .sf-external .sf-sub-name { font-size: 10px !important; }
+
+  /* 계층별 등락률 / 비중 footer — 더 크게 (정보 강조) */
+  .sf-layer-footer {
+    font-size: 11px !important; padding: 6px 10px !important;
+    gap: 6px;
+  }
+  .sf-layer.sf-center .sf-layer-footer {
+    font-size: 12px !important; font-weight: 700; padding: 8px 12px !important;
+  }
 }
+/* end v2.20 sector framework mobile */
 
 /* ============================================================== */
 /* v1.19 — 데스크탑에도 적용되는 글로벌 추가                       */
@@ -4314,7 +4437,7 @@ table.combo-eval tbody td .nodata {
 /* v1.19 — 추가 작은 화면 (≤480px) — 최소 단말 미세조정              */
 /* ============================================================== */
 @media (max-width: 480px) {
-  .container { padding: 10px 8px 32px; }
+  .container { padding: 12px 14px 32px; }
   .hero h1 { font-size: 20px; }
   .hero-tagline { font-size: 8px; }
   .hero .meta { gap: 6px; }
@@ -4393,7 +4516,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.19</div>
+      <div class="splash-version" id="splashVersion">v2.20</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>

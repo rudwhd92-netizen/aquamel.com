@@ -1,7 +1,7 @@
-// AQUAMEL V-Shape Scanner — Service Worker v2.19
+// AQUAMEL V-Shape Scanner — Service Worker v2.20
 // v2.04: data/data.json만 stale-while-revalidate (즉시 캐시 반환 + 백그라운드 갱신)
 // 다른 자산은 기존 network-first
-const CACHE_NAME = 'aquamel-v2.19';
+const CACHE_NAME = 'aquamel-v2.20';
 const CACHE_FILES = ['./', './index.html', './sw.js'];
 
 self.addEventListener('install', (event) => {
