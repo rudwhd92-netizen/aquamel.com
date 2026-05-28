@@ -685,15 +685,7 @@ section.card.collapsed > .card-header { border-radius: 0; margin-bottom: 0; }
 .sig-btn[data-sig="V_Panic"] .dot { background: var(--v-panic); }
 .sig-btn[data-sig="V_Vol"].on { border-color: var(--v-vol); }
 .sig-btn[data-sig="V_Vol"] .dot { background: var(--v-vol); }
-.sig-btn[data-sig="T_KJP_Sharp"].on { border-color: var(--t-kjp-sharp); }
-.sig-btn[data-sig="T_KJP_Sharp"] .dot { background: var(--t-kjp-sharp); }
-.sig-btn[data-sig="T_KJP_Wide"].on { border-color: var(--t-kjp-wide); }
-.sig-btn[data-sig="T_KJP_Wide"] .dot { background: var(--t-kjp-wide); }
-.sig-btn[data-sig="T_Claude_Sharp"].on { border-color: var(--t-claude-sharp); }
-.sig-btn[data-sig="T_Claude_Sharp"] .dot { background: var(--t-claude-sharp); }
-.sig-btn[data-sig="T_Claude_Wide"].on { border-color: var(--t-claude-wide); }
-.sig-btn[data-sig="T_Claude_Wide"] .dot { background: var(--t-claude-wide); }
-/* v1.68: 한국 T 신호 */
+/* v1.68/v2.30: T 신호 — US/KR 통합 */
 .sig-btn[data-sig="T"].on { border-color: #0288d1; }
 .sig-btn[data-sig="T"] .dot { background: #0288d1; }
 
@@ -1035,11 +1027,7 @@ table.archive .mfi-high { color: var(--danger); font-weight: 600; }
 .sig-badge.V_Main         { color: var(--v-main);         border-color: var(--v-main);         background: rgba(250,82,82,0.1); }
 .sig-badge.V_Panic        { color: #ff8a80;               border-color: var(--v-panic);        background: rgba(183,28,28,0.15); }
 .sig-badge.V_Vol          { color: #ffb74d;               border-color: var(--v-vol);          background: rgba(230,81,0,0.12); }
-.sig-badge.T_KJP_Sharp    { color: #4dd0e1;               border-color: var(--t-kjp-sharp);    background: rgba(0,131,143,0.12); }
-.sig-badge.T_KJP_Wide     { color: #64b5f6;               border-color: var(--t-kjp-wide);     background: rgba(2,136,209,0.12); }
-.sig-badge.T_Claude_Sharp { color: #f48fb1;               border-color: var(--t-claude-sharp); background: rgba(173,20,87,0.15); }
-.sig-badge.T_Claude_Wide  { color: #ce93d8;               border-color: var(--t-claude-wide);  background: rgba(171,71,188,0.12); }
-/* v1.68: 한국 T 신호 배지 */
+/* v1.68/v2.30: T 신호 배지 (US/KR 통합) */
 .sig-badge.T              { color: #64b5f6;               border-color: #0288d1;               background: rgba(2,136,209,0.12); }
 
 /* ============ SPREADSHEET (Portfolio / Trade history) ============ */
@@ -4594,7 +4582,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.28</div>
+      <div class="splash-version" id="splashVersion">v2.30</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -5192,30 +5180,23 @@ const SECTORS_40 = [
   '🧪 화학소재','🌐 소셜 인프라','⚖️ 디펜시브 유틸'
 ];
 
-const SIGNAL_TYPES = ['V_Main','V_Panic','V_Vol','T_KJP_Sharp','T_KJP_Wide','T_Claude_Sharp','T_Claude_Wide'];
+// v2.30: T_* 4개를 'T' 하나로 통일 (KR과 동일 — 백엔드 V_Shape_Archive_EMA에서 'T'로 들어옴)
+const SIGNAL_TYPES = ['V_Main','V_Panic','V_Vol','T'];
 const SIGNAL_COLORS = {
-  'V_Main':         '#fa5252',
-  'V_Panic':        '#b71c1c',
-  'V_Vol':          '#e65100',
-  'T_KJP_Sharp':    '#00838f',
-  'T_KJP_Wide':     '#0288d1',
-  'T_Claude_Sharp': '#ad1457',
-  'T_Claude_Wide':  '#ab47bc',
+  'V_Main':  '#fa5252',
+  'V_Panic': '#b71c1c',
+  'V_Vol':   '#e65100',
+  'T':       '#0288d1',  // 청색 (구 T_KJP_Wide 색감 계승)
 };
 // matplotlib marker → Chart.js pointStyle
 const SIGNAL_SHAPE = {
-  'V_Main':         'circle',
-  'V_Panic':        'triangle',   // ▼ (Chart.js triangle, rotated by us to look like ▼)
-  'V_Vol':          'rect',
-  'T_KJP_Sharp':    'rectRot',    // ◆ diamond
-  'T_KJP_Wide':     'rectRot',
-  'T_Claude_Sharp': 'star',
-  'T_Claude_Wide':  'crossRot',
+  'V_Main':  'circle',
+  'V_Panic': 'triangle',   // ▼ (Chart.js triangle, rotated by us to look like ▼)
+  'V_Vol':   'rect',
+  'T':       'rectRot',    // ◆ diamond
 };
 
-// 그룹화: V/Tree 알고리즘 × Core/Sub 분류
-// Core: V_Main, V_Vol, T_KJP_Sharp, T_Claude_Sharp
-// Sub : V_Panic, T_KJP_Wide, T_Claude_Wide
+// 그룹화: V 알고리즘 / Tree 알고리즘
 const SIGNAL_GROUPS = [
   {
     key: 'V', label: 'V 알고리즘',
@@ -5224,8 +5205,8 @@ const SIGNAL_GROUPS = [
   },
   {
     key: 'T', label: 'Tree 알고리즘',
-    core: ['T_KJP_Sharp', 'T_Claude_Sharp'],
-    sub:  ['T_KJP_Wide',  'T_Claude_Wide'],
+    core: ['T'],
+    sub:  [],
   },
 ];
 
@@ -5273,9 +5254,9 @@ function getSignalGroups() { return getCurrentMarket() === 'KR' ? KR_SIGNAL_GROU
 const BACKEND = {
   // Apps Script Web App URL (배포 후 받은 .../exec URL)
   URL: 'https://script.google.com/macros/s/AKfycbzBCVv5txxprNM-1WxB1YZrawu4sjGernf5Y5AD10xYwqF-8XxsS7L6jLTthP8FT6wO/exec',
-  // V_Shape_Archive 탭이 들어있는 구글 시트
+  // V_Shape_Archive_EMA 탭이 들어있는 구글 시트 (v2.30: EMA 기반 알고리즘으로 교체)
   ARCHIVE_SHEET_ID: '1KsyEM7DEODYFVgki7NEb_9gmYmF8a6dtL8B55J5i1XI',
-  ARCHIVE_TAB: 'V_Shape_Archive',
+  ARCHIVE_TAB: 'V_Shape_Archive_EMA',
   // 40개 섹터 + 매크로 시트가 들어있는 구글 드라이브 폴더
   SECTOR_FOLDER_ID: '1fBHnX5gJ8MvL14Q29AVBP5RwmFChJ6cB',
   // v1.99: 종목별 정량 보고서 TXT 파일 폴더 (파일명: TICKER_YYYYMMDD.txt)
@@ -11935,9 +11916,7 @@ async function openChart(ticker) {
   const sigMarkersByType = {};
   getSignalTypes().forEach(s => sigMarkersByType[s] = []);
   if (tf !== '1Y') {
-    const priority = (getCurrentMarket() === 'KR')
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T']
-      : ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide'];
+    const priority = ['V_Panic', 'V_Vol', 'V_Main', 'T'];  // v2.30: US/KR 통합
     _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
       const dateStr = normalizeDate(r.Date);
       if (!dateStr || dateStr < cutoffStr) return;
@@ -12421,7 +12400,8 @@ function computeMacroCorrelations() {
   });
 
   const macroTickers = [...new Set(macrosUS.map(r => r.Ticker))];
-  const companyMap = _state.tickerCompanyMap || {};
+  // v2.29 fix: 섹터 모달의 'desc' 컬럼과 동일 데이터 소스 사용 (_state.tickerDescMap)
+  const descMap = _state.tickerDescMap || {};
   const results = {};
 
   macroTickers.forEach(macroTk => {
@@ -12452,7 +12432,7 @@ function computeMacroCorrelations() {
       if (isFinite(corr)) {
         correlations.push({
           ticker: tk,
-          company: companyMap[tk] || '',
+          desc: descMap[tk] || '',
           corr,
           lastChange: tickerLastChange[tk] != null ? tickerLastChange[tk] : null,
         });
@@ -12494,7 +12474,7 @@ function renderMacroCorrelationList(macroName) {
       }
       html += `<tr>
         <td class="ticker" data-ticker="${escapeAttr(t.ticker)}">${tickerLogoHtml(t.ticker)}${escapeHtml(t.ticker)}</td>
-        <td class="desc"><div class="desc-inner">${escapeHtml(t.company || '')}</div></td>
+        <td class="desc"><div class="desc-inner">${escapeHtml(t.desc || '')}</div></td>
         <td class="num ${cls}">${txt}</td>
       </tr>`;
     });
