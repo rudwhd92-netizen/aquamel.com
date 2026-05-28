@@ -263,12 +263,12 @@ body {
    v2.11: 진짜 앱 느낌 — 탭 indicator + 카드 그라데이션 + hero 그라데이션 + 페이지 전환
    ============================================================================ */
 
-/* (4) 카드 — 평면 회색 박스 → 미세 그라데이션으로 깊이감 */
+/* v2.18: 카드 그라데이션 제거 (프레임 제거 일관성) */
 section.card {
-  background: linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 88%, var(--bg) 12%) 100%);
+  background: transparent !important;
 }
 [data-theme="light"] section.card {
-  background: linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 92%, var(--bg-3) 8%) 100%);
+  background: transparent !important;
 }
 
 /* (5) Hero — 평면 텍스트 → 미묘한 그라데이션 배경 + 좌측 액센트 */
@@ -354,22 +354,10 @@ section.card {
   opacity: 1;
 }
 
-/* v2.11: 대시보드 카드 — 강조 (액센트 그라데이션으로 메인 카드 위계 표현) */
+/* v2.11/v2.18: 대시보드 카드 — 프레임 제거 일관성에 맞춰 그라데이션 제거 */
 #dashboardCard {
-  background:
-    linear-gradient(135deg,
-      color-mix(in srgb, var(--accent) 5%, transparent) 0%,
-      transparent 60%),
-    linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 88%, var(--bg) 12%) 100%);
-  box-shadow: var(--shadow-2),
-              inset 0 1px 0 0 color-mix(in srgb, white 5%, transparent);
-}
-[data-theme="light"] #dashboardCard {
-  background:
-    linear-gradient(135deg,
-      color-mix(in srgb, var(--accent) 8%, transparent) 0%,
-      transparent 60%),
-    linear-gradient(180deg, var(--panel) 0%, color-mix(in srgb, var(--panel) 92%, var(--bg-3) 8%) 100%);
+  background: transparent;
+  box-shadow: none;
 }
 /* v2.11: .hero h1 / .hero h1 .hl 는 위(.hero 그라데이션 블록 안)에서 정의 — 중복 제거 */
 .hero-brand { display: flex; flex-direction: column; gap: 4px; }
@@ -485,11 +473,15 @@ section.card {
 
 /* ============ CARDS (collapsible) ============ */
 section.card {
-  background: var(--panel); border: 1px solid var(--line);
-  /* v2.08: radius 6px → 14px (더 부드러운 둥근 모서리), padding 20→24px, margin-bottom 16→20px */
-  border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px;
-  transition: box-shadow var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-out);
-  /* v2.11: 카드 enter 애니메이션 — 진입 시 살짝 떠오름 (페이지/탭 전환에서도 재실행) */
+  /* v2.18: 영역 구분 프레임 모두 제거 — 답답함 해소
+     background/border/shadow 모두 투명, padding은 유지하되 가로 padding은 줄여 호흡 */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0; margin-bottom: 32px;
+  transition: none;
+  /* v2.11: 카드 enter 애니메이션은 유지 — 페이지/탭 전환에서도 재실행 */
   animation: card-enter 0.32s var(--ease-out) both;
 }
 @keyframes card-enter {
@@ -546,25 +538,25 @@ section.card .subtitle { color: var(--text-dim); font-size: var(--text-sm); marg
 section.card .card-header {
   display: flex; align-items: center; justify-content: space-between;
   cursor: pointer; user-select: none;
-  /* v2.08: padding 16→20px (more breathing room) */
-  margin: -24px -24px 0 -24px; padding: 20px 24px;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  transition: background var(--t-fast) var(--ease-out);
+  /* v2.18: 프레임 제거 — margin 음수, hover bg 제거 + 헤더 padding 단순 */
+  margin: 0 0 6px 0; padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
-section.card .card-header:hover { background: var(--bg); }
+section.card .card-header:hover { background: transparent; }
 section.card .card-header h2 { margin: 0; }
 section.card .card-header .toggle-icon {
   font-size: var(--text-sm); color: var(--text-mute);
   transition: transform var(--t-base) var(--ease-out);
   margin-left: 12px; flex-shrink: 0;
 }
-section.card .card-body { margin-top: 18px; }
-section.card .card-body > .subtitle:first-child { margin-top: -8px; }
+section.card .card-body { margin-top: 14px; }
+section.card .card-body > .subtitle:first-child { margin-top: -4px; }
 
 /* 카드 토글 */
 section.card.collapsed > .card-body { display: none; }
 section.card.collapsed > .card-header .toggle-icon { transform: rotate(-90deg); }
-section.card.collapsed > .card-header { border-radius: var(--radius-lg); margin-bottom: 0; }
+section.card.collapsed > .card-header { border-radius: 0; margin-bottom: 0; }
 
 /* ============ PWA STANDALONE MODE — iOS safe-area는 body에서 항상 처리 (v1.40), 여기는 추가 미세 조정 ============ */
 .pwa-standalone .hero { padding-top: 8px; }
@@ -1385,6 +1377,107 @@ table.sheet tbody tr.drop-below td:last-child {
 .rs-misc .report-icon { color: #868e96; }
 .rs-misc .report-item { border-left-color: #868e96; color: var(--text-mute); }
 
+/* ============ v2.18: 신설 3개 영역 ============ */
+
+/* 🎯 추천 ACTION — 최상단 강조 박스, 액션별 색상 분기 */
+.rs-action {
+  border-left: 4px solid #5c7cfa;
+  background: linear-gradient(135deg, rgba(92,124,250,0.12), rgba(92,124,250,0.02) 60%);
+}
+.rs-action .report-icon { color: #5c7cfa; font-size: 22px; }
+.rs-action .report-section-title { font-size: 16px; }
+.report-action {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 4px 0;
+}
+.report-action-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 18px; font-weight: 800; letter-spacing: -0.3px;
+  font-family: 'Pretendard Variable', Pretendard, sans-serif;
+  box-shadow: var(--shadow-2);
+}
+.report-action-reason {
+  font-size: 14px; line-height: 1.65; color: var(--text);
+  padding: 2px 4px;
+}
+/* 액션별 배지 색상 */
+.report-action-strong-buy .report-action-badge {
+  background: linear-gradient(135deg, #2f9e44, #51cf66);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(47,158,68,0.45);
+}
+.report-action-buy .report-action-badge {
+  background: linear-gradient(135deg, #51cf66, #94d82d);
+  color: #1a1a1a;
+}
+.report-action-hold .report-action-badge {
+  background: linear-gradient(135deg, #fab005, #fcc419);
+  color: #1a1a1a;
+}
+.report-action-avoid .report-action-badge {
+  background: linear-gradient(135deg, #e03131, #fa5252);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(224,49,49,0.45);
+}
+.report-action-neutral .report-action-badge {
+  background: linear-gradient(135deg, #868e96, #adb5bd);
+  color: #ffffff;
+}
+
+/* ↓ 악재 진단 — 호재의 짝, 다홍색 */
+.rs-negative { border-left: 3px solid #fd7e14; background: linear-gradient(90deg, rgba(253,126,20,0.08), transparent 30%); }
+.rs-negative .report-icon { color: #fd7e14; font-size: 20px; font-weight: 800; }
+.rs-negative .report-item { border-left-color: #fd7e14; }
+
+/* 🤔 시장의 걱정과 진실 — 짝 카드 형식 */
+.rs-worry { border-left: 3px solid #15aabf; background: linear-gradient(90deg, rgba(21,170,191,0.08), transparent 30%); }
+.rs-worry .report-icon { color: #15aabf; }
+.report-pair {
+  display: flex; flex-direction: column; gap: 0;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  margin-bottom: 4px;
+}
+.report-pair-worry, .report-pair-truth {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 14px;
+  font-size: 13px; line-height: 1.6;
+}
+.report-pair-worry {
+  background: rgba(250,82,82,0.06);
+  border-bottom: 1px solid var(--line);
+}
+.report-pair-truth {
+  background: rgba(81,207,102,0.06);
+}
+.report-pair-label {
+  flex-shrink: 0; padding: 2px 10px;
+  font-size: 11px; font-weight: 700; border-radius: 4px;
+  white-space: nowrap;
+  min-width: 56px; text-align: center;
+}
+.report-pair-worry .report-pair-label {
+  background: rgba(250,82,82,0.2); color: #fa5252;
+}
+.report-pair-truth .report-pair-label {
+  background: rgba(81,207,102,0.2); color: #51cf66;
+}
+.report-pair-text { flex: 1; color: var(--text); }
+
+@media (max-width: 640px) {
+  .rs-action .report-action-badge { font-size: 16px; padding: 8px 18px; }
+  .rs-action .report-action-reason { font-size: 13px; }
+  .report-pair-worry, .report-pair-truth {
+    flex-direction: column; gap: 6px; padding: 10px 12px;
+  }
+  .report-pair-label { min-width: 0; align-self: flex-start; }
+}
+
 /* v2.01 Phase 2: 분석 카드 ticker 그리드 */
 #analysisGridArea { padding: 4px 0; }
 .analysis-empty {
@@ -1416,10 +1509,10 @@ table.sheet tbody tr.drop-below td:last-child {
 .analysis-card-logo {
   width: 36px; height: 36px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  background: var(--bg-3); border-radius: 6px;
+  background: var(--bg-3); border-radius: 50%;  /* v2.17: 원형 통일 */
   overflow: hidden;
 }
-.analysis-card-logo img { width: 100%; height: 100%; object-fit: contain; }
+.analysis-card-logo img { width: 100%; height: 100%; object-fit: cover; }  /* contain → cover (원형 안 채움) */
 .analysis-card-logo-fallback {
   font-size: 12px; font-weight: 700; color: var(--text-mute);
   font-family: Consolas, monospace;
@@ -2252,29 +2345,29 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 @keyframes hero-refresh-spin { to { transform: rotate(360deg); } }
 
 /* ============ TICKER LOGOS (v1.28) ============ */
-/* 모든 곳의 티커명 왼쪽에 사용. 모서리 라운딩 4px (직각 정사각형 아님) */
+/* v2.17: 모든 곳의 티커 로고 — 원형으로 통일 (이전 라운딩된 사각형) */
 .ticker-logo {
   display: inline-block;
   width: 18px; height: 18px;
-  border-radius: 4px;
+  border-radius: 50%;
   vertical-align: -5px;
   margin-right: 9px;
   object-fit: cover;
   background: var(--bg-3);
   flex-shrink: 0;
 }
-/* v1.34: 모달 타이틀 — 더 크고 자연스러운 정렬 (flex로 alignment) */
+/* v1.34/v2.17: 모달 타이틀 — 더 크고 자연스러운 정렬 (flex), 원형 */
 .modal-title .ticker-logo {
   width: 40px; height: 40px;
-  border-radius: 8px;
+  border-radius: 50%;
   vertical-align: middle;
   margin-right: 0;
   flex-shrink: 0;
 }
-/* 모바일에서는 약간 작게 */
+/* 모바일에서는 약간 작게 (radius 그대로 50%) */
 @media (max-width: 640px) {
   .ticker-logo { width: 16px; height: 16px; vertical-align: -4px; margin-right: 8px; }
-  .modal-title .ticker-logo { width: 32px; height: 32px; border-radius: 6px; }
+  .modal-title .ticker-logo { width: 32px; height: 32px; }
 }
 
 /* ============ LOADING OVERLAY ============ */
@@ -2574,7 +2667,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 }
 .dash-hold-logo {
   width: 32px; height: 32px;
-  border-radius: 6px;
+  border-radius: 50%;  /* v2.17: 원형 통일 */
   object-fit: cover;
   background: var(--bg);
   flex-shrink: 0;
@@ -2804,7 +2897,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   .dash-asof { display: none; }
   .dash-holdings-card, .dash-matrix-card { min-height: 380px; max-height: 380px; }
   .dash-hold-row { padding: 8px 9px; }
-  .dash-hold-logo { width: 28px; height: 28px; border-radius: 5px; }
+  .dash-hold-logo { width: 28px; height: 28px; border-radius: 50%; }
   .dash-hold-ticker { font-size: 12px; }
   .dash-hold-eval { font-size: 12px; }
   .dash-hold-meta { font-size: 9px; }
@@ -3435,15 +3528,45 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 /* ============ MOBILE (≤640px) — 폰만 대상. 태블릿 (iPad Mini 744px+ 포함) 은 PC 레이아웃 ============ */
 @media (max-width: 640px) {
   .container { padding: 14px 10px 40px; }
-  /* v1.32 / v2.11: 모바일에서도 hero는 한 줄로 — 좌측 brand + 우측 meta + 그라데이션 박스 */
+  /* v1.32 / v2.11 / v2.17: 모바일 hero — AQUAMEL/INVESTMENT 두 줄 + 우측 meta는 AQUAMEL 줄 옆
+     align-items: flex-start → meta가 첫 줄(AQUAMEL)과 정렬됨
+     INVESTMENT(10글자)가 AQUAMEL(7글자)보다 길어서 AQUAMEL을 더 큰 폰트로 폭 매칭 */
   .hero {
     padding: 14px 16px;
     margin-bottom: 18px;
-    flex-wrap: nowrap; align-items: center; gap: 8px;
+    flex-wrap: nowrap; align-items: flex-start; gap: 8px;
     border-radius: var(--radius-md);
   }
   .hero-brand { flex: 1; min-width: 0; }
-  .hero h1 { font-size: 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.5px; }
+  .hero h1 {
+    line-height: 1.05;
+    /* 두 span을 block으로 → 두 줄 */
+  }
+  .hero h1 .brand-aquamel,
+  .hero h1 .brand-investment {
+    display: block;
+    font-family: 'Pretendard Variable', Pretendard, Arial, sans-serif;
+    font-weight: 800;
+  }
+  /* AQUAMEL — 큰 폰트, 좁은 letter-spacing (7글자) */
+  .hero h1 .brand-aquamel {
+    font-size: 36px;
+    letter-spacing: -1.4px;
+  }
+  /* INVESTMENT — 작은 폰트, 넓은 letter-spacing (10글자) → 끝선 맞춤 */
+  .hero h1 .brand-investment {
+    font-size: 22px;
+    letter-spacing: 2.4px;
+    font-weight: 600;
+    color: var(--text-mute);
+    margin-top: 2px;
+  }
+  /* meta: AQUAMEL 줄 옆 (상단 정렬) */
+  .meta {
+    align-self: flex-start;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
   .hero-tagline {
     font-size: 9px; letter-spacing: 0.15px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -3453,12 +3576,12 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .hero .meta .v { font-size: 11px; padding-left: 2px; }
   .hero-refresh { width: 26px; height: 26px; font-size: 14px; }
   .hero p { font-size: 11px; }
-  section.card { padding: 18px; margin-bottom: 14px; max-width: 100%; min-width: 0; overflow: hidden; border-radius: var(--radius-md); }
-  section.card .card-header { margin: -18px -18px 0 -18px; padding: 16px 18px; border-radius: var(--radius-md) var(--radius-md) 0 0; }
-  section.card.collapsed > .card-header { border-radius: var(--radius-md); }
+  /* v2.08/v2.18: 모바일 카드 — 프레임 제거 일관성. padding 0, margin만 유지 */
+  section.card { padding: 0; margin-bottom: 24px; max-width: 100%; min-width: 0; overflow: visible; }
+  section.card .card-header { margin: 0 0 4px 0; padding: 0; }
   /* v2.08: 모바일 헤더 18px (PC 22px의 비율 유지) */
   section.card h2 { font-size: var(--text-xl); }
-  section.card .card-body { max-width: 100%; min-width: 0; margin-top: 14px; }
+  section.card .card-body { max-width: 100%; min-width: 0; margin-top: 12px; }
 
   /* Buttons stack better */
   .btn-row { gap: 8px; }
@@ -3952,13 +4075,13 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .ticker-history-wrap table.archive tbody td[data-col="Pred_5d"]::before {
     content: "예측 5d: "; opacity: 0.7; font-size: 10px;
   }
-  /* Row 4: 평가지표 6개 동일 간격 [1d+][5d+][C1][C2][C3][C4] */
+  /* Row 4: 평가지표 6개 동일 간격 [1d+][5d+][SR][C1][C2][C3] — v2.16: C4 → SR (5d+ 다음) */
   .ticker-history-wrap table.archive tbody td[data-col="_ret1pos"] { grid-column: 1; grid-row: 4; }
   .ticker-history-wrap table.archive tbody td[data-col="_ret5pos"] { grid-column: 2; grid-row: 4; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c1"] { grid-column: 3; grid-row: 4; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c2"] { grid-column: 4; grid-row: 4; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c3"] { grid-column: 5; grid-row: 4; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c4"] { grid-column: 6; grid-row: 4; }
+  .ticker-history-wrap table.archive tbody td[data-col="_sniping"] { grid-column: 3; grid-row: 4; }
+  .ticker-history-wrap table.archive tbody td[data-col="_c1"] { grid-column: 4; grid-row: 4; }
+  .ticker-history-wrap table.archive tbody td[data-col="_c2"] { grid-column: 5; grid-row: 4; }
+  .ticker-history-wrap table.archive tbody td[data-col="_c3"] { grid-column: 6; grid-row: 4; }
   .ticker-history-wrap table.archive tbody td[data-col^="_"] {
     text-align: center;
     font-size: 11px;
@@ -3978,10 +4101,10 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   }
   .ticker-history-wrap table.archive tbody td[data-col="_ret1pos"]::before { content: "1d+"; }
   .ticker-history-wrap table.archive tbody td[data-col="_ret5pos"]::before { content: "5d+"; }
+  .ticker-history-wrap table.archive tbody td[data-col="_sniping"]::before { content: "SR"; }
   .ticker-history-wrap table.archive tbody td[data-col="_c1"]::before { content: "C1"; }
   .ticker-history-wrap table.archive tbody td[data-col="_c2"]::before { content: "C2"; }
   .ticker-history-wrap table.archive tbody td[data-col="_c3"]::before { content: "C3"; }
-  .ticker-history-wrap table.archive tbody td[data-col="_c4"]::before { content: "C4"; }
   /* N/A 셀은 흐릿하게 */
   .ticker-history-wrap table.archive tbody td[data-col^="_"].is-null { opacity: 0.45; }
   /* 다른 필드들 숨김 */
@@ -4254,7 +4377,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.15</div>
+      <div class="splash-version" id="splashVersion">v2.18</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4268,7 +4391,7 @@ table.combo-eval tbody td .nodata {
   <!-- ============ HEADER (AQUAMEL) ============ -->
   <header class="hero">
     <div class="hero-brand">
-      <h1><span class="hl">AQUA</span>MEL INVESTMENT</h1>
+      <h1><span class="brand-aquamel"><span class="hl">AQUA</span>MEL</span> <span class="brand-investment">INVESTMENT</span></h1>
       <div class="hero-tagline">The blueprint for the next 10-year structural paradigm</div>
     </div>
     <div class="meta">
@@ -7428,11 +7551,15 @@ async function fetchReportContent(ticker, date) {
 }
 
 // 보고서 TXT 본문 → 섹션별 구조화
-//   알려진 7개 섹션 헤더로 분리. 5WHYS는 줄별 (라벨) 본문 패턴 파싱.
+//   v2.18: 10개 섹션 (이전 7개 + 신설 3: 🎯 추천 ACTION / 악재 진단 / 시장의 걱정과 진실)
+//   5WHYS는 (라벨) 본문 패턴 파싱. 시장의 걱정과 진실은 "걱정:" / "진실:" 짝 파싱.
 const REPORT_SECTIONS = [
+  { key: 'action',       header: '🎯 추천 ACTION',                                                      icon: '🎯', cls: 'rs-action' },
   { key: 'summary',      header: '핵심 요약',                                                          icon: '★', cls: 'rs-summary' },
   { key: 'misunder',     header: '대중의 오해',                                                        icon: '⚠', cls: 'rs-misunder' },
+  { key: 'negative',     header: '악재 진단',                                                          icon: '↓', cls: 'rs-negative' },
   { key: 'positive',     header: '호재 진단',                                                          icon: '⊕', cls: 'rs-positive' },
+  { key: 'worry_truth',  header: '시장의 걱정과 진실',                                                  icon: '🤔', cls: 'rs-worry' },
   { key: 'why5_down',    header: '5WHYS: "왜 이 주식은 하락하고 있는가?"',                              icon: '⬇', cls: 'rs-why-down' },
   { key: 'why5_partner', header: '5WHYS: "나는 왜 이 기업의 동업자가 되어야 하는가?"',                  icon: '🤝', cls: 'rs-why-partner' },
   { key: 'opportunity',  header: '나의 기회 영역',                                                     icon: '◆', cls: 'rs-opp' },
@@ -7466,6 +7593,44 @@ function parseReportText(text) {
       const m = clean.match(/^(?:\d+\.\s*)?\(([^)]+)\)\s*(.*)$/);
       if (m) { out.sections[current].push({ label: m[1], text: m[2] }); continue; }
     }
+    // v2.18: 시장의 걱정과 진실 — "걱정:" / "진실:" 짝 파싱
+    if (current === 'worry_truth') {
+      const mWorry = clean.match(/^걱정\s*[:：]\s*"?([^"]*?)"?\s*→?\s*$/);
+      const mInline = clean.match(/^걱정\s*[:：]\s*"?(.+?)"?\s*→\s*진실\s*[:：]\s*"?(.+?)"?\s*$/);
+      const mTruth = clean.match(/^진실\s*[:：]\s*"?(.+?)"?\s*$/);
+      if (mInline) {
+        out.sections[current].push({ type: 'pair', worry: mInline[1], truth: mInline[2] });
+        continue;
+      }
+      if (mWorry) {
+        out.sections[current].push({ type: 'pair', worry: mWorry[1], truth: '' });
+        continue;
+      }
+      if (mTruth) {
+        // 직전 worry 짝과 합침
+        const last = out.sections[current][out.sections[current].length - 1];
+        if (last && last.type === 'pair' && !last.truth) last.truth = mTruth[1];
+        else out.sections[current].push({ type: 'pair', worry: '', truth: mTruth[1] });
+        continue;
+      }
+    }
+    // v2.18: 🎯 추천 ACTION — "[액션] — [이유]" 패턴 분리
+    if (current === 'action') {
+      // "적극 매수 — 이유" / "매수 금지 — 이유" / "관망 — 이유"
+      const m = clean.match(/^([^—\-]+?)\s*[—\-]\s*(.+)$/);
+      if (m) {
+        const actionRaw = m[1].trim();
+        const reason = m[2].trim();
+        // 액션 종류 분류 (자동 색상용)
+        let actionType = 'neutral';
+        if (/적극\s*매수|강력\s*매수|매수\s*추천/.test(actionRaw))      actionType = 'strong-buy';
+        else if (/매수\s*금지|매도|회피/.test(actionRaw))                actionType = 'avoid';
+        else if (/매수/.test(actionRaw))                                  actionType = 'buy';
+        else if (/관망|보류|대기/.test(actionRaw))                        actionType = 'hold';
+        out.sections[current].push({ type: 'action', action: actionRaw, reason, actionType });
+        continue;
+      }
+    }
     out.sections[current].push(clean);
   }
   return out;
@@ -7484,6 +7649,18 @@ function renderReportContent(parsed) {
     items.forEach(it => {
       if (typeof it === 'string') {
         parts.push(`<div class="report-item">${escapeHtml(it)}</div>`);
+      } else if (it.type === 'action') {
+        // v2.18: 추천 ACTION — 큰 배지 + 이유
+        parts.push(`<div class="report-action report-action-${it.actionType}">
+          <div class="report-action-badge">${escapeHtml(it.action)}</div>
+          <div class="report-action-reason">${escapeHtml(it.reason)}</div>
+        </div>`);
+      } else if (it.type === 'pair') {
+        // v2.18: 시장의 걱정과 진실 — 짝 카드
+        parts.push(`<div class="report-pair">
+          <div class="report-pair-worry"><span class="report-pair-label">😰 걱정</span><span class="report-pair-text">${escapeHtml(it.worry)}</span></div>
+          <div class="report-pair-truth"><span class="report-pair-label">✓ 진실</span><span class="report-pair-text">${escapeHtml(it.truth)}</span></div>
+        </div>`);
       } else {
         // 5WHYS labeled item
         parts.push(`<div class="report-item report-item-labeled"><span class="report-label">(${escapeHtml(it.label)})</span> <span class="report-text">${escapeHtml(it.text)}</span></div>`);
@@ -9232,6 +9409,44 @@ function computeSignalReturns() {
     withReturns++;
   });
   console.log(`[computeSignalReturns/${getCurrentMarket()}] archive=${_state.archive.length}, OHLCV match=${processed}, with returns=${withReturns}`);
+  // v2.16: 스나이핑 플래그 계산 (returns 다음 — ret1 정보 필요)
+  computeSnipingFlags();
+}
+
+// ============================================================================
+// v2.16: 스나이핑률 (SR) — "한 번에 잘 잡은 매수 자리" 비율
+//   각 신호별로 _sniping 부여 (true = 직전 5거래일에 같은 종목 실패 신호 없음)
+//   같은 ticker로 group → Date 정렬 → 직전 5일 calendar window 안에 ret1 < 0 신호 있나 검사
+// ============================================================================
+function computeSnipingFlags() {
+  if (!_state.archive || !_state.archive.length) return;
+  const byTicker = new Map();
+  _state.archive.forEach(r => {
+    if (!r.Ticker || !r.Date) return;
+    if (!byTicker.has(r.Ticker)) byTicker.set(r.Ticker, []);
+    byTicker.get(r.Ticker).push(r);
+  });
+  byTicker.forEach(rows => {
+    rows.sort((a, b) => String(a.Date).localeCompare(String(b.Date)));
+    rows.forEach((r, idx) => {
+      // 직전 5 calendar day 안에 같은 ticker 실패(ret1 < 0) 신호 검사
+      const currDate = new Date(r.Date);
+      const lower = new Date(currDate); lower.setDate(lower.getDate() - 5);
+      const lowerStr = lower.toISOString().split('T')[0];
+      let hasFailedRecent = false;
+      for (let i = idx - 1; i >= 0; i--) {
+        const prev = rows[i];
+        if (!prev.Date || prev.Date < lowerStr) break;  // 5일 넘으면 종료
+        if (prev.Date >= r.Date) continue;
+        const prevRet1 = (prev._returns && prev._returns.ret1 != null) ? prev._returns.ret1 : null;
+        if (prevRet1 !== null && prevRet1 < 0) {
+          hasFailedRecent = true;
+          break;
+        }
+      }
+      r._sniping = !hasFailedRecent;
+    });
+  });
 }
 
 // ============================================================================
@@ -9255,6 +9470,7 @@ function computeComboMetrics(rows) {
   const buildMetric = (arr, sig, mode) => {
     const ret1s  = []; const ret5s  = []; const ret10s = [];
     const c1s = []; const c2s = []; const c3s = []; const c4s = [];
+    const srs = [];   // v2.16: 스나이핑
     arr.forEach(r => {
       const R = r._returns;
       if (!R) return;
@@ -9265,6 +9481,8 @@ function computeComboMetrics(rows) {
       if (R.c2 != null) c2s.push(R.c2);
       if (R.c3 != null) c3s.push(R.c3);
       if (R.c4 != null) c4s.push(R.c4);
+      // v2.16: 스나이핑 boolean
+      if (r._sniping !== undefined) srs.push(r._sniping);
     });
     return {
       combo: sig,          // 시그널 이름 (badge 색용)
@@ -9279,6 +9497,7 @@ function computeComboMetrics(rows) {
       c2: trueRate(c2s),  c2N: c2s.length,
       c3: trueRate(c3s),  c3N: c3s.length,
       c4: trueRate(c4s),  c4N: c4s.length,
+      sr: trueRate(srs),  srN: srs.length,   // v2.16
     };
   };
 
@@ -9417,7 +9636,7 @@ function renderComboEval(rows) {
   const C1_DEF = 'Case 1 — 10일 정점 도달\n조건: max(close[t+1..t+10]) > P\n매수 후 10거래일 안에 종가가 매수가보다 한 번이라도 위로 올라감.\n의미: "단기에 일단 +로 갔는가" (대부분 90% 안팎)';
   const C2_DEF = 'Case 2 — 10일 매수가 보존 (단기 안정)\n조건: min(close[t+1..t+10]) >= P\n매수 후 10거래일 동안 종가가 매수가 밑으로 한 번도 안 떨어짐.\n의미: "10일 무손실" — 실용적으로 가장 중요한 지표';
   const C3_DEF = 'Case 3 — 30일 매수가 보존 (장기 안정)\n조건: min(close[t+1..t+30]) >= P\n매수 후 30거래일 동안 P 밑으로 안 떨어짐.\n의미: "한 달 무손실"';
-  const C4_DEF = 'Case 4 — 전체 매수가 보존 (완전 안정)\n조건: min(close[t+1..end]) >= P\n매수 후 데이터 끝까지 P 밑으로 한 번도 안 떨어짐.\n의미: "지금까지 한 번도 손실 안 남" — 이상적 매수\n\n관계: C4 ⊂ C3 ⊂ C2 · C1과 C2는 독립';
+  const SR_DEF = '스나이핑률 (Sniping Rate) — 한 번에 잘 잡은 매수 자리 비율\n조건: 직전 5거래일 안에 같은 종목에서 1d 음수(실패) 신호가 하나도 없었던 신호의 비율\n분자 = 직전 5일 같은 종목 실패 신호 0건\n분모 = 전체 신호 수\n100% = 모든 신호가 cluster 없이 깨끗한 단발 진입\n낮음 = 신호가 며칠씩 연속 발생 + 실패가 끼어 있음';
 
   let html = `<div class="combo-eval-wrap">
     <div class="combo-eval-title">
@@ -9431,10 +9650,10 @@ function renderComboEval(rows) {
         ${headCell('n',       '건수')}
         ${headCell('ret1Pos', '1d+%')}
         ${headCell('ret5Pos', '5d+%')}
+        ${headCell('sr',      'SR', SR_DEF, '스나이핑률 (Sniping Rate)')}
         ${headCell('c1',      'C1', C1_DEF, 'Case 1 — 10일 정점 도달')}
         ${headCell('c2',      'C2', C2_DEF, 'Case 2 — 10일 매수가 보존')}
         ${headCell('c3',      'C3', C3_DEF, 'Case 3 — 30일 매수가 보존')}
-        ${headCell('c4',      'C4', C4_DEF, 'Case 4 — 전체 매수가 보존')}
         ${headCell('ret5Avg', '5d평균')}
         ${headCell('ret10Avg','10d평균')}
       </tr></thead>
@@ -9447,10 +9666,10 @@ function renderComboEval(rows) {
       <td class="num"><b>${m.n}</b></td>
       <td class="num ${rateClass(m.ret1Pos, 'pos')}">${fmtPct(m.ret1Pos, m.ret1N)}</td>
       <td class="num ${rateClass(m.ret5Pos, 'pos')}">${fmtPct(m.ret5Pos, m.ret5N)}</td>
+      <td class="num ${rateClass(m.sr, 'c2')}">${fmtPct(m.sr, m.srN)}</td>
       <td class="num ${rateClass(m.c1, 'c1')}">${fmtPct(m.c1, m.c1N)}</td>
       <td class="num ${rateClass(m.c2, 'c2')}">${fmtPct(m.c2, m.c2N)}</td>
       <td class="num ${rateClass(m.c3, 'c3')}">${fmtPct(m.c3, m.c3N)}</td>
-      <td class="num ${rateClass(m.c4, 'c4')}">${fmtPct(m.c4, m.c4N)}</td>
       <td class="num">${fmtRet(m.ret5Avg)}</td>
       <td class="num">${fmtRet(m.ret10Avg)}</td>
     </tr>`;
@@ -9461,12 +9680,13 @@ function renderComboEval(rows) {
       <b>그룹 정의</b> (각 시그널별로 두 그룹씩 평가):<br>
       • <span class="combo-mode-tag mode-any">포함</span> 해당 시그널이 들어있는 모든 행 — 다른 시그널이 같이 발생했어도 OK (같은 행이 여러 "포함" 그룹에 중복 카운트됨)<br>
       • <span class="combo-mode-tag mode-solo">단독</span> 해당 시그널 하나만 발생한 행 (중복 없음)<br>
-      <b>Case 정의</b> (종가 기준, 매수가 P = 시그널 당일 종가) — 헤더의 <span class="case-info" style="cursor:default;">i</span> 아이콘 탭 시에도 표시:<br>
+      <b>지표 정의</b> — 헤더의 <span class="case-info" style="cursor:default;">i</span> 아이콘 탭 시에도 표시:<br>
+      • <b>1d+%, 5d+%:</b> 매수 후 1일/5일 종가가 매수가보다 + 인 비율<br>
+      • <b>SR (스나이핑률):</b> 직전 5거래일 안에 같은 종목 실패(1d 음수) 신호가 없었던 신호의 비율 — "cluster 없이 깨끗한 단발 진입" 비율. 100% = 모든 신호가 단발, 낮을수록 연속 발생 + 실패 섞임<br>
       • <b>C1 (10d정점):</b> 매수 후 10거래일 안에 종가가 P 위로 한 번이라도 도달 — "단기에 일단 +로 갔는가"<br>
       • <b>C2 (10d보존):</b> 매수 후 10거래일 동안 종가가 P 밑으로 안 떨어짐 — "10일 무손실" <i>(실용적으로 가장 중요)</i><br>
       • <b>C3 (30d보존):</b> 매수 후 30거래일 동안 P 밑으로 안 떨어짐 — "한 달 무손실"<br>
-      • <b>C4 (전체보존):</b> 매수 후 데이터 끝까지 P 밑으로 안 떨어짐 — "지금까지 무손실 = 이상적 매수"<br>
-      <b>관계:</b> C4 ⊂ C3 ⊂ C2 (strict → 느슨함) · C1과 C2는 독립<br>
+      <b>Case 관계:</b> C3 ⊂ C2 (strict → 느슨함) · C1과 C2는 독립<br>
       <span style="color:var(--text-mute);">건수 옆 (n) = 해당 지표 계산 가능한 표본 수 (최근 신호는 미래 데이터 부족으로 일부 지표 제외). 표본 5건 미만은 흐리게 표시 · 헤더 클릭 시 정렬 (디폴트: C1 ↓).</span>
     </div>
   </div>`;
@@ -11125,14 +11345,15 @@ const ARCHIVE_COLS = [
     get: r => (r._returns && r._returns.ret1 != null) ? (r._returns.ret1 > 0) : null },
   { key: '_ret5pos', label: '5d+', t: 'b', w: '45px', cls: 'check', title: '매수 후 5거래일 종가가 매수가 위 (ret5 > 0)',
     get: r => (r._returns && r._returns.ret5 != null) ? (r._returns.ret5 > 0) : null },
+  // v2.16: 스나이핑률 (SR) — 5d+ 다음 위치
+  { key: '_sniping', label: 'SR',  t: 'b', w: '45px', cls: 'check', title: '스나이핑 — 직전 5거래일 안에 같은 종목 실패(1d 음수) 신호 없으면 ✅ (cluster 없는 단발 진입)',
+    get: r => (r._sniping !== undefined) ? r._sniping : null },
   { key: '_c1',      label: 'C1',  t: 'b', w: '40px', cls: 'check', title: 'Case 1 — 10일 정점 도달 (10거래일 안에 P 위 한 번이라도)',
     get: r => r._returns ? r._returns.c1 : null },
   { key: '_c2',      label: 'C2',  t: 'b', w: '40px', cls: 'check', title: 'Case 2 — 10일 매수가 보존 (10거래일 동안 P 밑 안 떨어짐)',
     get: r => r._returns ? r._returns.c2 : null },
   { key: '_c3',      label: 'C3',  t: 'b', w: '40px', cls: 'check', title: 'Case 3 — 30일 매수가 보존',
     get: r => r._returns ? r._returns.c3 : null },
-  { key: '_c4',      label: 'C4',  t: 'b', w: '40px', cls: 'check', title: 'Case 4 — 전체 매수가 보존 (데이터 끝까지)',
-    get: r => r._returns ? r._returns.c4 : null },
 ];
 
 // ✅/❌/N/A 포맷터 (Boolean 컬럼 공용)
