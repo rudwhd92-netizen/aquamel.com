@@ -4614,7 +4614,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.33</div>
+      <div class="splash-version" id="splashVersion">v2.34</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7058,10 +7058,12 @@ function setVshapeVersion(ver) {
   _state.vshapeVersion = ver;
   lsSet('aquamel_vshape_version', ver);
   applyMarketState(getCurrentMarket());
-  try { if (typeof renderArchiveTable === 'function') renderArchiveTable(); } catch (e) {}
-  try { if (typeof renderSignalsCard === 'function')  renderSignalsCard();  } catch (e) {}
-  try { if (typeof renderBuyPointsCard === 'function') renderBuyPointsCard(); } catch (e) {}
-  try { if (typeof renderTickerHistory === 'function' && _state.openTicker) renderTickerHistory(_state.openTicker); } catch (e) {}
+  // v2.34: filteredArchive 재계산 + 모든 archive 의존 view 갱신 (단순 renderArchiveTable로는 filteredArchive 안 바뀜)
+  try { if (typeof computeSignalReturns === 'function') computeSignalReturns(); } catch (e) {}
+  try { if (typeof applyFilterAndRender === 'function') applyFilterAndRender(); } catch (e) {}
+  try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
+  try { if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList(); } catch (e) {}
+  // 차트 모달이 열려있으면 같은 종목 다시 그리기 (시그널 마커 + 시그널 이력 V1/V2 변경 반영)
   try {
     if (_state.openTicker && document.getElementById('chartModal').classList.contains('active')) {
       openChart(_state.openTicker);
