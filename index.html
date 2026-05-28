@@ -4614,7 +4614,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.32</div>
+      <div class="splash-version" id="splashVersion">v2.33</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7043,9 +7043,16 @@ function hasVshapeV1Data() {
 function setVshapeVersion(ver) {
   if (ver !== 'V1' && ver !== 'V2') ver = 'V2';
   if (ver === 'V1' && !hasVshapeV1Data()) {
-    alert('V1 (V_Shape_Archive) 데이터가 아직 도착하지 않았습니다.\n\nCode.gs에서 archive_v1을 함께 보내도록 업데이트하면 GitHub Actions 다음 cron 실행 후 자동으로 활성화됩니다.');
-    // V2 유지 + UI 동기화 (V1 버튼 활성화 잘못 표시 방지)
-    syncVshapeToggleUI();
+    // v2.33: alert 안 띄움 — lazy fetch로 즉시 가져옴 (Code.gs 배포/cron 대기 불필요)
+    _lazyFetchVshapeV1().then(ok => {
+      if (ok) {
+        // 데이터 도착 → 다시 V1 swap 시도
+        setVshapeVersion('V1');
+      } else {
+        alert('V1 데이터를 가져올 수 없습니다. 백엔드/네트워크 확인 필요.');
+        syncVshapeToggleUI();
+      }
+    });
     return;
   }
   _state.vshapeVersion = ver;
@@ -7061,6 +7068,34 @@ function setVshapeVersion(ver) {
     }
   } catch (e) {}
   syncVshapeToggleUI();
+}
+
+// v2.33: V1 데이터가 data.json에 없을 때 Apps Script로 직접 fetch (lazy)
+let _vshapeV1FetchPromise = null;
+async function _lazyFetchVshapeV1() {
+  if (_vshapeV1FetchPromise) return _vshapeV1FetchPromise;
+  _vshapeV1FetchPromise = (async () => {
+    try {
+      const cfg = MARKET_CONFIG.US;
+      // V1 시트 = 'V_Shape_Archive' (옛). 클라이언트 ARCHIVE_TAB은 v2.30에서 EMA로 변경됨.
+      const res = await apiCall('getBuyList', { sheetId: cfg.archiveSheetId, tab: 'V_Shape_Archive' });
+      if (!res || !res.ok) {
+        console.warn('[_lazyFetchVshapeV1] failed:', res && res.error);
+        return false;
+      }
+      const rows = (res.rows || []).map(r => normalizeArchiveRow(r, 'US')).filter(r => r.Ticker && r.Date);
+      _state.archivesV1.US = rows;
+      console.log(`[_lazyFetchVshapeV1] ✓ V1 archive lazy fetch: ${rows.length}건`);
+      return rows.length > 0;
+    } catch (e) {
+      console.warn('[_lazyFetchVshapeV1] error:', e);
+      return false;
+    } finally {
+      // 다음 클릭에서 재시도 가능하도록 promise 해제 (실패한 경우만)
+      // 성공 시엔 _state.archivesV1.US 채워졌으니 hasVshapeV1Data가 true → 재호출 X
+    }
+  })();
+  return _vshapeV1FetchPromise;
 }
 
 function syncVshapeToggleUI() {
