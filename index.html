@@ -4353,36 +4353,19 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   }
 }
 
-/* ============ v2.25/v2.27: 매크로 모달 상관관계 종목 리스트 ============
-   sec-modal-table 동일 형식 사용 (티커 / 간단 설명 / 최근일 등락) */
-.macro-corr-wrap {
-  margin-top: 18px;
-  padding: 16px;
-  background: var(--bg-2);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--line);
+/* ============ v2.25/v2.27/v2.28: 매크로 모달 상관관계 종목 라벨 ============
+   v2.28: wrap/header/background 완전 제거. sec-modal-table을 그대로 사용.
+   양/음 라벨만 단순 텍스트 — 표 자체는 섹터 모달과 완전히 동일하게 보임. */
+.macro-corr-label {
+  font-size: 14px; font-weight: 700;
+  margin: 18px 0 8px 0;
+  padding: 0;
+  letter-spacing: 0.2px;
 }
-.macro-corr-header {
-  font-size: 13px; font-weight: 700; color: var(--text-mute);
-  margin-bottom: 14px; padding-bottom: 8px;
-  border-bottom: 1px solid var(--line);
-  letter-spacing: 0.3px;
-}
-.macro-corr-section { margin-bottom: 16px; }
-.macro-corr-section:last-child { margin-bottom: 0; }
-.macro-corr-title {
-  font-size: 13px; font-weight: 700;
-  margin: 0 0 10px 0; padding: 5px 10px;
-  border-radius: 6px;
-  display: inline-block;
-}
-.macro-corr-title.pos { color: var(--kr-up); background: rgba(220,53,69,0.10); }
-.macro-corr-title.neg { color: var(--kr-down); background: rgba(86,156,214,0.12); }
-
+.macro-corr-label.pos { color: var(--kr-up); }
+.macro-corr-label.neg { color: var(--kr-down); }
 @media (max-width: 640px) {
-  .macro-corr-wrap { margin-top: 14px; padding: 12px; }
-  .macro-corr-header { font-size: 12px; margin-bottom: 10px; }
-  .macro-corr-title { font-size: 12px; }
+  .macro-corr-label { font-size: 13px; margin: 14px 0 6px 0; }
 }
 
 /* ============================================================== */
@@ -4611,7 +4594,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.27</div>
+      <div class="splash-version" id="splashVersion">v2.28</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -12498,7 +12481,7 @@ function renderMacroCorrelationList(macroName) {
   const data = correlations[macroName];
   if (!data || (!data.positive.length && !data.negative.length)) return;
 
-  // sec-modal-table과 동일한 구조 (티커 / 간단 설명 / 최근일 등락)
+  // 섹터 모달의 sec-modal-table과 완전 동일 (티커 / 간단 설명 / 최근일 등락)
   const renderTable = (items) => {
     let html = `<div class="sec-modal-table-wrap"><table class="sec-modal-table"><thead><tr>
       <th>티커</th><th>간단 설명</th><th class="num">최근일 등락</th>
@@ -12519,23 +12502,18 @@ function renderMacroCorrelationList(macroName) {
     return html;
   };
 
-  let html = `<div class="macro-corr-wrap" id="macroCorrWrap">
-    <div class="macro-corr-header">📊 최근 60일 상관관계 종목 (US)</div>
-    <div class="macro-corr-section">
-      <h4 class="macro-corr-title pos">📈 양의 상관관계 TOP 5</h4>
-      ${renderTable(data.positive)}
-    </div>
-    <div class="macro-corr-section">
-      <h4 class="macro-corr-title neg">📉 음의 상관관계 TOP 5</h4>
-      ${renderTable(data.negative)}
-    </div>
+  // 양/음 라벨만 + 표 단독 (섹터 모달과 완전 같은 표)
+  let html = `<div id="macroCorrWrap">
+    <div class="macro-corr-label pos">📈 양의 상관관계 TOP 5</div>
+    ${renderTable(data.positive)}
+    <div class="macro-corr-label neg">📉 음의 상관관계 TOP 5</div>
+    ${renderTable(data.negative)}
   </div>`;
 
   const chartWrap = document.querySelector('#chartModal .chart-wrap');
   if (!chartWrap) return;
   chartWrap.insertAdjacentHTML('afterend', html);
 
-  // 클릭 → 해당 종목 차트
   const wrap = document.getElementById('macroCorrWrap');
   if (wrap) {
     wrap.addEventListener('click', (e) => {
@@ -13041,6 +13019,57 @@ window.addEventListener('resize', () => {
     document.body.removeAttribute('data-mtab');
   }
 });
+
+// ============================================================================
+// v2.28: Android 뒤로가기 버튼 → 모달 닫기 (앱 종료 방지)
+//   페이지 로드 시 base state 추가 → modal 열림 감지 시 pushState
+//   popstate → 활성 모달 닫음 / 모든 모달 닫혀있으면 자연 종료
+// ============================================================================
+(function setupBackButton() {
+  if (typeof history === 'undefined' || typeof MutationObserver === 'undefined') return;
+  try { history.replaceState({ aqBase: true }, ''); } catch (e) {}
+
+  let _suppressBack = false;
+
+  window.addEventListener('popstate', () => {
+    const actives = document.querySelectorAll('.modal-overlay.active');
+    if (actives.length > 0) {
+      _suppressBack = true;
+      actives.forEach(m => m.classList.remove('active'));
+      setTimeout(() => { _suppressBack = false; }, 0);
+    }
+  });
+
+  function attachObserver() {
+    const modals = document.querySelectorAll('.modal-overlay');
+    if (modals.length === 0) { setTimeout(attachObserver, 100); return; }
+    const obs = new MutationObserver((mutations) => {
+      mutations.forEach(m => {
+        if (m.attributeName !== 'class') return;
+        if (!m.target.classList || !m.target.classList.contains('modal-overlay')) return;
+        const wasActive = (m.oldValue || '').includes('active');
+        const isActive = m.target.classList.contains('active');
+        if (!wasActive && isActive) {
+          try { history.pushState({ aqModal: m.target.id }, ''); } catch (e) {}
+        } else if (wasActive && !isActive && !_suppressBack) {
+          try { history.back(); } catch (e) {}
+        }
+      });
+    });
+    modals.forEach(m => {
+      obs.observe(m, {
+        attributes: true,
+        attributeOldValue: true,
+        attributeFilter: ['class'],
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attachObserver);
+  } else {
+    attachObserver();
+  }
+})();
 
 // ============================================================================
 // v1.44 MOBILE TAB SYSTEM
