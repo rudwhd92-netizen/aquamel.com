@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.61';
+window.AQ_PWA_VERSION = '2.63';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -418,7 +418,7 @@ section.card {
 /* v2.11: .hero h1 / .hero h1 .hl 는 위(.hero 그라데이션 블록 안)에서 정의 — 중복 제거 */
 .hero-brand { display: flex; flex-direction: column; gap: 4px; }
 .hero-tagline {
-  font-family: Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   font-weight: 300;
   font-size: 12px;
   color: var(--text-mute);
@@ -804,7 +804,7 @@ section.card.collapsed > .card-header { border-radius: 0; margin-bottom: 0; }
 .config-row label { font-size: 11px; color: var(--text-mute); font-weight: 600; }
 .config-row input {
   background: var(--bg-3); color: var(--text); border: 1px solid var(--line);
-  padding: 6px 10px; border-radius: 3px; font-family: Consolas, monospace; font-size: 11px;
+  padding: 6px 10px; border-radius: 3px; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; font-size: 11px;
   width: 100%;
 }
 .config-row input:focus { outline: none; border-color: var(--accent); }
@@ -973,7 +973,7 @@ table.combo-eval thead th.num { text-align: right; }
 table.combo-eval tbody td {
   padding: 7px 8px; border-bottom: 1px solid var(--line);
   vertical-align: middle; white-space: nowrap;
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
 }
 table.combo-eval tbody td.num { text-align: right; }
 table.combo-eval tbody td.combo {
@@ -1169,12 +1169,12 @@ table.archive thead th:hover { background: var(--bg); color: var(--text); }
 table.archive thead th.sorted::after { content: ' ▾'; color: var(--accent); font-size: 9px; }
 table.archive thead th.sorted-asc::after { content: ' ▴'; color: var(--accent); font-size: 9px; }
 table.archive tbody td { padding: 0 8px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; height: 44px; }
-table.archive tbody td.num { text-align: right; font-family: Consolas, monospace; }
+table.archive tbody td.num { text-align: right; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; }
 table.archive tbody tr:hover { background: var(--bg-3); }
 table.archive tbody tr:last-child { /* 마지막행 border 제거는 td에서 */ }
 table.archive tbody tr:last-child td { border-bottom: none; }
 table.archive .ticker-cell {
-  font-weight: 700; color: var(--accent); font-family: Consolas, monospace;
+  font-weight: 700; color: var(--accent); font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   cursor: pointer; text-decoration: underline; text-decoration-color: transparent;
   transition: text-decoration-color 0.15s;
 }
@@ -1261,7 +1261,7 @@ table.archive .mfi-high { color: var(--danger); font-weight: 600; }
 }
 .sheet-help kbd {
   background: var(--bg-3); color: var(--accent-2); padding: 1px 5px;
-  border-radius: 2px; font-family: Consolas, monospace; font-size: 10px;
+  border-radius: 2px; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; font-size: 10px;
   border: 1px solid var(--line);
 }
 
@@ -1286,7 +1286,7 @@ table.sheet tbody td {
 table.sheet tbody td.row-num {
   width: 36px; text-align: center; padding: 6px;
   background: var(--bg-2); color: var(--text-mute);
-  font-family: Consolas, monospace; font-size: 10px;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; font-size: 10px;
 }
 table.sheet tbody tr:hover td { background: rgba(86,156,214,0.04); }
 table.sheet tbody td input,
@@ -1298,7 +1298,7 @@ table.sheet tbody td select {
 table.sheet tbody td input:focus,
 table.sheet tbody td select:focus { background: rgba(86,156,214,0.12); box-shadow: inset 0 0 0 1px var(--accent); }
 table.sheet tbody td input.num,
-table.sheet tbody td.num input { text-align: right; font-family: Consolas, monospace; }
+table.sheet tbody td.num input { text-align: right; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; }
 table.sheet tbody td select { cursor: pointer; }
 table.sheet tbody td select option { background: var(--bg-3); color: var(--text); }
 table.sheet tbody td .del-btn {
@@ -1407,7 +1407,7 @@ table.sheet tbody tr.drop-below td:last-child {
   font-size: 11px; color: var(--text-dim); padding: 8px 12px;
   background: var(--bg); border-radius: 3px; border: 1px solid var(--line);
 }
-.sheet-summary b { color: var(--text-hi); font-family: Consolas, monospace; }
+.sheet-summary b { color: var(--text-hi); font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; }
 .sheet-summary .pos { color: var(--green-2); }
 .sheet-summary .neg { color: var(--danger); }
 
@@ -1521,7 +1521,7 @@ table.sheet tbody tr.drop-below td:last-child {
   flex-wrap: wrap;
 }
 .report-list-title { font-size: 16px; font-weight: 700; color: var(--text); }
-.report-tk-sub { color: var(--text-mute); font-size: 12px; font-weight: 500; font-family: Consolas, monospace; }
+.report-tk-sub { color: var(--text-mute); font-size: 12px; font-weight: 500; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; }
 .report-list-body { display: flex; flex-direction: column; gap: 8px; }
 .report-date-card {
   display: flex; align-items: center; justify-content: space-between;
@@ -1529,7 +1529,7 @@ table.sheet tbody tr.drop-below td:last-child {
   border-radius: 8px; cursor: pointer; transition: all 0.15s;
 }
 .report-date-card:hover { border-color: var(--accent); background: var(--bg-3); transform: translateX(2px); }
-.report-date-card-date { font-size: 14px; font-weight: 600; color: var(--text); font-family: Consolas, 'Pretendard Variable', sans-serif; }
+.report-date-card-date { font-size: 14px; font-weight: 600; color: var(--text); font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; }
 .report-date-card-arrow { color: var(--text-mute); font-size: 20px; }
 
 /* 상세 모드 */
@@ -1539,7 +1539,7 @@ table.sheet tbody tr.drop-below td:last-child {
   flex-wrap: wrap;
 }
 .report-detail-title { font-size: 16px; font-weight: 700; color: var(--text); flex: 1; min-width: 0; }
-.report-detail-date { color: var(--text-mute); font-size: 12px; font-family: Consolas, monospace; }
+.report-detail-date { color: var(--text-mute); font-size: 12px; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; }
 
 /* v2.61: 보고서 일자 드롭다운 — 우상단 */
 .report-date-select {
@@ -1548,7 +1548,7 @@ table.sheet tbody tr.drop-below td:last-child {
   border: 1px solid rgba(255,255,255,0.18);
   background-color: rgba(255,255,255,0.05);
   color: var(--text-hi);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -1578,6 +1578,72 @@ table.sheet tbody tr.drop-below td:last-child {
   text-align: center;
   color: var(--text-mute);
   font-size: 14px;
+}
+
+/* v2.63: 보고서 head v2 — 좌측 종목 헤더 + 우측 큰 일자/돌아가기 버튼 */
+.report-detail-head-v2 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 22px;
+}
+[data-theme="light"] .report-detail-head-v2 { border-bottom-color: rgba(0,0,0,0.08); }
+
+.report-detail-head-v2 .report-detail-left {
+  flex: 1;
+  min-width: 0;
+}
+/* 좌측 안의 modal-title/Price/Subtitle 그대로 사용 (사이즈 동일) */
+.report-detail-head-v2 .modal-title,
+.report-detail-head-v2 .modal-price,
+.report-detail-head-v2 .modal-subtitle {
+  margin-bottom: 8px;
+}
+.report-detail-head-v2 .modal-subtitle { margin-bottom: 0; }
+
+.report-detail-head-v2 .report-detail-right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+/* 우상단 큰 일자 (단일) */
+.report-detail-head-v2 .report-date-big {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+  color: var(--text-hi);
+  letter-spacing: -0.3px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 우상단 일자 드롭다운 (복수 보고서) — 큰 사이즈로 재정의 */
+.report-detail-head-v2 .report-date-select {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 36px 8px 14px;
+}
+
+/* 모바일 대응 — 좌우 stack */
+@media (max-width: 640px) {
+  .report-detail-head-v2 {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .report-detail-head-v2 .report-detail-right {
+    align-items: flex-start;
+    padding-top: 0;
+    width: 100%;
+  }
+  .report-detail-head-v2 .modal-title { font-size: 20px; gap: 10px; }
+  .report-detail-head-v2 .modal-price { font-size: 28px; }
+  .report-detail-head-v2 .report-date-big { font-size: 17px; }
 }
 
 .report-detail-body { display: flex; flex-direction: column; gap: 18px; }
@@ -1821,7 +1887,7 @@ table.sheet tbody tr.drop-below td:last-child {
 .analysis-card-logo img { width: 100%; height: 100%; object-fit: cover; }  /* contain → cover (원형 안 채움) */
 .analysis-card-logo-fallback {
   font-size: 12px; font-weight: 700; color: var(--text-mute);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
 }
 .analysis-card-body { flex: 1; min-width: 0; }
 .analysis-card-name {
@@ -1829,7 +1895,7 @@ table.sheet tbody tr.drop-below td:last-child {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .analysis-card-tk {
-  font-size: 11px; color: var(--text-mute); font-family: Consolas, monospace;
+  font-size: 11px; color: var(--text-mute); font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   margin-top: 2px;
 }
 .analysis-card-meta {
@@ -1986,7 +2052,7 @@ table.sheet tbody tr.drop-below td:last-child {
   background: transparent; color: var(--text-mute);
   border: none; cursor: pointer;
   border-radius: 4px;
-  font-family: 'SF Mono', 'Consolas', monospace;
+  font-family: 'SF Mono', 'Consolas', 'Pretendard Variable', Pretendard, monospace;
   letter-spacing: 0.5px;
   min-width: 36px;
 }
@@ -2052,7 +2118,7 @@ table.sheet tbody tr.drop-below td:last-child {
   font-weight: 700;
   line-height: 1.2;
   color: var(--text-hi);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   letter-spacing: 0.3px;
   white-space: nowrap;
   overflow: hidden;
@@ -2062,13 +2128,13 @@ table.sheet tbody tr.drop-below td:last-child {
 .buy-point-item .bp-date {
   font-size: 10px;
   color: var(--text-mute);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
 }
 .buy-point-item .bp-ret {
   font-size: 11px;
   font-weight: 700;
   color: var(--kr-down);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   margin-top: 3px;
 }
 
@@ -2102,7 +2168,7 @@ table.sheet tbody tr.drop-below td:last-child {
   font-size: 15px;
   font-weight: 700;
   color: var(--text-hi);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   line-height: 1.15;
   letter-spacing: 0.2px;
 }
@@ -2131,7 +2197,7 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .archive-mobile-item .am-meta {
   text-align: right;
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   flex-shrink: 0;
 }
 .archive-mobile-item .am-date {
@@ -2282,9 +2348,10 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   }
 
   /* === 페이지 전환 === */
-  /* 메인 페이지: AQUAMEL Dashboard와 보유주식 입력만 숨김 */
+  /* 메인 페이지: AQUAMEL Dashboard와 보유주식 입력, 데이터 관리 숨김 (각자 별도 페이지에 있음) */
   body[data-pc-page="main"] #dashboardCard,
-  body[data-pc-page="main"] #myPortfolioCard { display: none !important; }
+  body[data-pc-page="main"] #myPortfolioCard,
+  body[data-pc-page="main"] #dataManagementCard { display: none !important; }
 
   /* 보드 페이지: dashboardCard만 표시 (다른 메인 카드 모두 숨김) */
   body[data-pc-page="board"] .container > section.card { display: none !important; }
@@ -2815,7 +2882,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   font-size: 14px;
   font-weight: 600;
   color: var(--text-hi);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
 }
 .data-mgmt-row .value.stale {
   color: #ff6b6b;
@@ -2874,7 +2941,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   display: none;
   font-size: 11px;
   color: var(--text-mute);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   letter-spacing: 0.3px;
   margin-left: 12px;
   white-space: nowrap;
@@ -3046,13 +3113,13 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   font-size: 14px;
   font-weight: 700;
   color: var(--text-hi);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   letter-spacing: 0.2px;
   white-space: nowrap;
 }
 .stock-list-row .sl-meta {
   text-align: right;
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   flex-shrink: 0;
 }
 .stock-list-row .sl-price {
@@ -3272,7 +3339,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   box-shadow: 0 0 10px rgba(255,255,255,0.35), 0 0 4px rgba(255,255,255,0.5);
 }
 .splash-progress-text {
-  font-family: 'SF Mono', 'Consolas', 'Roboto Mono', monospace;
+  font-family: 'SF Mono', 'Consolas', 'Roboto Mono', 'Pretendard Variable', Pretendard, monospace;
   font-size: 10px;
   color: rgba(255,255,255,0.5);
   letter-spacing: 2px;
@@ -3281,7 +3348,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 /* v2.01: 버전 표시 — 로딩 % 바로 밑 */
 .splash-version {
   margin-top: 6px;
-  font-family: 'SF Mono', 'Consolas', 'Roboto Mono', monospace;
+  font-family: 'SF Mono', 'Consolas', 'Roboto Mono', 'Pretendard Variable', Pretendard, monospace;
   font-size: 9px;
   color: rgba(255,255,255,0.28);
   letter-spacing: 1px;
@@ -3295,7 +3362,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   font-size: 11px;
   color: #ff7676;
   margin-bottom: 14px;
-  font-family: 'SF Mono', 'Consolas', monospace;
+  font-family: 'SF Mono', 'Consolas', 'Pretendard Variable', Pretendard, monospace;
   word-break: keep-all;
   line-height: 1.5;
   padding: 0 10px;
@@ -3411,7 +3478,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 .loading-title { font-size: 15px; color: var(--text-hi); font-weight: 600; margin-bottom: 6px; }
 .loading-sub   { font-size: 11px; color: var(--text-dim); margin-bottom: 18px; }
 .loading-progress {
-  font-size: 13px; color: var(--accent-2); font-family: Consolas, monospace;
+  font-size: 13px; color: var(--accent-2); font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   margin-bottom: 12px;
 }
 .loading-bar { width: 100%; height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; }
@@ -4161,7 +4228,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 /* v1.27 / v2.12: val 큼 (등락률) — 22px → 24px */
 .macro-cell .val {
   font-size: 24px; font-weight: 800; margin-top: 10px;
-  font-family: Consolas, monospace; color: var(--text-hi);
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; color: var(--text-hi);
   letter-spacing: -0.4px; line-height: 1.1;
   font-variant-numeric: tabular-nums;
 }
@@ -4169,12 +4236,12 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 .macro-cell .val.down { color: var(--kr-down); }
 .macro-cell .chg-sub {
   font-size: 11px; margin-top: 4px;
-  font-family: Consolas, monospace; font-weight: 500;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; font-weight: 500;
   color: var(--text-mute);
   letter-spacing: 0.2px;
 }
 /* 기존 .chg 유지 (KJP400 셀의 sub-text 등에 사용) */
-.macro-cell .chg { font-size: 11px; margin-top: 3px; font-family: Consolas, monospace; font-weight: 600; }
+.macro-cell .chg { font-size: 11px; margin-top: 3px; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; font-weight: 600; }
 .macro-cell .chg.up { color: var(--kr-up); }
 .macro-cell .chg.down { color: var(--kr-down); }
 /* KJP400 — 다른 매크로 셀들과 시각적 구분 (좌측 두꺼운 보더 + 약간 다른 배경) */
@@ -4329,7 +4396,7 @@ footer .accent { color: var(--accent-2); }
   justify-content: center;
   gap: 8px;
   padding: 4px 6px;
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   font-size: 11px;
   font-weight: 700;
   border-top: 1px dashed rgba(var(--c-rgb), 0.35);
@@ -4428,7 +4495,7 @@ footer .accent { color: var(--accent-2); }
 .sec-modal-avg {
   margin-left: auto;
   font-size: 16px; font-weight: 700;
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   padding: 4px 12px; border-radius: 4px;
 }
 .sec-modal-avg.up   { color: var(--kr-up);   background: rgba(250,82,82,0.12); border: 1px solid rgba(250,82,82,0.4); }
@@ -4505,10 +4572,10 @@ table.sec-modal-table tbody td {
   vertical-align: middle;
   height: 64px;               /* v1.35: 행 균등 높이 */
 }
-table.sec-modal-table tbody td.num { text-align: right; font-family: Consolas, monospace; }
+table.sec-modal-table tbody td.num { text-align: right; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; }
 table.sec-modal-table tbody td.ticker {
   font-weight: 700; color: var(--accent);
-  font-family: Consolas, monospace;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   white-space: nowrap;
   cursor: pointer;
   text-decoration: underline;
@@ -4824,7 +4891,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   table.archive tbody td[data-col="Date"] {
     grid-column: 2; grid-row: 1;
     color: var(--text-hi); font-size: 14px;
-    font-family: Consolas, monospace;
+    font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
     font-weight: 700;
     text-align: right;
   }
@@ -5061,7 +5128,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
     font-weight: 700;
     color: var(--text-hi);
     text-align: left;
-    font-family: Consolas, monospace;
+    font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   }
   .ticker-history-wrap table.archive tbody td[data-col="Current_Return(%)"] {
     grid-column: 4 / 7; grid-row: 1;
@@ -6276,7 +6343,7 @@ table.combo-eval tbody td .nodata {
         사용자 ID에 비밀번호를 걸어 저장된 데이터를 보호합니다. 한 번 설정하면 모든 저장/불러오기에 필요합니다.
       </p>
       <div id="passwordModalUserDisplay" style="font-size:12px; color:var(--text-mute); margin-bottom:14px;">
-        사용자 ID: <b id="passwordModalUserId" style="color:var(--text-hi); font-family:Consolas,monospace;">-</b>
+        사용자 ID: <b id="passwordModalUserId" style="color:var(--text-hi); font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;">-</b>
         <span id="passwordModalCurrentStatus" style="margin-left:8px;"></span>
       </div>
 
@@ -6339,7 +6406,8 @@ table.combo-eval tbody td .nodata {
         </div>
         <canvas id="chartCanvas"></canvas>
       </div>
-      <div class="chart-legend" id="chartLegend"></div>
+      <!-- v2.63: 차트 하단 레전드 제거 — 차트 안 동적 레전드와 중복이라 불필요 -->
+      <!-- (id=chartLegend 참조하는 JS는 element 없어도 null 가드 또는 무해 — 별도 처리) -->
       <div class="modal-filter-block">
         <div class="modal-filter-label">🎯 Signal Type 필터 (메인 표와 동일하게 동기화):</div>
         <div class="signal-filter-area" id="modalSignalFilterArea"></div>
@@ -10725,17 +10793,30 @@ async function openReportPanel() {
   hideEls.forEach(id => { const el = $(id); if (el) el.closest('.chart-wrap, .chart-legend, *').style.display = ''; });
   $('reportPanel').style.display = '';
   $('mainModalBody').style.display = 'none';
+  // v2.63: 보고서 모드 시 토스증권 버튼 숨김 (보고서엔 토스 연계 불필요)
+  const tossBtn = $('modalTossBtn');
+  if (tossBtn) tossBtn.style.display = 'none';
   // v2.61: 일자 목록 단계 skip — 최신 보고서를 바로 표시 + 드롭다운으로 다른 일자 선택
   const mkt = getCurrentMarket();
   const dates = ((_state.reports[mkt] || {})[String(tk).toUpperCase()]) || [];
   if (dates.length === 0) {
-    const company = ((_state.tickerCompanyMaps || {})[mkt] || {})[String(tk).toUpperCase()] || '';
-    const titleHtml = company ? `${escapeHtml(company)} <span class="report-tk-sub">(${escapeHtml(tk)})</span>` : escapeHtml(tk);
+    // v2.63: 보고서 없는 경우도 새 head v2 레이아웃 (좌측 종목 헤더 + 우측 버튼)
+    const modalTitleEl = $('modalTitle');
+    const modalPriceEl = $('modalPrice');
+    const modalSubtitleEl = $('modalSubtitle');
+    const tickerTitleHtml = (modalTitleEl && modalTitleEl.innerHTML.trim() && modalTitleEl.innerHTML !== '—') ? modalTitleEl.innerHTML : escapeHtml(String(tk).toUpperCase());
+    const tickerPriceHtml = (modalPriceEl && modalPriceEl.innerHTML.trim()) ? modalPriceEl.innerHTML : '';
+    const tickerSubtitleHtml = (modalSubtitleEl && modalSubtitleEl.innerHTML.trim() && modalSubtitleEl.innerHTML !== '—') ? modalSubtitleEl.innerHTML : '';
     $('reportPanel').innerHTML = `
-      <div class="report-detail-head">
-        <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
-        <div class="report-detail-title">📊 ${titleHtml}</div>
-        <div></div>
+      <div class="report-detail-head-v2">
+        <div class="report-detail-left">
+          <div class="modal-title">${tickerTitleHtml}</div>
+          <div class="modal-price">${tickerPriceHtml}</div>
+          <div class="modal-subtitle">${tickerSubtitleHtml}</div>
+        </div>
+        <div class="report-detail-right">
+          <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
+        </div>
       </div>
       <div class="report-empty">등록된 보고서가 없습니다.</div>
     `;
@@ -10750,6 +10831,9 @@ function closeReportPanel() {
   _state.reportCurrentDate = null;
   $('reportPanel').style.display = 'none';
   $('mainModalBody').style.display = '';
+  // v2.63: 토스증권 버튼 복원 (보고서 모드 종료 시)
+  const tossBtn = $('modalTossBtn');
+  if (tossBtn) tossBtn.style.display = '';
 }
 
 function renderReportList() {
@@ -10784,20 +10868,33 @@ async function openReportDetail(date) {
     const content = await fetchReportContent(tk, date);
     const parsed = parseReportText(content);
     const mkt = getCurrentMarket();
-    const company = ((_state.tickerCompanyMaps || {})[mkt] || {})[String(tk).toUpperCase()] || '';
-    const titleHtml = company ? `${escapeHtml(company)} <span class="report-tk-sub">(${escapeHtml(tk)})</span>` : escapeHtml(tk);
-    // v2.61: 일자 드롭다운 — 우상단, 과거 보고서 선택 가능
+    // v2.63: 좌측 종목 헤더 — 차트 모달의 modalTitle/Price/Subtitle innerHTML 그대로 복사 (이미 openChart에서 채워져 있음)
+    const modalTitleEl = $('modalTitle');
+    const modalPriceEl = $('modalPrice');
+    const modalSubtitleEl = $('modalSubtitle');
+    const tickerTitleHtml = (modalTitleEl && modalTitleEl.innerHTML.trim() && modalTitleEl.innerHTML !== '—')
+      ? modalTitleEl.innerHTML
+      : escapeHtml(String(tk).toUpperCase());
+    const tickerPriceHtml = (modalPriceEl && modalPriceEl.innerHTML.trim()) ? modalPriceEl.innerHTML : '';
+    const tickerSubtitleHtml = (modalSubtitleEl && modalSubtitleEl.innerHTML.trim() && modalSubtitleEl.innerHTML !== '—') ? modalSubtitleEl.innerHTML : '';
+    // v2.61/v2.63: 일자 드롭다운 (복수 일자) 또는 큰 단일 일자 — 우상단
     const dates = ((_state.reports[mkt] || {})[String(tk).toUpperCase()]) || [];
-    const dateSelectHtml = dates.length > 1
+    const dateUiHtml = dates.length > 1
       ? `<select class="report-date-select" onchange="openReportDetail(this.value)">
            ${dates.map(d => `<option value="${escapeAttr(d)}"${d === date ? ' selected' : ''}>${escapeHtml(d)}</option>`).join('')}
          </select>`
-      : `<div class="report-detail-date">${escapeHtml(date)}</div>`;
+      : `<div class="report-date-big">${escapeHtml(date)}</div>`;
     $('reportPanel').innerHTML = `
-      <div class="report-detail-head">
-        <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
-        <div class="report-detail-title">📊 ${titleHtml}</div>
-        ${dateSelectHtml}
+      <div class="report-detail-head-v2">
+        <div class="report-detail-left">
+          <div class="modal-title">${tickerTitleHtml}</div>
+          <div class="modal-price">${tickerPriceHtml}</div>
+          <div class="modal-subtitle">${tickerSubtitleHtml}</div>
+        </div>
+        <div class="report-detail-right">
+          ${dateUiHtml}
+          <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
+        </div>
       </div>
       <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${renderReportContent(parsed, tk, date)}</div>
     `;
@@ -15651,10 +15748,14 @@ function drawChart(d) {
   if (d.buyAvg > 0) legendItems.push({ color: COL.buyAvg, label: '평단가' });
   legendItems.push({ color: COL.volSpike, label: 'Volume Spike (≥2× MA30)' });
 
-  $('chartLegend').innerHTML = legendItems.map(it =>
-    `<span class="lg-item"><span class="lg-shape" style="background:${it.color};${it.dash?'height:2px;':''}"></span>${escapeHtml(it.label)}</span>`
-  ).join('') + ' · 신호 마커: ' +
-    getSignalTypes().map(s => `<span class="lg-item"><span class="lg-shape" style="background:${getSignalColors()[s]};border-radius:50%;width:10px;height:10px;border:1.2px solid #fff;"></span>${s}</span>`).join('');
+  // v2.63: chartLegend element 제거됨 — null 가드
+  const legendEl = $('chartLegend');
+  if (legendEl) {
+    legendEl.innerHTML = legendItems.map(it =>
+      `<span class="lg-item"><span class="lg-shape" style="background:${it.color};${it.dash?'height:2px;':''}"></span>${escapeHtml(it.label)}</span>`
+    ).join('') + ' · 신호 마커: ' +
+      getSignalTypes().map(s => `<span class="lg-item"><span class="lg-shape" style="background:${getSignalColors()[s]};border-radius:50%;width:10px;height:10px;border:1.2px solid #fff;"></span>${s}</span>`).join('');
+  }
 }
 
 // Chart.js 플러그인: 마우스 hover 시 가격에 가로 빨간 점선 + 가격 라벨 표시
@@ -15752,7 +15853,7 @@ function buildTickerHistoryTable(ticker) {
       if (c.key === 'Ticker') {
         const tk2 = r.Ticker;
         const sec2 = r.Sector || '';
-        html += `<td data-col="Ticker"><span style="font-weight:700;color:var(--accent);font-family:Consolas,monospace;">${tickerLogoHtml(tk2, sec2)}${escapeHtml(disp)}</span></td>`;
+        html += `<td data-col="Ticker"><span style="font-weight:700;color:var(--accent);font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;">${tickerLogoHtml(tk2, sec2)}${escapeHtml(disp)}</span></td>`;
         return;
       }
       if (c.key === 'Signal_Type') {
