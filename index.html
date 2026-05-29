@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.72';
+window.AQ_PWA_VERSION = '2.73';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -6910,17 +6910,18 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <!-- v2.71: 종목 검색 모달 — 별도 spotlight 창 -->
-  <div class="search-modal" id="searchModal" onclick="_aqSearchModalBackdrop(event)">
+  <!-- v2.73: ID에 aq 접두사 — 기존 archive 필터의 searchInput과 충돌 해결 -->
+  <div class="search-modal" id="aqSearchModal" onclick="_aqSearchModalBackdrop(event)">
     <div class="search-modal-content">
       <div class="search-modal-head">
         <svg class="search-modal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="7"/>
           <path d="M21 21l-4.35-4.35"/>
         </svg>
-        <input type="text" id="searchInput" placeholder="티커명 또는 회사명 입력 (예: PLAB, 삼성전자)" autocomplete="off" spellcheck="false">
+        <input type="text" id="aqSearchInput" placeholder="티커명 또는 회사명 입력 (예: PLAB, 삼성전자)" autocomplete="off" spellcheck="false">
         <button class="search-modal-close" onclick="closeSearchModal()" aria-label="닫기">×</button>
       </div>
-      <div class="search-modal-results" id="searchResults">
+      <div class="search-modal-results" id="aqSearchResults">
         <div class="search-modal-empty">티커명 또는 회사명을 입력하세요</div>
       </div>
     </div>
@@ -16868,8 +16869,8 @@ function _aqHighlight(text, query) {
 }
 
 function _aqRenderSearchResults(query) {
-  const resultsEl = document.getElementById('searchResults');
-  if (!resultsEl) return;
+  const resultsEl = document.getElementById('aqSearchResults');
+  if (!resultsEl) { console.warn('[SEARCH] aqSearchResults element not found'); return; }
   const q = String(query || '').trim();
   const all = _aqGetAllSearchables();
   console.log('[SEARCH] query="' + q + '", universe size=' + all.length);
@@ -16885,13 +16886,11 @@ function _aqRenderSearchResults(query) {
     return;
   }
   const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
-  // v2.72: KR ticker — 5930 입력 시 005930 매칭하도록 padding
   let qUpper = q.toUpperCase();
   let qNorm = qUpper;
   if (mkt === 'KR' && /^\d{1,6}$/.test(qNorm) && qNorm.length < 6) {
     qNorm = qNorm.padStart(6, '0');
   }
-  // ticker prefix match 우선 → ticker contains → 회사명 contains
   const matches = [];
   all.forEach(it => {
     const tickerU = it.ticker;
@@ -16908,6 +16907,7 @@ function _aqRenderSearchResults(query) {
   const top = matches.slice(0, 50);
   _aqSearchLastResults = top;
   _aqSearchActiveIdx = 0;
+  console.log('[SEARCH] matches found:', top.length);
   if (top.length === 0) {
     resultsEl.innerHTML = `<div class="search-modal-empty">"${escapeHtml(q)}"에 해당하는 종목이 없습니다 (검색 대상: KJP400 ${all.length}개)</div>`;
     return;
@@ -16931,7 +16931,6 @@ function _aqRenderSearchResults(query) {
       </div>
     `;
   }).join('');
-  // 클릭 → openChart
   resultsEl.querySelectorAll('.search-modal-result').forEach(el => {
     el.onclick = () => {
       const tk = el.dataset.ticker;
@@ -16951,45 +16950,18 @@ function _aqRenderSearchResults(query) {
   });
 }
 
-function openSearchModal() {
-  const modal = document.getElementById('searchModal');
-  const input = document.getElementById('searchInput');
-  if (!modal || !input) return;
-  modal.classList.add('open');
-  // 초기 상태
-  input.value = '';
-  _aqRenderSearchResults('');
-  // 포커스 (animation 끝난 뒤)
-  setTimeout(() => input.focus(), 100);
-}
-window.openSearchModal = openSearchModal;
-
-function closeSearchModal() {
-  const modal = document.getElementById('searchModal');
-  if (modal) modal.classList.remove('open');
-}
-window.closeSearchModal = closeSearchModal;
-
-function _aqSearchModalBackdrop(e) {
-  // 모달 자체(배경) 클릭 시 닫기, 안 내용 클릭 시 유지
-  if (e.target.id === 'searchModal') closeSearchModal();
-}
-window._aqSearchModalBackdrop = _aqSearchModalBackdrop;
-
-// input 이벤트 + 키보드 네비
-window.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('searchInput');
-  const modal = document.getElementById('searchModal');
-  if (!input || !modal) return;
+function _aqBindSearchModalEvents() {
+  const input = document.getElementById('aqSearchInput');
+  const modal = document.getElementById('aqSearchModal');
+  if (!input || !modal) { console.warn('[SEARCH] modal/input not found for event binding'); return; }
+  if (input.dataset._aqBound === '1') return;  // 중복 방지
+  input.dataset._aqBound = '1';
   input.addEventListener('input', (e) => {
     _aqRenderSearchResults(e.target.value);
   });
   input.addEventListener('keydown', (e) => {
-    const results = document.querySelectorAll('#searchResults .search-modal-result');
-    if (e.key === 'Escape') {
-      closeSearchModal();
-      return;
-    }
+    const results = document.querySelectorAll('#aqSearchResults .search-modal-result');
+    if (e.key === 'Escape') { closeSearchModal(); return; }
     if (!results.length) return;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -17008,18 +16980,39 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
       return;
     }
-    // active 클래스 갱신 + 스크롤
     results.forEach((el, i) => el.classList.toggle('active', i === _aqSearchActiveIdx));
     const activeEl = results[_aqSearchActiveIdx];
     if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
   });
-  // 전역 ESC — 모달 열려 있을 때만
+  // 전역 ESC
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('open')) {
-      closeSearchModal();
-    }
+    if (e.key === 'Escape' && modal.classList.contains('open')) closeSearchModal();
   });
-});
+}
+
+function openSearchModal() {
+  const modal = document.getElementById('aqSearchModal');
+  const input = document.getElementById('aqSearchInput');
+  if (!modal || !input) { console.warn('[SEARCH] modal/input element missing'); return; }
+  // v2.73: openSearchModal 호출 시점에 event binding 보장 (DOMContentLoaded timing 무관)
+  _aqBindSearchModalEvents();
+  modal.classList.add('open');
+  input.value = '';
+  _aqRenderSearchResults('');
+  setTimeout(() => input.focus(), 100);
+}
+window.openSearchModal = openSearchModal;
+
+function closeSearchModal() {
+  const modal = document.getElementById('aqSearchModal');
+  if (modal) modal.classList.remove('open');
+}
+window.closeSearchModal = closeSearchModal;
+
+function _aqSearchModalBackdrop(e) {
+  if (e.target.id === 'aqSearchModal') closeSearchModal();
+}
+window._aqSearchModalBackdrop = _aqSearchModalBackdrop;
 
 // 마퀴 알림 ID → 원본 todo 찾기 (ID 형식: ticker|reportDate|idx|type)
 function _aqFindTodoByNotificationId(notifId) {
