@@ -46,12 +46,32 @@ try {
   }
 })();
 
+// ============================================================================
+// v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
+//   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
+// ============================================================================
+window.AQ_PWA_VERSION = '2.60';
+
+// splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
+function _aqUpdateSplashVersion() {
+  try {
+    const el = document.getElementById('splashVersion');
+    if (el) el.textContent = 'v' + window.AQ_PWA_VERSION;
+  } catch (e) {}
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _aqUpdateSplashVersion);
+} else {
+  _aqUpdateSplashVersion();
+}
+
 // Service Worker 등록 — Chrome이 풀 WebAPK로 설치하기 위한 필수 요건
 //   sw.js 파일이 같은 폴더에 함께 호스팅되어 있어야 함
 //   미등록 시 Chrome은 "바로가기"로만 설치하고 아이콘에 브라우저 배지를 덧입힘
 // v1.95: 새 버전 감지 시 자동 reload (캐시로 옛 버전 표시되는 문제 해결)
 // v2.36-r3: updateViaCache:'none' — sw.js fetch 시 HTTP cache 우회, 매번 fresh 체크
 //          + AQ_SW_ACTIVATED 메시지 받으면 1회 자동 reload (sessionStorage 가드)
+// v2.60: register URL에 ?v=PWA_VERSION — query 다르면 일부 브라우저가 새 SW로 인식
 if ('serviceWorker' in navigator) {
   // 새 SW가 activate되면서 보내는 broadcast → 1회 자동 reload (옛 SW로 본 페이지를 새 SW 기반으로 강제 갱신)
   navigator.serviceWorker.addEventListener('message', (e) => {
@@ -63,8 +83,10 @@ if ('serviceWorker' in navigator) {
     }
   });
   window.addEventListener('load', () => {
+    // v2.60: register URL에 PWA 버전 query — 브라우저별 SW 갱신 트리거 강화
+    const swUrl = './sw.js?v=' + window.AQ_PWA_VERSION;
     // updateViaCache:'none' — 브라우저 HTTP cache 우회, sw.js 매번 fresh fetch
-    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(reg => {
+    navigator.serviceWorker.register(swUrl, { updateViaCache: 'none' }).then(reg => {
       reg.update();
       // v2.55: 60초 → 15초 — 사용자가 PWA 켜놓은 채로도 새 버전 빠른 감지 + 자동 적용
       setInterval(() => { try { reg.update(); } catch(e) {} }, 15 * 1000);
@@ -5570,7 +5592,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.59</div>
+      <div class="splash-version" id="splashVersion">v—</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -5867,6 +5889,15 @@ table.combo-eval tbody td .nodata {
           <div class="label">시트 마지막 변경</div>
           <div class="value" id="dataMgmtSheetChange">—</div>
         </div>
+        <!-- v2.60: PWA 버전 + 자동 동기화 주기 -->
+        <div class="data-mgmt-row">
+          <div class="label">PWA 버전</div>
+          <div class="value" id="dataMgmtPwaVersion">—</div>
+        </div>
+        <div class="data-mgmt-row">
+          <div class="label">자동 동기화 주기</div>
+          <div class="value">2분 (PWA 켜 있을 때)</div>
+        </div>
       </div>
       <div class="data-mgmt-actions">
         <button class="data-mgmt-btn" onclick="autoLoadData({forceFresh:true})" title="시트에서 최신 데이터를 새로 받아옴 (~100초)">
@@ -5878,7 +5909,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="data-mgmt-hint">
         시트에 데이터를 추가했는데 화면에 안 보이거나 옛 데이터가 계속 보일 때 사용하세요.
-        평소엔 5분마다 자동 동기화되므로 별도 작업 불필요합니다.
+        평소엔 2분마다 자동 동기화되므로 별도 작업 불필요합니다.
       </div>
     </div>
   </section>
@@ -9312,6 +9343,11 @@ async function _aqUpdateDataMetaUI() {
     if (sheetChangeEl) {
       sheetChangeEl.textContent = _aqFormatRelativeTime(sheetChange);
     }
+    // v2.60: PWA 버전 표시
+    const pwaVerEl = document.getElementById('dataMgmtPwaVersion');
+    if (pwaVerEl) {
+      pwaVerEl.textContent = 'v' + (window.AQ_PWA_VERSION || '—');
+    }
   } catch (e) { console.warn('[_aqUpdateDataMetaUI]', e); }
 }
 window._aqUpdateDataMetaUI = _aqUpdateDataMetaUI;
@@ -9944,7 +9980,8 @@ window.autoLoadData = autoLoadData;
 //   forceFresh 성공 시 lastSheetsState 갱신 → 신호 자동 제거
 //   탭 hidden일 때 skip (배터리 / 트래픽 절약)
 // ============================================================================
-const AQ_POLL_INTERVAL_MS = 5 * 60 * 1000;  // 5분
+// v2.60: 5분 → 2분 — 사용자 PWA 켜 있을 때만 polling (visibility hidden 시 skip)
+const AQ_POLL_INTERVAL_MS = 2 * 60 * 1000;  // 2분
 let _aqPollInterval = null;
 let _aqPollStarted = false;
 
