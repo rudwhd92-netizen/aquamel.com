@@ -4660,7 +4660,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.38</div>
+      <div class="splash-version" id="splashVersion">v2.39</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7485,35 +7485,24 @@ let _autoLoadInProgress = false;
 //   PWA는 CDN에서 data.json 1번 fetch → 2-3초에 모든 데이터 로드 완료
 //   실패 시 → autoLoadData가 자동으로 백엔드 직접 호출 fallback
 // ============================================================================
-// v2.38: 마지막 ingest된 bundle timestamp (silent SWR 비교용)
-let _lastBundleTs = null;
-
-async function tryLoadFromBundle(opts = {}) {
-  const silent = opts.silent === true;
+async function tryLoadFromBundle() {
   const t0 = performance.now();
   try {
-    // v2.38: silent 모드면 SW 우회 강제 (cache-busting query + no-store)
-    const url = silent
-      ? './data/data.json?_=' + Date.now()
-      : './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
-    if (!silent) splashUpdate(15);
-    const res = await fetch(url, silent ? { cache: 'no-store' } : { cache: 'default' });
+    // cache-bust query — 새로고침 버튼 누를 땐 최신, 평소엔 SW 캐시 사용
+    const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
+    splashUpdate(15);
+    const res = await fetch(url, { cache: 'default' });
     if (!res.ok) {
-      if (!silent) console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
+      console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
       return false;
     }
-    if (!silent) splashUpdate(40);
+    splashUpdate(40);
     const bundle = await res.json();
     if (!bundle || !bundle.ok) {
-      if (!silent) console.warn('[tryLoadFromBundle] data.json invalid:', bundle);
+      console.warn('[tryLoadFromBundle] data.json invalid:', bundle);
       return false;
     }
-    // v2.38: silent — 같은 timestamp면 skip (변경 없음)
-    if (silent && _lastBundleTs && bundle.timestamp === _lastBundleTs) {
-      return false;
-    }
-    _lastBundleTs = bundle.timestamp;
-    if (!silent) splashUpdate(55);
+    splashUpdate(55);
 
     // ─── _state 채우기 — 기존 autoLoadData 로직 모방 ───
 
@@ -7538,13 +7527,13 @@ async function tryLoadFromBundle(opts = {}) {
       if (tk && judge) _state.evaluations.US[tk] = judge;
     });
 
-    if (!silent) splashUpdate(65);
+    splashUpdate(65);
 
     // 2) KJP 매핑
     buildKjpMaps_({ ok: true, rows: (bundle.US && bundle.US.kjpMaster) || [] }, 'US');
     buildKjpMaps_({ ok: true, rows: (bundle.KR && bundle.KR.kjpMaster) || [] }, 'KR');
 
-    if (!silent) splashUpdate(75);
+    splashUpdate(75);
 
     // 3) Sectors (시장별 + ohlcv 정규화)
     _state.sectorsByMarket = { US: {}, KR: {} };
@@ -7560,7 +7549,7 @@ async function tryLoadFromBundle(opts = {}) {
       });
     });
 
-    if (!silent) splashUpdate(85);
+    splashUpdate(85);
 
     // 4) Macro (시장별)
     _state.macroByMarket = { US: [], KR: [] };
@@ -7600,7 +7589,7 @@ async function tryLoadFromBundle(opts = {}) {
     lsSet(LS.KJP_DESC_MAP,    _state.tickerDescMap);
     lsSet(LS.KJP_COMPANY_MAP, _state.tickerCompanyMap);
 
-    if (!silent) splashUpdate(92);
+    splashUpdate(92);
 
     // 8) 메인 화면 렌더 — fast path에서도 정상 함수명 사용 (applyFilters X → applyFilterAndRender)
     try { applyFilterAndRender(); } catch (e) { console.warn('[bundle] applyFilterAndRender:', e); }
@@ -7616,6 +7605,10 @@ async function tryLoadFromBundle(opts = {}) {
     if (document.getElementById('macroCard')) document.getElementById('macroCard').style.display = _state.macro.length ? '' : 'none';
     if (document.getElementById('filterCard')) document.getElementById('filterCard').style.display = '';
     if (document.getElementById('archiveCard')) document.getElementById('archiveCard').style.display = '';
+
+    // v2.39: V1↔V2 토글 효과를 자동으로 한 번 trigger — 새 시그널/평가 등 모든 archive 의존 view 재계산
+    //   (사용자가 토글 안 해도 자동 반영. silent SWR 없이 단순 view 재렌더만)
+    try { if (typeof setVshapeVersion === 'function') setVshapeVersion(_state.vshapeVersion); } catch (e) { console.warn('[bundle] setVshapeVersion auto:', e); }
 
     const dt = (performance.now() - t0).toFixed(0);
     const ts = bundle.timestamp || 'unknown';
@@ -7989,9 +7982,6 @@ async function autoLoadData() {
     if (Object.keys(_state.evaluations.US).length === 0) {
       setTimeout(() => _lazyFetchEvaluations(), 400);
     }
-    // v2.38: 일정 시간 후 data.json silent refresh — 새 시그널/평가 등이 도착하면 즉시 반영
-    //   (V1↔V2 토글 안 해도 자동으로 새 시그널 보이게)
-    setTimeout(() => tryLoadFromBundle({ silent: true }).catch(()=>{}), 3500);
   } catch (err) {
     console.error(err);
     splashError(err.message || '데이터 로드 실패');
@@ -8001,24 +7991,6 @@ async function autoLoadData() {
   }
 }
 window.autoLoadData = autoLoadData;
-
-// v2.38: 페이지 활성화 시 (탭 전환/포커스 복귀) silent SWR — 새 data.json 자동 반영
-//   원리: SW를 우회한 fetch로 cache-buster query + no-store → 항상 fresh
-//   변경 있으면 view 자동 재렌더 (V1↔V2 토글 안 해도 됨)
-let _lastSilentRefreshTs = 0;
-function _maybeSilentRefresh() {
-  if (document.visibilityState !== 'visible') return;
-  const now = Date.now();
-  if (now - _lastSilentRefreshTs < 60000) return;  // 1분 내 중복 호출 차단
-  _lastSilentRefreshTs = now;
-  tryLoadFromBundle({ silent: true }).catch(()=>{});
-  // 매수매력도도 같이 refresh
-  _resetEvalFetchPromise && _resetEvalFetchPromise();
-  _state.evaluations.US = {};
-  _lazyFetchEvaluations();
-}
-document.addEventListener('visibilitychange', _maybeSilentRefresh);
-window.addEventListener('focus', _maybeSilentRefresh);
 
 // ============================================================================
 // v2.10: 차트 타임프레임 (3M/6M/1Y) — 공통 샘플링 함수 + 핸들러
