@@ -5371,7 +5371,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.51</div>
+      <div class="splash-version" id="splashVersion">v2.52</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -9071,8 +9071,6 @@ async function autoLoadData(opts) {
         setTimeout(() => _aqBackgroundRefresh(cachedTs), 100);
         // v2.50: polling 시작 (한 번만 — 내부 가드)
         _aqStartPolling();
-        // v2.51: 시트 캘린더 백그라운드 fetch
-        if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false);
         return;
       }
     } catch (e) {
@@ -9123,8 +9121,6 @@ async function autoLoadData(opts) {
         aqCacheSaveState();
         // v2.50: polling 시작 (한 번만 — 내부 가드)
         _aqStartPolling();
-        // v2.51: 시트 캘린더 백그라운드 fetch (캐시 만료 시에만 backend 호출)
-        if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false);
         return;
       }
     } else {
@@ -9358,8 +9354,6 @@ async function autoLoadData(opts) {
     // v2.50: forceFresh 또는 일반 fallback 성공 — 기준점 갱신 + 신호 OFF + polling 시작
     _aqUpdateLastSheetsState();
     _aqStartPolling();
-    // v2.51: 시트 캘린더도 fresh로 (forceFresh 시 강제 갱신)
-    if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(!!forceFresh);
   } catch (err) {
     console.error(err);
     splashError(err.message || '데이터 로드 실패');
@@ -15325,6 +15319,8 @@ function switchMobileTab(tab) {
   } else if (tab === 'schedule') {
     // v2.46: 캘린더 렌더
     try { aqCalendarRender(); } catch (e) {}
+    // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
+    try { if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false); } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -15420,6 +15416,8 @@ function setPCTab(tab) {
     // 일정 페이지 진입 시 캘린더 렌더 (DOM 준비된 후)
     if (tab === 'schedule') {
       try { aqCalendarRender(); } catch (e) {}
+      // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
+      try { if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false); } catch (e) {}
     }
   } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis') {
     // v2.03: analysis도 사이드 패널 (탐색과 동일 UI/UX)
