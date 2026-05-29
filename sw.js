@@ -30,19 +30,19 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
-  // v2.04: data/data.json → stale-while-revalidate (캐시 즉시 반환 + 백그라운드 갱신)
+  // v2.36-fix: data/data.json → network-first (매번 fresh, 옛 cached 잔상 차단)
+  //   기존 SWR은 cached 응답을 즉시 반환 + 백그라운드 갱신 → 사용자는 다음 visit에만 새 데이터 봄
+  //   변경: network 우선, 실패 시만 cache fallback
   if (url.pathname.includes('/data/data.json')) {
     event.respondWith(
-      caches.open(CACHE_NAME).then(cache => {
-        return cache.match(req, { ignoreSearch: true }).then(cached => {
-          const networkPromise = fetch(req).then(res => {
-            if (res && res.status === 200) {
-              cache.put(req, res.clone()).catch(()=>{});
-            }
-            return res;
-          }).catch(() => null);
-          return cached || networkPromise;
-        });
+      fetch(req).then(res => {
+        if (res && res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, clone).catch(()=>{}));
+        }
+        return res;
+      }).catch(() => {
+        return caches.match(req, { ignoreSearch: true });
       })
     );
     return;
