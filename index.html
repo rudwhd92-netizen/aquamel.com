@@ -514,6 +514,10 @@ section.card {
   /* v2.11: 카드 enter 애니메이션은 유지 — 페이지/탭 전환에서도 재실행 */
   animation: card-enter 0.32s var(--ease-out) both;
 }
+/* v2.40: PC 화면(≥1024px)에서 카드 사이 여백 확대 — 모바일 32px 유지, PC만 56px로 호흡 */
+@media (min-width: 1024px) {
+  section.card { margin-bottom: 56px; }
+}
 @keyframes card-enter {
   from {
     transform: translateY(8px);
@@ -4650,7 +4654,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.36</div>
+      <div class="splash-version" id="splashVersion">v2.40</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7458,11 +7462,15 @@ async function tryLoadFromBundle() {
     splashUpdate(92);
 
     // 8) 메인 화면 렌더 — fast path에서도 정상 함수명 사용 (applyFilters X → applyFilterAndRender)
+    // v2.40: computeSignalReturns + renderSectorFilter 추가 — fast path 초기 진입 시 시그널 성과(Case 1~4, 1d/5d) N/A 표시 fix
+    try { computeSignalReturns(); } catch (e) { console.warn('[bundle] computeSignalReturns:', e); }
     try { applyFilterAndRender(); } catch (e) { console.warn('[bundle] applyFilterAndRender:', e); }
     try { renderMacro(); } catch (e) { console.warn(e); }
+    try { renderSectorFilter(); } catch (e) { console.warn(e); }
     try { renderSignalFilter(); } catch (e) { console.warn(e); }
     try { renderSectorFramework(); } catch (e) { console.warn(e); }
     try { renderSectorAnalysis(); } catch (e) { console.warn(e); }
+    try { refreshLayerReturns(); } catch (e) {}
     try { buildBuyPointsCard(); } catch (e) { console.warn(e); }
     try { buildStockList(); } catch (e) { console.warn(e); }
     try { _archiveMobileShown = 10; buildArchiveMobileList(); } catch (e) {}
