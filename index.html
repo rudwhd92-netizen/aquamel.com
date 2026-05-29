@@ -5444,7 +5444,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.56</div>
+      <div class="splash-version" id="splashVersion">v2.57</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7483,8 +7483,8 @@ async function fetchSheetCalendar(forceFresh) {
           return _aqCalSheetEvents;
         }
       }
-      // v2.56: 옛 v1 캐시 cleanup (한 번만)
-      try { await aqDbSet('us_calendar_sheet', null); } catch (e) {}
+      // v2.57: 옛 v1 캐시 진짜 삭제 (null 저장이 아님)
+      try { await aqDbDel('us_calendar_sheet'); } catch (e) {}
     } catch (e) {}
   }
   if (typeof apiCall !== 'function' || !backendReady()) return _aqCalSheetEvents;
@@ -9006,6 +9006,54 @@ async function aqDbSet(key, value) {
     });
   } catch (e) { console.warn('[aqDbSet]', e); return false; }
 }
+// v2.57: 진짜 delete (null 저장이 아님)
+async function aqDbDel(key) {
+  try {
+    const db = await _aqDbOpen();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(AQ_DB_STORE, 'readwrite');
+      const req = tx.objectStore(AQ_DB_STORE).delete(key);
+      req.onsuccess = () => resolve(true);
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) { console.warn('[aqDbDel]', e); return false; }
+}
+
+// v2.57: 옛 캐시 키 자동 cleanup — DOMContentLoaded 시점에 1회 실행
+//   현재 정상 키: state, lastSheetsState, us_calendar_sheet_v2
+//   옛 키 (구버전): us_calendar_sheet (v1 — 미래만)
+const AQ_CACHE_CLEANUP_VERSION = 'v2_57';
+async function _aqAutoCleanupOldCache() {
+  try {
+    const done = localStorage.getItem('aq_cache_cleanup_v') === AQ_CACHE_CLEANUP_VERSION;
+    if (done) return;
+    const OLD_KEYS = ['us_calendar_sheet'];  // 옛 v1 캐시
+    for (const k of OLD_KEYS) {
+      try { await aqDbDel(k); } catch (e) {}
+    }
+    localStorage.setItem('aq_cache_cleanup_v', AQ_CACHE_CLEANUP_VERSION);
+    console.log('[cache] 옛 캐시 cleanup 완료 (' + AQ_CACHE_CLEANUP_VERSION + ')');
+  } catch (e) { console.warn('[_aqAutoCleanupOldCache]', e); }
+}
+// 페이지 로드 직후 백그라운드로 한 번 실행 (메인 흐름 영향 X)
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => _aqAutoCleanupOldCache(), 2000);
+});
+
+// v2.57: 사용자/디버그용 — 모든 IDB 캐시 강제 클리어 (마이 메뉴 또는 콘솔 호출)
+async function aqClearAllCaches() {
+  try {
+    const KEYS = ['state', 'lastSheetsState', 'us_calendar_sheet', 'us_calendar_sheet_v2'];
+    for (const k of KEYS) {
+      try { await aqDbDel(k); } catch (e) {}
+    }
+    try { localStorage.removeItem('aq_cache_cleanup_v'); } catch (e) {}
+    if (typeof aqToast === 'function') aqToast('모든 캐시 클리어 완료 — 새로고침 시 fresh 데이터 받음');
+    console.log('[cache] 모든 IDB 캐시 클리어 완료');
+    return true;
+  } catch (e) { console.warn('[aqClearAllCaches]', e); return false; }
+}
+window.aqClearAllCaches = aqClearAllCaches;
 
 // _state의 데이터 필드만 캐시 (UI/임시 필드 제외)
 async function aqCacheSaveState() {
@@ -9638,6 +9686,10 @@ function _aqSetUpdateSignal(on) {
   if (mob)  mob.classList.toggle('has-update', !!on);
 }
 
+// v2.57: 자동 silent fresh 빈도 가드 — 30분 이내 중복 방지
+let _aqLastAutoFreshAt = 0;
+const AQ_AUTO_FRESH_COOLDOWN_MS = 30 * 60 * 1000;  // 30분
+
 async function _aqPollSheetsChange() {
   if (document.visibilityState === 'hidden') return;
   if (_autoLoadInProgress) return;
@@ -9664,8 +9716,21 @@ async function _aqPollSheetsChange() {
       if (newV > oldV) { changed = true; changedKey = key; break; }
     }
     if (changed) {
-      console.log('[poll] 시트 변경 감지 — 신호 ON (key=' + changedKey + ')');
+      console.log('[poll] 시트 변경 감지 (key=' + changedKey + ') — 빨간 점 표시 + 자동 silent fresh 시도');
       _aqSetUpdateSignal(true);
+      // v2.57: 자동 silent forceFresh — 빈도 가드 후 백그라운드 갱신
+      //   사용자가 새로고침 안 눌러도 30분 안에 한 번은 자동 동기화
+      const sinceLast = Date.now() - _aqLastAutoFreshAt;
+      if (sinceLast > AQ_AUTO_FRESH_COOLDOWN_MS) {
+        _aqLastAutoFreshAt = Date.now();
+        console.log('[poll] 자동 silent forceFresh 실행 (마지막 자동 갱신 ' + Math.floor(sinceLast/60000) + '분 전)');
+        try {
+          if (typeof aqToast === 'function') aqToast('시트 변경 감지 — 백그라운드에서 갱신 중');
+          await autoLoadData({ forceFresh: true, silent: true });
+        } catch (e) { console.warn('[poll] auto silent fresh 실패:', e); }
+      } else {
+        console.log('[poll] 자동 fresh 쿨다운 중 (' + Math.floor(sinceLast/60000) + '/30분) — 사용자 새로고침 대기');
+      }
     }
     // 신호 OFF는 사용자가 새로고침 한 후에만 (자동 OFF 안 함 — 사용자가 새로고침 클릭 전까지 유지)
   } catch (e) {
