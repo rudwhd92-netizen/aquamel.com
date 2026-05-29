@@ -14,9 +14,14 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches.keys().then(keys => {
+      // 백혈구: 현재 cache 외 모든 aquamel-v2.x 캐시 박멸
+      const stale = keys.filter(k => k !== CACHE_NAME);
+      if (stale.length > 0) {
+        console.log('[sw 백혈구] 옛 캐시 박멸:', stale);
+      }
+      return Promise.all(stale.map(k => caches.delete(k)));
+    }).then(() => self.clients.claim())
   );
 });
 
