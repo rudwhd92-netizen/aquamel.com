@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.64';
+window.AQ_PWA_VERSION = '2.65';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8053,7 +8053,26 @@ window.fetchSheetCalendar = fetchSheetCalendar;
 
 // ============================================================================
 // v2.64: 내부자 거래 데이터 (US_RESULT, SEC Form 4 매수 거래) fetch + 종목별 그룹화
-// ============================================================================
+// v2.65: Security 필터 — 차트 가격(보통주 USD)과 단위 일치하는 거래만 통과
+//   ✗ Preferred / Warrant / Option / RSU / Note / Bond (derivatives — 가격대 다름)
+//   ✗ 괄호 안 외국 거래소 코드 (.TW, .HK, .L 등 — 본국 보통주, 통화 단위 다름)
+//   ✓ Common Stock / Common Shares / Class A/B / Ordinary Shares / American Depositary Shares 등
+const _AQ_FOREIGN_EXCH_CODES = ['TW', 'HK', 'L', 'T', 'KS', 'KQ', 'TYO', 'JP', 'TO', 'SW', 'DE', 'PA', 'MI', 'MC', 'AS', 'AX', 'SZ', 'SH', 'SI', 'SG', 'KR', 'NS', 'BO'];
+const _AQ_FOREIGN_EXCH_PAT = new RegExp('\\(\\s*[A-Za-z0-9]+\\.(' + _AQ_FOREIGN_EXCH_CODES.join('|') + ')\\s*\\)', 'i');
+function isCommonEquityTrade(securityStr) {
+  if (!securityStr) return true;  // 비어있으면 default 포함 (정보 부족 시 보수적)
+  const s = String(securityStr).toLowerCase();
+  // derivatives — 가격이 보통주와 다름
+  if (s.includes('preferred')) return false;
+  if (s.includes('warrant')) return false;
+  if (s.includes('option')) return false;
+  if (s.includes('rsu') || s.includes('restricted stock unit')) return false;
+  if (/\bnote\b|\bbond\b/.test(s)) return false;
+  // 외국 거래소 표시 (예: "Common Shares (2330.TW)") — 본국 보통주, 가격/주식 수 단위 다름
+  if (_AQ_FOREIGN_EXCH_PAT.test(securityStr)) return false;
+  return true;
+}
+
 const AQ_US_INSIDER_TAB = 'US_RESULT';
 const AQ_INS_CACHE_KEY = 'us_insider_v1';
 const AQ_INS_CACHE_TTL_MIN = 360;  // 6h
@@ -15033,18 +15052,32 @@ async function openChart(ticker) {
     .filter(t => t.x && t.x >= cutoffStr);
 
   // v2.64: 내부자 거래 마커 (US만, _aqInsiderTrades에서 종목별 데이터 가져옴)
-  const insiderMarkers = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[ticker])
+  // v2.65: 2단계 필터
+  //   Step 1: 보통주 계열만 (Preferred / 외국 거래소 표시 거래 제외 — 가격 단위 다름)
+  //   Step 2: 차트의 그 일자 close 가격과 비교, 0.5x~2x 범위 안이면 OK (단위 mismatch 안전망)
+  const _allInsiderTrades = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[ticker])
     ? _aqInsiderTrades[ticker]
-        .filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
-        .map(t => ({
-          x: t.transDate,
-          y: t.price,
-          shares: t.shares,
-          sharesAfter: t.sharesAfter,
-          ownerName: t.ownerName,
-          relationship: t.relationship,
-        }))
     : [];
+  const filteredInsiderTrades = _allInsiderTrades
+    .filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
+    .filter(t => isCommonEquityTrade(t.security))
+    .filter(t => {
+      // 가격 plausibility — 차트 close 가격과 비교
+      const idx = dates.indexOf(t.transDate);
+      if (idx < 0) return true;  // 차트 윈도우 안인데 indexOf 실패 — buildSparse에서 어차피 dropped
+      const chartClose = closes[idx];
+      if (!chartClose || chartClose <= 0) return true;
+      const ratio = t.price / chartClose;
+      return ratio > 0.5 && ratio < 2;
+    });
+  const insiderMarkers = filteredInsiderTrades.map(t => ({
+    x: t.transDate,
+    y: t.price,
+    shares: t.shares,
+    sharesAfter: t.sharesAfter,
+    ownerName: t.ownerName,
+    relationship: t.relationship,
+  }));
 
   // Signal markers from archive — respect global signal filter
   // v1.81: priority도 시장별 — KR엔 'T' 한 종류만, US는 4가지 T_*
@@ -15068,7 +15101,8 @@ async function openChart(ticker) {
   // Ticker signal history table (below chart)
   buildTickerHistoryTable(ticker);
   // v2.64: 내부자 거래 이력 테이블
-  renderInsiderHistory(ticker);
+  // v2.65: 차트 마커와 동일한 필터된 거래만 (보통주 + 가격 plausible)
+  renderInsiderHistory(ticker, filteredInsiderTrades);
 
   // Modal-level signal filter buttons (synced with main filter)
   renderSignalFilterInto($('modalSignalFilterArea'));
@@ -16091,12 +16125,18 @@ function buildTickerHistoryTable(ticker) {
 }
 
 // v2.64: 내부자 거래 이력 테이블 — 거래자(Owner_Name)마다 일자/Relationship/Security/Shares/Price/비중%
-function renderInsiderHistory(ticker) {
+// v2.65: filteredTrades 파라미터 — 차트 마커와 동일하게 필터된 거래만 표시 (보통주 + 가격 plausible)
+function renderInsiderHistory(ticker, filteredTrades) {
   const wrap = $('insiderHistoryWrap');
   const area = $('insiderHistoryArea');
   if (!wrap || !area) return;
   const tkU = String(ticker || '').toUpperCase();
-  const trades = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[tkU]) ? _aqInsiderTrades[tkU] : [];
+  // filteredTrades 우선 사용, 없으면 raw에서 가져와 default 필터 적용
+  let trades = filteredTrades;
+  if (!Array.isArray(trades)) {
+    const raw = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[tkU]) ? _aqInsiderTrades[tkU] : [];
+    trades = raw.filter(t => isCommonEquityTrade(t.security));
+  }
   // US 시장이 아니거나 데이터 없으면 숨김
   if (!trades.length || (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US')) {
     wrap.style.display = 'none';
