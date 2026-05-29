@@ -501,6 +501,156 @@ section.card {
   .hero .meta { width: 100%; justify-content: flex-end; }
 }
 
+/* v2.44: 토스트 알림 — disabled 메뉴 클릭 시 "준비 중" 안내 */
+.aq-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 90px;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(20,20,20,0.92);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: calc(100vw - 40px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.aq-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (min-width: 641px) { .aq-toast { bottom: 40px; } }
+[data-theme="light"] .aq-toast { background: rgba(45,35,15,0.92); color: #fff; }
+
+/* v2.44: PC 사이드바 영역 구분선 */
+.pc-sidebar .pc-sidebar-divider {
+  width: 32px;
+  height: 1px;
+  margin: 8px 0;
+  background: rgba(255,255,255,0.15);
+  align-self: center;
+}
+[data-theme="light"] .pc-sidebar .pc-sidebar-divider { background: rgba(0,0,0,0.12); }
+
+/* v2.44: disabled 메뉴 — 시각적 약화 + 커서 변경 */
+.pc-tab-btn.disabled,
+.mtab-btn.disabled,
+.mo-drawer-item.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.pc-tab-btn.disabled:hover,
+.mtab-btn.disabled:hover { color: inherit !important; }
+
+/* v2.44: MO 상단 1열 (검색 + 햄버거) — 모바일 전용 */
+.mobile-topbar {
+  display: none;  /* PC 숨김 */
+}
+@media (max-width: 640px) {
+  .mobile-topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 18px;
+    padding: 8px 4px 0 4px;
+    margin-bottom: 4px;
+  }
+  .mobile-topbar-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-mid);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .mobile-topbar-btn:hover,
+  .mobile-topbar-btn:active { background: rgba(255,255,255,0.06); color: var(--text-hi); }
+  .mobile-topbar-btn svg { width: 22px; height: 22px; }
+  [data-theme="light"] .mobile-topbar-btn:hover,
+  [data-theme="light"] .mobile-topbar-btn:active { background: rgba(0,0,0,0.06); }
+}
+
+/* v2.44: MO 햄버거 드로어 — 왼쪽 슬라이드 */
+.mo-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.mo-drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mo-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 78%;
+  max-width: 320px;
+  background: var(--bg-card, #1a1a1a);
+  z-index: 9001;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease-out;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+}
+.mo-drawer.open { transform: translateX(0); }
+[data-theme="light"] .mo-drawer { background: #fefdf8; }
+.mo-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+[data-theme="light"] .mo-drawer-head { border-bottom-color: rgba(0,0,0,0.08); }
+.mo-drawer-title { font-size: 15px; font-weight: 700; color: var(--text-hi); letter-spacing: 0.5px; }
+.mo-drawer-close {
+  background: transparent;
+  border: none;
+  color: var(--text-mid);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.mo-drawer-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  flex: 1;
+}
+.mo-drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: transparent;
+  border: none;
+  color: var(--text-mid);
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.mo-drawer-item:hover,
+.mo-drawer-item:active { background: rgba(255,255,255,0.05); color: var(--text-hi); }
+[data-theme="light"] .mo-drawer-item:hover,
+[data-theme="light"] .mo-drawer-item:active { background: rgba(0,0,0,0.04); }
+.mo-drawer-item svg { width: 20px; height: 20px; flex-shrink: 0; }
+
 /* ============ CARDS (collapsible) ============ */
 section.card {
   /* v2.18: 영역 구분 프레임 모두 제거 — 답답함 해소
@@ -4704,7 +4854,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.42</div>
+      <div class="splash-version" id="splashVersion">v2.44</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4714,6 +4864,23 @@ table.combo-eval tbody td .nodata {
 </div>
 
 <div class="container">
+
+  <!-- v2.44: MO 전용 상단 줄 — 토스증권 스타일 (오른쪽 정렬: 검색 + 햄버거) -->
+  <div class="mobile-topbar" aria-label="상단 메뉴">
+    <button class="mobile-topbar-btn" id="mobileSearchBtn" onclick="aqToast('준비 중입니다')" aria-label="검색">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+    </button>
+    <button class="mobile-topbar-btn" id="mobileMenuBtn" onclick="openMoDrawer()" aria-label="메뉴">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 6h18"/>
+        <path d="M3 12h18"/>
+        <path d="M3 18h18"/>
+      </svg>
+    </button>
+  </div>
 
   <!-- ============ HEADER (AQUAMEL) ============ -->
   <header class="hero">
@@ -5079,19 +5246,14 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ v1.45 MOBILE-ONLY: 하단 플로팅 알약 메뉴 (그레이톤 SVG 아이콘) ============ -->
+  <!-- v2.44: 6개 → 5개로 재구성 (발견/탐색/To-Do/분석/일정), 섹터·보드·마이는 햄버거 드로어로 이동 -->
   <nav class="mobile-tab-bar" id="mobileTabBar" aria-label="모바일 네비게이션">
     <button class="mtab-btn" data-mtab="discover" onclick="switchMobileTab('discover')" aria-label="발견">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="7"/>
-        <path d="M21 21l-4.35-4.35"/>
+        <circle cx="12" cy="12" r="9"/>
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
       </svg>
       <span class="mtab-label">발견</span>
-    </button>
-    <button class="mtab-btn" data-mtab="sector" onclick="switchMobileTab('sector')" aria-label="섹터">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 20V10M9 20V4M15 20v-8M21 20V8"/>
-      </svg>
-      <span class="mtab-label">섹터</span>
     </button>
     <button class="mtab-btn" data-mtab="explore" onclick="switchMobileTab('explore')" aria-label="탐색">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -5100,30 +5262,54 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">탐색</span>
     </button>
-    <!-- v2.05: 분석 → 보드 순서 -->
+    <button class="mtab-btn disabled" data-mtab="todo" onclick="switchMobileTab('todo')" aria-label="To-Do">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 6l-4 4-2-2"/>
+        <path d="M9 13l-4 4-2-2"/>
+        <path d="M13 7h7"/>
+        <path d="M13 14h7"/>
+      </svg>
+      <span class="mtab-label">To-Do</span>
+    </button>
     <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
       </svg>
       <span class="mtab-label">분석</span>
     </button>
-    <button class="mtab-btn" data-mtab="board" onclick="switchMobileTab('board')" aria-label="보드">
+    <button class="mtab-btn disabled" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="7" height="9" rx="1.2"/>
-        <rect x="14" y="3" width="7" height="5" rx="1.2"/>
-        <rect x="14" y="12" width="7" height="9" rx="1.2"/>
-        <rect x="3" y="16" width="7" height="5" rx="1.2"/>
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M3 10h18"/>
+        <path d="M8 3v4"/>
+        <path d="M16 3v4"/>
       </svg>
-      <span class="mtab-label">보드</span>
-    </button>
-    <button class="mtab-btn" data-mtab="my" onclick="switchMobileTab('my')" aria-label="마이">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="8" r="4"/>
-        <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
-      </svg>
-      <span class="mtab-label">마이</span>
+      <span class="mtab-label">일정</span>
     </button>
   </nav>
+
+  <!-- v2.44: MO 햄버거 드로어 — 섹터/보드/마이 (PC 사이드바와는 별개의 보조 메뉴) -->
+  <div class="mo-drawer-backdrop" id="moDrawerBackdrop" onclick="closeMoDrawer()" aria-hidden="true"></div>
+  <aside class="mo-drawer" id="moDrawer" aria-label="보조 메뉴" aria-hidden="true">
+    <div class="mo-drawer-head">
+      <div class="mo-drawer-title">메뉴</div>
+      <button class="mo-drawer-close" onclick="closeMoDrawer()" aria-label="닫기">×</button>
+    </div>
+    <nav class="mo-drawer-list">
+      <button class="mo-drawer-item" onclick="moDrawerNav('sector')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V10M9 20V4M15 20v-8M21 20V8"/></svg>
+        <span>섹터</span>
+      </button>
+      <button class="mo-drawer-item" onclick="moDrawerNav('board')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.2"/><rect x="14" y="3" width="7" height="5" rx="1.2"/><rect x="14" y="12" width="7" height="9" rx="1.2"/><rect x="3" y="16" width="7" height="5" rx="1.2"/></svg>
+        <span>보드</span>
+      </button>
+      <button class="mo-drawer-item" onclick="moDrawerNav('my')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+        <span>마이</span>
+      </button>
+    </nav>
+  </aside>
 
   <!-- ============ LOADING OVERLAY ============ -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -5263,22 +5449,14 @@ table.combo-eval tbody td .nodata {
 
 <!-- v1.57 PC 우측 세로 사이드바 — 5개 메뉴 (모바일에선 display:none) -->
 <nav class="pc-sidebar" id="pcSidebar" aria-label="PC 네비게이션">
+  <!-- v2.44: 영역 1 — 화면 전체 교체 탭 (메인 / 일정 / 보드 / 마이) -->
   <button class="pc-tab-btn active" data-pc-tab="main" onclick="setPCTab('main')" aria-label="메인">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 4l9 8M5 10v10h14V10"/></svg>
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8M5 10v10h14V10"/></svg>
     <span class="pc-tab-label">메인</span>
   </button>
-  <button class="pc-tab-btn" data-pc-tab="discover" onclick="setPCTab('discover')" aria-label="발견">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <span class="pc-tab-label">발견</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="explore" onclick="setPCTab('explore')" aria-label="탐색">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M16 8l-3 5-5 3 3-5z"/></svg>
-    <span class="pc-tab-label">탐색</span>
-  </button>
-  <!-- v2.05: 분석 → 보드 순서 (이전 보드 → 분석 → 마이를 분석 → 보드 → 마이로 변경) -->
-  <button class="pc-tab-btn" data-pc-tab="analysis" onclick="setPCTab('analysis')" aria-label="분석">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
-    <span class="pc-tab-label">분석</span>
+  <button class="pc-tab-btn disabled" data-pc-tab="schedule" onclick="setPCTab('schedule')" aria-label="일정">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>
+    <span class="pc-tab-label">일정</span>
   </button>
   <button class="pc-tab-btn" data-pc-tab="board" onclick="setPCTab('board')" aria-label="보드">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
@@ -5287,6 +5465,27 @@ table.combo-eval tbody td .nodata {
   <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="마이">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
     <span class="pc-tab-label">마이</span>
+  </button>
+
+  <!-- v2.44: 영역 구분선 -->
+  <div class="pc-sidebar-divider" aria-hidden="true"></div>
+
+  <!-- v2.44: 영역 2 — 사이드 패널 (메인 화면 위에 공존, 발견/탐색/분석/To-Do) -->
+  <button class="pc-tab-btn" data-pc-tab="discover" onclick="setPCTab('discover')" aria-label="발견">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    <span class="pc-tab-label">발견</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="explore" onclick="setPCTab('explore')" aria-label="탐색">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M16 8l-3 5-5 3 3-5z"/></svg>
+    <span class="pc-tab-label">탐색</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="analysis" onclick="setPCTab('analysis')" aria-label="분석">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
+    <span class="pc-tab-label">분석</span>
+  </button>
+  <button class="pc-tab-btn disabled" data-pc-tab="todo" onclick="setPCTab('todo')" aria-label="To-Do">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
+    <span class="pc-tab-label">To-Do</span>
   </button>
 </nav>
 
@@ -6512,6 +6711,23 @@ window.closeColMenu = closeColMenu;
 
 function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function escapeAttr(s) { return escapeHtml(s); }
+
+// v2.44: 토스트 알림 (disabled 메뉴 클릭 시 "준비 중" 등)
+function aqToast(msg, duration) {
+  const old = document.getElementById('aqToast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.id = 'aqToast';
+  t.className = 'aq-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => {
+    t.classList.remove('show');
+    setTimeout(() => { if (t.parentNode) t.remove(); }, 250);
+  }, duration || 1800);
+}
+window.aqToast = aqToast;
 
 // ============================================================================
 // PORTFOLIO + TRADES (LocalStorage)
@@ -8139,38 +8355,241 @@ function parseReportText(text) {
   return out;
 }
 
-// v2.42: AI 권장 TO-DO 체크리스트 — localStorage helper + 토글 핸들러
-function _todoLoadAll() {
-  try { return JSON.parse(localStorage.getItem('aq_report_todos') || '{}'); }
-  catch (e) { return {}; }
+// ============================================================================
+// v2.43: TO-DO 파이프라인 — 태그 파서 + 중앙 store + 이벤트 구독
+//   향후 캘린더/대시보드/알림 등 어디서든 AqTodoStore.subscribe()로 연동 가능
+//   raw text → {when, what, body} 구조 분해, store는 모든 모듈의 단일 source of truth
+// ============================================================================
+
+// 태그 파서 — todo raw text에서 시점(when) + 과업(what) + 본문(body) 분리
+function parseTodoTags(rawText) {
+  const result = { raw: rawText || '', when: null, what: null, body: rawText || '', ticker: null };
+  if (!rawText || typeof rawText !== 'string') return result;
+  let remaining = rawText.trim();
+
+  // ─── 시점(WHEN) 태그 — 앞에서부터 1개만 매치, 더 구체적인 패턴 우선 ───
+  const whenPatterns = [
+    // 1) 날짜 범위: [PLAB 2026-05-30 ~ 2026-06-12]
+    { re: /^\[([A-Z0-9]+)\s+(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})\]\s*/,
+      build: m => ({ type: 'range', ticker: m[1], from: m[2], to: m[3] }) },
+    // 2) 단일 날짜: [PLAB 2026-05-30]
+    { re: /^\[([A-Z0-9]+)\s+(\d{4}-\d{2}-\d{2})\]\s*/,
+      build: m => ({ type: 'date', ticker: m[1], date: m[2] }) },
+    // 3) 분기 실적: [PLAB 26Y 3Q 실적발표] / [PLAB 2026Y 3Q 실적발표]
+    { re: /^\[([A-Z0-9]+)\s+(\d{2,4})Y\s+([1-4])Q\s+실적발표\]\s*/,
+      build: m => {
+        let yr = m[2];
+        if (yr.length === 2) yr = (parseInt(yr, 10) >= 50 ? '19' : '20') + yr;  // 26Y → 2026
+        return { type: 'quarter', ticker: m[1], year: parseInt(yr, 10), quarter: parseInt(m[3], 10) };
+      } },
+    // 4-a) 소프트 데드 (YYYY-MM까지): [PLAB 2026-12까지]
+    { re: /^\[([A-Z0-9]+)\s+(\d{4}-\d{2})까지\]\s*/,
+      build: m => ({ type: 'soft', ticker: m[1], deadline: m[2], format: 'month' }) },
+    // 4-b) 소프트 데드 (반기): [PLAB 2026 상반기] / [PLAB 2026 하반기]
+    { re: /^\[([A-Z0-9]+)\s+(\d{4})\s+(상|하)반기\]\s*/,
+      build: m => ({ type: 'soft', ticker: m[1], deadline: m[2] + ' ' + m[3] + '반기', year: parseInt(m[2], 10), half: m[3] }) },
+  ];
+  for (const p of whenPatterns) {
+    const m = remaining.match(p.re);
+    if (m) {
+      result.when = p.build(m);
+      result.ticker = m[1];
+      remaining = remaining.slice(m[0].length);
+      break;
+    }
+  }
+
+  // ─── 과업(WHAT) 태그 ───
+  const whatPatterns = [
+    // 5) 모니터링: [PLAB Form 4 모니터링]
+    { re: /^\[([A-Z0-9]+)\s+(.+?)\s+모니터링\]\s*/,
+      build: m => ({ type: 'monitor', ticker: m[1], keyword: m[2].trim() }) },
+    // 6) 조건부 트리거: [PLAB 조건: 종가 $35 회복]
+    { re: /^\[([A-Z0-9]+)\s+조건:\s*(.+?)\]\s*/,
+      build: m => ({ type: 'trigger', ticker: m[1], condition: m[2].trim() }) },
+  ];
+  for (const p of whatPatterns) {
+    const m = remaining.match(p.re);
+    if (m) {
+      result.what = p.build(m);
+      if (!result.ticker) result.ticker = m[1];
+      remaining = remaining.slice(m[0].length);
+      break;
+    }
+  }
+
+  result.body = remaining.trim();
+  return result;
 }
-function _todoSaveAll(obj) {
-  try { localStorage.setItem('aq_report_todos', JSON.stringify(obj)); } catch (e) {}
-}
+
+// 중앙 store — 체크된 todo의 단일 source of truth, 변경 시 listener에게 broadcast
+window.AqTodoStore = (function() {
+  const LS_KEY = 'aq_report_todos';
+  const listeners = new Set();
+
+  function loadRaw() {
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function saveRaw(obj) {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(obj)); } catch (e) {}
+  }
+
+  // 옛 v2.42 데이터 마이그레이션 — parsed 필드 없는 항목에 자동 파싱 추가 (한 번만 저장)
+  (function _migrate() {
+    const raw = loadRaw();
+    let changed = false;
+    Object.keys(raw).forEach(t => {
+      Object.keys(raw[t] || {}).forEach(d => {
+        Object.keys(raw[t][d] || {}).forEach(i => {
+          const it = raw[t][d][i];
+          if (it && !it.parsed && it.text) {
+            it.parsed = parseTodoTags(it.text);
+            changed = true;
+          }
+        });
+      });
+    });
+    if (changed) {
+      saveRaw(raw);
+      console.log('[AqTodoStore] 옛 todo 데이터 자동 마이그레이션 완료 (parsed 필드 추가)');
+    }
+  })();
+
+  function notify(event) {
+    listeners.forEach(fn => {
+      try { fn(event); } catch (e) { console.warn('[AqTodoStore] listener error:', e); }
+    });
+  }
+
+  // 평탄화된 active todo 목록 — 다른 모듈이 쓰기 좋은 형태
+  function getAll() {
+    const raw = loadRaw();
+    const out = [];
+    Object.keys(raw).forEach(reportTicker => {
+      Object.keys(raw[reportTicker] || {}).forEach(reportDate => {
+        Object.keys(raw[reportTicker][reportDate] || {}).forEach(idx => {
+          const it = raw[reportTicker][reportDate][idx];
+          if (!it) return;
+          const parsed = it.parsed || parseTodoTags(it.text || '');
+          out.push({
+            reportTicker,                            // 보고서가 속한 종목
+            reportDate,                              // 보고서 일자
+            idx: parseInt(idx, 10),                  // 보고서 내 todo 순서
+            text: it.text || '',                    // raw 문자열
+            parsed,                                  // {raw, when, what, body, ticker}
+            checkedAt: it.checkedAt || null,
+            // 편의 평탄 필드 (가장 자주 쓰임)
+            ticker: parsed.ticker || reportTicker,
+            when: parsed.when,
+            what: parsed.what,
+            body: parsed.body,
+          });
+        });
+      });
+    });
+    return out;
+  }
+
+  // 필터 헬퍼
+  function getByTicker(ticker) {
+    ticker = String(ticker || '').toUpperCase();
+    return getAll().filter(t => t.ticker === ticker);
+  }
+  function getByDateRange(fromIso, toIso) {
+    return getAll().filter(t => {
+      if (!t.when) return false;
+      const w = t.when;
+      if (w.type === 'date')  return w.date >= fromIso && w.date <= toIso;
+      if (w.type === 'range') return w.to   >= fromIso && w.from <= toIso;
+      // quarter/soft 는 단순 ISO 비교 어려움 — 향후 매핑 함수 분리해서 추가
+      return false;
+    });
+  }
+  function isChecked(reportTicker, reportDate, idx) {
+    const raw = loadRaw();
+    return !!(raw[reportTicker] && raw[reportTicker][reportDate] && raw[reportTicker][reportDate][idx]);
+  }
+
+  // ─── 변경 API (toggleReportTodo가 호출) ───
+  function _add(reportTicker, reportDate, idx, text) {
+    const raw = loadRaw();
+    if (!raw[reportTicker]) raw[reportTicker] = {};
+    if (!raw[reportTicker][reportDate]) raw[reportTicker][reportDate] = {};
+    const parsed = parseTodoTags(text);
+    const record = { text, parsed, checkedAt: new Date().toISOString() };
+    raw[reportTicker][reportDate][idx] = record;
+    saveRaw(raw);
+    notify({
+      type: 'added',
+      item: {
+        reportTicker, reportDate, idx, text, parsed,
+        ticker: parsed.ticker || reportTicker,
+        when: parsed.when, what: parsed.what, body: parsed.body,
+        checkedAt: record.checkedAt,
+      },
+    });
+  }
+  function _remove(reportTicker, reportDate, idx) {
+    const raw = loadRaw();
+    if (!raw[reportTicker] || !raw[reportTicker][reportDate]) return;
+    const removed = raw[reportTicker][reportDate][idx];
+    if (!removed) return;
+    delete raw[reportTicker][reportDate][idx];
+    if (Object.keys(raw[reportTicker][reportDate]).length === 0) delete raw[reportTicker][reportDate];
+    if (Object.keys(raw[reportTicker]).length === 0) delete raw[reportTicker];
+    saveRaw(raw);
+    const parsed = removed.parsed || parseTodoTags(removed.text || '');
+    notify({
+      type: 'removed',
+      item: {
+        reportTicker, reportDate, idx,
+        text: removed.text || '', parsed,
+        ticker: parsed.ticker || reportTicker,
+        when: parsed.when, what: parsed.what, body: parsed.body,
+      },
+    });
+  }
+
+  return {
+    // 조회 API
+    getAll,
+    getByTicker,
+    getByDateRange,
+    isChecked,
+    // 변경 API (내부 toggle 핸들러용 — 직접 호출 가능하지만 보통 toggleReportTodo 통해)
+    _add,
+    _remove,
+    // 이벤트 구독 — 향후 캘린더/대시보드/알림 모듈이 여기에 listener 등록
+    //   const unsub = AqTodoStore.subscribe((event) => { /* event.type: 'added'|'removed', event.item: {...} */ });
+    //   unsub();  // 또는 AqTodoStore.unsubscribe(fn);
+    subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); },
+    unsubscribe(fn) { listeners.delete(fn); },
+    // 진단용 — 파서 단독 호출
+    parseTags: parseTodoTags,
+  };
+})();
+
+// 기존 v2.42 호환 — _todoIsChecked는 store wrapper로 위임
 function _todoIsChecked(ticker, date, idx) {
-  const all = _todoLoadAll();
-  return !!(all[ticker] && all[ticker][date] && all[ticker][date][idx]);
+  return AqTodoStore.isChecked(ticker, date, idx);
 }
+
+// 토글 핸들러 — 체크박스 onchange에서 호출, AqTodoStore에 위임
 function toggleReportTodo(cb) {
   const item = cb.closest('.report-todo-item');
   const body = cb.closest('.report-detail-body');
   if (!item || !body) return;
-  const ticker = body.dataset.reportTicker;
-  const date = body.dataset.reportDate;
+  const reportTicker = body.dataset.reportTicker;
+  const reportDate = body.dataset.reportDate;
   const idx = parseInt(item.dataset.todoIdx, 10);
-  if (!ticker || !date || isNaN(idx)) return;
+  if (!reportTicker || !reportDate || isNaN(idx)) return;
   const text = (item.querySelector('.report-todo-text') || {}).textContent || '';
-  const all = _todoLoadAll();
-  if (!all[ticker]) all[ticker] = {};
-  if (!all[ticker][date]) all[ticker][date] = {};
   if (cb.checked) {
-    all[ticker][date][idx] = { text: text, checkedAt: new Date().toISOString() };
+    AqTodoStore._add(reportTicker, reportDate, idx, text);
   } else {
-    delete all[ticker][date][idx];
-    if (Object.keys(all[ticker][date]).length === 0) delete all[ticker][date];
-    if (Object.keys(all[ticker]).length === 0) delete all[ticker];
+    AqTodoStore._remove(reportTicker, reportDate, idx);
   }
-  _todoSaveAll(all);
   item.classList.toggle('checked', cb.checked);
 }
 window.toggleReportTodo = toggleReportTodo;
@@ -13467,7 +13886,36 @@ window.addEventListener('resize', () => {
 // ============================================================================
 let _archiveMobileShown = 10;
 
+// v2.44: MO 햄버거 드로어 — 섹터/보드/마이
+function openMoDrawer() {
+  const d = document.getElementById('moDrawer');
+  const b = document.getElementById('moDrawerBackdrop');
+  if (d) { d.classList.add('open'); d.setAttribute('aria-hidden', 'false'); }
+  if (b) { b.classList.add('open'); b.setAttribute('aria-hidden', 'false'); }
+  document.body.style.overflow = 'hidden';
+}
+function closeMoDrawer() {
+  const d = document.getElementById('moDrawer');
+  const b = document.getElementById('moDrawerBackdrop');
+  if (d) { d.classList.remove('open'); d.setAttribute('aria-hidden', 'true'); }
+  if (b) { b.classList.remove('open'); b.setAttribute('aria-hidden', 'true'); }
+  document.body.style.overflow = '';
+}
+function moDrawerNav(tab) {
+  closeMoDrawer();
+  // 작은 지연 — 드로어 닫힘 애니메이션과 탭 전환 시각 분리
+  setTimeout(() => switchMobileTab(tab), 200);
+}
+window.openMoDrawer = openMoDrawer;
+window.closeMoDrawer = closeMoDrawer;
+window.moDrawerNav = moDrawerNav;
+
 function switchMobileTab(tab) {
+  // v2.44: 신규 disabled 메뉴 — 클릭 시 토스트만, 탭 전환 X (옛 active 그대로)
+  if (tab === 'schedule' || tab === 'todo') {
+    aqToast('준비 중입니다');
+    return;
+  }
   document.body.setAttribute('data-mtab', tab);
   document.querySelectorAll('.mtab-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mtab === tab);
@@ -13567,6 +14015,11 @@ function updatePCSidebarActive() {
 
 // 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
 function setPCTab(tab) {
+  // v2.44: 신규 disabled 메뉴 — 클릭 시 토스트만, 페이지/패널 변경 X
+  if (tab === 'schedule' || tab === 'todo') {
+    aqToast('준비 중입니다');
+    return;
+  }
   if (tab === 'main' || tab === 'board' || tab === 'my') {
     setPCPage(tab);
   } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis') {
