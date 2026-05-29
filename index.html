@@ -1413,6 +1413,56 @@ table.sheet tbody tr.drop-below td:last-child {
 .rs-misc .report-icon { color: #868e96; }
 .rs-misc .report-item { border-left-color: #868e96; color: var(--text-mute); }
 
+/* v2.42: TO-DO CHECK LIST — 체크박스 인터랙티브 영역 */
+.rs-todo { border-left: 3px solid #15aabf; background: linear-gradient(90deg, rgba(21,170,191,0.08), transparent 30%); }
+.rs-todo .report-icon { color: #15aabf; }
+.rs-todo .report-section-body { display: flex; flex-direction: column; gap: 10px; padding: 4px 0; }
+.report-todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  user-select: none;
+}
+.report-todo-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(21,170,191,0.3); }
+.report-todo-item.checked {
+  background: rgba(21,170,191,0.12);
+  border-color: rgba(21,170,191,0.45);
+}
+.report-todo-cb {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #15aabf;
+}
+.report-todo-text {
+  flex: 1;
+  line-height: 1.5;
+  color: var(--text-mid);
+  font-size: 14px;
+  word-break: break-word;
+}
+.report-todo-item.checked .report-todo-text {
+  color: var(--text-hi);
+  font-weight: 500;
+}
+[data-theme="light"] .report-todo-item {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .report-todo-item:hover { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .report-todo-item.checked {
+  background: rgba(21,170,191,0.10);
+  border-color: rgba(21,170,191,0.5);
+}
+
 /* ============ v2.18: 신설 3개 영역 ============ */
 
 /* 🎯 추천 ACTION — 최상단 강조 박스, 액션별 색상 분기 */
@@ -4654,7 +4704,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.40</div>
+      <div class="splash-version" id="splashVersion">v2.42</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -8010,6 +8060,8 @@ const REPORT_SECTIONS = [
   { key: 'why5_partner', header: '5WHYS: "나는 왜 이 기업의 동업자가 되어야 하는가?"',                  icon: '🤝', cls: 'rs-why-partner' },
   { key: 'opportunity',  header: '나의 기회 영역',                                                     icon: '◆', cls: 'rs-opp' },
   { key: 'misc',         header: '기타 특이사항',                                                      icon: 'ⓘ', cls: 'rs-misc' },
+  // v2.42: AI 권장 TO-DO 체크리스트 — 사용자가 체크하면 localStorage 저장 (향후 모아보기용)
+  { key: 'todo',         header: 'TO-DO CHECK LIST',                                                  icon: '☑', cls: 'rs-todo' },
 ];
 
 function parseReportText(text) {
@@ -8038,6 +8090,11 @@ function parseReportText(text) {
     if (current === 'why5_down' || current === 'why5_partner') {
       const m = clean.match(/^(?:\d+\.\s*)?\(([^)]+)\)\s*(.*)$/);
       if (m) { out.sections[current].push({ label: m[1], text: m[2] }); continue; }
+    }
+    // v2.42: TO-DO CHECK LIST — 객체로 저장 (체크박스 + 텍스트)
+    if (current === 'todo') {
+      out.sections[current].push({ type: 'todo', text: clean });
+      continue;
     }
     // v2.18: 시장의 걱정과 진실 — "걱정:" / "진실:" 짝 파싱
     if (current === 'worry_truth') {
@@ -8082,8 +8139,47 @@ function parseReportText(text) {
   return out;
 }
 
+// v2.42: AI 권장 TO-DO 체크리스트 — localStorage helper + 토글 핸들러
+function _todoLoadAll() {
+  try { return JSON.parse(localStorage.getItem('aq_report_todos') || '{}'); }
+  catch (e) { return {}; }
+}
+function _todoSaveAll(obj) {
+  try { localStorage.setItem('aq_report_todos', JSON.stringify(obj)); } catch (e) {}
+}
+function _todoIsChecked(ticker, date, idx) {
+  const all = _todoLoadAll();
+  return !!(all[ticker] && all[ticker][date] && all[ticker][date][idx]);
+}
+function toggleReportTodo(cb) {
+  const item = cb.closest('.report-todo-item');
+  const body = cb.closest('.report-detail-body');
+  if (!item || !body) return;
+  const ticker = body.dataset.reportTicker;
+  const date = body.dataset.reportDate;
+  const idx = parseInt(item.dataset.todoIdx, 10);
+  if (!ticker || !date || isNaN(idx)) return;
+  const text = (item.querySelector('.report-todo-text') || {}).textContent || '';
+  const all = _todoLoadAll();
+  if (!all[ticker]) all[ticker] = {};
+  if (!all[ticker][date]) all[ticker][date] = {};
+  if (cb.checked) {
+    all[ticker][date][idx] = { text: text, checkedAt: new Date().toISOString() };
+  } else {
+    delete all[ticker][date][idx];
+    if (Object.keys(all[ticker][date]).length === 0) delete all[ticker][date];
+    if (Object.keys(all[ticker]).length === 0) delete all[ticker];
+  }
+  _todoSaveAll(all);
+  item.classList.toggle('checked', cb.checked);
+}
+window.toggleReportTodo = toggleReportTodo;
+
 // HTML 렌더링 — 섹션별 디자인
-function renderReportContent(parsed) {
+function renderReportContent(parsed, ticker, date) {
+  // v2.42: ticker/date — TO-DO 체크 상태 식별용
+  ticker = String(ticker || parsed.ticker || '').toUpperCase();
+  date   = String(date   || parsed.date   || '');
   const parts = [];
   REPORT_SECTIONS.forEach(sec => {
     const items = parsed.sections[sec.key];
@@ -8092,7 +8188,7 @@ function renderReportContent(parsed) {
     parts.push(`<div class="report-section ${sec.cls}">`);
     parts.push(`<div class="report-section-head"><span class="report-icon">${sec.icon}</span><span class="report-section-title">${escapeHtml(headerKor)}</span></div>`);
     parts.push(`<div class="report-section-body">`);
-    items.forEach(it => {
+    items.forEach((it, idx) => {
       if (typeof it === 'string') {
         parts.push(`<div class="report-item">${escapeHtml(it)}</div>`);
       } else if (it.type === 'action') {
@@ -8107,6 +8203,13 @@ function renderReportContent(parsed) {
           <div class="report-pair-worry"><span class="report-pair-label">😰 걱정</span><span class="report-pair-text">${escapeHtml(it.worry)}</span></div>
           <div class="report-pair-truth"><span class="report-pair-label">✓ 진실</span><span class="report-pair-text">${escapeHtml(it.truth)}</span></div>
         </div>`);
+      } else if (it.type === 'todo') {
+        // v2.42: TO-DO 체크박스 — 체크 시 localStorage 저장 (향후 모아보기용)
+        const checked = _todoIsChecked(ticker, date, idx);
+        parts.push(`<label class="report-todo-item${checked ? ' checked' : ''}" data-todo-idx="${idx}">
+          <input type="checkbox" class="report-todo-cb"${checked ? ' checked' : ''} onchange="toggleReportTodo(this)">
+          <span class="report-todo-text">${escapeHtml(it.text)}</span>
+        </label>`);
       } else {
         // 5WHYS labeled item
         parts.push(`<div class="report-item report-item-labeled"><span class="report-label">(${escapeHtml(it.label)})</span> <span class="report-text">${escapeHtml(it.text)}</span></div>`);
@@ -8177,7 +8280,7 @@ async function openReportDetail(date) {
         <div class="report-detail-title">📊 ${titleHtml}</div>
         <div class="report-detail-date">${escapeHtml(date)}</div>
       </div>
-      <div class="report-detail-body">${renderReportContent(parsed)}</div>
+      <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${renderReportContent(parsed, tk, date)}</div>
     `;
     // 스크롤 맨 위로
     const modalContent = $('reportPanel').closest('.modal-content');
@@ -9835,14 +9938,24 @@ function computeSignalReturns() {
     const ret10 = n >= 10 ? (futureCloses[9]  / P - 1) * 100 : null;
 
     // CASE 1~4 (사용자 정의)
-    // C1: max(close[t+1..t+10]) > P
-    // C2: min(close[t+1..t+10]) >= P
+    // C1: max(close[t+1..t+10]) > P   — v2.41: 10일 안 차도 이미 한 번이라도 P 위로 갔으면 즉시 true 확정 (조기 결정)
+    // C2: min(close[t+1..t+10]) >= P  — 10일 다 지나야 결정 (그 안의 어느 날이라도 P 밑이면 false)
     // C3: min(close[t+1..t+30]) >= P
     // C4: min(close[t+1..end])  >= P
     let c1 = null, c2 = null, c3 = null, c4 = null;
+    // v2.41: C1 조기 결정 — n < 10이라도 이미 위로 간 적 있으면 true
+    if (n >= 1) {
+      const wAvail = futureCloses.slice(0, Math.min(n, 10));
+      const maxAvail = Math.max.apply(null, wAvail);
+      if (maxAvail > P) {
+        c1 = true;            // 이미 한 번이라도 위로 → 확정
+      } else if (n >= 10) {
+        c1 = false;           // 10일 다 지나도 한 번도 안 올라감 → 확정
+      }
+      // 그 외 (n < 10이고 아직 위로 안 감) → null (pending)
+    }
     if (n >= 10) {
       const w10 = futureCloses.slice(0, 10);
-      c1 = Math.max.apply(null, w10) > P;
       c2 = Math.min.apply(null, w10) >= P;
     }
     if (n >= 30) {
@@ -11794,7 +11907,7 @@ const ARCHIVE_COLS = [
   // v2.16: 스나이핑률 (SR) — 5d+ 다음 위치
   { key: '_sniping', label: 'SR',  t: 'b', w: '45px', cls: 'check', title: '스나이핑 — 직전 5거래일 안에 같은 종목 실패(1d 음수) 신호 없으면 ✅ (cluster 없는 단발 진입)',
     get: r => (r._sniping !== undefined) ? r._sniping : null },
-  { key: '_c1',      label: 'C1',  t: 'b', w: '40px', cls: 'check', title: 'Case 1 — 10일 정점 도달 (10거래일 안에 P 위 한 번이라도)',
+  { key: '_c1',      label: 'C1',  t: 'b', w: '40px', cls: 'check', title: 'Case 1 — 10일 안에 P 위로 한 번이라도 (이미 한 번 올라간 적 있으면 10일 안 차도 ✅, 한 번도 안 올라간 채 10일 지나면 ❌, 아직 미정이면 N/A)',
     get: r => r._returns ? r._returns.c1 : null },
   { key: '_c2',      label: 'C2',  t: 'b', w: '40px', cls: 'check', title: 'Case 2 — 10일 매수가 보존 (10거래일 동안 P 밑 안 떨어짐)',
     get: r => r._returns ? r._returns.c2 : null },
