@@ -7459,10 +7459,10 @@ async function tryLoadFromBundle() {
 
     // 8) 메인 화면 렌더 — fast path에서도 정상 함수명 사용 (applyFilters X → applyFilterAndRender)
     try { applyFilterAndRender(); } catch (e) { console.warn('[bundle] applyFilterAndRender:', e); }
-    try { buildMacroCard(); } catch (e) { console.warn(e); }
-    try { buildSignalFilterCard(); } catch (e) { console.warn(e); }
-    try { buildSectorFrameworkCard(); } catch (e) { console.warn(e); }
-    try { buildSectorAnalysisCard(); } catch (e) { console.warn(e); }
+    try { renderMacro(); } catch (e) { console.warn(e); }
+    try { renderSignalFilter(); } catch (e) { console.warn(e); }
+    try { renderSectorFramework(); } catch (e) { console.warn(e); }
+    try { renderSectorAnalysis(); } catch (e) { console.warn(e); }
     try { buildBuyPointsCard(); } catch (e) { console.warn(e); }
     try { buildStockList(); } catch (e) { console.warn(e); }
     try { _archiveMobileShown = 10; buildArchiveMobileList(); } catch (e) {}
