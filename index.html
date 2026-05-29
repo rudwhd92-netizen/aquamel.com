@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.70';
+window.AQ_PWA_VERSION = '2.71';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3393,21 +3393,25 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 .splash-retry:active { background: rgba(255,255,255,0.20); transform: scale(0.98); }
 
 /* hero meta refresh button (v1.26) */
-.hero-refresh {
+.hero-refresh,
+.hero-search {
   background: transparent;
   border: 1px solid var(--line);
   color: var(--text-mute);
-  width: 30px; height: 30px;
+  /* v2.71: 30→38px 더 크게 */
+  width: 38px; height: 38px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 17px;
   display: inline-flex; align-items: center; justify-content: center;
   transition: transform 0.4s ease, background 0.18s, color 0.18s, border-color 0.18s;
   font-family: inherit;
   padding: 0;
 }
-.hero-refresh:hover  { background: var(--bg-3); color: var(--text-hi); border-color: var(--line-2); }
-.hero-refresh:active { transform: scale(0.92); }
+.hero-refresh svg,
+.hero-search svg { width: 20px; height: 20px; }
+.hero-refresh:hover, .hero-search:hover { background: var(--bg-3); color: var(--text-hi); border-color: var(--line-2); }
+.hero-refresh:active, .hero-search:active { transform: scale(0.92); }
 .hero-refresh.spinning { animation: hero-refresh-spin 1.1s linear infinite; }
 @keyframes hero-refresh-spin { to { transform: rotate(360deg); } }
 /* v2.48: mobile-topbar 새로고침 버튼 스피닝 (SVG 회전) */
@@ -4013,6 +4017,180 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 .modal-filter-label {
   font-size: 11px; color: var(--text-mute); font-weight: 600;
   margin-bottom: 8px;
+}
+
+/* ============ v2.71: 종목 검색 모달 (Spotlight) ============ */
+.search-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  animation: searchModalFadeIn 0.18s ease-out;
+}
+.search-modal.open { display: flex; }
+[data-theme="light"] .search-modal { background: rgba(255,255,255,0.55); }
+@keyframes searchModalFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.search-modal-content {
+  background: var(--bg-2);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 70vh;
+  margin: 0 16px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: searchModalSlideIn 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+[data-theme="light"] .search-modal-content {
+  border-color: rgba(0,0,0,0.10);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18), 0 8px 16px rgba(0,0,0,0.10);
+}
+@keyframes searchModalSlideIn {
+  from { transform: translateY(-12px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.search-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+[data-theme="light"] .search-modal-head { border-bottom-color: rgba(0,0,0,0.08); }
+.search-modal-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-mute);
+  flex-shrink: 0;
+}
+#searchInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Pretendard Variable', Pretendard, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-hi);
+  padding: 6px 0;
+  letter-spacing: -0.1px;
+}
+#searchInput::placeholder { color: var(--text-mute); font-weight: 400; }
+.search-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--text-mute);
+  font-size: 22px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.search-modal-close:hover { background: rgba(255,255,255,0.06); color: var(--text-hi); }
+[data-theme="light"] .search-modal-close:hover { background: rgba(0,0,0,0.06); }
+
+.search-modal-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+  min-height: 0;
+}
+.search-modal-results::-webkit-scrollbar { width: 6px; }
+.search-modal-results::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 3px; }
+[data-theme="light"] .search-modal-results::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.10); }
+
+.search-modal-empty {
+  padding: 28px 18px;
+  text-align: center;
+  color: var(--text-mute);
+  font-size: 13px;
+}
+
+.search-modal-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: background 0.12s;
+  border-left: 2px solid transparent;
+}
+.search-modal-result:hover,
+.search-modal-result.active {
+  background: rgba(255,255,255,0.04);
+  border-left-color: var(--accent-2);
+}
+[data-theme="light"] .search-modal-result:hover,
+[data-theme="light"] .search-modal-result.active {
+  background: rgba(0,0,0,0.04);
+}
+.search-modal-result-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--bg-3);
+  object-fit: cover;
+}
+.search-modal-result-text {
+  flex: 1;
+  min-width: 0;
+}
+.search-modal-result-main {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-hi);
+  letter-spacing: -0.1px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.search-modal-result-ticker {
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+  color: var(--accent-2);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.5px;
+}
+.search-modal-result-sector {
+  font-size: 11px;
+  color: var(--text-mute);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.search-modal-result mark {
+  background: transparent;
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .search-modal { padding-top: 8vh; }
+  .search-modal-content { margin: 0 12px; max-height: 80vh; }
+  .search-modal-head { padding: 14px 14px; gap: 10px; }
+  #searchInput { font-size: 15px; }
+  .search-modal-result { padding: 10px 14px; gap: 10px; }
 }
 
 /* ============ TICKER HISTORY (below chart) ============ */
@@ -6065,7 +6243,7 @@ table.combo-eval tbody td .nodata {
   <!-- v2.44: MO 전용 상단 줄 — 토스증권 스타일 (오른쪽 정렬: 검색 + 햄버거) -->
   <!-- v2.45: 새로고침 추가 (돋보기 → 새로고침 → 햄버거 순) -->
   <div class="mobile-topbar" aria-label="상단 메뉴">
-    <button class="mobile-topbar-btn" id="mobileSearchBtn" onclick="aqToast('준비 중입니다')" aria-label="검색">
+    <button class="mobile-topbar-btn" id="mobileSearchBtn" onclick="openSearchModal()" aria-label="검색">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="7"/>
         <path d="M21 21l-4.35-4.35"/>
@@ -6093,7 +6271,19 @@ table.combo-eval tbody td .nodata {
       <div class="hero-tagline">The blueprint for the next 10-year structural paradigm</div>
     </div>
     <div class="meta">
-      <button class="hero-refresh" id="heroRefreshBtn" onclick="autoLoadData({forceFresh: true})" title="데이터 새로고침" aria-label="데이터 새로고침">↻</button>
+      <!-- v2.71: 종목 검색 -->
+      <button class="hero-search" id="heroSearchBtn" onclick="openSearchModal()" title="종목 검색" aria-label="종목 검색">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </button>
+      <button class="hero-refresh" id="heroRefreshBtn" onclick="autoLoadData({forceFresh: true})" title="데이터 새로고침" aria-label="데이터 새로고침">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-3-6.7L21 8"/>
+          <path d="M21 3v5h-5"/>
+        </svg>
+      </button>
       <!-- v2.58: 마지막 데이터 갱신 시점 (PC만 표시) -->
       <div class="hero-data-meta" id="heroDataMeta" title="마지막으로 데이터를 받아온 시점"><span class="dot"></span><span id="heroDataMetaText">—</span></div>
       <!-- v1.65: 다크/라이트 토글 제거 → 시장 스위치 (US / KR) -->
@@ -6716,6 +6906,23 @@ table.combo-eval tbody td .nodata {
       <div class="loading-sub" id="loadingSub">구글 시트에서 데이터 다운로드 중...</div>
       <div class="loading-progress" id="loadingProgress">대기</div>
       <div class="loading-bar"><div class="loading-bar-fill" id="loadingBarFill"></div></div>
+    </div>
+  </div>
+
+  <!-- v2.71: 종목 검색 모달 — 별도 spotlight 창 -->
+  <div class="search-modal" id="searchModal" onclick="_aqSearchModalBackdrop(event)">
+    <div class="search-modal-content">
+      <div class="search-modal-head">
+        <svg class="search-modal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="티커명 또는 회사명 입력 (예: PLAB, 삼성전자)" autocomplete="off" spellcheck="false">
+        <button class="search-modal-close" onclick="closeSearchModal()" aria-label="닫기">×</button>
+      </div>
+      <div class="search-modal-results" id="searchResults">
+        <div class="search-modal-empty">티커명 또는 회사명을 입력하세요</div>
+      </div>
     </div>
   </div>
 
@@ -16622,6 +16829,188 @@ function _aqRouteTodoCard(todo) {
   if (ticker && typeof openChart === 'function') openChart(ticker);
 }
 window._aqRouteTodoCard = _aqRouteTodoCard;
+
+// ============================================================================
+// v2.71: 종목 검색 모달 — 별도 spotlight 창
+//   _state.sectors의 모든 ticker + 회사명을 평탄화 → query 매칭 → 후보 리스트 → 클릭 시 openChart
+// ============================================================================
+let _aqSearchActiveIdx = 0;     // 키보드 네비용 현재 선택 인덱스
+let _aqSearchLastResults = [];  // 마지막 렌더된 후보 (Enter 선택용)
+
+function _aqGetAllSearchables() {
+  // _state.sectors 평탄화 — { ticker, company, sector } 객체 배열, ticker 중복 제거
+  const seen = new Set();
+  const out = [];
+  const sectors = (window._state && _state.sectors) || {};
+  const companyMap = (_state && (_state.tickerCompanyMap ||
+    (_state.tickerCompanyMaps && _state.tickerCompanyMaps[typeof getCurrentMarket === 'function' ? getCurrentMarket() : 'US']))) || {};
+  Object.keys(sectors).forEach(sector => {
+    const rows = sectors[sector] || [];
+    rows.forEach(r => {
+      const tk = String(r.Ticker || '').toUpperCase();
+      if (!tk || seen.has(tk)) return;
+      seen.add(tk);
+      out.push({ ticker: tk, company: companyMap[tk] || '', sector });
+    });
+  });
+  return out;
+}
+
+function _aqEscapeRegex(s) {
+  return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function _aqHighlight(text, query) {
+  if (!text || !query) return escapeHtml(text || '');
+  try {
+    const re = new RegExp('(' + _aqEscapeRegex(query) + ')', 'ig');
+    return escapeHtml(text).replace(re, '<mark>$1</mark>');
+  } catch (e) {
+    return escapeHtml(text);
+  }
+}
+
+function _aqRenderSearchResults(query) {
+  const resultsEl = document.getElementById('searchResults');
+  if (!resultsEl) return;
+  const q = String(query || '').trim();
+  if (!q) {
+    resultsEl.innerHTML = '<div class="search-modal-empty">티커명 또는 회사명을 입력하세요</div>';
+    _aqSearchLastResults = [];
+    _aqSearchActiveIdx = 0;
+    return;
+  }
+  const qUpper = q.toUpperCase();
+  const all = _aqGetAllSearchables();
+  // ticker prefix match 우선, 그 다음 ticker contains, 회사명 contains 순서로 정렬
+  const matches = [];
+  all.forEach(it => {
+    const tickerU = it.ticker;
+    const companyU = (it.company || '').toUpperCase();
+    let score = -1;
+    if (tickerU === qUpper) score = 100;
+    else if (tickerU.startsWith(qUpper)) score = 90;
+    else if (tickerU.includes(qUpper)) score = 70;
+    else if (companyU.includes(qUpper) || (it.company || '').includes(q)) score = 50;
+    if (score >= 0) matches.push({ ...it, score });
+  });
+  matches.sort((a, b) => b.score - a.score || a.ticker.localeCompare(b.ticker));
+  const top = matches.slice(0, 50);  // 최대 50개
+  _aqSearchLastResults = top;
+  _aqSearchActiveIdx = 0;
+  if (top.length === 0) {
+    resultsEl.innerHTML = `<div class="search-modal-empty">"${escapeHtml(q)}"에 해당하는 종목이 없습니다</div>`;
+    return;
+  }
+  const logoFn = (typeof tickerFileName === 'function') ? tickerFileName : (t) => t;
+  resultsEl.innerHTML = top.map((it, idx) => {
+    const logoFile = logoFn(it.ticker);
+    const logoHtml = `<img class="search-modal-result-logo" src="./logos/tickers/${encodeURIComponent(logoFile)}.png" onerror="this.style.display='none'" alt=""/>`;
+    const tickerHl = _aqHighlight(it.ticker, q);
+    const companyHl = it.company ? _aqHighlight(it.company, q) : '';
+    return `
+      <div class="search-modal-result${idx === 0 ? ' active' : ''}" data-ticker="${escapeAttr(it.ticker)}" data-idx="${idx}">
+        ${logoHtml}
+        <div class="search-modal-result-text">
+          <div class="search-modal-result-main">
+            ${companyHl ? `<span>${companyHl}</span>` : ''}
+            <span class="search-modal-result-ticker">${tickerHl}</span>
+          </div>
+          ${it.sector ? `<div class="search-modal-result-sector">${escapeHtml(it.sector)}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+  // 클릭 → openChart
+  resultsEl.querySelectorAll('.search-modal-result').forEach(el => {
+    el.onclick = () => {
+      const tk = el.dataset.ticker;
+      if (!tk) return;
+      closeSearchModal();
+      if (typeof openChart === 'function') openChart(tk);
+    };
+    el.onmouseenter = () => {
+      // 마우스 호버 시 active idx 변경
+      const i = parseInt(el.dataset.idx, 10);
+      if (!isNaN(i)) {
+        _aqSearchActiveIdx = i;
+        resultsEl.querySelectorAll('.search-modal-result').forEach((e2, ii) => {
+          e2.classList.toggle('active', ii === _aqSearchActiveIdx);
+        });
+      }
+    };
+  });
+}
+
+function openSearchModal() {
+  const modal = document.getElementById('searchModal');
+  const input = document.getElementById('searchInput');
+  if (!modal || !input) return;
+  modal.classList.add('open');
+  // 초기 상태
+  input.value = '';
+  _aqRenderSearchResults('');
+  // 포커스 (animation 끝난 뒤)
+  setTimeout(() => input.focus(), 100);
+}
+window.openSearchModal = openSearchModal;
+
+function closeSearchModal() {
+  const modal = document.getElementById('searchModal');
+  if (modal) modal.classList.remove('open');
+}
+window.closeSearchModal = closeSearchModal;
+
+function _aqSearchModalBackdrop(e) {
+  // 모달 자체(배경) 클릭 시 닫기, 안 내용 클릭 시 유지
+  if (e.target.id === 'searchModal') closeSearchModal();
+}
+window._aqSearchModalBackdrop = _aqSearchModalBackdrop;
+
+// input 이벤트 + 키보드 네비
+window.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('searchInput');
+  const modal = document.getElementById('searchModal');
+  if (!input || !modal) return;
+  input.addEventListener('input', (e) => {
+    _aqRenderSearchResults(e.target.value);
+  });
+  input.addEventListener('keydown', (e) => {
+    const results = document.querySelectorAll('#searchResults .search-modal-result');
+    if (e.key === 'Escape') {
+      closeSearchModal();
+      return;
+    }
+    if (!results.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      _aqSearchActiveIdx = Math.min(_aqSearchActiveIdx + 1, results.length - 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      _aqSearchActiveIdx = Math.max(_aqSearchActiveIdx - 1, 0);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const item = _aqSearchLastResults[_aqSearchActiveIdx];
+      if (item && item.ticker) {
+        closeSearchModal();
+        if (typeof openChart === 'function') openChart(item.ticker);
+      }
+      return;
+    } else {
+      return;
+    }
+    // active 클래스 갱신 + 스크롤
+    results.forEach((el, i) => el.classList.toggle('active', i === _aqSearchActiveIdx));
+    const activeEl = results[_aqSearchActiveIdx];
+    if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+  });
+  // 전역 ESC — 모달 열려 있을 때만
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+      closeSearchModal();
+    }
+  });
+});
 
 // 마퀴 알림 ID → 원본 todo 찾기 (ID 형식: ticker|reportDate|idx|type)
 function _aqFindTodoByNotificationId(notifId) {
