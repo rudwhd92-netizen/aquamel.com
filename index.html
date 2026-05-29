@@ -505,6 +505,10 @@ section.card {
   /* v2.11: 카드 enter 애니메이션은 유지 — 페이지/탭 전환에서도 재실행 */
   animation: card-enter 0.32s var(--ease-out) both;
 }
+/* v2.38: PC에선 영역 사이 호흡 더 — 토글 카드들이 따닥따닥 안 붙도록 */
+@media (min-width: 1024px) {
+  section.card { margin-bottom: 56px; }
+}
 @keyframes card-enter {
   from {
     transform: translateY(8px);
@@ -4656,7 +4660,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.37</div>
+      <div class="splash-version" id="splashVersion">v2.38</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7238,28 +7242,37 @@ async function _lazyFetchEvaluations() {
   _evalFetchPromise = (async () => {
     try {
       const cfg = MARKET_CONFIG.US;
+      console.log(`[_lazyFetchEvaluations] start — sheet=${cfg.archiveSheetId}, tab=매수매력도`);
       const res = await apiCall('getOneSheet', { sheetId: cfg.archiveSheetId, tab: '매수매력도' });
+      console.log('[_lazyFetchEvaluations] response:', res && res.ok, res && (res.rows ? res.rows.length : '(no rows)'), res && res.error);
       if (!res || !res.ok || !Array.isArray(res.rows)) {
         console.warn('[_lazyFetchEvaluations] failed:', res && res.error);
+        _evalFetchPromise = null;  // 재시도 가능하도록 reset
         return false;
       }
+      let added = 0;
       res.rows.forEach(r => {
-        const tk = String(r.Ticker || '').toUpperCase().trim();
-        const judge = String(r['판단'] || '').trim();
-        if (tk && judge) _state.evaluations.US[tk] = judge;
+        // robust: Ticker / ticker / TICKER 모두 시도
+        const tk = String(r.Ticker || r.ticker || r.TICKER || '').toUpperCase().trim();
+        // 판단 / 판단 / verdict / 평가 fallback
+        const judge = String(r['판단'] || r['평가'] || r.verdict || '').trim();
+        if (tk && judge) {
+          _state.evaluations.US[tk] = judge;
+          added++;
+        }
       });
-      const n = Object.keys(_state.evaluations.US).length;
-      console.log(`[_lazyFetchEvaluations] ✓ 매수매력도 lazy fetch: ${n}건`);
+      console.log(`[_lazyFetchEvaluations] ✓ ${added}건 매수매력도 매핑 (헤더 샘플:`, res.rows[0] ? Object.keys(res.rows[0]) : 'empty', ')');
       // 모달 열려있으면 평가 항목 다시 그리기 + 종목 리스트가 'eval' 모드면 재렌더
       try {
         if (_state.openTicker && document.getElementById('chartModal')?.classList.contains('active')) {
           if (typeof refreshModalEvaluation === 'function') refreshModalEvaluation(_state.openTicker);
         }
         if (_stockSortMode === 'eval' && typeof buildStockList === 'function') buildStockList();
-      } catch (e) {}
-      return n > 0;
+      } catch (e) { console.warn(e); }
+      return added > 0;
     } catch (e) {
       console.warn('[_lazyFetchEvaluations] error:', e);
+      _evalFetchPromise = null;  // 재시도 가능하도록 reset
       return false;
     }
   })();
@@ -7472,24 +7485,35 @@ let _autoLoadInProgress = false;
 //   PWA는 CDN에서 data.json 1번 fetch → 2-3초에 모든 데이터 로드 완료
 //   실패 시 → autoLoadData가 자동으로 백엔드 직접 호출 fallback
 // ============================================================================
-async function tryLoadFromBundle() {
+// v2.38: 마지막 ingest된 bundle timestamp (silent SWR 비교용)
+let _lastBundleTs = null;
+
+async function tryLoadFromBundle(opts = {}) {
+  const silent = opts.silent === true;
   const t0 = performance.now();
   try {
-    // cache-bust query — 새로고침 버튼 누를 땐 최신, 평소엔 SW 캐시 사용
-    const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
-    splashUpdate(15);
-    const res = await fetch(url, { cache: 'default' });
+    // v2.38: silent 모드면 SW 우회 강제 (cache-busting query + no-store)
+    const url = silent
+      ? './data/data.json?_=' + Date.now()
+      : './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
+    if (!silent) splashUpdate(15);
+    const res = await fetch(url, silent ? { cache: 'no-store' } : { cache: 'default' });
     if (!res.ok) {
-      console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
+      if (!silent) console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
       return false;
     }
-    splashUpdate(40);
+    if (!silent) splashUpdate(40);
     const bundle = await res.json();
     if (!bundle || !bundle.ok) {
-      console.warn('[tryLoadFromBundle] data.json invalid:', bundle);
+      if (!silent) console.warn('[tryLoadFromBundle] data.json invalid:', bundle);
       return false;
     }
-    splashUpdate(55);
+    // v2.38: silent — 같은 timestamp면 skip (변경 없음)
+    if (silent && _lastBundleTs && bundle.timestamp === _lastBundleTs) {
+      return false;
+    }
+    _lastBundleTs = bundle.timestamp;
+    if (!silent) splashUpdate(55);
 
     // ─── _state 채우기 — 기존 autoLoadData 로직 모방 ───
 
@@ -7514,13 +7538,13 @@ async function tryLoadFromBundle() {
       if (tk && judge) _state.evaluations.US[tk] = judge;
     });
 
-    splashUpdate(65);
+    if (!silent) splashUpdate(65);
 
     // 2) KJP 매핑
     buildKjpMaps_({ ok: true, rows: (bundle.US && bundle.US.kjpMaster) || [] }, 'US');
     buildKjpMaps_({ ok: true, rows: (bundle.KR && bundle.KR.kjpMaster) || [] }, 'KR');
 
-    splashUpdate(75);
+    if (!silent) splashUpdate(75);
 
     // 3) Sectors (시장별 + ohlcv 정규화)
     _state.sectorsByMarket = { US: {}, KR: {} };
@@ -7536,7 +7560,7 @@ async function tryLoadFromBundle() {
       });
     });
 
-    splashUpdate(85);
+    if (!silent) splashUpdate(85);
 
     // 4) Macro (시장별)
     _state.macroByMarket = { US: [], KR: [] };
@@ -7576,7 +7600,7 @@ async function tryLoadFromBundle() {
     lsSet(LS.KJP_DESC_MAP,    _state.tickerDescMap);
     lsSet(LS.KJP_COMPANY_MAP, _state.tickerCompanyMap);
 
-    splashUpdate(92);
+    if (!silent) splashUpdate(92);
 
     // 8) 메인 화면 렌더 — fast path에서도 정상 함수명 사용 (applyFilters X → applyFilterAndRender)
     try { applyFilterAndRender(); } catch (e) { console.warn('[bundle] applyFilterAndRender:', e); }
@@ -7961,6 +7985,13 @@ async function autoLoadData() {
 
     // v1.99: 보고서 인덱스 백그라운드 fetch (UX 블로킹 X — 메인 로드 끝난 후 비동기)
     fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+    // v2.38: 매수매력도 background fetch (Code.gs 안 거치고 fallback 보장)
+    if (Object.keys(_state.evaluations.US).length === 0) {
+      setTimeout(() => _lazyFetchEvaluations(), 400);
+    }
+    // v2.38: 일정 시간 후 data.json silent refresh — 새 시그널/평가 등이 도착하면 즉시 반영
+    //   (V1↔V2 토글 안 해도 자동으로 새 시그널 보이게)
+    setTimeout(() => tryLoadFromBundle({ silent: true }).catch(()=>{}), 3500);
   } catch (err) {
     console.error(err);
     splashError(err.message || '데이터 로드 실패');
@@ -7970,6 +8001,24 @@ async function autoLoadData() {
   }
 }
 window.autoLoadData = autoLoadData;
+
+// v2.38: 페이지 활성화 시 (탭 전환/포커스 복귀) silent SWR — 새 data.json 자동 반영
+//   원리: SW를 우회한 fetch로 cache-buster query + no-store → 항상 fresh
+//   변경 있으면 view 자동 재렌더 (V1↔V2 토글 안 해도 됨)
+let _lastSilentRefreshTs = 0;
+function _maybeSilentRefresh() {
+  if (document.visibilityState !== 'visible') return;
+  const now = Date.now();
+  if (now - _lastSilentRefreshTs < 60000) return;  // 1분 내 중복 호출 차단
+  _lastSilentRefreshTs = now;
+  tryLoadFromBundle({ silent: true }).catch(()=>{});
+  // 매수매력도도 같이 refresh
+  _resetEvalFetchPromise && _resetEvalFetchPromise();
+  _state.evaluations.US = {};
+  _lazyFetchEvaluations();
+}
+document.addEventListener('visibilitychange', _maybeSilentRefresh);
+window.addEventListener('focus', _maybeSilentRefresh);
 
 // ============================================================================
 // v2.10: 차트 타임프레임 (3M/6M/1Y) — 공통 샘플링 함수 + 핸들러
@@ -12331,6 +12380,10 @@ async function openChart(ticker) {
     ? `<span class="sep">·</span><span class="modal-eval" title="매수매력도">${escapeHtml(evalText)}</span>`
     : '';
   $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span>${evalHtml}<span class="sep">·</span><span>Data: ${escapeHtml(dates[dates.length-1])}</span>`;
+  // v2.38: 평가 없고 US면 lazy fetch trigger (도착 후 refreshModalEvaluation으로 자동 채움)
+  if (!evalText && getCurrentMarket() === 'US') {
+    setTimeout(() => _lazyFetchEvaluations(), 50);
+  }
   // 4줄: 상세설명 (있으면 표시)
   $('modalDesc').textContent = desc;
 
