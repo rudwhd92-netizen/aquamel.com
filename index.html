@@ -2,6 +2,10 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<!-- v2.55: HTTP cache 우회 — index.html이 GitHub Pages CDN cache 또는 브라우저 cache로 stale되는 것 방지 -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>AQUAMEL — V-Shape Scanner</title>
 
@@ -62,8 +66,8 @@ if ('serviceWorker' in navigator) {
     // updateViaCache:'none' — 브라우저 HTTP cache 우회, sw.js 매번 fresh fetch
     navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(reg => {
       reg.update();
-      // 60초마다 sw.js 갱신 체크 (이전 1시간 → 1분; PWA 열어둔 채로도 새 버전 빠른 감지)
-      setInterval(() => { try { reg.update(); } catch(e) {} }, 60 * 1000);
+      // v2.55: 60초 → 15초 — 사용자가 PWA 켜놓은 채로도 새 버전 빠른 감지 + 자동 적용
+      setInterval(() => { try { reg.update(); } catch(e) {} }, 15 * 1000);
       reg.addEventListener('updatefound', () => {
         const newWorker = reg.installing;
         if (!newWorker) return;
