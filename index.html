@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.69';
+window.AQ_PWA_VERSION = '2.70';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -312,7 +312,8 @@ section.card {
   background: transparent;
   border-radius: 0;
   padding: 0;
-  margin-bottom: 72px;  /* v2.27/v2.31: PC AQUAMEL INVESTMENT 헤더와 본 콘텐츠 간 여백 (44→72px) */
+  /* v2.70: hero 아래에 마퀴가 자연스럽게 위치 — 72→28로 축소 */
+  margin-bottom: 28px;
   border: none;
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 12px;
@@ -4026,8 +4027,8 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   background: transparent;
   border-top: 1px solid rgba(255,255,255,0.06);
   border-bottom: 1px solid rgba(255,255,255,0.06);
-  /* hero margin-bottom(72px) 안에 자연스럽게 자리 잡기 */
-  margin: -48px 0 28px 0;
+  /* v2.70: hero margin-bottom 28px 후 자연스럽게 위치 — 아래로 36px 여백 */
+  margin: 0 0 36px 0;
   height: 38px;
   overflow: hidden;
 }
@@ -4107,7 +4108,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 .hero-marquee:hover .hero-marquee-track { animation-play-state: paused; }
 
 @media (max-width: 640px) {
-  .hero-marquee { height: 32px; margin: -22px 0 18px 0; }
+  .hero-marquee { height: 32px; margin: 0 0 22px 0; }
   .hero-marquee-label { font-size: 9px; padding-right: 10px; letter-spacing: 1.4px; }
   .hero-marquee-mask { padding-left: 12px; }
   .hero-marquee-track { font-size: 11.5px; }
@@ -4117,15 +4118,19 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 
 /* ============ v2.66: TO-DO 칸반 보드 ============ */
 .todo-board {
+  /* v2.70: 4 컬럼 폭 강제 보장 (min 220px) + 화면 좁으면 가로 스크롤로 4컬럼 유지 */
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
   gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
-@media (max-width: 1100px) {
-  .todo-board { grid-template-columns: repeat(2, 1fr); }
-}
+.todo-board::-webkit-scrollbar { height: 6px; }
+.todo-board::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 3px; }
+[data-theme="light"] .todo-board::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.10); }
+
 @media (max-width: 640px) {
-  .todo-board { grid-template-columns: 1fr; gap: 12px; }
+  .todo-board { grid-template-columns: 1fr; gap: 12px; overflow-x: visible; }
 }
 
 .todo-column {
@@ -4282,6 +4287,11 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   font-weight: 500;
   word-break: keep-all;
   overflow-wrap: break-word;
+  /* v2.70: 긴 본문 3줄 자르기 — 컬럼 폭 좁아도 깔끔, 전체 본문은 title 툴팁 + 카드 클릭 랜딩에서 확인 */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .todo-card-notify {
@@ -6333,23 +6343,23 @@ table.combo-eval tbody td .nodata {
 
   <!-- v2.66: TO-DO 칸반 보드 — 보고서에서 체크된 todo 항목을 시점별 4개 컬럼으로 정리 -->
   <section class="card" id="todoBoardCard" data-mtab="todo">
-    <div class="card-header"><h2>📋 TO-DO 칸반</h2></div>
+    <div class="card-header"><h2>TO-DO 칸반</h2></div>
     <div class="card-body">
       <div class="todo-board">
         <div class="todo-column" data-col="urgent">
-          <div class="todo-col-head"><span>임박 (D-7 이내)</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-head"><span>📅 임박 (D-7 이내)</span><span class="todo-col-count">0</span></div>
           <div class="todo-col-body"></div>
         </div>
         <div class="todo-column" data-col="month">
-          <div class="todo-col-head"><span>이번달 (D-30)</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-head"><span>📆 이번달 (D-30)</span><span class="todo-col-count">0</span></div>
           <div class="todo-col-body"></div>
         </div>
         <div class="todo-column" data-col="long">
-          <div class="todo-col-head"><span>장기/분기</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-head"><span>🗓 장기/분기</span><span class="todo-col-count">0</span></div>
           <div class="todo-col-body"></div>
         </div>
         <div class="todo-column" data-col="ongoing">
-          <div class="todo-col-head"><span>상시 모니터링</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-head"><span>🔄 상시 모니터링</span><span class="todo-col-count">0</span></div>
           <div class="todo-col-body"></div>
         </div>
       </div>
@@ -16538,14 +16548,16 @@ function _aqRouteTodoCard(todo) {
 
   // F. 조건부 트리거 → 차트 모달
   if (what && what.type === 'trigger') {
+    console.log('[ROUTE] → 차트 모달 (조건부 트리거)', ticker);
     if (ticker && typeof openChart === 'function') openChart(ticker);
     return;
   }
   // E. Form 4 모니터링 → 차트 모달 + 내부자 거래 이력 스크롤
+  //   v2.70: Form 4 키워드 매칭 관대화 (Form 4 / Form4 / form 4 모두 매칭)
   if (what && what.type === 'monitor' && /form\s*4/i.test(what.keyword || '')) {
+    console.log('[ROUTE] → 차트 모달 + 내부자 스크롤 (Form 4)', ticker);
     if (!ticker || typeof openChart !== 'function') return;
     openChart(ticker);
-    // 모달 열린 후 스크롤 — render 완료 후 0.6초 뒤
     setTimeout(() => {
       const wrap = document.getElementById('insiderHistoryWrap');
       if (!wrap || wrap.style.display === 'none') return;
@@ -16560,6 +16572,7 @@ function _aqRouteTodoCard(todo) {
   }
   // 다른 모니터링 — 차트 모달
   if (what && what.type === 'monitor') {
+    console.log('[ROUTE] → 차트 모달 (일반 모니터링)', ticker, what.keyword);
     if (ticker && typeof openChart === 'function') openChart(ticker);
     return;
   }
@@ -16567,14 +16580,23 @@ function _aqRouteTodoCard(todo) {
   // A-D. 시점 기반 → 일정 페이지 + 해당 일자 선택
   if (w) {
     let targetDate = null;
-    if (w.type === 'date') targetDate = w.date;
-    else if (w.type === 'range') targetDate = w.from;
-    else if (w.type === 'soft' && w.format === 'month' && w.deadline) targetDate = w.deadline + '-28';
-    else if (w.type === 'quarter') {
+    let whenLabel = '';
+    if (w.type === 'date') { targetDate = w.date; whenLabel = `단일 일자 ${w.date}`; }
+    else if (w.type === 'range') { targetDate = w.from; whenLabel = `범위 ${w.from}~${w.to}`; }
+    else if (w.type === 'soft' && w.format === 'month' && w.deadline) {
+      targetDate = w.deadline + '-28';
+      whenLabel = `소프트 데드 ${w.deadline}`;
+    } else if (w.type === 'quarter') {
       const earn = (typeof _aqFindNextEarning === 'function') ? _aqFindNextEarning(ticker) : null;
-      if (earn && earn.date) targetDate = earn.date;
+      if (earn && earn.date) {
+        targetDate = earn.date;
+        whenLabel = `${w.year}Y ${w.quarter}Q → 캘린더 ${earn.date}`;
+      } else {
+        console.warn('[ROUTE] 분기 실적이지만 캘린더에 Earnings 없음 → 차트 fallback', ticker, w);
+      }
     }
     if (targetDate) {
+      console.log('[ROUTE] → 일정 페이지', ticker, whenLabel, '→', targetDate);
       // 일정 페이지 진입
       if (isMobile) {
         if (typeof switchMobileTab === 'function') switchMobileTab('schedule');
@@ -16584,17 +16606,19 @@ function _aqRouteTodoCard(todo) {
       // 캘린더 render 후 해당 일자 선택 + 셀로 스크롤
       setTimeout(() => {
         if (typeof aqCalendarSelectDate === 'function') {
-          try { aqCalendarSelectDate(targetDate); } catch (e) {}
+          try { aqCalendarSelectDate(targetDate); } catch (e) { console.warn('aqCalendarSelectDate fail', e); }
         }
         setTimeout(() => {
           const cell = document.querySelector('.cal-cell[data-date="' + targetDate + '"]');
           if (cell) cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 200);
-      }, 250);
+          else console.warn('[ROUTE] cal-cell not found for', targetDate);
+        }, 250);
+      }, 300);
       return;
     }
   }
   // Fallback — 차트 모달
+  console.log('[ROUTE] → 차트 모달 (fallback, when/what 없음)', ticker);
   if (ticker && typeof openChart === 'function') openChart(ticker);
 }
 window._aqRouteTodoCard = _aqRouteTodoCard;
@@ -16752,16 +16776,21 @@ function buildTodoKanban() {
     el.onclick = (e) => {
       if (e.target.closest('.todo-card-close')) return;
       // v2.68: 컨텍스트 라우팅 — todo 유형별 적절한 페이지로
-      const rt = el.dataset.reportTicker;
-      const rd = el.dataset.reportDate;
+      // v2.70: 매칭 견고화 — String 변환 + 디버그 로그
+      const rt = String(el.dataset.reportTicker || '');
+      const rd = String(el.dataset.reportDate || '');
       const idx = parseInt(el.dataset.idx, 10);
       const todo = (window.AqTodoStore && !isNaN(idx))
-        ? AqTodoStore.getAll().find(t => t.reportTicker === rt && t.reportDate === rd && t.idx === idx)
+        ? AqTodoStore.getAll().find(t =>
+            String(t.reportTicker) === rt &&
+            String(t.reportDate) === rd &&
+            t.idx === idx)
         : null;
       if (todo && typeof _aqRouteTodoCard === 'function') {
+        console.log('[ROUTE_TODO]', { ticker: todo.ticker, when: todo.when, what: todo.what, body: todo.body });
         _aqRouteTodoCard(todo);
       } else {
-        // Fallback — 차트 모달
+        console.warn('[ROUTE_TODO] todo not found, fallback openChart', { rt, rd, idx });
         const tk = el.dataset.ticker;
         if (tk && typeof openChart === 'function') openChart(tk);
       }
@@ -16908,9 +16937,11 @@ function _aqTriggerCheckTick() {
         })();
         if (tr.transDate < cutoff) return;
         const id = `${prefix}|insider-${tr.transDate}-${(tr.ownerName || '').replace(/\W/g, '')}`;
+        // v2.70: TICKER · WHEN · WHAT 짧은 형식
+        const shortOwner = (tr.ownerName || '').split(' ')[0] || tr.ownerName || '';
         _aqAddNotification({
           id, ticker,
-          message: `${ticker} 내부자 매수 — ${tr.ownerName} (${tr.relationship}) ${tr.shares.toLocaleString()}주 @ $${tr.price.toFixed(2)} (${tr.transDate})`,
+          message: `${ticker} · ${tr.transDate} · Form 4 매수 (${shortOwner})`,
           urgent: true,
         });
       });
@@ -16926,11 +16957,12 @@ function _aqTriggerCheckTick() {
           if (parsed.direction === 'up' && last.close >= parsed.threshold) met = true;
           if (parsed.direction === 'down' && last.close <= parsed.threshold) met = true;
           if (met) {
-            const dirLabel = parsed.direction === 'up' ? '회복/돌파' : '이탈';
+            const dirLabel = parsed.direction === 'up' ? '회복' : '이탈';
+            // v2.70: TICKER · WHEN · WHAT
             _aqAddNotification({
               id: `${prefix}|trigger-${parsed.threshold}-${parsed.direction}`,
               ticker,
-              message: `${ticker} 조건 충족 — 종가 $${last.close.toFixed(2)} (목표: $${parsed.threshold} ${dirLabel}) — ${body}`,
+              message: `${ticker} · 조건 충족 · $${parsed.threshold} ${dirLabel} (현재 $${last.close.toFixed(2)})`,
               urgent: true,
             });
           }
@@ -16967,6 +16999,7 @@ function _aqRenderMarquee() {
   if (!track) return;
 
   // (1) 실시간 임박 카드 메시지 — 칸반 '임박' 분류와 1:1 sync
+  //   v2.70: 짧은 형식 — TICKER · WHEN · WHAT (30~40자 이내)
   const liveItems = [];
   if (window.AqTodoStore && typeof _aqClassifyTodoCol === 'function') {
     const todayIso = new Date().toISOString().slice(0, 10);
@@ -16975,37 +17008,38 @@ function _aqRenderMarquee() {
       const col = _aqClassifyTodoCol(t, todayIso);
       if (col !== 'urgent') return;
       const ticker = String(t.ticker || t.reportTicker || '').toUpperCase();
-      const body = (t.body || t.text || '').slice(0, 80);
+      // WHAT — body 텍스트는 30자 이내로 자름
+      const whatShort = (t.body || t.text || '').slice(0, 30).trim();
       const w = t.when;
-      let label = '', detail = '';
+      let whenLabel = '', whatLabel = whatShort;
       if (w && w.type === 'date') {
         const d = _aqDaysUntil(todayIso, w.date);
         if (d == null) return;
-        label = d === 0 ? 'D-Day' : (d > 0 ? `D-${d}` : `D+${-d}`);
-        detail = `${ticker} ${label} — ${body || w.date}`;
+        whenLabel = d === 0 ? 'D-Day' : (d > 0 ? `D-${d}` : `D+${-d}`);
       } else if (w && w.type === 'range') {
         const dFrom = _aqDaysUntil(todayIso, w.from);
         const dTo = _aqDaysUntil(todayIso, w.to);
         if (dFrom != null && dFrom <= 0 && dTo != null && dTo >= 0) {
-          detail = `${ticker} 관찰 기간 진행중 (${w.from} ~ ${w.to}) — ${body}`;
+          whenLabel = '진행중';
         } else if (dFrom != null && dFrom > 0) {
-          detail = `${ticker} D-${dFrom} 시작 (${w.from}) — ${body}`;
+          whenLabel = `D-${dFrom} 시작`;
         } else return;
       } else if (w && w.type === 'quarter') {
         const earn = (typeof _aqFindNextEarning === 'function') ? _aqFindNextEarning(ticker) : null;
         if (!earn) return;
         const d = _aqDaysUntil(todayIso, earn.date);
         if (d == null || d < 0 || d > 7) return;
-        const dLabel = d === 0 ? 'D-Day' : `D-${d}`;
-        detail = `${ticker} ${w.year}년 ${w.quarter}Q 실적발표 ${dLabel} (${earn.date})`;
+        whenLabel = d === 0 ? 'D-Day' : `D-${d}`;
+        whatLabel = `${w.year}년 ${w.quarter}Q 실적`;
       } else if (w && w.type === 'soft' && w.format === 'month' && w.deadline) {
         const d = _aqDaysUntil(todayIso, w.deadline + '-28');
         if (d == null || d > 7) return;
-        detail = d <= 0
-          ? `${ticker} ${w.deadline} 데드라인 도래 — ${body}`
-          : `${ticker} ${w.deadline}까지 D-${d} — ${body}`;
+        whenLabel = d <= 0 ? '데드라인' : `${w.deadline}까지 D-${d}`;
       } else return;
-      // 실시간 알림 ID — todo prefix + 'live' (트리거 큐와 구분)
+      // 형식: TICKER · WHEN · WHAT
+      const parts = [ticker, whenLabel];
+      if (whatLabel) parts.push(whatLabel);
+      const detail = parts.join(' · ');
       const id = `${ticker}|${t.reportDate || ''}|${t.idx}|live-imminent`;
       liveItems.push({ id, ticker, message: detail, urgent: true, createdAt: todayIso });
     });
