@@ -1,11 +1,11 @@
-// AQUAMEL V-Shape Scanner — Service Worker v2.57
+// AQUAMEL V-Shape Scanner — Service Worker v2.59
 // v2.55: CACHE_NAME 갱신 → 옛 cache 박멸 강제
 //        + index.html / sw.js / .html / data.json은 fetch cache:'reload'로 브라우저 HTTP cache 우회
 //        (이전: fetch(req)가 브라우저 HTTP cache의 옛 거를 받아와 stale 무한 반복)
 //
 // 중요: 이 파일을 index.html과 항상 함께 push할 것.
 //       CACHE_NAME 문자열만 변경해도 옛 cache가 자동 박멸되며 새 자원이 받아짐.
-const CACHE_NAME = 'aquamel-v2.57-' + '20260529e';
+const CACHE_NAME = 'aquamel-v2.59-' + '20260529g';
 const CACHE_FILES = ['./', './index.html'];
 
 self.addEventListener('install', (event) => {

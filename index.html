@@ -2138,6 +2138,18 @@ table.sheet tbody tr.drop-below td:last-child {
 .pc-sidebar .pc-tab-label { font-size: 11px; font-weight: 500; }
 .pc-sidebar .pc-tab-btn.active .pc-tab-label { font-weight: 700; }
 
+/* v2.59: PC 사이드바 — 설정 버튼은 맨 아래로 밀기 (flex auto) */
+.pc-sidebar .pc-tab-btn[data-pc-tab="settings"] { margin-top: auto; }
+.pc-sidebar .pc-sidebar-divider.bottom { margin-top: auto; margin-bottom: 6px; }
+
+/* v2.59: MO drawer 분리선 (마이 ↔ 설정 사이) */
+.mo-drawer-list .mo-drawer-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 8px 14px;
+}
+[data-theme="light"] .mo-drawer-list .mo-drawer-divider { background: rgba(0,0,0,0.06); }
+
 [data-theme="light"] .pc-sidebar .pc-tab-btn { color: rgba(58, 50, 32, 0.5); }
 [data-theme="light"] .pc-sidebar .pc-tab-btn:hover { color: rgba(58, 50, 32, 0.8); }
 [data-theme="light"] .pc-sidebar .pc-tab-btn.active { color: var(--text-hi); }
@@ -2217,6 +2229,11 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   body[data-pc-page="my"] .container > section.card { display: none !important; }
   body[data-pc-page="my"] #myPortfolioCard { display: block !important; }
   body[data-pc-page="my"] .sheet-wrap { max-height: calc(100vh - 280px) !important; }
+
+  /* v2.59: 설정 페이지 — dataManagementCard만 표시 (마이에서 분리) */
+  body[data-pc-page="settings"] .container > section.card { display: none !important; }
+  body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
+  body[data-pc-page="settings"] .hero { display: none !important; }
 
   /* v2.46: 일정 페이지 — scheduleCard만 표시 */
   body[data-pc-page="schedule"] .container > section.card { display: none !important; }
@@ -2706,6 +2723,112 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 [data-theme="light"] .cal-modal-btn-secondary:hover { background: rgba(0,0,0,0.04); }
 [data-theme="light"] .calendar-title { color: var(--text-hi); }
 
+/* v2.58: 데이터 관리 카드 (마이 페이지) — 캐시 클리어 + 데이터 시점 표시 */
+.data-mgmt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+@media (max-width: 640px) {
+  .data-mgmt-grid { grid-template-columns: 1fr; gap: 10px; }
+}
+.data-mgmt-row {
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+}
+.data-mgmt-row .label {
+  font-size: 11px;
+  color: var(--text-mute);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.data-mgmt-row .value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-hi);
+  font-family: Consolas, monospace;
+}
+.data-mgmt-row .value.stale {
+  color: #ff6b6b;
+}
+.data-mgmt-row .value.fresh {
+  color: #51cf66;
+}
+.data-mgmt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.data-mgmt-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-mid);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  font-family: inherit;
+}
+.data-mgmt-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-hi);
+  border-color: rgba(255,255,255,0.25);
+}
+.data-mgmt-btn.danger {
+  border-color: rgba(255,107,107,0.35);
+  color: #ff8787;
+}
+.data-mgmt-btn.danger:hover {
+  background: rgba(255,107,107,0.12);
+  color: #ff6b6b;
+  border-color: rgba(255,107,107,0.55);
+}
+.data-mgmt-hint {
+  font-size: 11px;
+  color: var(--text-mute);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+[data-theme="light"] .data-mgmt-row {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .data-mgmt-btn {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.12);
+}
+
+/* v2.58: hero에 마지막 데이터 시점 작은 표시 (PC만) */
+.hero-data-meta {
+  display: none;
+  font-size: 11px;
+  color: var(--text-mute);
+  font-family: Consolas, monospace;
+  letter-spacing: 0.3px;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+.hero-data-meta .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #51cf66;
+  margin-right: 5px;
+  vertical-align: 1px;
+}
+.hero-data-meta .dot.stale { background: #fab005; }
+.hero-data-meta .dot.very-stale { background: #ff6b6b; }
+@media (min-width: 641px) {
+  .hero-data-meta { display: inline-flex; align-items: center; }
+}
+
 /* v2.53: 큰 화면(≥1024px)에서 캘린더 셀 더 키움 (PC 화면 이점 활용) */
 @media (min-width: 1024px) {
   .cal-cell { min-height: 160px; padding: 8px 8px 6px; }
@@ -2960,6 +3083,9 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   body[data-mtab="my"]       section.card[data-mtab~="my"]       { display: block !important; }
   /* v2.01 Phase 2: 분석 탭 — 분석 카드만 표시 */
   body[data-mtab="analysis"] section.card[data-mtab~="analysis"] { display: block !important; }
+  /* v2.59: 설정 탭 — dataManagementCard만 표시 */
+  body[data-mtab="settings"] section.card[data-mtab~="settings"] { display: block !important; }
+  body[data-mtab="settings"] .hero { display: none !important; }
 
   /* 발견 탭에서는 PC용 archive 테이블 카드 숨기고 모바일 리스트만 */
   body[data-mtab="discover"] #archiveCard { display: none !important; }
@@ -5444,7 +5570,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.57</div>
+      <div class="splash-version" id="splashVersion">v2.59</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -5487,6 +5613,8 @@ table.combo-eval tbody td .nodata {
     </div>
     <div class="meta">
       <button class="hero-refresh" id="heroRefreshBtn" onclick="autoLoadData({forceFresh: true})" title="데이터 새로고침" aria-label="데이터 새로고침">↻</button>
+      <!-- v2.58: 마지막 데이터 갱신 시점 (PC만 표시) -->
+      <div class="hero-data-meta" id="heroDataMeta" title="마지막으로 데이터를 받아온 시점"><span class="dot"></span><span id="heroDataMetaText">—</span></div>
       <!-- v1.65: 다크/라이트 토글 제거 → 시장 스위치 (US / KR) -->
       <!-- v1.66: 국기 이미지 적용 (./flags/US.png, KR.png) -->
       <div class="market-switch" role="tablist" aria-label="시장 선택">
@@ -5719,6 +5847,38 @@ table.combo-eval tbody td .nodata {
       <p class="subtitle">정량 보고서가 등록된 종목입니다. 클릭하면 보고서 일자 목록이 열립니다.</p>
       <div id="analysisGridArea">
         <div class="analysis-empty">보고서를 불러오는 중...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- v2.58: 데이터 관리 카드 — v2.59: 설정 페이지로 이동 -->
+  <section class="card" id="dataManagementCard" data-mtab="settings">
+    <div class="card-header" onclick="toggleCard(this)">
+      <h2>데이터 관리</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="card-body">
+      <div class="data-mgmt-grid">
+        <div class="data-mgmt-row">
+          <div class="label">마지막 데이터 갱신</div>
+          <div class="value" id="dataMgmtLastFetch">—</div>
+        </div>
+        <div class="data-mgmt-row">
+          <div class="label">시트 마지막 변경</div>
+          <div class="value" id="dataMgmtSheetChange">—</div>
+        </div>
+      </div>
+      <div class="data-mgmt-actions">
+        <button class="data-mgmt-btn" onclick="autoLoadData({forceFresh:true})" title="시트에서 최신 데이터를 새로 받아옴 (~100초)">
+          🔄 강제 새로고침
+        </button>
+        <button class="data-mgmt-btn danger" onclick="aqClearAllCachesAndReload()" title="브라우저의 모든 캐시를 비우고 페이지 새로고침">
+          🗑️ 캐시 클리어 + 새로고침
+        </button>
+      </div>
+      <div class="data-mgmt-hint">
+        시트에 데이터를 추가했는데 화면에 안 보이거나 옛 데이터가 계속 보일 때 사용하세요.
+        평소엔 5분마다 자동 동기화되므로 별도 작업 불필요합니다.
       </div>
     </div>
   </section>
@@ -6013,6 +6173,12 @@ table.combo-eval tbody td .nodata {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
         <span>마이</span>
       </button>
+      <!-- v2.59: 분리선 + 설정 -->
+      <div class="mo-drawer-divider" aria-hidden="true"></div>
+      <button class="mo-drawer-item" onclick="moDrawerNav('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>설정</span>
+      </button>
     </nav>
   </aside>
 
@@ -6191,6 +6357,12 @@ table.combo-eval tbody td .nodata {
   <button class="pc-tab-btn disabled" data-pc-tab="todo" onclick="setPCTab('todo')" aria-label="To-Do">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
     <span class="pc-tab-label">To-Do</span>
+  </button>
+
+  <!-- v2.59: 설정 — 사이드바 맨 아래 (margin-top: auto) -->
+  <button class="pc-tab-btn" data-pc-tab="settings" onclick="setPCTab('settings')" aria-label="설정">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span class="pc-tab-label">설정</span>
   </button>
 </nav>
 
@@ -9055,6 +9227,101 @@ async function aqClearAllCaches() {
 }
 window.aqClearAllCaches = aqClearAllCaches;
 
+// v2.58: 캐시 클리어 + 페이지 새로고침 (마이 페이지 버튼용)
+async function aqClearAllCachesAndReload() {
+  if (!confirm('모든 캐시를 비우고 페이지를 새로고침합니다.\n시트에서 데이터를 다시 받아옵니다 (~100초).\n\n계속하시겠습니까?')) return;
+  try {
+    await aqClearAllCaches();
+    // sessionStorage의 SW reload guard도 클리어 (controllerchange로 또 reload 막기 위해)
+    try { sessionStorage.removeItem('aq_sw_reload_done'); } catch (e) {}
+    setTimeout(() => window.location.reload(), 300);
+  } catch (e) { console.warn('[aqClearAllCachesAndReload]', e); }
+}
+window.aqClearAllCachesAndReload = aqClearAllCachesAndReload;
+
+// v2.58: 상대 시간 포맷 — "방금 전", "5분 전", "2시간 전", "어제", "3일 전"
+function _aqFormatRelativeTime(isoOrDate) {
+  if (!isoOrDate) return '—';
+  try {
+    const t = (isoOrDate instanceof Date) ? isoOrDate : new Date(isoOrDate);
+    if (isNaN(t.getTime())) return '—';
+    const diffMs = Date.now() - t.getTime();
+    const sec = Math.floor(diffMs / 1000);
+    if (sec < 0) return '방금 전';
+    if (sec < 60) return '방금 전';
+    const min = Math.floor(sec / 60);
+    if (min < 60) return min + '분 전';
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return hr + '시간 전';
+    const day = Math.floor(hr / 24);
+    if (day === 1) return '어제';
+    if (day < 7) return day + '일 전';
+    // 7일 이상이면 절대 날짜
+    return t.toISOString().slice(0, 10);
+  } catch (e) { return '—'; }
+}
+
+// v2.58: 데이터 시점 UI 업데이트 — hero + 마이 페이지 데이터 관리 카드 동시
+async function _aqUpdateDataMetaUI() {
+  try {
+    // 1) 마지막 데이터 갱신 시점 = state 캐시의 timestamp
+    let lastFetch = null;
+    try {
+      const snap = await aqDbGet('state');
+      if (snap && snap.timestamp) lastFetch = snap.timestamp;
+    } catch (e) {}
+
+    // 2) 시트 마지막 변경 시점 = lastSheetsState의 최신값
+    let sheetChange = null;
+    try {
+      const last = await aqDbGet('lastSheetsState');
+      if (last && typeof last === 'object') {
+        let maxIso = '';
+        for (const k of Object.keys(last)) {
+          const v = last[k];
+          if (typeof v === 'string' && v > maxIso) maxIso = v;
+        }
+        if (maxIso) sheetChange = maxIso;
+      }
+    } catch (e) {}
+
+    // hero 표시 — fresh/stale 색 결정
+    const heroEl = document.getElementById('heroDataMetaText');
+    const heroDot = document.querySelector('#heroDataMeta .dot');
+    if (heroEl) heroEl.textContent = _aqFormatRelativeTime(lastFetch);
+    if (heroDot && lastFetch) {
+      const diffMin = (Date.now() - new Date(lastFetch).getTime()) / 60000;
+      heroDot.classList.remove('stale', 'very-stale');
+      if (diffMin > 360) heroDot.classList.add('very-stale');      // 6시간↑ — 빨강
+      else if (diffMin > 60) heroDot.classList.add('stale');       // 1시간↑ — 노랑
+      // else 기본 초록
+    }
+
+    // 마이 페이지 데이터 관리 카드
+    const lastFetchEl = document.getElementById('dataMgmtLastFetch');
+    const sheetChangeEl = document.getElementById('dataMgmtSheetChange');
+    if (lastFetchEl) {
+      lastFetchEl.textContent = _aqFormatRelativeTime(lastFetch);
+      lastFetchEl.classList.remove('stale', 'fresh');
+      if (lastFetch) {
+        const diffMin = (Date.now() - new Date(lastFetch).getTime()) / 60000;
+        if (diffMin > 60) lastFetchEl.classList.add('stale');
+        else lastFetchEl.classList.add('fresh');
+      }
+    }
+    if (sheetChangeEl) {
+      sheetChangeEl.textContent = _aqFormatRelativeTime(sheetChange);
+    }
+  } catch (e) { console.warn('[_aqUpdateDataMetaUI]', e); }
+}
+window._aqUpdateDataMetaUI = _aqUpdateDataMetaUI;
+
+// 1분마다 hero/마이 페이지 시점 표시 자동 갱신 (상대시간이 "5분 전" → "6분 전" 자동 변경)
+setInterval(() => { try { _aqUpdateDataMetaUI(); } catch (e) {} }, 60 * 1000);
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => { try { _aqUpdateDataMetaUI(); } catch (e) {} }, 1500);
+});
+
 // _state의 데이터 필드만 캐시 (UI/임시 필드 제외)
 async function aqCacheSaveState() {
   try {
@@ -9071,6 +9338,8 @@ async function aqCacheSaveState() {
     };
     const ok = await aqDbSet('state', snapshot);
     if (ok) console.log('[aqCacheSaveState] 캐시 저장 완료 —', snapshot.timestamp);
+    // v2.58: 캐시 저장 후 hero + 마이 페이지 데이터 시점 즉시 갱신
+    try { if (typeof _aqUpdateDataMetaUI === 'function') _aqUpdateDataMetaUI(); } catch (e) {}
     return ok;
   } catch (e) { console.warn('[aqCacheSaveState]', e); return false; }
 }
@@ -15651,6 +15920,9 @@ function switchMobileTab(tab) {
       });
       if (typeof renderMajorEventsCard === 'function') renderMajorEventsCard();
     } catch (e) {}
+  } else if (tab === 'settings') {
+    // v2.59: 설정 탭 진입 시 데이터 시점 표시 갱신
+    try { if (typeof _aqUpdateDataMetaUI === 'function') _aqUpdateDataMetaUI(); } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -15741,8 +16013,12 @@ function setPCTab(tab) {
     aqToast('준비 중입니다');
     return;
   }
-  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule') {
+  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings') {
     setPCPage(tab);
+    // v2.59: 설정 페이지 진입 시 데이터 시점 표시 갱신 (v2.58에서 마이 페이지였던 것)
+    if (tab === 'settings') {
+      try { if (typeof _aqUpdateDataMetaUI === 'function') _aqUpdateDataMetaUI(); } catch (e) {}
+    }
     // 일정 페이지 진입 시 캘린더 렌더 (DOM 준비된 후)
     if (tab === 'schedule') {
       try { aqCalendarRender(); } catch (e) {}
