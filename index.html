@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.71';
+window.AQ_PWA_VERSION = '2.72';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -16838,20 +16838,17 @@ let _aqSearchActiveIdx = 0;     // 키보드 네비용 현재 선택 인덱스
 let _aqSearchLastResults = [];  // 마지막 렌더된 후보 (Enter 선택용)
 
 function _aqGetAllSearchables() {
-  // _state.sectors 평탄화 — { ticker, company, sector } 객체 배열, ticker 중복 제거
-  const seen = new Set();
+  // v2.72: KJP400 유니버스 — _state.tickerSectorMap 사용 (보드에 보이는 sectors가 아닌 정의된 전체 마스터)
+  const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
+  const sectorMap = (_state && _state.tickerSectorMaps && _state.tickerSectorMaps[mkt])
+                 || (_state && _state.tickerSectorMap)
+                 || {};
+  const companyMap = (_state && _state.tickerCompanyMaps && _state.tickerCompanyMaps[mkt])
+                  || (_state && _state.tickerCompanyMap)
+                  || {};
   const out = [];
-  const sectors = (window._state && _state.sectors) || {};
-  const companyMap = (_state && (_state.tickerCompanyMap ||
-    (_state.tickerCompanyMaps && _state.tickerCompanyMaps[typeof getCurrentMarket === 'function' ? getCurrentMarket() : 'US']))) || {};
-  Object.keys(sectors).forEach(sector => {
-    const rows = sectors[sector] || [];
-    rows.forEach(r => {
-      const tk = String(r.Ticker || '').toUpperCase();
-      if (!tk || seen.has(tk)) return;
-      seen.add(tk);
-      out.push({ ticker: tk, company: companyMap[tk] || '', sector });
-    });
+  Object.keys(sectorMap).forEach(tk => {
+    out.push({ ticker: tk, company: companyMap[tk] || '', sector: sectorMap[tk] || '' });
   });
   return out;
 }
@@ -16874,32 +16871,45 @@ function _aqRenderSearchResults(query) {
   const resultsEl = document.getElementById('searchResults');
   if (!resultsEl) return;
   const q = String(query || '').trim();
+  const all = _aqGetAllSearchables();
+  console.log('[SEARCH] query="' + q + '", universe size=' + all.length);
+  if (all.length === 0) {
+    resultsEl.innerHTML = '<div class="search-modal-empty">KJP400 유니버스 데이터가 아직 로드되지 않았습니다. 잠시 후 다시 시도하세요.</div>';
+    _aqSearchLastResults = [];
+    return;
+  }
   if (!q) {
-    resultsEl.innerHTML = '<div class="search-modal-empty">티커명 또는 회사명을 입력하세요</div>';
+    resultsEl.innerHTML = '<div class="search-modal-empty">티커명 또는 회사명을 입력하세요 (' + all.length.toLocaleString() + '개 종목 대상)</div>';
     _aqSearchLastResults = [];
     _aqSearchActiveIdx = 0;
     return;
   }
-  const qUpper = q.toUpperCase();
-  const all = _aqGetAllSearchables();
-  // ticker prefix match 우선, 그 다음 ticker contains, 회사명 contains 순서로 정렬
+  const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
+  // v2.72: KR ticker — 5930 입력 시 005930 매칭하도록 padding
+  let qUpper = q.toUpperCase();
+  let qNorm = qUpper;
+  if (mkt === 'KR' && /^\d{1,6}$/.test(qNorm) && qNorm.length < 6) {
+    qNorm = qNorm.padStart(6, '0');
+  }
+  // ticker prefix match 우선 → ticker contains → 회사명 contains
   const matches = [];
   all.forEach(it => {
     const tickerU = it.ticker;
     const companyU = (it.company || '').toUpperCase();
     let score = -1;
-    if (tickerU === qUpper) score = 100;
-    else if (tickerU.startsWith(qUpper)) score = 90;
-    else if (tickerU.includes(qUpper)) score = 70;
+    if (tickerU === qNorm) score = 100;
+    else if (tickerU === qUpper) score = 95;
+    else if (tickerU.startsWith(qNorm) || tickerU.startsWith(qUpper)) score = 90;
+    else if (tickerU.includes(qNorm) || tickerU.includes(qUpper)) score = 70;
     else if (companyU.includes(qUpper) || (it.company || '').includes(q)) score = 50;
     if (score >= 0) matches.push({ ...it, score });
   });
   matches.sort((a, b) => b.score - a.score || a.ticker.localeCompare(b.ticker));
-  const top = matches.slice(0, 50);  // 최대 50개
+  const top = matches.slice(0, 50);
   _aqSearchLastResults = top;
   _aqSearchActiveIdx = 0;
   if (top.length === 0) {
-    resultsEl.innerHTML = `<div class="search-modal-empty">"${escapeHtml(q)}"에 해당하는 종목이 없습니다</div>`;
+    resultsEl.innerHTML = `<div class="search-modal-empty">"${escapeHtml(q)}"에 해당하는 종목이 없습니다 (검색 대상: KJP400 ${all.length}개)</div>`;
     return;
   }
   const logoFn = (typeof tickerFileName === 'function') ? tickerFileName : (t) => t;
@@ -16930,7 +16940,6 @@ function _aqRenderSearchResults(query) {
       if (typeof openChart === 'function') openChart(tk);
     };
     el.onmouseenter = () => {
-      // 마우스 호버 시 active idx 변경
       const i = parseInt(el.dataset.idx, 10);
       if (!isNaN(i)) {
         _aqSearchActiveIdx = i;
