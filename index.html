@@ -5444,7 +5444,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.55</div>
+      <div class="splash-version" id="splashVersion">v2.56</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7448,16 +7448,29 @@ const aqCal = {
 // v2.51: 외부 시트 일정 (Earnings, FOMC, 13F) — 메모리 캐시
 //   소스: 사용자 별도 구글시트 (US_DATE 탭)
 //   주기: 6시간 캐시. forceFresh 또는 진입 시 만료 시 fetch.
+// v2.56: 캐시 키 v2 — v2.52의 옛 캐시 (미래만) 무효화 + KR 시장 가드 추가
 const AQ_US_CALENDAR_SHEET = '1-44DsxFWblpgN5IdUObXDFgLJkVFVF1VsxyVYEWH2xc';
 const AQ_US_CALENDAR_TAB = 'US_DATE';
+const AQ_CAL_CACHE_KEY = 'us_calendar_sheet_v2';  // v2.56: v2 — 옛 미래-only 캐시 무효화
 const AQ_CAL_CACHE_TTL_MIN = 360;  // 6시간
 let _aqCalSheetEvents = [];
 
 async function fetchSheetCalendar(forceFresh) {
+  // v2.56: KR 시장에서는 미국 일정 fetch 안 함 — 메모리 클리어 후 즉시 return
+  if (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US') {
+    if (_aqCalSheetEvents.length > 0) {
+      _aqCalSheetEvents = [];
+      if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
+        try { aqCalendarRender(); } catch (e) {}
+        try { renderMajorEventsCard(); } catch (e) {}
+      }
+    }
+    return _aqCalSheetEvents;
+  }
   // 캐시 우선
   if (!forceFresh) {
     try {
-      const cached = await aqDbGet('us_calendar_sheet');
+      const cached = await aqDbGet(AQ_CAL_CACHE_KEY);
       if (cached && cached.fetchedAt && Array.isArray(cached.events)) {
         const ageMin = (Date.now() - new Date(cached.fetchedAt).getTime()) / 60000;
         if (ageMin < AQ_CAL_CACHE_TTL_MIN) {
@@ -7470,6 +7483,8 @@ async function fetchSheetCalendar(forceFresh) {
           return _aqCalSheetEvents;
         }
       }
+      // v2.56: 옛 v1 캐시 cleanup (한 번만)
+      try { await aqDbSet('us_calendar_sheet', null); } catch (e) {}
     } catch (e) {}
   }
   if (typeof apiCall !== 'function' || !backendReady()) return _aqCalSheetEvents;
@@ -7502,8 +7517,8 @@ async function fetchSheetCalendar(forceFresh) {
       }))
       .filter(e => e.date >= minStr && e.date <= maxStr);
     _aqCalSheetEvents = events;
-    try { await aqDbSet('us_calendar_sheet', { fetchedAt: new Date().toISOString(), events }); } catch (e) {}
-    console.log('[fetchSheetCalendar] fetch 완료 — ' + events.length + '개 미래 일정');
+    try { await aqDbSet(AQ_CAL_CACHE_KEY, { fetchedAt: new Date().toISOString(), events }); } catch (e) {}
+    console.log('[fetchSheetCalendar] fetch 완료 — ' + events.length + '개 (' + minStr + ' ~ ' + maxStr + ')');
     if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
       try { aqCalendarRender(); } catch (e) {}
       try { renderMajorEventsCard(); } catch (e) {}
@@ -7516,7 +7531,9 @@ async function fetchSheetCalendar(forceFresh) {
 }
 
 // 특정 날짜의 시트 일정 — 시간순 정렬 (Earnings 시간 순, 종일성격이면 뒤로)
+// v2.56: KR 시장은 미국 일정 표시 안 함
 function aqCalSheetEventsFor(dateStr) {
+  if (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US') return [];
   if (!Array.isArray(_aqCalSheetEvents) || _aqCalSheetEvents.length === 0) return [];
   return _aqCalSheetEvents
     .filter(e => e.date === dateStr && _aqCalEventMatchesFilter(e))
@@ -7598,8 +7615,15 @@ function _aqCalDaysUntil(dateStr) {
 //   UI는 매수 포인트와 동일 구조 (로고/티커/일정명/D-N). 필터도 같이 적용.
 //   v2.55: daysUntil은 _aqCalDaysUntil로 매번 계산 (캐시된 시트값 신뢰 X)
 function renderMajorEventsCard() {
+  const card = document.getElementById('majorEventsCard');
   const scroll = document.getElementById('majorEventsScroll');
   if (!scroll) return;
+  // v2.56: KR 시장은 미국 일정 카드 자체를 숨김 (필터 chip도 같이)
+  const isUS = typeof getCurrentMarket !== 'function' || getCurrentMarket() === 'US';
+  if (card) card.style.display = isUS ? '' : 'none';
+  const filterRow = document.querySelector('.cal-filter-row');
+  if (filterRow) filterRow.style.display = isUS ? '' : 'none';
+  if (!isUS) return;
   _aqCalRefreshHoldings();  // 캐시 갱신
   if (!Array.isArray(_aqCalSheetEvents) || _aqCalSheetEvents.length === 0) {
     scroll.innerHTML = '<div class="buy-points-empty">불러오는 중…</div>';
@@ -8833,6 +8857,13 @@ function rerenderAll() {
     if (typeof renderComboEval === 'function') renderComboEval(_state.archive);
     // 대시보드 (보유 종목 표시 — 현재는 통합이지만 추후 시장별 분리 가능)
     if (typeof renderDashboard === 'function') renderDashboard().catch(() => {});
+    // v2.56: 시장 전환 시 캘린더 + 주요 이벤트 재렌더 (KR이면 시트 일정 안 보임)
+    if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
+      try { aqCalendarRender(); } catch (e) {}
+    }
+    if (typeof renderMajorEventsCard === 'function') {
+      try { renderMajorEventsCard(); } catch (e) {}
+    }
     // 차트 모달이 열려있으면 닫음 (시장 다른 종목이라 데이터 안 맞음)
     if (_state.openTicker && document.getElementById('chartModal')?.classList.contains('active')) {
       if (typeof closeModal === 'function') closeModal();
