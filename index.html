@@ -495,12 +495,15 @@ section.card {
   .market-switch .mkt-btn { padding: 3px 8px 3px 3px; font-size: 11px; gap: 4px; }
   .market-switch .mkt-flag { width: 16px; height: 16px; }
   /* v2.45: 모바일 hero — 로고+시장토글 한 줄, 하단 정렬 (이전 column → row 복원) */
-  .hero { flex-direction: row; align-items: flex-end; gap: 10px; padding-bottom: 14px; margin-bottom: 18px; flex-wrap: wrap; justify-content: space-between; }
+  /* v2.47: flex-end !important + tagline 숨김 — INVESTMENT와 US/KR 같은 라인 정렬 강제 */
+  .hero { flex-direction: row !important; align-items: flex-end !important; gap: 10px; padding-bottom: 14px; margin-bottom: 18px; flex-wrap: wrap; justify-content: space-between; }
   .hero h1 { font-size: 26px; }
   .hero-brand { width: auto; flex: 1 1 auto; min-width: 0; }
-  .hero .meta { width: auto; justify-content: flex-end; }
-  /* v2.45: MO에서 hero 안의 새로고침 숨김 — mobile-topbar로 이동됨 */
-  .hero-refresh { display: none; }
+  .hero .meta { width: auto; justify-content: flex-end; align-self: flex-end; }
+  /* v2.47: MO에서 tagline 숨김 — hero-brand 마지막 줄 = INVESTMENT가 되어 US/KR과 자연 정렬 */
+  .hero-tagline { display: none; }
+  /* v2.45/v2.47: MO에서 hero 안의 새로고침 숨김 — mobile-topbar로 이동됨 (!important 강제) */
+  .hero-refresh { display: none !important; }
 }
 
 /* v2.44: 토스트 알림 — disabled 메뉴 클릭 시 "준비 중" 안내 */
@@ -5280,7 +5283,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.46</div>
+      <div class="splash-version" id="splashVersion">v2.47</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
