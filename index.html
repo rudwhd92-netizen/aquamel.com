@@ -5440,7 +5440,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.54</div>
+      <div class="splash-version" id="splashVersion">v2.55</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7580,8 +7580,19 @@ function aqCalToggleFilter(key) {
 }
 window.aqCalToggleFilter = aqCalToggleFilter;
 
+// v2.55: daysUntil 클라이언트 측 계산 — 시트의 Days_Until은 stale 가능 (캐시 + 시트 업데이트 시점 차이)
+function _aqCalDaysUntil(dateStr) {
+  if (!dateStr) return null;
+  try {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const target = new Date(dateStr); target.setHours(0,0,0,0);
+    return Math.round((target - today) / 86400000);
+  } catch (e) { return null; }
+}
+
 // v2.53: "주요 이벤트" 카드 렌더 — Days_Until 0~5 (오늘 + 미래 5일)
 //   UI는 매수 포인트와 동일 구조 (로고/티커/일정명/D-N). 필터도 같이 적용.
+//   v2.55: daysUntil은 _aqCalDaysUntil로 매번 계산 (캐시된 시트값 신뢰 X)
 function renderMajorEventsCard() {
   const scroll = document.getElementById('majorEventsScroll');
   if (!scroll) return;
@@ -7590,13 +7601,13 @@ function renderMajorEventsCard() {
     scroll.innerHTML = '<div class="buy-points-empty">불러오는 중…</div>';
     return;
   }
-  // 임박 이벤트 — 0 <= Days_Until <= 5, 필터 통과
+  // 임박 이벤트 — 클라이언트 기준 0 <= daysUntil <= 5
   const items = _aqCalSheetEvents
-    .filter(e => typeof e.daysUntil === 'number' && e.daysUntil >= 0 && e.daysUntil <= 5)
+    .map(e => Object.assign({}, e, { _dn: _aqCalDaysUntil(e.date) }))
+    .filter(e => typeof e._dn === 'number' && e._dn >= 0 && e._dn <= 5)
     .filter(e => _aqCalEventMatchesFilter(e))
     .sort((a, b) => {
-      if (a.daysUntil !== b.daysUntil) return a.daysUntil - b.daysUntil;
-      // 같은 D-day면 카테고리 우선
+      if (a._dn !== b._dn) return a._dn - b._dn;
       const catOrder = { 'FOMC': 0, '13F': 1, 'Earnings': 2 };
       const ao = catOrder[a.category] != null ? catOrder[a.category] : 9;
       const bo = catOrder[b.category] != null ? catOrder[b.category] : 9;
@@ -7606,23 +7617,19 @@ function renderMajorEventsCard() {
     scroll.innerHTML = '<div class="buy-points-empty">5일 이내 임박 이벤트가 없습니다</div>';
     return;
   }
-  // 카테고리별 일정명
   const evtName = (cat) => cat === 'Earnings' ? '실적발표'
                          : cat === 'FOMC'    ? 'FOMC'
                          : cat === '13F'      ? '13F' : cat;
-  // D-N 라벨
   const dLabel = (n) => n === 0 ? 'D-DAY' : ('D-' + n);
-  // 로고
   const logoUrl = (ev) => (ev.category === 'Earnings' && ev.ticker)
     ? './logos/tickers/' + ev.ticker + '.png'
     : './flags/US.png';
-  // 티커 라벨 (Earnings는 ticker, FOMC/13F는 카테고리 자체)
   const tkLabel = (ev) => ev.category === 'Earnings' ? ev.ticker : ev.category;
   scroll.innerHTML = items.map(ev => {
     const lg = logoUrl(ev);
     const lb = escapeHtml(tkLabel(ev));
     const en = escapeHtml(evtName(ev.category));
-    const dn = dLabel(ev.daysUntil);
+    const dn = dLabel(ev._dn);
     return '<div class="buy-point-item major-event-item" title="' + escapeAttr(ev.description || '') + '">' +
              '<img class="bp-logo" src="' + lg + '" onerror="this.onerror=null;this.src=\'./flags/US.png\';" alt=""/>' +
              '<div class="bp-name">' + lb + '</div>' +
