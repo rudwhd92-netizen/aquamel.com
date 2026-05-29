@@ -5,6 +5,8 @@ const CACHE_NAME = 'aquamel-v2.37';
 const CACHE_FILES = ['./', './index.html', './sw.js'];
 
 self.addEventListener('install', (event) => {
+  // 새 SW 즉시 활성화 (옛 SW 대기 안 함)
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(CACHE_FILES).catch(()=>{}))
   );
