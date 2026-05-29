@@ -5440,7 +5440,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.53</div>
+      <div class="splash-version" id="splashVersion">v2.54</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7541,7 +7541,7 @@ function aqCalLoadFilters() {
 function aqCalSaveFilters() {
   try { localStorage.setItem('aq_cal_filters', JSON.stringify(aqCalFilters)); } catch (e) {}
 }
-aqCalLoadFilters();
+// v2.54: top-level 즉시 호출 제거 — schedule 탭 진입 시 lazy 호출
 
 // 보유 종목 ticker set — computeHoldingsState 사용. 캘린더 렌더 시점에 한 번만 캐시
 let _aqCalHoldingsCache = null;
@@ -15534,7 +15534,9 @@ function switchMobileTab(tab) {
     // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
     try { if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false); } catch (e) {}
     // v2.53: 필터 chip 상태 + 주요 이벤트 카드 렌더
+    // v2.54: lazy filter load — 메인 로딩 영향 X
     try {
+      if (typeof aqCalLoadFilters === 'function') aqCalLoadFilters();
       if (typeof _aqCalRefreshHoldings === 'function') _aqCalRefreshHoldings();
       document.querySelectorAll('.cal-filter-chip').forEach(c => {
         const k = c.dataset.filter;
@@ -15640,7 +15642,9 @@ function setPCTab(tab) {
       // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
       try { if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false); } catch (e) {}
       // v2.53: 필터 chip 상태 + 주요 이벤트 카드 렌더
+      // v2.54: lazy filter load
       try {
+        if (typeof aqCalLoadFilters === 'function') aqCalLoadFilters();
         if (typeof _aqCalRefreshHoldings === 'function') _aqCalRefreshHoldings();
         document.querySelectorAll('.cal-filter-chip').forEach(c => {
           const k = c.dataset.filter;
