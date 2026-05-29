@@ -2381,6 +2381,67 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   padding-left: 6px;
   font-weight: 500;
 }
+
+/* v2.51: 시트 외부 일정 (Earnings/FOMC/13F) — 카테고리별 색상 + 로고 */
+.cal-event-chip.cal-evt-earnings {
+  background: rgba(121, 80, 242, 0.20);
+  border-left-color: #7950f2;
+}
+.cal-event-chip.cal-evt-earnings:hover { background: rgba(121, 80, 242, 0.32); }
+.cal-event-chip.cal-evt-fomc {
+  background: rgba(255, 107, 107, 0.20);
+  border-left-color: #ff6b6b;
+}
+.cal-event-chip.cal-evt-fomc:hover { background: rgba(255, 107, 107, 0.32); }
+.cal-event-chip.cal-evt-13f {
+  background: rgba(250, 176, 5, 0.22);
+  border-left-color: #fab005;
+}
+.cal-event-chip.cal-evt-13f:hover { background: rgba(250, 176, 5, 0.34); }
+.cal-event-chip-logo {
+  width: 12px;
+  height: 12px;
+  vertical-align: -2px;
+  margin-right: 4px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255,255,255,0.06);
+}
+.cal-cell-dot.cal-dot-earnings { background: #7950f2; }
+.cal-cell-dot.cal-dot-fomc { background: #ff6b6b; }
+.cal-cell-dot.cal-dot-13f { background: #fab005; }
+
+.cal-event-row.is-readonly {
+  cursor: default;
+  background: rgba(255,255,255,0.02);
+  border-style: dashed;
+}
+.cal-event-row.is-readonly:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+.cal-event-row-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  background: rgba(255,255,255,0.05);
+  margin-top: 1px;
+}
+.cal-event-source {
+  font-size: 10px;
+  color: var(--text-mute);
+  margin-top: 4px;
+  opacity: 0.7;
+  letter-spacing: 0.3px;
+}
+[data-theme="light"] .cal-event-row.is-readonly {
+  background: rgba(0,0,0,0.018);
+}
+[data-theme="light"] .cal-event-chip.cal-evt-earnings { background: rgba(121, 80, 242, 0.14); }
+[data-theme="light"] .cal-event-chip.cal-evt-fomc { background: rgba(255, 107, 107, 0.14); }
+[data-theme="light"] .cal-event-chip.cal-evt-13f { background: rgba(250, 176, 5, 0.18); }
 .cal-cell-dots {
   display: flex;
   gap: 3px;
@@ -5310,7 +5371,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.50</div>
+      <div class="splash-version" id="splashVersion">v2.51</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7284,6 +7345,87 @@ const aqCal = {
   editingId: null,
 };
 
+// v2.51: 외부 시트 일정 (Earnings, FOMC, 13F) — 메모리 캐시
+//   소스: 사용자 별도 구글시트 (US_DATE 탭)
+//   주기: 6시간 캐시. forceFresh 또는 진입 시 만료 시 fetch.
+const AQ_US_CALENDAR_SHEET = '1-44DsxFWblpgN5IdUObXDFgLJkVFVF1VsxyVYEWH2xc';
+const AQ_US_CALENDAR_TAB = 'US_DATE';
+const AQ_CAL_CACHE_TTL_MIN = 360;  // 6시간
+let _aqCalSheetEvents = [];
+
+async function fetchSheetCalendar(forceFresh) {
+  // 캐시 우선
+  if (!forceFresh) {
+    try {
+      const cached = await aqDbGet('us_calendar_sheet');
+      if (cached && cached.fetchedAt && Array.isArray(cached.events)) {
+        const ageMin = (Date.now() - new Date(cached.fetchedAt).getTime()) / 60000;
+        if (ageMin < AQ_CAL_CACHE_TTL_MIN) {
+          _aqCalSheetEvents = cached.events;
+          console.log('[fetchSheetCalendar] IDB 캐시 사용 (' + ageMin.toFixed(0) + '분 전, ' + cached.events.length + '개)');
+          if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
+            try { aqCalendarRender(); } catch (e) {}
+          }
+          return _aqCalSheetEvents;
+        }
+      }
+    } catch (e) {}
+  }
+  if (typeof apiCall !== 'function' || !backendReady()) return _aqCalSheetEvents;
+  try {
+    const res = await apiCall('getOneSheet', {
+      sheetId: AQ_US_CALENDAR_SHEET,
+      tab: AQ_US_CALENDAR_TAB,
+    });
+    if (!res || !res.ok || !Array.isArray(res.rows)) {
+      console.warn('[fetchSheetCalendar] 응답 비정상:', res && res.error);
+      return _aqCalSheetEvents;
+    }
+    // 오늘 포함 이후 일정만, 정렬은 셀 표시 단계에서
+    const todayStr = aqCalTodayStr();
+    const events = res.rows
+      .filter(r => r.Date_KST && r.Category)
+      .map(r => ({
+        date: String(r.Date_KST).slice(0, 10),
+        time: r.Time_KST ? String(r.Time_KST).slice(0, 5) : '',
+        category: String(r.Category),
+        ticker: String(r.Ticker || '').toUpperCase(),
+        sector: String(r.Sector || ''),
+        description: String(r.Description || ''),
+        session: String(r.Session || ''),
+      }))
+      .filter(e => e.date >= todayStr);
+    _aqCalSheetEvents = events;
+    try { await aqDbSet('us_calendar_sheet', { fetchedAt: new Date().toISOString(), events }); } catch (e) {}
+    console.log('[fetchSheetCalendar] fetch 완료 — ' + events.length + '개 미래 일정');
+    if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
+      try { aqCalendarRender(); } catch (e) {}
+    }
+    return events;
+  } catch (e) {
+    console.warn('[fetchSheetCalendar]', e);
+    return _aqCalSheetEvents;
+  }
+}
+
+// 특정 날짜의 시트 일정 — 시간순 정렬 (Earnings 시간 순, 종일성격이면 뒤로)
+function aqCalSheetEventsFor(dateStr) {
+  if (!Array.isArray(_aqCalSheetEvents) || _aqCalSheetEvents.length === 0) return [];
+  return _aqCalSheetEvents
+    .filter(e => e.date === dateStr)
+    .sort((a, b) => {
+      // FOMC/13F는 시간 없음 → 위로, Earnings는 시간순
+      const catOrder = { 'FOMC': 0, '13F': 1, 'Earnings': 2 };
+      const ao = catOrder[a.category] != null ? catOrder[a.category] : 9;
+      const bo = catOrder[b.category] != null ? catOrder[b.category] : 9;
+      if (ao !== bo) return ao - bo;
+      return (a.time || '').localeCompare(b.time || '');
+    });
+}
+
+window.fetchSheetCalendar = fetchSheetCalendar;
+window.aqCalSheetEventsFor = aqCalSheetEventsFor;
+
 function aqCalLoadEvents() {
   try { return JSON.parse(localStorage.getItem('aq_calendar_events') || '[]'); }
   catch (e) { return []; }
@@ -7346,7 +7488,13 @@ function aqCalendarRender() {
 }
 
 function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
-  const events = aqCalEventsFor(dateStr);
+  const userEvents = aqCalEventsFor(dateStr);
+  // v2.51: 시트 일정 합치기 — 사용자 일정 먼저, 그 다음 시트 일정
+  const sheetEvents = (typeof aqCalSheetEventsFor === 'function') ? aqCalSheetEventsFor(dateStr) : [];
+  const allEvents = [
+    ...userEvents.map(e => Object.assign({}, e, { _type: 'user' })),
+    ...sheetEvents.map(e => Object.assign({}, e, { _type: 'sheet' })),
+  ];
   const cell = document.createElement('div');
   cell.className = 'cal-cell' +
     (isOther ? ' other-month' : '') +
@@ -7365,14 +7513,21 @@ function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
   dateDiv.textContent = dayNum;
   cell.appendChild(dateDiv);
 
-  if (events.length > 0) {
+  if (allEvents.length > 0) {
     if (isMobile) {
       const dotsDiv = document.createElement('div');
       dotsDiv.className = 'cal-cell-dots';
-      const maxDots = Math.min(events.length, 3);
+      const maxDots = Math.min(allEvents.length, 3);
       for (let i = 0; i < maxDots; i++) {
+        const ev = allEvents[i];
         const dot = document.createElement('div');
-        dot.className = 'cal-cell-dot';
+        let dotCls = 'cal-cell-dot';
+        if (ev._type === 'sheet') {
+          if (ev.category === 'Earnings') dotCls += ' cal-dot-earnings';
+          else if (ev.category === 'FOMC') dotCls += ' cal-dot-fomc';
+          else if (ev.category === '13F') dotCls += ' cal-dot-13f';
+        }
+        dot.className = dotCls;
         dotsDiv.appendChild(dot);
       }
       cell.appendChild(dotsDiv);
@@ -7380,18 +7535,36 @@ function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
       const evDiv = document.createElement('div');
       evDiv.className = 'cal-cell-events';
       const maxShow = 3;
-      events.slice(0, maxShow).forEach(ev => {
+      allEvents.slice(0, maxShow).forEach(ev => {
         const chip = document.createElement('div');
-        chip.className = 'cal-event-chip';
-        chip.textContent = ev.allDay ? ev.title : ((ev.startTime ? ev.startTime + ' ' : '') + ev.title);
-        chip.title = ev.title;
-        chip.onclick = (e) => { e.stopPropagation(); aqCalendarOpenModal(ev.id); };
+        if (ev._type === 'user') {
+          chip.className = 'cal-event-chip';
+          chip.textContent = ev.allDay ? ev.title : ((ev.startTime ? ev.startTime + ' ' : '') + ev.title);
+          chip.title = ev.title;
+          chip.onclick = (e) => { e.stopPropagation(); aqCalendarOpenModal(ev.id); };
+        } else {
+          // v2.51: 시트 일정 — 카테고리별 색상 + 로고 + read-only (클릭 시 그냥 날짜 선택)
+          const catCls = ev.category === 'Earnings' ? 'cal-evt-earnings'
+                       : ev.category === 'FOMC' ? 'cal-evt-fomc'
+                       : ev.category === '13F' ? 'cal-evt-13f' : '';
+          chip.className = 'cal-event-chip ' + catCls;
+          const logoUrl = (ev.category === 'Earnings' && ev.ticker)
+            ? './logos/tickers/' + ev.ticker + '.png'
+            : './flags/US.png';
+          const label = ev.category === 'Earnings' ? (ev.ticker || '') : ev.category;
+          chip.innerHTML =
+            '<img class="cal-event-chip-logo" src="' + logoUrl +
+            '" onerror="this.onerror=null;this.src=\'./flags/US.png\';" alt=""/>' +
+            escapeHtml(label);
+          chip.title = ev.description || '';
+          chip.style.cursor = 'default';
+        }
         evDiv.appendChild(chip);
       });
-      if (events.length > maxShow) {
+      if (allEvents.length > maxShow) {
         const more = document.createElement('div');
         more.className = 'cal-event-more';
-        more.textContent = '+' + (events.length - maxShow);
+        more.textContent = '+' + (allEvents.length - maxShow);
         evDiv.appendChild(more);
       }
       cell.appendChild(evDiv);
@@ -7422,7 +7595,9 @@ function _renderSelectedSection() {
   label.textContent = dt.getFullYear() + '년 ' + (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 (' + dayNames[dt.getDay()] + ')';
 
   const events = aqCalEventsFor(aqCal.selected);
-  if (events.length === 0) {
+  // v2.51: 시트 일정도 같이 합쳐서 표시 (read-only)
+  const sheetEvents = (typeof aqCalSheetEventsFor === 'function') ? aqCalSheetEventsFor(aqCal.selected) : [];
+  if (events.length === 0 && sheetEvents.length === 0) {
     list.innerHTML = '<div class="cal-event-empty">이 날짜에 등록된 일정이 없습니다.</div>';
     return;
   }
@@ -7452,6 +7627,69 @@ function _renderSelectedSection() {
       memoEl.textContent = ev.memo;
       info.appendChild(memoEl);
     }
+    row.appendChild(info);
+    list.appendChild(row);
+  });
+
+  // v2.51: 시트 일정 (Earnings, FOMC, 13F) — read-only
+  sheetEvents.forEach(ev => {
+    const row = document.createElement('div');
+    row.className = 'cal-event-row is-readonly';
+
+    // 로고
+    const logoEl = document.createElement('img');
+    logoEl.className = 'cal-event-row-logo';
+    logoEl.alt = '';
+    if (ev.category === 'Earnings' && ev.ticker) {
+      logoEl.src = './logos/tickers/' + ev.ticker + '.png';
+      logoEl.onerror = function() { this.onerror = null; this.src = './flags/US.png'; };
+    } else {
+      logoEl.src = './flags/US.png';
+      logoEl.onerror = function() { this.style.visibility = 'hidden'; };
+    }
+    row.appendChild(logoEl);
+
+    const info = document.createElement('div');
+    info.className = 'cal-event-info';
+
+    const titleEl = document.createElement('div');
+    titleEl.className = 'cal-event-title';
+    if (ev.category === 'Earnings') {
+      const sectorTxt = ev.sector ? ' · ' + ev.sector : '';
+      titleEl.innerHTML = '<strong>' + escapeHtml(ev.ticker) + '</strong> 실적 발표' + escapeHtml(sectorTxt);
+    } else if (ev.category === 'FOMC') {
+      titleEl.innerHTML = '🇺🇸 <strong>FOMC</strong> 회의';
+    } else if (ev.category === '13F') {
+      titleEl.innerHTML = '🇺🇸 <strong>13F</strong> 공시 마감';
+    } else {
+      titleEl.textContent = ev.category;
+    }
+    info.appendChild(titleEl);
+
+    // 시간 + Session
+    let timeStr = '';
+    if (ev.session && ev.time) timeStr = ev.session + ' · ' + ev.time + ' KST';
+    else if (ev.session) timeStr = ev.session;
+    else if (ev.time) timeStr = ev.time + ' KST';
+    if (timeStr) {
+      const timeEl = document.createElement('div');
+      timeEl.className = 'cal-event-memo';
+      timeEl.textContent = timeStr;
+      info.appendChild(timeEl);
+    }
+
+    if (ev.description) {
+      const descEl = document.createElement('div');
+      descEl.className = 'cal-event-memo';
+      descEl.textContent = ev.description;
+      info.appendChild(descEl);
+    }
+
+    const srcEl = document.createElement('div');
+    srcEl.className = 'cal-event-source';
+    srcEl.textContent = '외부 일정 (편집 불가)';
+    info.appendChild(srcEl);
+
     row.appendChild(info);
     list.appendChild(row);
   });
@@ -8833,6 +9071,8 @@ async function autoLoadData(opts) {
         setTimeout(() => _aqBackgroundRefresh(cachedTs), 100);
         // v2.50: polling 시작 (한 번만 — 내부 가드)
         _aqStartPolling();
+        // v2.51: 시트 캘린더 백그라운드 fetch
+        if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false);
         return;
       }
     } catch (e) {
@@ -8883,6 +9123,8 @@ async function autoLoadData(opts) {
         aqCacheSaveState();
         // v2.50: polling 시작 (한 번만 — 내부 가드)
         _aqStartPolling();
+        // v2.51: 시트 캘린더 백그라운드 fetch (캐시 만료 시에만 backend 호출)
+        if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false);
         return;
       }
     } else {
@@ -9116,6 +9358,8 @@ async function autoLoadData(opts) {
     // v2.50: forceFresh 또는 일반 fallback 성공 — 기준점 갱신 + 신호 OFF + polling 시작
     _aqUpdateLastSheetsState();
     _aqStartPolling();
+    // v2.51: 시트 캘린더도 fresh로 (forceFresh 시 강제 갱신)
+    if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(!!forceFresh);
   } catch (err) {
     console.error(err);
     splashError(err.message || '데이터 로드 실패');
