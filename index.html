@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.63';
+window.AQ_PWA_VERSION = '2.64';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2314,6 +2314,8 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 /* PC 전용 표시 컨트롤 */
 @media (min-width: 641px) {
   .pc-sidebar { display: flex; }
+  /* v2.64: PC에서는 mo-drawer 안 씀 — transform translateX(-100%) 상태에서도 box-shadow + 일부 잔상 보이는 문제 차단 */
+  .mo-drawer, .mo-drawer-backdrop { display: none !important; }
   /* 메인 컨테이너 — 정상: 사이드바 폭(64) + 살짝 여백(20) */
   .container {
     padding-right: calc(64px + 20px);
@@ -4008,6 +4010,56 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 /* ============ TICKER HISTORY (below chart) ============ */
 .ticker-history-wrap { margin-top: 18px; background: var(--bg); border-radius: 4px; padding: 14px 16px; overflow: auto; }
 .ticker-history-title { font-size: 12px; color: var(--text-hi); margin-bottom: 10px; font-weight: 600; }
+
+/* v2.64: 내부자 거래 테이블 */
+.insider-history-wrap table.insider-history {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.insider-history-wrap table.insider-history thead th {
+  text-align: left;
+  padding: 8px 10px;
+  color: var(--text-mute);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.2px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: transparent;
+  white-space: nowrap;
+}
+.insider-history-wrap table.insider-history tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text);
+  vertical-align: middle;
+}
+.insider-history-wrap table.insider-history tbody tr:hover { background: rgba(255,215,0,0.04); }
+.insider-history-wrap .ih-owner { font-weight: 600; color: var(--text-hi); }
+.insider-history-wrap .ih-num { text-align: right; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; font-variant-numeric: tabular-nums; }
+.insider-history-wrap .ih-pct {
+  text-align: right;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+  font-weight: 600;
+  color: #FFD700;
+}
+.insider-history-wrap .ih-pct-low { color: var(--text-mute); font-weight: 400; }
+.insider-history-wrap .ih-rel { color: var(--text-dim); font-size: 11px; }
+.insider-history-wrap .ih-sec { color: var(--text-dim); font-size: 11px; }
+[data-theme="light"] .insider-history-wrap table.insider-history thead th { border-bottom-color: rgba(0,0,0,0.08); }
+[data-theme="light"] .insider-history-wrap table.insider-history tbody td { border-bottom-color: rgba(0,0,0,0.05); }
+[data-theme="light"] .insider-history-wrap table.insider-history tbody tr:hover { background: rgba(184,134,11,0.06); }
+
+@media (max-width: 640px) {
+  .insider-history-wrap table.insider-history { font-size: 11px; }
+  .insider-history-wrap table.insider-history thead th,
+  .insider-history-wrap table.insider-history tbody td { padding: 6px 6px; }
+  /* 모바일에서 Security, Relationship 컬럼 숨김 (공간 확보) */
+  .insider-history-wrap table.insider-history th.col-rel,
+  .insider-history-wrap table.insider-history td.col-rel,
+  .insider-history-wrap table.insider-history th.col-sec,
+  .insider-history-wrap table.insider-history td.col-sec { display: none; }
+}
 
 /* ============ LOADER / EMPTY / ERROR ============ */
 .loader { padding: 40px; text-align: center; color: var(--text-dim); font-size: 12px; }
@@ -6424,6 +6476,11 @@ table.combo-eval tbody td .nodata {
         <h4 class="ticker-history-title">📜 이 종목의 시그널 이력</h4>
         <div id="tickerHistoryArea"></div>
       </div>
+      <!-- v2.64: 내부자 거래 이력 (SEC Form 4 P-transactions) — US 종목에만 데이터 있음 -->
+      <div class="ticker-history-wrap insider-history-wrap" id="insiderHistoryWrap" style="display:none;">
+        <h4 class="ticker-history-title">💼 내부자 거래 이력</h4>
+        <div id="insiderHistoryArea"></div>
+      </div>
       </div><!-- /#mainModalBody -->
       <!-- v1.99: 보고서 패널 (보고서 모드 진입 시 표시, 평소 숨김) -->
       <div id="reportPanel" style="display:none"></div>
@@ -7993,6 +8050,81 @@ function renderMajorEventsCard() {
 window.renderMajorEventsCard = renderMajorEventsCard;
 
 window.fetchSheetCalendar = fetchSheetCalendar;
+
+// ============================================================================
+// v2.64: 내부자 거래 데이터 (US_RESULT, SEC Form 4 매수 거래) fetch + 종목별 그룹화
+// ============================================================================
+const AQ_US_INSIDER_TAB = 'US_RESULT';
+const AQ_INS_CACHE_KEY = 'us_insider_v1';
+const AQ_INS_CACHE_TTL_MIN = 360;  // 6h
+let _aqInsiderTrades = {};  // { TICKER: [trade, trade, ...] }
+
+async function fetchInsiderTrades(forceFresh) {
+  if (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US') {
+    if (Object.keys(_aqInsiderTrades).length > 0) _aqInsiderTrades = {};
+    return _aqInsiderTrades;
+  }
+  if (!forceFresh) {
+    try {
+      const cached = await aqDbGet(AQ_INS_CACHE_KEY);
+      if (cached && cached.fetchedAt && cached.byTicker) {
+        const ageMin = (Date.now() - new Date(cached.fetchedAt).getTime()) / 60000;
+        if (ageMin < AQ_INS_CACHE_TTL_MIN) {
+          _aqInsiderTrades = cached.byTicker;
+          console.log('[fetchInsiderTrades] IDB 캐시 사용 (' + ageMin.toFixed(0) + '분 전, ' + Object.keys(_aqInsiderTrades).length + '종목)');
+          return _aqInsiderTrades;
+        }
+      }
+    } catch (e) {}
+  }
+  if (typeof apiCall !== 'function' || !backendReady()) return _aqInsiderTrades;
+  try {
+    const res = await apiCall('getOneSheet', {
+      sheetId: AQ_US_CALENDAR_SHEET,
+      tab: AQ_US_INSIDER_TAB,
+    });
+    if (!res || !res.ok || !Array.isArray(res.rows)) {
+      console.warn('[fetchInsiderTrades] 응답 비정상:', res && res.error);
+      return _aqInsiderTrades;
+    }
+    const byTicker = {};
+    res.rows.forEach(r => {
+      const tk = String(r.Ticker || '').toUpperCase();
+      if (!tk) return;
+      const transDate = r.TransDate_ET ? String(r.TransDate_ET).slice(0, 10) : '';
+      const price = Number(r.Price) || 0;
+      if (!transDate || price <= 0) return;
+      if (!byTicker[tk]) byTicker[tk] = [];
+      byTicker[tk].push({
+        transDate,
+        ticker: tk,
+        ownerName: String(r.Owner_Name || ''),
+        ownerType: String(r.Owner_Type || ''),
+        relationship: String(r.Relationship || ''),
+        security: String(r.Security || ''),
+        transCode: String(r.TransCode || 'P'),
+        shares: Number(r.Shares) || 0,
+        price,
+        valueUsd: Number(r.Value_USD) || 0,
+        sharesAfter: Number(r.Shares_After) || 0,
+        filedDate: r.Filed_Date_KST ? String(r.Filed_Date_KST).slice(0, 10) : '',
+        formUrl: String(r.Form_URL || ''),
+      });
+    });
+    // 종목별 내부에서 최근 → 옛 순 정렬
+    Object.keys(byTicker).forEach(tk => {
+      byTicker[tk].sort((a, b) => (b.transDate || '').localeCompare(a.transDate || ''));
+    });
+    _aqInsiderTrades = byTicker;
+    try { await aqDbSet(AQ_INS_CACHE_KEY, { fetchedAt: new Date().toISOString(), byTicker }); } catch (e) {}
+    console.log('[fetchInsiderTrades] fetch 완료 — ' + Object.keys(byTicker).length + '종목, ' + res.rows.length + '건');
+    return byTicker;
+  } catch (e) {
+    console.warn('[fetchInsiderTrades]', e);
+    return _aqInsiderTrades;
+  }
+}
+window.fetchInsiderTrades = fetchInsiderTrades;
 window.aqCalSheetEventsFor = aqCalSheetEventsFor;
 
 function aqCalLoadEvents() {
@@ -9260,6 +9392,11 @@ function setMarket(mkt) {
   try {
     if (typeof syncVshapeToggleUI === 'function') syncVshapeToggleUI();
   } catch (e) {}
+
+  // v2.64: 시장 전환 후 내부자 거래 데이터 갱신 — US만, background
+  setTimeout(() => {
+    try { if (typeof fetchInsiderTrades === 'function') fetchInsiderTrades(false); } catch (e) {}
+  }, 300);
 }
 window.setMarket = setMarket;
 
@@ -10102,6 +10239,10 @@ async function autoLoadData(opts) {
     // v2.48: 다음 일반 로드를 위해 loadingTitle 원복
     if (loadingTitle) loadingTitle.textContent = '데이터 업데이트 & 분석';
     _autoLoadInProgress = false;
+    // v2.64: 내부자 거래 데이터 background fetch (US만, 메인 로딩 영향 X — 비동기 / await 안 함)
+    setTimeout(() => {
+      try { if (typeof fetchInsiderTrades === 'function') fetchInsiderTrades(false); } catch (e) {}
+    }, 500);
   }
 }
 window.autoLoadData = autoLoadData;
@@ -14891,6 +15032,20 @@ async function openChart(ticker) {
     }))
     .filter(t => t.x && t.x >= cutoffStr);
 
+  // v2.64: 내부자 거래 마커 (US만, _aqInsiderTrades에서 종목별 데이터 가져옴)
+  const insiderMarkers = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[ticker])
+    ? _aqInsiderTrades[ticker]
+        .filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
+        .map(t => ({
+          x: t.transDate,
+          y: t.price,
+          shares: t.shares,
+          sharesAfter: t.sharesAfter,
+          ownerName: t.ownerName,
+          relationship: t.relationship,
+        }))
+    : [];
+
   // Signal markers from archive — respect global signal filter
   // v1.81: priority도 시장별 — KR엔 'T' 한 종류만, US는 4가지 T_*
   // v2.10: 1Y에서는 시그널 표시 X (포인트 너무 압축돼서 가독성 떨어짐)
@@ -14912,6 +15067,8 @@ async function openChart(ticker) {
 
   // Ticker signal history table (below chart)
   buildTickerHistoryTable(ticker);
+  // v2.64: 내부자 거래 이력 테이블
+  renderInsiderHistory(ticker);
 
   // Modal-level signal filter buttons (synced with main filter)
   renderSignalFilterInto($('modalSignalFilterArea'));
@@ -14993,6 +15150,7 @@ async function openChart(ticker) {
     dates, closes, highs, lows, ma20, adN, vols,
     supportMA20, supportRF, prevLow, lastPrice, recentHigh, recentHighIdx,
     buyAvg, tradeMarkers, sigMarkersByType,
+    insiderMarkers,  // v2.64: 내부자 거래 마커
     retailN, foreignN, instN,   // v1.89: KR 모드면 값 있음, 아니면 null
   });
 
@@ -15286,6 +15444,9 @@ async function openMacroChart(macroName) {
   // 매크로 모드: 시그널 필터 + 시그널 이력 숨김
   $('modalSignalFilterArea').parentElement.style.display = 'none';
   $('tickerHistoryWrap').style.display = 'none';
+  // v2.64: 내부자 거래 이력도 매크로 모드에서는 숨김
+  const ihWrap = $('insiderHistoryWrap');
+  if (ihWrap) ihWrap.style.display = 'none';
 
   _state.openTicker = null;
   _state.openMacro = macroName;
@@ -15626,6 +15787,32 @@ function drawChart(d) {
     }
   }
 
+  // v2.64: 내부자 매수 마커 — 황금색 역삼각형 (▼), V_Main 등과 같은 사이즈
+  if (d.insiderMarkers && d.insiderMarkers.length) {
+    // 같은 일자에 여러 거래 가능 → 일자별 그룹 (tooltip에 모두 표시)
+    const _insiderByDate = {};
+    d.insiderMarkers.forEach(m => {
+      if (!_insiderByDate[m.x]) _insiderByDate[m.x] = [];
+      _insiderByDate[m.x].push(m);
+    });
+    sigDatasets.push({
+      label: '내부자 매수',
+      data: buildSparse(d.insiderMarkers),
+      showLine: false,
+      backgroundColor: '#FFD700',       // 황금색
+      borderColor: '#8B6914',           // 진한 황금 테두리 (다크 배경에서 대비)
+      borderWidth: 1.2,
+      pointStyle: 'triangle',
+      pointRotation: 180,               // ▼ 역삼각형
+      pointRadius: simple ? 5 : 6,
+      pointHoverRadius: simple ? 7 : 8,
+      yAxisID: 'yPrice',
+      order: 0,
+      spanGaps: false,
+      _insiderByDate,                   // tooltip callback에서 사용
+    });
+  }
+
   // Annotations — simple 모드에선 지지선 라벨 숨김 (라인은 살림)
   const labelDisp = !simple;
   const annotations = {
@@ -15714,6 +15901,15 @@ function drawChart(d) {
               // v1.91: 누적 수급선 (KR) — 정규화된 0~100 값이라 통화 표시 X
               if (c.dataset.label === '외국인 누적' || c.dataset.label === '기관 누적' || c.dataset.label === '개인 누적' || c.dataset.label === 'A/D Line') {
                 return `${c.dataset.label}: ${typeof v === 'number' ? v.toFixed(1) : v}`;
+              }
+              // v2.64: 내부자 매수 마커 — 거래주식수 + 거래가 표시 (같은 일자에 여러 거래면 모두)
+              if (c.dataset.label === '내부자 매수') {
+                const date = c.chart.data.labels[c.dataIndex];
+                const metas = (c.dataset._insiderByDate || {})[date];
+                if (metas && metas.length) {
+                  return metas.map(m => `💼 ${m.shares.toLocaleString()}주 @ ${fmtPrice(m.price)}`);
+                }
+                return `💼 ${fmtPrice(v)}`;
               }
               // 종가/고가/저가/MA20/시그널 마커 등 — 시장별 통화 포맷
               return `${c.dataset.label}: ${fmtPrice(v)}`;
@@ -15893,6 +16089,60 @@ function buildTickerHistoryTable(ticker) {
   area.innerHTML = html;
   $('tickerHistoryWrap').style.display = '';
 }
+
+// v2.64: 내부자 거래 이력 테이블 — 거래자(Owner_Name)마다 일자/Relationship/Security/Shares/Price/비중%
+function renderInsiderHistory(ticker) {
+  const wrap = $('insiderHistoryWrap');
+  const area = $('insiderHistoryArea');
+  if (!wrap || !area) return;
+  const tkU = String(ticker || '').toUpperCase();
+  const trades = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[tkU]) ? _aqInsiderTrades[tkU] : [];
+  // US 시장이 아니거나 데이터 없으면 숨김
+  if (!trades.length || (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US')) {
+    wrap.style.display = 'none';
+    area.innerHTML = '';
+    return;
+  }
+  // Owner_Name 정렬 + 같은 owner 안에서는 최근 일자 우선 (이미 정렬됨)
+  // 표시: Owner_Name → 거래일자 → Relationship → Security → Shares → Price → 비중%
+  const fmtPct = (p) => {
+    if (p == null || isNaN(p) || !isFinite(p)) return '—';
+    if (p < 0.01) return '<0.01%';
+    if (p >= 100) return '100%';
+    return p.toFixed(2) + '%';
+  };
+  const rows = trades.map(t => {
+    const pct = (t.sharesAfter > 0) ? (t.shares / t.sharesAfter * 100) : null;
+    const pctCls = (pct == null) ? 'ih-pct ih-pct-low' : (pct < 1 ? 'ih-pct ih-pct-low' : 'ih-pct');
+    return `<tr>
+      <td class="ih-owner">${escapeHtml(t.ownerName || '—')}</td>
+      <td>${escapeHtml(t.transDate || '—')}</td>
+      <td class="col-rel ih-rel">${escapeHtml(t.relationship || '—')}</td>
+      <td class="col-sec ih-sec">${escapeHtml(t.security || '—')}</td>
+      <td class="ih-num">${(t.shares || 0).toLocaleString()}</td>
+      <td class="ih-num">${fmtPrice(t.price || 0)}</td>
+      <td class="${pctCls}">${fmtPct(pct)}</td>
+    </tr>`;
+  }).join('');
+  area.innerHTML = `
+    <table class="insider-history">
+      <thead>
+        <tr>
+          <th>거래자</th>
+          <th>일자</th>
+          <th class="col-rel">관계</th>
+          <th class="col-sec">증권</th>
+          <th style="text-align:right">주식 수</th>
+          <th style="text-align:right">가격</th>
+          <th style="text-align:right">비중%</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+  wrap.style.display = '';
+}
+window.renderInsiderHistory = renderInsiderHistory;
 
 // ============================================================================
 // INIT
