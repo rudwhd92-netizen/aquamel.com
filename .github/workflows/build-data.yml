@@ -2,8 +2,8 @@ name: Build data.json from Apps Script
 
 "on":
   schedule:
-    - cron: '*/10 * * * *'   # 10분마다 (UTC 기준)
-  workflow_dispatch:           # 수동 트리거 가능
+    - cron: '*/10 * * * *'   # 10분마다 (UTC 기준) — GitHub Actions 부하에 따라 skip 가능
+  workflow_dispatch:           # 수동 트리거 허용 (Actions 탭의 "Run workflow" 버튼)
 
 permissions:
   contents: write
@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10        # workflow 자체 timeout (이전: 5분 → 10분)
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,28 +30,50 @@ jobs:
           set -e
           BACKEND_URL="https://script.google.com/macros/s/AKfycbzBCVv5txxprNM-1WxB1YZrawu4sjGernf5Y5AD10xYwqF-8XxsS7L6jLTthP8FT6wO/exec"
           echo "Calling dumpAllToJson..."
-          # Apps Script는 가끔 첫 호출에 cold start. 최대 3회 재시도.
-          for i in 1 2 3; do
-            if curl -sSL --fail --max-time 90 \
+          # dumpAllToJson은 정상 70-80초 소요 (US/KR sectors 각 34초).
+          # --max-time 300 (5분) — cold start + sector 폴더 fetch 여유.
+          # 최대 5회 재시도, 사이 sleep 15초 (cold start 회복).
+          SUCCESS=0
+          for i in 1 2 3 4 5; do
+            echo "Attempt $i / 5..."
+            if curl -sSL --fail --max-time 300 \
               "${BACKEND_URL}?action=dumpAllToJson" \
               -o data/data.json.tmp; then
-              echo "Fetch OK on attempt $i"
-              break
+              if grep -q '"ok":true' data/data.json.tmp; then
+                echo "Fetch OK on attempt $i"
+                SUCCESS=1
+                break
+              else
+                echo "Response does NOT contain ok:true"
+                head -c 500 data/data.json.tmp
+                echo
+              fi
             else
-              echo "Attempt $i failed, retrying..."
-              sleep 5
+              echo "curl failed (timeout or HTTP error)"
+            fi
+            if [ $i -lt 5 ]; then
+              echo "Sleeping 15s before retry..."
+              sleep 15
             fi
           done
-          # 응답 검증 — ok:true 인지
-          if ! grep -q '"ok":true' data/data.json.tmp; then
-            echo "ERROR: Response does not contain ok:true"
-            head -200 data/data.json.tmp
+
+          if [ $SUCCESS -ne 1 ]; then
+            echo "ERROR: All 5 attempts failed"
             exit 1
           fi
-          # 통과하면 정식 파일로
+
           mv data/data.json.tmp data/data.json
           echo "Size: $(wc -c < data/data.json) bytes"
-          echo "Timings: $(grep -o '"timings":{[^}]*}' data/data.json || echo 'none')"
+          node -e "
+            const d = JSON.parse(require('fs').readFileSync('data/data.json','utf8'));
+            console.log('US.archive:', (d.US && d.US.archive || []).length);
+            console.log('US.archive_v1:', (d.US && d.US.archive_v1 || []).length);
+            console.log('KR.archive:', (d.KR && d.KR.archive || []).length);
+            console.log('US.macro:', (d.US && d.US.macro || []).length);
+            console.log('US.sectorsCount:', d.US && d.US.sectorsCount);
+            console.log('KR.sectorsCount:', d.KR && d.KR.sectorsCount);
+            console.log('timestamp:', d.timestamp);
+          "
 
       - name: Commit if changed
         run: |
