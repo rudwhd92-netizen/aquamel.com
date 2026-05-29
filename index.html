@@ -46,29 +46,38 @@ try {
 //   sw.js 파일이 같은 폴더에 함께 호스팅되어 있어야 함
 //   미등록 시 Chrome은 "바로가기"로만 설치하고 아이콘에 브라우저 배지를 덧입힘
 // v1.95: 새 버전 감지 시 자동 reload (캐시로 옛 버전 표시되는 문제 해결)
+// v2.36-r3: updateViaCache:'none' — sw.js fetch 시 HTTP cache 우회, 매번 fresh 체크
+//          + AQ_SW_ACTIVATED 메시지 받으면 1회 자동 reload (sessionStorage 가드)
 if ('serviceWorker' in navigator) {
+  // 새 SW가 activate되면서 보내는 broadcast → 1회 자동 reload (옛 SW로 본 페이지를 새 SW 기반으로 강제 갱신)
+  navigator.serviceWorker.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'AQ_SW_ACTIVATED') {
+      if (sessionStorage.getItem('aq_sw_reload_done') === '1') return;
+      sessionStorage.setItem('aq_sw_reload_done', '1');
+      console.log('[SW] 새 워커 active — 페이지 새로고침');
+      window.location.reload();
+    }
+  });
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').then(reg => {
-      // 페이지 로드 시 즉시 update 체크
+    // updateViaCache:'none' — 브라우저 HTTP cache 우회, sw.js 매번 fresh fetch
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(reg => {
       reg.update();
-      // 1시간마다 update 체크 (장시간 PWA 열어둔 경우)
-      setInterval(() => { try { reg.update(); } catch(e) {} }, 60 * 60 * 1000);
-      // 새 SW가 install되어 waiting 상태가 되면 즉시 active로 전환 + reload
+      // 60초마다 sw.js 갱신 체크 (이전 1시간 → 1분; PWA 열어둔 채로도 새 버전 빠른 감지)
+      setInterval(() => { try { reg.update(); } catch(e) {} }, 60 * 1000);
       reg.addEventListener('updatefound', () => {
         const newWorker = reg.installing;
         if (!newWorker) return;
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            // 새 SW 설치 완료 + 이전 SW가 페이지를 제어 중 → 새 SW를 즉시 활성화 요청
             try { newWorker.postMessage({ type: 'SKIP_WAITING' }); } catch(e) {}
           }
         });
       });
-      // 새 SW가 controller 잡으면 자동 reload (한 번만)
-      let _reloaded = false;
+      let _reloaded = sessionStorage.getItem('aq_sw_reload_done') === '1';
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (_reloaded) return;
         _reloaded = true;
+        sessionStorage.setItem('aq_sw_reload_done', '1');
         window.location.reload();
       });
     }).catch(err => {
@@ -485,12 +494,167 @@ section.card {
   .market-switch { padding: 2px; }
   .market-switch .mkt-btn { padding: 3px 8px 3px 3px; font-size: 11px; gap: 4px; }
   .market-switch .mkt-flag { width: 16px; height: 16px; }
-  /* v1.88: 모바일에서 hero 영역을 세로 배치 — 로고 가려지는 문제 해결 */
-  .hero { flex-direction: column; align-items: flex-start; gap: 10px; padding-bottom: 14px; margin-bottom: 18px; }
+  /* v2.45: 모바일 hero — 로고+시장토글 한 줄, 하단 정렬 (이전 column → row 복원) */
+  /* v2.47: flex-end !important + tagline 숨김 — INVESTMENT와 US/KR 같은 라인 정렬 강제 */
+  .hero { flex-direction: row !important; align-items: flex-end !important; gap: 10px; padding-bottom: 14px; margin-bottom: 18px; flex-wrap: wrap; justify-content: space-between; }
   .hero h1 { font-size: 26px; }
-  .hero-brand { width: 100%; }
-  .hero .meta { width: 100%; justify-content: flex-end; }
+  .hero-brand { width: auto; flex: 1 1 auto; min-width: 0; }
+  .hero .meta { width: auto; justify-content: flex-end; align-self: flex-end; }
+  /* v2.47: MO에서 tagline 숨김 — hero-brand 마지막 줄 = INVESTMENT가 되어 US/KR과 자연 정렬 */
+  .hero-tagline { display: none; }
+  /* v2.45/v2.47: MO에서 hero 안의 새로고침 숨김 — mobile-topbar로 이동됨 (!important 강제) */
+  .hero-refresh { display: none !important; }
 }
+
+/* v2.44: 토스트 알림 — disabled 메뉴 클릭 시 "준비 중" 안내 */
+.aq-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 90px;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(20,20,20,0.92);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: calc(100vw - 40px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.aq-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (min-width: 641px) { .aq-toast { bottom: 40px; } }
+[data-theme="light"] .aq-toast { background: rgba(45,35,15,0.92); color: #fff; }
+
+/* v2.44: PC 사이드바 영역 구분선 */
+.pc-sidebar .pc-sidebar-divider {
+  width: 32px;
+  height: 1px;
+  margin: 8px 0;
+  background: rgba(255,255,255,0.15);
+  align-self: center;
+}
+[data-theme="light"] .pc-sidebar .pc-sidebar-divider { background: rgba(0,0,0,0.12); }
+
+/* v2.44: disabled 메뉴 — 시각적 약화 + 커서 변경 */
+.pc-tab-btn.disabled,
+.mtab-btn.disabled,
+.mo-drawer-item.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.pc-tab-btn.disabled:hover,
+.mtab-btn.disabled:hover { color: inherit !important; }
+
+/* v2.44: MO 상단 1열 (검색 + 햄버거) — 모바일 전용 */
+.mobile-topbar {
+  display: none;  /* PC 숨김 */
+}
+@media (max-width: 640px) {
+  .mobile-topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 26px;
+    padding: 8px 4px 0 4px;
+    margin-bottom: 4px;
+  }
+  .mobile-topbar-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-mid);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .mobile-topbar-btn:hover,
+  .mobile-topbar-btn:active { background: rgba(255,255,255,0.06); color: var(--text-hi); }
+  .mobile-topbar-btn svg { width: 22px; height: 22px; }
+  [data-theme="light"] .mobile-topbar-btn:hover,
+  [data-theme="light"] .mobile-topbar-btn:active { background: rgba(0,0,0,0.06); }
+}
+
+/* v2.44: MO 햄버거 드로어 — 왼쪽 슬라이드 */
+.mo-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.mo-drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mo-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 78%;
+  max-width: 320px;
+  background: var(--bg-card, #1a1a1a);
+  z-index: 9001;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease-out;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+}
+.mo-drawer.open { transform: translateX(0); }
+[data-theme="light"] .mo-drawer { background: #fefdf8; }
+.mo-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+[data-theme="light"] .mo-drawer-head { border-bottom-color: rgba(0,0,0,0.08); }
+.mo-drawer-title { font-size: 15px; font-weight: 700; color: var(--text-hi); letter-spacing: 0.5px; }
+.mo-drawer-close {
+  background: transparent;
+  border: none;
+  color: var(--text-mid);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.mo-drawer-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  flex: 1;
+}
+.mo-drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: transparent;
+  border: none;
+  color: var(--text-mid);
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.mo-drawer-item:hover,
+.mo-drawer-item:active { background: rgba(255,255,255,0.05); color: var(--text-hi); }
+[data-theme="light"] .mo-drawer-item:hover,
+[data-theme="light"] .mo-drawer-item:active { background: rgba(0,0,0,0.04); }
+.mo-drawer-item svg { width: 20px; height: 20px; flex-shrink: 0; }
 
 /* ============ CARDS (collapsible) ============ */
 section.card {
@@ -504,6 +668,10 @@ section.card {
   transition: none;
   /* v2.11: 카드 enter 애니메이션은 유지 — 페이지/탭 전환에서도 재실행 */
   animation: card-enter 0.32s var(--ease-out) both;
+}
+/* v2.40: PC 화면(≥1024px)에서 카드 사이 여백 확대 — 모바일 32px 유지, PC만 56px로 호흡 */
+@media (min-width: 1024px) {
+  section.card { margin-bottom: 56px; }
 }
 @keyframes card-enter {
   from {
@@ -1400,6 +1568,56 @@ table.sheet tbody tr.drop-below td:last-child {
 .rs-misc .report-icon { color: #868e96; }
 .rs-misc .report-item { border-left-color: #868e96; color: var(--text-mute); }
 
+/* v2.42: TO-DO CHECK LIST — 체크박스 인터랙티브 영역 */
+.rs-todo { border-left: 3px solid #15aabf; background: linear-gradient(90deg, rgba(21,170,191,0.08), transparent 30%); }
+.rs-todo .report-icon { color: #15aabf; }
+.rs-todo .report-section-body { display: flex; flex-direction: column; gap: 10px; padding: 4px 0; }
+.report-todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  user-select: none;
+}
+.report-todo-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(21,170,191,0.3); }
+.report-todo-item.checked {
+  background: rgba(21,170,191,0.12);
+  border-color: rgba(21,170,191,0.45);
+}
+.report-todo-cb {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #15aabf;
+}
+.report-todo-text {
+  flex: 1;
+  line-height: 1.5;
+  color: var(--text-mid);
+  font-size: 14px;
+  word-break: break-word;
+}
+.report-todo-item.checked .report-todo-text {
+  color: var(--text-hi);
+  font-weight: 500;
+}
+[data-theme="light"] .report-todo-item {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .report-todo-item:hover { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .report-todo-item.checked {
+  background: rgba(21,170,191,0.10);
+  border-color: rgba(21,170,191,0.5);
+}
+
 /* ============ v2.18: 신설 3개 영역 ============ */
 
 /* 🎯 추천 ACTION — 최상단 강조 박스, 액션별 색상 분기 */
@@ -1995,7 +2213,561 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   body[data-pc-page="my"] .container > section.card { display: none !important; }
   body[data-pc-page="my"] #myPortfolioCard { display: block !important; }
   body[data-pc-page="my"] .sheet-wrap { max-height: calc(100vh - 280px) !important; }
+
+  /* v2.46: 일정 페이지 — scheduleCard만 표시 */
+  body[data-pc-page="schedule"] .container > section.card { display: none !important; }
+  body[data-pc-page="schedule"] #scheduleCard { display: block !important; }
+  body[data-pc-page="schedule"] #majorEventsCard { display: block !important; }
 }
+
+/* v2.46: MO 일정 탭 — scheduleCard만 표시 */
+@media (max-width: 640px) {
+  body[data-mtab="schedule"] section.card[data-mtab~="schedule"] { display: block !important; }
+  body[data-mtab="schedule"] #scheduleCard { display: block !important; }
+  body[data-mtab="schedule"] #majorEventsCard { display: block !important; }
+}
+
+/* ============ v2.46: CALENDAR ============ */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.calendar-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-hi);
+  letter-spacing: -0.3px;
+}
+.calendar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cal-nav-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-mid);
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cal-nav-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-hi);
+  border-color: rgba(255,255,255,0.2);
+}
+.cal-today-btn {
+  padding: 7px 14px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: var(--text-mid);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cal-today-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-hi);
+}
+.cal-add-btn {
+  padding: 8px 14px;
+  background: #5c7cfa;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: filter 0.15s, transform 0.05s;
+}
+.cal-add-btn:hover { filter: brightness(1.1); }
+.cal-add-btn:active { transform: scale(0.96); }
+
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 6px;
+}
+.cal-weekday {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mute);
+  padding: 8px 0;
+  letter-spacing: 0.5px;
+}
+.cal-weekday.sat { color: #74c0fc; }
+.cal-weekday.sun { color: #ff6b6b; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.cal-cell {
+  min-height: 132px;
+  padding: 6px 6px 4px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s, border-color 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+.cal-cell:hover {
+  background: rgba(255,255,255,0.05);
+}
+.cal-cell.other-month { opacity: 0.32; }
+.cal-cell.today {
+  border-color: #5c7cfa;
+}
+.cal-cell.selected {
+  background: rgba(92,124,250,0.14);
+  border-color: #5c7cfa;
+}
+.cal-cell-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mid);
+  font-variant-numeric: tabular-nums;
+}
+.cal-cell.today .cal-cell-date {
+  color: #5c7cfa;
+  font-weight: 800;
+}
+.cal-cell-date.sat { color: #74c0fc; }
+.cal-cell-date.sun { color: #ff6b6b; }
+.cal-cell.today .cal-cell-date.sat,
+.cal-cell.today .cal-cell-date.sun { color: #5c7cfa; }
+.cal-cell-events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  flex: 1;
+}
+.cal-event-chip {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(92,124,250,0.22);
+  color: var(--text-hi);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-left: 3px solid #5c7cfa;
+  line-height: 1.4;
+}
+.cal-event-chip:hover { background: rgba(92,124,250,0.32); }
+.cal-event-more {
+  font-size: 10px;
+  color: var(--text-mute);
+  padding-left: 6px;
+  font-weight: 500;
+}
+
+/* v2.51: 시트 외부 일정 (Earnings/FOMC/13F) — 카테고리별 색상 + 로고 */
+.cal-event-chip.cal-evt-earnings {
+  background: rgba(121, 80, 242, 0.20);
+  border-left-color: #7950f2;
+}
+.cal-event-chip.cal-evt-earnings:hover { background: rgba(121, 80, 242, 0.32); }
+.cal-event-chip.cal-evt-fomc {
+  background: rgba(255, 107, 107, 0.20);
+  border-left-color: #ff6b6b;
+}
+.cal-event-chip.cal-evt-fomc:hover { background: rgba(255, 107, 107, 0.32); }
+.cal-event-chip.cal-evt-13f {
+  background: rgba(250, 176, 5, 0.22);
+  border-left-color: #fab005;
+}
+.cal-event-chip.cal-evt-13f:hover { background: rgba(250, 176, 5, 0.34); }
+.cal-event-chip-logo {
+  width: 12px;
+  height: 12px;
+  vertical-align: -2px;
+  margin-right: 4px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255,255,255,0.06);
+}
+.cal-cell-dot.cal-dot-earnings { background: #7950f2; }
+.cal-cell-dot.cal-dot-fomc { background: #ff6b6b; }
+.cal-cell-dot.cal-dot-13f { background: #fab005; }
+
+.cal-event-row.is-readonly {
+  cursor: default;
+  background: rgba(255,255,255,0.02);
+  border-style: dashed;
+}
+.cal-event-row.is-readonly:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+.cal-event-row-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  background: rgba(255,255,255,0.05);
+  margin-top: 1px;
+}
+.cal-event-source {
+  font-size: 10px;
+  color: var(--text-mute);
+  margin-top: 4px;
+  opacity: 0.7;
+  letter-spacing: 0.3px;
+}
+[data-theme="light"] .cal-event-row.is-readonly {
+  background: rgba(0,0,0,0.018);
+}
+[data-theme="light"] .cal-event-chip.cal-evt-earnings { background: rgba(121, 80, 242, 0.14); }
+[data-theme="light"] .cal-event-chip.cal-evt-fomc { background: rgba(255, 107, 107, 0.14); }
+[data-theme="light"] .cal-event-chip.cal-evt-13f { background: rgba(250, 176, 5, 0.18); }
+.cal-cell-dots {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.cal-cell-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #5c7cfa;
+}
+
+/* MO: 셀 더 작게 + 일정은 점으로만 */
+@media (max-width: 640px) {
+  .calendar-title { font-size: 18px; }
+  .cal-add-btn .cal-add-label { display: none; }
+  .cal-add-btn { padding: 8px 10px; }
+  .cal-cell { min-height: 78px; padding: 4px 4px 3px; border-radius: 6px; }
+  .cal-cell-date { font-size: 12px; }
+  .cal-event-chip { display: none; }
+  .cal-event-more { display: none; }
+  .cal-weekday { font-size: 11px; padding: 6px 0; }
+}
+
+/* 선택 날짜 일정 목록 */
+.cal-selected-section {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.cal-selected-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cal-selected-date-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-hi);
+}
+.cal-selected-quick-add {
+  font-size: 12px;
+  color: #5c7cfa;
+  background: transparent;
+  border: 1px solid rgba(92,124,250,0.4);
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.cal-selected-quick-add:hover { background: rgba(92,124,250,0.08); }
+.cal-event-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 13px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.cal-event-row:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(92,124,250,0.3);
+}
+.cal-event-time {
+  font-size: 12px;
+  color: var(--text-mute);
+  flex-shrink: 0;
+  min-width: 76px;
+  font-variant-numeric: tabular-nums;
+  padding-top: 1px;
+}
+.cal-event-info { flex: 1; min-width: 0; }
+.cal-event-title {
+  font-size: 14px;
+  color: var(--text-hi);
+  font-weight: 500;
+  word-break: break-word;
+}
+.cal-event-memo {
+  font-size: 12px;
+  color: var(--text-mute);
+  margin-top: 3px;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.cal-event-empty {
+  font-size: 13px;
+  color: var(--text-mute);
+  text-align: center;
+  padding: 24px 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border: 1px dashed rgba(255,255,255,0.08);
+}
+
+/* 일정 등록/편집 모달 */
+.cal-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.cal-modal-backdrop.open { display: flex; }
+.cal-modal {
+  background: #1a1a1a;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 22px 22px 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.cal-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-hi);
+  margin-bottom: 18px;
+}
+.cal-modal-field { margin-bottom: 14px; }
+.cal-modal-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mute);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+.cal-modal-input,
+.cal-modal-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--text-hi);
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.cal-modal-input:focus,
+.cal-modal-textarea:focus {
+  outline: none;
+  border-color: #5c7cfa;
+  background: rgba(255,255,255,0.06);
+}
+.cal-modal-textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+.cal-modal-row {
+  display: flex;
+  gap: 10px;
+}
+.cal-modal-row > * { flex: 1; min-width: 0; }
+.cal-modal-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.cal-modal-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: #5c7cfa;
+  cursor: pointer;
+}
+.cal-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+.cal-modal-btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, filter 0.15s;
+}
+.cal-modal-btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text-mid);
+}
+.cal-modal-btn-secondary:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--text-hi);
+}
+.cal-modal-btn-primary {
+  background: #5c7cfa;
+  color: white;
+}
+.cal-modal-btn-primary:hover { filter: brightness(1.1); }
+.cal-modal-btn-danger {
+  background: transparent;
+  border: 1px solid rgba(255,107,107,0.4);
+  color: #ff6b6b;
+  margin-right: auto;
+}
+.cal-modal-btn-danger:hover { background: rgba(255,107,107,0.1); }
+
+/* Light theme */
+[data-theme="light"] .cal-cell { background: rgba(0,0,0,0.022); }
+[data-theme="light"] .cal-cell:hover { background: rgba(0,0,0,0.05); }
+[data-theme="light"] .cal-cell.selected { background: rgba(92,124,250,0.10); }
+[data-theme="light"] .cal-nav-btn,
+[data-theme="light"] .cal-today-btn { border-color: rgba(0,0,0,0.12); }
+[data-theme="light"] .cal-nav-btn:hover,
+[data-theme="light"] .cal-today-btn:hover { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .cal-event-chip { background: rgba(92,124,250,0.16); color: var(--text-hi); }
+[data-theme="light"] .cal-selected-section { border-top-color: rgba(0,0,0,0.08); }
+[data-theme="light"] .cal-event-row {
+  background: rgba(0,0,0,0.025);
+  border-color: rgba(0,0,0,0.06);
+}
+[data-theme="light"] .cal-event-row:hover { background: rgba(0,0,0,0.05); }
+[data-theme="light"] .cal-event-empty {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .cal-modal {
+  background: #fefdf8;
+  border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .cal-modal-input,
+[data-theme="light"] .cal-modal-textarea {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.1);
+  color: var(--text-hi);
+}
+[data-theme="light"] .cal-modal-btn-secondary {
+  border-color: rgba(0,0,0,0.15);
+  color: var(--text-mid);
+}
+[data-theme="light"] .cal-modal-btn-secondary:hover { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .calendar-title { color: var(--text-hi); }
+
+/* v2.53: 큰 화면(≥1024px)에서 캘린더 셀 더 키움 (PC 화면 이점 활용) */
+@media (min-width: 1024px) {
+  .cal-cell { min-height: 160px; padding: 8px 8px 6px; }
+  .cal-cell-date { font-size: 14px; }
+  .cal-event-chip { font-size: 12px; padding: 3px 7px; }
+}
+
+/* v2.53: 캘린더 필터 chip (4가지) */
+.cal-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.cal-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-mid);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s, color 0.15s;
+}
+.cal-filter-chip:hover { background: rgba(255,255,255,0.07); }
+.cal-filter-chip.off {
+  opacity: 0.42;
+  color: var(--text-mute);
+  text-decoration: line-through;
+  background: transparent;
+  border-style: dashed;
+}
+.cal-filter-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cal-filter-chip[data-filter="earnings_held"] .cal-filter-chip-dot { background: #7950f2; }
+.cal-filter-chip[data-filter="earnings_unheld"] .cal-filter-chip-dot { background: #ae8eff; }
+.cal-filter-chip[data-filter="fomc"] .cal-filter-chip-dot { background: #ff6b6b; }
+.cal-filter-chip[data-filter="thirteenF"] .cal-filter-chip-dot { background: #fab005; }
+[data-theme="light"] .cal-filter-chip {
+  background: rgba(0,0,0,0.025);
+  border-color: rgba(0,0,0,0.12);
+}
+[data-theme="light"] .cal-filter-chip:hover { background: rgba(0,0,0,0.04); }
+
+/* v2.53: 보유 종목 Earnings chip — 더 진한 보라 (구분) */
+.cal-event-chip.cal-evt-earnings.is-held {
+  background: rgba(121, 80, 242, 0.34);
+  border-left-color: #5e3edb;
+}
+.cal-event-chip.cal-evt-earnings.is-held:hover { background: rgba(121, 80, 242, 0.46); }
+
+/* v2.53: 주요 이벤트 카드 — 매수 포인트와 동일 UI 사용 */
+.major-event-item .bp-date { color: var(--text-mid); font-weight: 600; }
+.major-event-item .bp-ret { color: #5c7cfa; }   /* D-N 컬러: 파랑 */
+
+/* v2.53: PC 사이드 패널의 매수 포인트 카드 다음에 여백 — 누적 시그널과 분리감 */
+.pc-side-panel section.card#buyPointsCard { margin-bottom: 36px; }
 .stock-list-sort {
   position: relative;
   margin-left: auto;
@@ -2051,21 +2823,6 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   letter-spacing: 0.3px;
 }
 .stock-list-sector-header:first-child { padding-top: 6px; }
-/* v2.37: 평가 유형순 그룹 헤더 — 이모지 포함 큰 글자, 카테고리 구분감 강조 */
-.stock-list-eval-header {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--text-hi);
-  padding: 18px 4px 8px;
-  letter-spacing: 0;
-}
-.stock-list-eval-header:first-child { padding-top: 8px; }
-/* v2.37: 종목 모달 — '고점대비'와 'Data' 사이의 평가 항목 */
-.modal-eval {
-  font-weight: 700;
-  color: var(--text-hi);
-  letter-spacing: 0;
-}
 .stock-list-row {
   display: grid;
   /* v1.54: 로고 | 티커 | 섹터 | 종가+등락률 (섹터를 티커 다음으로) */
@@ -2381,6 +3138,33 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 .hero-refresh:active { transform: scale(0.92); }
 .hero-refresh.spinning { animation: hero-refresh-spin 1.1s linear infinite; }
 @keyframes hero-refresh-spin { to { transform: rotate(360deg); } }
+/* v2.48: mobile-topbar 새로고침 버튼 스피닝 (SVG 회전) */
+.mobile-topbar-btn.spinning svg { animation: hero-refresh-spin 1.1s linear infinite; transform-origin: center; }
+
+/* v2.50: 시트 변경 감지 신호 — 새로고침 버튼에 빨간 점 + 펄스 (PC + MO 공통) */
+.hero-refresh.has-update,
+.mobile-topbar-btn.has-update { position: relative; }
+.hero-refresh.has-update::after,
+.mobile-topbar-btn.has-update::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  background: #ff6b6b;
+  border-radius: 50%;
+  border: 2px solid var(--bg, #0d0d0d);
+  box-shadow: 0 0 6px rgba(255, 107, 107, 0.55);
+  animation: aq-update-pulse 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes aq-update-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.2); opacity: 0.65; }
+}
+[data-theme="light"] .hero-refresh.has-update::after,
+[data-theme="light"] .mobile-topbar-btn.has-update::after { border-color: var(--bg, #fefdf8); }
 
 /* ============ TICKER LOGOS (v1.28) ============ */
 /* v2.17: 모든 곳의 티커 로고 — 원형으로 통일 (이전 라운딩된 사각형) */
@@ -4656,7 +5440,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.37</div>
+      <div class="splash-version" id="splashVersion">v2.54</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -4667,6 +5451,30 @@ table.combo-eval tbody td .nodata {
 
 <div class="container">
 
+  <!-- v2.44: MO 전용 상단 줄 — 토스증권 스타일 (오른쪽 정렬: 검색 + 햄버거) -->
+  <!-- v2.45: 새로고침 추가 (돋보기 → 새로고침 → 햄버거 순) -->
+  <div class="mobile-topbar" aria-label="상단 메뉴">
+    <button class="mobile-topbar-btn" id="mobileSearchBtn" onclick="aqToast('준비 중입니다')" aria-label="검색">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+    </button>
+    <button class="mobile-topbar-btn" id="mobileRefreshBtn" onclick="autoLoadData({forceFresh: true})" aria-label="데이터 새로고침">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12a9 9 0 1 1-3-6.7L21 8"/>
+        <path d="M21 3v5h-5"/>
+      </svg>
+    </button>
+    <button class="mobile-topbar-btn" id="mobileMenuBtn" onclick="openMoDrawer()" aria-label="메뉴">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 6h18"/>
+        <path d="M3 12h18"/>
+        <path d="M3 18h18"/>
+      </svg>
+    </button>
+  </div>
+
   <!-- ============ HEADER (AQUAMEL) ============ -->
   <header class="hero">
     <div class="hero-brand">
@@ -4674,7 +5482,7 @@ table.combo-eval tbody td .nodata {
       <div class="hero-tagline">The blueprint for the next 10-year structural paradigm</div>
     </div>
     <div class="meta">
-      <button class="hero-refresh" id="heroRefreshBtn" onclick="autoLoadData()" title="데이터 새로고침" aria-label="데이터 새로고침">↻</button>
+      <button class="hero-refresh" id="heroRefreshBtn" onclick="autoLoadData({forceFresh: true})" title="데이터 새로고침" aria-label="데이터 새로고침">↻</button>
       <!-- v1.65: 다크/라이트 토글 제거 → 시장 스위치 (US / KR) -->
       <!-- v1.66: 국기 이미지 적용 (./flags/US.png, KR.png) -->
       <div class="market-switch" role="tablist" aria-label="시장 선택">
@@ -4714,7 +5522,6 @@ table.combo-eval tbody td .nodata {
         <div class="sort-menu" id="sortMenu" style="display:none;">
           <button onclick="event.stopPropagation(); setStockSort('return');" data-mode="return" class="active">등락률 높은순</button>
           <button onclick="event.stopPropagation(); setStockSort('sector');" data-mode="sector">섹터 강한순</button>
-          <button onclick="event.stopPropagation(); setStockSort('eval');" data-mode="eval">평가 유형순</button>
         </div>
       </div>
     </div>
@@ -5031,20 +5838,123 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+  <!-- ============ v2.46: CALENDAR / 일정 ============ -->
+  <!-- v2.53: 주요 이벤트 — 5일 이내 임박 이벤트 가로 스크롤 (매수 포인트와 동일 UI) -->
+  <section class="card" id="majorEventsCard" data-mtab="schedule" style="display:none;">
+    <div class="card-header">
+      <h2>주요 이벤트</h2>
+    </div>
+    <div class="card-body">
+      <div class="buy-points-scroll" id="majorEventsScroll">
+        <div class="buy-points-empty">불러오는 중…</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="scheduleCard" data-mtab="schedule" style="display:none;">
+    <div class="card-body">
+      <div class="calendar-header">
+        <div class="calendar-title" id="calendarTitle">2026년 5월</div>
+        <div class="calendar-actions">
+          <button class="cal-nav-btn" onclick="aqCalendarNav(-1)" aria-label="이전 달">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button class="cal-today-btn" onclick="aqCalendarToday()">오늘</button>
+          <button class="cal-nav-btn" onclick="aqCalendarNav(1)" aria-label="다음 달">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <button class="cal-add-btn" onclick="aqCalendarOpenModal()">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span class="cal-add-label">일정 추가</span>
+          </button>
+        </div>
+      </div>
+      <!-- v2.53: 카테고리 필터 chip (4가지) -->
+      <div class="cal-filter-row" aria-label="이벤트 필터">
+        <button class="cal-filter-chip" data-filter="earnings_held" onclick="aqCalToggleFilter('earnings_held')" type="button">
+          <span class="cal-filter-chip-dot"></span>실적발표 · 보유
+        </button>
+        <button class="cal-filter-chip" data-filter="earnings_unheld" onclick="aqCalToggleFilter('earnings_unheld')" type="button">
+          <span class="cal-filter-chip-dot"></span>실적발표 · 미보유
+        </button>
+        <button class="cal-filter-chip" data-filter="fomc" onclick="aqCalToggleFilter('fomc')" type="button">
+          <span class="cal-filter-chip-dot"></span>FOMC
+        </button>
+        <button class="cal-filter-chip" data-filter="thirteenF" onclick="aqCalToggleFilter('thirteenF')" type="button">
+          <span class="cal-filter-chip-dot"></span>13F
+        </button>
+      </div>
+      <div class="cal-weekdays">
+        <div class="cal-weekday">월</div>
+        <div class="cal-weekday">화</div>
+        <div class="cal-weekday">수</div>
+        <div class="cal-weekday">목</div>
+        <div class="cal-weekday">금</div>
+        <div class="cal-weekday sat">토</div>
+        <div class="cal-weekday sun">일</div>
+      </div>
+      <div class="cal-grid" id="calendarGrid"></div>
+
+      <div class="cal-selected-section" id="calSelectedSection" style="display: none;">
+        <div class="cal-selected-head">
+          <div class="cal-selected-date-label" id="calSelectedDateLabel"></div>
+          <button class="cal-selected-quick-add" onclick="aqCalendarOpenModal()">+ 이 날 일정 추가</button>
+        </div>
+        <div id="calSelectedList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- v2.46: 일정 등록/편집 모달 -->
+  <div class="cal-modal-backdrop" id="calModalBackdrop" onclick="if(event.target===this) aqCalendarCloseModal()">
+    <div class="cal-modal" role="dialog" aria-label="일정 등록">
+      <div class="cal-modal-title" id="calModalTitle">새 일정</div>
+      <div class="cal-modal-field">
+        <label class="cal-modal-label" for="calInputTitle">제목</label>
+        <input class="cal-modal-input" id="calInputTitle" type="text" placeholder="일정 제목" maxlength="80">
+      </div>
+      <div class="cal-modal-field">
+        <label class="cal-modal-label" for="calInputDate">날짜</label>
+        <input class="cal-modal-input" id="calInputDate" type="date">
+      </div>
+      <div class="cal-modal-field">
+        <label class="cal-modal-toggle">
+          <input type="checkbox" id="calInputAllDay" onchange="aqCalendarToggleAllDay()">
+          <span>종일</span>
+        </label>
+      </div>
+      <div class="cal-modal-row" id="calTimeRow">
+        <div class="cal-modal-field" style="margin-bottom:0;">
+          <label class="cal-modal-label" for="calInputStartTime">시작</label>
+          <input class="cal-modal-input" id="calInputStartTime" type="time">
+        </div>
+        <div class="cal-modal-field" style="margin-bottom:0;">
+          <label class="cal-modal-label" for="calInputEndTime">종료</label>
+          <input class="cal-modal-input" id="calInputEndTime" type="time">
+        </div>
+      </div>
+      <div class="cal-modal-field" style="margin-top:14px;">
+        <label class="cal-modal-label" for="calInputMemo">메모</label>
+        <textarea class="cal-modal-textarea" id="calInputMemo" placeholder="추가 메모 (선택)"></textarea>
+      </div>
+      <div class="cal-modal-actions">
+        <button class="cal-modal-btn cal-modal-btn-danger" id="calModalDeleteBtn" onclick="aqCalendarDelete()" style="display: none;">삭제</button>
+        <button class="cal-modal-btn cal-modal-btn-secondary" onclick="aqCalendarCloseModal()">취소</button>
+        <button class="cal-modal-btn cal-modal-btn-primary" onclick="aqCalendarSave()">저장</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ============ v1.45 MOBILE-ONLY: 하단 플로팅 알약 메뉴 (그레이톤 SVG 아이콘) ============ -->
+  <!-- v2.44: 6개 → 5개로 재구성 (발견/탐색/To-Do/분석/일정), 섹터·보드·마이는 햄버거 드로어로 이동 -->
   <nav class="mobile-tab-bar" id="mobileTabBar" aria-label="모바일 네비게이션">
     <button class="mtab-btn" data-mtab="discover" onclick="switchMobileTab('discover')" aria-label="발견">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="7"/>
-        <path d="M21 21l-4.35-4.35"/>
+        <path d="M9 18h6"/>
+        <path d="M10 22h4"/>
+        <path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/>
       </svg>
       <span class="mtab-label">발견</span>
-    </button>
-    <button class="mtab-btn" data-mtab="sector" onclick="switchMobileTab('sector')" aria-label="섹터">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 20V10M9 20V4M15 20v-8M21 20V8"/>
-      </svg>
-      <span class="mtab-label">섹터</span>
     </button>
     <button class="mtab-btn" data-mtab="explore" onclick="switchMobileTab('explore')" aria-label="탐색">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -5053,30 +5963,54 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">탐색</span>
     </button>
-    <!-- v2.05: 분석 → 보드 순서 -->
+    <button class="mtab-btn disabled" data-mtab="todo" onclick="switchMobileTab('todo')" aria-label="To-Do">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 6l-4 4-2-2"/>
+        <path d="M9 13l-4 4-2-2"/>
+        <path d="M13 7h7"/>
+        <path d="M13 14h7"/>
+      </svg>
+      <span class="mtab-label">To-Do</span>
+    </button>
     <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
       </svg>
       <span class="mtab-label">분석</span>
     </button>
-    <button class="mtab-btn" data-mtab="board" onclick="switchMobileTab('board')" aria-label="보드">
+    <button class="mtab-btn" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="7" height="9" rx="1.2"/>
-        <rect x="14" y="3" width="7" height="5" rx="1.2"/>
-        <rect x="14" y="12" width="7" height="9" rx="1.2"/>
-        <rect x="3" y="16" width="7" height="5" rx="1.2"/>
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M3 10h18"/>
+        <path d="M8 3v4"/>
+        <path d="M16 3v4"/>
       </svg>
-      <span class="mtab-label">보드</span>
-    </button>
-    <button class="mtab-btn" data-mtab="my" onclick="switchMobileTab('my')" aria-label="마이">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="8" r="4"/>
-        <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
-      </svg>
-      <span class="mtab-label">마이</span>
+      <span class="mtab-label">일정</span>
     </button>
   </nav>
+
+  <!-- v2.44: MO 햄버거 드로어 — 섹터/보드/마이 (PC 사이드바와는 별개의 보조 메뉴) -->
+  <div class="mo-drawer-backdrop" id="moDrawerBackdrop" onclick="closeMoDrawer()" aria-hidden="true"></div>
+  <aside class="mo-drawer" id="moDrawer" aria-label="보조 메뉴" aria-hidden="true">
+    <div class="mo-drawer-head">
+      <div class="mo-drawer-title">메뉴</div>
+      <button class="mo-drawer-close" onclick="closeMoDrawer()" aria-label="닫기">×</button>
+    </div>
+    <nav class="mo-drawer-list">
+      <button class="mo-drawer-item" onclick="moDrawerNav('sector')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V10M9 20V4M15 20v-8M21 20V8"/></svg>
+        <span>섹터</span>
+      </button>
+      <button class="mo-drawer-item" onclick="moDrawerNav('board')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.2"/><rect x="14" y="3" width="7" height="5" rx="1.2"/><rect x="14" y="12" width="7" height="9" rx="1.2"/><rect x="3" y="16" width="7" height="5" rx="1.2"/></svg>
+        <span>보드</span>
+      </button>
+      <button class="mo-drawer-item" onclick="moDrawerNav('my')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+        <span>마이</span>
+      </button>
+    </nav>
+  </aside>
 
   <!-- ============ LOADING OVERLAY ============ -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -5216,22 +6150,14 @@ table.combo-eval tbody td .nodata {
 
 <!-- v1.57 PC 우측 세로 사이드바 — 5개 메뉴 (모바일에선 display:none) -->
 <nav class="pc-sidebar" id="pcSidebar" aria-label="PC 네비게이션">
+  <!-- v2.44: 영역 1 — 화면 전체 교체 탭 (메인 / 일정 / 보드 / 마이) -->
   <button class="pc-tab-btn active" data-pc-tab="main" onclick="setPCTab('main')" aria-label="메인">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 4l9 8M5 10v10h14V10"/></svg>
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8M5 10v10h14V10"/></svg>
     <span class="pc-tab-label">메인</span>
   </button>
-  <button class="pc-tab-btn" data-pc-tab="discover" onclick="setPCTab('discover')" aria-label="발견">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <span class="pc-tab-label">발견</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="explore" onclick="setPCTab('explore')" aria-label="탐색">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M16 8l-3 5-5 3 3-5z"/></svg>
-    <span class="pc-tab-label">탐색</span>
-  </button>
-  <!-- v2.05: 분석 → 보드 순서 (이전 보드 → 분석 → 마이를 분석 → 보드 → 마이로 변경) -->
-  <button class="pc-tab-btn" data-pc-tab="analysis" onclick="setPCTab('analysis')" aria-label="분석">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
-    <span class="pc-tab-label">분석</span>
+  <button class="pc-tab-btn" data-pc-tab="schedule" onclick="setPCTab('schedule')" aria-label="일정">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>
+    <span class="pc-tab-label">일정</span>
   </button>
   <button class="pc-tab-btn" data-pc-tab="board" onclick="setPCTab('board')" aria-label="보드">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
@@ -5240,6 +6166,27 @@ table.combo-eval tbody td .nodata {
   <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="마이">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
     <span class="pc-tab-label">마이</span>
+  </button>
+
+  <!-- v2.44: 영역 구분선 -->
+  <div class="pc-sidebar-divider" aria-hidden="true"></div>
+
+  <!-- v2.44: 영역 2 — 사이드 패널 (메인 화면 위에 공존, 발견/탐색/분석/To-Do) -->
+  <button class="pc-tab-btn" data-pc-tab="discover" onclick="setPCTab('discover')" aria-label="발견">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>
+    <span class="pc-tab-label">발견</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="explore" onclick="setPCTab('explore')" aria-label="탐색">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M16 8l-3 5-5 3 3-5z"/></svg>
+    <span class="pc-tab-label">탐색</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="analysis" onclick="setPCTab('analysis')" aria-label="분석">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
+    <span class="pc-tab-label">분석</span>
+  </button>
+  <button class="pc-tab-btn disabled" data-pc-tab="todo" onclick="setPCTab('todo')" aria-label="To-Do">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
+    <span class="pc-tab-label">To-Do</span>
   </button>
 </nav>
 
@@ -6466,6 +7413,620 @@ window.closeColMenu = closeColMenu;
 function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function escapeAttr(s) { return escapeHtml(s); }
 
+// v2.44: 토스트 알림 (disabled 메뉴 클릭 시 "준비 중" 등)
+function aqToast(msg, duration) {
+  const old = document.getElementById('aqToast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.id = 'aqToast';
+  t.className = 'aq-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => {
+    t.classList.remove('show');
+    setTimeout(() => { if (t.parentNode) t.remove(); }, 250);
+  }, duration || 1800);
+}
+window.aqToast = aqToast;
+
+// ============================================================================
+// v2.46: 캘린더 — 일정 메뉴
+//   월화수목금토일 순. localStorage 'aq_calendar_events' 배열.
+//   PC: 셀에 일정 chip 텍스트, MO: 점(dot)만, 선택 시 하단에 일정 목록.
+// ============================================================================
+const aqCal = {
+  current: new Date(),   // 표시 중인 달 (해당 달의 임의 시점)
+  selected: null,        // 선택된 날짜 (YYYY-MM-DD)
+  editingId: null,
+};
+
+// v2.51: 외부 시트 일정 (Earnings, FOMC, 13F) — 메모리 캐시
+//   소스: 사용자 별도 구글시트 (US_DATE 탭)
+//   주기: 6시간 캐시. forceFresh 또는 진입 시 만료 시 fetch.
+const AQ_US_CALENDAR_SHEET = '1-44DsxFWblpgN5IdUObXDFgLJkVFVF1VsxyVYEWH2xc';
+const AQ_US_CALENDAR_TAB = 'US_DATE';
+const AQ_CAL_CACHE_TTL_MIN = 360;  // 6시간
+let _aqCalSheetEvents = [];
+
+async function fetchSheetCalendar(forceFresh) {
+  // 캐시 우선
+  if (!forceFresh) {
+    try {
+      const cached = await aqDbGet('us_calendar_sheet');
+      if (cached && cached.fetchedAt && Array.isArray(cached.events)) {
+        const ageMin = (Date.now() - new Date(cached.fetchedAt).getTime()) / 60000;
+        if (ageMin < AQ_CAL_CACHE_TTL_MIN) {
+          _aqCalSheetEvents = cached.events;
+          console.log('[fetchSheetCalendar] IDB 캐시 사용 (' + ageMin.toFixed(0) + '분 전, ' + cached.events.length + '개)');
+          if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
+            try { aqCalendarRender(); } catch (e) {}
+            try { renderMajorEventsCard(); } catch (e) {}
+          }
+          return _aqCalSheetEvents;
+        }
+      }
+    } catch (e) {}
+  }
+  if (typeof apiCall !== 'function' || !backendReady()) return _aqCalSheetEvents;
+  try {
+    const res = await apiCall('getOneSheet', {
+      sheetId: AQ_US_CALENDAR_SHEET,
+      tab: AQ_US_CALENDAR_TAB,
+    });
+    if (!res || !res.ok || !Array.isArray(res.rows)) {
+      console.warn('[fetchSheetCalendar] 응답 비정상:', res && res.error);
+      return _aqCalSheetEvents;
+    }
+    // 범위: 오늘 -30 ~ +60일 (사용자 요청 v2.53)
+    const today = new Date(); today.setHours(0,0,0,0);
+    const minMs = today.getTime() - 30*86400000;
+    const maxMs = today.getTime() + 60*86400000;
+    const minStr = new Date(minMs).toISOString().slice(0,10);
+    const maxStr = new Date(maxMs).toISOString().slice(0,10);
+    const events = res.rows
+      .filter(r => r.Date_KST && r.Category)
+      .map(r => ({
+        date: String(r.Date_KST).slice(0, 10),
+        time: r.Time_KST ? String(r.Time_KST).slice(0, 5) : '',
+        category: String(r.Category),
+        ticker: String(r.Ticker || '').toUpperCase(),
+        sector: String(r.Sector || ''),
+        description: String(r.Description || ''),
+        session: String(r.Session || ''),
+        daysUntil: (r.Days_Until != null && r.Days_Until !== '') ? Number(r.Days_Until) : null,
+      }))
+      .filter(e => e.date >= minStr && e.date <= maxStr);
+    _aqCalSheetEvents = events;
+    try { await aqDbSet('us_calendar_sheet', { fetchedAt: new Date().toISOString(), events }); } catch (e) {}
+    console.log('[fetchSheetCalendar] fetch 완료 — ' + events.length + '개 미래 일정');
+    if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
+      try { aqCalendarRender(); } catch (e) {}
+      try { renderMajorEventsCard(); } catch (e) {}
+    }
+    return events;
+  } catch (e) {
+    console.warn('[fetchSheetCalendar]', e);
+    return _aqCalSheetEvents;
+  }
+}
+
+// 특정 날짜의 시트 일정 — 시간순 정렬 (Earnings 시간 순, 종일성격이면 뒤로)
+function aqCalSheetEventsFor(dateStr) {
+  if (!Array.isArray(_aqCalSheetEvents) || _aqCalSheetEvents.length === 0) return [];
+  return _aqCalSheetEvents
+    .filter(e => e.date === dateStr && _aqCalEventMatchesFilter(e))
+    .sort((a, b) => {
+      const catOrder = { 'FOMC': 0, '13F': 1, 'Earnings': 2 };
+      const ao = catOrder[a.category] != null ? catOrder[a.category] : 9;
+      const bo = catOrder[b.category] != null ? catOrder[b.category] : 9;
+      if (ao !== bo) return ao - bo;
+      return (a.time || '').localeCompare(b.time || '');
+    });
+}
+
+// v2.53: 캘린더 필터 (4가지 ON/OFF) — localStorage 영속
+const aqCalFilters = {
+  earnings_held:   true,   // 실적발표 - 보유
+  earnings_unheld: true,   // 실적발표 - 미보유
+  fomc:            true,
+  thirteenF:       true,
+};
+function aqCalLoadFilters() {
+  try {
+    const s = JSON.parse(localStorage.getItem('aq_cal_filters') || 'null');
+    if (s && typeof s === 'object') Object.assign(aqCalFilters, s);
+  } catch (e) {}
+}
+function aqCalSaveFilters() {
+  try { localStorage.setItem('aq_cal_filters', JSON.stringify(aqCalFilters)); } catch (e) {}
+}
+// v2.54: top-level 즉시 호출 제거 — schedule 탭 진입 시 lazy 호출
+
+// 보유 종목 ticker set — computeHoldingsState 사용. 캘린더 렌더 시점에 한 번만 캐시
+let _aqCalHoldingsCache = null;
+function _aqCalRefreshHoldings() {
+  try {
+    if (typeof computeHoldingsState !== 'function') { _aqCalHoldingsCache = new Set(); return; }
+    const sim = computeHoldingsState();
+    _aqCalHoldingsCache = new Set((sim.holdings || []).map(h => String(h.ticker || '').toUpperCase()));
+  } catch (e) { _aqCalHoldingsCache = new Set(); }
+}
+function _aqCalIsHolding(ticker) {
+  if (!_aqCalHoldingsCache) _aqCalRefreshHoldings();
+  return _aqCalHoldingsCache.has(String(ticker || '').toUpperCase());
+}
+
+function _aqCalEventMatchesFilter(ev) {
+  if (ev.category === 'Earnings') {
+    const held = _aqCalIsHolding(ev.ticker);
+    return held ? aqCalFilters.earnings_held : aqCalFilters.earnings_unheld;
+  }
+  if (ev.category === 'FOMC') return aqCalFilters.fomc;
+  if (ev.category === '13F')  return aqCalFilters.thirteenF;
+  return true;
+}
+
+function aqCalToggleFilter(key) {
+  if (!(key in aqCalFilters)) return;
+  aqCalFilters[key] = !aqCalFilters[key];
+  aqCalSaveFilters();
+  // chip 토글 상태 즉시 반영
+  const chip = document.querySelector('.cal-filter-chip[data-filter="' + key + '"]');
+  if (chip) chip.classList.toggle('off', !aqCalFilters[key]);
+  // 캘린더 + 주요 이벤트 재렌더
+  try { aqCalendarRender(); } catch (e) {}
+  try { renderMajorEventsCard(); } catch (e) {}
+}
+window.aqCalToggleFilter = aqCalToggleFilter;
+
+// v2.53: "주요 이벤트" 카드 렌더 — Days_Until 0~5 (오늘 + 미래 5일)
+//   UI는 매수 포인트와 동일 구조 (로고/티커/일정명/D-N). 필터도 같이 적용.
+function renderMajorEventsCard() {
+  const scroll = document.getElementById('majorEventsScroll');
+  if (!scroll) return;
+  _aqCalRefreshHoldings();  // 캐시 갱신
+  if (!Array.isArray(_aqCalSheetEvents) || _aqCalSheetEvents.length === 0) {
+    scroll.innerHTML = '<div class="buy-points-empty">불러오는 중…</div>';
+    return;
+  }
+  // 임박 이벤트 — 0 <= Days_Until <= 5, 필터 통과
+  const items = _aqCalSheetEvents
+    .filter(e => typeof e.daysUntil === 'number' && e.daysUntil >= 0 && e.daysUntil <= 5)
+    .filter(e => _aqCalEventMatchesFilter(e))
+    .sort((a, b) => {
+      if (a.daysUntil !== b.daysUntil) return a.daysUntil - b.daysUntil;
+      // 같은 D-day면 카테고리 우선
+      const catOrder = { 'FOMC': 0, '13F': 1, 'Earnings': 2 };
+      const ao = catOrder[a.category] != null ? catOrder[a.category] : 9;
+      const bo = catOrder[b.category] != null ? catOrder[b.category] : 9;
+      return ao - bo;
+    });
+  if (items.length === 0) {
+    scroll.innerHTML = '<div class="buy-points-empty">5일 이내 임박 이벤트가 없습니다</div>';
+    return;
+  }
+  // 카테고리별 일정명
+  const evtName = (cat) => cat === 'Earnings' ? '실적발표'
+                         : cat === 'FOMC'    ? 'FOMC'
+                         : cat === '13F'      ? '13F' : cat;
+  // D-N 라벨
+  const dLabel = (n) => n === 0 ? 'D-DAY' : ('D-' + n);
+  // 로고
+  const logoUrl = (ev) => (ev.category === 'Earnings' && ev.ticker)
+    ? './logos/tickers/' + ev.ticker + '.png'
+    : './flags/US.png';
+  // 티커 라벨 (Earnings는 ticker, FOMC/13F는 카테고리 자체)
+  const tkLabel = (ev) => ev.category === 'Earnings' ? ev.ticker : ev.category;
+  scroll.innerHTML = items.map(ev => {
+    const lg = logoUrl(ev);
+    const lb = escapeHtml(tkLabel(ev));
+    const en = escapeHtml(evtName(ev.category));
+    const dn = dLabel(ev.daysUntil);
+    return '<div class="buy-point-item major-event-item" title="' + escapeAttr(ev.description || '') + '">' +
+             '<img class="bp-logo" src="' + lg + '" onerror="this.onerror=null;this.src=\'./flags/US.png\';" alt=""/>' +
+             '<div class="bp-name">' + lb + '</div>' +
+             '<div class="bp-date">' + en + '</div>' +
+             '<div class="bp-ret">' + dn + '</div>' +
+           '</div>';
+  }).join('');
+}
+window.renderMajorEventsCard = renderMajorEventsCard;
+
+window.fetchSheetCalendar = fetchSheetCalendar;
+window.aqCalSheetEventsFor = aqCalSheetEventsFor;
+
+function aqCalLoadEvents() {
+  try { return JSON.parse(localStorage.getItem('aq_calendar_events') || '[]'); }
+  catch (e) { return []; }
+}
+function aqCalSaveEvents(arr) {
+  try { localStorage.setItem('aq_calendar_events', JSON.stringify(arr)); } catch (e) {}
+}
+function aqCalFmt(y, m, d) {
+  const dt = new Date(y, m, d);
+  return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+}
+function aqCalTodayStr() {
+  const t = new Date();
+  return aqCalFmt(t.getFullYear(), t.getMonth(), t.getDate());
+}
+function aqCalEventsFor(dateStr) {
+  return aqCalLoadEvents().filter(e => e.date === dateStr).sort((a, b) => {
+    if (a.allDay && !b.allDay) return -1;
+    if (!a.allDay && b.allDay) return 1;
+    return (a.startTime || '').localeCompare(b.startTime || '');
+  });
+}
+
+function aqCalendarRender() {
+  const titleEl = document.getElementById('calendarTitle');
+  const grid = document.getElementById('calendarGrid');
+  if (!titleEl || !grid) return;
+
+  const y = aqCal.current.getFullYear();
+  const m = aqCal.current.getMonth();
+  titleEl.textContent = y + '년 ' + (m + 1) + '월';
+
+  const firstDay = new Date(y, m, 1);
+  const lastDay = new Date(y, m + 1, 0);
+  // 월화수목금토일 시작 → 월(JS day=1)이 첫번째 → offset = (day + 6) % 7
+  const startOffset = (firstDay.getDay() + 6) % 7;
+  const todayStr = aqCalTodayStr();
+  const isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+  grid.innerHTML = '';
+
+  // 이전 달 잔여
+  const prevLastDate = new Date(y, m, 0).getDate();
+  for (let i = startOffset - 1; i >= 0; i--) {
+    const d = prevLastDate - i;
+    grid.appendChild(_buildCalCell(d, aqCalFmt(y, m - 1, d), true, todayStr, isMobile));
+  }
+  // 이번 달
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    grid.appendChild(_buildCalCell(d, aqCalFmt(y, m, d), false, todayStr, isMobile));
+  }
+  // 다음 달 채움 (6주 = 42칸까지)
+  const filled = startOffset + lastDay.getDate();
+  const remain = filled <= 35 ? 35 - filled : 42 - filled;
+  for (let d = 1; d <= remain; d++) {
+    grid.appendChild(_buildCalCell(d, aqCalFmt(y, m + 1, d), true, todayStr, isMobile));
+  }
+
+  _renderSelectedSection();
+}
+
+function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
+  const userEvents = aqCalEventsFor(dateStr);
+  // v2.51: 시트 일정 합치기 — 사용자 일정 먼저, 그 다음 시트 일정
+  const sheetEvents = (typeof aqCalSheetEventsFor === 'function') ? aqCalSheetEventsFor(dateStr) : [];
+  const allEvents = [
+    ...userEvents.map(e => Object.assign({}, e, { _type: 'user' })),
+    ...sheetEvents.map(e => Object.assign({}, e, { _type: 'sheet' })),
+  ];
+  const cell = document.createElement('div');
+  cell.className = 'cal-cell' +
+    (isOther ? ' other-month' : '') +
+    (dateStr === todayStr ? ' today' : '') +
+    (dateStr === aqCal.selected ? ' selected' : '');
+  cell.dataset.date = dateStr;
+  cell.onclick = () => aqCalendarSelectDate(dateStr);
+
+  const dateDiv = document.createElement('div');
+  dateDiv.className = 'cal-cell-date';
+  // 토/일 색상
+  const dt = new Date(dateStr);
+  const dow = dt.getDay();
+  if (dow === 6) dateDiv.classList.add('sat');
+  if (dow === 0) dateDiv.classList.add('sun');
+  dateDiv.textContent = dayNum;
+  cell.appendChild(dateDiv);
+
+  if (allEvents.length > 0) {
+    if (isMobile) {
+      const dotsDiv = document.createElement('div');
+      dotsDiv.className = 'cal-cell-dots';
+      const maxDots = Math.min(allEvents.length, 3);
+      for (let i = 0; i < maxDots; i++) {
+        const ev = allEvents[i];
+        const dot = document.createElement('div');
+        let dotCls = 'cal-cell-dot';
+        if (ev._type === 'sheet') {
+          if (ev.category === 'Earnings') dotCls += ' cal-dot-earnings';
+          else if (ev.category === 'FOMC') dotCls += ' cal-dot-fomc';
+          else if (ev.category === '13F') dotCls += ' cal-dot-13f';
+        }
+        dot.className = dotCls;
+        dotsDiv.appendChild(dot);
+      }
+      cell.appendChild(dotsDiv);
+    } else {
+      const evDiv = document.createElement('div');
+      evDiv.className = 'cal-cell-events';
+      const maxShow = 3;
+      allEvents.slice(0, maxShow).forEach(ev => {
+        const chip = document.createElement('div');
+        if (ev._type === 'user') {
+          chip.className = 'cal-event-chip';
+          chip.textContent = ev.allDay ? ev.title : ((ev.startTime ? ev.startTime + ' ' : '') + ev.title);
+          chip.title = ev.title;
+          chip.onclick = (e) => { e.stopPropagation(); aqCalendarOpenModal(ev.id); };
+        } else {
+          // v2.51: 시트 일정 — 카테고리별 색상 + 로고 + read-only (클릭 시 그냥 날짜 선택)
+          // v2.53: Earnings 중 보유 종목은 is-held 클래스 (더 진한 색)
+          const catCls = ev.category === 'Earnings' ? 'cal-evt-earnings'
+                       : ev.category === 'FOMC' ? 'cal-evt-fomc'
+                       : ev.category === '13F' ? 'cal-evt-13f' : '';
+          const heldCls = (ev.category === 'Earnings' && typeof _aqCalIsHolding === 'function' && _aqCalIsHolding(ev.ticker)) ? ' is-held' : '';
+          chip.className = 'cal-event-chip ' + catCls + heldCls;
+          const logoUrl = (ev.category === 'Earnings' && ev.ticker)
+            ? './logos/tickers/' + ev.ticker + '.png'
+            : './flags/US.png';
+          const label = ev.category === 'Earnings' ? (ev.ticker || '') : ev.category;
+          chip.innerHTML =
+            '<img class="cal-event-chip-logo" src="' + logoUrl +
+            '" onerror="this.onerror=null;this.src=\'./flags/US.png\';" alt=""/>' +
+            escapeHtml(label);
+          chip.title = ev.description || '';
+          chip.style.cursor = 'default';
+        }
+        evDiv.appendChild(chip);
+      });
+      if (allEvents.length > maxShow) {
+        const more = document.createElement('div');
+        more.className = 'cal-event-more';
+        more.textContent = '+' + (allEvents.length - maxShow);
+        evDiv.appendChild(more);
+      }
+      cell.appendChild(evDiv);
+    }
+  }
+  return cell;
+}
+
+function aqCalendarSelectDate(dateStr) {
+  aqCal.selected = dateStr;
+  // 다른 달이면 그 달로 이동
+  const dt = new Date(dateStr);
+  if (dt.getMonth() !== aqCal.current.getMonth() || dt.getFullYear() !== aqCal.current.getFullYear()) {
+    aqCal.current = new Date(dt.getFullYear(), dt.getMonth(), 1);
+  }
+  aqCalendarRender();
+}
+
+function _renderSelectedSection() {
+  const section = document.getElementById('calSelectedSection');
+  const label = document.getElementById('calSelectedDateLabel');
+  const list = document.getElementById('calSelectedList');
+  if (!section || !label || !list) return;
+  if (!aqCal.selected) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  const dt = new Date(aqCal.selected);
+  const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+  label.textContent = dt.getFullYear() + '년 ' + (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 (' + dayNames[dt.getDay()] + ')';
+
+  const events = aqCalEventsFor(aqCal.selected);
+  // v2.51: 시트 일정도 같이 합쳐서 표시 (read-only)
+  const sheetEvents = (typeof aqCalSheetEventsFor === 'function') ? aqCalSheetEventsFor(aqCal.selected) : [];
+  if (events.length === 0 && sheetEvents.length === 0) {
+    list.innerHTML = '<div class="cal-event-empty">이 날짜에 등록된 일정이 없습니다.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  events.forEach(ev => {
+    const row = document.createElement('div');
+    row.className = 'cal-event-row';
+    row.onclick = () => aqCalendarOpenModal(ev.id);
+
+    const tEl = document.createElement('div');
+    tEl.className = 'cal-event-time';
+    if (ev.allDay) tEl.textContent = '종일';
+    else if (ev.startTime && ev.endTime) tEl.textContent = ev.startTime + ' ~ ' + ev.endTime;
+    else if (ev.startTime) tEl.textContent = ev.startTime;
+    else tEl.textContent = '시각 미정';
+    row.appendChild(tEl);
+
+    const info = document.createElement('div');
+    info.className = 'cal-event-info';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'cal-event-title';
+    titleEl.textContent = ev.title;
+    info.appendChild(titleEl);
+    if (ev.memo) {
+      const memoEl = document.createElement('div');
+      memoEl.className = 'cal-event-memo';
+      memoEl.textContent = ev.memo;
+      info.appendChild(memoEl);
+    }
+    row.appendChild(info);
+    list.appendChild(row);
+  });
+
+  // v2.51: 시트 일정 (Earnings, FOMC, 13F) — read-only
+  sheetEvents.forEach(ev => {
+    const row = document.createElement('div');
+    row.className = 'cal-event-row is-readonly';
+
+    // 로고
+    const logoEl = document.createElement('img');
+    logoEl.className = 'cal-event-row-logo';
+    logoEl.alt = '';
+    if (ev.category === 'Earnings' && ev.ticker) {
+      logoEl.src = './logos/tickers/' + ev.ticker + '.png';
+      logoEl.onerror = function() { this.onerror = null; this.src = './flags/US.png'; };
+    } else {
+      logoEl.src = './flags/US.png';
+      logoEl.onerror = function() { this.style.visibility = 'hidden'; };
+    }
+    row.appendChild(logoEl);
+
+    const info = document.createElement('div');
+    info.className = 'cal-event-info';
+
+    const titleEl = document.createElement('div');
+    titleEl.className = 'cal-event-title';
+    if (ev.category === 'Earnings') {
+      const sectorTxt = ev.sector ? ' · ' + ev.sector : '';
+      titleEl.innerHTML = '<strong>' + escapeHtml(ev.ticker) + '</strong> 실적 발표' + escapeHtml(sectorTxt);
+    } else if (ev.category === 'FOMC') {
+      titleEl.innerHTML = '🇺🇸 <strong>FOMC</strong> 회의';
+    } else if (ev.category === '13F') {
+      titleEl.innerHTML = '🇺🇸 <strong>13F</strong> 공시 마감';
+    } else {
+      titleEl.textContent = ev.category;
+    }
+    info.appendChild(titleEl);
+
+    // 시간 + Session
+    let timeStr = '';
+    if (ev.session && ev.time) timeStr = ev.session + ' · ' + ev.time + ' KST';
+    else if (ev.session) timeStr = ev.session;
+    else if (ev.time) timeStr = ev.time + ' KST';
+    if (timeStr) {
+      const timeEl = document.createElement('div');
+      timeEl.className = 'cal-event-memo';
+      timeEl.textContent = timeStr;
+      info.appendChild(timeEl);
+    }
+
+    if (ev.description) {
+      const descEl = document.createElement('div');
+      descEl.className = 'cal-event-memo';
+      descEl.textContent = ev.description;
+      info.appendChild(descEl);
+    }
+
+    const srcEl = document.createElement('div');
+    srcEl.className = 'cal-event-source';
+    srcEl.textContent = '외부 일정 (편집 불가)';
+    info.appendChild(srcEl);
+
+    row.appendChild(info);
+    list.appendChild(row);
+  });
+}
+
+function aqCalendarNav(delta) {
+  aqCal.current = new Date(aqCal.current.getFullYear(), aqCal.current.getMonth() + delta, 1);
+  aqCalendarRender();
+}
+function aqCalendarToday() {
+  const t = new Date();
+  aqCal.current = new Date(t.getFullYear(), t.getMonth(), 1);
+  aqCal.selected = aqCalTodayStr();
+  aqCalendarRender();
+}
+
+function aqCalendarOpenModal(editId) {
+  const backdrop = document.getElementById('calModalBackdrop');
+  if (!backdrop) return;
+  const _$ = (id) => document.getElementById(id);
+
+  _$('calInputTitle').value = '';
+  _$('calInputDate').value = aqCal.selected || aqCalTodayStr();
+  _$('calInputStartTime').value = '';
+  _$('calInputEndTime').value = '';
+  _$('calInputMemo').value = '';
+  _$('calInputAllDay').checked = false;
+  _$('calTimeRow').style.display = '';
+  _$('calModalDeleteBtn').style.display = 'none';
+  _$('calModalTitle').textContent = '새 일정';
+  aqCal.editingId = null;
+
+  if (editId) {
+    const ev = aqCalLoadEvents().find(e => e.id === editId);
+    if (ev) {
+      aqCal.editingId = editId;
+      _$('calModalTitle').textContent = '일정 편집';
+      _$('calInputTitle').value = ev.title || '';
+      _$('calInputDate').value = ev.date || '';
+      _$('calInputStartTime').value = ev.startTime || '';
+      _$('calInputEndTime').value = ev.endTime || '';
+      _$('calInputMemo').value = ev.memo || '';
+      _$('calInputAllDay').checked = !!ev.allDay;
+      if (ev.allDay) _$('calTimeRow').style.display = 'none';
+      _$('calModalDeleteBtn').style.display = '';
+    }
+  }
+  backdrop.classList.add('open');
+  setTimeout(() => _$('calInputTitle').focus(), 80);
+}
+function aqCalendarCloseModal() {
+  const b = document.getElementById('calModalBackdrop');
+  if (b) b.classList.remove('open');
+  aqCal.editingId = null;
+}
+function aqCalendarToggleAllDay() {
+  const checked = document.getElementById('calInputAllDay').checked;
+  document.getElementById('calTimeRow').style.display = checked ? 'none' : '';
+}
+function aqCalendarSave() {
+  const _$ = (id) => document.getElementById(id);
+  const title = (_$('calInputTitle').value || '').trim();
+  const date = _$('calInputDate').value;
+  if (!title) { aqToast('제목을 입력하세요'); _$('calInputTitle').focus(); return; }
+  if (!date)  { aqToast('날짜를 선택하세요'); return; }
+  const allDay = _$('calInputAllDay').checked;
+  const startTime = allDay ? '' : (_$('calInputStartTime').value || '');
+  const endTime   = allDay ? '' : (_$('calInputEndTime').value || '');
+  const memo = (_$('calInputMemo').value || '').trim();
+  // 시작/종료 순서 검증
+  if (!allDay && startTime && endTime && endTime < startTime) {
+    aqToast('종료 시각이 시작보다 빠릅니다');
+    return;
+  }
+  const events = aqCalLoadEvents();
+  if (aqCal.editingId) {
+    const idx = events.findIndex(e => e.id === aqCal.editingId);
+    if (idx >= 0) {
+      events[idx] = Object.assign({}, events[idx], { title, date, startTime, endTime, memo, allDay });
+    }
+  } else {
+    events.push({
+      id: 'evt_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+      title, date, startTime, endTime, memo, allDay,
+      createdAt: new Date().toISOString(),
+    });
+  }
+  aqCalSaveEvents(events);
+  aqCalendarCloseModal();
+  aqCal.selected = date;
+  const dt = new Date(date);
+  aqCal.current = new Date(dt.getFullYear(), dt.getMonth(), 1);
+  aqCalendarRender();
+  aqToast('일정이 저장되었습니다');
+}
+function aqCalendarDelete() {
+  if (!aqCal.editingId) return;
+  if (!confirm('이 일정을 삭제할까요?')) return;
+  const events = aqCalLoadEvents().filter(e => e.id !== aqCal.editingId);
+  aqCalSaveEvents(events);
+  aqCalendarCloseModal();
+  aqCalendarRender();
+  aqToast('일정이 삭제되었습니다');
+}
+
+window.aqCalendarRender       = aqCalendarRender;
+window.aqCalendarNav          = aqCalendarNav;
+window.aqCalendarToday        = aqCalendarToday;
+window.aqCalendarSelectDate   = aqCalendarSelectDate;
+window.aqCalendarOpenModal    = aqCalendarOpenModal;
+window.aqCalendarCloseModal   = aqCalendarCloseModal;
+window.aqCalendarToggleAllDay = aqCalendarToggleAllDay;
+window.aqCalendarSave         = aqCalendarSave;
+window.aqCalendarDelete       = aqCalendarDelete;
+
+// 페이지 로드 시 초기 selected = 오늘 (DOM 준비된 후 한 번)
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('calendarGrid')) {
+    aqCal.current = new Date();
+    aqCal.selected = aqCalTodayStr();
+    // 일정 페이지 진입 시점에 render되긴 하지만, 미리 한 번 시도
+    try { aqCalendarRender(); } catch (e) {}
+  }
+});
+
 // ============================================================================
 // PORTFOLIO + TRADES (LocalStorage)
 // ============================================================================
@@ -7056,10 +8617,6 @@ let _state = {
   //   setMarket 시 applyMarketState가 active 변수로 swap
   archives:          { US: [], KR: [] },           // → _state.archive (V2 / EMA 기본)
   archivesV1:        { US: [] },                    // v2.31: V1 (옛 V_Shape_Archive) — US만, Code.gs가 보낼 때만 채워짐
-  // v2.37: 매수매력도 (Buy Attractiveness Evaluation) — '판단' 컬럼 매핑
-  //   구조: { US: { 'AAPL': '💎 기회', 'MSFT': '🟢 우호', ... }, KR: {} }
-  //   매일 덮어씌워지는 시트. US만 존재. data.json에 없으면 lazy fetch.
-  evaluations:       { US: {}, KR: {} },
   // v1.80: 한국도 섹터별 별도 시트 구조로 바뀜 → 시장별 sector OHLCV 저장
   sectorsByMarket:   { US: {}, KR: {} },           // → _state.sectors
   // v1.81: 매크로도 시장별 분리 (US: S&P/NASDAQ/KJP400, KR: KOSPI/KOSDAQ)
@@ -7197,108 +8754,6 @@ async function _lazyFetchVshapeV1() {
     }
   })();
   return _vshapeV1FetchPromise;
-}
-
-// ============================================================================
-// v2.37: 매수매력도 (Buy Attractiveness Evaluation) — 시트 fetch + 헬퍼
-// ============================================================================
-
-// 정렬 우선순위 (사용자 지정): 💎 기회 → 🟢 우호 → 🟡 주의 → 🟠 보류 → 🔴 경계 → ⚪ 무난 → ➖ 중립
-const EVAL_ORDER = ['💎 기회', '🟢 우호', '🟡 주의', '🟠 보류', '🔴 경계', '⚪ 무난', '➖ 중립'];
-
-// 정규화: 이모지 첫 글자 + 공백 무시 → 7개 카테고리 중 하나로 매칭
-function _normalizeEval(text) {
-  if (!text) return '';
-  const t = String(text).trim();
-  for (let i = 0; i < EVAL_ORDER.length; i++) {
-    const emoji = EVAL_ORDER[i].split(' ')[0];  // '💎', '🟢', ...
-    if (t.startsWith(emoji) || t === EVAL_ORDER[i]) return EVAL_ORDER[i];
-  }
-  return '';
-}
-// 종목의 평가 카테고리 반환 (정규화된 형태). 없으면 ''
-function getTickerEval(ticker) {
-  if (!ticker) return '';
-  const mkt = getCurrentMarket();
-  if (mkt !== 'US') return '';  // 현재는 US만 매수매력도 존재
-  const raw = _state.evaluations.US[String(ticker).toUpperCase()];
-  return _normalizeEval(raw);
-}
-function getEvalRank(ticker) {
-  const ev = getTickerEval(ticker);
-  if (!ev) return 999;
-  const idx = EVAL_ORDER.indexOf(ev);
-  return idx >= 0 ? idx : 999;
-}
-
-let _evalFetchPromise = null;
-async function _lazyFetchEvaluations() {
-  if (_evalFetchPromise) return _evalFetchPromise;
-  if (Object.keys(_state.evaluations.US).length > 0) return true;
-  _evalFetchPromise = (async () => {
-    try {
-      const cfg = MARKET_CONFIG.US;
-      const res = await apiCall('getOneSheet', { sheetId: cfg.archiveSheetId, tab: '매수매력도' });
-      if (!res || !res.ok || !Array.isArray(res.rows)) {
-        console.warn('[_lazyFetchEvaluations] failed:', res && res.error);
-        return false;
-      }
-      res.rows.forEach(r => {
-        const tk = String(r.Ticker || '').toUpperCase().trim();
-        const judge = String(r['판단'] || '').trim();
-        if (tk && judge) _state.evaluations.US[tk] = judge;
-      });
-      const n = Object.keys(_state.evaluations.US).length;
-      console.log(`[_lazyFetchEvaluations] ✓ 매수매력도 lazy fetch: ${n}건`);
-      // 모달 열려있으면 평가 항목 다시 그리기 + 종목 리스트가 'eval' 모드면 재렌더
-      try {
-        if (_state.openTicker && document.getElementById('chartModal')?.classList.contains('active')) {
-          if (typeof refreshModalEvaluation === 'function') refreshModalEvaluation(_state.openTicker);
-        }
-        if (_stockSortMode === 'eval' && typeof buildStockList === 'function') buildStockList();
-      } catch (e) {}
-      return n > 0;
-    } catch (e) {
-      console.warn('[_lazyFetchEvaluations] error:', e);
-      return false;
-    }
-  })();
-  return _evalFetchPromise;
-}
-// 외부에서 강제 갱신 필요 시 (예: 시장 swap)
-function _resetEvalFetchPromise() { _evalFetchPromise = null; }
-
-// v2.37: 모달이 열려있을 때 평가 항목만 다시 그리기 (lazy fetch 도착 직후 호출)
-function refreshModalEvaluation(ticker) {
-  const subtitleEl = document.getElementById('modalSubtitle');
-  if (!subtitleEl) return;
-  // modal-eval 노드 있으면 제거. 그 후 새로 평가 있으면 sep+modal-eval 삽입.
-  subtitleEl.querySelectorAll('.modal-eval').forEach(el => {
-    const prevSep = el.previousElementSibling;
-    if (prevSep && prevSep.classList.contains('sep')) prevSep.remove();
-    el.remove();
-  });
-  const evalText = getTickerEval(ticker);
-  if (!evalText) return;
-  // 'Data:' span 찾기 — 그 직전에 sep + modal-eval 삽입
-  const spans = subtitleEl.querySelectorAll('span');
-  let dataSpan = null;
-  spans.forEach(s => {
-    if (s.textContent && s.textContent.startsWith('Data:')) dataSpan = s;
-  });
-  if (!dataSpan) return;
-  const dataSep = dataSpan.previousElementSibling;  // sep 직전에 삽입
-  const sepEl = document.createElement('span');
-  sepEl.className = 'sep';
-  sepEl.textContent = '·';
-  const evalEl = document.createElement('span');
-  evalEl.className = 'modal-eval';
-  evalEl.title = '매수매력도';
-  evalEl.textContent = evalText;
-  if (dataSep && dataSep.classList.contains('sep')) {
-    dataSep.insertAdjacentElement('beforebegin', evalEl);
-    evalEl.insertAdjacentElement('beforebegin', sepEl);
-  }
 }
 
 function syncVshapeToggleUI() {
@@ -7467,6 +8922,107 @@ function hideLoading() {
 let _autoLoadInProgress = false;
 
 // ============================================================================
+// v2.49: 데이터 영속 캐시 (IndexedDB) — 앱 재진입 시 즉시 복원
+//   data.json fast path / forceFresh fallback 둘 다 성공 후 캐시 저장
+//   재진입 시 캐시 우선 ingest → 즉시 화면 → 백그라운드로 새 데이터 확인
+//   cron 멈춰도 사용자가 마지막으로 본 데이터 회귀 안 함
+// ============================================================================
+const AQ_DB_NAME = 'aquamel_cache';
+const AQ_DB_VER = 1;
+const AQ_DB_STORE = 'kv';
+
+function _aqDbOpen() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(AQ_DB_NAME, AQ_DB_VER);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(AQ_DB_STORE)) db.createObjectStore(AQ_DB_STORE);
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function aqDbGet(key) {
+  try {
+    const db = await _aqDbOpen();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(AQ_DB_STORE, 'readonly');
+      const req = tx.objectStore(AQ_DB_STORE).get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) { console.warn('[aqDbGet]', e); return null; }
+}
+async function aqDbSet(key, value) {
+  try {
+    const db = await _aqDbOpen();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(AQ_DB_STORE, 'readwrite');
+      const req = tx.objectStore(AQ_DB_STORE).put(value, key);
+      req.onsuccess = () => resolve(true);
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) { console.warn('[aqDbSet]', e); return false; }
+}
+
+// _state의 데이터 필드만 캐시 (UI/임시 필드 제외)
+async function aqCacheSaveState() {
+  try {
+    const snapshot = {
+      timestamp: new Date().toISOString(),
+      archives:           _state.archives          || { US: [], KR: [] },
+      archivesV1:         _state.archivesV1        || { US: [] },
+      sectorsByMarket:    _state.sectorsByMarket   || { US: {}, KR: {} },
+      macroByMarket:      _state.macroByMarket     || { US: [], KR: [] },
+      tickerSectorMaps:   _state.tickerSectorMaps  || { US: {}, KR: {} },
+      kjpSectorMaps:      _state.kjpSectorMaps     || { US: {}, KR: {} },
+      tickerDescMaps:     _state.tickerDescMaps    || { US: {}, KR: {} },
+      tickerCompanyMaps:  _state.tickerCompanyMaps || { US: {}, KR: {} },
+    };
+    const ok = await aqDbSet('state', snapshot);
+    if (ok) console.log('[aqCacheSaveState] 캐시 저장 완료 —', snapshot.timestamp);
+    return ok;
+  } catch (e) { console.warn('[aqCacheSaveState]', e); return false; }
+}
+
+async function aqCacheLoadState() {
+  const snap = await aqDbGet('state');
+  if (!snap) return null;
+  _state.archives           = snap.archives           || { US: [], KR: [] };
+  _state.archivesV1         = snap.archivesV1         || { US: [] };
+  _state.sectorsByMarket    = snap.sectorsByMarket    || { US: {}, KR: {} };
+  _state.macroByMarket      = snap.macroByMarket      || { US: [], KR: [] };
+  _state.tickerSectorMaps   = snap.tickerSectorMaps   || { US: {}, KR: {} };
+  _state.kjpSectorMaps      = snap.kjpSectorMaps      || { US: {}, KR: {} };
+  _state.tickerDescMaps     = snap.tickerDescMaps     || { US: {}, KR: {} };
+  _state.tickerCompanyMaps  = snap.tickerCompanyMaps  || { US: {}, KR: {} };
+  console.log('[aqCacheLoadState] 캐시 복원 —', snap.timestamp);
+  return snap.timestamp;
+}
+
+// 캐시 또는 새 데이터 ingest 후 렌더 함수 일괄 호출 (단일 진입점)
+function _aqRenderAllAfterIngest() {
+  try { applyMarketState(getCurrentMarket()); } catch (e) {}
+  try { computeSignalReturns(); } catch (e) {}
+  try { applyFilterAndRender(); } catch (e) {}
+  try { renderMacro(); } catch (e) {}
+  try { renderSectorFilter(); } catch (e) {}
+  try { renderSignalFilter(); } catch (e) {}
+  try { renderSectorFramework(); } catch (e) {}
+  try { renderSectorAnalysis(); } catch (e) {}
+  try { refreshLayerReturns(); } catch (e) {}
+  try { buildBuyPointsCard(); } catch (e) {}
+  try { buildStockList(); } catch (e) {}
+  try { _archiveMobileShown = 10; buildArchiveMobileList(); } catch (e) {}
+  try { renderDashboard(); } catch (e) {}
+  // 매크로 카드 가시성
+  const macroCardEl = document.getElementById('macroCard');
+  if (macroCardEl) macroCardEl.style.display = (_state.macro && _state.macro.length) ? '' : 'none';
+  const filterCardEl = document.getElementById('filterCard');
+  if (filterCardEl) filterCardEl.style.display = '';
+}
+
+// ============================================================================
 // v2.04 / Code.gs v2.12: data.json fast path
 //   GitHub Actions cron이 10분마다 dumpAllToJson 호출 → ./data/data.json 갱신
 //   PWA는 CDN에서 data.json 1번 fetch → 2-3초에 모든 데이터 로드 완료
@@ -7505,14 +9061,6 @@ async function tryLoadFromBundle() {
     _state.archives.KR = ((bundle.KR && bundle.KR.archive) || [])
       .map(r => normalizeArchiveRow(r, 'KR'))
       .filter(r => r.Ticker && r.Date);
-    // v2.37: 매수매력도 (data.json에 있으면 즉시 채움, 없으면 autoLoadData 끝나고 lazy fetch)
-    _state.evaluations.US = {};
-    const evalRows = (bundle.US && bundle.US.evaluations) || [];
-    evalRows.forEach(r => {
-      const tk = String(r.Ticker || '').toUpperCase().trim();
-      const judge = String(r['판단'] || '').trim();
-      if (tk && judge) _state.evaluations.US[tk] = judge;
-    });
 
     splashUpdate(65);
 
@@ -7579,11 +9127,15 @@ async function tryLoadFromBundle() {
     splashUpdate(92);
 
     // 8) 메인 화면 렌더 — fast path에서도 정상 함수명 사용 (applyFilters X → applyFilterAndRender)
+    // v2.40: computeSignalReturns + renderSectorFilter 추가 — fast path 초기 진입 시 시그널 성과(Case 1~4, 1d/5d) N/A 표시 fix
+    try { computeSignalReturns(); } catch (e) { console.warn('[bundle] computeSignalReturns:', e); }
     try { applyFilterAndRender(); } catch (e) { console.warn('[bundle] applyFilterAndRender:', e); }
-    try { buildMacroCard(); } catch (e) { console.warn(e); }
-    try { buildSignalFilterCard(); } catch (e) { console.warn(e); }
-    try { buildSectorFrameworkCard(); } catch (e) { console.warn(e); }
-    try { buildSectorAnalysisCard(); } catch (e) { console.warn(e); }
+    try { renderMacro(); } catch (e) { console.warn(e); }
+    try { renderSectorFilter(); } catch (e) { console.warn(e); }
+    try { renderSignalFilter(); } catch (e) { console.warn(e); }
+    try { renderSectorFramework(); } catch (e) { console.warn(e); }
+    try { renderSectorAnalysis(); } catch (e) { console.warn(e); }
+    try { refreshLayerReturns(); } catch (e) {}
     try { buildBuyPointsCard(); } catch (e) { console.warn(e); }
     try { buildStockList(); } catch (e) { console.warn(e); }
     try { _archiveMobileShown = 10; buildArchiveMobileList(); } catch (e) {}
@@ -7600,10 +9152,6 @@ async function tryLoadFromBundle() {
     console.log(`[tryLoadFromBundle] US: archive=${_state.archives.US.length}, sectors=${Object.keys(_state.sectorsByMarket.US).length}, KR: archive=${_state.archives.KR.length}, sectors=${Object.keys(_state.sectorsByMarket.KR).length}`);
     // v2.31: 데이터 로드 완료 신호 — vshape 토글 UI 등 데이터-의존 UI 갱신
     try { window.dispatchEvent(new CustomEvent('aquamel:data-loaded')); } catch (e) {}
-    // v2.37: 매수매력도가 data.json에 없으면 background lazy fetch (UI 블록 X)
-    if (Object.keys(_state.evaluations.US).length === 0) {
-      setTimeout(() => _lazyFetchEvaluations(), 600);
-    }
 
     return true;
   } catch (e) {
@@ -7708,20 +9256,61 @@ function buildKjpMaps_(kjpRes, market) {
   }
 }
 
-async function autoLoadData() {
+async function autoLoadData(opts) {
   if (_autoLoadInProgress) return;
   _autoLoadInProgress = true;
 
-  // 새로고침 버튼이라면 splash 다시 보여주기
-  splashShow();
+  // v2.48: forceFresh — 새로고침 버튼 클릭 시 data.json fast path 건너뛰고 backend 직접 호출
+  // v2.49: silent — 백그라운드 자동 갱신 시 splash 안 띄움 (사용자 화면 끊기지 않음)
+  opts = opts || {};
+  const forceFresh = !!opts.forceFresh;
+  const silent = !!opts.silent;
 
-  // hero refresh 버튼 스피닝 (있을 때만)
+  // v2.49: 캐시 우선 ingest — forceFresh가 아니고 사용자 첫 진입이라면 IDB 캐시 먼저 확인
+  //   캐시 있음 → 즉시 화면 표시 (instant) → 백그라운드로 data.json fetch + 자동 갱신
+  //   캐시 없음 → 평소 fast path 진행
+  if (!forceFresh && !silent && !opts.skipCache) {
+    try {
+      const cachedTs = await aqCacheLoadState();
+      if (cachedTs) {
+        console.log('[autoLoadData] IDB 캐시 ingest 우선 → 즉시 화면 표시');
+        _aqRenderAllAfterIngest();
+        // 보고서 인덱스도 백그라운드
+        fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+        // splash 안 띄웠으므로 닫을 필요 X (이미 닫혀 있음)
+        _autoLoadInProgress = false;
+        // 백그라운드: data.json 새 거 확인 + 60분 이상 stale이면 자동 forceFresh
+        setTimeout(() => _aqBackgroundRefresh(cachedTs), 100);
+        // v2.50: polling 시작 (한 번만 — 내부 가드)
+        _aqStartPolling();
+        return;
+      }
+    } catch (e) {
+      console.warn('[autoLoadData] 캐시 ingest 실패 — 정상 경로 진행:', e);
+    }
+  }
+
+  // 새로고침 버튼이라면 splash 다시 보여주기 (silent 모드는 제외)
+  if (!silent) splashShow();
+
+  // v2.48: forceFresh 모드 — splash 메시지로 시간 안내 (~1-2분 소요 가능)
+  const loadingTitle = document.getElementById('loadingTitle');
+  if (loadingTitle) {
+    loadingTitle.textContent = forceFresh
+      ? '시트에서 최신 데이터 가져오는 중...'
+      : '데이터 업데이트 & 분석';
+  }
+
+  // hero refresh + mobile-topbar refresh 버튼 스피닝 (있을 때만)
   const refreshBtn = document.getElementById('heroRefreshBtn');
   if (refreshBtn) refreshBtn.classList.add('spinning');
+  const mobileRefreshBtn = document.getElementById('mobileRefreshBtn');
+  if (mobileRefreshBtn) mobileRefreshBtn.classList.add('spinning');
 
   if (!backendReady()) {
     splashError('Apps Script URL 미설정 — HTML 안의 BACKEND.URL 값을 본인 배포 URL로 교체하세요.');
     if (refreshBtn) refreshBtn.classList.remove('spinning');
+    if (mobileRefreshBtn) mobileRefreshBtn.classList.remove('spinning');
     _autoLoadInProgress = false;
     return;
   }
@@ -7732,17 +9321,28 @@ async function autoLoadData() {
     // v2.04: data.json 우선 시도 (10분마다 GitHub Actions가 자동 빌드 → CDN에서 즉시)
     //   data.json 성공 → 직접 _state 채움 (40+ Apps Script 호출 우회, 2-3초 완료)
     //   data.json 실패 → 백엔드 직접 호출 (기존 방식, 10-20초)
-    const usedFastPath = await tryLoadFromBundle();
-    if (usedFastPath) {
-      splashUpdate(100);
-      setTimeout(() => splashHide(), 200);
-      // 보고서 인덱스도 백그라운드로
-      fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
-      return;
+    // v2.48: forceFresh=true이면 fast path 건너뛰고 바로 backend 직접 호출 (시트 fresh)
+    if (!forceFresh) {
+      const usedFastPath = await tryLoadFromBundle();
+      if (usedFastPath) {
+        splashUpdate(100);
+        setTimeout(() => splashHide(), 200);
+        // 보고서 인덱스도 백그라운드로
+        fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+        // v2.49: 캐시 저장 (다음 진입 시 즉시 복원)
+        aqCacheSaveState();
+        // v2.50: polling 시작 (한 번만 — 내부 가드)
+        _aqStartPolling();
+        return;
+      }
+    } else {
+      console.log('[autoLoadData] forceFresh=true → fast path 건너뛰고 backend 직접 호출 (시트 fresh 보장)');
     }
 
-    // ─── Fallback: 기존 백엔드 직접 호출 (data.json 없거나 실패 시) ───
-    console.warn('[autoLoadData] data.json fast path 실패 → 백엔드 직접 호출 fallback (시간 더 걸림)');
+    // ─── Fallback: 기존 백엔드 직접 호출 (data.json 없거나 실패 시, 또는 forceFresh) ───
+    if (!forceFresh) {
+      console.warn('[autoLoadData] data.json fast path 실패 → 백엔드 직접 호출 fallback (시간 더 걸림)');
+    }
     splashUpdate(8);
 
     // v1.69: 양쪽 시장 (US + KR) Archive + KJP 매핑을 한 번에 fetch
@@ -7961,15 +9561,162 @@ async function autoLoadData() {
 
     // v1.99: 보고서 인덱스 백그라운드 fetch (UX 블로킹 X — 메인 로드 끝난 후 비동기)
     fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+    // v2.49: forceFresh fallback 성공 — 캐시 저장 (다음 진입 시 즉시 복원)
+    aqCacheSaveState();
+    // v2.50: forceFresh 또는 일반 fallback 성공 — 기준점 갱신 + 신호 OFF + polling 시작
+    _aqUpdateLastSheetsState();
+    _aqStartPolling();
   } catch (err) {
     console.error(err);
     splashError(err.message || '데이터 로드 실패');
   } finally {
     if (refreshBtn) refreshBtn.classList.remove('spinning');
+    if (mobileRefreshBtn) mobileRefreshBtn.classList.remove('spinning');
+    // v2.48: 다음 일반 로드를 위해 loadingTitle 원복
+    if (loadingTitle) loadingTitle.textContent = '데이터 업데이트 & 분석';
     _autoLoadInProgress = false;
   }
 }
 window.autoLoadData = autoLoadData;
+
+// ============================================================================
+// v2.50: 시트 변경 감지 polling — 5분마다 backend에 sheet lastModified 확인
+//   사용자가 시트에 데이터 추가 → 최대 5분 안에 새로고침 버튼에 빨간 점 표시
+//   forceFresh 성공 시 lastSheetsState 갱신 → 신호 자동 제거
+//   탭 hidden일 때 skip (배터리 / 트래픽 절약)
+// ============================================================================
+const AQ_POLL_INTERVAL_MS = 5 * 60 * 1000;  // 5분
+let _aqPollInterval = null;
+let _aqPollStarted = false;
+
+function _aqSetUpdateSignal(on) {
+  const hero = document.getElementById('heroRefreshBtn');
+  const mob = document.getElementById('mobileRefreshBtn');
+  if (hero) hero.classList.toggle('has-update', !!on);
+  if (mob)  mob.classList.toggle('has-update', !!on);
+}
+
+async function _aqPollSheetsChange() {
+  if (document.visibilityState === 'hidden') return;
+  if (_autoLoadInProgress) return;
+  if (!backendReady()) return;
+  try {
+    const res = await apiCall('getSheetsLastModified', {});
+    if (!res || !res.ok || !res.sheets) {
+      console.warn('[poll] getSheetsLastModified 응답 비정상:', res && res.error);
+      return;
+    }
+    const newState = res.sheets;
+    const lastState = await aqDbGet('lastSheetsState');
+    if (!lastState) {
+      // 첫 polling — 비교 기준점 저장만, 신호 X
+      await aqDbSet('lastSheetsState', newState);
+      return;
+    }
+    // 비교 — 하나라도 새 거면 신호 ON
+    let changed = false;
+    let changedKey = '';
+    for (const key of Object.keys(newState)) {
+      const newV = newState[key] || '';
+      const oldV = lastState[key] || '';
+      if (newV > oldV) { changed = true; changedKey = key; break; }
+    }
+    if (changed) {
+      console.log('[poll] 시트 변경 감지 — 신호 ON (key=' + changedKey + ')');
+      _aqSetUpdateSignal(true);
+    }
+    // 신호 OFF는 사용자가 새로고침 한 후에만 (자동 OFF 안 함 — 사용자가 새로고침 클릭 전까지 유지)
+  } catch (e) {
+    console.warn('[poll]', e);
+  }
+}
+
+// forceFresh 성공 후 호출 — 기준점 갱신 + 신호 OFF
+async function _aqUpdateLastSheetsState() {
+  try {
+    const res = await apiCall('getSheetsLastModified', {});
+    if (res && res.ok && res.sheets) {
+      await aqDbSet('lastSheetsState', res.sheets);
+      _aqSetUpdateSignal(false);
+      console.log('[poll] lastSheetsState 갱신 + 신호 OFF');
+    }
+  } catch (e) { console.warn('[_aqUpdateLastSheetsState]', e); }
+}
+
+// polling 시작 — 앱 진입 후 한 번만, 30초 후 첫 호출
+function _aqStartPolling() {
+  if (_aqPollStarted) return;
+  _aqPollStarted = true;
+  if (_aqPollInterval) clearInterval(_aqPollInterval);
+  setTimeout(() => {
+    _aqPollSheetsChange();
+    _aqPollInterval = setInterval(_aqPollSheetsChange, AQ_POLL_INTERVAL_MS);
+  }, 30000);
+  // 탭 다시 활성화될 때 즉시 한 번 더 확인
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && _aqPollStarted) {
+      _aqPollSheetsChange();
+    }
+  });
+}
+window._aqStartPolling = _aqStartPolling;
+window._aqUpdateLastSheetsState = _aqUpdateLastSheetsState;
+window._aqSetUpdateSignal = _aqSetUpdateSignal;
+
+// ============================================================================
+// v2.49: 백그라운드 자동 갱신 — 캐시 ingest 후 호출
+//   1) data.json fetch → 캐시보다 새 거면 silent ingest + 캐시 갱신 + 토스트
+//   2) 그 data.json조차 60분 이상 stale이면 자동 forceFresh (silent — splash 안 띄움)
+// ============================================================================
+async function _aqBackgroundRefresh(cachedTs) {
+  try {
+    const t0 = Date.now();
+    const res = await fetch('./data/data.json', { cache: 'no-cache' });
+    if (!res.ok) {
+      console.warn('[_aqBackgroundRefresh] data.json fetch 실패:', res.status);
+      // data.json 자체 못 받음 → 시트 직통 시도할지 결정
+      return;
+    }
+    const bundle = await res.json();
+    const dt = Date.now() - t0;
+    if (!bundle || !bundle.timestamp) return;
+
+    const cachedDate = new Date(cachedTs);
+    const bundleDate = new Date(bundle.timestamp);
+    const ageMin = (Date.now() - bundleDate.getTime()) / 60000;
+
+    console.log(`[_aqBackgroundRefresh] data.json ${dt}ms — 캐시(${cachedTs}) vs bundle(${bundle.timestamp}), age=${ageMin.toFixed(0)}분`);
+
+    // 1) 캐시보다 더 새 data.json → silent ingest + 캐시 갱신
+    if (bundleDate > cachedDate) {
+      console.log('[_aqBackgroundRefresh] 더 새 data.json 발견 — silent 갱신');
+      // tryLoadFromBundle 재호출 (bundle 다시 fetch + ingest, 약 2-3초)
+      _autoLoadInProgress = false;  // 재진입 허용
+      try {
+        const ok = await tryLoadFromBundle();
+        if (ok) {
+          await aqCacheSaveState();
+          // v2.50: silent 갱신도 fresh로 본 거라 신호 OFF + 기준점 갱신
+          _aqUpdateLastSheetsState();
+          if (typeof aqToast === 'function') aqToast('데이터가 최신으로 업데이트되었습니다');
+        }
+      } catch (e) { console.warn('[_aqBackgroundRefresh] re-ingest 실패:', e); }
+    }
+
+    // 2) 그래도 60분 이상 stale → 자동 silent forceFresh (cron 멈춤 대응)
+    if (ageMin > 60) {
+      console.log(`[_aqBackgroundRefresh] ${ageMin.toFixed(0)}분 stale → 자동 silent forceFresh`);
+      if (typeof aqToast === 'function') aqToast('데이터가 오래되어 백그라운드에서 최신화 중...');
+      _autoLoadInProgress = false;
+      try {
+        await autoLoadData({ forceFresh: true, silent: true });
+        if (typeof aqToast === 'function') aqToast('최신 데이터로 갱신 완료');
+      } catch (e) { console.warn('[_aqBackgroundRefresh] silent forceFresh 실패:', e); }
+    }
+  } catch (e) {
+    console.warn('[_aqBackgroundRefresh] error:', e);
+  }
+}
 
 // ============================================================================
 // v2.10: 차트 타임프레임 (3M/6M/1Y) — 공통 샘플링 함수 + 핸들러
@@ -8127,6 +9874,8 @@ const REPORT_SECTIONS = [
   { key: 'why5_partner', header: '5WHYS: "나는 왜 이 기업의 동업자가 되어야 하는가?"',                  icon: '🤝', cls: 'rs-why-partner' },
   { key: 'opportunity',  header: '나의 기회 영역',                                                     icon: '◆', cls: 'rs-opp' },
   { key: 'misc',         header: '기타 특이사항',                                                      icon: 'ⓘ', cls: 'rs-misc' },
+  // v2.42: AI 권장 TO-DO 체크리스트 — 사용자가 체크하면 localStorage 저장 (향후 모아보기용)
+  { key: 'todo',         header: 'TO-DO CHECK LIST',                                                  icon: '☑', cls: 'rs-todo' },
 ];
 
 function parseReportText(text) {
@@ -8155,6 +9904,11 @@ function parseReportText(text) {
     if (current === 'why5_down' || current === 'why5_partner') {
       const m = clean.match(/^(?:\d+\.\s*)?\(([^)]+)\)\s*(.*)$/);
       if (m) { out.sections[current].push({ label: m[1], text: m[2] }); continue; }
+    }
+    // v2.42: TO-DO CHECK LIST — 객체로 저장 (체크박스 + 텍스트)
+    if (current === 'todo') {
+      out.sections[current].push({ type: 'todo', text: clean });
+      continue;
     }
     // v2.18: 시장의 걱정과 진실 — "걱정:" / "진실:" 짝 파싱
     if (current === 'worry_truth') {
@@ -8199,8 +9953,250 @@ function parseReportText(text) {
   return out;
 }
 
+// ============================================================================
+// v2.43: TO-DO 파이프라인 — 태그 파서 + 중앙 store + 이벤트 구독
+//   향후 캘린더/대시보드/알림 등 어디서든 AqTodoStore.subscribe()로 연동 가능
+//   raw text → {when, what, body} 구조 분해, store는 모든 모듈의 단일 source of truth
+// ============================================================================
+
+// 태그 파서 — todo raw text에서 시점(when) + 과업(what) + 본문(body) 분리
+function parseTodoTags(rawText) {
+  const result = { raw: rawText || '', when: null, what: null, body: rawText || '', ticker: null };
+  if (!rawText || typeof rawText !== 'string') return result;
+  let remaining = rawText.trim();
+
+  // ─── 시점(WHEN) 태그 — 앞에서부터 1개만 매치, 더 구체적인 패턴 우선 ───
+  const whenPatterns = [
+    // 1) 날짜 범위: [PLAB 2026-05-30 ~ 2026-06-12]
+    { re: /^\[([A-Z0-9]+)\s+(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})\]\s*/,
+      build: m => ({ type: 'range', ticker: m[1], from: m[2], to: m[3] }) },
+    // 2) 단일 날짜: [PLAB 2026-05-30]
+    { re: /^\[([A-Z0-9]+)\s+(\d{4}-\d{2}-\d{2})\]\s*/,
+      build: m => ({ type: 'date', ticker: m[1], date: m[2] }) },
+    // 3) 분기 실적: [PLAB 26Y 3Q 실적발표] / [PLAB 2026Y 3Q 실적발표]
+    { re: /^\[([A-Z0-9]+)\s+(\d{2,4})Y\s+([1-4])Q\s+실적발표\]\s*/,
+      build: m => {
+        let yr = m[2];
+        if (yr.length === 2) yr = (parseInt(yr, 10) >= 50 ? '19' : '20') + yr;  // 26Y → 2026
+        return { type: 'quarter', ticker: m[1], year: parseInt(yr, 10), quarter: parseInt(m[3], 10) };
+      } },
+    // 4-a) 소프트 데드 (YYYY-MM까지): [PLAB 2026-12까지]
+    { re: /^\[([A-Z0-9]+)\s+(\d{4}-\d{2})까지\]\s*/,
+      build: m => ({ type: 'soft', ticker: m[1], deadline: m[2], format: 'month' }) },
+    // 4-b) 소프트 데드 (반기): [PLAB 2026 상반기] / [PLAB 2026 하반기]
+    { re: /^\[([A-Z0-9]+)\s+(\d{4})\s+(상|하)반기\]\s*/,
+      build: m => ({ type: 'soft', ticker: m[1], deadline: m[2] + ' ' + m[3] + '반기', year: parseInt(m[2], 10), half: m[3] }) },
+  ];
+  for (const p of whenPatterns) {
+    const m = remaining.match(p.re);
+    if (m) {
+      result.when = p.build(m);
+      result.ticker = m[1];
+      remaining = remaining.slice(m[0].length);
+      break;
+    }
+  }
+
+  // ─── 과업(WHAT) 태그 ───
+  const whatPatterns = [
+    // 5) 모니터링: [PLAB Form 4 모니터링]
+    { re: /^\[([A-Z0-9]+)\s+(.+?)\s+모니터링\]\s*/,
+      build: m => ({ type: 'monitor', ticker: m[1], keyword: m[2].trim() }) },
+    // 6) 조건부 트리거: [PLAB 조건: 종가 $35 회복]
+    { re: /^\[([A-Z0-9]+)\s+조건:\s*(.+?)\]\s*/,
+      build: m => ({ type: 'trigger', ticker: m[1], condition: m[2].trim() }) },
+  ];
+  for (const p of whatPatterns) {
+    const m = remaining.match(p.re);
+    if (m) {
+      result.what = p.build(m);
+      if (!result.ticker) result.ticker = m[1];
+      remaining = remaining.slice(m[0].length);
+      break;
+    }
+  }
+
+  result.body = remaining.trim();
+  return result;
+}
+
+// 중앙 store — 체크된 todo의 단일 source of truth, 변경 시 listener에게 broadcast
+window.AqTodoStore = (function() {
+  const LS_KEY = 'aq_report_todos';
+  const listeners = new Set();
+
+  function loadRaw() {
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function saveRaw(obj) {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(obj)); } catch (e) {}
+  }
+
+  // 옛 v2.42 데이터 마이그레이션 — parsed 필드 없는 항목에 자동 파싱 추가 (한 번만 저장)
+  (function _migrate() {
+    const raw = loadRaw();
+    let changed = false;
+    Object.keys(raw).forEach(t => {
+      Object.keys(raw[t] || {}).forEach(d => {
+        Object.keys(raw[t][d] || {}).forEach(i => {
+          const it = raw[t][d][i];
+          if (it && !it.parsed && it.text) {
+            it.parsed = parseTodoTags(it.text);
+            changed = true;
+          }
+        });
+      });
+    });
+    if (changed) {
+      saveRaw(raw);
+      console.log('[AqTodoStore] 옛 todo 데이터 자동 마이그레이션 완료 (parsed 필드 추가)');
+    }
+  })();
+
+  function notify(event) {
+    listeners.forEach(fn => {
+      try { fn(event); } catch (e) { console.warn('[AqTodoStore] listener error:', e); }
+    });
+  }
+
+  // 평탄화된 active todo 목록 — 다른 모듈이 쓰기 좋은 형태
+  function getAll() {
+    const raw = loadRaw();
+    const out = [];
+    Object.keys(raw).forEach(reportTicker => {
+      Object.keys(raw[reportTicker] || {}).forEach(reportDate => {
+        Object.keys(raw[reportTicker][reportDate] || {}).forEach(idx => {
+          const it = raw[reportTicker][reportDate][idx];
+          if (!it) return;
+          const parsed = it.parsed || parseTodoTags(it.text || '');
+          out.push({
+            reportTicker,                            // 보고서가 속한 종목
+            reportDate,                              // 보고서 일자
+            idx: parseInt(idx, 10),                  // 보고서 내 todo 순서
+            text: it.text || '',                    // raw 문자열
+            parsed,                                  // {raw, when, what, body, ticker}
+            checkedAt: it.checkedAt || null,
+            // 편의 평탄 필드 (가장 자주 쓰임)
+            ticker: parsed.ticker || reportTicker,
+            when: parsed.when,
+            what: parsed.what,
+            body: parsed.body,
+          });
+        });
+      });
+    });
+    return out;
+  }
+
+  // 필터 헬퍼
+  function getByTicker(ticker) {
+    ticker = String(ticker || '').toUpperCase();
+    return getAll().filter(t => t.ticker === ticker);
+  }
+  function getByDateRange(fromIso, toIso) {
+    return getAll().filter(t => {
+      if (!t.when) return false;
+      const w = t.when;
+      if (w.type === 'date')  return w.date >= fromIso && w.date <= toIso;
+      if (w.type === 'range') return w.to   >= fromIso && w.from <= toIso;
+      // quarter/soft 는 단순 ISO 비교 어려움 — 향후 매핑 함수 분리해서 추가
+      return false;
+    });
+  }
+  function isChecked(reportTicker, reportDate, idx) {
+    const raw = loadRaw();
+    return !!(raw[reportTicker] && raw[reportTicker][reportDate] && raw[reportTicker][reportDate][idx]);
+  }
+
+  // ─── 변경 API (toggleReportTodo가 호출) ───
+  function _add(reportTicker, reportDate, idx, text) {
+    const raw = loadRaw();
+    if (!raw[reportTicker]) raw[reportTicker] = {};
+    if (!raw[reportTicker][reportDate]) raw[reportTicker][reportDate] = {};
+    const parsed = parseTodoTags(text);
+    const record = { text, parsed, checkedAt: new Date().toISOString() };
+    raw[reportTicker][reportDate][idx] = record;
+    saveRaw(raw);
+    notify({
+      type: 'added',
+      item: {
+        reportTicker, reportDate, idx, text, parsed,
+        ticker: parsed.ticker || reportTicker,
+        when: parsed.when, what: parsed.what, body: parsed.body,
+        checkedAt: record.checkedAt,
+      },
+    });
+  }
+  function _remove(reportTicker, reportDate, idx) {
+    const raw = loadRaw();
+    if (!raw[reportTicker] || !raw[reportTicker][reportDate]) return;
+    const removed = raw[reportTicker][reportDate][idx];
+    if (!removed) return;
+    delete raw[reportTicker][reportDate][idx];
+    if (Object.keys(raw[reportTicker][reportDate]).length === 0) delete raw[reportTicker][reportDate];
+    if (Object.keys(raw[reportTicker]).length === 0) delete raw[reportTicker];
+    saveRaw(raw);
+    const parsed = removed.parsed || parseTodoTags(removed.text || '');
+    notify({
+      type: 'removed',
+      item: {
+        reportTicker, reportDate, idx,
+        text: removed.text || '', parsed,
+        ticker: parsed.ticker || reportTicker,
+        when: parsed.when, what: parsed.what, body: parsed.body,
+      },
+    });
+  }
+
+  return {
+    // 조회 API
+    getAll,
+    getByTicker,
+    getByDateRange,
+    isChecked,
+    // 변경 API (내부 toggle 핸들러용 — 직접 호출 가능하지만 보통 toggleReportTodo 통해)
+    _add,
+    _remove,
+    // 이벤트 구독 — 향후 캘린더/대시보드/알림 모듈이 여기에 listener 등록
+    //   const unsub = AqTodoStore.subscribe((event) => { /* event.type: 'added'|'removed', event.item: {...} */ });
+    //   unsub();  // 또는 AqTodoStore.unsubscribe(fn);
+    subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); },
+    unsubscribe(fn) { listeners.delete(fn); },
+    // 진단용 — 파서 단독 호출
+    parseTags: parseTodoTags,
+  };
+})();
+
+// 기존 v2.42 호환 — _todoIsChecked는 store wrapper로 위임
+function _todoIsChecked(ticker, date, idx) {
+  return AqTodoStore.isChecked(ticker, date, idx);
+}
+
+// 토글 핸들러 — 체크박스 onchange에서 호출, AqTodoStore에 위임
+function toggleReportTodo(cb) {
+  const item = cb.closest('.report-todo-item');
+  const body = cb.closest('.report-detail-body');
+  if (!item || !body) return;
+  const reportTicker = body.dataset.reportTicker;
+  const reportDate = body.dataset.reportDate;
+  const idx = parseInt(item.dataset.todoIdx, 10);
+  if (!reportTicker || !reportDate || isNaN(idx)) return;
+  const text = (item.querySelector('.report-todo-text') || {}).textContent || '';
+  if (cb.checked) {
+    AqTodoStore._add(reportTicker, reportDate, idx, text);
+  } else {
+    AqTodoStore._remove(reportTicker, reportDate, idx);
+  }
+  item.classList.toggle('checked', cb.checked);
+}
+window.toggleReportTodo = toggleReportTodo;
+
 // HTML 렌더링 — 섹션별 디자인
-function renderReportContent(parsed) {
+function renderReportContent(parsed, ticker, date) {
+  // v2.42: ticker/date — TO-DO 체크 상태 식별용
+  ticker = String(ticker || parsed.ticker || '').toUpperCase();
+  date   = String(date   || parsed.date   || '');
   const parts = [];
   REPORT_SECTIONS.forEach(sec => {
     const items = parsed.sections[sec.key];
@@ -8209,7 +10205,7 @@ function renderReportContent(parsed) {
     parts.push(`<div class="report-section ${sec.cls}">`);
     parts.push(`<div class="report-section-head"><span class="report-icon">${sec.icon}</span><span class="report-section-title">${escapeHtml(headerKor)}</span></div>`);
     parts.push(`<div class="report-section-body">`);
-    items.forEach(it => {
+    items.forEach((it, idx) => {
       if (typeof it === 'string') {
         parts.push(`<div class="report-item">${escapeHtml(it)}</div>`);
       } else if (it.type === 'action') {
@@ -8224,6 +10220,13 @@ function renderReportContent(parsed) {
           <div class="report-pair-worry"><span class="report-pair-label">😰 걱정</span><span class="report-pair-text">${escapeHtml(it.worry)}</span></div>
           <div class="report-pair-truth"><span class="report-pair-label">✓ 진실</span><span class="report-pair-text">${escapeHtml(it.truth)}</span></div>
         </div>`);
+      } else if (it.type === 'todo') {
+        // v2.42: TO-DO 체크박스 — 체크 시 localStorage 저장 (향후 모아보기용)
+        const checked = _todoIsChecked(ticker, date, idx);
+        parts.push(`<label class="report-todo-item${checked ? ' checked' : ''}" data-todo-idx="${idx}">
+          <input type="checkbox" class="report-todo-cb"${checked ? ' checked' : ''} onchange="toggleReportTodo(this)">
+          <span class="report-todo-text">${escapeHtml(it.text)}</span>
+        </label>`);
       } else {
         // 5WHYS labeled item
         parts.push(`<div class="report-item report-item-labeled"><span class="report-label">(${escapeHtml(it.label)})</span> <span class="report-text">${escapeHtml(it.text)}</span></div>`);
@@ -8294,7 +10297,7 @@ async function openReportDetail(date) {
         <div class="report-detail-title">📊 ${titleHtml}</div>
         <div class="report-detail-date">${escapeHtml(date)}</div>
       </div>
-      <div class="report-detail-body">${renderReportContent(parsed)}</div>
+      <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${renderReportContent(parsed, tk, date)}</div>
     `;
     // 스크롤 맨 위로
     const modalContent = $('reportPanel').closest('.modal-content');
@@ -9952,14 +11955,24 @@ function computeSignalReturns() {
     const ret10 = n >= 10 ? (futureCloses[9]  / P - 1) * 100 : null;
 
     // CASE 1~4 (사용자 정의)
-    // C1: max(close[t+1..t+10]) > P
-    // C2: min(close[t+1..t+10]) >= P
+    // C1: max(close[t+1..t+10]) > P   — v2.41: 10일 안 차도 이미 한 번이라도 P 위로 갔으면 즉시 true 확정 (조기 결정)
+    // C2: min(close[t+1..t+10]) >= P  — 10일 다 지나야 결정 (그 안의 어느 날이라도 P 밑이면 false)
     // C3: min(close[t+1..t+30]) >= P
     // C4: min(close[t+1..end])  >= P
     let c1 = null, c2 = null, c3 = null, c4 = null;
+    // v2.41: C1 조기 결정 — n < 10이라도 이미 위로 간 적 있으면 true
+    if (n >= 1) {
+      const wAvail = futureCloses.slice(0, Math.min(n, 10));
+      const maxAvail = Math.max.apply(null, wAvail);
+      if (maxAvail > P) {
+        c1 = true;            // 이미 한 번이라도 위로 → 확정
+      } else if (n >= 10) {
+        c1 = false;           // 10일 다 지나도 한 번도 안 올라감 → 확정
+      }
+      // 그 외 (n < 10이고 아직 위로 안 감) → null (pending)
+    }
     if (n >= 10) {
       const w10 = futureCloses.slice(0, 10);
-      c1 = Math.max.apply(null, w10) > P;
       c2 = Math.min.apply(null, w10) >= P;
     }
     if (n >= 30) {
@@ -11911,7 +13924,7 @@ const ARCHIVE_COLS = [
   // v2.16: 스나이핑률 (SR) — 5d+ 다음 위치
   { key: '_sniping', label: 'SR',  t: 'b', w: '45px', cls: 'check', title: '스나이핑 — 직전 5거래일 안에 같은 종목 실패(1d 음수) 신호 없으면 ✅ (cluster 없는 단발 진입)',
     get: r => (r._sniping !== undefined) ? r._sniping : null },
-  { key: '_c1',      label: 'C1',  t: 'b', w: '40px', cls: 'check', title: 'Case 1 — 10일 정점 도달 (10거래일 안에 P 위 한 번이라도)',
+  { key: '_c1',      label: 'C1',  t: 'b', w: '40px', cls: 'check', title: 'Case 1 — 10일 안에 P 위로 한 번이라도 (이미 한 번 올라간 적 있으면 10일 안 차도 ✅, 한 번도 안 올라간 채 10일 지나면 ❌, 아직 미정이면 N/A)',
     get: r => r._returns ? r._returns.c1 : null },
   { key: '_c2',      label: 'C2',  t: 'b', w: '40px', cls: 'check', title: 'Case 2 — 10일 매수가 보존 (10거래일 동안 P 밑 안 떨어짐)',
     get: r => r._returns ? r._returns.c2 : null },
@@ -12325,12 +14338,8 @@ async function openChart(ticker) {
   }
   // 2줄: 최근 종가 + 전일 대비
   $('modalPrice').innerHTML = `${fmtPrice(lastPrice)} ${chgHtml}`;
-  // 3줄: 섹터 + 고점 대비 + (v2.37 평가) + 데이터 일자
-  const evalText = getTickerEval(ticker);
-  const evalHtml = evalText
-    ? `<span class="sep">·</span><span class="modal-eval" title="매수매력도">${escapeHtml(evalText)}</span>`
-    : '';
-  $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span>${evalHtml}<span class="sep">·</span><span>Data: ${escapeHtml(dates[dates.length-1])}</span>`;
+  // 3줄: 섹터 + 고점 대비 + 데이터 일자
+  $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span><span class="sep">·</span><span>Data: ${escapeHtml(dates[dates.length-1])}</span>`;
   // 4줄: 상세설명 (있으면 표시)
   $('modalDesc').textContent = desc;
 
@@ -13475,7 +15484,36 @@ window.addEventListener('resize', () => {
 // ============================================================================
 let _archiveMobileShown = 10;
 
+// v2.44: MO 햄버거 드로어 — 섹터/보드/마이
+function openMoDrawer() {
+  const d = document.getElementById('moDrawer');
+  const b = document.getElementById('moDrawerBackdrop');
+  if (d) { d.classList.add('open'); d.setAttribute('aria-hidden', 'false'); }
+  if (b) { b.classList.add('open'); b.setAttribute('aria-hidden', 'false'); }
+  document.body.style.overflow = 'hidden';
+}
+function closeMoDrawer() {
+  const d = document.getElementById('moDrawer');
+  const b = document.getElementById('moDrawerBackdrop');
+  if (d) { d.classList.remove('open'); d.setAttribute('aria-hidden', 'true'); }
+  if (b) { b.classList.remove('open'); b.setAttribute('aria-hidden', 'true'); }
+  document.body.style.overflow = '';
+}
+function moDrawerNav(tab) {
+  closeMoDrawer();
+  // 작은 지연 — 드로어 닫힘 애니메이션과 탭 전환 시각 분리
+  setTimeout(() => switchMobileTab(tab), 200);
+}
+window.openMoDrawer = openMoDrawer;
+window.closeMoDrawer = closeMoDrawer;
+window.moDrawerNav = moDrawerNav;
+
 function switchMobileTab(tab) {
+  // v2.46: schedule 활성화. todo는 여전히 disabled
+  if (tab === 'todo') {
+    aqToast('준비 중입니다');
+    return;
+  }
   document.body.setAttribute('data-mtab', tab);
   document.querySelectorAll('.mtab-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mtab === tab);
@@ -13490,6 +15528,22 @@ function switchMobileTab(tab) {
   } else if (tab === 'analysis') {
     // v2.01 Phase 2: 보고서 등록 ticker 그리드
     buildAnalysisGrid();
+  } else if (tab === 'schedule') {
+    // v2.46: 캘린더 렌더
+    try { aqCalendarRender(); } catch (e) {}
+    // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
+    try { if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false); } catch (e) {}
+    // v2.53: 필터 chip 상태 + 주요 이벤트 카드 렌더
+    // v2.54: lazy filter load — 메인 로딩 영향 X
+    try {
+      if (typeof aqCalLoadFilters === 'function') aqCalLoadFilters();
+      if (typeof _aqCalRefreshHoldings === 'function') _aqCalRefreshHoldings();
+      document.querySelectorAll('.cal-filter-chip').forEach(c => {
+        const k = c.dataset.filter;
+        if (k in aqCalFilters) c.classList.toggle('off', !aqCalFilters[k]);
+      });
+      if (typeof renderMajorEventsCard === 'function') renderMajorEventsCard();
+    } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -13575,8 +15629,30 @@ function updatePCSidebarActive() {
 
 // 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
 function setPCTab(tab) {
-  if (tab === 'main' || tab === 'board' || tab === 'my') {
+  // v2.46: schedule 활성화 — 영역 1 (페이지 교체)에 합류. todo는 여전히 disabled
+  if (tab === 'todo') {
+    aqToast('준비 중입니다');
+    return;
+  }
+  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule') {
     setPCPage(tab);
+    // 일정 페이지 진입 시 캘린더 렌더 (DOM 준비된 후)
+    if (tab === 'schedule') {
+      try { aqCalendarRender(); } catch (e) {}
+      // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
+      try { if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false); } catch (e) {}
+      // v2.53: 필터 chip 상태 + 주요 이벤트 카드 렌더
+      // v2.54: lazy filter load
+      try {
+        if (typeof aqCalLoadFilters === 'function') aqCalLoadFilters();
+        if (typeof _aqCalRefreshHoldings === 'function') _aqCalRefreshHoldings();
+        document.querySelectorAll('.cal-filter-chip').forEach(c => {
+          const k = c.dataset.filter;
+          if (k in aqCalFilters) c.classList.toggle('off', !aqCalFilters[k]);
+        });
+        if (typeof renderMajorEventsCard === 'function') renderMajorEventsCard();
+      } catch (e) {}
+    }
   } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis') {
     // v2.03: analysis도 사이드 패널 (탐색과 동일 UI/UX)
     togglePCPanel(tab);
@@ -13884,30 +15960,6 @@ function buildStockList() {
     // 등락률 desc — 단순 정렬
     items.sort((a, b) => b.chg - a.chg);
     renderHtml = items.map(renderStockRow).join('');
-  } else if (_stockSortMode === 'eval') {
-    // v2.37: 평가 유형순 — 💎 → 🟢 → 🟡 → 🟠 → 🔴 → ⚪ → ➖ → 평가없음
-    //   카테고리 내: 등락률 desc
-    items.forEach(it => { it.evalRank = getEvalRank(it.ticker); it.evalLabel = getTickerEval(it.ticker); });
-    items.sort((a, b) => {
-      if (a.evalRank !== b.evalRank) return a.evalRank - b.evalRank;
-      return b.chg - a.chg;
-    });
-    // 카테고리 헤더 함께 렌더
-    let currentEval = null;
-    renderHtml = items.map(it => {
-      let prefix = '';
-      const evalKey = it.evalLabel || '__none__';
-      if (evalKey !== currentEval) {
-        const headerText = it.evalLabel || '평가 없음';
-        prefix = `<div class="stock-list-sector-header stock-list-eval-header">${escapeHtml(headerText)}</div>`;
-        currentEval = evalKey;
-      }
-      return prefix + renderStockRow(it);
-    }).join('');
-    // 데이터 아직 도착 안 했을 가능성 — background fetch trigger
-    if (items.length > 0 && items.every(it => it.evalRank === 999)) {
-      _lazyFetchEvaluations();  // 도착하면 자동 재렌더
-    }
   } else {
     // 섹터 강한순: 섹터 평균 chg desc → 섹터 내 종목 chg desc
     const sectorAvg = {};
@@ -13975,12 +16027,7 @@ function setStockSort(mode) {
   _stockSortMode = mode;
   // 라벨 업데이트
   const label = $('sortToggleLabel');
-  if (label) {
-    label.textContent = mode === 'return' ? '등락률 높은순'
-                     : mode === 'sector' ? '섹터 강한순'
-                     : mode === 'eval'   ? '평가 유형순'
-                     : '등락률 높은순';
-  }
+  if (label) label.textContent = mode === 'return' ? '등락률 높은순' : '섹터 강한순';
   // 활성 표시
   document.querySelectorAll('#sortMenu button').forEach(b => {
     b.classList.toggle('active', b.dataset.mode === mode);
