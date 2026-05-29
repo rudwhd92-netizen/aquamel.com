@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.65';
+window.AQ_PWA_VERSION = '2.66';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2369,6 +2369,10 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
   body[data-pc-page="settings"] .hero { display: none !important; }
 
+  /* v2.66: To-Do 페이지 — todoBoardCard만 표시 */
+  body[data-pc-page="todo"] .container > section.card { display: none !important; }
+  body[data-pc-page="todo"] #todoBoardCard { display: block !important; }
+
   /* v2.46: 일정 페이지 — scheduleCard만 표시 */
   body[data-pc-page="schedule"] .container > section.card { display: none !important; }
   body[data-pc-page="schedule"] #scheduleCard { display: block !important; }
@@ -3220,6 +3224,9 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   /* v2.59: 설정 탭 — dataManagementCard만 표시 */
   body[data-mtab="settings"] section.card[data-mtab~="settings"] { display: block !important; }
   body[data-mtab="settings"] .hero { display: none !important; }
+  /* v2.66: MO To-Do 탭 — todoBoardCard만 표시 */
+  body[data-mtab="todo"] section.card[data-mtab~="todo"] { display: block !important; }
+  body[data-mtab="todo"] .hero { display: none !important; }
 
   /* 발견 탭에서는 PC용 archive 테이블 카드 숨기고 모바일 리스트만 */
   body[data-mtab="discover"] #archiveCard { display: none !important; }
@@ -4010,6 +4017,175 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 /* ============ TICKER HISTORY (below chart) ============ */
 .ticker-history-wrap { margin-top: 18px; background: var(--bg); border-radius: 4px; padding: 14px 16px; overflow: auto; }
 .ticker-history-title { font-size: 12px; color: var(--text-hi); margin-bottom: 10px; font-weight: 600; }
+
+/* ============ v2.66: TO-DO 칸반 보드 ============ */
+.todo-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+@media (max-width: 1100px) {
+  .todo-board { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .todo-board { grid-template-columns: 1fr; gap: 12px; }
+}
+
+.todo-column {
+  background: rgba(255,255,255,0.025);
+  border-radius: 10px;
+  padding: 14px 10px;
+  min-height: 200px;
+}
+[data-theme="light"] .todo-column { background: rgba(0,0,0,0.025); }
+
+.todo-col-head {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-hi);
+  margin-bottom: 12px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  letter-spacing: 0.2px;
+}
+.todo-col-count {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-mid);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+}
+[data-theme="light"] .todo-col-count { background: rgba(0,0,0,0.08); }
+
+.todo-col-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.todo-empty {
+  color: var(--text-mute);
+  font-size: 12px;
+  text-align: center;
+  padding: 20px 8px;
+  font-style: italic;
+}
+
+/* 포스트잇 카드 */
+.todo-card {
+  position: relative;
+  background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%);
+  color: #1a1a1a;
+  padding: 14px 14px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.12);
+  cursor: pointer;
+  transition: transform 0.2s ease-out, box-shadow 0.2s;
+  transform: rotate(-0.6deg);
+  user-select: none;
+}
+.todo-card:hover {
+  transform: rotate(0deg) translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.28), 0 2px 4px rgba(0,0,0,0.16);
+}
+/* 색깔 변형 — nth-child 패턴 */
+.todo-card:nth-child(4n+2) { background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); transform: rotate(0.5deg); }
+.todo-card:nth-child(4n+3) { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); transform: rotate(-0.3deg); }
+.todo-card:nth-child(4n+4) { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); transform: rotate(0.7deg); }
+.todo-card:nth-child(4n+2):hover,
+.todo-card:nth-child(4n+3):hover,
+.todo-card:nth-child(4n+4):hover { transform: rotate(0deg) translateY(-2px); }
+
+.todo-card-close {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.08);
+  color: rgba(0,0,0,0.55);
+  border: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+  padding: 0;
+}
+.todo-card-close:hover {
+  background: rgba(220,53,69,0.85);
+  color: #fff;
+  transform: scale(1.12);
+}
+
+.todo-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding-right: 22px;  /* × 버튼 공간 */
+}
+.todo-card-logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.6);
+  object-fit: cover;
+}
+.todo-card-ticker {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: -0.2px;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+}
+.todo-card-when {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b4f00;
+  background: rgba(255,255,255,0.55);
+  padding: 2px 7px;
+  border-radius: 8px;
+  margin-left: auto;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+  white-space: nowrap;
+}
+.todo-card-when.urgent {
+  background: rgba(220,53,69,0.92);
+  color: #fff;
+}
+
+.todo-card-body {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #2a2a2a;
+  font-weight: 500;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.todo-card-notify {
+  margin-top: 10px;
+  padding: 6px 8px;
+  background: rgba(220,53,69,0.1);
+  border-left: 3px solid #dc3545;
+  border-radius: 3px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #8b0000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
 /* v2.64: 내부자 거래 테이블 */
 .insider-history-wrap table.insider-history {
@@ -6035,6 +6211,31 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+  <!-- v2.66: TO-DO 칸반 보드 — 보고서에서 체크된 todo 항목을 시점별 4개 컬럼으로 정리 -->
+  <section class="card" id="todoBoardCard" data-mtab="todo">
+    <div class="card-header"><h2>📋 TO-DO 칸반</h2></div>
+    <div class="card-body">
+      <div class="todo-board">
+        <div class="todo-column" data-col="urgent">
+          <div class="todo-col-head"><span>📅 임박 (D-7 이내)</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-body"></div>
+        </div>
+        <div class="todo-column" data-col="month">
+          <div class="todo-col-head"><span>📆 이번달 (D-30)</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-body"></div>
+        </div>
+        <div class="todo-column" data-col="long">
+          <div class="todo-col-head"><span>🗓 장기/분기</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-body"></div>
+        </div>
+        <div class="todo-column" data-col="ongoing">
+          <div class="todo-col-head"><span>🔄 상시 모니터링</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-body"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- v2.58: 데이터 관리 카드 — v2.59: 설정 페이지로 이동 -->
   <section class="card" id="dataManagementCard" data-mtab="settings">
     <div class="card-header" onclick="toggleCard(this)">
@@ -6366,6 +6567,11 @@ table.combo-eval tbody td .nodata {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
         <span>마이</span>
       </button>
+      <!-- v2.66: To-Do 칸반 -->
+      <button class="mo-drawer-item" onclick="moDrawerNav('todo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
+        <span>To-Do</span>
+      </button>
       <!-- v2.59: 분리선 + 설정 -->
       <div class="mo-drawer-divider" aria-hidden="true"></div>
       <button class="mo-drawer-item" onclick="moDrawerNav('settings')">
@@ -6553,7 +6759,7 @@ table.combo-eval tbody td .nodata {
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
     <span class="pc-tab-label">분석</span>
   </button>
-  <button class="pc-tab-btn disabled" data-pc-tab="todo" onclick="setPCTab('todo')" aria-label="To-Do">
+  <button class="pc-tab-btn" data-pc-tab="todo" onclick="setPCTab('todo')" aria-label="To-Do">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
     <span class="pc-tab-label">To-Do</span>
   </button>
@@ -10887,7 +11093,9 @@ function toggleReportTodo(cb) {
   const reportDate = body.dataset.reportDate;
   const idx = parseInt(item.dataset.todoIdx, 10);
   if (!reportTicker || !reportDate || isNaN(idx)) return;
-  const text = (item.querySelector('.report-todo-text') || {}).textContent || '';
+  // v2.66: 원본(태그 포함)을 우선 사용 — display text는 태그 제거된 body만이라 AqTodoStore가 parseTodoTags 못 함
+  const rawAttr = item.dataset.todoRaw;
+  const text = rawAttr || ((item.querySelector('.report-todo-text') || {}).textContent || '');
   if (cb.checked) {
     AqTodoStore._add(reportTicker, reportDate, idx, text);
   } else {
@@ -10927,10 +11135,14 @@ function renderReportContent(parsed, ticker, date) {
         </div>`);
       } else if (it.type === 'todo') {
         // v2.42: TO-DO 체크박스 — 체크 시 localStorage 저장 (향후 모아보기용)
+        // v2.66: 태그 비노출 — parseTodoTags의 body만 표시 (태그는 시스템 내부용 언어)
+        //   원본 raw text는 data-todo-raw에 보관 → toggleReportTodo가 AqTodoStore에 raw로 저장
         const checked = _todoIsChecked(ticker, date, idx);
-        parts.push(`<label class="report-todo-item${checked ? ' checked' : ''}" data-todo-idx="${idx}">
+        const parsed = (typeof parseTodoTags === 'function') ? parseTodoTags(it.text) : { body: it.text };
+        const displayText = (parsed && parsed.body && parsed.body.trim()) ? parsed.body : it.text;
+        parts.push(`<label class="report-todo-item${checked ? ' checked' : ''}" data-todo-idx="${idx}" data-todo-raw="${escapeAttr(it.text)}">
           <input type="checkbox" class="report-todo-cb"${checked ? ' checked' : ''} onchange="toggleReportTodo(this)">
-          <span class="report-todo-text">${escapeHtml(it.text)}</span>
+          <span class="report-todo-text">${escapeHtml(displayText)}</span>
         </label>`);
       } else {
         // 5WHYS labeled item
@@ -16185,6 +16397,185 @@ function renderInsiderHistory(ticker, filteredTrades) {
 window.renderInsiderHistory = renderInsiderHistory;
 
 // ============================================================================
+// v2.66: TO-DO 칸반 보드 — 보고서에서 체크된 todo를 시점별 4개 컬럼으로 분류
+// ============================================================================
+function _aqDaysUntil(todayIso, targetIso) {
+  if (!todayIso || !targetIso) return null;
+  const t = new Date(todayIso + 'T00:00:00');
+  const x = new Date(targetIso + 'T00:00:00');
+  if (isNaN(t.getTime()) || isNaN(x.getTime())) return null;
+  return Math.round((x.getTime() - t.getTime()) / 86400000);
+}
+
+function _aqClassifyTodoCol(t, todayIso) {
+  const w = t.when;
+  if (!w) {
+    if (t.what && (t.what.type === 'monitor' || t.what.type === 'trigger')) return 'ongoing';
+    return 'long';  // 시점/조건 없는 일반 메모
+  }
+  if (w.type === 'date') {
+    const d = _aqDaysUntil(todayIso, w.date);
+    if (d == null) return 'long';
+    if (d <= 7) return 'urgent';
+    if (d <= 30) return 'month';
+    return 'long';
+  }
+  if (w.type === 'range') {
+    const dFrom = _aqDaysUntil(todayIso, w.from);
+    const dTo = _aqDaysUntil(todayIso, w.to);
+    if (dFrom == null || dTo == null) return 'long';
+    if (dFrom <= 0 && dTo >= 0) return 'urgent';  // 진행 중
+    if (dFrom <= 7) return 'urgent';
+    if (dFrom <= 30) return 'month';
+    return 'long';
+  }
+  if (w.type === 'quarter') return 'long';  // 분기 실적 (캘린더 cross-check는 단계 D에서)
+  if (w.type === 'soft') {
+    if (w.format === 'month' && w.deadline) {
+      const d = _aqDaysUntil(todayIso, w.deadline + '-28');  // 월 28일 근사
+      if (d != null) {
+        if (d <= 7) return 'urgent';
+        if (d <= 30) return 'month';
+      }
+    }
+    return 'long';
+  }
+  return 'long';
+}
+
+function _aqFormatTodoWhen(when, what, todayIso) {
+  if (when) {
+    if (when.type === 'date') {
+      const d = _aqDaysUntil(todayIso, when.date);
+      if (d == null) return when.date;
+      if (d === 0) return 'D-Day';
+      if (d > 0) return 'D-' + d;
+      return 'D+' + (-d);
+    }
+    if (when.type === 'range') {
+      const dFrom = _aqDaysUntil(todayIso, when.from);
+      const dTo = _aqDaysUntil(todayIso, when.to);
+      if (dFrom != null && dFrom <= 0 && dTo != null && dTo >= 0) return '진행중 (D+' + (-dFrom) + ')';
+      if (dFrom != null && dFrom > 0) return 'D-' + dFrom + ' 시작';
+      return when.from + ' ~ ' + when.to;
+    }
+    if (when.type === 'quarter') return when.year + ' ' + when.quarter + 'Q 실적';
+    if (when.type === 'soft') {
+      if (when.format === 'month') return when.deadline + '까지';
+      return when.deadline;
+    }
+  }
+  if (what) {
+    if (what.type === 'monitor') return '🔎 ' + what.keyword;
+    if (what.type === 'trigger') return '⚙ 조건부';
+  }
+  return '';
+}
+
+function _aqIsUrgentWhen(when, todayIso) {
+  if (!when) return false;
+  if (when.type === 'date') {
+    const d = _aqDaysUntil(todayIso, when.date);
+    return d != null && d >= 0 && d <= 3;  // D-3 이내면 urgent 배지
+  }
+  if (when.type === 'range') {
+    const dFrom = _aqDaysUntil(todayIso, when.from);
+    const dTo = _aqDaysUntil(todayIso, when.to);
+    return dFrom != null && dFrom <= 0 && dTo != null && dTo >= 0;  // 진행 중
+  }
+  return false;
+}
+
+function _aqRenderTodoCard(t, todayIso) {
+  const ticker = String(t.ticker || '').toUpperCase();
+  const body = escapeHtml(t.body || t.text || '');
+  const logoFile = (typeof tickerFileName === 'function') ? tickerFileName(ticker) : ticker;
+  const logoHtml = logoFile
+    ? `<img class="todo-card-logo" src="./logos/tickers/${encodeURIComponent(logoFile)}.png" onerror="this.style.display='none'" alt=""/>`
+    : '';
+  const whenLabel = escapeHtml(_aqFormatTodoWhen(t.when, t.what, todayIso));
+  const urgentCls = _aqIsUrgentWhen(t.when, todayIso) ? ' urgent' : '';
+  return `
+    <div class="todo-card" data-ticker="${escapeAttr(ticker)}" data-report-ticker="${escapeAttr(t.reportTicker || '')}" data-report-date="${escapeAttr(t.reportDate || '')}" data-idx="${t.idx}" title="${escapeAttr(t.body || t.text || '')}">
+      <button class="todo-card-close" title="완료/삭제" aria-label="삭제">×</button>
+      <div class="todo-card-head">
+        ${logoHtml}
+        <span class="todo-card-ticker">${escapeHtml(ticker)}</span>
+        ${whenLabel ? `<span class="todo-card-when${urgentCls}">${whenLabel}</span>` : ''}
+      </div>
+      <div class="todo-card-body">${body}</div>
+    </div>
+  `;
+}
+
+function buildTodoKanban() {
+  const card = document.getElementById('todoBoardCard');
+  if (!card) return;
+  const todos = (window.AqTodoStore && typeof AqTodoStore.getAll === 'function') ? AqTodoStore.getAll() : [];
+  const todayIso = new Date().toISOString().slice(0, 10);
+  // 시점 정렬 — 임박 우선
+  todos.sort((a, b) => {
+    const wa = a.when, wb = b.when;
+    const da = wa && wa.type === 'date' ? _aqDaysUntil(todayIso, wa.date) : (wa && wa.type === 'range' ? _aqDaysUntil(todayIso, wa.from) : 9999);
+    const db = wb && wb.type === 'date' ? _aqDaysUntil(todayIso, wb.date) : (wb && wb.type === 'range' ? _aqDaysUntil(todayIso, wb.from) : 9999);
+    const va = (da == null) ? 9999 : da;
+    const vb = (db == null) ? 9999 : db;
+    return va - vb;
+  });
+  const cols = { urgent: [], month: [], long: [], ongoing: [] };
+  todos.forEach(t => {
+    const col = _aqClassifyTodoCol(t, todayIso);
+    if (cols[col]) cols[col].push(t);
+  });
+  ['urgent', 'month', 'long', 'ongoing'].forEach(col => {
+    const colEl = card.querySelector('.todo-column[data-col="' + col + '"] .todo-col-body');
+    const countEl = card.querySelector('.todo-column[data-col="' + col + '"] .todo-col-count');
+    if (countEl) countEl.textContent = String(cols[col].length);
+    if (!colEl) return;
+    if (cols[col].length === 0) {
+      colEl.innerHTML = '<div class="todo-empty">없음</div>';
+    } else {
+      colEl.innerHTML = cols[col].map(t => _aqRenderTodoCard(t, todayIso)).join('');
+    }
+  });
+  // 이벤트 위임 (재렌더 후 매번 다시 바인딩)
+  card.querySelectorAll('.todo-card').forEach(el => {
+    el.onclick = (e) => {
+      if (e.target.closest('.todo-card-close')) return;
+      const tk = el.dataset.ticker;
+      if (tk && typeof openChart === 'function') openChart(tk);
+    };
+  });
+  card.querySelectorAll('.todo-card-close').forEach(el => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      const tCard = el.closest('.todo-card');
+      if (!tCard) return;
+      const rt = tCard.dataset.reportTicker;
+      const rd = tCard.dataset.reportDate;
+      const idx = parseInt(tCard.dataset.idx, 10);
+      if (rt && rd && !isNaN(idx) && window.AqTodoStore) {
+        AqTodoStore._remove(rt, rd, idx);
+      }
+    };
+  });
+}
+window.buildTodoKanban = buildTodoKanban;
+
+// AqTodoStore 변경 시 자동 재렌더 (todo 페이지에 있을 때만)
+window.addEventListener('DOMContentLoaded', () => {
+  if (window.AqTodoStore && typeof AqTodoStore.subscribe === 'function') {
+    AqTodoStore.subscribe(() => {
+      const pcPage = document.body.getAttribute('data-pc-page');
+      const mtab = document.body.getAttribute('data-mtab');
+      if (pcPage === 'todo' || mtab === 'todo') {
+        try { buildTodoKanban(); } catch (e) {}
+      }
+    });
+  }
+});
+
+// ============================================================================
 // INIT
 // ============================================================================
 window.addEventListener('DOMContentLoaded', () => {
@@ -16402,11 +16793,7 @@ window.closeMoDrawer = closeMoDrawer;
 window.moDrawerNav = moDrawerNav;
 
 function switchMobileTab(tab) {
-  // v2.46: schedule 활성화. todo는 여전히 disabled
-  if (tab === 'todo') {
-    aqToast('준비 중입니다');
-    return;
-  }
+  // v2.66: todo 활성화 — 칸반 빌드 (이전엔 'todo' return)
   document.body.setAttribute('data-mtab', tab);
   document.querySelectorAll('.mtab-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mtab === tab);
@@ -16440,6 +16827,9 @@ function switchMobileTab(tab) {
   } else if (tab === 'settings') {
     // v2.59: 설정 탭 진입 시 데이터 시점 표시 갱신
     try { if (typeof _aqUpdateDataMetaUI === 'function') _aqUpdateDataMetaUI(); } catch (e) {}
+  } else if (tab === 'todo') {
+    // v2.66: To-Do 칸반 빌드
+    try { if (typeof buildTodoKanban === 'function') buildTodoKanban(); } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -16525,16 +16915,16 @@ function updatePCSidebarActive() {
 
 // 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
 function setPCTab(tab) {
-  // v2.46: schedule 활성화 — 영역 1 (페이지 교체)에 합류. todo는 여전히 disabled
-  if (tab === 'todo') {
-    aqToast('준비 중입니다');
-    return;
-  }
-  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings') {
+  // v2.66: To-Do 활성화 — 별도 페이지로 진입
+  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings' || tab === 'todo') {
     setPCPage(tab);
     // v2.59: 설정 페이지 진입 시 데이터 시점 표시 갱신 (v2.58에서 마이 페이지였던 것)
     if (tab === 'settings') {
       try { if (typeof _aqUpdateDataMetaUI === 'function') _aqUpdateDataMetaUI(); } catch (e) {}
+    }
+    // v2.66: To-Do 페이지 진입 시 칸반 빌드
+    if (tab === 'todo') {
+      try { if (typeof buildTodoKanban === 'function') buildTodoKanban(); } catch (e) {}
     }
     // 일정 페이지 진입 시 캘린더 렌더 (DOM 준비된 후)
     if (tab === 'schedule') {
