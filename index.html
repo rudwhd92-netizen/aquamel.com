@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.67';
+window.AQ_PWA_VERSION = '2.68';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2365,9 +2365,9 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   body[data-pc-page="my"] .sheet-wrap { max-height: calc(100vh - 280px) !important; }
 
   /* v2.59: 설정 페이지 — dataManagementCard만 표시 (마이에서 분리) */
+  /* v2.68: hero는 항상 상단에 노출 — hide 룰 제거 */
   body[data-pc-page="settings"] .container > section.card { display: none !important; }
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
-  body[data-pc-page="settings"] .hero { display: none !important; }
 
   /* v2.66: To-Do 페이지 — todoBoardCard만 표시 */
   body[data-pc-page="todo"] .container > section.card { display: none !important; }
@@ -3222,11 +3222,10 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   /* v2.01 Phase 2: 분석 탭 — 분석 카드만 표시 */
   body[data-mtab="analysis"] section.card[data-mtab~="analysis"] { display: block !important; }
   /* v2.59: 설정 탭 — dataManagementCard만 표시 */
+  /* v2.68: hero는 항상 상단에 노출 — hide 룰 제거 */
   body[data-mtab="settings"] section.card[data-mtab~="settings"] { display: block !important; }
-  body[data-mtab="settings"] .hero { display: none !important; }
   /* v2.66: MO To-Do 탭 — todoBoardCard만 표시 */
   body[data-mtab="todo"] section.card[data-mtab~="todo"] { display: block !important; }
-  body[data-mtab="todo"] .hero { display: none !important; }
 
   /* 발견 탭에서는 PC용 archive 테이블 카드 숨기고 모바일 리스트만 */
   body[data-mtab="discover"] #archiveCard { display: none !important; }
@@ -4107,8 +4106,22 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   border-radius: 10px;
   padding: 14px 10px;
   min-height: 200px;
+  /* v2.68: 카드 많을 때 세로 스크롤 (컬럼당 ~10개 이상 가능) */
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 [data-theme="light"] .todo-column { background: rgba(0,0,0,0.025); }
+
+/* v2.68: 컬럼 스크롤바 — 슬림 */
+.todo-column::-webkit-scrollbar { width: 6px; }
+.todo-column::-webkit-scrollbar-track { background: transparent; }
+.todo-column::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.10);
+  border-radius: 3px;
+}
+.todo-column::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+[data-theme="light"] .todo-column::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.10); }
 
 .todo-col-head {
   font-size: 13px;
@@ -6296,19 +6309,19 @@ table.combo-eval tbody td .nodata {
     <div class="card-body">
       <div class="todo-board">
         <div class="todo-column" data-col="urgent">
-          <div class="todo-col-head"><span>📅 임박 (D-7 이내)</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-head"><span>임박 (D-7 이내)</span><span class="todo-col-count">0</span></div>
           <div class="todo-col-body"></div>
         </div>
         <div class="todo-column" data-col="month">
-          <div class="todo-col-head"><span>📆 이번달 (D-30)</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-head"><span>이번달 (D-30)</span><span class="todo-col-count">0</span></div>
           <div class="todo-col-body"></div>
         </div>
         <div class="todo-column" data-col="long">
-          <div class="todo-col-head"><span>🗓 장기/분기</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-head"><span>장기/분기</span><span class="todo-col-count">0</span></div>
           <div class="todo-col-body"></div>
         </div>
         <div class="todo-column" data-col="ongoing">
-          <div class="todo-col-head"><span>🔄 상시 모니터링</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-head"><span>상시 모니터링</span><span class="todo-col-count">0</span></div>
           <div class="todo-col-body"></div>
         </div>
       </div>
@@ -6600,21 +6613,7 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">탐색</span>
     </button>
-    <button class="mtab-btn disabled" data-mtab="todo" onclick="switchMobileTab('todo')" aria-label="To-Do">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 6l-4 4-2-2"/>
-        <path d="M9 13l-4 4-2-2"/>
-        <path d="M13 7h7"/>
-        <path d="M13 14h7"/>
-      </svg>
-      <span class="mtab-label">To-Do</span>
-    </button>
-    <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
-      </svg>
-      <span class="mtab-label">분석</span>
-    </button>
+    <!-- v2.68: 3번째 위치 — 일정 (이전엔 To-Do) -->
     <button class="mtab-btn" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="5" width="18" height="16" rx="2"/>
@@ -6623,6 +6622,22 @@ table.combo-eval tbody td .nodata {
         <path d="M16 3v4"/>
       </svg>
       <span class="mtab-label">일정</span>
+    </button>
+    <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
+      </svg>
+      <span class="mtab-label">분석</span>
+    </button>
+    <!-- v2.68: 5번째 위치 — To-Do (이전엔 일정), disabled 해제 -->
+    <button class="mtab-btn" data-mtab="todo" onclick="switchMobileTab('todo')" aria-label="To-Do">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 6l-4 4-2-2"/>
+        <path d="M9 13l-4 4-2-2"/>
+        <path d="M13 7h7"/>
+        <path d="M13 14h7"/>
+      </svg>
+      <span class="mtab-label">To-Do</span>
     </button>
   </nav>
 
@@ -6645,11 +6660,6 @@ table.combo-eval tbody td .nodata {
       <button class="mo-drawer-item" onclick="moDrawerNav('my')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
         <span>마이</span>
-      </button>
-      <!-- v2.66: To-Do 칸반 -->
-      <button class="mo-drawer-item" onclick="moDrawerNav('todo')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
-        <span>To-Do</span>
       </button>
       <!-- v2.59: 분리선 + 설정 -->
       <div class="mo-drawer-divider" aria-hidden="true"></div>
@@ -16477,6 +16487,7 @@ window.renderInsiderHistory = renderInsiderHistory;
 
 // ============================================================================
 // v2.66: TO-DO 칸반 보드 — 보고서에서 체크된 todo를 시점별 4개 컬럼으로 분류
+// v2.68: 컨텍스트 라우터 — 카드/마퀴 클릭 시 todo 유형별로 적절한 페이지로
 // ============================================================================
 function _aqDaysUntil(todayIso, targetIso) {
   if (!todayIso || !targetIso) return null;
@@ -16485,6 +16496,97 @@ function _aqDaysUntil(todayIso, targetIso) {
   if (isNaN(t.getTime()) || isNaN(x.getTime())) return null;
   return Math.round((x.getTime() - t.getTime()) / 86400000);
 }
+
+// v2.68: TO-DO 유형별 적절한 랜딩 페이지로 라우팅
+//   E. Form 4 모니터링 → 종목 차트 모달 + 내부자 거래 이력 세션으로 스크롤
+//   F. 조건부 트리거    → 종목 차트 모달
+//   A-D. 시점 기반     → 일정 페이지 + 해당 일자 선택
+//   기타              → 종목 차트 모달
+function _aqRouteTodoCard(todo) {
+  if (!todo) return;
+  const ticker = String(todo.ticker || todo.reportTicker || '').toUpperCase();
+  const w = todo.when, what = todo.what;
+  const isMobile = window.innerWidth <= 640;
+
+  // F. 조건부 트리거 → 차트 모달
+  if (what && what.type === 'trigger') {
+    if (ticker && typeof openChart === 'function') openChart(ticker);
+    return;
+  }
+  // E. Form 4 모니터링 → 차트 모달 + 내부자 거래 이력 스크롤
+  if (what && what.type === 'monitor' && /form\s*4/i.test(what.keyword || '')) {
+    if (!ticker || typeof openChart !== 'function') return;
+    openChart(ticker);
+    // 모달 열린 후 스크롤 — render 완료 후 0.6초 뒤
+    setTimeout(() => {
+      const wrap = document.getElementById('insiderHistoryWrap');
+      if (!wrap || wrap.style.display === 'none') return;
+      const modalContent = wrap.closest('.modal-content');
+      if (modalContent) {
+        modalContent.scrollTo({ top: wrap.offsetTop - 16, behavior: 'smooth' });
+      } else {
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 600);
+    return;
+  }
+  // 다른 모니터링 — 차트 모달
+  if (what && what.type === 'monitor') {
+    if (ticker && typeof openChart === 'function') openChart(ticker);
+    return;
+  }
+
+  // A-D. 시점 기반 → 일정 페이지 + 해당 일자 선택
+  if (w) {
+    let targetDate = null;
+    if (w.type === 'date') targetDate = w.date;
+    else if (w.type === 'range') targetDate = w.from;
+    else if (w.type === 'soft' && w.format === 'month' && w.deadline) targetDate = w.deadline + '-28';
+    else if (w.type === 'quarter') {
+      const earn = (typeof _aqFindNextEarning === 'function') ? _aqFindNextEarning(ticker) : null;
+      if (earn && earn.date) targetDate = earn.date;
+    }
+    if (targetDate) {
+      // 일정 페이지 진입
+      if (isMobile) {
+        if (typeof switchMobileTab === 'function') switchMobileTab('schedule');
+      } else {
+        if (typeof setPCTab === 'function') setPCTab('schedule');
+      }
+      // 캘린더 render 후 해당 일자 선택 + 셀로 스크롤
+      setTimeout(() => {
+        if (typeof aqCalendarSelectDate === 'function') {
+          try { aqCalendarSelectDate(targetDate); } catch (e) {}
+        }
+        setTimeout(() => {
+          const cell = document.querySelector('.cal-cell[data-date="' + targetDate + '"]');
+          if (cell) cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 200);
+      }, 250);
+      return;
+    }
+  }
+  // Fallback — 차트 모달
+  if (ticker && typeof openChart === 'function') openChart(ticker);
+}
+window._aqRouteTodoCard = _aqRouteTodoCard;
+
+// 마퀴 알림 ID → 원본 todo 찾기 (ID 형식: ticker|reportDate|idx|type)
+function _aqFindTodoByNotificationId(notifId) {
+  if (!notifId || !window.AqTodoStore) return null;
+  const parts = String(notifId).split('|');
+  if (parts.length < 3) return null;
+  const ticker = parts[0];
+  const reportDate = parts[1];
+  const idx = parseInt(parts[2], 10);
+  if (isNaN(idx)) return null;
+  return AqTodoStore.getAll().find(t =>
+    String(t.ticker || t.reportTicker || '').toUpperCase() === ticker &&
+    t.reportDate === reportDate &&
+    t.idx === idx
+  ) || null;
+}
+window._aqFindTodoByNotificationId = _aqFindTodoByNotificationId;
 
 function _aqClassifyTodoCol(t, todayIso) {
   const w = t.when;
@@ -16621,8 +16723,20 @@ function buildTodoKanban() {
   card.querySelectorAll('.todo-card').forEach(el => {
     el.onclick = (e) => {
       if (e.target.closest('.todo-card-close')) return;
-      const tk = el.dataset.ticker;
-      if (tk && typeof openChart === 'function') openChart(tk);
+      // v2.68: 컨텍스트 라우팅 — todo 유형별 적절한 페이지로
+      const rt = el.dataset.reportTicker;
+      const rd = el.dataset.reportDate;
+      const idx = parseInt(el.dataset.idx, 10);
+      const todo = (window.AqTodoStore && !isNaN(idx))
+        ? AqTodoStore.getAll().find(t => t.reportTicker === rt && t.reportDate === rd && t.idx === idx)
+        : null;
+      if (todo && typeof _aqRouteTodoCard === 'function') {
+        _aqRouteTodoCard(todo);
+      } else {
+        // Fallback — 차트 모달
+        const tk = el.dataset.ticker;
+        if (tk && typeof openChart === 'function') openChart(tk);
+      }
     };
   });
   card.querySelectorAll('.todo-card-close').forEach(el => {
@@ -16895,14 +17009,21 @@ function _aqRenderMarquee() {
   });
   const inner = sorted.map(n => {
     const cls = 'notif' + (n.urgent ? ' notif-urgent' : '');
-    return `<span class="${cls}" data-ticker="${escapeAttr(n.ticker)}" title="클릭하여 종목 차트 보기">${escapeHtml(n.message)}</span>`;
+    return `<span class="${cls}" data-ticker="${escapeAttr(n.ticker)}" data-notif-id="${escapeAttr(n.id)}" title="클릭하여 해당 페이지로 이동">${escapeHtml(n.message)}</span>`;
   }).join('<span class="notif-sep">•</span>');
   track.innerHTML = inner;
-  // 클릭 핸들러 — 종목 차트 모달
+  // v2.68: 알림 클릭 — todo 유형별 컨텍스트 페이지로 (Form 4 → 내부자 거래 / 일자 → 일정 / 조건부 → 차트)
   track.querySelectorAll('.notif').forEach(el => {
     el.onclick = () => {
-      const tk = el.dataset.ticker;
-      if (tk && typeof openChart === 'function') openChart(tk);
+      const todo = (typeof _aqFindTodoByNotificationId === 'function')
+        ? _aqFindTodoByNotificationId(el.dataset.notifId)
+        : null;
+      if (todo && typeof _aqRouteTodoCard === 'function') {
+        _aqRouteTodoCard(todo);
+      } else {
+        const tk = el.dataset.ticker;
+        if (tk && typeof openChart === 'function') openChart(tk);
+      }
     };
   });
 }
