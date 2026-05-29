@@ -505,10 +505,6 @@ section.card {
   /* v2.11: 카드 enter 애니메이션은 유지 — 페이지/탭 전환에서도 재실행 */
   animation: card-enter 0.32s var(--ease-out) both;
 }
-/* v2.38: PC에선 영역 사이 호흡 더 — 토글 카드들이 따닥따닥 안 붙도록 */
-@media (min-width: 1024px) {
-  section.card { margin-bottom: 56px; }
-}
 @keyframes card-enter {
   from {
     transform: translateY(8px);
@@ -4660,7 +4656,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.39</div>
+      <div class="splash-version" id="splashVersion">v2.37</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -7242,37 +7238,28 @@ async function _lazyFetchEvaluations() {
   _evalFetchPromise = (async () => {
     try {
       const cfg = MARKET_CONFIG.US;
-      console.log(`[_lazyFetchEvaluations] start — sheet=${cfg.archiveSheetId}, tab=매수매력도`);
       const res = await apiCall('getOneSheet', { sheetId: cfg.archiveSheetId, tab: '매수매력도' });
-      console.log('[_lazyFetchEvaluations] response:', res && res.ok, res && (res.rows ? res.rows.length : '(no rows)'), res && res.error);
       if (!res || !res.ok || !Array.isArray(res.rows)) {
         console.warn('[_lazyFetchEvaluations] failed:', res && res.error);
-        _evalFetchPromise = null;  // 재시도 가능하도록 reset
         return false;
       }
-      let added = 0;
       res.rows.forEach(r => {
-        // robust: Ticker / ticker / TICKER 모두 시도
-        const tk = String(r.Ticker || r.ticker || r.TICKER || '').toUpperCase().trim();
-        // 판단 / 판단 / verdict / 평가 fallback
-        const judge = String(r['판단'] || r['평가'] || r.verdict || '').trim();
-        if (tk && judge) {
-          _state.evaluations.US[tk] = judge;
-          added++;
-        }
+        const tk = String(r.Ticker || '').toUpperCase().trim();
+        const judge = String(r['판단'] || '').trim();
+        if (tk && judge) _state.evaluations.US[tk] = judge;
       });
-      console.log(`[_lazyFetchEvaluations] ✓ ${added}건 매수매력도 매핑 (헤더 샘플:`, res.rows[0] ? Object.keys(res.rows[0]) : 'empty', ')');
+      const n = Object.keys(_state.evaluations.US).length;
+      console.log(`[_lazyFetchEvaluations] ✓ 매수매력도 lazy fetch: ${n}건`);
       // 모달 열려있으면 평가 항목 다시 그리기 + 종목 리스트가 'eval' 모드면 재렌더
       try {
         if (_state.openTicker && document.getElementById('chartModal')?.classList.contains('active')) {
           if (typeof refreshModalEvaluation === 'function') refreshModalEvaluation(_state.openTicker);
         }
         if (_stockSortMode === 'eval' && typeof buildStockList === 'function') buildStockList();
-      } catch (e) { console.warn(e); }
-      return added > 0;
+      } catch (e) {}
+      return n > 0;
     } catch (e) {
       console.warn('[_lazyFetchEvaluations] error:', e);
-      _evalFetchPromise = null;  // 재시도 가능하도록 reset
       return false;
     }
   })();
@@ -7605,10 +7592,6 @@ async function tryLoadFromBundle() {
     if (document.getElementById('macroCard')) document.getElementById('macroCard').style.display = _state.macro.length ? '' : 'none';
     if (document.getElementById('filterCard')) document.getElementById('filterCard').style.display = '';
     if (document.getElementById('archiveCard')) document.getElementById('archiveCard').style.display = '';
-
-    // v2.39: V1↔V2 토글 효과를 자동으로 한 번 trigger — 새 시그널/평가 등 모든 archive 의존 view 재계산
-    //   (사용자가 토글 안 해도 자동 반영. silent SWR 없이 단순 view 재렌더만)
-    try { if (typeof setVshapeVersion === 'function') setVshapeVersion(_state.vshapeVersion); } catch (e) { console.warn('[bundle] setVshapeVersion auto:', e); }
 
     const dt = (performance.now() - t0).toFixed(0);
     const ts = bundle.timestamp || 'unknown';
@@ -7978,10 +7961,6 @@ async function autoLoadData() {
 
     // v1.99: 보고서 인덱스 백그라운드 fetch (UX 블로킹 X — 메인 로드 끝난 후 비동기)
     fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
-    // v2.38: 매수매력도 background fetch (Code.gs 안 거치고 fallback 보장)
-    if (Object.keys(_state.evaluations.US).length === 0) {
-      setTimeout(() => _lazyFetchEvaluations(), 400);
-    }
   } catch (err) {
     console.error(err);
     splashError(err.message || '데이터 로드 실패');
@@ -12352,10 +12331,6 @@ async function openChart(ticker) {
     ? `<span class="sep">·</span><span class="modal-eval" title="매수매력도">${escapeHtml(evalText)}</span>`
     : '';
   $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span>${evalHtml}<span class="sep">·</span><span>Data: ${escapeHtml(dates[dates.length-1])}</span>`;
-  // v2.38: 평가 없고 US면 lazy fetch trigger (도착 후 refreshModalEvaluation으로 자동 채움)
-  if (!evalText && getCurrentMarket() === 'US') {
-    setTimeout(() => _lazyFetchEvaluations(), 50);
-  }
   // 4줄: 상세설명 (있으면 표시)
   $('modalDesc').textContent = desc;
 
