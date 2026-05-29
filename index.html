@@ -2217,12 +2217,14 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   /* v2.46: 일정 페이지 — scheduleCard만 표시 */
   body[data-pc-page="schedule"] .container > section.card { display: none !important; }
   body[data-pc-page="schedule"] #scheduleCard { display: block !important; }
+  body[data-pc-page="schedule"] #majorEventsCard { display: block !important; }
 }
 
 /* v2.46: MO 일정 탭 — scheduleCard만 표시 */
 @media (max-width: 640px) {
   body[data-mtab="schedule"] section.card[data-mtab~="schedule"] { display: block !important; }
   body[data-mtab="schedule"] #scheduleCard { display: block !important; }
+  body[data-mtab="schedule"] #majorEventsCard { display: block !important; }
 }
 
 /* ============ v2.46: CALENDAR ============ */
@@ -2317,7 +2319,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   gap: 3px;
 }
 .cal-cell {
-  min-height: 92px;
+  min-height: 132px;
   padding: 6px 6px 4px;
   background: rgba(255,255,255,0.025);
   border: 1px solid transparent;
@@ -2460,7 +2462,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   .calendar-title { font-size: 18px; }
   .cal-add-btn .cal-add-label { display: none; }
   .cal-add-btn { padding: 8px 10px; }
-  .cal-cell { min-height: 58px; padding: 4px 4px 3px; border-radius: 6px; }
+  .cal-cell { min-height: 78px; padding: 4px 4px 3px; border-radius: 6px; }
   .cal-cell-date { font-size: 12px; }
   .cal-event-chip { display: none; }
   .cal-event-more { display: none; }
@@ -2699,6 +2701,73 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 }
 [data-theme="light"] .cal-modal-btn-secondary:hover { background: rgba(0,0,0,0.04); }
 [data-theme="light"] .calendar-title { color: var(--text-hi); }
+
+/* v2.53: 큰 화면(≥1024px)에서 캘린더 셀 더 키움 (PC 화면 이점 활용) */
+@media (min-width: 1024px) {
+  .cal-cell { min-height: 160px; padding: 8px 8px 6px; }
+  .cal-cell-date { font-size: 14px; }
+  .cal-event-chip { font-size: 12px; padding: 3px 7px; }
+}
+
+/* v2.53: 캘린더 필터 chip (4가지) */
+.cal-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.cal-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-mid);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s, color 0.15s;
+}
+.cal-filter-chip:hover { background: rgba(255,255,255,0.07); }
+.cal-filter-chip.off {
+  opacity: 0.42;
+  color: var(--text-mute);
+  text-decoration: line-through;
+  background: transparent;
+  border-style: dashed;
+}
+.cal-filter-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cal-filter-chip[data-filter="earnings_held"] .cal-filter-chip-dot { background: #7950f2; }
+.cal-filter-chip[data-filter="earnings_unheld"] .cal-filter-chip-dot { background: #ae8eff; }
+.cal-filter-chip[data-filter="fomc"] .cal-filter-chip-dot { background: #ff6b6b; }
+.cal-filter-chip[data-filter="thirteenF"] .cal-filter-chip-dot { background: #fab005; }
+[data-theme="light"] .cal-filter-chip {
+  background: rgba(0,0,0,0.025);
+  border-color: rgba(0,0,0,0.12);
+}
+[data-theme="light"] .cal-filter-chip:hover { background: rgba(0,0,0,0.04); }
+
+/* v2.53: 보유 종목 Earnings chip — 더 진한 보라 (구분) */
+.cal-event-chip.cal-evt-earnings.is-held {
+  background: rgba(121, 80, 242, 0.34);
+  border-left-color: #5e3edb;
+}
+.cal-event-chip.cal-evt-earnings.is-held:hover { background: rgba(121, 80, 242, 0.46); }
+
+/* v2.53: 주요 이벤트 카드 — 매수 포인트와 동일 UI 사용 */
+.major-event-item .bp-date { color: var(--text-mid); font-weight: 600; }
+.major-event-item .bp-ret { color: #5c7cfa; }   /* D-N 컬러: 파랑 */
+
+/* v2.53: PC 사이드 패널의 매수 포인트 카드 다음에 여백 — 누적 시그널과 분리감 */
+.pc-side-panel section.card#buyPointsCard { margin-bottom: 36px; }
 .stock-list-sort {
   position: relative;
   margin-left: auto;
@@ -5371,7 +5440,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.52</div>
+      <div class="splash-version" id="splashVersion">v2.53</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -5770,6 +5839,18 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ v2.46: CALENDAR / 일정 ============ -->
+  <!-- v2.53: 주요 이벤트 — 5일 이내 임박 이벤트 가로 스크롤 (매수 포인트와 동일 UI) -->
+  <section class="card" id="majorEventsCard" data-mtab="schedule" style="display:none;">
+    <div class="card-header">
+      <h2>주요 이벤트</h2>
+    </div>
+    <div class="card-body">
+      <div class="buy-points-scroll" id="majorEventsScroll">
+        <div class="buy-points-empty">불러오는 중…</div>
+      </div>
+    </div>
+  </section>
+
   <section class="card" id="scheduleCard" data-mtab="schedule" style="display:none;">
     <div class="card-body">
       <div class="calendar-header">
@@ -5787,6 +5868,21 @@ table.combo-eval tbody td .nodata {
             <span class="cal-add-label">일정 추가</span>
           </button>
         </div>
+      </div>
+      <!-- v2.53: 카테고리 필터 chip (4가지) -->
+      <div class="cal-filter-row" aria-label="이벤트 필터">
+        <button class="cal-filter-chip" data-filter="earnings_held" onclick="aqCalToggleFilter('earnings_held')" type="button">
+          <span class="cal-filter-chip-dot"></span>실적발표 · 보유
+        </button>
+        <button class="cal-filter-chip" data-filter="earnings_unheld" onclick="aqCalToggleFilter('earnings_unheld')" type="button">
+          <span class="cal-filter-chip-dot"></span>실적발표 · 미보유
+        </button>
+        <button class="cal-filter-chip" data-filter="fomc" onclick="aqCalToggleFilter('fomc')" type="button">
+          <span class="cal-filter-chip-dot"></span>FOMC
+        </button>
+        <button class="cal-filter-chip" data-filter="thirteenF" onclick="aqCalToggleFilter('thirteenF')" type="button">
+          <span class="cal-filter-chip-dot"></span>13F
+        </button>
       </div>
       <div class="cal-weekdays">
         <div class="cal-weekday">월</div>
@@ -7365,6 +7461,7 @@ async function fetchSheetCalendar(forceFresh) {
           console.log('[fetchSheetCalendar] IDB 캐시 사용 (' + ageMin.toFixed(0) + '분 전, ' + cached.events.length + '개)');
           if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
             try { aqCalendarRender(); } catch (e) {}
+            try { renderMajorEventsCard(); } catch (e) {}
           }
           return _aqCalSheetEvents;
         }
@@ -7381,8 +7478,12 @@ async function fetchSheetCalendar(forceFresh) {
       console.warn('[fetchSheetCalendar] 응답 비정상:', res && res.error);
       return _aqCalSheetEvents;
     }
-    // 오늘 포함 이후 일정만, 정렬은 셀 표시 단계에서
-    const todayStr = aqCalTodayStr();
+    // 범위: 오늘 -30 ~ +60일 (사용자 요청 v2.53)
+    const today = new Date(); today.setHours(0,0,0,0);
+    const minMs = today.getTime() - 30*86400000;
+    const maxMs = today.getTime() + 60*86400000;
+    const minStr = new Date(minMs).toISOString().slice(0,10);
+    const maxStr = new Date(maxMs).toISOString().slice(0,10);
     const events = res.rows
       .filter(r => r.Date_KST && r.Category)
       .map(r => ({
@@ -7393,13 +7494,15 @@ async function fetchSheetCalendar(forceFresh) {
         sector: String(r.Sector || ''),
         description: String(r.Description || ''),
         session: String(r.Session || ''),
+        daysUntil: (r.Days_Until != null && r.Days_Until !== '') ? Number(r.Days_Until) : null,
       }))
-      .filter(e => e.date >= todayStr);
+      .filter(e => e.date >= minStr && e.date <= maxStr);
     _aqCalSheetEvents = events;
     try { await aqDbSet('us_calendar_sheet', { fetchedAt: new Date().toISOString(), events }); } catch (e) {}
     console.log('[fetchSheetCalendar] fetch 완료 — ' + events.length + '개 미래 일정');
     if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
       try { aqCalendarRender(); } catch (e) {}
+      try { renderMajorEventsCard(); } catch (e) {}
     }
     return events;
   } catch (e) {
@@ -7412,9 +7515,8 @@ async function fetchSheetCalendar(forceFresh) {
 function aqCalSheetEventsFor(dateStr) {
   if (!Array.isArray(_aqCalSheetEvents) || _aqCalSheetEvents.length === 0) return [];
   return _aqCalSheetEvents
-    .filter(e => e.date === dateStr)
+    .filter(e => e.date === dateStr && _aqCalEventMatchesFilter(e))
     .sort((a, b) => {
-      // FOMC/13F는 시간 없음 → 위로, Earnings는 시간순
       const catOrder = { 'FOMC': 0, '13F': 1, 'Earnings': 2 };
       const ao = catOrder[a.category] != null ? catOrder[a.category] : 9;
       const bo = catOrder[b.category] != null ? catOrder[b.category] : 9;
@@ -7422,6 +7524,114 @@ function aqCalSheetEventsFor(dateStr) {
       return (a.time || '').localeCompare(b.time || '');
     });
 }
+
+// v2.53: 캘린더 필터 (4가지 ON/OFF) — localStorage 영속
+const aqCalFilters = {
+  earnings_held:   true,   // 실적발표 - 보유
+  earnings_unheld: true,   // 실적발표 - 미보유
+  fomc:            true,
+  thirteenF:       true,
+};
+function aqCalLoadFilters() {
+  try {
+    const s = JSON.parse(localStorage.getItem('aq_cal_filters') || 'null');
+    if (s && typeof s === 'object') Object.assign(aqCalFilters, s);
+  } catch (e) {}
+}
+function aqCalSaveFilters() {
+  try { localStorage.setItem('aq_cal_filters', JSON.stringify(aqCalFilters)); } catch (e) {}
+}
+aqCalLoadFilters();
+
+// 보유 종목 ticker set — computeHoldingsState 사용. 캘린더 렌더 시점에 한 번만 캐시
+let _aqCalHoldingsCache = null;
+function _aqCalRefreshHoldings() {
+  try {
+    if (typeof computeHoldingsState !== 'function') { _aqCalHoldingsCache = new Set(); return; }
+    const sim = computeHoldingsState();
+    _aqCalHoldingsCache = new Set((sim.holdings || []).map(h => String(h.ticker || '').toUpperCase()));
+  } catch (e) { _aqCalHoldingsCache = new Set(); }
+}
+function _aqCalIsHolding(ticker) {
+  if (!_aqCalHoldingsCache) _aqCalRefreshHoldings();
+  return _aqCalHoldingsCache.has(String(ticker || '').toUpperCase());
+}
+
+function _aqCalEventMatchesFilter(ev) {
+  if (ev.category === 'Earnings') {
+    const held = _aqCalIsHolding(ev.ticker);
+    return held ? aqCalFilters.earnings_held : aqCalFilters.earnings_unheld;
+  }
+  if (ev.category === 'FOMC') return aqCalFilters.fomc;
+  if (ev.category === '13F')  return aqCalFilters.thirteenF;
+  return true;
+}
+
+function aqCalToggleFilter(key) {
+  if (!(key in aqCalFilters)) return;
+  aqCalFilters[key] = !aqCalFilters[key];
+  aqCalSaveFilters();
+  // chip 토글 상태 즉시 반영
+  const chip = document.querySelector('.cal-filter-chip[data-filter="' + key + '"]');
+  if (chip) chip.classList.toggle('off', !aqCalFilters[key]);
+  // 캘린더 + 주요 이벤트 재렌더
+  try { aqCalendarRender(); } catch (e) {}
+  try { renderMajorEventsCard(); } catch (e) {}
+}
+window.aqCalToggleFilter = aqCalToggleFilter;
+
+// v2.53: "주요 이벤트" 카드 렌더 — Days_Until 0~5 (오늘 + 미래 5일)
+//   UI는 매수 포인트와 동일 구조 (로고/티커/일정명/D-N). 필터도 같이 적용.
+function renderMajorEventsCard() {
+  const scroll = document.getElementById('majorEventsScroll');
+  if (!scroll) return;
+  _aqCalRefreshHoldings();  // 캐시 갱신
+  if (!Array.isArray(_aqCalSheetEvents) || _aqCalSheetEvents.length === 0) {
+    scroll.innerHTML = '<div class="buy-points-empty">불러오는 중…</div>';
+    return;
+  }
+  // 임박 이벤트 — 0 <= Days_Until <= 5, 필터 통과
+  const items = _aqCalSheetEvents
+    .filter(e => typeof e.daysUntil === 'number' && e.daysUntil >= 0 && e.daysUntil <= 5)
+    .filter(e => _aqCalEventMatchesFilter(e))
+    .sort((a, b) => {
+      if (a.daysUntil !== b.daysUntil) return a.daysUntil - b.daysUntil;
+      // 같은 D-day면 카테고리 우선
+      const catOrder = { 'FOMC': 0, '13F': 1, 'Earnings': 2 };
+      const ao = catOrder[a.category] != null ? catOrder[a.category] : 9;
+      const bo = catOrder[b.category] != null ? catOrder[b.category] : 9;
+      return ao - bo;
+    });
+  if (items.length === 0) {
+    scroll.innerHTML = '<div class="buy-points-empty">5일 이내 임박 이벤트가 없습니다</div>';
+    return;
+  }
+  // 카테고리별 일정명
+  const evtName = (cat) => cat === 'Earnings' ? '실적발표'
+                         : cat === 'FOMC'    ? 'FOMC'
+                         : cat === '13F'      ? '13F' : cat;
+  // D-N 라벨
+  const dLabel = (n) => n === 0 ? 'D-DAY' : ('D-' + n);
+  // 로고
+  const logoUrl = (ev) => (ev.category === 'Earnings' && ev.ticker)
+    ? './logos/tickers/' + ev.ticker + '.png'
+    : './flags/US.png';
+  // 티커 라벨 (Earnings는 ticker, FOMC/13F는 카테고리 자체)
+  const tkLabel = (ev) => ev.category === 'Earnings' ? ev.ticker : ev.category;
+  scroll.innerHTML = items.map(ev => {
+    const lg = logoUrl(ev);
+    const lb = escapeHtml(tkLabel(ev));
+    const en = escapeHtml(evtName(ev.category));
+    const dn = dLabel(ev.daysUntil);
+    return '<div class="buy-point-item major-event-item" title="' + escapeAttr(ev.description || '') + '">' +
+             '<img class="bp-logo" src="' + lg + '" onerror="this.onerror=null;this.src=\'./flags/US.png\';" alt=""/>' +
+             '<div class="bp-name">' + lb + '</div>' +
+             '<div class="bp-date">' + en + '</div>' +
+             '<div class="bp-ret">' + dn + '</div>' +
+           '</div>';
+  }).join('');
+}
+window.renderMajorEventsCard = renderMajorEventsCard;
 
 window.fetchSheetCalendar = fetchSheetCalendar;
 window.aqCalSheetEventsFor = aqCalSheetEventsFor;
@@ -7544,10 +7754,12 @@ function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
           chip.onclick = (e) => { e.stopPropagation(); aqCalendarOpenModal(ev.id); };
         } else {
           // v2.51: 시트 일정 — 카테고리별 색상 + 로고 + read-only (클릭 시 그냥 날짜 선택)
+          // v2.53: Earnings 중 보유 종목은 is-held 클래스 (더 진한 색)
           const catCls = ev.category === 'Earnings' ? 'cal-evt-earnings'
                        : ev.category === 'FOMC' ? 'cal-evt-fomc'
                        : ev.category === '13F' ? 'cal-evt-13f' : '';
-          chip.className = 'cal-event-chip ' + catCls;
+          const heldCls = (ev.category === 'Earnings' && typeof _aqCalIsHolding === 'function' && _aqCalIsHolding(ev.ticker)) ? ' is-held' : '';
+          chip.className = 'cal-event-chip ' + catCls + heldCls;
           const logoUrl = (ev.category === 'Earnings' && ev.ticker)
             ? './logos/tickers/' + ev.ticker + '.png'
             : './flags/US.png';
@@ -15321,6 +15533,15 @@ function switchMobileTab(tab) {
     try { aqCalendarRender(); } catch (e) {}
     // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
     try { if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false); } catch (e) {}
+    // v2.53: 필터 chip 상태 + 주요 이벤트 카드 렌더
+    try {
+      if (typeof _aqCalRefreshHoldings === 'function') _aqCalRefreshHoldings();
+      document.querySelectorAll('.cal-filter-chip').forEach(c => {
+        const k = c.dataset.filter;
+        if (k in aqCalFilters) c.classList.toggle('off', !aqCalFilters[k]);
+      });
+      if (typeof renderMajorEventsCard === 'function') renderMajorEventsCard();
+    } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -15418,6 +15639,15 @@ function setPCTab(tab) {
       try { aqCalendarRender(); } catch (e) {}
       // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
       try { if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false); } catch (e) {}
+      // v2.53: 필터 chip 상태 + 주요 이벤트 카드 렌더
+      try {
+        if (typeof _aqCalRefreshHoldings === 'function') _aqCalRefreshHoldings();
+        document.querySelectorAll('.cal-filter-chip').forEach(c => {
+          const k = c.dataset.filter;
+          if (k in aqCalFilters) c.classList.toggle('off', !aqCalFilters[k]);
+        });
+        if (typeof renderMajorEventsCard === 'function') renderMajorEventsCard();
+      } catch (e) {}
     }
   } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis') {
     // v2.03: analysis도 사이드 패널 (탐색과 동일 UI/UX)
