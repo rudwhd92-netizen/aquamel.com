@@ -5285,7 +5285,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.48</div>
+      <div class="splash-version" id="splashVersion">v2.49</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -8447,6 +8447,107 @@ function hideLoading() {
 let _autoLoadInProgress = false;
 
 // ============================================================================
+// v2.49: 데이터 영속 캐시 (IndexedDB) — 앱 재진입 시 즉시 복원
+//   data.json fast path / forceFresh fallback 둘 다 성공 후 캐시 저장
+//   재진입 시 캐시 우선 ingest → 즉시 화면 → 백그라운드로 새 데이터 확인
+//   cron 멈춰도 사용자가 마지막으로 본 데이터 회귀 안 함
+// ============================================================================
+const AQ_DB_NAME = 'aquamel_cache';
+const AQ_DB_VER = 1;
+const AQ_DB_STORE = 'kv';
+
+function _aqDbOpen() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(AQ_DB_NAME, AQ_DB_VER);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(AQ_DB_STORE)) db.createObjectStore(AQ_DB_STORE);
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function aqDbGet(key) {
+  try {
+    const db = await _aqDbOpen();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(AQ_DB_STORE, 'readonly');
+      const req = tx.objectStore(AQ_DB_STORE).get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) { console.warn('[aqDbGet]', e); return null; }
+}
+async function aqDbSet(key, value) {
+  try {
+    const db = await _aqDbOpen();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(AQ_DB_STORE, 'readwrite');
+      const req = tx.objectStore(AQ_DB_STORE).put(value, key);
+      req.onsuccess = () => resolve(true);
+      req.onerror = () => reject(req.error);
+    });
+  } catch (e) { console.warn('[aqDbSet]', e); return false; }
+}
+
+// _state의 데이터 필드만 캐시 (UI/임시 필드 제외)
+async function aqCacheSaveState() {
+  try {
+    const snapshot = {
+      timestamp: new Date().toISOString(),
+      archives:           _state.archives          || { US: [], KR: [] },
+      archivesV1:         _state.archivesV1        || { US: [] },
+      sectorsByMarket:    _state.sectorsByMarket   || { US: {}, KR: {} },
+      macroByMarket:      _state.macroByMarket     || { US: [], KR: [] },
+      tickerSectorMaps:   _state.tickerSectorMaps  || { US: {}, KR: {} },
+      kjpSectorMaps:      _state.kjpSectorMaps     || { US: {}, KR: {} },
+      tickerDescMaps:     _state.tickerDescMaps    || { US: {}, KR: {} },
+      tickerCompanyMaps:  _state.tickerCompanyMaps || { US: {}, KR: {} },
+    };
+    const ok = await aqDbSet('state', snapshot);
+    if (ok) console.log('[aqCacheSaveState] 캐시 저장 완료 —', snapshot.timestamp);
+    return ok;
+  } catch (e) { console.warn('[aqCacheSaveState]', e); return false; }
+}
+
+async function aqCacheLoadState() {
+  const snap = await aqDbGet('state');
+  if (!snap) return null;
+  _state.archives           = snap.archives           || { US: [], KR: [] };
+  _state.archivesV1         = snap.archivesV1         || { US: [] };
+  _state.sectorsByMarket    = snap.sectorsByMarket    || { US: {}, KR: {} };
+  _state.macroByMarket      = snap.macroByMarket      || { US: [], KR: [] };
+  _state.tickerSectorMaps   = snap.tickerSectorMaps   || { US: {}, KR: {} };
+  _state.kjpSectorMaps      = snap.kjpSectorMaps      || { US: {}, KR: {} };
+  _state.tickerDescMaps     = snap.tickerDescMaps     || { US: {}, KR: {} };
+  _state.tickerCompanyMaps  = snap.tickerCompanyMaps  || { US: {}, KR: {} };
+  console.log('[aqCacheLoadState] 캐시 복원 —', snap.timestamp);
+  return snap.timestamp;
+}
+
+// 캐시 또는 새 데이터 ingest 후 렌더 함수 일괄 호출 (단일 진입점)
+function _aqRenderAllAfterIngest() {
+  try { applyMarketState(getCurrentMarket()); } catch (e) {}
+  try { computeSignalReturns(); } catch (e) {}
+  try { applyFilterAndRender(); } catch (e) {}
+  try { renderMacro(); } catch (e) {}
+  try { renderSectorFilter(); } catch (e) {}
+  try { renderSignalFilter(); } catch (e) {}
+  try { renderSectorFramework(); } catch (e) {}
+  try { renderSectorAnalysis(); } catch (e) {}
+  try { refreshLayerReturns(); } catch (e) {}
+  try { buildBuyPointsCard(); } catch (e) {}
+  try { buildStockList(); } catch (e) {}
+  try { _archiveMobileShown = 10; buildArchiveMobileList(); } catch (e) {}
+  try { renderDashboard(); } catch (e) {}
+  // 매크로 카드 가시성
+  const macroCardEl = document.getElementById('macroCard');
+  if (macroCardEl) macroCardEl.style.display = (_state.macro && _state.macro.length) ? '' : 'none';
+  const filterCardEl = document.getElementById('filterCard');
+  if (filterCardEl) filterCardEl.style.display = '';
+}
+
+// ============================================================================
 // v2.04 / Code.gs v2.12: data.json fast path
 //   GitHub Actions cron이 10분마다 dumpAllToJson 호출 → ./data/data.json 갱신
 //   PWA는 CDN에서 data.json 1번 fetch → 2-3초에 모든 데이터 로드 완료
@@ -8685,12 +8786,35 @@ async function autoLoadData(opts) {
   _autoLoadInProgress = true;
 
   // v2.48: forceFresh — 새로고침 버튼 클릭 시 data.json fast path 건너뛰고 backend 직접 호출
-  //   GitHub Actions cron이 멈춰 있어도 사용자가 새로고침 한 번이면 시트 → PWA 직통 fresh
+  // v2.49: silent — 백그라운드 자동 갱신 시 splash 안 띄움 (사용자 화면 끊기지 않음)
   opts = opts || {};
   const forceFresh = !!opts.forceFresh;
+  const silent = !!opts.silent;
 
-  // 새로고침 버튼이라면 splash 다시 보여주기
-  splashShow();
+  // v2.49: 캐시 우선 ingest — forceFresh가 아니고 사용자 첫 진입이라면 IDB 캐시 먼저 확인
+  //   캐시 있음 → 즉시 화면 표시 (instant) → 백그라운드로 data.json fetch + 자동 갱신
+  //   캐시 없음 → 평소 fast path 진행
+  if (!forceFresh && !silent && !opts.skipCache) {
+    try {
+      const cachedTs = await aqCacheLoadState();
+      if (cachedTs) {
+        console.log('[autoLoadData] IDB 캐시 ingest 우선 → 즉시 화면 표시');
+        _aqRenderAllAfterIngest();
+        // 보고서 인덱스도 백그라운드
+        fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+        // splash 안 띄웠으므로 닫을 필요 X (이미 닫혀 있음)
+        _autoLoadInProgress = false;
+        // 백그라운드: data.json 새 거 확인 + 60분 이상 stale이면 자동 forceFresh
+        setTimeout(() => _aqBackgroundRefresh(cachedTs), 100);
+        return;
+      }
+    } catch (e) {
+      console.warn('[autoLoadData] 캐시 ingest 실패 — 정상 경로 진행:', e);
+    }
+  }
+
+  // 새로고침 버튼이라면 splash 다시 보여주기 (silent 모드는 제외)
+  if (!silent) splashShow();
 
   // v2.48: forceFresh 모드 — splash 메시지로 시간 안내 (~1-2분 소요 가능)
   const loadingTitle = document.getElementById('loadingTitle');
@@ -8728,6 +8852,8 @@ async function autoLoadData(opts) {
         setTimeout(() => splashHide(), 200);
         // 보고서 인덱스도 백그라운드로
         fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+        // v2.49: 캐시 저장 (다음 진입 시 즉시 복원)
+        aqCacheSaveState();
         return;
       }
     } else {
@@ -8956,6 +9082,8 @@ async function autoLoadData(opts) {
 
     // v1.99: 보고서 인덱스 백그라운드 fetch (UX 블로킹 X — 메인 로드 끝난 후 비동기)
     fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+    // v2.49: forceFresh fallback 성공 — 캐시 저장 (다음 진입 시 즉시 복원)
+    aqCacheSaveState();
   } catch (err) {
     console.error(err);
     splashError(err.message || '데이터 로드 실패');
@@ -8968,6 +9096,59 @@ async function autoLoadData(opts) {
   }
 }
 window.autoLoadData = autoLoadData;
+
+// ============================================================================
+// v2.49: 백그라운드 자동 갱신 — 캐시 ingest 후 호출
+//   1) data.json fetch → 캐시보다 새 거면 silent ingest + 캐시 갱신 + 토스트
+//   2) 그 data.json조차 60분 이상 stale이면 자동 forceFresh (silent — splash 안 띄움)
+// ============================================================================
+async function _aqBackgroundRefresh(cachedTs) {
+  try {
+    const t0 = Date.now();
+    const res = await fetch('./data/data.json', { cache: 'no-cache' });
+    if (!res.ok) {
+      console.warn('[_aqBackgroundRefresh] data.json fetch 실패:', res.status);
+      // data.json 자체 못 받음 → 시트 직통 시도할지 결정
+      return;
+    }
+    const bundle = await res.json();
+    const dt = Date.now() - t0;
+    if (!bundle || !bundle.timestamp) return;
+
+    const cachedDate = new Date(cachedTs);
+    const bundleDate = new Date(bundle.timestamp);
+    const ageMin = (Date.now() - bundleDate.getTime()) / 60000;
+
+    console.log(`[_aqBackgroundRefresh] data.json ${dt}ms — 캐시(${cachedTs}) vs bundle(${bundle.timestamp}), age=${ageMin.toFixed(0)}분`);
+
+    // 1) 캐시보다 더 새 data.json → silent ingest + 캐시 갱신
+    if (bundleDate > cachedDate) {
+      console.log('[_aqBackgroundRefresh] 더 새 data.json 발견 — silent 갱신');
+      // tryLoadFromBundle 재호출 (bundle 다시 fetch + ingest, 약 2-3초)
+      _autoLoadInProgress = false;  // 재진입 허용
+      try {
+        const ok = await tryLoadFromBundle();
+        if (ok) {
+          await aqCacheSaveState();
+          if (typeof aqToast === 'function') aqToast('데이터가 최신으로 업데이트되었습니다');
+        }
+      } catch (e) { console.warn('[_aqBackgroundRefresh] re-ingest 실패:', e); }
+    }
+
+    // 2) 그래도 60분 이상 stale → 자동 silent forceFresh (cron 멈춤 대응)
+    if (ageMin > 60) {
+      console.log(`[_aqBackgroundRefresh] ${ageMin.toFixed(0)}분 stale → 자동 silent forceFresh`);
+      if (typeof aqToast === 'function') aqToast('데이터가 오래되어 백그라운드에서 최신화 중...');
+      _autoLoadInProgress = false;
+      try {
+        await autoLoadData({ forceFresh: true, silent: true });
+        if (typeof aqToast === 'function') aqToast('최신 데이터로 갱신 완료');
+      } catch (e) { console.warn('[_aqBackgroundRefresh] silent forceFresh 실패:', e); }
+    }
+  } catch (e) {
+    console.warn('[_aqBackgroundRefresh] error:', e);
+  }
+}
 
 // ============================================================================
 // v2.10: 차트 타임프레임 (3M/6M/1Y) — 공통 샘플링 함수 + 핸들러
