@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.66';
+window.AQ_PWA_VERSION = '2.67';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4018,6 +4018,77 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 .ticker-history-wrap { margin-top: 18px; background: var(--bg); border-radius: 4px; padding: 14px 16px; overflow: auto; }
 .ticker-history-title { font-size: 12px; color: var(--text-hi); margin-bottom: 10px; font-weight: 600; }
 
+/* ============ v2.67: HERO 알림 마퀴 — 우→좌 흐름 ============ */
+.hero-marquee {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, rgba(92,124,250,0.10), rgba(92,124,250,0.02));
+  border: 1px solid rgba(92,124,250,0.20);
+  border-radius: 8px;
+  margin: 0 0 22px 0;
+  height: 36px;
+  overflow: hidden;
+}
+[data-theme="light"] .hero-marquee {
+  background: linear-gradient(90deg, rgba(58,80,200,0.08), rgba(58,80,200,0.02));
+  border-color: rgba(58,80,200,0.18);
+}
+.hero-marquee-icon {
+  flex-shrink: 0;
+  padding: 0 12px;
+  font-size: 14px;
+  border-right: 1px solid rgba(92,124,250,0.18);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background: rgba(92,124,250,0.10);
+}
+.hero-marquee-mask {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.hero-marquee-track {
+  display: inline-block;
+  padding-left: 100%;        /* 우측 끝에서 시작 */
+  animation: heroMarqueeScroll 45s linear infinite;
+  font-size: 13px;
+  color: var(--text-mid);
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 1;
+  letter-spacing: 0.1px;
+}
+@keyframes heroMarqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+.hero-marquee-track.empty {
+  color: var(--text-mute);
+  font-style: italic;
+  animation-duration: 30s;
+}
+.hero-marquee-track .notif {
+  margin-right: 50px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.hero-marquee-track .notif:hover { color: var(--text-hi); }
+.hero-marquee-track .notif-urgent { color: #ff6b6b; font-weight: 700; }
+.hero-marquee-track .notif-sep { color: var(--text-mute); opacity: 0.4; margin: 0 8px; }
+.hero-marquee:hover .hero-marquee-track { animation-play-state: paused; }
+
+@media (max-width: 640px) {
+  .hero-marquee { height: 32px; margin-bottom: 16px; }
+  .hero-marquee-icon { padding: 0 10px; font-size: 13px; }
+  .hero-marquee-track { font-size: 12px; }
+  .hero-marquee-track .notif { margin-right: 40px; }
+}
+
 /* ============ v2.66: TO-DO 칸반 보드 ============ */
 .todo-board {
   display: grid;
@@ -5989,6 +6060,14 @@ table.combo-eval tbody td .nodata {
       </div>
     </div>
   </header>
+
+  <!-- v2.67: HERO 알림 마퀴 — TO-DO 트리거 소식 우→좌 흐름 (모든 페이지에 표시) -->
+  <div class="hero-marquee" id="heroMarquee">
+    <div class="hero-marquee-icon">🔔</div>
+    <div class="hero-marquee-mask">
+      <div class="hero-marquee-track empty" id="heroMarqueeTrack">📬 새로운 소식이 없습니다</div>
+    </div>
+  </div>
 
 
   <!-- ============ MACRO (after load) ============ -->
@@ -16562,17 +16641,297 @@ function buildTodoKanban() {
 }
 window.buildTodoKanban = buildTodoKanban;
 
-// AqTodoStore 변경 시 자동 재렌더 (todo 페이지에 있을 때만)
+// ============================================================================
+// v2.67: 알림 트리거 엔진 + HERO 마퀴
+//   각 TO-DO의 시점/조건을 정기 검사 → 알림 큐에 추가 → 마퀴로 흘러감
+//   트리거 종류:
+//     A. 단일 일자  — D-3, D-1, D-Day
+//     B. 범위        — from 도래 시 진행중 알림
+//     C. 분기 실적   — US_DATE 캘린더 Earnings 일자와 cross-check
+//     D. 소프트 데드 — D-7 / D-Day
+//     E. Form 4 모니터링 — _aqInsiderTrades 새 거래 감지
+//     F. 조건부 트리거 — 종가 $X 회복/이탈
+// ============================================================================
+const AQ_NOTIF_LS = 'aq_notifications_v1';
+const AQ_TRIG_KEYS_LS = 'aq_triggered_keys_v1';
+let _aqNotifications = [];   // [{ id, ticker, message, urgent, createdAt }]
+let _aqTriggeredKeys = new Set();
+
+(function _aqLoadNotifState() {
+  try {
+    const n = JSON.parse(localStorage.getItem(AQ_NOTIF_LS) || '[]');
+    if (Array.isArray(n)) _aqNotifications = n;
+    const k = JSON.parse(localStorage.getItem(AQ_TRIG_KEYS_LS) || '[]');
+    if (Array.isArray(k)) _aqTriggeredKeys = new Set(k);
+  } catch (e) {}
+})();
+
+function _aqSaveNotifState() {
+  try {
+    localStorage.setItem(AQ_NOTIF_LS, JSON.stringify(_aqNotifications));
+    localStorage.setItem(AQ_TRIG_KEYS_LS, JSON.stringify([..._aqTriggeredKeys]));
+  } catch (e) {}
+}
+
+function _aqAddNotification(notif) {
+  if (!notif || !notif.id) return;
+  if (_aqTriggeredKeys.has(notif.id)) return;  // 중복 방지
+  _aqTriggeredKeys.add(notif.id);
+  _aqNotifications.push({
+    id: notif.id,
+    ticker: notif.ticker || '',
+    message: notif.message || '',
+    urgent: !!notif.urgent,
+    createdAt: new Date().toISOString(),
+  });
+  if (_aqNotifications.length > 30) _aqNotifications = _aqNotifications.slice(-30);  // 최근 30개만
+  _aqSaveNotifState();
+  _aqRenderMarquee();
+}
+
+function _aqRemoveNotificationsByPrefix(prefix) {
+  const before = _aqNotifications.length;
+  _aqNotifications = _aqNotifications.filter(n => !n.id.startsWith(prefix));
+  for (const k of [..._aqTriggeredKeys]) {
+    if (k.startsWith(prefix)) _aqTriggeredKeys.delete(k);
+  }
+  if (_aqNotifications.length !== before) {
+    _aqSaveNotifState();
+    _aqRenderMarquee();
+  }
+}
+
+function _aqLastCloseForTicker(ticker) {
+  if (typeof findTickerSeries !== 'function') return null;
+  try {
+    const s = findTickerSeries(String(ticker || '').toUpperCase());
+    if (s && s.rows && s.rows.length) {
+      const last = s.rows[s.rows.length - 1];
+      return { close: Number(last.Close) || 0, date: last.Date || '' };
+    }
+  } catch (e) {}
+  return null;
+}
+
+// 조건부 문자열 파싱 — "종가 $35 회복" / "종가 $40 이탈" 등
+function _aqParseCondition(condStr) {
+  if (!condStr || typeof condStr !== 'string') return null;
+  const priceMatch = condStr.match(/\$?\s*(\d+(?:\.\d+)?)/);
+  if (!priceMatch) return null;
+  const threshold = parseFloat(priceMatch[1]);
+  if (isNaN(threshold) || threshold <= 0) return null;
+  const upKeywords = ['회복', '돌파', '도달', '이상', '상회', '터치', '상승'];
+  const downKeywords = ['이탈', '하락', '이하', '하회', '붕괴', '떨어'];
+  const isUp = upKeywords.some(k => condStr.includes(k));
+  const isDown = downKeywords.some(k => condStr.includes(k));
+  if (!isUp && !isDown) return null;
+  return { direction: isUp ? 'up' : 'down', threshold };
+}
+
+// US_DATE 캘린더에서 종목의 다음 Earnings 일자 찾기
+function _aqFindNextEarning(ticker) {
+  if (typeof _aqCalSheetEvents === 'undefined' || !Array.isArray(_aqCalSheetEvents)) return null;
+  const tkU = String(ticker || '').toUpperCase();
+  const today = new Date().toISOString().slice(0, 10);
+  const future = _aqCalSheetEvents
+    .filter(e => e.category === 'Earnings' && (e.ticker || '').toUpperCase() === tkU && e.date >= today)
+    .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  return future.length ? future[0] : null;
+}
+
+// 메인 트리거 검사 — 모든 active TO-DO 검사 → 새 트리거 발견 시 알림 추가
+function _aqTriggerCheckTick() {
+  if (!window.AqTodoStore) return;
+  const todos = AqTodoStore.getAll();
+  const todayIso = new Date().toISOString().slice(0, 10);
+
+  todos.forEach(t => {
+    const ticker = String(t.ticker || t.reportTicker || '').toUpperCase();
+    if (!ticker) return;
+    const prefix = `${ticker}|${t.reportDate || ''}|${t.idx}`;
+    const w = t.when, what = t.what;
+    const body = (t.body || t.text || '').slice(0, 80);  // 너무 길면 자름
+
+    // A. 단일 일자 — D-3, D-1, D-Day
+    if (w && w.type === 'date') {
+      const days = _aqDaysUntil(todayIso, w.date);
+      if (days != null) {
+        [3, 1, 0].forEach(dx => {
+          if (days === dx) {
+            const id = `${prefix}|date-d${dx}`;
+            const label = dx === 0 ? 'D-Day' : `D-${dx}`;
+            _aqAddNotification({
+              id, ticker,
+              message: `📅 ${ticker} ${label} — ${body || w.date}`,
+              urgent: dx <= 1,
+            });
+          }
+        });
+      }
+    }
+
+    // B. 범위 — from 도래 시 진행중 알림
+    if (w && w.type === 'range') {
+      const dFrom = _aqDaysUntil(todayIso, w.from);
+      if (dFrom != null && dFrom <= 0) {
+        _aqAddNotification({
+          id: `${prefix}|range-start`,
+          ticker,
+          message: `▶ ${ticker} 관찰 기간 진행중 (${w.from} ~ ${w.to}) — ${body}`,
+          urgent: true,
+        });
+      }
+    }
+
+    // C. 분기 실적 — 캘린더와 cross-check
+    if (w && w.type === 'quarter') {
+      const earn = _aqFindNextEarning(ticker);
+      if (earn) {
+        const days = _aqDaysUntil(todayIso, earn.date);
+        if (days != null && days >= 0 && days <= 7) {
+          _aqAddNotification({
+            id: `${prefix}|quarter-${earn.date}`,
+            ticker,
+            message: `📊 ${ticker} ${w.year}년 ${w.quarter}Q 실적발표 D-${days} (${earn.date})`,
+            urgent: days <= 1,
+          });
+        }
+      }
+    }
+
+    // D. 소프트 데드 — D-7 / D-Day
+    if (w && w.type === 'soft' && w.format === 'month' && w.deadline) {
+      const days = _aqDaysUntil(todayIso, w.deadline + '-28');
+      if (days != null && days <= 7) {
+        const label = days <= 0 ? `${w.deadline} 데드라인 도래` : `${w.deadline}까지 D-${days}`;
+        _aqAddNotification({
+          id: `${prefix}|soft-${w.deadline}`,
+          ticker,
+          message: `⏰ ${ticker} ${label} — ${body}`,
+          urgent: days <= 3,
+        });
+      }
+    }
+
+    // E. Form 4 모니터링 — _aqInsiderTrades에서 새 거래 감지
+    if (what && what.type === 'monitor' && /form\s*4/i.test(what.keyword || '')) {
+      const trades = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[ticker]) ? _aqInsiderTrades[ticker] : [];
+      const checkedDate = (t.checkedAt || '').slice(0, 10);
+      trades.forEach(tr => {
+        if (!tr.transDate || !tr.shares || !tr.price) return;
+        // 체크 시점 이후 새 거래만 (체크 시점 없으면 최근 30일)
+        const cutoff = checkedDate || (() => {
+          const d = new Date(); d.setDate(d.getDate() - 30);
+          return d.toISOString().slice(0, 10);
+        })();
+        if (tr.transDate < cutoff) return;
+        const id = `${prefix}|insider-${tr.transDate}-${(tr.ownerName || '').replace(/\W/g, '')}`;
+        _aqAddNotification({
+          id, ticker,
+          message: `💼 ${ticker} 내부자 매수 — ${tr.ownerName} (${tr.relationship}) ${tr.shares.toLocaleString()}주 @ $${tr.price.toFixed(2)} (${tr.transDate})`,
+          urgent: true,
+        });
+      });
+    }
+
+    // F. 조건부 트리거 — 종가 조건
+    if (what && what.type === 'trigger') {
+      const parsed = _aqParseCondition(what.condition || '');
+      if (parsed) {
+        const last = _aqLastCloseForTicker(ticker);
+        if (last && last.close > 0) {
+          let met = false;
+          if (parsed.direction === 'up' && last.close >= parsed.threshold) met = true;
+          if (parsed.direction === 'down' && last.close <= parsed.threshold) met = true;
+          if (met) {
+            const dirLabel = parsed.direction === 'up' ? '회복/돌파' : '이탈';
+            _aqAddNotification({
+              id: `${prefix}|trigger-${parsed.threshold}-${parsed.direction}`,
+              ticker,
+              message: `🎯 ${ticker} 조건 충족 — 종가 $${last.close.toFixed(2)} (목표: $${parsed.threshold} ${dirLabel}) — ${body}`,
+              urgent: true,
+            });
+          }
+        }
+      }
+    }
+  });
+
+  // 삭제된 TODO의 알림 정리
+  const activeTodoPrefixes = new Set(todos.map(t => {
+    const ticker = String(t.ticker || t.reportTicker || '').toUpperCase();
+    return `${ticker}|${t.reportDate || ''}|${t.idx}`;
+  }));
+  const beforeLen = _aqNotifications.length;
+  _aqNotifications = _aqNotifications.filter(n => {
+    const np = n.id.split('|').slice(0, 3).join('|');
+    return activeTodoPrefixes.has(np);
+  });
+  if (_aqNotifications.length !== beforeLen) {
+    for (const k of [..._aqTriggeredKeys]) {
+      const np = k.split('|').slice(0, 3).join('|');
+      if (!activeTodoPrefixes.has(np)) _aqTriggeredKeys.delete(k);
+    }
+    _aqSaveNotifState();
+  }
+  _aqRenderMarquee();
+}
+window._aqTriggerCheckTick = _aqTriggerCheckTick;
+
+// HERO 마퀴 렌더 — 알림 큐를 우→좌 흐르는 텍스트로
+function _aqRenderMarquee() {
+  const track = document.getElementById('heroMarqueeTrack');
+  if (!track) return;
+  if (_aqNotifications.length === 0) {
+    track.classList.add('empty');
+    track.textContent = '📬 새로운 소식이 없습니다';
+    return;
+  }
+  track.classList.remove('empty');
+  // urgent 우선, 그 다음 최신
+  const sorted = _aqNotifications.slice().sort((a, b) => {
+    if (a.urgent !== b.urgent) return a.urgent ? -1 : 1;
+    return (b.createdAt || '').localeCompare(a.createdAt || '');
+  });
+  const inner = sorted.map(n => {
+    const cls = 'notif' + (n.urgent ? ' notif-urgent' : '');
+    return `<span class="${cls}" data-ticker="${escapeAttr(n.ticker)}" title="클릭하여 종목 차트 보기">${escapeHtml(n.message)}</span>`;
+  }).join('<span class="notif-sep">•</span>');
+  track.innerHTML = inner;
+  // 클릭 핸들러 — 종목 차트 모달
+  track.querySelectorAll('.notif').forEach(el => {
+    el.onclick = () => {
+      const tk = el.dataset.ticker;
+      if (tk && typeof openChart === 'function') openChart(tk);
+    };
+  });
+}
+window._aqRenderMarquee = _aqRenderMarquee;
+
+// AqTodoStore 변경 시 자동 재렌더 (todo 페이지에 있을 때만) + 트리거 엔진 연동
 window.addEventListener('DOMContentLoaded', () => {
   if (window.AqTodoStore && typeof AqTodoStore.subscribe === 'function') {
-    AqTodoStore.subscribe(() => {
+    AqTodoStore.subscribe((evt) => {
+      // 칸반 보드 재렌더
       const pcPage = document.body.getAttribute('data-pc-page');
       const mtab = document.body.getAttribute('data-mtab');
       if (pcPage === 'todo' || mtab === 'todo') {
         try { buildTodoKanban(); } catch (e) {}
       }
+      // 트리거 엔진 연동
+      if (evt.type === 'added') {
+        setTimeout(_aqTriggerCheckTick, 100);  // 즉시 검사
+      } else if (evt.type === 'removed') {
+        const ticker = String((evt.item.ticker || evt.item.reportTicker || '')).toUpperCase();
+        const prefix = `${ticker}|${evt.item.reportDate || ''}|${evt.item.idx}`;
+        _aqRemoveNotificationsByPrefix(prefix);
+      }
     });
   }
+  // 초기 마퀴 + 1.5초 후 첫 트리거 검사 + 5분 정기 검사
+  _aqRenderMarquee();
+  setTimeout(_aqTriggerCheckTick, 1500);
+  setInterval(_aqTriggerCheckTick, 5 * 60 * 1000);
 });
 
 // ============================================================================
