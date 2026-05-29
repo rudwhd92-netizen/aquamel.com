@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.60';
+window.AQ_PWA_VERSION = '2.61';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1541,6 +1541,45 @@ table.sheet tbody tr.drop-below td:last-child {
 .report-detail-title { font-size: 16px; font-weight: 700; color: var(--text); flex: 1; min-width: 0; }
 .report-detail-date { color: var(--text-mute); font-size: 12px; font-family: Consolas, monospace; }
 
+/* v2.61: 보고서 일자 드롭다운 — 우상단 */
+.report-date-select {
+  padding: 6px 30px 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background-color: rgba(255,255,255,0.05);
+  color: var(--text-hi);
+  font-family: Consolas, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.report-date-select:hover {
+  background-color: rgba(255,255,255,0.09);
+  border-color: rgba(255,255,255,0.3);
+}
+.report-date-select:focus { outline: none; border-color: rgba(92,124,250,0.6); }
+[data-theme="light"] .report-date-select {
+  background-color: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.15);
+  color: var(--text-hi);
+}
+[data-theme="light"] .report-date-select:hover { background-color: rgba(0,0,0,0.06); }
+
+/* v2.61: 보고서 없음 표시 */
+.report-empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-mute);
+  font-size: 14px;
+}
+
 .report-detail-body { display: flex; flex-direction: column; gap: 18px; }
 
 /* 섹션 공통 */
@@ -2221,12 +2260,16 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   body[data-pc-panel="analysis"] .pc-side-panel { transform: translateX(0); }
 
   /* v1.62: 사이드 패널 열림 시 메인 콘텐츠 왼쪽 이동 — 가로 폭 유지!
-     이동량 = container의 좌측 여백(가운데 정렬 때문에 생긴 여유)만큼.
-     min(0px, (1500-vw)/2): vw>1500이면 음수 (좌측 이동), vw<=1500이면 0 (이동 X = 좌측 잘림 방지) */
+     v2.61: 큰 모니터에서 좌우 여백 균등화
+     공식: translateX(min(0, max((1500-vw)/2, -242)))
+       · -242 = (sidebar 64 + panel 420) / 2 — panel이 차지하는 영역의 절반만큼만 좌측 이동
+       · vw > 1984: -242 고정 (좌측 여백 = 우측 여백, panel과 container 사이 여백도 동일)
+       · vw 1500~1984: (1500-vw)/2 (현재 동작 — 좌측 여백 0, panel과 살짝 겹침)
+       · vw < 1500: 0 (이동 X — 좌측 잘림 방지) */
   body[data-pc-panel="discover"] .container,
   body[data-pc-panel="explore"] .container,
   body[data-pc-panel="analysis"] .container {
-    transform: translateX(min(0px, calc((1500px - 100vw) / 2)));
+    transform: translateX(min(0px, max(calc((1500px - 100vw) / 2), calc(-1 * (64px + 420px) / 2))));
   }
 
   /* v1.63: 차트 모달도 사이드 패널 열렸을 때 가용 영역(좌측)만 차지 → 모달이 사이드 패널에 안 가려짐
@@ -7861,13 +7904,23 @@ function renderMajorEventsCard() {
     const lb = escapeHtml(tkLabel(ev));
     const en = escapeHtml(evtName(ev.category));
     const dn = dLabel(ev._dn);
-    return '<div class="buy-point-item major-event-item" title="' + escapeAttr(ev.description || '') + '">' +
+    // v2.61: Earnings는 data-ticker 부여 → 클릭 시 차트 모달
+    const tickerAttr = (ev.category === 'Earnings' && ev.ticker)
+      ? ' data-ticker="' + escapeAttr(ev.ticker) + '"' : '';
+    const clickableCls = (ev.category === 'Earnings' && ev.ticker) ? ' clickable' : '';
+    return '<div class="buy-point-item major-event-item' + clickableCls + '"' + tickerAttr + ' title="' + escapeAttr(ev.description || '') + '">' +
              '<img class="bp-logo" src="' + lg + '" onerror="this.onerror=null;this.src=\'./flags/US.png\';" alt=""/>' +
              '<div class="bp-name">' + lb + '</div>' +
              '<div class="bp-date">' + en + '</div>' +
              '<div class="bp-ret">' + dn + '</div>' +
            '</div>';
   }).join('');
+  // v2.61: Earnings 종목 클릭 → 차트 모달
+  if (typeof openChart === 'function') {
+    scroll.querySelectorAll('.major-event-item[data-ticker]').forEach(el => {
+      el.addEventListener('click', () => openChart(el.dataset.ticker));
+    });
+  }
 }
 window.renderMajorEventsCard = renderMajorEventsCard;
 
@@ -8007,7 +8060,13 @@ function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
             '" onerror="this.onerror=null;this.src=\'./flags/US.png\';" alt=""/>' +
             escapeHtml(label);
           chip.title = ev.description || '';
-          chip.style.cursor = 'default';
+          // v2.61: Earnings는 클릭 시 차트 모달 (ticker 있을 때만)
+          if (ev.category === 'Earnings' && ev.ticker && typeof openChart === 'function') {
+            chip.style.cursor = 'pointer';
+            chip.onclick = (e) => { e.stopPropagation(); openChart(ev.ticker); };
+          } else {
+            chip.style.cursor = 'default';
+          }
         }
         evDiv.appendChild(chip);
       });
@@ -8085,6 +8144,11 @@ function _renderSelectedSection() {
   sheetEvents.forEach(ev => {
     const row = document.createElement('div');
     row.className = 'cal-event-row is-readonly';
+    // v2.61: Earnings는 클릭 시 차트 모달
+    if (ev.category === 'Earnings' && ev.ticker && typeof openChart === 'function') {
+      row.style.cursor = 'pointer';
+      row.onclick = () => openChart(ev.ticker);
+    }
 
     // 로고
     const logoEl = document.createElement('img');
@@ -10655,13 +10719,30 @@ function renderReportContent(parsed, ticker, date) {
 async function openReportPanel() {
   const tk = _state.openTicker;
   if (!tk) return;
-  _state.reportMode = 'list';
+  _state.reportMode = 'detail';
   // 차트/콘텐츠 영역 숨김
   const hideEls = ['chartCanvas', 'chartLegend', 'modeToggleBtn'];
   hideEls.forEach(id => { const el = $(id); if (el) el.closest('.chart-wrap, .chart-legend, *').style.display = ''; });
   $('reportPanel').style.display = '';
   $('mainModalBody').style.display = 'none';
-  renderReportList();
+  // v2.61: 일자 목록 단계 skip — 최신 보고서를 바로 표시 + 드롭다운으로 다른 일자 선택
+  const mkt = getCurrentMarket();
+  const dates = ((_state.reports[mkt] || {})[String(tk).toUpperCase()]) || [];
+  if (dates.length === 0) {
+    const company = ((_state.tickerCompanyMaps || {})[mkt] || {})[String(tk).toUpperCase()] || '';
+    const titleHtml = company ? `${escapeHtml(company)} <span class="report-tk-sub">(${escapeHtml(tk)})</span>` : escapeHtml(tk);
+    $('reportPanel').innerHTML = `
+      <div class="report-detail-head">
+        <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
+        <div class="report-detail-title">📊 ${titleHtml}</div>
+        <div></div>
+      </div>
+      <div class="report-empty">등록된 보고서가 없습니다.</div>
+    `;
+    return;
+  }
+  // dates는 최신 → 옛 순 가정 — 가장 최근 일자 자동 선택
+  openReportDetail(dates[0]);
 }
 
 function closeReportPanel() {
@@ -10702,13 +10783,21 @@ async function openReportDetail(date) {
   try {
     const content = await fetchReportContent(tk, date);
     const parsed = parseReportText(content);
-    const company = (_state.tickerCompanyMap || {})[String(tk).toUpperCase()] || '';
+    const mkt = getCurrentMarket();
+    const company = ((_state.tickerCompanyMaps || {})[mkt] || {})[String(tk).toUpperCase()] || '';
     const titleHtml = company ? `${escapeHtml(company)} <span class="report-tk-sub">(${escapeHtml(tk)})</span>` : escapeHtml(tk);
+    // v2.61: 일자 드롭다운 — 우상단, 과거 보고서 선택 가능
+    const dates = ((_state.reports[mkt] || {})[String(tk).toUpperCase()]) || [];
+    const dateSelectHtml = dates.length > 1
+      ? `<select class="report-date-select" onchange="openReportDetail(this.value)">
+           ${dates.map(d => `<option value="${escapeAttr(d)}"${d === date ? ' selected' : ''}>${escapeHtml(d)}</option>`).join('')}
+         </select>`
+      : `<div class="report-detail-date">${escapeHtml(date)}</div>`;
     $('reportPanel').innerHTML = `
       <div class="report-detail-head">
-        <button class="report-back-btn" onclick="renderReportList()">← 목록</button>
+        <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
         <div class="report-detail-title">📊 ${titleHtml}</div>
-        <div class="report-detail-date">${escapeHtml(date)}</div>
+        ${dateSelectHtml}
       </div>
       <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${renderReportContent(parsed, tk, date)}</div>
     `;
@@ -10716,7 +10805,7 @@ async function openReportDetail(date) {
     const modalContent = $('reportPanel').closest('.modal-content');
     if (modalContent) modalContent.scrollTop = 0;
   } catch (e) {
-    $('reportPanel').innerHTML = `<div class="report-error">보고서 로드 실패: ${escapeHtml(e.message)}<br><button class="report-back-btn" onclick="renderReportList()">← 목록으로</button></div>`;
+    $('reportPanel').innerHTML = `<div class="report-error">보고서 로드 실패: ${escapeHtml(e.message)}<br><button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button></div>`;
   }
 }
 
