@@ -2210,7 +2210,431 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   body[data-pc-page="my"] .container > section.card { display: none !important; }
   body[data-pc-page="my"] #myPortfolioCard { display: block !important; }
   body[data-pc-page="my"] .sheet-wrap { max-height: calc(100vh - 280px) !important; }
+
+  /* v2.46: 일정 페이지 — scheduleCard만 표시 */
+  body[data-pc-page="schedule"] .container > section.card { display: none !important; }
+  body[data-pc-page="schedule"] #scheduleCard { display: block !important; }
 }
+
+/* v2.46: MO 일정 탭 — scheduleCard만 표시 */
+@media (max-width: 640px) {
+  body[data-mtab="schedule"] section.card[data-mtab~="schedule"] { display: block !important; }
+  body[data-mtab="schedule"] #scheduleCard { display: block !important; }
+}
+
+/* ============ v2.46: CALENDAR ============ */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.calendar-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-hi);
+  letter-spacing: -0.3px;
+}
+.calendar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cal-nav-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-mid);
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cal-nav-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-hi);
+  border-color: rgba(255,255,255,0.2);
+}
+.cal-today-btn {
+  padding: 7px 14px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: var(--text-mid);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cal-today-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-hi);
+}
+.cal-add-btn {
+  padding: 8px 14px;
+  background: #5c7cfa;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: filter 0.15s, transform 0.05s;
+}
+.cal-add-btn:hover { filter: brightness(1.1); }
+.cal-add-btn:active { transform: scale(0.96); }
+
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 6px;
+}
+.cal-weekday {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mute);
+  padding: 8px 0;
+  letter-spacing: 0.5px;
+}
+.cal-weekday.sat { color: #74c0fc; }
+.cal-weekday.sun { color: #ff6b6b; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.cal-cell {
+  min-height: 92px;
+  padding: 6px 6px 4px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s, border-color 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+.cal-cell:hover {
+  background: rgba(255,255,255,0.05);
+}
+.cal-cell.other-month { opacity: 0.32; }
+.cal-cell.today {
+  border-color: #5c7cfa;
+}
+.cal-cell.selected {
+  background: rgba(92,124,250,0.14);
+  border-color: #5c7cfa;
+}
+.cal-cell-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mid);
+  font-variant-numeric: tabular-nums;
+}
+.cal-cell.today .cal-cell-date {
+  color: #5c7cfa;
+  font-weight: 800;
+}
+.cal-cell-date.sat { color: #74c0fc; }
+.cal-cell-date.sun { color: #ff6b6b; }
+.cal-cell.today .cal-cell-date.sat,
+.cal-cell.today .cal-cell-date.sun { color: #5c7cfa; }
+.cal-cell-events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  flex: 1;
+}
+.cal-event-chip {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(92,124,250,0.22);
+  color: var(--text-hi);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-left: 3px solid #5c7cfa;
+  line-height: 1.4;
+}
+.cal-event-chip:hover { background: rgba(92,124,250,0.32); }
+.cal-event-more {
+  font-size: 10px;
+  color: var(--text-mute);
+  padding-left: 6px;
+  font-weight: 500;
+}
+.cal-cell-dots {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.cal-cell-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #5c7cfa;
+}
+
+/* MO: 셀 더 작게 + 일정은 점으로만 */
+@media (max-width: 640px) {
+  .calendar-title { font-size: 18px; }
+  .cal-add-btn .cal-add-label { display: none; }
+  .cal-add-btn { padding: 8px 10px; }
+  .cal-cell { min-height: 58px; padding: 4px 4px 3px; border-radius: 6px; }
+  .cal-cell-date { font-size: 12px; }
+  .cal-event-chip { display: none; }
+  .cal-event-more { display: none; }
+  .cal-weekday { font-size: 11px; padding: 6px 0; }
+}
+
+/* 선택 날짜 일정 목록 */
+.cal-selected-section {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.cal-selected-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cal-selected-date-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-hi);
+}
+.cal-selected-quick-add {
+  font-size: 12px;
+  color: #5c7cfa;
+  background: transparent;
+  border: 1px solid rgba(92,124,250,0.4);
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.cal-selected-quick-add:hover { background: rgba(92,124,250,0.08); }
+.cal-event-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 13px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.cal-event-row:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(92,124,250,0.3);
+}
+.cal-event-time {
+  font-size: 12px;
+  color: var(--text-mute);
+  flex-shrink: 0;
+  min-width: 76px;
+  font-variant-numeric: tabular-nums;
+  padding-top: 1px;
+}
+.cal-event-info { flex: 1; min-width: 0; }
+.cal-event-title {
+  font-size: 14px;
+  color: var(--text-hi);
+  font-weight: 500;
+  word-break: break-word;
+}
+.cal-event-memo {
+  font-size: 12px;
+  color: var(--text-mute);
+  margin-top: 3px;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.cal-event-empty {
+  font-size: 13px;
+  color: var(--text-mute);
+  text-align: center;
+  padding: 24px 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border: 1px dashed rgba(255,255,255,0.08);
+}
+
+/* 일정 등록/편집 모달 */
+.cal-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.cal-modal-backdrop.open { display: flex; }
+.cal-modal {
+  background: #1a1a1a;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 22px 22px 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.cal-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-hi);
+  margin-bottom: 18px;
+}
+.cal-modal-field { margin-bottom: 14px; }
+.cal-modal-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mute);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+.cal-modal-input,
+.cal-modal-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--text-hi);
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.cal-modal-input:focus,
+.cal-modal-textarea:focus {
+  outline: none;
+  border-color: #5c7cfa;
+  background: rgba(255,255,255,0.06);
+}
+.cal-modal-textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+.cal-modal-row {
+  display: flex;
+  gap: 10px;
+}
+.cal-modal-row > * { flex: 1; min-width: 0; }
+.cal-modal-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.cal-modal-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: #5c7cfa;
+  cursor: pointer;
+}
+.cal-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+.cal-modal-btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, filter 0.15s;
+}
+.cal-modal-btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text-mid);
+}
+.cal-modal-btn-secondary:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--text-hi);
+}
+.cal-modal-btn-primary {
+  background: #5c7cfa;
+  color: white;
+}
+.cal-modal-btn-primary:hover { filter: brightness(1.1); }
+.cal-modal-btn-danger {
+  background: transparent;
+  border: 1px solid rgba(255,107,107,0.4);
+  color: #ff6b6b;
+  margin-right: auto;
+}
+.cal-modal-btn-danger:hover { background: rgba(255,107,107,0.1); }
+
+/* Light theme */
+[data-theme="light"] .cal-cell { background: rgba(0,0,0,0.022); }
+[data-theme="light"] .cal-cell:hover { background: rgba(0,0,0,0.05); }
+[data-theme="light"] .cal-cell.selected { background: rgba(92,124,250,0.10); }
+[data-theme="light"] .cal-nav-btn,
+[data-theme="light"] .cal-today-btn { border-color: rgba(0,0,0,0.12); }
+[data-theme="light"] .cal-nav-btn:hover,
+[data-theme="light"] .cal-today-btn:hover { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .cal-event-chip { background: rgba(92,124,250,0.16); color: var(--text-hi); }
+[data-theme="light"] .cal-selected-section { border-top-color: rgba(0,0,0,0.08); }
+[data-theme="light"] .cal-event-row {
+  background: rgba(0,0,0,0.025);
+  border-color: rgba(0,0,0,0.06);
+}
+[data-theme="light"] .cal-event-row:hover { background: rgba(0,0,0,0.05); }
+[data-theme="light"] .cal-event-empty {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .cal-modal {
+  background: #fefdf8;
+  border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .cal-modal-input,
+[data-theme="light"] .cal-modal-textarea {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.1);
+  color: var(--text-hi);
+}
+[data-theme="light"] .cal-modal-btn-secondary {
+  border-color: rgba(0,0,0,0.15);
+  color: var(--text-mid);
+}
+[data-theme="light"] .cal-modal-btn-secondary:hover { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .calendar-title { color: var(--text-hi); }
 .stock-list-sort {
   position: relative;
   margin-left: auto;
@@ -4856,7 +5280,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.45</div>
+      <div class="splash-version" id="splashVersion">v2.46</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -5254,6 +5678,86 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+  <!-- ============ v2.46: CALENDAR / 일정 ============ -->
+  <section class="card" id="scheduleCard" data-mtab="schedule" style="display:none;">
+    <div class="card-body">
+      <div class="calendar-header">
+        <div class="calendar-title" id="calendarTitle">2026년 5월</div>
+        <div class="calendar-actions">
+          <button class="cal-nav-btn" onclick="aqCalendarNav(-1)" aria-label="이전 달">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button class="cal-today-btn" onclick="aqCalendarToday()">오늘</button>
+          <button class="cal-nav-btn" onclick="aqCalendarNav(1)" aria-label="다음 달">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <button class="cal-add-btn" onclick="aqCalendarOpenModal()">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span class="cal-add-label">일정 추가</span>
+          </button>
+        </div>
+      </div>
+      <div class="cal-weekdays">
+        <div class="cal-weekday">월</div>
+        <div class="cal-weekday">화</div>
+        <div class="cal-weekday">수</div>
+        <div class="cal-weekday">목</div>
+        <div class="cal-weekday">금</div>
+        <div class="cal-weekday sat">토</div>
+        <div class="cal-weekday sun">일</div>
+      </div>
+      <div class="cal-grid" id="calendarGrid"></div>
+
+      <div class="cal-selected-section" id="calSelectedSection" style="display: none;">
+        <div class="cal-selected-head">
+          <div class="cal-selected-date-label" id="calSelectedDateLabel"></div>
+          <button class="cal-selected-quick-add" onclick="aqCalendarOpenModal()">+ 이 날 일정 추가</button>
+        </div>
+        <div id="calSelectedList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- v2.46: 일정 등록/편집 모달 -->
+  <div class="cal-modal-backdrop" id="calModalBackdrop" onclick="if(event.target===this) aqCalendarCloseModal()">
+    <div class="cal-modal" role="dialog" aria-label="일정 등록">
+      <div class="cal-modal-title" id="calModalTitle">새 일정</div>
+      <div class="cal-modal-field">
+        <label class="cal-modal-label" for="calInputTitle">제목</label>
+        <input class="cal-modal-input" id="calInputTitle" type="text" placeholder="일정 제목" maxlength="80">
+      </div>
+      <div class="cal-modal-field">
+        <label class="cal-modal-label" for="calInputDate">날짜</label>
+        <input class="cal-modal-input" id="calInputDate" type="date">
+      </div>
+      <div class="cal-modal-field">
+        <label class="cal-modal-toggle">
+          <input type="checkbox" id="calInputAllDay" onchange="aqCalendarToggleAllDay()">
+          <span>종일</span>
+        </label>
+      </div>
+      <div class="cal-modal-row" id="calTimeRow">
+        <div class="cal-modal-field" style="margin-bottom:0;">
+          <label class="cal-modal-label" for="calInputStartTime">시작</label>
+          <input class="cal-modal-input" id="calInputStartTime" type="time">
+        </div>
+        <div class="cal-modal-field" style="margin-bottom:0;">
+          <label class="cal-modal-label" for="calInputEndTime">종료</label>
+          <input class="cal-modal-input" id="calInputEndTime" type="time">
+        </div>
+      </div>
+      <div class="cal-modal-field" style="margin-top:14px;">
+        <label class="cal-modal-label" for="calInputMemo">메모</label>
+        <textarea class="cal-modal-textarea" id="calInputMemo" placeholder="추가 메모 (선택)"></textarea>
+      </div>
+      <div class="cal-modal-actions">
+        <button class="cal-modal-btn cal-modal-btn-danger" id="calModalDeleteBtn" onclick="aqCalendarDelete()" style="display: none;">삭제</button>
+        <button class="cal-modal-btn cal-modal-btn-secondary" onclick="aqCalendarCloseModal()">취소</button>
+        <button class="cal-modal-btn cal-modal-btn-primary" onclick="aqCalendarSave()">저장</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ============ v1.45 MOBILE-ONLY: 하단 플로팅 알약 메뉴 (그레이톤 SVG 아이콘) ============ -->
   <!-- v2.44: 6개 → 5개로 재구성 (발견/탐색/To-Do/분석/일정), 섹터·보드·마이는 햄버거 드로어로 이동 -->
   <nav class="mobile-tab-bar" id="mobileTabBar" aria-label="모바일 네비게이션">
@@ -5287,7 +5791,7 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">분석</span>
     </button>
-    <button class="mtab-btn disabled" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
+    <button class="mtab-btn" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="5" width="18" height="16" rx="2"/>
         <path d="M3 10h18"/>
@@ -5464,7 +5968,7 @@ table.combo-eval tbody td .nodata {
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8M5 10v10h14V10"/></svg>
     <span class="pc-tab-label">메인</span>
   </button>
-  <button class="pc-tab-btn disabled" data-pc-tab="schedule" onclick="setPCTab('schedule')" aria-label="일정">
+  <button class="pc-tab-btn" data-pc-tab="schedule" onclick="setPCTab('schedule')" aria-label="일정">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>
     <span class="pc-tab-label">일정</span>
   </button>
@@ -6738,6 +7242,310 @@ function aqToast(msg, duration) {
   }, duration || 1800);
 }
 window.aqToast = aqToast;
+
+// ============================================================================
+// v2.46: 캘린더 — 일정 메뉴
+//   월화수목금토일 순. localStorage 'aq_calendar_events' 배열.
+//   PC: 셀에 일정 chip 텍스트, MO: 점(dot)만, 선택 시 하단에 일정 목록.
+// ============================================================================
+const aqCal = {
+  current: new Date(),   // 표시 중인 달 (해당 달의 임의 시점)
+  selected: null,        // 선택된 날짜 (YYYY-MM-DD)
+  editingId: null,
+};
+
+function aqCalLoadEvents() {
+  try { return JSON.parse(localStorage.getItem('aq_calendar_events') || '[]'); }
+  catch (e) { return []; }
+}
+function aqCalSaveEvents(arr) {
+  try { localStorage.setItem('aq_calendar_events', JSON.stringify(arr)); } catch (e) {}
+}
+function aqCalFmt(y, m, d) {
+  const dt = new Date(y, m, d);
+  return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+}
+function aqCalTodayStr() {
+  const t = new Date();
+  return aqCalFmt(t.getFullYear(), t.getMonth(), t.getDate());
+}
+function aqCalEventsFor(dateStr) {
+  return aqCalLoadEvents().filter(e => e.date === dateStr).sort((a, b) => {
+    if (a.allDay && !b.allDay) return -1;
+    if (!a.allDay && b.allDay) return 1;
+    return (a.startTime || '').localeCompare(b.startTime || '');
+  });
+}
+
+function aqCalendarRender() {
+  const titleEl = document.getElementById('calendarTitle');
+  const grid = document.getElementById('calendarGrid');
+  if (!titleEl || !grid) return;
+
+  const y = aqCal.current.getFullYear();
+  const m = aqCal.current.getMonth();
+  titleEl.textContent = y + '년 ' + (m + 1) + '월';
+
+  const firstDay = new Date(y, m, 1);
+  const lastDay = new Date(y, m + 1, 0);
+  // 월화수목금토일 시작 → 월(JS day=1)이 첫번째 → offset = (day + 6) % 7
+  const startOffset = (firstDay.getDay() + 6) % 7;
+  const todayStr = aqCalTodayStr();
+  const isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+  grid.innerHTML = '';
+
+  // 이전 달 잔여
+  const prevLastDate = new Date(y, m, 0).getDate();
+  for (let i = startOffset - 1; i >= 0; i--) {
+    const d = prevLastDate - i;
+    grid.appendChild(_buildCalCell(d, aqCalFmt(y, m - 1, d), true, todayStr, isMobile));
+  }
+  // 이번 달
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    grid.appendChild(_buildCalCell(d, aqCalFmt(y, m, d), false, todayStr, isMobile));
+  }
+  // 다음 달 채움 (6주 = 42칸까지)
+  const filled = startOffset + lastDay.getDate();
+  const remain = filled <= 35 ? 35 - filled : 42 - filled;
+  for (let d = 1; d <= remain; d++) {
+    grid.appendChild(_buildCalCell(d, aqCalFmt(y, m + 1, d), true, todayStr, isMobile));
+  }
+
+  _renderSelectedSection();
+}
+
+function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
+  const events = aqCalEventsFor(dateStr);
+  const cell = document.createElement('div');
+  cell.className = 'cal-cell' +
+    (isOther ? ' other-month' : '') +
+    (dateStr === todayStr ? ' today' : '') +
+    (dateStr === aqCal.selected ? ' selected' : '');
+  cell.dataset.date = dateStr;
+  cell.onclick = () => aqCalendarSelectDate(dateStr);
+
+  const dateDiv = document.createElement('div');
+  dateDiv.className = 'cal-cell-date';
+  // 토/일 색상
+  const dt = new Date(dateStr);
+  const dow = dt.getDay();
+  if (dow === 6) dateDiv.classList.add('sat');
+  if (dow === 0) dateDiv.classList.add('sun');
+  dateDiv.textContent = dayNum;
+  cell.appendChild(dateDiv);
+
+  if (events.length > 0) {
+    if (isMobile) {
+      const dotsDiv = document.createElement('div');
+      dotsDiv.className = 'cal-cell-dots';
+      const maxDots = Math.min(events.length, 3);
+      for (let i = 0; i < maxDots; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'cal-cell-dot';
+        dotsDiv.appendChild(dot);
+      }
+      cell.appendChild(dotsDiv);
+    } else {
+      const evDiv = document.createElement('div');
+      evDiv.className = 'cal-cell-events';
+      const maxShow = 3;
+      events.slice(0, maxShow).forEach(ev => {
+        const chip = document.createElement('div');
+        chip.className = 'cal-event-chip';
+        chip.textContent = ev.allDay ? ev.title : ((ev.startTime ? ev.startTime + ' ' : '') + ev.title);
+        chip.title = ev.title;
+        chip.onclick = (e) => { e.stopPropagation(); aqCalendarOpenModal(ev.id); };
+        evDiv.appendChild(chip);
+      });
+      if (events.length > maxShow) {
+        const more = document.createElement('div');
+        more.className = 'cal-event-more';
+        more.textContent = '+' + (events.length - maxShow);
+        evDiv.appendChild(more);
+      }
+      cell.appendChild(evDiv);
+    }
+  }
+  return cell;
+}
+
+function aqCalendarSelectDate(dateStr) {
+  aqCal.selected = dateStr;
+  // 다른 달이면 그 달로 이동
+  const dt = new Date(dateStr);
+  if (dt.getMonth() !== aqCal.current.getMonth() || dt.getFullYear() !== aqCal.current.getFullYear()) {
+    aqCal.current = new Date(dt.getFullYear(), dt.getMonth(), 1);
+  }
+  aqCalendarRender();
+}
+
+function _renderSelectedSection() {
+  const section = document.getElementById('calSelectedSection');
+  const label = document.getElementById('calSelectedDateLabel');
+  const list = document.getElementById('calSelectedList');
+  if (!section || !label || !list) return;
+  if (!aqCal.selected) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  const dt = new Date(aqCal.selected);
+  const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+  label.textContent = dt.getFullYear() + '년 ' + (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 (' + dayNames[dt.getDay()] + ')';
+
+  const events = aqCalEventsFor(aqCal.selected);
+  if (events.length === 0) {
+    list.innerHTML = '<div class="cal-event-empty">이 날짜에 등록된 일정이 없습니다.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  events.forEach(ev => {
+    const row = document.createElement('div');
+    row.className = 'cal-event-row';
+    row.onclick = () => aqCalendarOpenModal(ev.id);
+
+    const tEl = document.createElement('div');
+    tEl.className = 'cal-event-time';
+    if (ev.allDay) tEl.textContent = '종일';
+    else if (ev.startTime && ev.endTime) tEl.textContent = ev.startTime + ' ~ ' + ev.endTime;
+    else if (ev.startTime) tEl.textContent = ev.startTime;
+    else tEl.textContent = '시각 미정';
+    row.appendChild(tEl);
+
+    const info = document.createElement('div');
+    info.className = 'cal-event-info';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'cal-event-title';
+    titleEl.textContent = ev.title;
+    info.appendChild(titleEl);
+    if (ev.memo) {
+      const memoEl = document.createElement('div');
+      memoEl.className = 'cal-event-memo';
+      memoEl.textContent = ev.memo;
+      info.appendChild(memoEl);
+    }
+    row.appendChild(info);
+    list.appendChild(row);
+  });
+}
+
+function aqCalendarNav(delta) {
+  aqCal.current = new Date(aqCal.current.getFullYear(), aqCal.current.getMonth() + delta, 1);
+  aqCalendarRender();
+}
+function aqCalendarToday() {
+  const t = new Date();
+  aqCal.current = new Date(t.getFullYear(), t.getMonth(), 1);
+  aqCal.selected = aqCalTodayStr();
+  aqCalendarRender();
+}
+
+function aqCalendarOpenModal(editId) {
+  const backdrop = document.getElementById('calModalBackdrop');
+  if (!backdrop) return;
+  const _$ = (id) => document.getElementById(id);
+
+  _$('calInputTitle').value = '';
+  _$('calInputDate').value = aqCal.selected || aqCalTodayStr();
+  _$('calInputStartTime').value = '';
+  _$('calInputEndTime').value = '';
+  _$('calInputMemo').value = '';
+  _$('calInputAllDay').checked = false;
+  _$('calTimeRow').style.display = '';
+  _$('calModalDeleteBtn').style.display = 'none';
+  _$('calModalTitle').textContent = '새 일정';
+  aqCal.editingId = null;
+
+  if (editId) {
+    const ev = aqCalLoadEvents().find(e => e.id === editId);
+    if (ev) {
+      aqCal.editingId = editId;
+      _$('calModalTitle').textContent = '일정 편집';
+      _$('calInputTitle').value = ev.title || '';
+      _$('calInputDate').value = ev.date || '';
+      _$('calInputStartTime').value = ev.startTime || '';
+      _$('calInputEndTime').value = ev.endTime || '';
+      _$('calInputMemo').value = ev.memo || '';
+      _$('calInputAllDay').checked = !!ev.allDay;
+      if (ev.allDay) _$('calTimeRow').style.display = 'none';
+      _$('calModalDeleteBtn').style.display = '';
+    }
+  }
+  backdrop.classList.add('open');
+  setTimeout(() => _$('calInputTitle').focus(), 80);
+}
+function aqCalendarCloseModal() {
+  const b = document.getElementById('calModalBackdrop');
+  if (b) b.classList.remove('open');
+  aqCal.editingId = null;
+}
+function aqCalendarToggleAllDay() {
+  const checked = document.getElementById('calInputAllDay').checked;
+  document.getElementById('calTimeRow').style.display = checked ? 'none' : '';
+}
+function aqCalendarSave() {
+  const _$ = (id) => document.getElementById(id);
+  const title = (_$('calInputTitle').value || '').trim();
+  const date = _$('calInputDate').value;
+  if (!title) { aqToast('제목을 입력하세요'); _$('calInputTitle').focus(); return; }
+  if (!date)  { aqToast('날짜를 선택하세요'); return; }
+  const allDay = _$('calInputAllDay').checked;
+  const startTime = allDay ? '' : (_$('calInputStartTime').value || '');
+  const endTime   = allDay ? '' : (_$('calInputEndTime').value || '');
+  const memo = (_$('calInputMemo').value || '').trim();
+  // 시작/종료 순서 검증
+  if (!allDay && startTime && endTime && endTime < startTime) {
+    aqToast('종료 시각이 시작보다 빠릅니다');
+    return;
+  }
+  const events = aqCalLoadEvents();
+  if (aqCal.editingId) {
+    const idx = events.findIndex(e => e.id === aqCal.editingId);
+    if (idx >= 0) {
+      events[idx] = Object.assign({}, events[idx], { title, date, startTime, endTime, memo, allDay });
+    }
+  } else {
+    events.push({
+      id: 'evt_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+      title, date, startTime, endTime, memo, allDay,
+      createdAt: new Date().toISOString(),
+    });
+  }
+  aqCalSaveEvents(events);
+  aqCalendarCloseModal();
+  aqCal.selected = date;
+  const dt = new Date(date);
+  aqCal.current = new Date(dt.getFullYear(), dt.getMonth(), 1);
+  aqCalendarRender();
+  aqToast('일정이 저장되었습니다');
+}
+function aqCalendarDelete() {
+  if (!aqCal.editingId) return;
+  if (!confirm('이 일정을 삭제할까요?')) return;
+  const events = aqCalLoadEvents().filter(e => e.id !== aqCal.editingId);
+  aqCalSaveEvents(events);
+  aqCalendarCloseModal();
+  aqCalendarRender();
+  aqToast('일정이 삭제되었습니다');
+}
+
+window.aqCalendarRender       = aqCalendarRender;
+window.aqCalendarNav          = aqCalendarNav;
+window.aqCalendarToday        = aqCalendarToday;
+window.aqCalendarSelectDate   = aqCalendarSelectDate;
+window.aqCalendarOpenModal    = aqCalendarOpenModal;
+window.aqCalendarCloseModal   = aqCalendarCloseModal;
+window.aqCalendarToggleAllDay = aqCalendarToggleAllDay;
+window.aqCalendarSave         = aqCalendarSave;
+window.aqCalendarDelete       = aqCalendarDelete;
+
+// 페이지 로드 시 초기 selected = 오늘 (DOM 준비된 후 한 번)
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('calendarGrid')) {
+    aqCal.current = new Date();
+    aqCal.selected = aqCalTodayStr();
+    // 일정 페이지 진입 시점에 render되긴 하지만, 미리 한 번 시도
+    try { aqCalendarRender(); } catch (e) {}
+  }
+});
 
 // ============================================================================
 // PORTFOLIO + TRADES (LocalStorage)
@@ -13921,8 +14729,8 @@ window.closeMoDrawer = closeMoDrawer;
 window.moDrawerNav = moDrawerNav;
 
 function switchMobileTab(tab) {
-  // v2.44: 신규 disabled 메뉴 — 클릭 시 토스트만, 탭 전환 X (옛 active 그대로)
-  if (tab === 'schedule' || tab === 'todo') {
+  // v2.46: schedule 활성화. todo는 여전히 disabled
+  if (tab === 'todo') {
     aqToast('준비 중입니다');
     return;
   }
@@ -13940,6 +14748,9 @@ function switchMobileTab(tab) {
   } else if (tab === 'analysis') {
     // v2.01 Phase 2: 보고서 등록 ticker 그리드
     buildAnalysisGrid();
+  } else if (tab === 'schedule') {
+    // v2.46: 캘린더 렌더
+    try { aqCalendarRender(); } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -14025,13 +14836,17 @@ function updatePCSidebarActive() {
 
 // 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
 function setPCTab(tab) {
-  // v2.44: 신규 disabled 메뉴 — 클릭 시 토스트만, 페이지/패널 변경 X
-  if (tab === 'schedule' || tab === 'todo') {
+  // v2.46: schedule 활성화 — 영역 1 (페이지 교체)에 합류. todo는 여전히 disabled
+  if (tab === 'todo') {
     aqToast('준비 중입니다');
     return;
   }
-  if (tab === 'main' || tab === 'board' || tab === 'my') {
+  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule') {
     setPCPage(tab);
+    // 일정 페이지 진입 시 캘린더 렌더 (DOM 준비된 후)
+    if (tab === 'schedule') {
+      try { aqCalendarRender(); } catch (e) {}
+    }
   } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis') {
     // v2.03: analysis도 사이드 패널 (탐색과 동일 UI/UX)
     togglePCPanel(tab);
