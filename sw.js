@@ -1,12 +1,10 @@
-// AQUAMEL V-Shape Scanner — Service Worker v2.36 (rollback)
+// AQUAMEL V-Shape Scanner — Service Worker v2.36
 // v2.04: data/data.json만 stale-while-revalidate (즉시 캐시 반환 + 백그라운드 갱신)
 // 다른 자산은 기존 network-first
-const CACHE_NAME = 'aquamel-v2.36-rollback';
+const CACHE_NAME = 'aquamel-v2.36';
 const CACHE_FILES = ['./', './index.html', './sw.js'];
 
 self.addEventListener('install', (event) => {
-  // 새 SW 즉시 활성화 (옛 SW 대기 안 함)
-  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(CACHE_FILES).catch(()=>{}))
   );
@@ -14,14 +12,9 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(keys => {
-      // 백혈구: 현재 cache 외 모든 aquamel-v2.x 캐시 박멸
-      const stale = keys.filter(k => k !== CACHE_NAME);
-      if (stale.length > 0) {
-        console.log('[sw 백혈구] 옛 캐시 박멸:', stale);
-      }
-      return Promise.all(stale.map(k => caches.delete(k)));
-    }).then(() => self.clients.claim())
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    ).then(() => self.clients.claim())
   );
 });
 
