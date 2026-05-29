@@ -3011,6 +3011,31 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 /* v2.48: mobile-topbar 새로고침 버튼 스피닝 (SVG 회전) */
 .mobile-topbar-btn.spinning svg { animation: hero-refresh-spin 1.1s linear infinite; transform-origin: center; }
 
+/* v2.50: 시트 변경 감지 신호 — 새로고침 버튼에 빨간 점 + 펄스 (PC + MO 공통) */
+.hero-refresh.has-update,
+.mobile-topbar-btn.has-update { position: relative; }
+.hero-refresh.has-update::after,
+.mobile-topbar-btn.has-update::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  background: #ff6b6b;
+  border-radius: 50%;
+  border: 2px solid var(--bg, #0d0d0d);
+  box-shadow: 0 0 6px rgba(255, 107, 107, 0.55);
+  animation: aq-update-pulse 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes aq-update-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.2); opacity: 0.65; }
+}
+[data-theme="light"] .hero-refresh.has-update::after,
+[data-theme="light"] .mobile-topbar-btn.has-update::after { border-color: var(--bg, #fefdf8); }
+
 /* ============ TICKER LOGOS (v1.28) ============ */
 /* v2.17: 모든 곳의 티커 로고 — 원형으로 통일 (이전 라운딩된 사각형) */
 .ticker-logo {
@@ -5285,7 +5310,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="splash-progress-text" id="splashProgressText">0%</div>
       <!-- v2.01: 버전 표시 — 로딩 % 밑에만 (hero/footer에서는 제거) -->
-      <div class="splash-version" id="splashVersion">v2.49</div>
+      <div class="splash-version" id="splashVersion">v2.50</div>
     </div>
     <div class="splash-error" id="splashError" style="display:none;">
       <div class="splash-error-msg" id="splashErrorMsg"></div>
@@ -8806,6 +8831,8 @@ async function autoLoadData(opts) {
         _autoLoadInProgress = false;
         // 백그라운드: data.json 새 거 확인 + 60분 이상 stale이면 자동 forceFresh
         setTimeout(() => _aqBackgroundRefresh(cachedTs), 100);
+        // v2.50: polling 시작 (한 번만 — 내부 가드)
+        _aqStartPolling();
         return;
       }
     } catch (e) {
@@ -8854,6 +8881,8 @@ async function autoLoadData(opts) {
         fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
         // v2.49: 캐시 저장 (다음 진입 시 즉시 복원)
         aqCacheSaveState();
+        // v2.50: polling 시작 (한 번만 — 내부 가드)
+        _aqStartPolling();
         return;
       }
     } else {
@@ -9084,6 +9113,9 @@ async function autoLoadData(opts) {
     fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
     // v2.49: forceFresh fallback 성공 — 캐시 저장 (다음 진입 시 즉시 복원)
     aqCacheSaveState();
+    // v2.50: forceFresh 또는 일반 fallback 성공 — 기준점 갱신 + 신호 OFF + polling 시작
+    _aqUpdateLastSheetsState();
+    _aqStartPolling();
   } catch (err) {
     console.error(err);
     splashError(err.message || '데이터 로드 실패');
@@ -9096,6 +9128,90 @@ async function autoLoadData(opts) {
   }
 }
 window.autoLoadData = autoLoadData;
+
+// ============================================================================
+// v2.50: 시트 변경 감지 polling — 5분마다 backend에 sheet lastModified 확인
+//   사용자가 시트에 데이터 추가 → 최대 5분 안에 새로고침 버튼에 빨간 점 표시
+//   forceFresh 성공 시 lastSheetsState 갱신 → 신호 자동 제거
+//   탭 hidden일 때 skip (배터리 / 트래픽 절약)
+// ============================================================================
+const AQ_POLL_INTERVAL_MS = 5 * 60 * 1000;  // 5분
+let _aqPollInterval = null;
+let _aqPollStarted = false;
+
+function _aqSetUpdateSignal(on) {
+  const hero = document.getElementById('heroRefreshBtn');
+  const mob = document.getElementById('mobileRefreshBtn');
+  if (hero) hero.classList.toggle('has-update', !!on);
+  if (mob)  mob.classList.toggle('has-update', !!on);
+}
+
+async function _aqPollSheetsChange() {
+  if (document.visibilityState === 'hidden') return;
+  if (_autoLoadInProgress) return;
+  if (!backendReady()) return;
+  try {
+    const res = await apiCall('getSheetsLastModified', {});
+    if (!res || !res.ok || !res.sheets) {
+      console.warn('[poll] getSheetsLastModified 응답 비정상:', res && res.error);
+      return;
+    }
+    const newState = res.sheets;
+    const lastState = await aqDbGet('lastSheetsState');
+    if (!lastState) {
+      // 첫 polling — 비교 기준점 저장만, 신호 X
+      await aqDbSet('lastSheetsState', newState);
+      return;
+    }
+    // 비교 — 하나라도 새 거면 신호 ON
+    let changed = false;
+    let changedKey = '';
+    for (const key of Object.keys(newState)) {
+      const newV = newState[key] || '';
+      const oldV = lastState[key] || '';
+      if (newV > oldV) { changed = true; changedKey = key; break; }
+    }
+    if (changed) {
+      console.log('[poll] 시트 변경 감지 — 신호 ON (key=' + changedKey + ')');
+      _aqSetUpdateSignal(true);
+    }
+    // 신호 OFF는 사용자가 새로고침 한 후에만 (자동 OFF 안 함 — 사용자가 새로고침 클릭 전까지 유지)
+  } catch (e) {
+    console.warn('[poll]', e);
+  }
+}
+
+// forceFresh 성공 후 호출 — 기준점 갱신 + 신호 OFF
+async function _aqUpdateLastSheetsState() {
+  try {
+    const res = await apiCall('getSheetsLastModified', {});
+    if (res && res.ok && res.sheets) {
+      await aqDbSet('lastSheetsState', res.sheets);
+      _aqSetUpdateSignal(false);
+      console.log('[poll] lastSheetsState 갱신 + 신호 OFF');
+    }
+  } catch (e) { console.warn('[_aqUpdateLastSheetsState]', e); }
+}
+
+// polling 시작 — 앱 진입 후 한 번만, 30초 후 첫 호출
+function _aqStartPolling() {
+  if (_aqPollStarted) return;
+  _aqPollStarted = true;
+  if (_aqPollInterval) clearInterval(_aqPollInterval);
+  setTimeout(() => {
+    _aqPollSheetsChange();
+    _aqPollInterval = setInterval(_aqPollSheetsChange, AQ_POLL_INTERVAL_MS);
+  }, 30000);
+  // 탭 다시 활성화될 때 즉시 한 번 더 확인
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && _aqPollStarted) {
+      _aqPollSheetsChange();
+    }
+  });
+}
+window._aqStartPolling = _aqStartPolling;
+window._aqUpdateLastSheetsState = _aqUpdateLastSheetsState;
+window._aqSetUpdateSignal = _aqSetUpdateSignal;
 
 // ============================================================================
 // v2.49: 백그라운드 자동 갱신 — 캐시 ingest 후 호출
@@ -9130,6 +9246,8 @@ async function _aqBackgroundRefresh(cachedTs) {
         const ok = await tryLoadFromBundle();
         if (ok) {
           await aqCacheSaveState();
+          // v2.50: silent 갱신도 fresh로 본 거라 신호 OFF + 기준점 갱신
+          _aqUpdateLastSheetsState();
           if (typeof aqToast === 'function') aqToast('데이터가 최신으로 업데이트되었습니다');
         }
       } catch (e) { console.warn('[_aqBackgroundRefresh] re-ingest 실패:', e); }
