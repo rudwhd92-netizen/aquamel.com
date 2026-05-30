@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.84';
+window.AQ_PWA_VERSION = '2.85';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -6646,10 +6646,11 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-  <!-- ============ v1.44 MOBILE-ONLY: 매수 포인트 카드 (발견 탭 상단) ============ -->
+  <!-- ============ v1.44 MOBILE-ONLY: 내부자 매수 카드 (발견 탭 상단) ============ -->
+  <!-- v2.85: "매수 포인트"(시그널 기반) → "내부자 매수"(Form 4 기반)로 컨텐츠 교체. UI 100% 보존. -->
   <section class="card mobile-only" id="buyPointsCard" data-mtab="discover">
     <div class="card-header">
-      <h2>매수 포인트</h2>
+      <h2>내부자 매수</h2>
     </div>
     <div class="card-body">
       <div class="buy-points-scroll" id="buyPointsScroll">
@@ -8619,6 +8620,7 @@ const AQ_US_INSIDER_TAB = 'US_RESULT';
 const AQ_INS_CACHE_KEY = 'us_insider_v1';
 const AQ_INS_CACHE_TTL_MIN = 360;  // 6h
 let _aqInsiderTrades = {};  // { TICKER: [trade, trade, ...] }
+let _aqInsiderLoaded = false;  // v2.85: 내부자 데이터 fetch 완료 여부 (로딩중 vs 비어있음 구분용)
 
 async function fetchInsiderTrades(forceFresh) {
   if (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US') {
@@ -8632,6 +8634,7 @@ async function fetchInsiderTrades(forceFresh) {
         const ageMin = (Date.now() - new Date(cached.fetchedAt).getTime()) / 60000;
         if (ageMin < AQ_INS_CACHE_TTL_MIN) {
           _aqInsiderTrades = cached.byTicker;
+          _aqInsiderLoaded = true;
           console.log('[fetchInsiderTrades] IDB 캐시 사용 (' + ageMin.toFixed(0) + '분 전, ' + Object.keys(_aqInsiderTrades).length + '종목)');
           return _aqInsiderTrades;
         }
@@ -8677,6 +8680,7 @@ async function fetchInsiderTrades(forceFresh) {
       byTicker[tk].sort((a, b) => (b.transDate || '').localeCompare(a.transDate || ''));
     });
     _aqInsiderTrades = byTicker;
+    _aqInsiderLoaded = true;
     try { await aqDbSet(AQ_INS_CACHE_KEY, { fetchedAt: new Date().toISOString(), byTicker }); } catch (e) {}
     console.log('[fetchInsiderTrades] fetch 완료 — ' + Object.keys(byTicker).length + '종목, ' + res.rows.length + '건');
     return byTicker;
@@ -9955,8 +9959,14 @@ function setMarket(mkt) {
   } catch (e) {}
 
   // v2.64: 시장 전환 후 내부자 거래 데이터 갱신 — US만, background
+  // v2.85: fetch 완료 후 내부자 매수 카드 재빌드
   setTimeout(() => {
-    try { if (typeof fetchInsiderTrades === 'function') fetchInsiderTrades(false); } catch (e) {}
+    try {
+      if (typeof fetchInsiderTrades === 'function')
+        fetchInsiderTrades(false)
+          .then(() => { try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {} })
+          .catch(() => {});
+    } catch (e) {}
   }, 300);
 }
 window.setMarket = setMarket;
@@ -10802,8 +10812,14 @@ async function autoLoadData(opts) {
     if (loadingTitle) loadingTitle.textContent = '데이터 업데이트 & 분석';
     _autoLoadInProgress = false;
     // v2.64: 내부자 거래 데이터 background fetch (US만, 메인 로딩 영향 X — 비동기 / await 안 함)
+    // v2.85: fetch 완료 후 내부자 매수 카드 재빌드
     setTimeout(() => {
-      try { if (typeof fetchInsiderTrades === 'function') fetchInsiderTrades(false); } catch (e) {}
+      try {
+        if (typeof fetchInsiderTrades === 'function')
+          fetchInsiderTrades(false)
+            .then(() => { try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {} })
+            .catch(() => {});
+      } catch (e) {}
     }, 500);
   }
   // v2.79: forceFresh 시 V_Shape_Archive (V1) 시트도 fetch — V2와 별도 시트라 기존 fallback 누락
@@ -17959,95 +17975,88 @@ function initPCTabs() {
 window.setPCTab = setPCTab;
 
 // ============================================================================
-// v1.44 매수 포인트 카드 (발견 탭 상단)
-// 최근 5거래일 시그널 + 활성 필터 + 현재 수익률 마이너스
+// v1.44 / v2.85: 내부자 매수 카드 (발견 탭 상단)
+// v2.85: "매수 포인트"(최근 5일 시그널 중 마이너스) → "내부자 매수"(최근 5일 내 Form 4 일반주 매수)로 교체.
+//   - US 전용 (US_RESULT = SEC Form 4). KR이면 안내 문구.
+//   - isCommonEquityTrade로 일반주만 (ADR=American Depositary Shares는 일반주로 통과).
+//   - 5일 이내 2회 이상 거래 종목은 가장 최근 transDate 기준으로만 1회 노출 (종목별 dedup).
+//   - 카드 양식은 기존과 100% 동일: 로고 / 이름 / 일자 / (하단 슬롯엔 매수 단가 $).
 // ============================================================================
 function buildBuyPointsCard() {
   const scrollEl = $('buyPointsScroll');
   if (!scrollEl) return;
-  if (!_state.archive || !_state.archive.length) {
+
+  const market = getCurrentMarket();
+  if (market !== 'US') {
+    scrollEl.innerHTML = '<div class="buy-points-empty">내부자 매수는 미국 시장에서만 제공됩니다</div>';
+    return;
+  }
+  if (!_aqInsiderLoaded) {
     scrollEl.innerHTML = '<div class="buy-points-empty">데이터 로딩 중…</div>';
     return;
   }
 
-  // v1.51: "최근 5일" = 오늘 기준 calendar 5일 윈도우 (today, -1, -2, -3, -4)
-  // (이전: archive의 unique date 5개 — 거래일 띄엄띄엄 있으면 6일 전까지 포함되는 버그)
-  const todayStr = _state.latestDate
-    || _state.archive.map(r => r.Date).filter(Boolean).sort().slice(-1)[0];
+  // 기준일: archive 최신일과 동일 기준으로 5일 윈도우 (오늘 포함 5일 → today, -1..-4)
+  //   archive 최신일이 없으면 내부자 거래의 최신 transDate를 기준으로 fallback
+  const pad = n => String(n).padStart(2, '0');
+  let todayStr = _state.latestDate
+    || (_state.archive || []).map(r => r.Date).filter(Boolean).sort().slice(-1)[0]
+    || '';
+  if (!todayStr) {
+    // 내부자 거래 최신 transDate로 기준일 잡기
+    let maxTd = '';
+    Object.keys(_aqInsiderTrades).forEach(tk => {
+      (_aqInsiderTrades[tk] || []).forEach(t => { if (t.transDate > maxTd) maxTd = t.transDate; });
+    });
+    todayStr = maxTd;
+  }
   if (!todayStr) {
     scrollEl.innerHTML = '<div class="buy-points-empty">데이터 없음</div>';
     return;
   }
   const todayDate = new Date(todayStr);
   const cutoffDate = new Date(todayDate);
-  cutoffDate.setDate(todayDate.getDate() - 4);  // 4 빼서 5일 윈도우 (오늘 포함 5일)
-  const pad = n => String(n).padStart(2, '0');
+  cutoffDate.setDate(todayDate.getDate() - 4);
   const cutoff = `${cutoffDate.getFullYear()}-${pad(cutoffDate.getMonth()+1)}-${pad(cutoffDate.getDate())}`;
 
-  // 필터된 시그널 + 5일 윈도우 후보
-  const activeFilters = _state.signalFilter;
-  const candidates = [];
-  _state.archive.forEach(r => {
-    if (!r.Date || r.Date < cutoff) return;
-    const sigs = (r.Signal_Type || '').split('+').map(s => s.trim()).filter(Boolean);
-    const hasActive = sigs.some(s => activeFilters.has(s));
-    if (!hasActive) return;
-    candidates.push(r);
-  });
-
-  // 현재 수익률 계산 + 마이너스만
-  const items = [];
-  candidates.forEach(r => {
-    const found = findTickerSeries(r.Ticker);
-    if (!found || !found.rows || !found.rows.length) return;
-    const latestClose = found.rows[found.rows.length - 1].Close;
-    const signalClose = r.Close_Price;
-    if (!(signalClose > 0) || !(latestClose > 0)) return;
-    const ret = (latestClose / signalClose - 1) * 100;
-    if (ret > 0) return;  // v1.57: 양수 아닌 것만 (0% 포함)
-    items.push({
-      ticker: r.Ticker,
-      sector: r.Sector,
-      date: r.Date,
-      ret,
-    });
-  });
-
-  // 같은 티커가 여러 시그널 가지면 가장 최근 일자만
+  // 종목별: 최근 5일 윈도우 내 일반주 매수 거래 → 가장 최근 1건만 (배열이 이미 desc 정렬)
   const byTicker = {};
-  items.forEach(it => {
-    if (!byTicker[it.ticker] || it.date > byTicker[it.ticker].date) byTicker[it.ticker] = it;
+  Object.keys(_aqInsiderTrades).forEach(tk => {
+    const recent = (_aqInsiderTrades[tk] || []).filter(t =>
+      isCommonEquityTrade(t.security) && t.transDate && t.transDate >= cutoff && t.price > 0
+    );
+    if (!recent.length) return;
+    const latest = recent[0];  // desc 정렬 → [0]이 최신
+    byTicker[tk] = { ticker: tk, date: latest.transDate, price: latest.price, shares: latest.shares };
   });
   const dedup = Object.values(byTicker);
-
-  // v1.51: 정렬 — 최근일 순 (좌측이 가장 최근)
   dedup.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
   if (dedup.length === 0) {
-    scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 시그널 중 현재 마이너스 종목 없음 👌</div>';
+    scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 내부자 매수 없음 👌</div>';
     return;
   }
 
   scrollEl.innerHTML = dedup.map(it => {
-    // 안전한 logo (handleLogoError 패턴) — v1.67: KR 모드는 layer 건너뜀 → 국기 fallback
-    const market = getCurrentMarket();
-    const layer = SECTOR_TO_LAYER[it.sector] || '기타';
-    const layerFile = (market === 'KR') ? '' : layerFileName(layer);
+    const sector = (_state.tickerSectorMap || {})[it.ticker] || '';
+    const layer = SECTOR_TO_LAYER[sector] || '기타';
+    const layerFile = layerFileName(layer);
     const tkFile = tickerFileName(it.ticker);
     const logoHtml = tkFile
       ? `<img class="bp-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
-      : `<img class="bp-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+      : `<img class="bp-logo" src="./flags/US.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+    const priceStr = it.price ? '$' + Number(it.price).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '';
     return `
       <div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
         ${logoHtml}
         <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
         <div class="bp-date">${escapeHtml(it.date)}</div>
-        <div class="bp-ret">${it.ret.toFixed(1)}%</div>
+        <div class="bp-ret" style="color:var(--text-mute);font-weight:600;">${escapeHtml(priceStr)}</div>
       </div>
     `;
   }).join('');
 
-  // 클릭 → 차트 모달
+  // 클릭 → 차트 모달 (내부자 마커 + 이력 자동 표시)
   scrollEl.querySelectorAll('.buy-point-item').forEach(el => {
     el.addEventListener('click', () => openChart(el.dataset.ticker));
   });
