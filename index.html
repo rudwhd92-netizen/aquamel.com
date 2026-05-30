@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.78';
+window.AQ_PWA_VERSION = '2.80';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -10806,6 +10806,35 @@ async function autoLoadData(opts) {
     setTimeout(() => {
       try { if (typeof fetchInsiderTrades === 'function') fetchInsiderTrades(false); } catch (e) {}
     }, 500);
+  }
+  // v2.79: forceFresh 시 V_Shape_Archive (V1) 시트도 fetch — V2와 별도 시트라 기존 fallback 누락
+  //   finally 밖 setTimeout + try/catch로 메인 흐름과 완전 격리. 실패해도 메인 로딩 영향 X.
+  if (opts && opts.forceFresh) {
+    setTimeout(async () => {
+      try {
+        if (typeof getCurrentMarket !== 'function' || getCurrentMarket() !== 'US') return;
+        const cfgUS = MARKET_CONFIG.US;
+        if (!cfgUS || !cfgUS.archiveSheetId) return;
+        const arcV1Res = await apiCall('getBuyList', { sheetId: cfgUS.archiveSheetId, tab: 'V_Shape_Archive' });
+        if (!arcV1Res || !arcV1Res.ok) {
+          console.warn('[V1 refresh] fetch 실패:', arcV1Res && arcV1Res.error);
+          return;
+        }
+        const rows = (arcV1Res.rows || [])
+          .map(r => normalizeArchiveRow(r, 'US'))
+          .filter(r => r.Ticker && r.Date);
+        if (!_state || !_state.archivesV1) return;
+        _state.archivesV1.US = rows;
+        _vshapeV1FetchPromise = null;  // 다음 V1 클릭 시 새로 fetch 가능
+        console.log(`[V1 refresh] ✓ V_Shape_Archive (V1) 갱신: ${rows.length}건`);
+        // v2.80: 사용자가 V1 모드 보고 있으면 setVshapeVersion('V1') 호출 — V1↔V1 swap으로
+        //   시그널 필터 재초기화 + computeSignalReturns + renderSignalFilter + applyFilterAndRender +
+        //   buildBuyPointsCard + buildArchiveMobileList + 차트 모달 다시 그리기까지 모두 정상 갱신
+        if (_state.vshapeVersion === 'V1') {
+          try { setVshapeVersion('V1'); } catch (e) { console.warn('[V1 refresh] setVshapeVersion fail:', e); }
+        }
+      } catch (e) { console.warn('[V1 refresh]', e); }
+    }, 1000);
   }
 }
 window.autoLoadData = autoLoadData;
