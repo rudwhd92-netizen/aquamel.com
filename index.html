@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.74';
+window.AQ_PWA_VERSION = '2.75';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -9793,11 +9793,14 @@ function setVshapeVersion(ver) {
 
 // v2.33: V1 데이터가 data.json에 없을 때 Apps Script로 직접 fetch (lazy)
 // v2.74: forceFresh 옵션 — promise 캐시 reset (autoLoadData 새로고침 시 V1도 다시 fetch)
+// v2.75: _state 가드 더 추가
 let _vshapeV1FetchPromise = null;
 async function _lazyFetchVshapeV1(forceFresh) {
   if (forceFresh) {
     _vshapeV1FetchPromise = null;
-    if (_state.archivesV1) _state.archivesV1.US = [];
+    try {
+      if (_state && _state.archivesV1) _state.archivesV1.US = [];
+    } catch (e) {}
   }
   if (_vshapeV1FetchPromise) return _vshapeV1FetchPromise;
   _vshapeV1FetchPromise = (async () => {
@@ -10809,25 +10812,29 @@ async function autoLoadData(opts) {
     setTimeout(() => {
       try { if (typeof fetchInsiderTrades === 'function') fetchInsiderTrades(false); } catch (e) {}
     }, 500);
-    // v2.74: forceFresh 시 V1 V-Shape archive도 함께 갱신 (V2는 autoLoadData가 갱신하지만 V1은 별도 시트 — 누락 방지)
-    //   _vshapeV1FetchPromise 캐시 reset → 새로 fetch → 현재 V1 보고 있으면 swap 자동 갱신
-    if (opts && opts.forceFresh && getCurrentMarket() === 'US') {
+  }
+  // v2.75: V1 V-Shape archive refresh — finally 밖으로 빼서 메인 흐름과 완전 격리
+  //   forceFresh 시 V_Shape_Archive (V1) 시트도 다시 fetch. 실패해도 메인 로딩에 영향 X.
+  try {
+    if (opts && opts.forceFresh) {
       setTimeout(() => {
         try {
+          const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
+          if (mkt !== 'US') return;
+          if (typeof _lazyFetchVshapeV1 !== 'function') return;
           _lazyFetchVshapeV1(true).then(ok => {
-            if (ok && _state.vshapeVersion === 'V1') {
-              // V1 보고 있는 상태면 archive swap 갱신
+            if (ok && _state && _state.vshapeVersion === 'V1') {
               try { applyMarketState('US'); } catch (e) {}
               try { if (typeof applyFilterAndRender === 'function') applyFilterAndRender(); } catch (e) {}
               try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
               try { if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList(); } catch (e) {}
               console.log('[autoLoadData] V1 archive refreshed');
             }
-          });
-        } catch (e) { console.warn('[autoLoadData] V1 refresh error:', e); }
+          }).catch(e => console.warn('[V1 refresh promise]', e));
+        } catch (e) { console.warn('[V1 refresh inner]', e); }
       }, 800);
     }
-  }
+  } catch (e) { console.warn('[V1 refresh outer]', e); }
 }
 window.autoLoadData = autoLoadData;
 
