@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.83';
+window.AQ_PWA_VERSION = '2.84';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -10809,7 +10809,11 @@ async function autoLoadData(opts) {
   // v2.79: forceFresh 시 V_Shape_Archive (V1) 시트도 fetch — V2와 별도 시트라 기존 fallback 누락
   // v2.82: v2.80 동작 복원 — v2.81의 매번 fetch가 브라우저/SW 캐시에 적중하여 옛 데이터 반환되는 듯
   //   finally 밖 setTimeout + try/catch로 메인 흐름과 완전 격리. 실패해도 메인 로딩 영향 X.
-  if (opts && opts.forceFresh) {
+  // v2.84: gate 확장 — forceFresh뿐 아니라 자동 진입에서도 active 버전이 V1이면 이 블록 실행.
+  //   (기존엔 메인 로드가 V1을 안 받고 setVshapeVersion도 안 불러서, V1 디폴트 사용자는
+  //    토글로 V2→V1 swap 해야만 갱신됐음. 이제 V1 진입 시 fresh fetch + 검증된 setVshapeVersion('V1') 경로로 자동 렌더.)
+  //   범위 좁힘: V2 자동 진입은 진입 안 함(불필요 fetch X). v2.81처럼 '버전 무관 매번 fetch'와 다름.
+  if (opts && (opts.forceFresh || (_state && _state.vshapeVersion === 'V1'))) {
     setTimeout(async () => {
       try {
         if (typeof getCurrentMarket !== 'function' || getCurrentMarket() !== 'US') return;
