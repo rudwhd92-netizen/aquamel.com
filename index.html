@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.75';
+window.AQ_PWA_VERSION = '2.76';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -10510,7 +10510,8 @@ async function autoLoadData(opts) {
         _aqRenderAllAfterIngest();
         // 보고서 인덱스도 백그라운드
         fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
-        // splash 안 띄웠으므로 닫을 필요 X (이미 닫혀 있음)
+        // v2.76: splash는 HTML/CSS default 표시 상태 — ingest 경로에선 hide 호출 필수 (이전 주석 잘못됨)
+        try { splashHide(); } catch (e) {}
         _autoLoadInProgress = false;
         // 백그라운드: data.json 새 거 확인 + 60분 이상 stale이면 자동 forceFresh
         setTimeout(() => _aqBackgroundRefresh(cachedTs), 100);
