@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.85';
+window.AQ_PWA_VERSION = '2.86';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2229,6 +2229,46 @@ table.sheet tbody tr.drop-below td:last-child {
   -webkit-tap-highlight-color: transparent;
 }
 .archive-mobile-more:active { color: var(--text-hi); }
+
+/* ===== v2.86: 내부자 누적 리스트 (발견 탭 — 누적 시그널 하단) ===== */
+.insider-archive-item {
+  display: grid;
+  /* [logo 42px | 티커+회사명 | 일자+주식수+단가(우측)] */
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 4px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s;
+}
+.insider-archive-item:active { opacity: 0.65; }
+.insider-archive-item .ia-logo {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-3);
+  display: block;
+}
+.insider-archive-item .ia-info { min-width: 0; }
+.insider-archive-item .ia-ticker {
+  font-size: 15px; font-weight: 700; color: var(--text-hi);
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+  line-height: 1.15; letter-spacing: 0.2px;
+}
+.insider-archive-item .ia-company {
+  font-size: 10px; color: var(--text-mute);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  margin-top: 3px;
+}
+.insider-archive-item .ia-meta {
+  text-align: right; flex-shrink: 0;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+}
+.insider-archive-item .ia-date { font-size: 10px; color: var(--text-mute); }
+.insider-archive-item .ia-shares { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.insider-archive-item .ia-price { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-top: 2px; }
 
 /* ============ v1.57 PC 사이드바 + 사이드 패널 (PC만, 모바일은 display:none) ============ */
 /* v1.58: data-pc-tab 단일 속성을 data-pc-page + data-pc-panel 두 속성으로 분리
@@ -6718,6 +6758,20 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+  <!-- ============ v2.86 MOBILE-ONLY: 내부자 누적 리스트 (발견 탭 — 누적 시그널 하단) ============ -->
+  <!-- Form 4 모든 일반주(ADR 포함) 거래 이력. 누적 시그널과 동일 UX (10개 + 더보기). PC는 relocateCardsForPC가 사이드 패널로 이동. -->
+  <section class="card mobile-only" id="insiderArchiveCard" data-mtab="discover">
+    <div class="card-header">
+      <h2>내부자 누적</h2>
+    </div>
+    <div class="card-body">
+      <div class="archive-mobile-list" id="insiderArchiveList">
+        <div class="buy-points-empty">로딩 중…</div>
+      </div>
+      <button class="archive-mobile-more" id="insiderArchiveMore" onclick="loadMoreInsiderArchive()" style="display:none;">더 보기</button>
+    </div>
+  </section>
+
   <!-- ============ v2.46: CALENDAR / 일정 ============ -->
   <!-- v2.53: 주요 이벤트 — 5일 이내 임박 이벤트 가로 스크롤 (매수 포인트와 동일 UI) -->
   <section class="card" id="majorEventsCard" data-mtab="schedule" style="display:none;">
@@ -9960,11 +10014,12 @@ function setMarket(mkt) {
 
   // v2.64: 시장 전환 후 내부자 거래 데이터 갱신 — US만, background
   // v2.85: fetch 완료 후 내부자 매수 카드 재빌드
+  // v2.86: 내부자 누적 리스트도 재빌드
   setTimeout(() => {
     try {
       if (typeof fetchInsiderTrades === 'function')
         fetchInsiderTrades(false)
-          .then(() => { try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {} })
+          .then(() => { try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); } catch (e) {} })
           .catch(() => {});
     } catch (e) {}
   }, 300);
@@ -10813,11 +10868,12 @@ async function autoLoadData(opts) {
     _autoLoadInProgress = false;
     // v2.64: 내부자 거래 데이터 background fetch (US만, 메인 로딩 영향 X — 비동기 / await 안 함)
     // v2.85: fetch 완료 후 내부자 매수 카드 재빌드
+    // v2.86: 내부자 누적 리스트도 재빌드
     setTimeout(() => {
       try {
         if (typeof fetchInsiderTrades === 'function')
           fetchInsiderTrades(false)
-            .then(() => { try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {} })
+            .then(() => { try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); } catch (e) {} })
             .catch(() => {});
       } catch (e) {}
     }, 500);
@@ -17947,6 +18003,9 @@ function relocateCardsForPC() {
     const am = document.getElementById('archiveMobileCard');
     if (bp && bp.parentElement !== discoverPanel) discoverPanel.appendChild(bp);
     if (am && am.parentElement !== discoverPanel) discoverPanel.appendChild(am);
+    // v2.86: 내부자 누적 카드도 발견 패널로 이동 (누적 시그널 다음 순서)
+    const ia = document.getElementById('insiderArchiveCard');
+    if (ia && ia.parentElement !== discoverPanel) discoverPanel.appendChild(ia);
   }
   if (explorePanel) {
     const sl = document.getElementById('stockListCard');
@@ -18183,6 +18242,101 @@ function loadMoreArchiveMobile() {
   _archiveMobileShown += 10;
   buildArchiveMobileList();
 }
+
+// ============================================================================
+// v2.86: 내부자 누적 리스트 (발견 탭 — 누적 시그널 하단)
+//   Form 4 모든 일반주(ADR 포함) 거래를 최근 transDate → 오래된 순으로 나열.
+//   누적 시그널과 동일 UX: 최근 10개 + 더보기. 우측 = TransDate_ET / Shares / Price.
+//   US 전용. 클릭 → 차트 모달 (내부자 마커/이력 표시).
+// ============================================================================
+let _insiderArchiveShown = 10;
+
+function _buildInsiderFlatList() {
+  // _aqInsiderTrades(종목별) → 일반주만 평탄화 → transDate desc 정렬
+  const flat = [];
+  Object.keys(_aqInsiderTrades || {}).forEach(tk => {
+    (_aqInsiderTrades[tk] || []).forEach(t => {
+      if (!isCommonEquityTrade(t.security)) return;
+      if (!t.transDate || !(t.price > 0)) return;
+      flat.push(t);
+    });
+  });
+  flat.sort((a, b) => (b.transDate || '').localeCompare(a.transDate || ''));
+  return flat;
+}
+
+function buildInsiderArchiveList() {
+  const listEl = $('insiderArchiveList');
+  const moreBtn = $('insiderArchiveMore');
+  if (!listEl) return;
+
+  const market = getCurrentMarket();
+  if (market !== 'US') {
+    listEl.innerHTML = '<div class="buy-points-empty">내부자 누적은 미국 시장에서만 제공됩니다</div>';
+    if (moreBtn) moreBtn.style.display = 'none';
+    return;
+  }
+  if (!_aqInsiderLoaded) {
+    listEl.innerHTML = '<div class="buy-points-empty">데이터 로딩 중…</div>';
+    if (moreBtn) moreBtn.style.display = 'none';
+    return;
+  }
+
+  const flat = _buildInsiderFlatList();
+  if (flat.length === 0) {
+    listEl.innerHTML = '<div class="buy-points-empty">내부자 매수 이력 없음</div>';
+    if (moreBtn) moreBtn.style.display = 'none';
+    return;
+  }
+
+  const shown = flat.slice(0, _insiderArchiveShown);
+  listEl.innerHTML = shown.map(t => {
+    const tk = t.ticker;
+    const sector = (_state.tickerSectorMap || {})[tk] || '';
+    const layer = SECTOR_TO_LAYER[sector] || '기타';
+    const layerFile = layerFileName(layer);
+    const tkFile = tickerFileName(tk);
+    const logoHtml = tkFile
+      ? `<img class="ia-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+      : `<img class="ia-logo" src="./flags/US.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+    const sharesStr = t.shares ? Number(t.shares).toLocaleString() + '주' : '—';
+    const priceStr = t.price ? '$' + Number(t.price).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '—';
+    return `
+      <div class="insider-archive-item" data-ticker="${escapeAttr(tk)}">
+        ${logoHtml}
+        <div class="ia-info">
+          <div class="ia-ticker" title="${escapeAttr(displayName(tk))}">${escapeHtml(displayName(tk))}</div>
+          <div class="ia-company">${escapeHtml(displaySub(tk))}</div>
+        </div>
+        <div class="ia-meta">
+          <div class="ia-date">${escapeHtml(t.transDate || '—')}</div>
+          <div class="ia-shares">${escapeHtml(sharesStr)}</div>
+          <div class="ia-price">${escapeHtml(priceStr)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (moreBtn) {
+    if (flat.length > _insiderArchiveShown) {
+      moreBtn.style.display = '';
+      moreBtn.textContent = `더 보기 (${flat.length - _insiderArchiveShown}개 남음)`;
+    } else {
+      moreBtn.style.display = 'none';
+    }
+  }
+
+  listEl.querySelectorAll('.insider-archive-item').forEach(el => {
+    el.addEventListener('click', () => openChart(el.dataset.ticker));
+  });
+}
+window.buildInsiderArchiveList = buildInsiderArchiveList;
+
+function loadMoreInsiderArchive() {
+  _insiderArchiveShown += 10;
+  buildInsiderArchiveList();
+}
+window.loadMoreInsiderArchive = loadMoreInsiderArchive;
 
 // ============================================================================
 // v1.52 종목 리스트 (탐색 탭 — 매크로 하단)
