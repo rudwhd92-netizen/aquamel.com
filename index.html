@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.99';
+window.AQ_PWA_VERSION = '3.00';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2141,12 +2141,13 @@ table.sheet tbody tr.drop-below td:last-child {
 .buy-point-item .bp-logo {
   width: 56px; height: 56px;
   border-radius: 50%;
-  /* v2.96: 하단 여백을 래퍼(.aq-logo-wrap)로 이동 — img margin이 래퍼를 세로로 늘려 스토리 링이 타원이 되던 문제 수정 */
-  margin: 0;
+  /* v3.00: 직접 img(주요 이벤트 등)는 중앙정렬+간격 유지. 래퍼(.aq-logo-wrap)로 감싼 경우(내부자매수 스토리링)만 0으로 → 링 정원 유지하면서 주요이벤트 정렬 복구 */
+  margin: 0 auto 8px;
   object-fit: cover;
   background: var(--bg-3);
   display: block;
 }
+.buy-point-item .aq-logo-wrap .bp-logo { margin: 0; }
 /* v2.96: 스토리 링 래퍼를 로고와 동일한 정사각으로 유지하고, 카드 내 하단 간격은 래퍼 margin으로 */
 .buy-point-item .aq-logo-wrap { margin: 0 auto 8px; }
 .buy-point-item .bp-name {
@@ -4416,7 +4417,7 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
 .hero-marquee-track {
   display: inline-block;
   padding-left: 100%;        /* 우측 끝에서 시작 */
-  animation: heroMarqueeScroll 50s linear infinite;
+  animation: heroMarqueeScroll 78s linear infinite;
   font-size: 12.5px;
   color: var(--text-dim);
   font-weight: 500;
@@ -4434,14 +4435,14 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
   font-style: normal;
 }
 .hero-marquee-track .notif {
-  margin-right: 48px;
+  margin-right: 20px;
   cursor: pointer;
   transition: color 0.15s;
   color: var(--text-dim);
 }
 .hero-marquee-track .notif:hover { color: var(--text-hi); }
 .hero-marquee-track .notif-urgent { color: var(--accent-2); font-weight: 600; }
-.hero-marquee-track .notif-sep { color: var(--text-mute); opacity: 0.45; margin: 0 14px; }
+.hero-marquee-track .notif-sep { color: var(--text-mute); opacity: 0.45; margin: 0 6px; }
 .hero-marquee:hover .hero-marquee-track { animation-play-state: paused; }
 
 @media (max-width: 640px) {
@@ -4449,7 +4450,7 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
   .hero-marquee-label { font-size: 9px; padding-right: 10px; letter-spacing: 1.4px; }
   .hero-marquee-mask { padding-left: 12px; }
   .hero-marquee-track { font-size: 11.5px; }
-  .hero-marquee-track .notif { margin-right: 36px; }
+  .hero-marquee-track .notif { margin-right: 16px; }
   .hero-marquee-track .notif-sep { margin: 0 10px; }
 }
 
@@ -4716,13 +4717,12 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
 /* v2.94: 컬럼 하단 종목 추가 버튼 */
 .watch-add-btn {
   display: block; width: 100%; margin-top: 10px;
-  padding: 9px; background: rgba(255,255,255,0.05);
+  padding: 9px; background: transparent;
   border: none; border-radius: 8px;
   color: var(--text-dim); font-family: inherit; font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: all 0.15s;
+  cursor: pointer; transition: color 0.15s;
 }
-.watch-add-btn:hover { color: var(--accent-2); background: rgba(78,201,176,0.10); }
-[data-theme="light"] .watch-add-btn { background: rgba(0,0,0,0.04); }
+.watch-add-btn:hover { color: var(--accent-2); }
 
 /* v2.94: 검색 결과 우측 하트 (관심 토글) */
 .search-result-heart {
