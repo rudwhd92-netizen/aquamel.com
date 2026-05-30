@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.81';
+window.AQ_PWA_VERSION = '2.83';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -10549,21 +10549,20 @@ async function autoLoadData(opts) {
     //   data.json 성공 → 직접 _state 채움 (40+ Apps Script 호출 우회, 2-3초 완료)
     //   data.json 실패 → 백엔드 직접 호출 (기존 방식, 10-20초)
     // v2.48: forceFresh=true이면 fast path 건너뛰고 바로 backend 직접 호출 (시트 fresh)
-    if (!forceFresh) {
+    // v2.83: fast path 자체 비활성화 — data.json이 옛 빌드 시점에서 멈춰 stale data 제공 (사용자 보고: 5/29 시트인데 5/27 받음).
+    //   모든 진입이 backend 직접 호출로 fresh 보장. 진입 1-2초 늦지만 사용자 요청 "항상 시트에서 가져와" 충족.
+    if (false && !forceFresh) {
       const usedFastPath = await tryLoadFromBundle();
       if (usedFastPath) {
         splashUpdate(100);
         setTimeout(() => splashHide(), 200);
-        // 보고서 인덱스도 백그라운드로
         fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
-        // v2.49: 캐시 저장 (다음 진입 시 즉시 복원)
         aqCacheSaveState();
-        // v2.50: polling 시작 (한 번만 — 내부 가드)
         _aqStartPolling();
         return;
       }
     } else {
-      console.log('[autoLoadData] forceFresh=true → fast path 건너뛰고 backend 직접 호출 (시트 fresh 보장)');
+      console.log('[autoLoadData] fast path 비활성화 (v2.83) → backend 직접 호출 (시트 fresh 보장)');
     }
 
     // ─── Fallback: 기존 백엔드 직접 호출 (data.json 없거나 실패 시, 또는 forceFresh) ───
@@ -10807,32 +10806,35 @@ async function autoLoadData(opts) {
       try { if (typeof fetchInsiderTrades === 'function') fetchInsiderTrades(false); } catch (e) {}
     }, 500);
   }
-  // v2.81: V_Shape_Archive (V1) 시트는 항상 직접 fetch — fast path data.json의 stale archive_v1 무시
-  //   사용자 요청: "시트에 새로 생기든 아니든 항상 가져와". forceFresh 여부 무관, 페이지 진입마다 fresh.
+  // v2.79: forceFresh 시 V_Shape_Archive (V1) 시트도 fetch — V2와 별도 시트라 기존 fallback 누락
+  // v2.82: v2.80 동작 복원 — v2.81의 매번 fetch가 브라우저/SW 캐시에 적중하여 옛 데이터 반환되는 듯
   //   finally 밖 setTimeout + try/catch로 메인 흐름과 완전 격리. 실패해도 메인 로딩 영향 X.
-  setTimeout(async () => {
-    try {
-      if (typeof getCurrentMarket !== 'function' || getCurrentMarket() !== 'US') return;
-      const cfgUS = MARKET_CONFIG.US;
-      if (!cfgUS || !cfgUS.archiveSheetId) return;
-      const arcV1Res = await apiCall('getBuyList', { sheetId: cfgUS.archiveSheetId, tab: 'V_Shape_Archive' });
-      if (!arcV1Res || !arcV1Res.ok) {
-        console.warn('[V1 refresh] fetch 실패:', arcV1Res && arcV1Res.error);
-        return;
-      }
-      const rows = (arcV1Res.rows || [])
-        .map(r => normalizeArchiveRow(r, 'US'))
-        .filter(r => r.Ticker && r.Date);
-      if (!_state || !_state.archivesV1) return;
-      _state.archivesV1.US = rows;
-      _vshapeV1FetchPromise = null;  // 다음 V1 클릭 시 새로 fetch 가능
-      console.log(`[V1 refresh] ✓ V_Shape_Archive (V1) 갱신: ${rows.length}건`);
-      // V1 모드 보고 있으면 setVshapeVersion('V1') 호출 — V1↔V1 swap으로 모든 view 갱신
-      if (_state.vshapeVersion === 'V1') {
-        try { setVshapeVersion('V1'); } catch (e) { console.warn('[V1 refresh] setVshapeVersion fail:', e); }
-      }
-    } catch (e) { console.warn('[V1 refresh]', e); }
-  }, 300);  // v2.81: 1000→300ms — 사용자가 stale 보는 시간 단축
+  if (opts && opts.forceFresh) {
+    setTimeout(async () => {
+      try {
+        if (typeof getCurrentMarket !== 'function' || getCurrentMarket() !== 'US') return;
+        const cfgUS = MARKET_CONFIG.US;
+        if (!cfgUS || !cfgUS.archiveSheetId) return;
+        const arcV1Res = await apiCall('getBuyList', { sheetId: cfgUS.archiveSheetId, tab: 'V_Shape_Archive' });
+        if (!arcV1Res || !arcV1Res.ok) {
+          console.warn('[V1 refresh] fetch 실패:', arcV1Res && arcV1Res.error);
+          return;
+        }
+        const rows = (arcV1Res.rows || [])
+          .map(r => normalizeArchiveRow(r, 'US'))
+          .filter(r => r.Ticker && r.Date);
+        if (!_state || !_state.archivesV1) return;
+        _state.archivesV1.US = rows;
+        _vshapeV1FetchPromise = null;  // 다음 V1 클릭 시 새로 fetch 가능
+        const lastDate = rows.length ? rows[rows.length-1].Date : '';
+        console.log(`[V1 refresh] ✓ V_Shape_Archive (V1) 갱신: ${rows.length}건, last=${lastDate}`);
+        // v2.80: V1 모드 보고 있으면 setVshapeVersion('V1') 호출 — V1↔V1 swap으로 모든 view 갱신
+        if (_state.vshapeVersion === 'V1') {
+          try { setVshapeVersion('V1'); } catch (e) { console.warn('[V1 refresh] setVshapeVersion fail:', e); }
+        }
+      } catch (e) { console.warn('[V1 refresh]', e); }
+    }, 1000);
+  }
 }
 window.autoLoadData = autoLoadData;
 
