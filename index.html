@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.87';
+window.AQ_PWA_VERSION = '2.89';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2284,10 +2284,37 @@ table.sheet tbody tr.drop-below td:last-child {
 .aq-logo-wrap.aq-story::before {
   content: "";
   position: absolute;
-  inset: -3px;
+  inset: -5px;                      /* v2.88: 로고에서 5px 바깥까지 — 두껍게 */
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  /* AQUAMEL 색 스윕 + 밝은 민트 하이라이트로 대비 ↑ (conic으로 전체 둘레 채움) */
+  background: conic-gradient(from 135deg,
+      var(--accent) 0deg,
+      var(--accent-2) 120deg,
+      #8ee6d4 200deg,
+      var(--accent) 360deg);
+  /* 링 모양 마스크 — 가운데를 비워 로고와 사이에 투명 갭 (인스타 분리감) */
+  padding: 3px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
   z-index: 1;
+}
+/* 글로우는 별도 레이어(::after)로 — 마스크 영향 없이 다크 배경에서 확 띔 + 은은한 펄스 */
+.aq-logo-wrap.aq-story::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  z-index: 0;
+  box-shadow: 0 0 8px 1px color-mix(in srgb, var(--accent-2) 60%, transparent);
+  animation: aqStoryPulse 1.8s ease-in-out infinite;
+}
+@keyframes aqStoryPulse {
+  0%, 100% { box-shadow: 0 0 6px 0   color-mix(in srgb, var(--accent-2) 40%, transparent); }
+  50%      { box-shadow: 0 0 13px 3px color-mix(in srgb, var(--accent-2) 78%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aq-logo-wrap.aq-story::after { animation: none; }
 }
 .aq-logo-wrap.aq-story > img { position: relative; z-index: 2; }
 
@@ -4431,100 +4458,116 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   font-style: italic;
 }
 
-/* 포스트잇 카드 */
+/* v2.89: TO-DO 카드 — 포스트잇(파스텔+회전) → 앱 다크 테마 카드로 재설계 */
 .todo-card {
   position: relative;
-  background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%);
-  color: #1a1a1a;
-  padding: 14px 14px 12px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.12);
+  background: var(--bg-2);
+  color: var(--text);
+  padding: 12px 12px 12px 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-left: 3px solid var(--accent);   /* 컬럼별 색은 아래 data-col에서 override */
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.22);
   cursor: pointer;
-  transition: transform 0.2s ease-out, box-shadow 0.2s;
-  transform: rotate(-0.6deg);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
   user-select: none;
 }
-.todo-card:hover {
-  transform: rotate(0deg) translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.28), 0 2px 4px rgba(0,0,0,0.16);
+[data-theme="light"] .todo-card {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
 }
-/* 색깔 변형 — nth-child 패턴 */
-.todo-card:nth-child(4n+2) { background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); transform: rotate(0.5deg); }
-.todo-card:nth-child(4n+3) { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); transform: rotate(-0.3deg); }
-.todo-card:nth-child(4n+4) { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); transform: rotate(0.7deg); }
-.todo-card:nth-child(4n+2):hover,
-.todo-card:nth-child(4n+3):hover,
-.todo-card:nth-child(4n+4):hover { transform: rotate(0deg) translateY(-2px); }
+.todo-card:hover {
+  transform: translateY(-2px);
+  background: var(--bg-3);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.34);
+}
+[data-theme="light"] .todo-card:hover { background: #fafafa; box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+
+/* 컬럼별 좌측 액센트 색 — 시점 코드화 (포스트잇 색 대체) */
+.todo-column[data-col="urgent"]  .todo-card { border-left-color: var(--danger); }
+.todo-column[data-col="month"]   .todo-card { border-left-color: var(--orange); }
+.todo-column[data-col="long"]    .todo-card { border-left-color: var(--accent); }
+.todo-column[data-col="ongoing"] .todo-card { border-left-color: var(--accent-2); }
+/* 컬럼 상단 액센트 — 헤더와 카드 색 연결 */
+.todo-column { border-top: 2px solid transparent; }
+.todo-column[data-col="urgent"]  { border-top-color: color-mix(in srgb, var(--danger) 55%, transparent); }
+.todo-column[data-col="month"]   { border-top-color: color-mix(in srgb, var(--orange) 55%, transparent); }
+.todo-column[data-col="long"]    { border-top-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.todo-column[data-col="ongoing"] { border-top-color: color-mix(in srgb, var(--accent-2) 55%, transparent); }
 
 .todo-card-close {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  background: rgba(0,0,0,0.08);
-  color: rgba(0,0,0,0.55);
+  top: 6px;
+  right: 6px;
+  background: transparent;
+  color: var(--text-mute);
   border: none;
   width: 22px;
   height: 22px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1;
-  font-weight: 700;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, color 0.15s, transform 0.15s;
+  transition: background 0.15s, color 0.15s;
   padding: 0;
+  opacity: 0.6;
 }
 .todo-card-close:hover {
-  background: rgba(220,53,69,0.85);
-  color: #fff;
-  transform: scale(1.12);
+  background: rgba(244,135,113,0.18);
+  color: var(--danger);
+  opacity: 1;
 }
 
 .todo-card-head {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
+  gap: 7px;
+  margin-bottom: 9px;
   padding-right: 22px;  /* × 버튼 공간 */
 }
 .todo-card-logo {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   flex-shrink: 0;
-  background: rgba(255,255,255,0.6);
+  background: var(--bg-3);
   object-fit: cover;
 }
 .todo-card-ticker {
   font-size: 13px;
-  font-weight: 800;
-  color: #1a1a1a;
-  letter-spacing: -0.2px;
+  font-weight: 700;
+  color: var(--text-hi);
+  letter-spacing: 0.2px;
   font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
 }
 .todo-card-when {
   font-size: 10px;
-  font-weight: 700;
-  color: #6b4f00;
-  background: rgba(255,255,255,0.55);
-  padding: 2px 7px;
-  border-radius: 8px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: rgba(255,255,255,0.07);
+  padding: 2px 8px;
+  border-radius: 6px;
   margin-left: auto;
   font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   white-space: nowrap;
 }
+[data-theme="light"] .todo-card-when { background: rgba(0,0,0,0.06); }
 .todo-card-when.urgent {
-  background: rgba(220,53,69,0.92);
-  color: #fff;
+  background: rgba(244,135,113,0.16);
+  color: var(--danger);
+  font-weight: 700;
 }
 
 .todo-card-body {
   font-size: 12.5px;
-  line-height: 1.45;
-  color: #2a2a2a;
-  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text);
+  font-weight: 400;
   word-break: keep-all;
   overflow-wrap: break-word;
   /* v2.70: 긴 본문 3줄 자르기 — 컬럼 폭 좁아도 깔끔, 전체 본문은 title 툴팁 + 카드 클릭 랜딩에서 확인 */
@@ -4537,12 +4580,12 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
 .todo-card-notify {
   margin-top: 10px;
   padding: 6px 8px;
-  background: rgba(220,53,69,0.1);
-  border-left: 3px solid #dc3545;
-  border-radius: 3px;
+  background: rgba(244,135,113,0.1);
+  border-left: 3px solid var(--danger);
+  border-radius: 4px;
   font-size: 11.5px;
   font-weight: 600;
-  color: #8b0000;
+  color: var(--danger);
   display: flex;
   align-items: center;
   gap: 6px;
