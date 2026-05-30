@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.00';
+window.AQ_PWA_VERSION = '3.02';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1501,8 +1501,8 @@ table.sheet tbody tr.drop-below td:last-child {
 @media (max-width: 640px) {
   .chart-wrap .modal-report {
     position: absolute;
-    top: auto; left: auto;
-    bottom: 12px; right: 12px;
+    top: auto; right: auto;
+    bottom: 12px; left: 12px;
     height: 34px; min-width: 34px;
   }
   .chart-wrap .modal-report img { width: 22px; height: 22px; }
