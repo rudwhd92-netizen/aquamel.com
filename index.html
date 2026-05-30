@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.98';
+window.AQ_PWA_VERSION = '2.99';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1944,9 +1944,8 @@ table.sheet tbody tr.drop-below td:last-child {
 .modal-content .modal-watch svg { width: 22px; height: 22px; display: block; }
 .modal-content .modal-watch:hover { background: rgba(255,255,255,0.12); }
 .modal-content .modal-watch:active { transform: scale(0.9); }
-.modal-content .modal-watch.watched { background: #fa5252; }
-.modal-content .modal-watch.watched:hover { background: #e63e3e; }
-.modal-content .modal-watch.watched svg { fill: #ffffff; stroke: #ffffff; }
+/* v2.99: 관심 등록 시 배경이 아니라 하트 내부를 빨갛게 (사용자 요청) */
+.modal-content .modal-watch.watched svg { fill: #fa5252; stroke: #fa5252; }
 @media (max-width: 640px) {
   .modal-content .modal-watch {
     top: calc(28px + env(safe-area-inset-top, 0px)); right: 4px;
@@ -2352,6 +2351,31 @@ table.sheet tbody tr.drop-below td:last-child {
   .aq-logo-wrap.aq-story::after { animation: none; }
 }
 .aq-logo-wrap.aq-story > img { position: relative; z-index: 2; }
+
+/* v2.99: 보고서 아이콘 스토리 링 — 최근 보고서 종목 모달에서 보고서 버튼에도 동일 링 표시.
+   로고 링과 동일 그라데이션/펄스, 단 버튼이 둥근 사각형이라 radius만 맞춤. */
+.modal-content .modal-report.aq-story::before {
+  content: ""; position: absolute; inset: -4px;
+  border-radius: calc(var(--radius-md) + 4px);
+  background: conic-gradient(from 135deg,
+      var(--accent) 0deg, var(--accent-2) 120deg, #8ee6d4 200deg, var(--accent) 360deg);
+  padding: 3px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  z-index: 1; pointer-events: none;
+}
+.modal-content .modal-report.aq-story::after {
+  content: ""; position: absolute; inset: -4px;
+  border-radius: calc(var(--radius-md) + 4px);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 8px 1px color-mix(in srgb, var(--accent-2) 60%, transparent);
+  animation: aqStoryPulse 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-content .modal-report.aq-story::after { animation: none; }
+}
+.modal-content .modal-report.aq-story img,
+.modal-content .modal-report.aq-story svg { position: relative; z-index: 2; }
 
 /* ============ v1.57 PC 사이드바 + 사이드 패널 (PC만, 모바일은 display:none) ============ */
 /* v1.58: data-pc-tab 단일 속성을 data-pc-page + data-pc-panel 두 속성으로 분리
@@ -4692,13 +4716,13 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
 /* v2.94: 컬럼 하단 종목 추가 버튼 */
 .watch-add-btn {
   display: block; width: 100%; margin-top: 10px;
-  padding: 9px; background: transparent;
-  border: 1px dashed rgba(255,255,255,0.18); border-radius: 8px;
+  padding: 9px; background: rgba(255,255,255,0.05);
+  border: none; border-radius: 8px;
   color: var(--text-dim); font-family: inherit; font-size: 12px; font-weight: 600;
   cursor: pointer; transition: all 0.15s;
 }
-.watch-add-btn:hover { border-color: var(--accent-2); color: var(--accent-2); background: rgba(78,201,176,0.06); }
-[data-theme="light"] .watch-add-btn { border-color: rgba(0,0,0,0.18); }
+.watch-add-btn:hover { color: var(--accent-2); background: rgba(78,201,176,0.10); }
+[data-theme="light"] .watch-add-btn { background: rgba(0,0,0,0.04); }
 
 /* v2.94: 검색 결과 우측 하트 (관심 토글) */
 .search-result-heart {
@@ -11438,6 +11462,9 @@ function updateReportButtonVisibility() {
   const list = (_state.reports[mkt] || {})[tkUpper];
   const hasReport = list && list.length > 0;
   btn.style.display = hasReport ? '' : 'none';
+  // v2.99: 로고에 스토리 링이 붙는 종목(최근 보고서)은 보고서 아이콘에도 동일한 스토리 링 → 어디를 봐야 하는지 표시
+  const recent = hasReport && (typeof aqHasRecentReport === 'function') && aqHasRecentReport(tkUpper);
+  btn.classList.toggle('aq-story', !!recent);
   console.log(`[Reports] 버튼 표시 갱신 — ticker=${tkUpper}, mkt=${mkt}, 보고서 ${list ? list.length : 0}개, 표시=${hasReport}`);
 }
 
@@ -11466,7 +11493,8 @@ function aqHasRecentReport(ticker, withinDays) {
 
 // 로고 img HTML을 스토리 링 래퍼로 감쌈. 보고서 최근일 때만 .aq-story 부여(아니면 링 없음).
 //   래퍼는 inline-block + img 크기로 shrink-wrap → 레이아웃 변화 없음.
-function aqWrapLogo(imgHtml, ticker) {
+function aqWrapLogo(imgHtml, ticker, noStory) {
+  if (noStory) return imgHtml;  // v2.99: TO-DO/관심 카드는 스토리 테두리 미적용
   const story = aqHasRecentReport(ticker);
   return `<span class="aq-logo-wrap${story ? ' aq-story' : ''}">${imgHtml}</span>`;
 }
@@ -17639,7 +17667,7 @@ function _aqRenderTodoCard(t, todayIso) {
     <div class="todo-card" data-ticker="${escapeAttr(ticker)}" data-report-ticker="${escapeAttr(t.reportTicker || '')}" data-report-date="${escapeAttr(t.reportDate || '')}" data-idx="${t.idx}" title="${escapeAttr(t.body || t.text || '')}">
       <button class="todo-card-close" title="완료/삭제" aria-label="삭제">×</button>
       <div class="todo-card-head">
-        ${aqWrapLogo(logoHtml, ticker)}
+        ${aqWrapLogo(logoHtml, ticker, true)}
         <span class="todo-card-ticker">${escapeHtml(ticker)}</span>
         ${whenLabel ? `<span class="todo-card-when${urgentCls}">${whenLabel}</span>` : ''}
       </div>
@@ -17768,7 +17796,7 @@ function _aqRenderWatchCard(item) {
   const logoImg = tkFile
     ? `<img class="todo-card-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
     : `<img class="todo-card-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
-  const logoHtml = aqWrapLogo(logoImg, tk);
+  const logoHtml = aqWrapLogo(logoImg, tk, true);
   const chgCls = d.chg == null ? 'zero' : d.chg > 0 ? 'up' : d.chg < 0 ? 'down' : 'zero';
   const chgStr = d.chg == null ? '–' : (d.chg >= 0 ? '+' : '') + d.chg.toFixed(2) + '%';
   const closeStr = d.close == null ? '–'
