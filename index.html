@@ -50,7 +50,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.86';
+window.AQ_PWA_VERSION = '2.87';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2269,6 +2269,27 @@ table.sheet tbody tr.drop-below td:last-child {
 .insider-archive-item .ia-date { font-size: 10px; color: var(--text-mute); }
 .insider-archive-item .ia-shares { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
 .insider-archive-item .ia-price { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-top: 2px; }
+
+/* ===== v2.87: 보고서 3일 이내 종목 로고 — 인스타 스토리 스타일 그라데이션 테두리 ===== */
+/*   색상은 AQUAMEL 브랜드 그라데이션(--accent → --accent-2)과 동일. 테마 자동 대응. */
+/*   absolute pseudo-element로 그려 레이아웃 영향 0. 갭 없이 링만 → 어떤 배경 위에서도 깨끗. */
+.aq-logo-wrap {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  vertical-align: middle;
+  flex-shrink: 0;
+  isolation: isolate;
+}
+.aq-logo-wrap.aq-story::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  z-index: 1;
+}
+.aq-logo-wrap.aq-story > img { position: relative; z-index: 2; }
 
 /* ============ v1.57 PC 사이드바 + 사이드 패널 (PC만, 모바일은 display:none) ============ */
 /* v1.58: data-pc-tab 단일 속성을 data-pc-page + data-pc-panel 두 속성으로 분리
@@ -11168,6 +11189,11 @@ async function fetchReportsIndex() {
       console.log(`[Reports] ✓ 인덱스 로드 완료 — US ${usList.length}개 (${usList.slice(0,5).join(',')}...), KR ${krList.length}개 (${krList.slice(0,5).join(',')}...)`);
       // 현재 열린 모달이 있으면 보고서 버튼 표시 상태 업데이트
       updateReportButtonVisibility();
+      // v2.87: 보고서 인덱스 로드 완료 → 로고 리스트 재빌드 (스토리 테두리 반영)
+      try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
+      try { if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList(); } catch (e) {}
+      try { if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); } catch (e) {}
+      try { if (typeof buildStockList === 'function') buildStockList(); } catch (e) {}
       // v2.01 Phase 2: 분석 페이지가 현재 보이고 있으면 그리드 재빌드
       const mtab = document.body.getAttribute('data-mtab');
       const pcPage = document.body.getAttribute('data-pc-page');
@@ -11195,6 +11221,38 @@ function updateReportButtonVisibility() {
   btn.style.display = hasReport ? '' : 'none';
   console.log(`[Reports] 버튼 표시 갱신 — ticker=${tkUpper}, mkt=${mkt}, 보고서 ${list ? list.length : 0}개, 표시=${hasReport}`);
 }
+
+// ============================================================================
+// v2.87: 보고서 3일 이내 종목 → 로고에 인스타 스토리 스타일 그라데이션 테두리
+//   _state.reports[mkt][TICKER] = 날짜 문자열 배열(최신순). dates[0]이 가장 최근.
+//   "최근 3일 이내" = 실제 today 기준 today, -1, -2 (3일 윈도우, cutoff = today-2).
+// ============================================================================
+function aqHasRecentReport(ticker, withinDays) {
+  withinDays = withinDays || 3;
+  try {
+    const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
+    const tkU = String(ticker || '').toUpperCase();
+    const dates = ((_state.reports && _state.reports[mkt]) || {})[tkU] || [];
+    if (!dates.length) return false;
+    const latest = String(dates[0] || '').slice(0, 10);  // 배열이 최신순 → [0]
+    if (!latest) return false;
+    const pad = n => String(n).padStart(2, '0');
+    const today = new Date();
+    const cut = new Date(today);
+    cut.setDate(today.getDate() - (withinDays - 1));
+    const cutStr = `${cut.getFullYear()}-${pad(cut.getMonth()+1)}-${pad(cut.getDate())}`;
+    return latest >= cutStr;
+  } catch (e) { return false; }
+}
+
+// 로고 img HTML을 스토리 링 래퍼로 감쌈. 보고서 최근일 때만 .aq-story 부여(아니면 링 없음).
+//   래퍼는 inline-block + img 크기로 shrink-wrap → 레이아웃 변화 없음.
+function aqWrapLogo(imgHtml, ticker) {
+  const story = aqHasRecentReport(ticker);
+  return `<span class="aq-logo-wrap${story ? ' aq-story' : ''}">${imgHtml}</span>`;
+}
+window.aqHasRecentReport = aqHasRecentReport;
+window.aqWrapLogo = aqWrapLogo;
 
 // 보고서 본문 fetch (캐시 사용)
 async function fetchReportContent(ticker, date) {
@@ -17027,7 +17085,7 @@ function _aqRenderSearchResults(query) {
     const companyHl = it.company ? _aqHighlight(it.company, q) : '';
     return `
       <div class="search-modal-result${idx === 0 ? ' active' : ''}" data-ticker="${escapeAttr(it.ticker)}" data-idx="${idx}">
-        ${logoHtml}
+        ${aqWrapLogo(logoHtml, it.ticker)}
         <div class="search-modal-result-text">
           <div class="search-modal-result-main">
             ${companyHl ? `<span>${companyHl}</span>` : ''}
@@ -17230,7 +17288,7 @@ function _aqRenderTodoCard(t, todayIso) {
     <div class="todo-card" data-ticker="${escapeAttr(ticker)}" data-report-ticker="${escapeAttr(t.reportTicker || '')}" data-report-date="${escapeAttr(t.reportDate || '')}" data-idx="${t.idx}" title="${escapeAttr(t.body || t.text || '')}">
       <button class="todo-card-close" title="완료/삭제" aria-label="삭제">×</button>
       <div class="todo-card-head">
-        ${logoHtml}
+        ${aqWrapLogo(logoHtml, ticker)}
         <span class="todo-card-ticker">${escapeHtml(ticker)}</span>
         ${whenLabel ? `<span class="todo-card-when${urgentCls}">${whenLabel}</span>` : ''}
       </div>
@@ -18107,7 +18165,7 @@ function buildBuyPointsCard() {
     const priceStr = it.price ? '$' + Number(it.price).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '';
     return `
       <div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
-        ${logoHtml}
+        ${aqWrapLogo(logoHtml, it.ticker)}
         <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
         <div class="bp-date">${escapeHtml(it.date)}</div>
         <div class="bp-ret" style="color:var(--text-mute);font-weight:600;">${escapeHtml(priceStr)}</div>
@@ -18206,7 +18264,7 @@ function buildArchiveMobileList() {
     const retStr = it.ret == null ? '-' : (it.ret >= 0 ? '+' : '') + it.ret.toFixed(1) + '%';
     return `
       <div class="archive-mobile-item" data-ticker="${escapeAttr(it.Ticker)}">
-        ${logoHtml}
+        ${aqWrapLogo(logoHtml, it.Ticker)}
         <div class="am-info">
           <div class="am-ticker" title="${escapeAttr(displayName(it.Ticker))}">${escapeHtml(displayName(it.Ticker))}</div>
           <div class="am-company">${escapeHtml(displaySub(it.Ticker))}</div>
@@ -18303,7 +18361,7 @@ function buildInsiderArchiveList() {
     const priceStr = t.price ? '$' + Number(t.price).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '—';
     return `
       <div class="insider-archive-item" data-ticker="${escapeAttr(tk)}">
-        ${logoHtml}
+        ${aqWrapLogo(logoHtml, tk)}
         <div class="ia-info">
           <div class="ia-ticker" title="${escapeAttr(displayName(tk))}">${escapeHtml(displayName(tk))}</div>
           <div class="ia-company">${escapeHtml(displaySub(tk))}</div>
@@ -18435,7 +18493,7 @@ function renderStockRow(it) {
   const chgStr = (it.chg >= 0 ? '+' : '') + it.chg.toFixed(2) + '%';
   return `
     <div class="stock-list-row" data-ticker="${escapeAttr(it.ticker)}">
-      ${logoHtml}
+      ${aqWrapLogo(logoHtml, it.ticker)}
       <div class="sl-ticker" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
       <div class="sl-sector">${escapeHtml(it.sector)}</div>
       <div class="sl-meta">
