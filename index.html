@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.94';
+window.AQ_PWA_VERSION = '2.98';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1434,6 +1434,9 @@ table.sheet tbody tr.drop-below td:last-child {
   /* v2.08: radius 8 → 14px (더 부드럽게), shadow 깊이감 */
   border-radius: var(--radius-lg); width: 95vw; max-width: 1400px; max-height: 95vh;
   overflow: auto; padding: 28px; position: relative;
+  /* v2.98: 모달 내부 overscroll이 페이지로 전파되어 네이티브 풀투리프레시(새로고침)를 일으키는 것 차단.
+     아래로 스와이프해 모달 닫으려다 새로고침되던 문제 수정. 일반 스크롤엔 영향 없음. */
+  overscroll-behavior: contain;
   box-shadow: var(--shadow-3);
   /* v2.08: slide-up 애니메이션 — 진짜 앱처럼 자연스럽게 떠오름 */
   animation: modal-slide-up var(--t-slow) var(--ease-out);
@@ -2139,11 +2142,14 @@ table.sheet tbody tr.drop-below td:last-child {
 .buy-point-item .bp-logo {
   width: 56px; height: 56px;
   border-radius: 50%;
-  margin: 0 auto 8px;
+  /* v2.96: 하단 여백을 래퍼(.aq-logo-wrap)로 이동 — img margin이 래퍼를 세로로 늘려 스토리 링이 타원이 되던 문제 수정 */
+  margin: 0;
   object-fit: cover;
   background: var(--bg-3);
   display: block;
 }
+/* v2.96: 스토리 링 래퍼를 로고와 동일한 정사각으로 유지하고, 카드 내 하단 간격은 래퍼 margin으로 */
+.buy-point-item .aq-logo-wrap { margin: 0 auto 8px; }
 .buy-point-item .bp-name {
   font-size: 12px;
   font-weight: 700;
@@ -4239,6 +4245,7 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
 .search-modal-results {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;  /* v2.98: 페이지 풀투리프레시 전파 차단 */
   padding: 6px 0;
   min-height: 0;
 }
@@ -6532,7 +6539,7 @@ table.combo-eval tbody td .nodata {
   <!-- v2.67: HERO 알림 마퀴 — TO-DO 트리거 소식 우→좌 흐름 (모든 페이지에 표시) -->
   <!-- v2.69: AQUAMEL 룩앤필 적용 — transparent + 모노스페이스 라벨 + mint pulse dot -->
   <div class="hero-marquee" id="heroMarquee">
-    <div class="hero-marquee-label">ALERTS</div>
+    <div class="hero-marquee-label">MACRO</div>
     <div class="hero-marquee-mask">
       <div class="hero-marquee-track empty" id="heroMarqueeTrack">새로운 소식이 없습니다</div>
     </div>
@@ -14131,6 +14138,8 @@ function renderMacro() {
     </div>`;
   });
   $('macroArea').innerHTML = '<div class="macro-grid">' + kjpHtml + cellsHtml + '</div>';
+  // v2.97: 매크로 렌더 시 HERO 마퀴(MACRO)도 갱신
+  try { if (typeof _aqRenderMarquee === 'function') _aqRenderMarquee(); } catch (e) {}
 }
 
 // ============================================================================
@@ -18088,92 +18097,60 @@ function _aqRenderMarquee() {
   const track = document.getElementById('heroMarqueeTrack');
   if (!track) return;
 
-  // (1) 실시간 임박 카드 메시지 — 칸반 '임박' 분류와 1:1 sync
-  //   v2.70: 짧은 형식 — TICKER · WHEN · WHAT (30~40자 이내)
-  const liveItems = [];
-  if (window.AqTodoStore && typeof _aqClassifyTodoCol === 'function') {
-    const todayIso = new Date().toISOString().slice(0, 10);
-    const todos = AqTodoStore.getAll();
-    todos.forEach(t => {
-      const col = _aqClassifyTodoCol(t, todayIso);
-      if (col !== 'urgent') return;
-      const ticker = String(t.ticker || t.reportTicker || '').toUpperCase();
-      // WHAT — body 텍스트는 30자 이내로 자름
-      const whatShort = (t.body || t.text || '').slice(0, 30).trim();
-      const w = t.when;
-      let whenLabel = '', whatLabel = whatShort;
-      if (w && w.type === 'date') {
-        const d = _aqDaysUntil(todayIso, w.date);
-        if (d == null) return;
-        whenLabel = d === 0 ? 'D-Day' : (d > 0 ? `D-${d}` : `D+${-d}`);
-      } else if (w && w.type === 'range') {
-        const dFrom = _aqDaysUntil(todayIso, w.from);
-        const dTo = _aqDaysUntil(todayIso, w.to);
-        if (dFrom != null && dFrom <= 0 && dTo != null && dTo >= 0) {
-          whenLabel = '진행중';
-        } else if (dFrom != null && dFrom > 0) {
-          whenLabel = `D-${dFrom} 시작`;
-        } else return;
-      } else if (w && w.type === 'quarter') {
-        const earn = (typeof _aqFindNextEarning === 'function') ? _aqFindNextEarning(ticker) : null;
-        if (!earn) return;
-        const d = _aqDaysUntil(todayIso, earn.date);
-        if (d == null || d < 0 || d > 7) return;
-        whenLabel = d === 0 ? 'D-Day' : `D-${d}`;
-        whatLabel = `${w.year}년 ${w.quarter}Q 실적`;
-      } else if (w && w.type === 'soft' && w.format === 'month' && w.deadline) {
-        const d = _aqDaysUntil(todayIso, w.deadline + '-28');
-        if (d == null || d > 7) return;
-        whenLabel = d <= 0 ? '데드라인' : `${w.deadline}까지 D-${d}`;
-      } else return;
-      // 형식: TICKER · WHEN · WHAT
-      const parts = [ticker, whenLabel];
-      if (whatLabel) parts.push(whatLabel);
-      const detail = parts.join(' · ');
-      const id = `${ticker}|${t.reportDate || ''}|${t.idx}|live-imminent`;
-      liveItems.push({ id, ticker, message: detail, urgent: true, createdAt: todayIso });
+  // v2.97: ALERTS(TO-DO 임박) → MACRO. 한국+미국 통합 매크로 지표 등락률 (큰 변동 먼저).
+  //   macroByMarket.KR은 US 매크로를 이미 포함(병합) → Ticker 기준 dedup으로 중복 방지.
+  const byTk = {};
+  const addRows = (rows, mkt) => {
+    if (!Array.isArray(rows)) return;
+    const grp = {};
+    rows.forEach(r => { if (!r.Ticker) return; (grp[r.Ticker] = grp[r.Ticker] || []).push(r); });
+    Object.keys(grp).forEach(tk => {
+      if (byTk[tk]) return;  // 이미 등록(US 먼저) → dedup
+      const arr = grp[tk].slice().sort((a, b) => (a.Date || '').localeCompare(b.Date || ''));
+      const last = arr[arr.length - 1], prev = arr[arr.length - 2];
+      if (!last || isNaN(last.Close)) return;
+      const chg = (prev && !isNaN(prev.Close) && prev.Close !== 0) ? (last.Close / prev.Close - 1) * 100 : 0;
+      byTk[tk] = { ticker: tk, chg };
     });
-  }
+  };
+  const mbm = _state.macroByMarket || {};
+  addRows(mbm.US, 'US');
+  addRows(mbm.KR, 'KR');
 
-  // (2) 누적 이벤트 알림 큐 (Form 4 새거래, 조건 충족 등) + 실시간 임박 합침
-  // 중복 방지 — ID 같으면 한 번만
-  const seen = new Set();
-  const combined = [];
-  const all = [...liveItems, ..._aqNotifications];
-  all.forEach(n => {
-    if (seen.has(n.id)) return;
-    seen.add(n.id);
-    combined.push(n);
-  });
+  const items = Object.values(byTk);
 
-  if (combined.length === 0) {
+  // KJP400 집계 포함 (사용자 요청)
+  try {
+    if (typeof computeKJP400Avg === 'function') {
+      const kjp = computeKJP400Avg();
+      if (kjp && typeof kjp.avg === 'number') items.push({ ticker: 'KJP400', chg: kjp.avg, isKjp: true });
+    }
+  } catch (e) {}
+
+  if (items.length === 0) {
     track.classList.add('empty');
-    track.textContent = '새로운 소식이 없습니다';
+    track.textContent = '매크로 데이터 불러오는 중…';
     return;
   }
   track.classList.remove('empty');
-  // urgent 우선, 그 다음 최신
-  combined.sort((a, b) => {
-    if (a.urgent !== b.urgent) return a.urgent ? -1 : 1;
-    return (b.createdAt || '').localeCompare(a.createdAt || '');
-  });
-  const inner = combined.map(n => {
-    const cls = 'notif' + (n.urgent ? ' notif-urgent' : '');
-    return `<span class="${cls}" data-ticker="${escapeAttr(n.ticker)}" data-notif-id="${escapeAttr(n.id)}" title="클릭하여 해당 페이지로 이동">${escapeHtml(n.message)}</span>`;
+
+  // 등락률 절댓값 큰 순 (큰 변동 먼저)
+  items.sort((a, b) => Math.abs(b.chg) - Math.abs(a.chg));
+
+  const inner = items.map(it => {
+    const up = it.chg >= 0;
+    const color = up ? 'var(--kr-up)' : 'var(--kr-down)';
+    const emoji = (typeof MACRO_EMOJI !== 'undefined' && MACRO_EMOJI[it.ticker]) ? MACRO_EMOJI[it.ticker] : '📊';
+    const chgStr = (up ? '+' : '') + it.chg.toFixed(2) + '%';
+    return `<span class="notif macro-chip" data-macro="${escapeAttr(it.ticker)}" title="${escapeAttr(it.ticker)} 매크로 차트">${emoji} ${escapeHtml(it.ticker)} <b style="color:${color};font-weight:700;">${escapeHtml(chgStr)}</b></span>`;
   }).join('<span class="notif-sep">·</span>');
   track.innerHTML = inner;
-  // v2.68: 알림 클릭 — todo 유형별 컨텍스트 페이지로 (Form 4 → 내부자 거래 / 일자 → 일정 / 조건부 → 차트)
-  track.querySelectorAll('.notif').forEach(el => {
+
+  // 클릭 → 매크로 차트
+  track.querySelectorAll('.macro-chip').forEach(el => {
     el.onclick = () => {
-      const todo = (typeof _aqFindTodoByNotificationId === 'function')
-        ? _aqFindTodoByNotificationId(el.dataset.notifId)
-        : null;
-      if (todo && typeof _aqRouteTodoCard === 'function') {
-        _aqRouteTodoCard(todo);
-      } else {
-        const tk = el.dataset.ticker;
-        if (tk && typeof openChart === 'function') openChart(tk);
-      }
+      const tk = el.dataset.macro;
+      if (tk && typeof openMacroChart === 'function') openMacroChart(tk);
     };
   });
 }
