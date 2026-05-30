@@ -13,6 +13,9 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 
+<!-- v2.93: SortableJS — 관심 칸반 드래그앤드롭(카드/컬럼). defer로 메인 로딩 영향 0, 미로드 시 DnD만 비활성. -->
+<script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
 <!-- ============ PWA META (v1.19) ============ -->
 <meta name="theme-color" content="#1e1e1e">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -50,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '2.89';
+window.AQ_PWA_VERSION = '2.94';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1924,6 +1927,32 @@ table.sheet tbody tr.drop-below td:last-child {
   .report-item-labeled .report-label { font-size: 10px; padding: 1px 6px; }
 }
 
+/* v2.91: 관심(하트) 버튼 — 모달 우상단 (토스 버튼 자리). 미등록=투명 배경/흰 외곽선, 등록=빨간 배경 */
+.modal-content .modal-watch {
+  position: absolute; top: 12px; right: 56px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; padding: 0;
+  background: transparent;
+  border: none; border-radius: 8px;
+  color: #ffffff; cursor: pointer;
+  transition: background 0.15s, transform 0.12s;
+  font-family: inherit;
+}
+.modal-content .modal-watch svg { width: 22px; height: 22px; display: block; }
+.modal-content .modal-watch:hover { background: rgba(255,255,255,0.12); }
+.modal-content .modal-watch:active { transform: scale(0.9); }
+.modal-content .modal-watch.watched { background: #fa5252; }
+.modal-content .modal-watch.watched:hover { background: #e63e3e; }
+.modal-content .modal-watch.watched svg { fill: #ffffff; stroke: #ffffff; }
+@media (max-width: 640px) {
+  .modal-content .modal-watch {
+    top: calc(28px + env(safe-area-inset-top, 0px)); right: 4px;
+    width: 36px; height: 36px; border-radius: 10px;
+  }
+  .modal-content .modal-watch svg { width: 24px; height: 24px; }
+  .modal-content #modalTitle { padding-right: 48px !important; }
+}
+
 /* v1.98: 토스증권 이동 버튼 — 모달 우상단 (닫기 ✕ 옆) */
 .modal-content .modal-toss {
   position: absolute; top: 12px; right: 56px;
@@ -2396,6 +2425,11 @@ table.sheet tbody tr.drop-below td:last-child {
 body[data-pc-panel="discover"] #pcPanelDiscover { display: block; }
 body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
 body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
+body[data-pc-panel="todo"] #pcPanelTodo { display: block; }
+body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
+
+/* v2.90: 사이드 패널 안 To-Do 칸반은 MO처럼 단일 세로 컬럼 (좁은 폭에 4열 그리드 부적합) */
+.pc-side-panel .todo-board { grid-template-columns: 1fr; gap: 12px; overflow-x: visible; }
 
 /* 사이드 패널 안 카드 — mobile-only 강제 표시 */
 .pc-side-panel section.card { margin-bottom: 14px; }
@@ -2415,7 +2449,9 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   /* v1.58: 사이드 패널 열림 시 슬라이드 인 */
   body[data-pc-panel="discover"] .pc-side-panel,
   body[data-pc-panel="explore"] .pc-side-panel,
-  body[data-pc-panel="analysis"] .pc-side-panel { transform: translateX(0); }
+  body[data-pc-panel="analysis"] .pc-side-panel,
+  body[data-pc-panel="todo"] .pc-side-panel,
+  body[data-pc-panel="watch"] .pc-side-panel { transform: translateX(0); }
 
   /* v1.62: 사이드 패널 열림 시 메인 콘텐츠 왼쪽 이동 — 가로 폭 유지!
      v2.61: 큰 모니터에서 좌우 여백 균등화
@@ -2426,7 +2462,9 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
        · vw < 1500: 0 (이동 X — 좌측 잘림 방지) */
   body[data-pc-panel="discover"] .container,
   body[data-pc-panel="explore"] .container,
-  body[data-pc-panel="analysis"] .container {
+  body[data-pc-panel="analysis"] .container,
+  body[data-pc-panel="todo"] .container,
+  body[data-pc-panel="watch"] .container {
     transform: translateX(min(0px, max(calc((1500px - 100vw) / 2), calc(-1 * (64px + 420px) / 2))));
   }
 
@@ -2435,7 +2473,9 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   .modal-overlay { transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
   body[data-pc-panel="discover"] .modal-overlay,
   body[data-pc-panel="explore"] .modal-overlay,
-  body[data-pc-panel="analysis"] .modal-overlay {
+  body[data-pc-panel="analysis"] .modal-overlay,
+  body[data-pc-panel="todo"] .modal-overlay,
+  body[data-pc-panel="watch"] .modal-overlay {
     width: calc(100vw - 64px - 420px);
   }
 
@@ -2443,8 +2483,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   /* 메인 페이지: AQUAMEL Dashboard와 보유주식 입력, 데이터 관리 숨김 (각자 별도 페이지에 있음) */
   body[data-pc-page="main"] #dashboardCard,
   body[data-pc-page="main"] #myPortfolioCard,
-  body[data-pc-page="main"] #dataManagementCard,
-  body[data-pc-page="main"] #todoBoardCard { display: none !important; }
+  body[data-pc-page="main"] #dataManagementCard { display: none !important; }
 
   /* 보드 페이지: dashboardCard만 표시 (다른 메인 카드 모두 숨김) */
   body[data-pc-page="board"] .container > section.card { display: none !important; }
@@ -2460,9 +2499,7 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   body[data-pc-page="settings"] .container > section.card { display: none !important; }
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
 
-  /* v2.66: To-Do 페이지 — todoBoardCard만 표시 */
-  body[data-pc-page="todo"] .container > section.card { display: none !important; }
-  body[data-pc-page="todo"] #todoBoardCard { display: block !important; }
+  /* v2.66/v2.90: To-Do는 중앙 페이지 → 사이드 패널로 전환 (data-pc-panel="todo"). 페이지 규칙 제거. */
 
   /* v2.46: 일정 페이지 — scheduleCard만 표시 */
   body[data-pc-page="schedule"] .container > section.card { display: none !important; }
@@ -3317,6 +3354,8 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   body[data-mtab="settings"] section.card[data-mtab~="settings"] { display: block !important; }
   /* v2.66: MO To-Do 탭 — todoBoardCard만 표시 */
   body[data-mtab="todo"] section.card[data-mtab~="todo"] { display: block !important; }
+  /* v2.92: MO 관심 탭 — watchBoardCard만 표시 */
+  body[data-mtab="watch"] section.card[data-mtab~="watch"] { display: block !important; }
 
   /* 발견 탭에서는 PC용 archive 테이블 카드 숨기고 모바일 리스트만 */
   body[data-mtab="discover"] #archiveCard { display: none !important; }
@@ -4589,6 +4628,90 @@ body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+/* v2.92: 관심 칸반 컬럼 색 코딩 (To-Do와 동일 룩, data-col만 다름) */
+.todo-column[data-col="short"]    .todo-card { border-left-color: var(--accent-2); }
+.todo-column[data-col="consider"] .todo-card { border-left-color: var(--orange); }
+.todo-column[data-col="longterm"] .todo-card { border-left-color: var(--accent); }
+.todo-column[data-col="done"]     .todo-card { border-left-color: var(--green); }
+.todo-column[data-col="short"]    { border-top-color: color-mix(in srgb, var(--accent-2) 55%, transparent); }
+.todo-column[data-col="consider"] { border-top-color: color-mix(in srgb, var(--orange) 55%, transparent); }
+.todo-column[data-col="longterm"] { border-top-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.todo-column[data-col="done"]     { border-top-color: color-mix(in srgb, var(--green) 55%, transparent); }
+
+/* v2.92: 관심 카드 추가 요소 (등락률 / 종가 / 이벤트 칩) — todo-card 베이스 위에 */
+.watch-card .watch-chg {
+  margin-left: auto;
+  font-size: 12px; font-weight: 700;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+}
+.watch-card .watch-chg.up   { color: var(--kr-up); }
+.watch-card .watch-chg.down { color: var(--kr-down); }
+.watch-card .watch-chg.zero { color: var(--text-mute); }
+.watch-card .watch-meta {
+  display: flex; align-items: baseline; gap: 8px;
+  margin-bottom: 8px;
+}
+.watch-card .watch-close {
+  font-size: 14px; font-weight: 700; color: var(--text-hi);
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+}
+.watch-card .watch-close-label { font-size: 10px; color: var(--text-mute); }
+.watch-card .watch-events {
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+.watch-card .watch-evt {
+  font-size: 10px; font-weight: 600;
+  padding: 2px 7px; border-radius: 6px;
+  background: rgba(255,255,255,0.06); color: var(--text-dim);
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
+  white-space: nowrap;
+}
+[data-theme="light"] .watch-card .watch-evt { background: rgba(0,0,0,0.05); }
+.watch-card .watch-evt.earn { background: rgba(86,156,214,0.15); color: var(--accent); }
+.watch-card .watch-evt.vsig { background: rgba(250,82,82,0.14); color: var(--v-main); }
+.watch-card .watch-evt.insider { background: rgba(255,193,7,0.15); color: #d4a017; }
+.watch-card .watch-empty-evt { font-size: 10px; color: var(--text-mute); font-style: italic; }
+
+/* v2.93: 관심 칸반 드래그앤드롭 시각 피드백 */
+#watchBoard .todo-col-head { cursor: grab; }
+#watchBoard .todo-col-head:active { cursor: grabbing; }
+#watchBoard .aq-dnd-ghost { opacity: 0.35; }
+#watchBoard .aq-dnd-chosen { box-shadow: 0 10px 26px rgba(0,0,0,0.5); }
+#watchBoard .aq-dnd-drag { opacity: 0.96; }
+#watchBoard.todo-board { touch-action: pan-y; }  /* 롱프레스 드래그 중 세로 스크롤 허용 */
+
+/* v2.94: 컬럼 하단 종목 추가 버튼 */
+.watch-add-btn {
+  display: block; width: 100%; margin-top: 10px;
+  padding: 9px; background: transparent;
+  border: 1px dashed rgba(255,255,255,0.18); border-radius: 8px;
+  color: var(--text-dim); font-family: inherit; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.watch-add-btn:hover { border-color: var(--accent-2); color: var(--accent-2); background: rgba(78,201,176,0.06); }
+[data-theme="light"] .watch-add-btn { border-color: rgba(0,0,0,0.18); }
+
+/* v2.94: 검색 결과 우측 하트 (관심 토글) */
+.search-result-heart {
+  margin-left: auto; flex-shrink: 0;
+  width: 34px; height: 34px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: none; border-radius: 8px;
+  color: var(--text-mute); cursor: pointer; transition: background 0.15s, color 0.15s, transform 0.12s;
+}
+.search-result-heart svg { width: 20px; height: 20px; display: block; }
+.search-result-heart:hover { background: rgba(255,255,255,0.08); color: var(--text-dim); }
+.search-result-heart:active { transform: scale(0.88); }
+.search-result-heart.watched { color: #fa5252; }
+.search-result-heart.watched svg { fill: #fa5252; }
+
+/* v2.94: 관심 카드 섹터명 */
+.watch-card .watch-sector {
+  font-size: 10px; color: var(--text-mute);
+  margin: -4px 0 8px; padding-left: 1px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
 /* v2.64: 내부자 거래 테이블 */
@@ -6661,6 +6784,35 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+  <!-- v2.92: 관심 칸반 보드 — 단기 모니터링 / 매수고려 / 장기 모니터링 / 매수완료. To-Do와 동일 룩앤필. -->
+  <section class="card" id="watchBoardCard" data-mtab="watch">
+    <div class="card-header"><h2>관심 종목</h2></div>
+    <div class="card-body">
+      <div class="todo-board" id="watchBoard">
+        <div class="todo-column" data-col="short">
+          <div class="todo-col-head"><span>👀 단기 모니터링</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-body"></div>
+          <button class="watch-add-btn" onclick="openWatchSearch('short')">+ 종목 추가</button>
+        </div>
+        <div class="todo-column" data-col="consider">
+          <div class="todo-col-head"><span>🛒 매수고려</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-body"></div>
+          <button class="watch-add-btn" onclick="openWatchSearch('consider')">+ 종목 추가</button>
+        </div>
+        <div class="todo-column" data-col="longterm">
+          <div class="todo-col-head"><span>📈 장기 모니터링</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-body"></div>
+          <button class="watch-add-btn" onclick="openWatchSearch('longterm')">+ 종목 추가</button>
+        </div>
+        <div class="todo-column" data-col="done">
+          <div class="todo-col-head"><span>✅ 매수완료</span><span class="todo-col-count">0</span></div>
+          <div class="todo-col-body"></div>
+          <button class="watch-add-btn" onclick="openWatchSearch('done')">+ 종목 추가</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- v2.58: 데이터 관리 카드 — v2.59: 설정 페이지로 이동 -->
   <section class="card" id="dataManagementCard" data-mtab="settings">
     <div class="card-header" onclick="toggleCard(this)">
@@ -6961,7 +7113,14 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">탐색</span>
     </button>
-    <!-- v2.68: 3번째 위치 — 일정 (이전엔 To-Do) -->
+    <!-- v2.92: 3번째 위치 — 관심 (하트) 신설 -->
+    <button class="mtab-btn" data-mtab="watch" onclick="switchMobileTab('watch')" aria-label="관심">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <span class="mtab-label">관심</span>
+    </button>
+    <!-- v2.92: 4번째 — 일정 -->
     <button class="mtab-btn" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="5" width="18" height="16" rx="2"/>
@@ -6971,21 +7130,12 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">일정</span>
     </button>
+    <!-- v2.92: 5번째 — 분석 -->
     <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
       </svg>
       <span class="mtab-label">분석</span>
-    </button>
-    <!-- v2.68: 5번째 위치 — To-Do (이전엔 일정), disabled 해제 -->
-    <button class="mtab-btn" data-mtab="todo" onclick="switchMobileTab('todo')" aria-label="To-Do">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 6l-4 4-2-2"/>
-        <path d="M9 13l-4 4-2-2"/>
-        <path d="M13 7h7"/>
-        <path d="M13 14h7"/>
-      </svg>
-      <span class="mtab-label">To-Do</span>
     </button>
   </nav>
 
@@ -7000,6 +7150,11 @@ table.combo-eval tbody td .nodata {
       <button class="mo-drawer-item" onclick="moDrawerNav('sector')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V10M9 20V4M15 20v-8M21 20V8"/></svg>
         <span>섹터</span>
+      </button>
+      <!-- v2.92: To-Do는 하단 탭에서 햄버거 드로어로 이동 (섹터 다음) -->
+      <button class="mo-drawer-item" onclick="moDrawerNav('todo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
+        <span>To-Do</span>
       </button>
       <button class="mo-drawer-item" onclick="moDrawerNav('board')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.2"/><rect x="14" y="3" width="7" height="5" rx="1.2"/><rect x="14" y="12" width="7" height="9" rx="1.2"/><rect x="3" y="16" width="7" height="5" rx="1.2"/></svg>
@@ -7096,10 +7251,11 @@ table.combo-eval tbody td .nodata {
       <button class="modal-report" id="modalReportBtn" onclick="openReportPanel()" title="분석 보고서" style="display:none">
         <img src="./logos/report.png" alt="분석 보고서" />
       </button>
-      <!-- v1.98: 토스증권 종목 페이지로 이동 (한국=tossinvest.com/stocks/A{ticker}, 미국=tossinvest.com/stocks/US{ticker}) -->
-      <button class="modal-toss" id="modalTossBtn" onclick="openTossInvest()" title="토스증권에서 보기">
-        <img src="./logos/toss.png" alt="토스증권" />
-        <span>토스증권</span>
+      <!-- v2.91: 토스증권 버튼 제거 → 관심(하트) 버튼으로 교체. 토스와 동일 위치(우상단). -->
+      <button class="modal-watch" id="modalWatchBtn" onclick="toggleWatch()" title="관심 종목 추가" aria-pressed="false">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
       </button>
       <button class="modal-close" onclick="closeModal()">×</button>
       <!-- v1.99: 메인 모달 본문 (보고서 모드 시 숨김) -->
@@ -7176,6 +7332,14 @@ table.combo-eval tbody td .nodata {
   <div class="pc-panel-content" id="pcPanelAnalysis" data-pc-tab="analysis">
     <!-- analysisCard 가 JS로 여기로 이동 -->
   </div>
+  <!-- v2.90: To-Do 사이드 패널 (분석과 동일 UI) — todoBoardCard가 PC에선 여기로 이동 -->
+  <div class="pc-panel-content" id="pcPanelTodo" data-pc-tab="todo">
+    <!-- todoBoardCard 가 JS로 여기로 이동 -->
+  </div>
+  <!-- v2.92: 관심 사이드 패널 — watchBoardCard가 PC에선 여기로 이동 -->
+  <div class="pc-panel-content" id="pcPanelWatch" data-pc-tab="watch">
+    <!-- watchBoardCard 가 JS로 여기로 이동 -->
+  </div>
 </aside>
 
 <!-- v1.57 PC 우측 세로 사이드바 — 5개 메뉴 (모바일에선 display:none) -->
@@ -7209,6 +7373,11 @@ table.combo-eval tbody td .nodata {
   <button class="pc-tab-btn" data-pc-tab="explore" onclick="setPCTab('explore')" aria-label="탐색">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M16 8l-3 5-5 3 3-5z"/></svg>
     <span class="pc-tab-label">탐색</span>
+  </button>
+  <!-- v2.92: 관심 (하트) — 탐색과 분석 사이. 사이드 패널 슬라이드. -->
+  <button class="pc-tab-btn" data-pc-tab="watch" onclick="setPCTab('watch')" aria-label="관심">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    <span class="pc-tab-label">관심</span>
   </button>
   <button class="pc-tab-btn" data-pc-tab="analysis" onclick="setPCTab('analysis')" aria-label="분석">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
@@ -15903,6 +16072,8 @@ async function openChart(ticker) {
 
   // v1.99: 보고서 버튼 표시 여부 갱신 (해당 ticker에 보고서 있을 때만)
   updateReportButtonVisibility();
+  // v2.91: 관심 하트 버튼 상태 동기화
+  try { syncWatchButton(); } catch (e) {}
   // 모달 새로 열 때마다 보고서 모드 reset (이전 ticker의 보고서가 남아있지 않도록)
   if (_state.reportMode) closeReportPanel();
 
@@ -16006,9 +16177,108 @@ function openTossInvest() {
   }
 }
 
+// ============================================================================
+// v2.91: 관심 종목 저장소 (localStorage 'aq_watchlist_v1')
+//   { "US:AAPL": { ticker, market, col, addedAt, order }, ... }
+//   col: 'short'(단기 모니터링·기본) | 'consider'(매수고려) | 'longterm'(장기 모니터링) | 'done'(매수완료)
+// ============================================================================
+window.AqWatchStore = (function() {
+  const LS_KEY = 'aq_watchlist_v1';
+  const listeners = new Set();
+  const DEFAULT_COL = 'short';
+  const COLS = ['short', 'consider', 'longterm', 'done'];
+  function load() { try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(LS_KEY, JSON.stringify(o)); } catch (e) {} }
+  function keyOf(market, ticker) { return String(market || 'US') + ':' + String(ticker || '').toUpperCase(); }
+  function notify(evt) { listeners.forEach(fn => { try { fn(evt); } catch (e) { console.warn('[AqWatchStore] listener error:', e); } }); }
+  return {
+    DEFAULT_COL, COLS,
+    has(market, ticker) { return !!load()[keyOf(market, ticker)]; },
+    get(market, ticker) { return load()[keyOf(market, ticker)] || null; },
+    getAll() { return Object.values(load()); },
+    add(market, ticker, col) {
+      const raw = load();
+      const k = keyOf(market, ticker);
+      if (raw[k]) return raw[k];
+      const item = {
+        ticker: String(ticker).toUpperCase(),
+        market: String(market || 'US'),
+        col: COLS.indexOf(col) >= 0 ? col : DEFAULT_COL,
+        addedAt: new Date().toISOString(),
+        order: Date.now(),
+      };
+      raw[k] = item; save(raw); notify({ type: 'added', item }); return item;
+    },
+    remove(market, ticker) {
+      const raw = load(); const k = keyOf(market, ticker);
+      if (!raw[k]) return; const item = raw[k]; delete raw[k]; save(raw); notify({ type: 'removed', item });
+    },
+    setCol(market, ticker, col) {
+      const raw = load(); const k = keyOf(market, ticker);
+      if (!raw[k] || COLS.indexOf(col) < 0) return; raw[k].col = col; save(raw); notify({ type: 'moved', item: raw[k] });
+    },
+    setOrder(market, ticker, order) {
+      const raw = load(); const k = keyOf(market, ticker);
+      if (!raw[k]) return; raw[k].order = order; save(raw); notify({ type: 'reordered', item: raw[k] });
+    },
+    // v2.93: 드롭 후 전체 보드 레이아웃 일괄 반영 (컬럼 + 순서) — 한 번만 저장/알림
+    applyLayout(layout) {
+      const raw = load();
+      Object.keys(layout || {}).forEach(col => {
+        (layout[col] || []).forEach((it, i) => {
+          const k = keyOf(it.market, it.ticker);
+          if (raw[k]) { if (COLS.indexOf(col) >= 0) raw[k].col = col; raw[k].order = i; }
+        });
+      });
+      save(raw); notify({ type: 'layout' });
+    },
+    // v2.93: 컬럼 표시 순서 (별도 키, notify 없이 저장 — DOM은 이미 재배치됨)
+    getColOrder() {
+      try {
+        const arr = JSON.parse(localStorage.getItem('aq_watch_colorder_v1') || 'null');
+        if (Array.isArray(arr) && arr.length === COLS.length && COLS.every(c => arr.indexOf(c) >= 0)) return arr;
+      } catch (e) {}
+      return COLS.slice();
+    },
+    setColOrder(arr) {
+      if (!Array.isArray(arr)) return;
+      try { localStorage.setItem('aq_watch_colorder_v1', JSON.stringify(arr)); } catch (e) {}
+    },
+    toggle(market, ticker) {
+      if (this.has(market, ticker)) { this.remove(market, ticker); return false; }
+      this.add(market, ticker); return true;
+    },
+    subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); },
+    unsubscribe(fn) { listeners.delete(fn); },
+  };
+})();
+
+// 모달 하트 클릭 → 현재 종목 관심 토글 (등록 시 기본 컬럼 = 단기 모니터링)
+function toggleWatch() {
+  const tk = _state.openTicker;
+  if (!tk) return;
+  const mkt = getCurrentMarket();
+  AqWatchStore.toggle(mkt, tk);
+  syncWatchButton();
+}
+window.toggleWatch = toggleWatch;
+
+// 모달 열릴 때 하트 상태 동기화. 종목 없음(매크로 등)이면 숨김.
+function syncWatchButton() {
+  const btn = document.getElementById('modalWatchBtn');
+  if (!btn) return;
+  const tk = _state.openTicker;
+  if (!tk) { btn.style.display = 'none'; return; }
+  btn.style.display = '';
+  const watched = AqWatchStore.has(getCurrentMarket(), tk);
+  btn.classList.toggle('watched', watched);
+  btn.setAttribute('aria-pressed', watched ? 'true' : 'false');
+  btn.title = watched ? '관심 종목 (등록됨 — 클릭 시 해제)' : '관심 종목 추가';
+}
+window.syncWatchButton = syncWatchButton;
+
 function closeModal() {
-  $('chartModal').classList.remove('active');
-  if (_chart) { _chart.destroy(); _chart = null; }
+  $('chartModal').classList.remove('active');  if (_chart) { _chart.destroy(); _chart = null; }
   // v1.23: 모바일 미니 차트도 정리
   if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
   // v1.19: 매크로 모드 정리 — 다음 일반 ticker 열기 위해 영역들 복원
@@ -16239,6 +16509,8 @@ async function openMacroChart(macroName) {
 
   _state.openTicker = null;
   _state.openMacro = macroName;
+  // v2.91: 매크로 모달엔 관심 하트 비표시 (종목 아님)
+  try { syncWatchButton(); } catch (e) {}
 
   // v1.23: 모바일에서는 간단한 영역 차트(섹터 모달과 동일 포맷)로 표시
   if (isMobileViewport()) {
@@ -17121,11 +17393,13 @@ function _aqRenderSearchResults(query) {
     return;
   }
   const logoFn = (typeof tickerFileName === 'function') ? tickerFileName : (t) => t;
+  const _watchHas = (tk) => !!(window.AqWatchStore && AqWatchStore.has(getCurrentMarket(), tk));
   resultsEl.innerHTML = top.map((it, idx) => {
     const logoFile = logoFn(it.ticker);
     const logoHtml = `<img class="search-modal-result-logo" src="./logos/tickers/${encodeURIComponent(logoFile)}.png" onerror="this.style.display='none'" alt=""/>`;
     const tickerHl = _aqHighlight(it.ticker, q);
     const companyHl = it.company ? _aqHighlight(it.company, q) : '';
+    const watched = _watchHas(it.ticker);
     return `
       <div class="search-modal-result${idx === 0 ? ' active' : ''}" data-ticker="${escapeAttr(it.ticker)}" data-idx="${idx}">
         ${aqWrapLogo(logoHtml, it.ticker)}
@@ -17136,9 +17410,28 @@ function _aqRenderSearchResults(query) {
           </div>
           ${it.sector ? `<div class="search-modal-result-sector">${escapeHtml(it.sector)}</div>` : ''}
         </div>
+        <button class="search-result-heart${watched ? ' watched' : ''}" data-ticker="${escapeAttr(it.ticker)}" title="관심 추가/해제" aria-pressed="${watched ? 'true' : 'false'}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
       </div>
     `;
   }).join('');
+  // v2.94: 하트 클릭 → 현재 컨텍스트 컬럼(또는 단기)으로 관심 토글
+  resultsEl.querySelectorAll('.search-result-heart').forEach(el => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      const tk = el.dataset.ticker;
+      if (!tk || !window.AqWatchStore) return;
+      const mkt = getCurrentMarket();
+      if (AqWatchStore.has(mkt, tk)) {
+        AqWatchStore.remove(mkt, tk);
+        el.classList.remove('watched'); el.setAttribute('aria-pressed', 'false');
+      } else {
+        AqWatchStore.add(mkt, tk, window._aqWatchAddCol || 'short');
+        el.classList.add('watched'); el.setAttribute('aria-pressed', 'true');
+      }
+    };
+  });
   resultsEl.querySelectorAll('.search-modal-result').forEach(el => {
     el.onclick = () => {
       const tk = el.dataset.ticker;
@@ -17198,10 +17491,12 @@ function _aqBindSearchModalEvents() {
   });
 }
 
-function openSearchModal() {
+function openSearchModal(watchCol) {
   const modal = document.getElementById('aqSearchModal');
   const input = document.getElementById('aqSearchInput');
   if (!modal || !input) { console.warn('[SEARCH] modal/input element missing'); return; }
+  // v2.94: 컬럼 "종목 추가"로 열렸으면 그 컬럼에 등록, 일반 검색이면 null(기본 단기 모니터링)
+  window._aqWatchAddCol = (typeof watchCol === 'string') ? watchCol : null;
   // v2.73: openSearchModal 호출 시점에 event binding 보장 (DOMContentLoaded timing 무관)
   _aqBindSearchModalEvents();
   modal.classList.add('open');
@@ -17210,6 +17505,10 @@ function openSearchModal() {
   setTimeout(() => input.focus(), 100);
 }
 window.openSearchModal = openSearchModal;
+
+// v2.94: 관심 컬럼의 "종목 추가" → 검색 모달을 그 컬럼 컨텍스트로 오픈
+function openWatchSearch(col) { openSearchModal(col); }
+window.openWatchSearch = openWatchSearch;
 
 function closeSearchModal() {
   const modal = document.getElementById('aqSearchModal');
@@ -17412,6 +17711,198 @@ function buildTodoKanban() {
   try { if (typeof _aqRenderMarquee === 'function') _aqRenderMarquee(); } catch (e) {}
 }
 window.buildTodoKanban = buildTodoKanban;
+
+// ============================================================================
+// v2.92: 관심 종목 칸반 (4컬럼: short/consider/longterm/done). To-Do와 동일 룩앤필.
+//   카드: 로고 / 티커 / 등락률 / 최근 종가 / 이벤트(실적일·최근5일 V신호·내부자 매수 — 일자만)
+// ============================================================================
+function _aqWatchCardData(item) {
+  const tk = String(item.ticker || '').toUpperCase();
+  const mkt = item.market || 'US';
+  let chg = null, close = null;
+  const found = (typeof findTickerSeries === 'function') ? findTickerSeries(tk) : null;
+  if (found && found.rows && found.rows.length) {
+    const rows = found.rows;
+    const last = rows[rows.length - 1];
+    close = Number(last.Close) || null;
+    if (rows.length >= 2) {
+      const prev = rows[rows.length - 2];
+      if (prev.Close > 0 && last.Close > 0) chg = (last.Close / prev.Close - 1) * 100;
+    }
+  }
+  // 최근 5일 기준일 윈도우
+  const pad = n => String(n).padStart(2, '0');
+  const todayStr = _state.latestDate || (_state.archive || []).map(r => r.Date).filter(Boolean).sort().slice(-1)[0] || '';
+  let cutoff = '';
+  if (todayStr) {
+    const d = new Date(todayStr); d.setDate(d.getDate() - 4);
+    cutoff = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  }
+  const earn = (typeof _aqFindNextEarning === 'function') ? _aqFindNextEarning(tk) : null;
+  const vDates = Array.from(new Set((_state.archive || [])
+    .filter(r => String(r.Ticker).toUpperCase() === tk && r.Date && (!cutoff || r.Date >= cutoff))
+    .map(r => r.Date))).sort().reverse();
+  const insTrades = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[tk]) ? _aqInsiderTrades[tk] : [];
+  const insDates = Array.from(new Set(insTrades
+    .filter(t => isCommonEquityTrade(t.security) && t.transDate && (!cutoff || t.transDate >= cutoff))
+    .map(t => t.transDate))).sort().reverse();
+  return { tk, mkt, chg, close, earnDate: earn ? earn.date : null, vDates, insDates };
+}
+
+function _aqRenderWatchCard(item) {
+  const d = _aqWatchCardData(item);
+  const tk = d.tk, market = d.mkt;
+  const sector = (_state.tickerSectorMap || {})[tk] || '';
+  const layer = SECTOR_TO_LAYER[sector] || '기타';
+  const layerFile = (market === 'KR') ? '' : layerFileName(layer);
+  const tkFile = tickerFileName(tk);
+  const logoImg = tkFile
+    ? `<img class="todo-card-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+    : `<img class="todo-card-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+  const logoHtml = aqWrapLogo(logoImg, tk);
+  const chgCls = d.chg == null ? 'zero' : d.chg > 0 ? 'up' : d.chg < 0 ? 'down' : 'zero';
+  const chgStr = d.chg == null ? '–' : (d.chg >= 0 ? '+' : '') + d.chg.toFixed(2) + '%';
+  const closeStr = d.close == null ? '–'
+    : (market === 'KR' ? Number(d.close).toLocaleString() : '$' + Number(d.close).toLocaleString(undefined, { maximumFractionDigits: 2 }));
+  const chips = [];
+  if (d.earnDate) chips.push(`<span class="watch-evt earn">📅 실적 ${escapeHtml(String(d.earnDate))}</span>`);
+  d.vDates.slice(0, 2).forEach(dt => chips.push(`<span class="watch-evt vsig">V ${escapeHtml(String(dt).slice(5))}</span>`));
+  d.insDates.slice(0, 2).forEach(dt => chips.push(`<span class="watch-evt insider">내부자 ${escapeHtml(String(dt).slice(5))}</span>`));
+  const evHtml = chips.length ? chips.join('') : '<span class="watch-empty-evt">예정 이벤트 없음</span>';
+  return `
+    <div class="todo-card watch-card" data-ticker="${escapeAttr(tk)}" data-market="${escapeAttr(market)}">
+      <button class="todo-card-close" title="관심 해제" aria-label="삭제">×</button>
+      <div class="todo-card-head">
+        ${logoHtml}
+        <span class="todo-card-ticker">${escapeHtml(displayName(tk))}</span>
+        <span class="watch-chg ${chgCls}">${escapeHtml(chgStr)}</span>
+      </div>
+      <div class="watch-sector">${escapeHtml(sector || '—')}</div>
+      <div class="watch-meta">
+        <span class="watch-close">${escapeHtml(closeStr)}</span>
+        <span class="watch-close-label">최근 종가</span>
+      </div>
+      <div class="watch-events">${evHtml}</div>
+    </div>
+  `;
+}
+
+function buildWatchKanban() {
+  const card = document.getElementById('watchBoardCard');
+  if (!card) return;
+  // v2.93: 저장된 컬럼 순서대로 DOM 재배치
+  const board = card.querySelector('#watchBoard') || card.querySelector('.todo-board');
+  if (board && window.AqWatchStore && AqWatchStore.getColOrder) {
+    AqWatchStore.getColOrder().forEach(col => {
+      const colEl = board.querySelector('.todo-column[data-col="' + col + '"]');
+      if (colEl) board.appendChild(colEl);
+    });
+  }
+  const items = (window.AqWatchStore && typeof AqWatchStore.getAll === 'function') ? AqWatchStore.getAll() : [];
+  const cols = { short: [], consider: [], longterm: [], done: [] };
+  items.forEach(it => { (cols[it.col] ? cols[it.col] : cols.short).push(it); });
+  Object.keys(cols).forEach(c => cols[c].sort((a, b) => (a.order || 0) - (b.order || 0)));
+  ['short', 'consider', 'longterm', 'done'].forEach(col => {
+    const colEl = card.querySelector('.todo-column[data-col="' + col + '"] .todo-col-body');
+    const countEl = card.querySelector('.todo-column[data-col="' + col + '"] .todo-col-count');
+    if (countEl) countEl.textContent = String(cols[col].length);
+    if (!colEl) return;
+    colEl.innerHTML = cols[col].length === 0
+      ? '<div class="todo-empty">없음</div>'
+      : cols[col].map(it => _aqRenderWatchCard(it)).join('');
+  });
+  // 클릭 → 차트 / 닫기 → 관심 해제
+  card.querySelectorAll('.watch-card').forEach(el => {
+    el.onclick = (e) => {
+      if (e.target.closest('.todo-card-close')) return;
+      const tk = el.dataset.ticker;
+      if (tk && typeof openChart === 'function') openChart(tk);
+    };
+  });
+  card.querySelectorAll('.watch-card .todo-card-close').forEach(el => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      const c = el.closest('.watch-card');
+      if (c && window.AqWatchStore) AqWatchStore.remove(c.dataset.market, c.dataset.ticker);
+    };
+  });
+  // v2.93: 드래그앤드롭 초기화 (한 번만)
+  try { _aqInitWatchDnD(); } catch (e) {}
+}
+window.buildWatchKanban = buildWatchKanban;
+
+// v2.93: 현재 보드 DOM → 레이아웃 {col: [{market,ticker}, ...]}
+function _aqReadWatchLayout() {
+  const card = document.getElementById('watchBoardCard');
+  const layout = {};
+  if (!card) return layout;
+  card.querySelectorAll('.todo-column').forEach(colEl => {
+    const col = colEl.dataset.col;
+    if (!col) return;
+    layout[col] = [];
+    colEl.querySelectorAll('.watch-card').forEach(cardEl => {
+      layout[col].push({ market: cardEl.dataset.market, ticker: cardEl.dataset.ticker });
+    });
+  });
+  return layout;
+}
+
+// v2.93: SortableJS 기반 DnD — 카드(컬럼 간 이동, MO 롱프레스) + 컬럼 재배치. 한 번만 init.
+let _aqWatchDnDInit = false;
+function _aqInitWatchDnD() {
+  if (_aqWatchDnDInit) return;
+  if (typeof Sortable === 'undefined') return;  // CDN 미로드 → DnD 비활성 (렌더는 정상)
+  const board = document.getElementById('watchBoard');
+  if (!board) return;
+  // 카드 — 각 컬럼 body 간 이동
+  board.querySelectorAll('.todo-column .todo-col-body').forEach(body => {
+    new Sortable(body, {
+      group: 'aqWatchCards',
+      animation: 150,
+      delay: 220,
+      delayOnTouchOnly: true,        // 모바일: 길게 누른 뒤 이동 / 데스크탑: 즉시
+      touchStartThreshold: 6,
+      filter: '.todo-card-close',
+      draggable: '.watch-card',
+      ghostClass: 'aq-dnd-ghost',
+      chosenClass: 'aq-dnd-chosen',
+      dragClass: 'aq-dnd-drag',
+      onEnd: () => {
+        try { if (window.AqWatchStore) AqWatchStore.applyLayout(_aqReadWatchLayout()); }
+        catch (e) { console.warn('[watch DnD] card', e); }
+      },
+    });
+  });
+  // 컬럼 — 헤더 핸들로 재배치
+  new Sortable(board, {
+    group: 'aqWatchCols',
+    animation: 150,
+    handle: '.todo-col-head',
+    draggable: '.todo-column',
+    delay: 220,
+    delayOnTouchOnly: true,
+    ghostClass: 'aq-dnd-ghost',
+    onEnd: () => {
+      try {
+        const order = Array.from(board.querySelectorAll('.todo-column')).map(c => c.dataset.col).filter(Boolean);
+        if (window.AqWatchStore) AqWatchStore.setColOrder(order);
+      } catch (e) { console.warn('[watch DnD] col', e); }
+    },
+  });
+  _aqWatchDnDInit = true;
+}
+
+// 관심 저장소 변경 시 — 칸반 보이고 있으면 재렌더 (+ 모달 하트 동기화)
+if (window.AqWatchStore && typeof AqWatchStore.subscribe === 'function') {
+  AqWatchStore.subscribe(() => {
+    const pcPanel = document.body.getAttribute('data-pc-panel');
+    const mtab = document.body.getAttribute('data-mtab');
+    if (pcPanel === 'watch' || mtab === 'watch') {
+      try { buildWatchKanban(); } catch (e) {}
+    }
+    try { if (typeof syncWatchButton === 'function') syncWatchButton(); } catch (e) {}
+  });
+}
 
 // ============================================================================
 // v2.67: 알림 트리거 엔진 + HERO 마퀴
@@ -17693,9 +18184,9 @@ window.addEventListener('DOMContentLoaded', () => {
   if (window.AqTodoStore && typeof AqTodoStore.subscribe === 'function') {
     AqTodoStore.subscribe((evt) => {
       // 칸반 보드 재렌더
-      const pcPage = document.body.getAttribute('data-pc-page');
+      const pcPanel = document.body.getAttribute('data-pc-panel');  // v2.90: todo는 페이지→패널
       const mtab = document.body.getAttribute('data-mtab');
-      if (pcPage === 'todo' || mtab === 'todo') {
+      if (pcPanel === 'todo' || mtab === 'todo') {
         try { buildTodoKanban(); } catch (e) {}
       }
       // v2.69: 마퀴 즉시 갱신 — 시점형 임박 todo는 실시간 분류라 추가/삭제 시 바로 반영
@@ -17973,6 +18464,9 @@ function switchMobileTab(tab) {
   } else if (tab === 'todo') {
     // v2.66: To-Do 칸반 빌드
     try { if (typeof buildTodoKanban === 'function') buildTodoKanban(); } catch (e) {}
+  } else if (tab === 'watch') {
+    // v2.92: 관심 칸반 빌드
+    try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -18058,16 +18552,12 @@ function updatePCSidebarActive() {
 
 // 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
 function setPCTab(tab) {
-  // v2.66: To-Do 활성화 — 별도 페이지로 진입
-  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings' || tab === 'todo') {
+  // v2.66/v2.90: To-Do는 사이드 패널로 전환 — 페이지 그룹에서 제외
+  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings') {
     setPCPage(tab);
     // v2.59: 설정 페이지 진입 시 데이터 시점 표시 갱신 (v2.58에서 마이 페이지였던 것)
     if (tab === 'settings') {
       try { if (typeof _aqUpdateDataMetaUI === 'function') _aqUpdateDataMetaUI(); } catch (e) {}
-    }
-    // v2.66: To-Do 페이지 진입 시 칸반 빌드
-    if (tab === 'todo') {
-      try { if (typeof buildTodoKanban === 'function') buildTodoKanban(); } catch (e) {}
     }
     // 일정 페이지 진입 시 캘린더 렌더 (DOM 준비된 후)
     if (tab === 'schedule') {
@@ -18086,10 +18576,12 @@ function setPCTab(tab) {
         if (typeof renderMajorEventsCard === 'function') renderMajorEventsCard();
       } catch (e) {}
     }
-  } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis') {
-    // v2.03: analysis도 사이드 패널 (탐색과 동일 UI/UX)
+  } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis' || tab === 'todo' || tab === 'watch') {
+    // v2.03: analysis도 사이드 패널 (탐색과 동일 UI/UX). v2.90: todo. v2.92: watch.
     togglePCPanel(tab);
     if (tab === 'analysis') buildAnalysisGrid();
+    if (tab === 'todo') { try { if (typeof buildTodoKanban === 'function') buildTodoKanban(); } catch (e) {} }
+    if (tab === 'watch') { try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {} }
   }
 }
 
@@ -18119,6 +18611,24 @@ function relocateCardsForPC() {
       analysisPanel.appendChild(ac);
       // PC 사이드 패널 안에서는 카드 force-display
       ac.style.display = '';
+    }
+  }
+  // v2.90: To-Do 칸반도 PC에선 사이드 패널 안으로 이동 (분석과 동일 UX)
+  const todoPanel = document.getElementById('pcPanelTodo');
+  if (todoPanel) {
+    const tc = document.getElementById('todoBoardCard');
+    if (tc && tc.parentElement !== todoPanel) {
+      todoPanel.appendChild(tc);
+      tc.style.display = '';
+    }
+  }
+  // v2.92: 관심 칸반도 PC에선 사이드 패널 안으로 이동
+  const watchPanel = document.getElementById('pcPanelWatch');
+  if (watchPanel) {
+    const wc = document.getElementById('watchBoardCard');
+    if (wc && wc.parentElement !== watchPanel) {
+      watchPanel.appendChild(wc);
+      wc.style.display = '';
     }
   }
 }
