@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.04';
+window.AQ_PWA_VERSION = '3.05';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -6611,7 +6611,7 @@ table.combo-eval tbody td .nodata {
     </div>
     <div class="card-body">
       <p class="subtitle">데이터센터(L4)를 중심축으로 좌측은 인프라·펀더멘털, 우측은 최종고객향으로 흐르는 가치사슬. AI 코어 7계층 (25 섹터) + 외부 5계층 (15 섹터) = 총 12계층 40섹터.</p>
-      <div class="sf-controls" style="display:none">
+      <div class="sf-controls">
         <label for="layerReturnPeriod">계층별 등락률 기간:</label>
         <select id="layerReturnPeriod" onchange="onLayerReturnPeriodChange()">
           <option value="5">최근 5일</option>
@@ -14844,26 +14844,7 @@ function renderSectorFramework() {
   const diag = $('sfDiagram');
   if (!diag) return;
 
-  // v3.04: 섹터 FRAME을 회전 가치사슬 모듈(격리 iframe)로 교체.
-  //   클래스/전역 충돌 방지를 위해 별도 파일(sector_frame.html)을 iframe으로 격리 삽입.
-  //   기존 sf-* 렌더 코드는 아래에 보존(미사용) — 되돌릴 때 이 블록만 제거하면 됨.
-  try {
-    if (!diag.querySelector('iframe.aq-vc-frame')) {
-      const ifr = document.createElement('iframe');
-      ifr.className = 'aq-vc-frame';
-      ifr.src = './sector_frame.html';
-      ifr.title = 'AI 가치사슬';
-      ifr.loading = 'lazy';
-      ifr.setAttribute('scrolling', 'no');
-      ifr.setAttribute('allowtransparency', 'true');
-      ifr.style.cssText = 'width:100%;height:560px;border:0;display:block;background:transparent';
-      diag.innerHTML = '';
-      diag.appendChild(ifr);
-    }
-  } catch (e) { console.warn('[sectorFrame iframe]', e); }
-  return;
-
-  // ── 이하 기존 sf-* 렌더 (v3.04부터 미사용) ──
+  // 1) 방향 라벨
   let html = `<div class="sf-dir-row">
     <span class="sf-dir-left">← 인프라·펀더멘털</span>
     <span class="sf-dir-right">최종고객향 →</span>
