@@ -38,6 +38,12 @@
 
   /* 상단 외부 타일 캐러셀 */
   .tiles{display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+  @keyframes aqBreathe{0%,100%{opacity:.78;transform:translate(-50%,-50%) scale(.97)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}}
+  @keyframes aqOrbitGlow{0%,100%{box-shadow:0 0 20px rgba(86,156,214,.13)}50%{box-shadow:0 0 44px rgba(86,156,214,.30)}}
+  .comet{position:absolute;width:9px;height:9px;border-radius:50%;background:#dcecff;margin:-4.5px 0 0 -4.5px;z-index:8;pointer-events:none;box-shadow:0 0 14px 4px rgba(130,185,255,.85),0 0 30px 10px rgba(86,156,214,.45)}
+  .comet.c2{width:7px;height:7px;background:#d2f1e4;box-shadow:0 0 12px 4px rgba(120,220,190,.8),0 0 26px 9px rgba(78,201,176,.42)}
+  #spokes{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:visible}
+  #spokes line{stroke-linecap:round}
   .tiles .strip{display:flex;justify-content:center;gap:7vw;flex-wrap:wrap}
   .tile{cursor:pointer;text-align:center;transition:.15s;padding:3px 6px;width:104px}
   .tile:hover{transform:translateY(-2px)}
@@ -51,23 +57,20 @@
   .cbtn{width:26px;height:48px;border-radius:7px;background:rgba(20,28,48,.85);border:1px solid var(--line);color:#d4d4d4;cursor:pointer;font-size:15px}
 
   /* 중앙 스테이지(링) */
-  .stage{position:relative;border:none;border-radius:0;height:506px;margin-top:30px;overflow:visible;perspective:1200px;background:transparent}
+  .stage{position:relative;border:none;border-radius:0;height:460px;margin-top:30px;overflow:visible;perspective:1200px;background:transparent}
   #ring{position:absolute;inset:0;z-index:10}
   /* 토성 고리 — rotateX 틸트 + 동심 밴드 + 글로우 */
   .saturn{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);transform-style:preserve-3d;z-index:1}
   .saturn .sr{position:absolute;left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%) rotateX(74deg)}
-  .saturn .sr1{width:536px;height:536px;border:1.5px solid rgba(86,156,214,.42);box-shadow:0 0 24px rgba(86,156,214,.16)}
-  .saturn .sr2{width:452px;height:452px;border:1px solid rgba(78,201,176,.26)}
+  .saturn .sr1{width:536px;height:536px;border:none;background:radial-gradient(closest-side,transparent 62%,rgba(86,156,214,.10) 70%,rgba(86,156,214,.32) 86%,rgba(86,156,214,.15) 96%,transparent 100%);box-shadow:0 0 34px rgba(86,156,214,.16);animation:aqOrbitGlow 5.2s ease-in-out infinite}
+  .saturn .sr2{width:452px;height:452px;border:none;background:radial-gradient(closest-side,transparent 80%,rgba(78,201,176,.16) 91%,transparent 100%)}
   /* 노드 = 박스 없는 엠블럼(번호 뱃지 + 텍스트) */
   .node{position:absolute;width:120px;margin-left:-60px;margin-top:-54px;text-align:center;cursor:pointer;will-change:left,top,transform}
-  .node .badge{width:62px;height:62px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;color:rgb(var(--ac));
-    background:radial-gradient(circle at 50% 34%,rgba(var(--ac),.36),rgba(var(--ac),.07) 72%,transparent);
-    border:1px solid rgba(var(--ac),.42);box-shadow:0 0 22px rgba(var(--ac),.24),inset 0 0 16px rgba(var(--ac),.14)}
+  .node .badge{display:flex;justify-content:center;color:rgb(var(--ac));filter:drop-shadow(0 0 8px rgba(var(--ac),.5))}
   .node .n{font-size:15.5px;font-weight:800;margin-top:6px;color:#f0f0f0;text-shadow:0 1px 4px rgba(0,0,0,.9)}
   .node .r{font-size:12.5px;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.9)}.node .w{font-size:10.5px;font-weight:700;color:var(--dim)}
-  .node.sel .badge{width:80px;height:80px;border:1.5px solid rgba(var(--ac),.75);box-shadow:0 0 38px rgba(var(--ac),.55),inset 0 0 22px rgba(var(--ac),.22)}
+  .node.sel .badge{filter:drop-shadow(0 0 16px rgba(var(--ac),.95))}
   .node.sel .n{color:#fff;font-size:18px}
-  .node.sel .n,.node.sel .r,.node.sel .w{display:none} /* 선택 노드는 아이콘만 — 상세는 중앙 허브 */
   /* 하단 주인공 띠 (노드와 겹치지 않음) */
   .herobar{position:absolute;left:0;right:0;bottom:0;z-index:70;padding:9px 13px;border-top:1px solid var(--line);
     background:linear-gradient(180deg,rgba(8,11,20,0),rgba(8,11,20,.9) 45%);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -78,12 +81,12 @@
   .nav{position:absolute;top:40%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;z-index:80;background:rgba(20,28,48,.9);border:1px solid var(--line);color:#d4d4d4;font-size:16px;cursor:pointer}
   .nav.l{left:8px}.nav.r{right:8px}
   /* v5: 아이콘 + 중앙 허브 */
-  .node .badge svg{width:30px;height:30px}
-  .node.sel .badge svg{width:40px;height:40px}
+  .node .badge svg{width:44px;height:44px}
+  .node.sel .badge svg{width:56px;height:56px}
   .tile .ti{display:inline-flex;align-items:center}.tile .ti svg{width:26px;height:26px}
   .hub{position:absolute;z-index:55;width:330px;transform:translate(-50%,-50%);text-align:center;pointer-events:auto}
   .hub::before{content:'';position:absolute;left:50%;top:44%;width:320px;height:300px;transform:translate(-50%,-50%);border-radius:50%;
-    background:radial-gradient(circle,rgba(var(--ac),.22),rgba(var(--ac),.07) 45%,transparent 66%);z-index:-1;pointer-events:none}
+    background:radial-gradient(circle,rgba(var(--ac),.22),rgba(var(--ac),.07) 45%,transparent 66%);z-index:-1;pointer-events:none;animation:aqBreathe 4.6s ease-in-out infinite}
   .hub .hi{margin:0 auto 2px;filter:drop-shadow(0 0 10px rgba(var(--ac),.6))}.hub .hi svg{width:28px;height:28px}
   .hub .hnm{font-size:20px;font-weight:800;text-shadow:0 1px 6px rgba(0,0,0,.9)}
   .hub .hmeta{font-size:12.5px;color:var(--dim);margin-top:6px}.hub .hmeta b{font-weight:800}
@@ -186,14 +189,20 @@ CORE.forEach((L,i)=>{const d=document.createElement('div');d.className='node';d.
   d.innerHTML=`<div class="badge">${icon(L.n,'rgb('+L.c+')')}</div><div class="n">${L.num} ${L.n}</div><div class="r"></div><div class="w">비중 ${L.w}%</div>`;
   d.onclick=()=>spinTo(i);ring.appendChild(d);});
 const nodes=[...ring.children];let rot=0,focus={type:'core',i:0},ringIdx=0,selIdx=0;
+const _SVGNS='http://www.w3.org/2000/svg',_stageEl=document.querySelector('.stage');
+const _spokes=document.createElementNS(_SVGNS,'svg');_spokes.id='spokes';_stageEl.appendChild(_spokes);
+const _lines=CORE.map(L=>{const ln=document.createElementNS(_SVGNS,'line');ln.setAttribute('stroke','rgb('+L.c+')');ln.setAttribute('stroke-width','1.3');_spokes.appendChild(ln);return ln;});
+const _comet=document.createElement('div');_comet.className='comet';_stageEl.appendChild(_comet);
+const _comet2=document.createElement('div');_comet2.className='comet c2';_stageEl.appendChild(_comet2);
 const N=CORE.length, SPAN=270*Math.PI/180, GAP=SPAN/(N-1); // 내부 6칸 45°, 1↔7 사이는 90° 빈 공간
 const base=i=>-SPAN/2 + i*GAP;            // node0(자원)=-135°, node6(피지컬)=+135°, 둘 사이 뒤쪽 90° 갭
-const CX=()=>ring.clientWidth/2||700,CY=()=>(ring.clientHeight||506)*0.47,RX=()=>Math.max(300,Math.min(540,(ring.clientWidth||1400)/2-110)),RY=()=>RX()*0.42;
+const CX=()=>ring.clientWidth/2||700,CY=()=>(ring.clientHeight||460)*0.48,RX=()=>Math.max(300,Math.min(540,(ring.clientWidth||1400)/2-110)),RY=()=>RX()*0.32;
 rot=-base(selIdx);
-function place(){const _d1=2*RX()*1.06,_d2=2*RX()*0.9,_s1=document.querySelector('.sr1'),_s2=document.querySelector('.sr2');
+function place(){const _d1=2*RX()*1.15,_d2=2*RX()*0.86,_s1=document.querySelector('.sr1'),_s2=document.querySelector('.sr2');
   if(_s1){_s1.style.width=_s1.style.height=_d1+'px';}if(_s2){_s2.style.width=_s2.style.height=_d2+'px';}
   let best=-2,bi=0;nodes.forEach((nd,i)=>{const th=base(i)+rot,dep=Math.cos(th);
-  nd.style.left=(CX()+RX()*Math.sin(th))+'px';nd.style.top=(CY()+dep*RY()*0.9)+'px';
+  const _nx=CX()+RX()*Math.sin(th),_ny=CY()+dep*RY()*0.9;nd.style.left=_nx+'px';nd.style.top=_ny+'px';
+  if(_lines[i]){const _L=_lines[i];_L.setAttribute('x1',CX());_L.setAttribute('y1',CY());_L.setAttribute('x2',_nx);_L.setAttribute('y2',_ny);_L.setAttribute('opacity',(.07+.18*((dep+1)/2)).toFixed(2));}
   const sc=.7+.3*((dep+1)/2);nd.style.transform=`scale(${sc.toFixed(3)})`;nd.style.opacity=(.66+.34*((dep+1)/2)).toFixed(2);
   nd.style.zIndex=Math.round((dep+1)*100)+10;if(dep>best){best=dep;bi=i;}});
   ringIdx=bi;nodes.forEach((nd,i)=>nd.classList.toggle('sel',i===bi&&focus.type==='core'));
@@ -230,6 +239,14 @@ function render(){
 }
 function tick(){const c=document.getElementById('clock');if(c)c.textContent=new Date().toTimeString().slice(0,8)+' KST';}
 tick();setInterval(tick,1000);window.addEventListener('resize',place);
+let _ct=0,_ct2=Math.PI;
+function flyComet(){_ct+=0.010;_ct2-=0.013;
+  const d1=Math.cos(_ct),x1=CX()+RX()*Math.sin(_ct),y1=CY()+d1*RY()*0.9;
+  _comet.style.left=x1+'px';_comet.style.top=y1+'px';_comet.style.opacity=(.18+.82*((d1+1)/2)).toFixed(2);
+  const d2=Math.cos(_ct2),x2=CX()+RX()*0.85*Math.sin(_ct2),y2=CY()+d2*RY()*0.85*0.9;
+  _comet2.style.left=x2+'px';_comet2.style.top=y2+'px';_comet2.style.opacity=(.12+.68*((d2+1)/2)).toFixed(2);
+  requestAnimationFrame(flyComet);}
+flyComet();
 place();render();
 </script>
 </body>
