@@ -11,8 +11,8 @@
     --p1:#2d2d30;--p2:#252526;--line:rgba(255,255,255,.05);--mute:#6a6a6a;--dim:#9d9d9d}
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
-    background:radial-gradient(1100px 620px at 50% 12%,rgba(86,156,214,.06),transparent 60%),#1e1e1e;
-    color:#d4d4d4;min-height:100vh;padding:14px 14px;-webkit-font-smoothing:antialiased;font-size:12px;max-width:840px;margin:0 auto}
+    background:transparent;
+    color:#d4d4d4;min-height:100vh;padding:10px 18px;-webkit-font-smoothing:antialiased;font-size:13px}
   .mono{font-family:Consolas,monospace}.up{color:var(--up)}.down{color:var(--down)}
   .head{display:flex;justify-content:flex-end;align-items:center;margin-bottom:8px;padding:0 4px}
   .head .t{font-size:17px;font-weight:800;letter-spacing:1.5px}
@@ -38,36 +38,33 @@
 
   /* 상단 외부 타일 캐러셀 */
   .tiles{display:flex;align-items:center;justify-content:center;margin-bottom:2px}
-  .tiles .strip{display:flex;justify-content:center;gap:30px}
-  .tile{cursor:pointer;text-align:center;transition:.15s;padding:2px 6px;width:118px}
+  .tiles .strip{display:flex;justify-content:center;gap:7vw;flex-wrap:wrap}
+  .tile{cursor:pointer;text-align:center;transition:.15s;padding:4px 10px;width:150px}
   .tile:hover{transform:translateY(-2px)}
   .tile .ti{color:rgb(var(--tc));filter:drop-shadow(0 0 8px rgba(var(--tc),.5));display:flex;justify-content:center}
   .tile .ti svg{width:28px;height:28px}
   .tile.on .ti{filter:drop-shadow(0 0 14px rgba(var(--tc),.95))}.tile.on .ti svg{width:36px;height:36px}
-  .tile .nm{font-size:13px;font-weight:800;margin-top:5px;color:#f0f0f0;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+  .tile .nm{font-size:16px;font-weight:800;margin-top:6px;color:#f4f4f4;text-shadow:0 1px 3px rgba(0,0,0,.8)}
   .tile.on .nm{color:rgb(var(--tc))}
-  .tile .rr{font-size:12px;font-weight:800;margin-top:2px;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  .tile .ww{font-size:10px;color:var(--dim)}
+  .tile .rr{font-size:15px;font-weight:800;margin-top:3px;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+  .tile .ww{font-size:12px;color:var(--dim)}
   .cbtn{width:26px;height:48px;border-radius:7px;background:rgba(20,28,48,.85);border:1px solid var(--line);color:#d4d4d4;cursor:pointer;font-size:15px}
 
   /* 중앙 스테이지(링) */
-  .stage{position:relative;border:none;border-radius:0;height:372px;overflow:visible;perspective:1000px;
-    background:radial-gradient(440px 230px at 50% 44%,rgba(150,120,201,.12),transparent 68%)}
+  .stage{position:relative;border:none;border-radius:0;height:470px;overflow:visible;perspective:1200px;background:transparent}
   #ring{position:absolute;inset:0;z-index:10}
   /* 토성 고리 — rotateX 틸트 + 동심 밴드 + 글로우 */
-  .saturn{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);transform-style:preserve-3d;z-index:1}
+  .saturn{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);transform-style:preserve-3d;z-index:1}
   .saturn .sr{position:absolute;left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%) rotateX(74deg)}
-  .saturn .sr1{width:536px;height:536px;border:2px solid rgba(86,156,214,.45);box-shadow:0 0 28px rgba(86,156,214,.30),inset 0 0 44px rgba(86,156,214,.10)}
-  .saturn .sr2{width:452px;height:452px;border:1px solid rgba(78,201,176,.30)}
-  .saturn .sr3{width:616px;height:616px;border:1px solid rgba(86,156,214,.16)}
-  .saturn .sdisc{position:absolute;left:50%;top:50%;width:520px;height:520px;border-radius:50%;transform:translate(-50%,-50%) rotateX(74deg);background:radial-gradient(circle,rgba(86,156,214,.10),transparent 60%)}
+  .saturn .sr1{width:536px;height:536px;border:1.5px solid rgba(86,156,214,.40)}
+  .saturn .sr2{width:452px;height:452px;border:1px solid rgba(78,201,176,.22)}
   /* 노드 = 박스 없는 엠블럼(번호 뱃지 + 텍스트) */
-  .node{position:absolute;width:112px;margin-left:-56px;margin-top:-52px;text-align:center;cursor:pointer;will-change:left,top,transform}
+  .node{position:absolute;width:132px;margin-left:-66px;margin-top:-60px;text-align:center;cursor:pointer;will-change:left,top,transform}
   .node .badge{display:flex;justify-content:center;color:rgb(var(--ac));filter:drop-shadow(0 0 8px rgba(var(--ac),.5))}
-  .node .n{font-size:14px;font-weight:800;margin-top:6px;color:#f0f0f0;text-shadow:0 1px 4px rgba(0,0,0,.85)}
-  .node .r{font-size:12px;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.85)}.node .w{font-size:10px;font-weight:700;color:var(--dim)}
+  .node .n{font-size:18px;font-weight:800;margin-top:7px;color:#f4f4f4;text-shadow:0 1px 5px rgba(0,0,0,.9)}
+  .node .r{font-size:15px;font-weight:800;text-shadow:0 1px 4px rgba(0,0,0,.9)}.node .w{font-size:12px;font-weight:700;color:var(--dim)}
   .node.sel .badge{filter:drop-shadow(0 0 16px rgba(var(--ac),.95))}
-  .node.sel .n{color:#fff;font-size:16px}
+  .node.sel .n{color:#fff;font-size:21px}
   /* 하단 주인공 띠 (노드와 겹치지 않음) */
   .herobar{position:absolute;left:0;right:0;bottom:0;z-index:70;padding:9px 13px;border-top:1px solid var(--line);
     background:linear-gradient(180deg,rgba(8,11,20,0),rgba(8,11,20,.9) 45%);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -78,15 +75,15 @@
   .nav{position:absolute;top:40%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;z-index:80;background:rgba(20,28,48,.9);border:1px solid var(--line);color:#d4d4d4;font-size:16px;cursor:pointer}
   .nav.l{left:8px}.nav.r{right:8px}
   /* v5: 아이콘 + 중앙 허브 */
-  .node .badge svg{width:40px;height:40px}
-  .node.sel .badge svg{width:52px;height:52px}
-  .tile .ti{display:inline-flex;align-items:center}.tile .ti svg{width:30px;height:30px}
-  .hub{position:absolute;z-index:55;width:268px;transform:translate(-50%,-50%);text-align:center;pointer-events:auto}
+  .node .badge svg{width:52px;height:52px}
+  .node.sel .badge svg{width:68px;height:68px}
+  .tile .ti{display:inline-flex;align-items:center}.tile .ti svg{width:40px;height:40px}
+  .hub{position:absolute;z-index:55;width:340px;transform:translate(-50%,-50%);text-align:center;pointer-events:auto}
   .hub .hi{margin:0 auto 2px;filter:drop-shadow(0 0 10px rgba(var(--ac),.6))}.hub .hi svg{width:28px;height:28px}
-  .hub .hnm{font-size:18px;font-weight:800;text-shadow:0 1px 5px rgba(0,0,0,.85)}
-  .hub .hmeta{font-size:12px;color:var(--dim);margin-top:5px}.hub .hmeta b{font-weight:800}
+  .hub .hnm{font-size:24px;font-weight:800;text-shadow:0 1px 6px rgba(0,0,0,.9)}
+  .hub .hmeta{font-size:14px;color:var(--dim);margin-top:7px}.hub .hmeta b{font-weight:800}
   .hub .hsecs{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-top:10px}
-  .hub .hsec{font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;background:rgba(var(--ac),.22);color:#ffffff;border:1px solid rgba(var(--ac),.45);cursor:help}
+  .hub .hsec{font-size:14px;font-weight:700;padding:6px 13px;border-radius:9px;background:rgba(var(--ac),.22);color:#ffffff;border:1px solid rgba(var(--ac),.45);cursor:help}
 
   /* 바 리스트 */
   .brow{display:flex;align-items:center;gap:6px;margin:5px 0;font-size:10px}
@@ -126,7 +123,7 @@
   <div class="tiles"><div class="strip" id="dock"></div></div>
   <!-- 회전 링 + 중앙 허브 (V6 중앙부) -->
   <div class="stage">
-    <div class="saturn"><div class="sr sr3"></div><div class="sr sr1"></div><div class="sr sr2"></div><div class="sdisc"></div></div>
+    <div class="saturn"><div class="sr sr1"></div><div class="sr sr2"></div></div>
     <div id="ring"></div>
     <div class="hub" id="hub"></div>
     <button class="nav l" id="prev">‹</button><button class="nav r" id="next">›</button>
@@ -186,15 +183,17 @@ CORE.forEach((L,i)=>{const d=document.createElement('div');d.className='node';d.
 const nodes=[...ring.children];let rot=0,focus={type:'core',i:0},ringIdx=0,selIdx=0;
 const N=CORE.length, SPAN=270*Math.PI/180, GAP=SPAN/(N-1); // 내부 6칸 45°, 1↔7 사이는 90° 빈 공간
 const base=i=>-SPAN/2 + i*GAP;            // node0(자원)=-135°, node6(피지컬)=+135°, 둘 사이 뒤쪽 90° 갭
-const CX=()=>ring.clientWidth/2||380,CY=()=>(ring.clientHeight||372)*0.44,RX=()=>Math.min(300,(ring.clientWidth||760)/2-60),RY=92;
+const CX=()=>ring.clientWidth/2||700,CY=()=>(ring.clientHeight||470)*0.46,RX=()=>Math.max(300,Math.min(560,(ring.clientWidth||1400)/2-110)),RY=()=>RX()*0.30;
 rot=-base(selIdx);
-function place(){let best=-2,bi=0;nodes.forEach((nd,i)=>{const th=base(i)+rot,dep=Math.cos(th);
-  nd.style.left=(CX()+RX()*Math.sin(th))+'px';nd.style.top=(CY()+dep*RY*0.9)+'px';
+function place(){const _d1=2*RX()*1.06,_d2=2*RX()*0.9,_s1=document.querySelector('.sr1'),_s2=document.querySelector('.sr2');
+  if(_s1){_s1.style.width=_s1.style.height=_d1+'px';}if(_s2){_s2.style.width=_s2.style.height=_d2+'px';}
+  let best=-2,bi=0;nodes.forEach((nd,i)=>{const th=base(i)+rot,dep=Math.cos(th);
+  nd.style.left=(CX()+RX()*Math.sin(th))+'px';nd.style.top=(CY()+dep*RY()*0.9)+'px';
   const sc=.7+.3*((dep+1)/2);nd.style.transform=`scale(${sc.toFixed(3)})`;nd.style.opacity=(.66+.34*((dep+1)/2)).toFixed(2);
   nd.style.zIndex=Math.round((dep+1)*100)+10;if(dep>best){best=dep;bi=i;}});
   ringIdx=bi;nodes.forEach((nd,i)=>nd.classList.toggle('sel',i===bi&&focus.type==='core'));
   if(focus.type==='core')focus.i=bi;
-  const hub=document.getElementById('hub');if(hub){hub.style.left=CX()+'px';hub.style.top=(CY()-22)+'px';}}
+  const hub=document.getElementById('hub');if(hub){hub.style.left=CX()+'px';hub.style.top=(CY()-10)+'px';}}
 let anim;function spinTo(i){i=Math.max(0,Math.min(N-1,i));selIdx=i;const tg=-base(i),s=rot,t0=performance.now();
   cancelAnimationFrame(anim);
   (function st(t){const k=Math.min(1,(t-t0)/440),e=1-Math.pow(1-k,3);rot=s+(tg-s)*e;place();

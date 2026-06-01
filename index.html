@@ -14855,7 +14855,8 @@ function renderSectorFramework() {
       ifr.title = 'AI 가치사슬';
       ifr.loading = 'lazy';
       ifr.setAttribute('scrolling', 'no');
-      ifr.style.cssText = 'width:100%;height:544px;border:0;display:block;background:transparent;border-radius:10px';
+      ifr.setAttribute('allowtransparency', 'true');
+      ifr.style.cssText = 'width:100%;height:640px;border:0;display:block;background:transparent';
       diag.innerHTML = '';
       diag.appendChild(ifr);
     }
