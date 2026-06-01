@@ -6611,7 +6611,7 @@ table.combo-eval tbody td .nodata {
     </div>
     <div class="card-body">
       <p class="subtitle">데이터센터(L4)를 중심축으로 좌측은 인프라·펀더멘털, 우측은 최종고객향으로 흐르는 가치사슬. AI 코어 7계층 (25 섹터) + 외부 5계층 (15 섹터) = 총 12계층 40섹터.</p>
-      <div class="sf-controls">
+      <div class="sf-controls" style="display:none">
         <label for="layerReturnPeriod">계층별 등락률 기간:</label>
         <select id="layerReturnPeriod" onchange="onLayerReturnPeriodChange()">
           <option value="5">최근 5일</option>
@@ -14855,7 +14855,7 @@ function renderSectorFramework() {
       ifr.title = 'AI 가치사슬';
       ifr.loading = 'lazy';
       ifr.setAttribute('scrolling', 'no');
-      ifr.style.cssText = 'width:100%;height:500px;border:0;display:block;background:#1e1e1e;border-radius:10px';
+      ifr.style.cssText = 'width:100%;height:544px;border:0;display:block;background:transparent;border-radius:10px';
       diag.innerHTML = '';
       diag.appendChild(ifr);
     }
