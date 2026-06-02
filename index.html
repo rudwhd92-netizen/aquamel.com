@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.20';
+window.AQ_PWA_VERSION = '3.21';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2181,8 +2181,6 @@ table.sheet tbody tr.drop-below td:last-child {
 .feed-caption { padding: 6px 12px 0; font-size: 12.5px; line-height: 1.5; color: var(--text, #d4d4d4); white-space: pre-wrap; word-break: break-word; }
 .feed-more { display: block; width: 100%; padding: 12px; margin-top: 2px; background: var(--panel-hi, #2d2d30); border: 1px solid var(--border, #3e3e42); border-radius: 10px; color: var(--accent, #569cd6); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .feed-more:active { opacity: 0.7; }
-/* v3.20: 발견 카드만 좌우로 넓힘 (MO 전용 — HERO/컨테이너는 그대로). PC는 사이드패널이라 미적용 */
-.container > #buyPointsCard, .container > #feedCard { margin-left: -12px; margin-right: -12px; }
 
 /* ===== 매수 포인트 카드 (발견 탭 상단) — 토스 "관심 이벤트" 레퍼런스 ===== */
 .buy-points-scroll {
