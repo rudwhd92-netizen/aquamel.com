@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.12';
+window.AQ_PWA_VERSION = '3.14';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2138,6 +2138,13 @@ table.sheet tbody tr.drop-below td:last-child {
 /* PC 디폴트: 모바일 전용 카드/메뉴는 모두 숨김, PC는 기존 그대로 */
 .mobile-tab-bar { display: none; }
 .mobile-only { display: none; }
+/* v3.14: 탐색 서브탭 바 */
+.explore-subtabs { padding: 6px; }
+.explore-subtabs .xtab-row { display: flex; gap: 5px; }
+.xtab-btn { flex: 1; padding: 9px 4px; font-size: 12px; font-weight: 700; border: none; border-radius: 9px;
+  background: var(--panel-hi, #2d2d30); color: var(--text-dim, #9d9d9d); cursor: pointer; white-space: nowrap;
+  transition: background .15s, color .15s; font-family: inherit; }
+.xtab-btn.active { background: var(--accent, #569cd6); color: #fff; }
 
 /* ===== 매수 포인트 카드 (발견 탭 상단) — 토스 "관심 이벤트" 레퍼런스 ===== */
 .buy-points-scroll {
@@ -2518,6 +2525,12 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
 /* 사이드 패널 안 카드 — mobile-only 강제 표시 */
 .pc-side-panel section.card { margin-bottom: 14px; }
 .pc-side-panel section.card.mobile-only { display: block !important; }
+/* v3.14: PC 탐색 서브탭 — 활성 서브탭 카드만 */
+.pc-side-panel section.card[data-xtab] { display: none !important; }
+body[data-xtab="signals"]  .pc-side-panel section.card[data-xtab="signals"],
+body[data-xtab="insider"]  .pc-side-panel section.card[data-xtab="insider"],
+body[data-xtab="shorting"] .pc-side-panel section.card[data-xtab="shorting"],
+body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { display: block !important; }
 
 /* PC 전용 표시 컨트롤 */
 @media (min-width: 641px) {
@@ -3429,6 +3442,12 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
   body[data-mtab="discover"] section.card[data-mtab~="discover"] { display: block !important; }
   body[data-mtab="sector"]   section.card[data-mtab~="sector"]   { display: block !important; }
   body[data-mtab="explore"]  section.card[data-mtab~="explore"]  { display: block !important; }
+  /* v3.14: MO 탐색 서브탭 — 활성 서브탭 카드만 */
+  body[data-mtab="explore"] section.card[data-xtab] { display: none !important; }
+  body[data-mtab="explore"][data-xtab="signals"]  section.card[data-xtab="signals"],
+  body[data-mtab="explore"][data-xtab="insider"]  section.card[data-xtab="insider"],
+  body[data-mtab="explore"][data-xtab="shorting"] section.card[data-xtab="shorting"],
+  body[data-mtab="explore"][data-xtab="all"]      section.card[data-xtab="all"] { display: block !important; }
   body[data-mtab="board"]    section.card[data-mtab~="board"]    { display: block !important; }
   body[data-mtab="my"]       section.card[data-mtab~="my"]       { display: block !important; }
   /* v2.01 Phase 2: 분석 탭 — 분석 카드만 표시 */
@@ -6635,7 +6654,24 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ v1.52 MOBILE-ONLY: 종목 리스트 (탐색 탭) ============ -->
-  <section class="card mobile-only" id="stockListCard" data-mtab="explore">
+  <!-- v3.14: 탐색 서브탭 바 (누적 시그널 / 내부자 매수 / 공매도 이력 / 전체 리스트) -->
+  <section class="card mobile-only explore-subtabs" id="exploreSubtabs" data-mtab="explore">
+    <div class="xtab-row">
+      <button class="xtab-btn active" data-xtab="signals" onclick="setExploreSubtab('signals')">누적 시그널</button>
+      <button class="xtab-btn" data-xtab="insider" onclick="setExploreSubtab('insider')">내부자 매수</button>
+      <button class="xtab-btn" data-xtab="shorting" onclick="setExploreSubtab('shorting')">공매도 이력</button>
+      <button class="xtab-btn" data-xtab="all" onclick="setExploreSubtab('all')">전체 리스트</button>
+    </div>
+  </section>
+
+  <!-- v3.14: 공매도 이력 (준비중) -->
+  <section class="card mobile-only" id="shortingCard" data-mtab="explore" data-xtab="shorting">
+    <div class="card-body">
+      <div class="buy-points-empty" style="padding:44px 12px;text-align:center;">공매도 이력 — 준비중입니다 🛠️</div>
+    </div>
+  </section>
+
+  <section class="card mobile-only" id="stockListCard" data-mtab="explore" data-xtab="all">
     <div class="card-header">
       <h2>종목 리스트</h2>
       <div class="stock-list-sort">
@@ -7000,7 +7036,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ SIGNAL FILTER & 평가 ============ -->
-  <section class="card" id="filterCard" data-mtab="discover" style="display:none;">
+  <section class="card" id="filterCard" data-mtab="explore" data-xtab="signals" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>시그널 필터</h2>
       <span class="toggle-icon">▼</span>
@@ -7046,7 +7082,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ v1.44 MOBILE-ONLY: 누적 신호 모바일 리스트 ============ -->
-  <section class="card mobile-only" id="archiveMobileCard" data-mtab="discover">
+  <section class="card mobile-only" id="archiveMobileCard" data-mtab="explore" data-xtab="signals">
     <div class="card-header">
       <h2>누적 시그널</h2>
     </div>
@@ -7060,7 +7096,7 @@ table.combo-eval tbody td .nodata {
 
   <!-- ============ v2.86 MOBILE-ONLY: 내부자 누적 리스트 (발견 탭 — 누적 시그널 하단) ============ -->
   <!-- Form 4 모든 일반주(ADR 포함) 거래 이력. 누적 시그널과 동일 UX (10개 + 더보기). PC는 relocateCardsForPC가 사이드 패널로 이동. -->
-  <section class="card mobile-only" id="insiderArchiveCard" data-mtab="discover">
+  <section class="card mobile-only" id="insiderArchiveCard" data-mtab="explore" data-xtab="insider">
     <div class="card-header">
       <h2>내부자 누적</h2>
     </div>
@@ -15674,18 +15710,19 @@ function applyFilterAndRender() {
   $('filterCount').textContent = `${_state.filteredArchive.length} / ${_state.archive.length}건`;
   renderArchiveTable();
   // v1.44: 모바일 발견 탭 컴포넌트도 재빌드 (필터 변경 반영)
-  if (isMobileViewport() && document.body.getAttribute('data-mtab') === 'discover') {
-    buildBuyPointsCard();
-    buildArchiveMobileList();
+  if (isMobileViewport()) {
+    const _mt = document.body.getAttribute('data-mtab');
+    if (_mt === 'discover') buildBuyPointsCard();
+    if (_mt === 'explore') buildArchiveMobileList();
   }
   // v1.57: PC 사이드 패널이 열려 있으면 같이 재빌드 (v1.58: data-pc-panel 기준)
   if (isPCViewport && isPCViewport()) {
     const pcPanel = document.body.getAttribute('data-pc-panel');
     if (pcPanel === 'discover') {
       if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard();
-      if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
     } else if (pcPanel === 'explore') {
       if (typeof buildStockList === 'function') buildStockList();
+      if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
     }
   }
 }
@@ -18577,6 +18614,7 @@ function initMobileTabs() {
   if (!document.body.getAttribute('data-mtab')) {
     document.body.setAttribute('data-mtab', 'discover');
   }
+  if (!document.body.getAttribute('data-xtab')) document.body.setAttribute('data-xtab', 'signals');
   // 디폴트 = 발견
   switchMobileTab(document.body.getAttribute('data-mtab') || 'discover');
 }
@@ -18669,23 +18707,33 @@ function setPCTab(tab) {
 }
 
 // PC에서는 모바일 전용 카드(buyPoints/archiveMobile/stockList)를 사이드 패널 안으로 DOM 이동
+function setExploreSubtab(x) {
+  document.body.setAttribute('data-xtab', x);
+  document.querySelectorAll('.xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.xtab === x));
+  try {
+    if (x === 'signals' && typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
+    else if (x === 'insider' && typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList();
+    else if (x === 'all' && typeof buildStockList === 'function') buildStockList();
+  } catch (e) {}
+}
+window.setExploreSubtab = setExploreSubtab;
+
 function relocateCardsForPC() {
   if (!isPCViewport()) return;
   const discoverPanel = document.getElementById('pcPanelDiscover');
   const explorePanel = document.getElementById('pcPanelExplore');
   const analysisPanel = document.getElementById('pcPanelAnalysis');
+  if (!document.body.getAttribute('data-xtab')) document.body.setAttribute('data-xtab', 'signals');
   if (discoverPanel) {
     const bp = document.getElementById('buyPointsCard');
-    const am = document.getElementById('archiveMobileCard');
     if (bp && bp.parentElement !== discoverPanel) discoverPanel.appendChild(bp);
-    if (am && am.parentElement !== discoverPanel) discoverPanel.appendChild(am);
-    // v2.86: 내부자 누적 카드도 발견 패널로 이동 (누적 시그널 다음 순서)
-    const ia = document.getElementById('insiderArchiveCard');
-    if (ia && ia.parentElement !== discoverPanel) discoverPanel.appendChild(ia);
   }
   if (explorePanel) {
-    const sl = document.getElementById('stockListCard');
-    if (sl && sl.parentElement !== explorePanel) explorePanel.appendChild(sl);
+    // v3.14: 탐색 서브탭 — 서브탭바 + (시그널필터+누적시그널) + 내부자 + 공매도 + 전체리스트 순
+    ['exploreSubtabs', 'filterCard', 'archiveMobileCard', 'insiderArchiveCard', 'shortingCard', 'stockListCard'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.parentElement !== explorePanel) explorePanel.appendChild(el);
+    });
   }
   // v2.03 Phase 2: analysisCard도 PC에선 사이드 패널 안으로 이동 (탐색과 동일 UX)
   if (analysisPanel) {
@@ -18865,7 +18913,7 @@ function buildBuyPointsCard() {
     return `
       <div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
         ${aqWrapLogo(logoHtml, it.ticker)}
-        <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(it.ticker)}</div>
+        <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
         <div class="bp-sector" title="${escapeAttr(aqStripSectorEmoji(sector))}">${escapeHtml(aqStripSectorEmoji(sector) || '—')}</div>
         <div class="bp-type">${escapeHtml(types.join(' · '))}</div>
         ${retHtml}
