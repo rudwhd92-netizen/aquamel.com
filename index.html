@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.23';
+window.AQ_PWA_VERSION = '3.24';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2192,7 +2192,7 @@ table.sheet tbody tr.drop-below td:last-child {
 .feed-dm { margin-left: auto; cursor: default; }
 .feed-cap-name { font-weight: 800; color: var(--text-hi, #fff); margin-right: 5px; }
 .feed-caption { padding: 6px 12px 0; font-size: 12.5px; line-height: 1.5; color: var(--text, #d4d4d4); white-space: pre-wrap; word-break: break-word; }
-.feed-tags { padding: 4px 12px 0; font-size: 12px; line-height: 1.5; color: var(--accent, #569cd6); word-break: break-word; }
+.feed-tags { padding: 4px 12px 0; font-size: 12px; line-height: 1.5; color: var(--accent, #569cd6); word-break: break-word; white-space: pre-wrap; }
 .feed-more { display: block; width: 100%; padding: 12px; margin-top: 2px; background: var(--panel-hi, #2d2d30); border: 1px solid var(--border, #3e3e42); border-radius: 10px; color: var(--accent, #569cd6); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .feed-more:active { opacity: 0.7; }
 
@@ -2414,6 +2414,22 @@ table.sheet tbody tr.drop-below td:last-child {
 .insider-archive-item .ia-date { font-size: 10px; color: var(--text-mute); }
 .insider-archive-item .ia-shares { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
 .insider-archive-item .ia-price { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-top: 2px; }
+
+/* v3.24: 공매도 리스트 */
+.short-sort { display: inline-flex; gap: 2px; background: var(--bg-3, #2d2d30); border-radius: 8px; padding: 2px; }
+.short-sort-btn { border: none; background: transparent; color: var(--text-mute, #6a6a6a); font-size: 11px; font-weight: 600;
+  padding: 5px 9px; border-radius: 6px; cursor: pointer; font-family: inherit; white-space: nowrap;
+  -webkit-tap-highlight-color: transparent; transition: background .15s, color .15s; }
+.short-sort-btn.active { background: var(--accent, #569cd6); color: #fff; }
+.short-item { grid-template-columns: 24px 42px minmax(0, 1fr) auto; }
+.short-rank { font-size: 12px; font-weight: 700; color: var(--text-mute, #6a6a6a); text-align: center;
+  font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; }
+.short-meta { text-align: right; flex-shrink: 0; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; }
+.short-meta .sm-row { display: flex; align-items: baseline; justify-content: flex-end; gap: 6px; margin-top: 2px; }
+.short-meta .sm-k { font-size: 9.5px; color: var(--text-mute, #6a6a6a); }
+.short-meta .sm-v { font-size: 12px; font-weight: 600; color: var(--text-dim, #9d9d9d); min-width: 44px; text-align: right; }
+.short-meta .sm-row.sm-on .sm-k { color: var(--accent2, #4ec9b0); }
+.short-meta .sm-row.sm-on .sm-v { color: var(--text-hi, #fff); font-weight: 700; }
 
 /* ===== v2.87: 보고서 3일 이내 종목 로고 — 인스타 스토리 스타일 그라데이션 테두리 ===== */
 /*   색상은 AQUAMEL 브랜드 그라데이션(--accent → --accent-2)과 동일. 테마 자동 대응. */
@@ -6714,10 +6730,20 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-  <!-- v3.14: 공매도 이력 (준비중) -->
+  <!-- v3.24: 공매도 이력 (US_CROWDING — 잔고비율순 / Days to Cover순) -->
   <section class="card mobile-only" id="shortingCard" data-mtab="explore" data-xtab="shorting">
+    <div class="card-header">
+      <h2>공매도 이력</h2>
+      <div class="short-sort" id="shortingSort">
+        <button class="short-sort-btn active" data-sort="float" onclick="setShortSort('float')">잔고비율순</button>
+        <button class="short-sort-btn" data-sort="dtc" onclick="setShortSort('dtc')">Days to Cover순</button>
+      </div>
+    </div>
     <div class="card-body">
-      <div class="buy-points-empty" style="padding:44px 12px;text-align:center;">공매도 이력 — 준비중입니다 🛠️</div>
+      <div class="archive-mobile-list" id="shortingList">
+        <div class="buy-points-empty">로딩 중…</div>
+      </div>
+      <button class="archive-mobile-more" id="shortingMore" onclick="loadMoreShorting()" style="display:none;">더 보기</button>
     </div>
   </section>
 
@@ -9221,6 +9247,60 @@ async function fetchValuation(forceFresh) {
 }
 window.fetchValuation = fetchValuation;
 
+// v3.24: 공매도/수급 쏠림 (US_CROWDING 탭) fetch
+const AQ_US_CROWDING_TAB = 'US_CROWDING';
+const AQ_CROWD_CACHE_KEY = 'us_crowding_v1';
+const AQ_CROWD_CACHE_TTL_MIN = 360;  // 6h
+let _aqCrowdingList = [];   // [{ ticker, shortPctFloat, daysToCover, shortInterest, svr20 }]
+let _aqCrowdingLoaded = false;
+
+async function fetchCrowding(forceFresh) {
+  if (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US') {
+    if (_aqCrowdingList.length) _aqCrowdingList = [];
+    return _aqCrowdingList;
+  }
+  if (!forceFresh) {
+    try {
+      const cached = await aqDbGet(AQ_CROWD_CACHE_KEY);
+      if (cached && cached.fetchedAt && Array.isArray(cached.list)) {
+        const ageMin = (Date.now() - new Date(cached.fetchedAt).getTime()) / 60000;
+        if (ageMin < AQ_CROWD_CACHE_TTL_MIN) {
+          _aqCrowdingList = cached.list; _aqCrowdingLoaded = true;
+          console.log('[fetchCrowding] IDB 캐시 사용 (' + ageMin.toFixed(0) + '분 전, ' + _aqCrowdingList.length + '종목)');
+          return _aqCrowdingList;
+        }
+      }
+    } catch (e) {}
+  }
+  if (typeof apiCall !== 'function' || !backendReady()) return _aqCrowdingList;
+  try {
+    const res = await apiCall('getOneSheet', { sheetId: AQ_US_CALENDAR_SHEET, tab: AQ_US_CROWDING_TAB });
+    if (!res || !res.ok || !Array.isArray(res.rows)) {
+      console.warn('[fetchCrowding] 응답 비정상:', res && res.error);
+      return _aqCrowdingList;
+    }
+    const list = [];
+    res.rows.forEach(r => {
+      const tk = String(r.Ticker || '').toUpperCase(); if (!tk) return;
+      list.push({
+        ticker: tk,
+        shortPctFloat: _aqNum(r.Short_pct_Float),  // 공매도 잔고 비율 (col I)
+        daysToCover:   _aqNum(r.Days_to_Cover),     // (col J)
+        shortInterest: _aqNum(r.Short_Interest),
+        svr20:         _aqNum(r.SVR_20d_pct),
+      });
+    });
+    _aqCrowdingList = list; _aqCrowdingLoaded = true;
+    try { await aqDbSet(AQ_CROWD_CACHE_KEY, { fetchedAt: new Date().toISOString(), list }); } catch (e) {}
+    console.log('[fetchCrowding] fetch 완료 — ' + list.length + '종목');
+    return list;
+  } catch (e) {
+    console.warn('[fetchCrowding]', e);
+    return _aqCrowdingList;
+  }
+}
+window.fetchCrowding = fetchCrowding;
+
 // 1자리 반올림 + 'N배' 포맷 (없으면 '—')
 function aqValFmt(v) {
   return (v === null || v === undefined || isNaN(v)) ? '—' : Number(v).toFixed(1) + '배';
@@ -9241,7 +9321,7 @@ function aqFeedValTags(tk) {
   if (fwd !== null) tags.push('#Foward.PER_' + fwd + '\ubc30');
   if (peg !== null) tags.push('#PEG_' + peg + '\ubc30');
   if (!tags.length) return '';
-  return '<div class="feed-tags">' + tags.join(' ') + '</div>';
+  return '<div class="feed-tags">' + tags.join('   ') + '</div>';
 }
 
 function aqCalLoadEvents() {
@@ -10523,6 +10603,10 @@ function setMarket(mkt) {
         fetchValuation(false)
           .then(() => { try { if (typeof buildDiscoverFeed === 'function' && _state._feedRes) buildDiscoverFeed(_state._feedRes, true); } catch (e) {} })
           .catch(() => {});
+      if (typeof fetchCrowding === 'function')
+        fetchCrowding(false)
+          .then(() => { try { if (typeof buildShortingList === 'function') buildShortingList(); } catch (e) {} })
+          .catch(() => {});
     } catch (e) {}
   }, 300);
 }
@@ -11405,6 +11489,10 @@ async function autoLoadData(opts) {
         if (typeof fetchValuation === 'function')
           fetchValuation(false)
             .then(() => { try { if (typeof buildDiscoverFeed === 'function' && _state._feedRes) buildDiscoverFeed(_state._feedRes, true); } catch (e) {} })
+            .catch(() => {});
+        if (typeof fetchCrowding === 'function')
+          fetchCrowding(false)
+            .then(() => { try { if (typeof buildShortingList === 'function') buildShortingList(); } catch (e) {} })
             .catch(() => {});
       } catch (e) {}
     }, 500);
@@ -18885,6 +18973,7 @@ function setExploreSubtab(x) {
   try {
     if (x === 'signals' && typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
     else if (x === 'insider' && typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList();
+    else if (x === 'shorting' && typeof buildShortingList === 'function') buildShortingList();
     else if (x === 'all' && typeof buildStockList === 'function') buildStockList();
   } catch (e) {}
 }
@@ -19468,6 +19557,74 @@ function buildInsiderArchiveList() {
     el.addEventListener('click', () => openChart(el.dataset.ticker));
   });
 }
+
+// v3.24: 공매도 리스트 (US_CROWDING — 잔고비율순 / Days to Cover순)
+let _shortingShown = 15;
+function _shortSortKey() { return _state.shortSort === 'dtc' ? 'daysToCover' : 'shortPctFloat'; }
+function buildShortingList() {
+  const listEl = $('shortingList'); const moreBtn = $('shortingMore');
+  if (!listEl) return;
+  if (getCurrentMarket() !== 'US') {
+    listEl.innerHTML = '<div class="buy-points-empty">공매도 데이터는 미국 시장에서만 제공됩니다</div>';
+    if (moreBtn) moreBtn.style.display = 'none'; return;
+  }
+  if (!_aqCrowdingLoaded) {
+    listEl.innerHTML = '<div class="buy-points-empty">데이터 로딩 중…</div>';
+    if (moreBtn) moreBtn.style.display = 'none'; return;
+  }
+  const key = _shortSortKey();
+  const sorted = _aqCrowdingList
+    .filter(r => r[key] !== null && r[key] !== undefined && !isNaN(r[key]))
+    .sort((a, b) => b[key] - a[key]);
+  if (sorted.length === 0) {
+    listEl.innerHTML = '<div class="buy-points-empty">공매도 데이터 없음</div>';
+    if (moreBtn) moreBtn.style.display = 'none'; return;
+  }
+  const shown = sorted.slice(0, _shortingShown);
+  const fmtPct = v => (v === null || isNaN(v)) ? '\u2014' : Number(v).toFixed(1) + '%';
+  const fmtDtc = v => (v === null || isNaN(v)) ? '\u2014' : Number(v).toFixed(1) + '\uc77c';
+  const floatActive = (key === 'shortPctFloat');
+  listEl.innerHTML = shown.map((r, i) => {
+    const tk = r.ticker;
+    const sector = (_state.tickerSectorMap || {})[tk] || '';
+    const layer = SECTOR_TO_LAYER[sector] || '\uae30\ud0c0';
+    const layerFile = layerFileName(layer);
+    const tkFile = tickerFileName(tk);
+    const logoHtml = tkFile
+      ? `<img class="ia-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+      : `<img class="ia-logo" src="./flags/US.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+    return `
+      <div class="insider-archive-item short-item" data-ticker="${escapeAttr(tk)}">
+        <div class="short-rank">${i + 1}</div>
+        ${aqWrapLogo(logoHtml, tk)}
+        <div class="ia-info">
+          <div class="ia-ticker" title="${escapeAttr(displayName(tk))}">${escapeHtml(displayName(tk))}</div>
+          <div class="ia-company">${escapeHtml(displaySub(tk))}</div>
+          <div class="ia-sector">${escapeHtml(aqStripSectorEmoji(sector))}</div>
+        </div>
+        <div class="short-meta">
+          <div class="sm-row ${floatActive ? 'sm-on' : ''}"><span class="sm-k">\uc794\uace0\ube44\uc728</span><span class="sm-v">${fmtPct(r.shortPctFloat)}</span></div>
+          <div class="sm-row ${!floatActive ? 'sm-on' : ''}"><span class="sm-k">DTC</span><span class="sm-v">${fmtDtc(r.daysToCover)}</span></div>
+        </div>
+      </div>`;
+  }).join('');
+  if (moreBtn) {
+    if (sorted.length > _shortingShown) { moreBtn.style.display = ''; moreBtn.textContent = `\ub354 \ubcf4\uae30 (${sorted.length - _shortingShown}\uac1c \ub0a8\uc74c)`; }
+    else moreBtn.style.display = 'none';
+  }
+  listEl.querySelectorAll('.insider-archive-item').forEach(el => {
+    el.addEventListener('click', () => openChart(el.dataset.ticker));
+  });
+}
+window.buildShortingList = buildShortingList;
+function setShortSort(key) {
+  _state.shortSort = key; _shortingShown = 15;
+  document.querySelectorAll('#shortingSort .short-sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort === key));
+  buildShortingList();
+}
+window.setShortSort = setShortSort;
+function loadMoreShorting() { _shortingShown += 15; buildShortingList(); }
+window.loadMoreShorting = loadMoreShorting;
 window.buildInsiderArchiveList = buildInsiderArchiveList;
 
 function loadMoreInsiderArchive() {
