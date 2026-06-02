@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.14';
+window.AQ_PWA_VERSION = '3.15';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2145,6 +2145,37 @@ table.sheet tbody tr.drop-below td:last-child {
   background: var(--panel-hi, #2d2d30); color: var(--text-dim, #9d9d9d); cursor: pointer; white-space: nowrap;
   transition: background .15s, color .15s; font-family: inherit; }
 .xtab-btn.active { background: var(--accent, #569cd6); color: #fff; }
+/* v3.15: 발견 피드 (인스타그램형) */
+#feedCard { padding: 0; }
+.feed-item { background: var(--panel, #252526); border: 1px solid var(--border, #3e3e42); border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+.feed-item:last-child { margin-bottom: 6px; }
+.feed-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+.feed-avatar { flex-shrink: 0; }
+.feed-avatar .feed-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: contain; background: #fff; }
+.feed-id { min-width: 0; flex: 1; }
+.feed-name { font-size: 14px; font-weight: 700; color: var(--text-hi, #fff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.feed-sub { font-size: 11px; color: var(--text-dim, #9d9d9d); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+.feed-hstat { text-align: right; flex-shrink: 0; }
+.feed-chg { display: block; font-size: 13px; font-weight: 800; font-family: Consolas, monospace; color: var(--text-mute, #6a6a6a); }
+.feed-chg.up { color: #fa5252; } .feed-chg.down { color: #339af0; }
+.feed-dd { display: block; font-size: 10px; color: var(--text-dim, #9d9d9d); margin-top: 1px; white-space: nowrap; }
+.feed-report { flex-shrink: 0; background: transparent; border: none; color: #ffd43b; cursor: pointer; padding: 4px; display: flex; align-items: center; }
+.feed-report:active { opacity: 0.6; }
+.feed-chart-wrap { position: relative; height: 240px; padding: 0 6px; }
+.feed-canvas { width: 100% !important; height: 100% !important; }
+.feed-tf { position: absolute; top: 4px; right: 10px; z-index: 2; display: flex; gap: 2px; background: rgba(30,30,30,0.6); border-radius: 7px; padding: 2px; }
+.feed-tf button { border: none; background: transparent; color: var(--text-dim, #9d9d9d); font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 5px; cursor: pointer; font-family: inherit; }
+.feed-tf button.active { background: var(--accent, #569cd6); color: #fff; }
+.feed-actions { display: flex; align-items: center; gap: 16px; padding: 10px 14px 4px; }
+.feed-act { background: transparent; border: none; color: var(--text, #d4d4d4); cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 5px; }
+.feed-act .fi { width: 24px; height: 24px; display: block; }
+.feed-act:active { opacity: 0.55; }
+.feed-stat i { font-style: normal; font-size: 13px; font-weight: 600; color: var(--text, #d4d4d4); }
+.feed-act.on .fi { fill: #fa5252; stroke: #fa5252; }
+.feed-dm { margin-left: auto; cursor: default; }
+.feed-caption { padding: 6px 14px 14px; font-size: 12.5px; line-height: 1.5; color: var(--text, #d4d4d4); white-space: pre-wrap; word-break: break-word; }
+.feed-more { display: block; width: 100%; padding: 12px; margin-top: 2px; background: var(--panel-hi, #2d2d30); border: 1px solid var(--border, #3e3e42); border-radius: 10px; color: var(--accent, #569cd6); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.feed-more:active { opacity: 0.7; }
 
 /* ===== 매수 포인트 카드 (발견 탭 상단) — 토스 "관심 이벤트" 레퍼런스 ===== */
 .buy-points-scroll {
@@ -7035,6 +7066,13 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+  <!-- v3.15: 발견 피드 (금주의 발견 아래) — 인스타그램 피드형 -->
+  <section class="card mobile-only" id="feedCard" data-mtab="discover">
+    <div class="card-body" id="feedScroll" style="padding:6px;">
+      <div class="buy-points-empty" style="padding:24px;">로딩 중…</div>
+    </div>
+  </section>
+
   <!-- ============ SIGNAL FILTER & 평가 ============ -->
   <section class="card" id="filterCard" data-mtab="explore" data-xtab="signals" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
@@ -7369,7 +7407,7 @@ table.combo-eval tbody td .nodata {
       <div class="modal-drag-handle"></div>
       <!-- v1.99/v2.05/v2.06: 분석 보고서 보기 (해당 ticker 보고서 있을 때만 표시) — 사용자 첨부 risk-analysis 아이콘 -->
       <button class="modal-report" id="modalReportBtn" onclick="openReportPanel()" title="분석 보고서" style="display:none">
-        <img src="./logos/report.png" alt="분석 보고서" />
+        <svg class="aq-report-ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
       </button>
       <!-- v2.91: 토스증권 버튼 제거 → 관심(하트) 버튼으로 교체. 토스와 동일 위치(우상단). -->
       <button class="modal-watch" id="modalWatchBtn" onclick="toggleWatch()" title="관심 종목 추가" aria-pressed="false">
@@ -16868,11 +16906,15 @@ function renderMacroCorrelationList(macroName) {
   }
 }
 
-function drawChart(d) {
-  const ctx = $('chartCanvas').getContext('2d');
-  if (_chart) _chart.destroy();
+function drawChart(d, opts) {
+  opts = opts || {};
+  const canvas = opts.canvas || $('chartCanvas');
+  const ctx = canvas.getContext('2d');
+  const isModal = !opts.canvas;
+  if (isModal) { if (_chart) _chart.destroy(); }
+  else { if (canvas._aqChart) { try { canvas._aqChart.destroy(); } catch (e) {} } }
 
-  const simple = useSimpleMode();  // 모바일 + detailMode OFF → 단순 모드
+  const simple = opts.feed ? true : useSimpleMode();  // 피드/모바일 → 단순 모드
   // v1.77 BUGFIX: getCurrentTheme이 v1.65에서 제거됨 → ReferenceError로 차트 전체 실패
   //   다크 모드 고정이므로 light=false 고정
   const light = false;
@@ -17028,14 +17070,15 @@ function drawChart(d) {
 
   // Annotations — simple 모드에선 지지선 라벨 숨김 (라인은 살림)
   const labelDisp = !simple;
-  const annotations = {
-    sup1: { type: 'line', yMin: d.supportMA20, yMax: d.supportMA20, borderColor: COL.sup1, borderWidth: 1.2, borderDash: [6,4], yScaleID: 'yPrice',
-      label: { display: labelDisp, content: `MA20 ${fmtPrice(d.supportMA20)}`, position: 'end', backgroundColor: 'rgba(106,153,85,0.2)', color: COL.sup1, font: { size: 10 } } },
-    sup2: { type: 'line', yMin: d.supportRF, yMax: d.supportRF, borderColor: COL.sup2, borderWidth: 1.2, borderDash: [3,3,9,3], yScaleID: 'yPrice',
-      label: { display: labelDisp, content: `Round ${fmtPrice(d.supportRF)}`, position: 'end', backgroundColor: 'rgba(86,156,214,0.2)', color: COL.sup2, font: { size: 10 } } },
-    sup3: { type: 'line', yMin: d.prevLow, yMax: d.prevLow, borderColor: COL.sup3, borderWidth: 1.2, borderDash: [2,4], yScaleID: 'yPrice',
-      label: { display: labelDisp, content: `전저점 ${fmtPrice(d.prevLow)}`, position: 'end', backgroundColor: 'rgba(157,106,217,0.2)', color: COL.sup3, font: { size: 10 } } },
-  };
+  const annotations = {};
+  if (!opts.feed) {
+    annotations.sup1 = { type: 'line', yMin: d.supportMA20, yMax: d.supportMA20, borderColor: COL.sup1, borderWidth: 1.2, borderDash: [6,4], yScaleID: 'yPrice',
+      label: { display: labelDisp, content: `MA20 ${fmtPrice(d.supportMA20)}`, position: 'end', backgroundColor: 'rgba(106,153,85,0.2)', color: COL.sup1, font: { size: 10 } } };
+    annotations.sup2 = { type: 'line', yMin: d.supportRF, yMax: d.supportRF, borderColor: COL.sup2, borderWidth: 1.2, borderDash: [3,3,9,3], yScaleID: 'yPrice',
+      label: { display: labelDisp, content: `Round ${fmtPrice(d.supportRF)}`, position: 'end', backgroundColor: 'rgba(86,156,214,0.2)', color: COL.sup2, font: { size: 10 } } };
+    annotations.sup3 = { type: 'line', yMin: d.prevLow, yMax: d.prevLow, borderColor: COL.sup3, borderWidth: 1.2, borderDash: [2,4], yScaleID: 'yPrice',
+      label: { display: labelDisp, content: `전저점 ${fmtPrice(d.prevLow)}`, position: 'end', backgroundColor: 'rgba(157,106,217,0.2)', color: COL.sup3, font: { size: 10 } } };
+  }
   if (d.buyAvg > 0) {
     // 평단가는 simple 모드에서도 라벨 유지 (사용자 본인 정보라 중요)
     annotations.buyAvg = { type: 'line', yMin: d.buyAvg, yMax: d.buyAvg, borderColor: COL.buyAvg, borderWidth: 2, yScaleID: 'yPrice',
@@ -17047,8 +17090,8 @@ function drawChart(d) {
     { label: '종가', data: d.closes, borderColor: COL.close, backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, tension: 0.05, yAxisID: 'yPrice', order: 5 },
     { label: '고가', data: d.highs, borderColor: COL.hl, backgroundColor: 'transparent', borderWidth: 0.6, pointRadius: 0, yAxisID: 'yPrice', order: 6 },
     { label: '저가', data: d.lows, borderColor: COL.hl, backgroundColor: 'transparent', borderWidth: 0.6, pointRadius: 0, yAxisID: 'yPrice', order: 6 },
-    { label: 'MA20', data: d.ma20, borderColor: COL.ma20, backgroundColor: 'transparent', borderWidth: 1.2, pointRadius: 0, borderDash: [4,2], yAxisID: 'yPrice', order: 4 },
   ];
+  if (!opts.feed) datasets.push({ label: 'MA20', data: d.ma20, borderColor: COL.ma20, backgroundColor: 'transparent', borderWidth: 1.2, pointRadius: 0, borderDash: [4,2], yAxisID: 'yPrice', order: 4 });
   if (!simple) {
     datasets.push({ label: 'Volume', type: 'bar', data: d.vols, backgroundColor: volBarColors, borderColor: volBarColors, yAxisID: 'yVol', order: 10 });
     // v1.89: KR 모드면 A/D 라인 대신 외국인(빨강)/기관(파랑)/개인(노랑) 누적 수급선
@@ -17088,7 +17131,7 @@ function drawChart(d) {
     scales.yInd = { position: 'right', min: 0, max: 100, ticks: { color: COL.textDim, font: { size: 9 } }, grid: { display: false }, title: { display: true, text: indTitle, color: COL.textMute, font: { size: 9 } } };
   }
 
-  _chart = new Chart(ctx, {
+  const _newChart = new Chart(ctx, {
     type: 'line',
     data: { labels: d.dates, datasets },
     options: {
@@ -17135,6 +17178,7 @@ function drawChart(d) {
     },
     plugins: [crosshairPlugin],
   });
+  if (isModal) { _chart = _newChart; } else { canvas._aqChart = _newChart; }
 
   // Legend (HTML) — simple 모드에선 안 보이게 CSS로 숨김 (body.simple-mode .chart-legend)
   // v1.89: KR 모드면 A/D 자리에 외국인/기관/개인 표시
@@ -18727,6 +18771,8 @@ function relocateCardsForPC() {
   if (discoverPanel) {
     const bp = document.getElementById('buyPointsCard');
     if (bp && bp.parentElement !== discoverPanel) discoverPanel.appendChild(bp);
+    const fc = document.getElementById('feedCard');
+    if (fc && fc.parentElement !== discoverPanel) discoverPanel.appendChild(fc);
   }
   if (explorePanel) {
     // v3.14: 탐색 서브탭 — 서브탭바 + (시그널필터+누적시그널) + 내부자 + 공매도 + 전체리스트 순
@@ -18783,149 +18829,296 @@ window.setPCTab = setPCTab;
 //   - 5일 이내 2회 이상 거래 종목은 가장 최근 transDate 기준으로만 1회 노출 (종목별 dedup).
 //   - 카드 양식은 기존과 100% 동일: 로고 / 이름 / 일자 / (하단 슬롯엔 매수 단가 $).
 // ============================================================================
-function buildBuyPointsCard() {
-  const scrollEl = $('buyPointsScroll');
-  if (!scrollEl) return;
-
+// v3.15: 발견 종목 목록/순서 계산 — 금주의 발견 카드 + 피드가 공유
+function aqDiscoverItems() {
   const market = getCurrentMarket();
-  // v3.12: US = 내부자 + V1·V2 시그널 / KR = 시그널만. 내부자 로딩 대기는 US에서만.
-  if (market === 'US' && !_aqInsiderLoaded) {
-    scrollEl.innerHTML = '<div class="buy-points-empty">데이터 로딩 중…</div>';
-    return;
-  }
-
-  // 기준일: archive 최신일과 동일 기준으로 5일 윈도우 (오늘 포함 5일 → today, -1..-4)
-  //   archive 최신일이 없으면 내부자 거래의 최신 transDate를 기준으로 fallback
+  if (market === 'US' && !_aqInsiderLoaded) return null;  // 로딩중
   const pad = n => String(n).padStart(2, '0');
   let todayStr = _state.latestDate
-    || (_state.archive || []).map(r => r.Date).filter(Boolean).sort().slice(-1)[0]
-    || '';
+    || (_state.archive || []).map(r => r.Date).filter(Boolean).sort().slice(-1)[0] || '';
   if (!todayStr) {
-    // 내부자 거래 최신 transDate로 기준일 잡기
     let maxTd = '';
     Object.keys(_aqInsiderTrades).forEach(tk => {
       (_aqInsiderTrades[tk] || []).forEach(t => { if (t.transDate > maxTd) maxTd = t.transDate; });
     });
     todayStr = maxTd;
   }
-  if (!todayStr) {
-    scrollEl.innerHTML = '<div class="buy-points-empty">데이터 없음</div>';
-    return;
-  }
+  if (!todayStr) return { market, cutoff: '', items: [] };
   const todayDate = new Date(todayStr);
-  const cutoffDate = new Date(todayDate);
-  cutoffDate.setDate(todayDate.getDate() - 4);
+  const cutoffDate = new Date(todayDate); cutoffDate.setDate(todayDate.getDate() - 4);
   const cutoff = `${cutoffDate.getFullYear()}-${pad(cutoffDate.getMonth()+1)}-${pad(cutoffDate.getDate())}`;
 
-  // 종목별: 최근 5일 윈도우 내 일반주 매수 거래 → 가장 최근 1건만 (US 전용)
   const byTicker = {};
   if (market === 'US') {
     Object.keys(_aqInsiderTrades).forEach(tk => {
       const recent = (_aqInsiderTrades[tk] || []).filter(t =>
-        isCommonEquityTrade(t.security) && t.transDate && t.transDate >= cutoff && t.price > 0
-      );
+        isCommonEquityTrade(t.security) && t.transDate && t.transDate >= cutoff && t.price > 0);
       if (!recent.length) return;
-      const latest = recent[0];  // desc 정렬 → [0]이 최신
+      const latest = recent[0];
       byTicker[tk] = { ticker: tk, date: latest.transDate, price: latest.price, shares: latest.shares };
     });
   }
-
-  // v3.12: "금주의 발견" — US = 내부자 + V1·V2 시그널 / KR = 시그널만 (모두 최근 5일·등락률 ±2%)
-  //   배치: 로고 / 티커 / 섹터 / 유형(해당 모두) / 시그널발생일 종가 기준 현재수익률
   const merged = {};
   const ensure = (tk, date) => merged[tk] || (merged[tk] = { ticker: tk, date: date, types: [] });
   const addType = (it, label) => { if (it.types.indexOf(label) < 0) it.types.push(label); };
-
-  // 내부자 매수 (US 전용)
   Object.values(byTicker).forEach(b => {
-    const it = ensure(b.ticker, b.date);
-    it.insider = true;
-    addType(it, '내부자');
+    const it = ensure(b.ticker, b.date); it.insider = true; addType(it, '내부자');
     if (b.date > (it.date || '')) it.date = b.date;
   });
-
-  // 시그널: 최근 5일 + 등락률 ±2%  (US: V1·V2 / KR: 단일 아카이브)
   const addSig = (rows, label) => {
     (rows || []).forEach(r => {
-      if (!r.Ticker || !r.Date || r.Date < cutoff) return;            // 최근 5일 이내
+      if (!r.Ticker || !r.Date || r.Date < cutoff) return;
       const ret = r['Current_Return(%)'];
-      if (ret == null || isNaN(ret) || ret < -2 || ret > 2) return;   // -2% ~ +2%
-      const it = ensure(r.Ticker, r.Date);
-      addType(it, label);
+      if (ret == null || isNaN(ret) || ret < -2 || ret > 2) return;
+      const it = ensure(r.Ticker, r.Date); addType(it, label);
       if (it.ret == null) it.ret = ret;
       if (r.Date > (it.date || '')) it.date = r.Date;
     });
   };
-  if (market === 'US') {
-    addSig(_state.archivesV1.US, 'V1');
-    addSig(_state.archives.US, 'V2');
-  } else if (market === 'KR') {
-    addSig(_state.archives.KR, '신호');
-  }
+  if (market === 'US') { addSig(_state.archivesV1.US, 'V1'); addSig(_state.archives.US, 'V2'); }
+  else if (market === 'KR') { addSig(_state.archives.KR, '신호'); }
 
-  // 유형 표기 순서 통일 (V1 · V2 · 신호 · 내부자)
   const TYPE_ORDER = { 'V1': 0, 'V2': 1, '신호': 2, '내부자': 3 };
   Object.values(merged).forEach(it => it.types.sort((a, b) => (TYPE_ORDER[a] != null ? TYPE_ORDER[a] : 9) - (TYPE_ORDER[b] != null ? TYPE_ORDER[b] : 9)));
-
-  // 정렬: ① 최근 보고서(스토리 링) 종목 맨 앞 → ② 그 외 기존 기준(최신순) 유지
   const items = Object.values(merged);
-  items.forEach(it => {
-    it._ring = (typeof aqHasRecentReport === 'function') ? !!aqHasRecentReport(it.ticker) : false;
-  });
-  items.sort((a, b) => {
-    if (a._ring !== b._ring) return a._ring ? -1 : 1;   // 링 종목 우선
-    return (b.date || '').localeCompare(a.date || '');  // 그 외 최신순
-  });
+  items.forEach(it => { it._ring = (typeof aqHasRecentReport === 'function') ? !!aqHasRecentReport(it.ticker) : false; });
+  items.sort((a, b) => { if (a._ring !== b._ring) return a._ring ? -1 : 1; return (b.date || '').localeCompare(a.date || ''); });
+  return { market, cutoff, items };
+}
 
-  if (items.length === 0) {
-    scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 발견 없음 👌</div>';
-    return;
-  }
+// 로고 html (피드/카드 공용)
+function aqLogoHtml(tk, sector, cls) {
+  const layer = SECTOR_TO_LAYER[sector] || '기타';
+  const layerFile = layerFileName(layer);
+  const tkFile = tickerFileName(tk);
+  return tkFile
+    ? `<img class="${cls}" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+    : `<img class="${cls}" src="./flags/${getCurrentMarket()}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+}
 
-  // 시그널발생일 종가 기준 현재수익률 — 신호 행 값이 없으면(내부자 전용) OHLCV로 계산
-  const curRet = (tk, fromDate) => {
-    const s = (_state._tickerOhlcv || {})[tk];
-    if (!s || !s.length) return null;
-    const i = s.findIndex(r => r.Date >= fromDate);
-    if (i < 0) return null;
-    const P = s[i].Close, last = s[s.length - 1].Close;
-    if (!P || isNaN(P) || P <= 0 || last == null || isNaN(last)) return null;
-    return (last / P - 1) * 100;
-  };
-
-  scrollEl.innerHTML = items.map(it => {
-    const sector = (_state.tickerSectorMap || {})[it.ticker] || '';
-    const layer = SECTOR_TO_LAYER[sector] || '기타';
-    const layerFile = layerFileName(layer);
-    const tkFile = tickerFileName(it.ticker);
-    const logoHtml = tkFile
-      ? `<img class="bp-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
-      : `<img class="bp-logo" src="./flags/US.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
-    const types = it.types || [];
-    const r = (it.ret != null) ? Number(it.ret) : curRet(it.ticker, it.date);
-    let retHtml;
-    if (r == null || isNaN(r)) {
-      retHtml = `<div class="bp-ret" style="color:var(--text-mute);font-weight:700;">—</div>`;
-    } else {
-      const col = r > 0 ? '#fa5252' : r < 0 ? '#339af0' : 'var(--text-mute)';
-      retHtml = `<div class="bp-ret" style="color:${col};font-weight:700;">${r > 0 ? '+' : ''}${r.toFixed(1)}%</div>`;
+function buildBuyPointsCard() {
+  const scrollEl = $('buyPointsScroll');
+  const res = aqDiscoverItems();
+  if (scrollEl) {
+    if (res === null) { scrollEl.innerHTML = '<div class="buy-points-empty">데이터 로딩 중…</div>'; }
+    else if (!res.items.length) { scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 발견 없음 👌</div>'; }
+    else {
+      const curRet = (tk, fromDate) => {
+        const s2 = (_state._tickerOhlcv || {})[tk];
+        if (!s2 || !s2.length) return null;
+        const ix = s2.findIndex(r => r.Date >= fromDate);
+        if (ix < 0) return null;
+        const P = s2[ix].Close, last = s2[s2.length - 1].Close;
+        if (!P || isNaN(P) || P <= 0 || last == null || isNaN(last)) return null;
+        return (last / P - 1) * 100;
+      };
+      scrollEl.innerHTML = res.items.map(it => {
+        const sector = (_state.tickerSectorMap || {})[it.ticker] || '';
+        const types = it.types || [];
+        const r = (it.ret != null) ? Number(it.ret) : curRet(it.ticker, it.date);
+        let retHtml;
+        if (r == null || isNaN(r)) retHtml = `<div class="bp-ret" style="color:var(--text-mute);font-weight:700;">—</div>`;
+        else { const col = r > 0 ? '#fa5252' : r < 0 ? '#339af0' : 'var(--text-mute)';
+          retHtml = `<div class="bp-ret" style="color:${col};font-weight:700;">${r > 0 ? '+' : ''}${r.toFixed(1)}%</div>`; }
+        return `<div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
+            ${aqWrapLogo(aqLogoHtml(it.ticker, sector, 'bp-logo'), it.ticker)}
+            <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
+            <div class="bp-sector" title="${escapeAttr(aqStripSectorEmoji(sector))}">${escapeHtml(aqStripSectorEmoji(sector) || '—')}</div>
+            <div class="bp-type">${escapeHtml(types.join(' · '))}</div>
+            ${retHtml}
+          </div>`;
+      }).join('');
+      scrollEl.querySelectorAll('.buy-point-item').forEach(el => el.addEventListener('click', () => openChart(el.dataset.ticker)));
     }
-    return `
-      <div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
-        ${aqWrapLogo(logoHtml, it.ticker)}
-        <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
-        <div class="bp-sector" title="${escapeAttr(aqStripSectorEmoji(sector))}">${escapeHtml(aqStripSectorEmoji(sector) || '—')}</div>
-        <div class="bp-type">${escapeHtml(types.join(' · '))}</div>
-        ${retHtml}
-      </div>
-    `;
-  }).join('');
+  }
+  try { buildDiscoverFeed(res); } catch (e) { console.warn('[feed]', e); }
+}
 
-  // 클릭 → 차트 모달
-  scrollEl.querySelectorAll('.buy-point-item').forEach(el => {
-    el.addEventListener('click', () => openChart(el.dataset.ticker));
+// v3.15: 인스타 피드형 SVG 아이콘
+const AQ_SVG = {
+  heart: `<svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>`,
+  comment: `<svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.2 7.6L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>`,
+  regram: `<svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`,
+  dm: `<svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>`,
+  report: `<svg class="aq-report-ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>`,
+};
+
+// 헤더 통계: 전일 대비 1일 등락률 + 고점대비(3M)
+function aqFeedHeaderStats(tk) {
+  const found = findTickerSeries(tk);
+  if (!found || !found.rows || found.rows.length < 2) return { dayPct: null, declinePct: null };
+  const rows = found.rows;
+  const lastClose = rows[rows.length - 1].Close, prevClose = rows[rows.length - 2].Close;
+  const dayPct = (prevClose > 0) ? (lastClose / prevClose - 1) * 100 : null;
+  const w = sampleTimeframe(rows, '3M');
+  const hi = Math.max(...w.map(r => r.High));
+  const declinePct = (hi > lastClose) ? -((hi - lastClose) / hi * 100) : 0;
+  return { dayPct, declinePct };
+}
+
+// 30일 시그널 수(V1+V2 / KR 단일) + 30일 내부자 매수 주식 수
+function aqFeedCounts(tk, market, cutoff30) {
+  let sig = 0;
+  const countIn = rows => (rows || []).forEach(r => { if (r.Ticker === tk && normalizeDate(r.Date) >= cutoff30) sig++; });
+  if (market === 'US') { countIn(_state.archivesV1.US); countIn(_state.archives.US); }
+  else { countIn(_state.archives.KR); }
+  let shares = 0;
+  (((typeof _aqInsiderTrades !== 'undefined') && _aqInsiderTrades[tk]) || []).forEach(t => {
+    if (t.transDate && t.transDate >= cutoff30 && (t.shares || 0) > 0) shares += t.shares;
+  });
+  return { sig, shares };
+}
+
+// 피드용 차트 데이터 (모달과 동일 마커/시그널, 지지선·MA·수급선 제외 — drawChart feed 옵션이 처리)
+function aqBuildFeedChartData(tk, tf) {
+  const found = findTickerSeries(tk);
+  if (!found || !found.rows || !found.rows.length) return null;
+  const win = sampleTimeframe(found.rows, tf);
+  if (win.length < 5) return null;
+  const cutoffStr = win[0].Date;
+  const dates = win.map(r => r.Date), closes = win.map(r => r.Close), highs = win.map(r => r.High),
+        lows = win.map(r => r.Low), vols = win.map(r => r.Volume);
+  const lastPrice = closes[closes.length - 1];
+  const recentHigh = Math.max(...highs), recentHighIdx = highs.indexOf(recentHigh);
+  const trades = lsGet(lsKeyTrades(), []);
+  const pos = computePortfolioFromTrades(trades);
+  const buyAvg = (pos[tk] && pos[tk].avg) || 0;
+  const tradeMarkers = trades.filter(t => (t.ticker || '').toUpperCase() === tk)
+    .map(t => ({ x: normalizeDate(t.date) || '', y: parseFloat(t.price) || 0, action: t.action, qty: t.qty }))
+    .filter(t => t.x && t.x >= cutoffStr);
+  const _allIns = ((typeof _aqInsiderTrades !== 'undefined') && _aqInsiderTrades[tk]) ? _aqInsiderTrades[tk] : [];
+  const insiderMarkers = _allIns
+    .filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
+    .filter(t => isCommonEquityTrade(t.security))
+    .filter(t => { const ix = dates.indexOf(t.transDate); if (ix < 0) return true; const cc = closes[ix]; if (!cc || cc <= 0) return true; const ra = t.price / cc; return ra > 0.5 && ra < 2; })
+    .map(t => ({ x: t.transDate, y: t.price, shares: t.shares, sharesAfter: t.sharesAfter, ownerName: t.ownerName, relationship: t.relationship }));
+  const sigMarkersByType = {};
+  getSignalTypes().forEach(sx => sigMarkersByType[sx] = []);
+  if (tf !== '1Y') {
+    const priority = _isV1Mode()
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
+    _state.archive.filter(r => r.Ticker === tk).forEach(r => {
+      const dateStr = normalizeDate(r.Date);
+      if (!dateStr || dateStr < cutoffStr) return;
+      const sigs = (r.Signal_Type || '').split('+').map(z => z.trim()).filter(Boolean);
+      const primary = priority.find(p => sigs.includes(p) && _state.signalFilter.has(p));
+      if (primary) sigMarkersByType[primary].push({ x: dateStr, y: r.Close_Price, pred: r.Pred_5d });
+    });
+  }
+  const nulls = closes.map(() => null);
+  return {
+    dates, closes, highs, lows, vols, ma20: nulls, adN: nulls,
+    supportMA20: lastPrice, supportRF: lastPrice, prevLow: lastPrice,
+    lastPrice, recentHigh, recentHighIdx, buyAvg,
+    tradeMarkers, sigMarkersByType, insiderMarkers,
+    retailN: null, foreignN: null, instN: null,
+  };
+}
+
+function aqRenderFeedChart(itemEl, tk, tf) {
+  if (!itemEl) return;
+  const canvas = itemEl.querySelector('canvas');
+  if (!canvas) return;
+  try { const d = aqBuildFeedChartData(tk, tf); if (d) drawChart(d, { canvas, feed: true }); } catch (e) { console.warn('[feedChart]', tk, e); }
+}
+
+function aqFeedSetTf(tk, tf) {
+  _state.feedTf = _state.feedTf || {};
+  _state.feedTf[tk] = tf;
+  let item = null;
+  document.querySelectorAll('.feed-item').forEach(el => { if (el.dataset.ticker === tk) item = el; });
+  if (!item) return;
+  item.querySelectorAll('.feed-tf button').forEach(b => b.classList.toggle('active', b.dataset.tf === tf));
+  aqRenderFeedChart(item, tk, tf);
+}
+window.aqFeedSetTf = aqFeedSetTf;
+
+function aqFeedToggleWatch(tk, btn) {
+  try { AqWatchStore.toggle(getCurrentMarket(), tk); } catch (e) {}
+  let on = false; try { on = AqWatchStore.has(getCurrentMarket(), tk); } catch (e) {}
+  btn.classList.toggle('on', on);
+}
+window.aqFeedToggleWatch = aqFeedToggleWatch;
+
+function aqFeedOpenReport(tk) {
+  Promise.resolve(openChart(tk)).then(() => setTimeout(() => { try { if (typeof openReportPanel === 'function') openReportPanel(); } catch (e) {} }, 150));
+}
+window.aqFeedOpenReport = aqFeedOpenReport;
+
+function aqFeedMore() { _state.feedShown = (_state.feedShown || 10) + 10; buildDiscoverFeed(_state._feedRes, true); }
+window.aqFeedMore = aqFeedMore;
+
+// v3.15: 발견 피드 (금주의 발견 아래) — 인스타 피드형
+function buildDiscoverFeed(res, keepShown) {
+  const container = $('feedScroll');
+  if (!container) return;
+  _state._feedRes = res;
+  if (!keepShown) _state.feedShown = 10;
+  if (res === null) { container.innerHTML = '<div class="buy-points-empty" style="padding:24px;">데이터 로딩 중…</div>'; return; }
+  if (!res.items || !res.items.length) { container.innerHTML = '<div class="buy-points-empty" style="padding:24px;">최근 5일 발견 없음 👌</div>'; return; }
+  const market = res.market;
+  const pad = n => String(n).padStart(2, '0');
+  const today = _state.latestDate || (_state.archive || []).map(r => r.Date).filter(Boolean).sort().slice(-1)[0] || '';
+  let cutoff30 = '';
+  if (today) { const dd = new Date(today); dd.setDate(dd.getDate() - 30); cutoff30 = `${dd.getFullYear()}-${pad(dd.getMonth()+1)}-${pad(dd.getDate())}`; }
+  const shown = Math.min(_state.feedShown || 10, res.items.length);
+  const slice = res.items.slice(0, shown);
+  const fmtPct = v => (v == null || isNaN(v)) ? '—' : `${v > 0 ? '+' : ''}${v.toFixed(2)}%`;
+
+  container.innerHTML = slice.map(it => {
+    const tk = it.ticker;
+    const sector = aqStripSectorEmoji((_state.tickerSectorMap || {})[tk] || '');
+    const desc = (_state.tickerDescMap || {})[tk] || '';
+    const st = aqFeedHeaderStats(tk);
+    const cnt = aqFeedCounts(tk, market, cutoff30);
+    const ring = it._ring;
+    const dayCls = (st.dayPct > 0) ? 'up' : (st.dayPct < 0) ? 'down' : '';
+    let watched = false; try { watched = AqWatchStore.has(market, tk); } catch (e) {}
+    const reportBtn = ring ? `<button class="feed-report" title="분석 보고서" onclick="aqFeedOpenReport('${escapeAttr(tk)}')">${AQ_SVG.report}</button>` : '';
+    return `<div class="feed-item" data-ticker="${escapeAttr(tk)}">
+      <div class="feed-head">
+        <div class="feed-avatar">${aqWrapLogo(aqLogoHtml(tk, (_state.tickerSectorMap||{})[tk]||'', 'feed-logo'), tk)}</div>
+        <div class="feed-id">
+          <div class="feed-name">${escapeHtml(displayName(tk))}</div>
+          <div class="feed-sub">${escapeHtml(tk)} · ${escapeHtml(sector || '—')}</div>
+        </div>
+        <div class="feed-hstat">
+          <span class="feed-chg ${dayCls}">${fmtPct(st.dayPct)}</span>
+          <span class="feed-dd">고점대비 ${st.declinePct == null ? '—' : st.declinePct.toFixed(1) + '%'}</span>
+        </div>
+        ${reportBtn}
+      </div>
+      <div class="feed-chart-wrap">
+        <div class="feed-tf">
+          <button data-tf="3M" class="active" onclick="aqFeedSetTf('${escapeAttr(tk)}','3M')">3M</button>
+          <button data-tf="6M" onclick="aqFeedSetTf('${escapeAttr(tk)}','6M')">6M</button>
+          <button data-tf="1Y" onclick="aqFeedSetTf('${escapeAttr(tk)}','1Y')">1Y</button>
+        </div>
+        <canvas class="feed-canvas"></canvas>
+      </div>
+      <div class="feed-actions">
+        <button class="feed-act${watched ? ' on' : ''}" title="관심" onclick="aqFeedToggleWatch('${escapeAttr(tk)}',this)">${AQ_SVG.heart}</button>
+        <span class="feed-act feed-stat" title="최근 30일 시그널">${AQ_SVG.comment}<i>${cnt.sig}</i></span>
+        <span class="feed-act feed-stat" title="최근 30일 내부자 매수 주식 수">${AQ_SVG.regram}<i>${cnt.shares ? cnt.shares.toLocaleString() : 0}</i></span>
+        <span class="feed-act feed-dm" title="DM">${AQ_SVG.dm}</span>
+      </div>
+      ${desc ? `<div class="feed-caption">${escapeHtml(desc)}</div>` : ''}
+    </div>`;
+  }).join('') + (res.items.length > shown ? `<button class="feed-more" onclick="aqFeedMore()">더 보기 (${res.items.length - shown})</button>` : '');
+
+  // 차트 렌더 (개별 인터랙티브)
+  container.querySelectorAll('.feed-item').forEach(itemEl => {
+    const tk = itemEl.dataset.ticker;
+    const tf = (_state.feedTf && _state.feedTf[tk]) || '3M';
+    if (_state.feedTf && _state.feedTf[tk] && _state.feedTf[tk] !== '3M') {
+      itemEl.querySelectorAll('.feed-tf button').forEach(b => b.classList.toggle('active', b.dataset.tf === tf));
+    }
+    requestAnimationFrame(() => aqRenderFeedChart(itemEl, tk, tf));
   });
 }
+window.buildDiscoverFeed = buildDiscoverFeed;
+
 
 // ============================================================================
 // v1.44 누적 신호 모바일 리스트 (발견 탭 하단)
