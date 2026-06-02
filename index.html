@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.18';
+window.AQ_PWA_VERSION = '3.19';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2163,6 +2163,10 @@ table.sheet tbody tr.drop-below td:last-child {
 .feed-report:active { opacity: 0.6; }
 .feed-chart-wrap { position: relative; height: 380px; padding: 0; }
 .feed-canvas { width: 100% !important; height: 100% !important; }
+/* v3.19: 차트 상/하단 옅은 페이드 — 가장자리가 배경으로 녹아들어 깊이감 */
+.feed-chart-wrap::before, .feed-chart-wrap::after { content: ''; position: absolute; left: 0; right: 0; height: 22px; pointer-events: none; z-index: 1; }
+.feed-chart-wrap::before { top: 0; background: linear-gradient(to bottom, var(--bg, #1e1e1e), transparent); }
+.feed-chart-wrap::after { bottom: 0; background: linear-gradient(to top, var(--bg, #1e1e1e), transparent); }
 .feed-tf { position: absolute; top: 4px; right: 10px; z-index: 2; display: flex; gap: 2px; background: rgba(30,30,30,0.6); border-radius: 7px; padding: 2px; }
 .feed-tf button { border: none; background: transparent; color: var(--text-dim, #9d9d9d); font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 5px; cursor: pointer; font-family: inherit; }
 .feed-tf button.active { background: var(--accent, #569cd6); color: #fff; }
