@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.22';
+window.AQ_PWA_VERSION = '3.23';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2146,12 +2146,18 @@ table.sheet tbody tr.drop-below td:last-child {
 .mobile-tab-bar { display: none; }
 .mobile-only { display: none; }
 /* v3.14: 탐색 서브탭 바 */
-.explore-subtabs { padding: 6px; }
-.explore-subtabs .xtab-row { display: flex; gap: 5px; }
-.xtab-btn { flex: 1; padding: 9px 4px; font-size: 12px; font-weight: 700; border: none; border-radius: 9px;
-  background: var(--panel-hi, #2d2d30); color: var(--text-dim, #9d9d9d); cursor: pointer; white-space: nowrap;
-  transition: background .15s, color .15s; font-family: inherit; }
-.xtab-btn.active { background: var(--accent, #569cd6); color: #fff; }
+/* v3.23: 밑줄형 탭 (데이터 앱 느낌으로 깔끔하게) */
+.explore-subtabs { padding: 2px 10px 0; }
+.explore-subtabs .xtab-row { display: flex; gap: 2px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.xtab-btn { flex: 1; padding: 11px 4px 10px; font-size: 12.5px; font-weight: 600; border: none; background: transparent;
+  color: var(--text-mute, #6a6a6a); cursor: pointer; white-space: nowrap; position: relative; letter-spacing: -0.01em;
+  transition: color .18s ease; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+.xtab-btn::after { content: ''; position: absolute; left: 14%; right: 14%; bottom: -1px; height: 2px;
+  background: var(--accent, #569cd6); border-radius: 2px; transform: scaleX(0); transform-origin: center;
+  transition: transform .2s ease; }
+.xtab-btn:not(.active):active { color: var(--text-dim, #9d9d9d); }
+.xtab-btn.active { color: var(--text-hi, #fff); font-weight: 700; }
+.xtab-btn.active::after { transform: scaleX(1); }
 /* v3.15: 발견 피드 (인스타그램형) */
 #feedCard { padding: 0; }
 .feed-item { background: transparent; padding: 26px 0 44px; border-bottom: 1px solid var(--border, #3e3e42); }
