@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.07';
+window.AQ_PWA_VERSION = '3.09';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2116,7 +2116,7 @@ table.sheet tbody tr.drop-below td:last-child {
 /* ===== 매수 포인트 카드 (발견 탭 상단) — 토스 "관심 이벤트" 레퍼런스 ===== */
 .buy-points-scroll {
   display: flex;
-  gap: 4px;
+  gap: 3px;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
@@ -2130,7 +2130,7 @@ table.sheet tbody tr.drop-below td:last-child {
   padding: 32px 12px;
 }
 .buy-point-item {
-  flex: 0 0 94px;
+  flex: 0 0 82px;
   text-align: center;
   cursor: pointer;
   padding: 4px;
@@ -18763,7 +18763,15 @@ function buildBuyPointsCard() {
   };
   addSig(_state.archivesV1.US, 'v1');
   addSig(_state.archives.US, 'v2');
-  const items = Object.values(merged).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  // 정렬: ① 최근 보고서(스토리 링) 종목 맨 앞 → ② 그 외 기존 기준(최신순) 유지
+  const items = Object.values(merged);
+  items.forEach(it => {
+    it._ring = (typeof aqHasRecentReport === 'function') ? !!aqHasRecentReport(it.ticker) : false;
+  });
+  items.sort((a, b) => {
+    if (a._ring !== b._ring) return a._ring ? -1 : 1;   // 링 종목 우선
+    return (b.date || '').localeCompare(a.date || '');  // 그 외 최신순
+  });
 
   if (items.length === 0) {
     scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 발견 없음 👌</div>';
@@ -18821,6 +18829,11 @@ function buildBuyPointsCard() {
 // ============================================================================
 // v1.44 누적 신호 모바일 리스트 (발견 탭 하단)
 // ============================================================================
+// v3.08: 섹터명 앞 이모지 제거 (누적 리스트 표시용)
+function aqStripSectorEmoji(s) {
+  return String(s == null ? '' : s).replace(/^[\s\p{Extended_Pictographic}\uFE0F\u200d\u20E3]+/u, '').trim();
+}
+
 function buildArchiveMobileList() {
   const listEl = $('archiveMobileList');
   const moreBtn = $('archiveMobileMore');
@@ -18907,7 +18920,7 @@ function buildArchiveMobileList() {
         <div class="am-info">
           <div class="am-ticker" title="${escapeAttr(displayName(it.Ticker))}">${escapeHtml(displayName(it.Ticker))}</div>
           <div class="am-company">${escapeHtml(displaySub(it.Ticker))}</div>
-          <div class="am-sector">${escapeHtml(it.Sector || '')}</div>
+          <div class="am-sector">${escapeHtml(aqStripSectorEmoji(it.Sector))}</div>
         </div>
         <div class="am-sigs">
           ${(() => { const C = getSignalColors(); return it.sigs.map(s => `<span class="sig-badge ${escapeAttr(s)}" style="color:${C[s]||'#888'};border-color:${C[s]||'#888'};">${escapeHtml(s)}</span>`).join(''); })()}
@@ -19005,7 +19018,7 @@ function buildInsiderArchiveList() {
         <div class="ia-info">
           <div class="ia-ticker" title="${escapeAttr(displayName(tk))}">${escapeHtml(displayName(tk))}</div>
           <div class="ia-company">${escapeHtml(displaySub(tk))}</div>
-          <div class="ia-sector">${escapeHtml(sector || '')}</div>
+          <div class="ia-sector">${escapeHtml(aqStripSectorEmoji(sector))}</div>
         </div>
         <div class="ia-meta">
           <div class="ia-date">${escapeHtml(t.transDate || '—')}</div>
