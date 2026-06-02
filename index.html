@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.06';
+window.AQ_PWA_VERSION = '3.07';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2130,7 +2130,7 @@ table.sheet tbody tr.drop-below td:last-child {
   padding: 32px 12px;
 }
 .buy-point-item {
-  flex: 0 0 76px;
+  flex: 0 0 94px;
   text-align: center;
   cursor: pointer;
   padding: 4px;
@@ -2174,6 +2174,22 @@ table.sheet tbody tr.drop-below td:last-child {
   font-family: Consolas, 'Pretendard Variable', Pretendard, monospace;
   margin-top: 3px;
 }
+.buy-point-item .bp-sector {
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-top: 2px;
+}
+.buy-point-item .bp-type {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-top: 3px;
+  letter-spacing: 0.2px;
+}
 
 /* ===== 누적 신호 리스트 (발견 탭 하단) — 토스 "관심 종목" 레퍼런스 ===== */
 .archive-mobile-list {
@@ -2216,6 +2232,12 @@ table.sheet tbody tr.drop-below td:last-child {
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-top: 3px;
+}
+.archive-mobile-item .am-sector {
+  font-size: 9.5px;
+  color: var(--text-dim);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  margin-top: 2px;
 }
 .archive-mobile-item .am-sigs {
   display: flex; gap: 3px;
@@ -2296,6 +2318,11 @@ table.sheet tbody tr.drop-below td:last-child {
   font-size: 10px; color: var(--text-mute);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   margin-top: 3px;
+}
+.insider-archive-item .ia-sector {
+  font-size: 9.5px; color: var(--text-dim);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  margin-top: 2px;
 }
 .insider-archive-item .ia-meta {
   text-align: right; flex-shrink: 0;
@@ -18717,31 +18744,42 @@ function buildBuyPointsCard() {
     byTicker[tk] = { ticker: tk, date: latest.transDate, price: latest.price, shares: latest.shares };
   });
 
-  // v3.06: "금주의 발견" = 내부자 매수 + V1·V2 최근 5일 시그널 中 아직 ±2% 이내(신선 진입) 종목
+  // v3.07: "금주의 발견" = 내부자 매수 + V1·V2 최근 5일 시그널 中 등락률 ±2% 이내(신선 진입)
+  //   배치: 로고 / 티커 / 섹터 / 유형(V1·V2·내부자 해당 모두) / 시그널발생일 종가 기준 현재수익률
   const merged = {};
   Object.values(byTicker).forEach(it => {
-    merged[it.ticker] = { ticker: it.ticker, date: it.date, price: it.price, insider: true };
+    merged[it.ticker] = { ticker: it.ticker, date: it.date, insider: true };
   });
-  const sigRows = [...(_state.archivesV1.US || []), ...(_state.archives.US || [])];
-  sigRows.forEach(r => {
-    if (!r.Ticker || !r.Date || r.Date < cutoff) return;       // 최근 5일 이내 시그널
-    const ret = r['Current_Return(%)'];
-    if (ret == null || isNaN(ret) || ret < -2 || ret > 2) return;  // 등락률 -2% ~ +2%
-    const ex = merged[r.Ticker];
-    if (ex) {
-      ex.signal = true;
+  const addSig = (rows, key) => {
+    (rows || []).forEach(r => {
+      if (!r.Ticker || !r.Date || r.Date < cutoff) return;            // 최근 5일 이내 시그널
+      const ret = r['Current_Return(%)'];
+      if (ret == null || isNaN(ret) || ret < -2 || ret > 2) return;   // 등락률 -2% ~ +2%
+      const ex = merged[r.Ticker] || (merged[r.Ticker] = { ticker: r.Ticker, date: r.Date });
+      ex[key] = true;
       if (ex.ret == null) ex.ret = ret;
-      if (r.Date > ex.date) ex.date = r.Date;
-    } else {
-      merged[r.Ticker] = { ticker: r.Ticker, date: r.Date, ret: ret, signal: true };
-    }
-  });
+      if (r.Date > (ex.date || '')) ex.date = r.Date;
+    });
+  };
+  addSig(_state.archivesV1.US, 'v1');
+  addSig(_state.archives.US, 'v2');
   const items = Object.values(merged).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
   if (items.length === 0) {
     scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 발견 없음 👌</div>';
     return;
   }
+
+  // 시그널발생일 종가 기준 현재수익률 — 신호 행 값이 없으면(내부자 전용) OHLCV로 계산
+  const curRet = (tk, fromDate) => {
+    const s = (_state._tickerOhlcv || {})[tk];
+    if (!s || !s.length) return null;
+    const i = s.findIndex(r => r.Date >= fromDate);
+    if (i < 0) return null;
+    const P = s[i].Close, last = s[s.length - 1].Close;
+    if (!P || isNaN(P) || P <= 0 || last == null || isNaN(last)) return null;
+    return (last / P - 1) * 100;
+  };
 
   scrollEl.innerHTML = items.map(it => {
     const sector = (_state.tickerSectorMap || {})[it.ticker] || '';
@@ -18751,22 +18789,25 @@ function buildBuyPointsCard() {
     const logoHtml = tkFile
       ? `<img class="bp-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
       : `<img class="bp-logo" src="./flags/US.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
-    const tag = (it.insider && it.signal) ? '내부자·신호' : it.insider ? '내부자' : '신호';
-    let valHtml;
-    if (it.insider) {
-      const priceStr = it.price ? '$' + Number(it.price).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '';
-      valHtml = `<div class="bp-ret" style="color:var(--text-mute);font-weight:600;">${escapeHtml(priceStr)}</div>`;
+    const types = [];
+    if (it.v1) types.push('V1');
+    if (it.v2) types.push('V2');
+    if (it.insider) types.push('내부자');
+    const r = (it.ret != null) ? Number(it.ret) : curRet(it.ticker, it.date);
+    let retHtml;
+    if (r == null || isNaN(r)) {
+      retHtml = `<div class="bp-ret" style="color:var(--text-mute);font-weight:700;">—</div>`;
     } else {
-      const r = Number(it.ret);
       const col = r > 0 ? '#fa5252' : r < 0 ? '#339af0' : 'var(--text-mute)';
-      valHtml = `<div class="bp-ret" style="color:${col};font-weight:700;">${r > 0 ? '+' : ''}${r.toFixed(1)}%</div>`;
+      retHtml = `<div class="bp-ret" style="color:${col};font-weight:700;">${r > 0 ? '+' : ''}${r.toFixed(1)}%</div>`;
     }
     return `
       <div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
         ${aqWrapLogo(logoHtml, it.ticker)}
-        <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
-        <div class="bp-date">${escapeHtml(tag)} · ${escapeHtml(it.date)}</div>
-        ${valHtml}
+        <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(it.ticker)}</div>
+        <div class="bp-sector" title="${escapeAttr(sector)}">${escapeHtml(sector || '—')}</div>
+        <div class="bp-type">${escapeHtml(types.join(' · '))}</div>
+        ${retHtml}
       </div>
     `;
   }).join('');
@@ -18866,6 +18907,7 @@ function buildArchiveMobileList() {
         <div class="am-info">
           <div class="am-ticker" title="${escapeAttr(displayName(it.Ticker))}">${escapeHtml(displayName(it.Ticker))}</div>
           <div class="am-company">${escapeHtml(displaySub(it.Ticker))}</div>
+          <div class="am-sector">${escapeHtml(it.Sector || '')}</div>
         </div>
         <div class="am-sigs">
           ${(() => { const C = getSignalColors(); return it.sigs.map(s => `<span class="sig-badge ${escapeAttr(s)}" style="color:${C[s]||'#888'};border-color:${C[s]||'#888'};">${escapeHtml(s)}</span>`).join(''); })()}
@@ -18963,6 +19005,7 @@ function buildInsiderArchiveList() {
         <div class="ia-info">
           <div class="ia-ticker" title="${escapeAttr(displayName(tk))}">${escapeHtml(displayName(tk))}</div>
           <div class="ia-company">${escapeHtml(displaySub(tk))}</div>
+          <div class="ia-sector">${escapeHtml(sector || '')}</div>
         </div>
         <div class="ia-meta">
           <div class="ia-date">${escapeHtml(t.transDate || '—')}</div>
