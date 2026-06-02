@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.17';
+window.AQ_PWA_VERSION = '3.18';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2147,7 +2147,7 @@ table.sheet tbody tr.drop-below td:last-child {
 .xtab-btn.active { background: var(--accent, #569cd6); color: #fff; }
 /* v3.15: 발견 피드 (인스타그램형) */
 #feedCard { padding: 0; }
-.feed-item { background: transparent; padding: 16px 0 28px; border-bottom: 1px solid var(--border, #3e3e42); }
+.feed-item { background: transparent; padding: 26px 0 44px; border-bottom: 1px solid var(--border, #3e3e42); }
 .feed-item:last-child { border-bottom: none; padding-bottom: 8px; }
 .feed-head { display: flex; align-items: center; gap: 8px; padding: 2px 12px 8px; cursor: pointer; }
 .feed-avatar { flex-shrink: 0; }
@@ -2176,6 +2176,8 @@ table.sheet tbody tr.drop-below td:last-child {
 .feed-caption { padding: 6px 12px 0; font-size: 12.5px; line-height: 1.5; color: var(--text, #d4d4d4); white-space: pre-wrap; word-break: break-word; }
 .feed-more { display: block; width: 100%; padding: 12px; margin-top: 2px; background: var(--panel-hi, #2d2d30); border: 1px solid var(--border, #3e3e42); border-radius: 10px; color: var(--accent, #569cd6); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .feed-more:active { opacity: 0.7; }
+/* v3.18: 발견 탭 좌우 더 넓게 (MO) */
+body[data-mtab="discover"] .container { padding-left: 8px !important; padding-right: 8px !important; }
 
 /* ===== 매수 포인트 카드 (발견 탭 상단) — 토스 "관심 이벤트" 레퍼런스 ===== */
 .buy-points-scroll {
@@ -16994,7 +16996,7 @@ function drawChart(d, opts) {
       showLine: false,       // 점만 표시
       backgroundColor: getSignalColors()[s],
       borderColor: '#ffffff',
-      borderWidth: 1.2,
+      borderWidth: 0,
       pointStyle: 'circle',
       pointRadius: simple ? 5 : 6,
       pointHoverRadius: simple ? 7 : 8,
@@ -17015,7 +17017,7 @@ function drawChart(d, opts) {
         showLine: false,
         backgroundColor: COL.trade_buy,
         borderColor: '#fff',
-        borderWidth: 1,
+        borderWidth: 0,
         pointStyle: 'rect',
         pointRadius: 4,
         pointHoverRadius: 6,
@@ -17031,7 +17033,7 @@ function drawChart(d, opts) {
         showLine: false,
         backgroundColor: COL.trade_sell,
         borderColor: '#fff',
-        borderWidth: 1,
+        borderWidth: 0,
         pointStyle: 'rect',
         pointRadius: 4,
         pointHoverRadius: 6,
@@ -17055,8 +17057,8 @@ function drawChart(d, opts) {
       data: buildSparse(d.insiderMarkers),
       showLine: false,
       backgroundColor: '#FFD700',       // 황금색
-      borderColor: '#8B6914',           // 진한 황금 테두리 (다크 배경에서 대비)
-      borderWidth: 1.2,
+      borderColor: '#8B6914',
+      borderWidth: 0,
       pointStyle: 'triangle',
       pointRotation: 180,               // ▼ 역삼각형
       pointRadius: simple ? 5 : 6,
@@ -17082,7 +17084,7 @@ function drawChart(d, opts) {
   if (d.buyAvg > 0) {
     // 평단가는 simple 모드에서도 라벨 유지 (사용자 본인 정보라 중요)
     annotations.buyAvg = { type: 'line', yMin: d.buyAvg, yMax: d.buyAvg, borderColor: COL.buyAvg, borderWidth: 2, yScaleID: 'yPrice',
-      label: { display: true, content: `평단가 ${fmtPrice(d.buyAvg)}`, position: 'start', backgroundColor: 'rgba(220,220,170,0.25)', color: COL.buyAvg, font: { size: 10, weight: 'bold' } } };
+      label: { display: true, content: `평단가 ${fmtPrice(d.buyAvg)}`, position: 'start', backgroundColor: 'rgba(30,30,30,0.95)', color: COL.buyAvg, font: { size: 10, weight: 'bold' } } };
   }
 
   // Datasets — simple 모드에선 A/D Line, Volume 제외
