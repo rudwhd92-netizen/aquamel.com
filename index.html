@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.05';
+window.AQ_PWA_VERSION = '3.06';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -6937,7 +6937,7 @@ table.combo-eval tbody td .nodata {
   <!-- v2.85: "매수 포인트"(시그널 기반) → "내부자 매수"(Form 4 기반)로 컨텐츠 교체. UI 100% 보존. -->
   <section class="card mobile-only" id="buyPointsCard" data-mtab="discover">
     <div class="card-header">
-      <h2>내부자 매수</h2>
+      <h2>금주의 발견</h2>
     </div>
     <div class="card-body">
       <div class="buy-points-scroll" id="buyPointsScroll">
@@ -18675,7 +18675,7 @@ function buildBuyPointsCard() {
 
   const market = getCurrentMarket();
   if (market !== 'US') {
-    scrollEl.innerHTML = '<div class="buy-points-empty">내부자 매수는 미국 시장에서만 제공됩니다</div>';
+    scrollEl.innerHTML = '<div class="buy-points-empty">금주의 발견은 미국 시장에서만 제공됩니다</div>';
     return;
   }
   if (!_aqInsiderLoaded) {
@@ -18716,15 +18716,34 @@ function buildBuyPointsCard() {
     const latest = recent[0];  // desc 정렬 → [0]이 최신
     byTicker[tk] = { ticker: tk, date: latest.transDate, price: latest.price, shares: latest.shares };
   });
-  const dedup = Object.values(byTicker);
-  dedup.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
-  if (dedup.length === 0) {
-    scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 내부자 매수 없음 👌</div>';
+  // v3.06: "금주의 발견" = 내부자 매수 + V1·V2 최근 5일 시그널 中 아직 ±2% 이내(신선 진입) 종목
+  const merged = {};
+  Object.values(byTicker).forEach(it => {
+    merged[it.ticker] = { ticker: it.ticker, date: it.date, price: it.price, insider: true };
+  });
+  const sigRows = [...(_state.archivesV1.US || []), ...(_state.archives.US || [])];
+  sigRows.forEach(r => {
+    if (!r.Ticker || !r.Date || r.Date < cutoff) return;       // 최근 5일 이내 시그널
+    const ret = r['Current_Return(%)'];
+    if (ret == null || isNaN(ret) || ret < -2 || ret > 2) return;  // 등락률 -2% ~ +2%
+    const ex = merged[r.Ticker];
+    if (ex) {
+      ex.signal = true;
+      if (ex.ret == null) ex.ret = ret;
+      if (r.Date > ex.date) ex.date = r.Date;
+    } else {
+      merged[r.Ticker] = { ticker: r.Ticker, date: r.Date, ret: ret, signal: true };
+    }
+  });
+  const items = Object.values(merged).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  if (items.length === 0) {
+    scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 발견 없음 👌</div>';
     return;
   }
 
-  scrollEl.innerHTML = dedup.map(it => {
+  scrollEl.innerHTML = items.map(it => {
     const sector = (_state.tickerSectorMap || {})[it.ticker] || '';
     const layer = SECTOR_TO_LAYER[sector] || '기타';
     const layerFile = layerFileName(layer);
@@ -18732,18 +18751,27 @@ function buildBuyPointsCard() {
     const logoHtml = tkFile
       ? `<img class="bp-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
       : `<img class="bp-logo" src="./flags/US.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
-    const priceStr = it.price ? '$' + Number(it.price).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '';
+    const tag = (it.insider && it.signal) ? '내부자·신호' : it.insider ? '내부자' : '신호';
+    let valHtml;
+    if (it.insider) {
+      const priceStr = it.price ? '$' + Number(it.price).toLocaleString(undefined, { maximumFractionDigits: 2 }) : '';
+      valHtml = `<div class="bp-ret" style="color:var(--text-mute);font-weight:600;">${escapeHtml(priceStr)}</div>`;
+    } else {
+      const r = Number(it.ret);
+      const col = r > 0 ? '#fa5252' : r < 0 ? '#339af0' : 'var(--text-mute)';
+      valHtml = `<div class="bp-ret" style="color:${col};font-weight:700;">${r > 0 ? '+' : ''}${r.toFixed(1)}%</div>`;
+    }
     return `
       <div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
         ${aqWrapLogo(logoHtml, it.ticker)}
         <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
-        <div class="bp-date">${escapeHtml(it.date)}</div>
-        <div class="bp-ret" style="color:var(--text-mute);font-weight:600;">${escapeHtml(priceStr)}</div>
+        <div class="bp-date">${escapeHtml(tag)} · ${escapeHtml(it.date)}</div>
+        ${valHtml}
       </div>
     `;
   }).join('');
 
-  // 클릭 → 차트 모달 (내부자 마커 + 이력 자동 표시)
+  // 클릭 → 차트 모달
   scrollEl.querySelectorAll('.buy-point-item').forEach(el => {
     el.addEventListener('click', () => openChart(el.dataset.ticker));
   });
