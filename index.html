@@ -49,11 +49,37 @@ try {
   }
 })();
 
+// v3.10: 모바일 세로 고정 (회전 시 가로 전환 방지)
+//   1) 실행 중 화면 방향 잠금 (설치형 PWA / 지원 브라우저)
+//   2) manifest에 orientation:portrait 병합 주입 (설치 시 세로 고정) — manifest.json 원본은 안 건드림
+(function aqLockPortrait() {
+  function tryLock() {
+    try {
+      if (screen.orientation && screen.orientation.lock) {
+        const p = screen.orientation.lock('portrait');
+        if (p && typeof p.catch === 'function') p.catch(function () {});
+      }
+    } catch (e) {}
+  }
+  tryLock();
+  window.addEventListener('orientationchange', tryLock);
+  try {
+    fetch('./manifest.json').then(function (r) { return r.json(); }).then(function (m) {
+      m.orientation = 'portrait';
+      const blob = new Blob([JSON.stringify(m)], { type: 'application/manifest+json' });
+      const url = URL.createObjectURL(blob);
+      let link = document.querySelector('link[rel="manifest"]');
+      if (!link) { link = document.createElement('link'); link.rel = 'manifest'; document.head.appendChild(link); }
+      link.href = url;
+    }).catch(function () {});
+  } catch (e) {}
+})();
+
 // ============================================================================
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.09';
+window.AQ_PWA_VERSION = '3.10';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -18813,7 +18839,7 @@ function buildBuyPointsCard() {
       <div class="buy-point-item" data-ticker="${escapeAttr(it.ticker)}">
         ${aqWrapLogo(logoHtml, it.ticker)}
         <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(it.ticker)}</div>
-        <div class="bp-sector" title="${escapeAttr(sector)}">${escapeHtml(sector || '—')}</div>
+        <div class="bp-sector" title="${escapeAttr(aqStripSectorEmoji(sector))}">${escapeHtml(aqStripSectorEmoji(sector) || '—')}</div>
         <div class="bp-type">${escapeHtml(types.join(' · '))}</div>
         ${retHtml}
       </div>
