@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.19';
+window.AQ_PWA_VERSION = '3.20';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2177,16 +2177,17 @@ table.sheet tbody tr.drop-below td:last-child {
 .feed-stat i { font-style: normal; font-size: 13px; font-weight: 600; color: var(--text, #d4d4d4); }
 .feed-act.on .fi { fill: #fa5252; stroke: #fa5252; }
 .feed-dm { margin-left: auto; cursor: default; }
+.feed-cap-name { font-weight: 800; color: var(--text-hi, #fff); margin-right: 5px; }
 .feed-caption { padding: 6px 12px 0; font-size: 12.5px; line-height: 1.5; color: var(--text, #d4d4d4); white-space: pre-wrap; word-break: break-word; }
 .feed-more { display: block; width: 100%; padding: 12px; margin-top: 2px; background: var(--panel-hi, #2d2d30); border: 1px solid var(--border, #3e3e42); border-radius: 10px; color: var(--accent, #569cd6); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .feed-more:active { opacity: 0.7; }
-/* v3.18: 발견 탭 좌우 더 넓게 (MO) */
-body[data-mtab="discover"] .container { padding-left: 8px !important; padding-right: 8px !important; }
+/* v3.20: 발견 카드만 좌우로 넓힘 (MO 전용 — HERO/컨테이너는 그대로). PC는 사이드패널이라 미적용 */
+.container > #buyPointsCard, .container > #feedCard { margin-left: -12px; margin-right: -12px; }
 
 /* ===== 매수 포인트 카드 (발견 탭 상단) — 토스 "관심 이벤트" 레퍼런스 ===== */
 .buy-points-scroll {
   display: flex;
-  gap: 3px;
+  gap: 2px;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
@@ -2200,7 +2201,7 @@ body[data-mtab="discover"] .container { padding-left: 8px !important; padding-ri
   padding: 32px 12px;
 }
 .buy-point-item {
-  flex: 0 0 82px;
+  flex: 0 0 76px;
   text-align: center;
   cursor: pointer;
   padding: 4px;
@@ -17000,7 +17001,7 @@ function drawChart(d, opts) {
       showLine: false,       // 점만 표시
       backgroundColor: getSignalColors()[s],
       borderColor: '#ffffff',
-      borderWidth: 0,
+      borderWidth: 1.2,
       pointStyle: 'circle',
       pointRadius: simple ? 5 : 6,
       pointHoverRadius: simple ? 7 : 8,
@@ -17021,7 +17022,7 @@ function drawChart(d, opts) {
         showLine: false,
         backgroundColor: COL.trade_buy,
         borderColor: '#fff',
-        borderWidth: 0,
+        borderWidth: 1,
         pointStyle: 'rect',
         pointRadius: 4,
         pointHoverRadius: 6,
@@ -17037,7 +17038,7 @@ function drawChart(d, opts) {
         showLine: false,
         backgroundColor: COL.trade_sell,
         borderColor: '#fff',
-        borderWidth: 0,
+        borderWidth: 1,
         pointStyle: 'rect',
         pointRadius: 4,
         pointHoverRadius: 6,
@@ -19112,7 +19113,7 @@ function buildDiscoverFeed(res, keepShown) {
         <span class="feed-act feed-stat" title="최근 30일 내부자 매수 주식 수">${AQ_SVG.regram}<i>${cnt.shares ? cnt.shares.toLocaleString() : 0}</i></span>
         <span class="feed-act feed-dm" title="DM">${AQ_SVG.dm}</span>
       </div>
-      ${desc ? `<div class="feed-caption">${escapeHtml(desc)}</div>` : ''}
+      ${desc ? `<div class="feed-caption"><b class="feed-cap-name">${escapeHtml(comp || displayName(tk))}</b> ${escapeHtml(desc)}</div>` : ''}
     </div>`;
   }).join('') + (res.items.length > shown ? `<button class="feed-more" onclick="aqFeedMore()">더 보기 (${res.items.length - shown})</button>` : '');
 
