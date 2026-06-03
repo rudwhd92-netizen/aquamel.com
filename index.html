@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.28';
+window.AQ_PWA_VERSION = '3.29';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1890,9 +1890,7 @@ table.sheet tbody tr.drop-below td:last-child {
   text-align: center; padding: 50px 20px; color: var(--text-mute); font-size: 13px;
 }
 .analysis-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 12px;
+  display: flex; flex-direction: column; gap: 0;
 }
 .analysis-mkt-section { margin-bottom: 24px; }
 .analysis-mkt-header {
@@ -1907,11 +1905,23 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .analysis-card {
   display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px;
-  background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px;
-  cursor: pointer; transition: all 0.15s;
+  padding: 12px 4px;
+  background: transparent; border: none; border-radius: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer; transition: opacity 0.15s;
 }
-.analysis-card:hover { border-color: var(--accent); background: var(--bg-3); transform: translateY(-1px); }
+.analysis-card:last-child { border-bottom: none; }
+.analysis-card:active { opacity: 0.6; }
+/* v3.29: 추천 ACTION 알약 (보고서 상단 액션 텍스트만) */
+.an-action-pill { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; letter-spacing: -0.01em; line-height: 1.3; }
+.an-action-pill.an-pending { width: 44px; height: 18px; padding: 0; background: rgba(255,255,255,0.05); }
+.an-action-pill.an-none { color: var(--text-mute); background: transparent; padding: 4px 6px; }
+.an-action-pill.an-strong-buy { color: #fff; background: #2f9e44; }
+.an-action-pill.an-buy { color: #69db7c; background: rgba(64,192,87,0.15); box-shadow: inset 0 0 0 1px rgba(64,192,87,0.40); }
+.an-action-pill.an-hold { color: #ffd43b; background: rgba(250,176,5,0.13); box-shadow: inset 0 0 0 1px rgba(250,176,5,0.35); }
+.an-action-pill.an-avoid { color: #ff8787; background: rgba(250,82,82,0.13); box-shadow: inset 0 0 0 1px rgba(250,82,82,0.40); }
+.an-action-pill.an-neutral { color: var(--text-dim); background: rgba(255,255,255,0.06); }
+.analysis-card:hover { background: rgba(255,255,255,0.03); }
 .analysis-card-logo {
   width: 36px; height: 36px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
@@ -1943,7 +1953,7 @@ table.sheet tbody tr.drop-below td:last-child {
 .analysis-card-arrow { color: var(--text-mute); font-size: 18px; flex-shrink: 0; }
 
 @media (max-width: 640px) {
-  .analysis-grid { grid-template-columns: 1fr; gap: 8px; }
+  .analysis-grid { gap: 0; }
   .analysis-card { padding: 10px 12px; }
   .analysis-card-logo { width: 32px; height: 32px; }
   .analysis-card-name { font-size: 12px; }
@@ -6955,6 +6965,17 @@ table.combo-eval tbody td .nodata {
   <section class="card" id="analysisCard" data-mtab="analysis" style="display:none;">
     <div class="card-header">
       <h2>분석 보고서</h2>
+      <div class="stock-list-sort">
+        <button class="sort-toggle" id="anSortToggleBtn" onclick="event.stopPropagation(); toggleAnalysisSortMenu();">
+          <span id="anSortToggleLabel">최신순</span>
+          <span class="sort-arrow">↕</span>
+        </button>
+        <div class="sort-menu" id="anSortMenu" style="display:none;">
+          <button onclick="event.stopPropagation(); setAnalysisSort('date');" data-mode="date" class="active">최신순</button>
+          <button onclick="event.stopPropagation(); setAnalysisSort('action');" data-mode="action">추천순</button>
+          <button onclick="event.stopPropagation(); setAnalysisSort('sector');" data-mode="sector">섹터 약한순</button>
+        </div>
+      </div>
     </div>
     <div class="card-body">
       <p class="subtitle">정량 보고서가 등록된 종목입니다. 클릭하면 보고서 일자 목록이 열립니다.</p>
@@ -12587,18 +12608,90 @@ window.openReportDetail = openReportDetail;
 // ============================================================================
 // v2.01 Phase 2: 분석 페이지 — 보고서 등록 ticker 그리드
 // ============================================================================
-function buildAnalysisGrid() {
+let _analysisSortMode = 'date';     // 'date' | 'action' | 'sector'
+let _analysisActions = {};          // 'MKT/TK' -> {action,type} | null (시도했으나 없음)
+
+function aqAnalysisActionRank(a) {
+  const R = { 'strong-buy': 0, 'buy': 1, 'hold': 2, 'neutral': 3, 'avoid': 4 };
+  if (!a || a.type == null) return 9;
+  return (R[a.type] != null) ? R[a.type] : 5;
+}
+async function aqLoadAnalysisAction(mkt, tk, date) {
+  const key = mkt + '/' + tk;
+  if (_analysisActions[key] !== undefined) return _analysisActions[key];
+  try {
+    const content = await fetchReportContent(tk, date);
+    const parsed = parseReportText(content);
+    const arr = (parsed.sections && parsed.sections.action) || [];
+    const a = arr.find(x => x && x.type === 'action');
+    _analysisActions[key] = a ? { action: a.action, type: a.actionType } : null;
+  } catch (e) { _analysisActions[key] = null; }
+  return _analysisActions[key];
+}
+function aqActionPillHtml(mkt, tk) {
+  const key = mkt + '/' + tk;
+  const a = _analysisActions[key];
+  if (a === undefined) return `<span class="an-action-pill an-pending" data-akey="${escapeAttr(key)}"></span>`;
+  if (!a) return `<span class="an-action-pill an-none" data-akey="${escapeAttr(key)}">—</span>`;
+  return `<span class="an-action-pill an-${a.type || 'neutral'}" data-akey="${escapeAttr(key)}">${escapeHtml(a.action)}</span>`;
+}
+
+async function buildAnalysisGrid() {
   const area = document.getElementById('analysisGridArea');
   if (!area) return;
   const reports = _state.reports || { US: {}, KR: {} };
-  // v2.03: 현재 시장의 보고서만 표시 (시장 전환 시 자동 재빌드)
   const mkt = getCurrentMarket();
-  const list = Object.entries(reports[mkt] || {}).filter(([tk, dates]) => dates && dates.length);
+  let list = Object.entries(reports[mkt] || {}).filter(([tk, dates]) => dates && dates.length);
   const mktLabel = mkt === 'KR' ? '🇰🇷 한국' : '🇺🇸 미국';
 
   if (list.length === 0) {
     area.innerHTML = `<div class="analysis-empty">${mktLabel} 시장에 등록된 보고서가 없습니다.<br><br>Google Drive 폴더에 <code>TICKER_YYYYMMDD.txt</code> 형식으로 TXT 파일을 업로드하세요.</div>`;
     return;
+  }
+
+  // 등락률 + 섹터 평균 (섹터 약한순용)
+  const chgMap = {}, secOf = {};
+  list.forEach(([tk]) => {
+    const T = String(tk).toUpperCase();
+    secOf[T] = (_state.tickerSectorMap || {})[T] || '';
+    let chg = 0;
+    try { const fnd = findTickerSeries(T); if (fnd && fnd.rows && fnd.rows.length >= 2) {
+      const c2 = fnd.rows[fnd.rows.length - 1].Close, c1 = fnd.rows[fnd.rows.length - 2].Close;
+      if (c1 > 0) chg = (c2 / c1 - 1) * 100; } } catch (e) {}
+    chgMap[T] = chg;
+  });
+  const secAvg = {};
+  list.forEach(([tk]) => { const T = String(tk).toUpperCase(); const sct = secOf[T] || '∅';
+    (secAvg[sct] || (secAvg[sct] = { sum: 0, n: 0 })); secAvg[sct].sum += chgMap[T]; secAvg[sct].n++; });
+  Object.keys(secAvg).forEach(sc => secAvg[sc].avg = secAvg[sc].sum / secAvg[sc].n);
+
+  // 추천순: 전체 액션 선로딩 필요
+  if (_analysisSortMode === 'action') {
+    const need = list.filter(([tk]) => _analysisActions[mkt + '/' + String(tk).toUpperCase()] === undefined);
+    if (need.length) {
+      area.innerHTML = `<div class="analysis-empty">추천순 정렬 중… (보고서 ${need.length}건 분석)</div>`;
+      await Promise.all(need.map(([tk, dates]) => aqLoadAnalysisAction(mkt, String(tk).toUpperCase(), dates[0])));
+    }
+  }
+
+  // 정렬
+  list = list.slice();
+  if (_analysisSortMode === 'date') {
+    list.sort((a, b) => String(b[1][0] || '').localeCompare(String(a[1][0] || '')));
+  } else if (_analysisSortMode === 'sector') {
+    list.sort((a, b) => {
+      const sa = secAvg[secOf[String(a[0]).toUpperCase()] || '∅'].avg;
+      const sb = secAvg[secOf[String(b[0]).toUpperCase()] || '∅'].avg;
+      if (Math.abs(sa - sb) > 0.0001) return sa - sb;  // 약한 섹터 먼저
+      return String(b[1][0] || '').localeCompare(String(a[1][0] || ''));
+    });
+  } else if (_analysisSortMode === 'action') {
+    list.sort((a, b) => {
+      const ra = aqAnalysisActionRank(_analysisActions[mkt + '/' + String(a[0]).toUpperCase()]);
+      const rb = aqAnalysisActionRank(_analysisActions[mkt + '/' + String(b[0]).toUpperCase()]);
+      if (ra !== rb) return ra - rb;
+      return String(b[1][0] || '').localeCompare(String(a[1][0] || ''));
+    });
   }
 
   const buildCard = (tk, dates) => {
@@ -12621,6 +12714,7 @@ function buildAnalysisGrid() {
             <span>최신: ${escapeHtml(latest)}</span>
           </div>
         </div>
+        ${aqActionPillHtml(mkt, tkUpper)}
         <div class="analysis-card-arrow">›</div>
       </div>
     `;
@@ -12630,8 +12724,44 @@ function buildAnalysisGrid() {
     <div class="analysis-mkt-header">${mktLabel} <span class="analysis-mkt-count">${list.length}</span></div>
     <div class="analysis-grid">${list.map(([tk, dates]) => buildCard(tk, dates)).join('')}</div>
   </div>`;
+
+  // 액션 알약 lazy 채우기 (아직 안 받은 것)
+  list.forEach(([tk, dates]) => {
+    const T = String(tk).toUpperCase(); const key = mkt + '/' + T;
+    if (_analysisActions[key] === undefined) {
+      aqLoadAnalysisAction(mkt, T, dates[0]).then(a => {
+        const el = area.querySelector('.an-action-pill[data-akey="' + key + '"]');
+        if (!el) return;
+        el.classList.remove('an-pending');
+        if (!a) { el.classList.add('an-none'); el.textContent = '—'; }
+        else { el.classList.add('an-' + (a.type || 'neutral')); el.textContent = a.action; }
+      }).catch(() => {});
+    }
+  });
 }
 window.buildAnalysisGrid = buildAnalysisGrid;
+
+function setAnalysisSort(mode) {
+  _analysisSortMode = mode;
+  const label = document.getElementById('anSortToggleLabel');
+  if (label) label.textContent = mode === 'date' ? '최신순' : mode === 'action' ? '추천순' : '섹터 약한순';
+  document.querySelectorAll('#anSortMenu button').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  const menu = document.getElementById('anSortMenu'); if (menu) menu.style.display = 'none';
+  buildAnalysisGrid();
+}
+window.setAnalysisSort = setAnalysisSort;
+function toggleAnalysisSortMenu() {
+  const menu = document.getElementById('anSortMenu'); if (!menu) return;
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+window.toggleAnalysisSortMenu = toggleAnalysisSortMenu;
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('anSortMenu'); const toggle = document.getElementById('anSortToggleBtn');
+  if (!menu || menu.style.display === 'none') return;
+  if (toggle && toggle.contains(e.target)) return;
+  if (menu.contains(e.target)) return;
+  menu.style.display = 'none';
+});
 
 // 분석 페이지에서 ticker 클릭 → 시장 자동 전환 + 모달 열기 + 보고서 패널 자동 진입
 async function openAnalysisTicker(mkt, ticker) {
