@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.27';
+window.AQ_PWA_VERSION = '3.28';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -9358,8 +9358,13 @@ async function fetchHexagon(forceFresh) {
 window.fetchHexagon = fetchHexagon;
 
 function aqHexagonFor(tk) {
-  const a = _aqHexagon[String(tk || '').toUpperCase()];
-  if (!a) return null;
+  const base = _aqHexagon[String(tk || '').toUpperCase()];
+  if (!base) return null;
+  const T = String(tk || '').toUpperCase();
+  const a = base.slice();
+  // v3.28: 방어(축6)는 현재 사용자 계좌 기반. 시트의 소유자 값은 노출하지 않음(계좌 없으면 회색)
+  if (_aqAsymComputed && _aqAsymReady) a[5] = (_aqAsymScores[T] != null) ? _aqAsymScores[T] : null;
+  else a[5] = null;
   if (a.every(v => v == null || isNaN(v))) return null;
   return a;
 }
@@ -9402,6 +9407,90 @@ function aqRefreshModalHex() {
   } catch (e) {}
 }
 window.aqHexagonFor = aqHexagonFor; window.aqHexSvg = aqHexSvg;
+
+// v3.28: 방어(축6) = 현재 사용자 계좌 기반 비대칭성 (시트의 소유자 값 대신 클라에서 계산)
+let _aqAsymScores = {}; let _aqAsymReady = false; let _aqAsymComputed = false;
+function aqComputeAsymmetryScores() {
+  let trades = [];
+  try { trades = lsGet(lsKeyTrades('US'), []) || []; } catch (e) { trades = []; }
+  trades = trades.filter(t => t && t.ticker && t.action && t.date && (parseFloat(t.qty) || 0) > 0);
+  if (!trades.length) return { ready: false, scores: {} };
+
+  const priceByTk = {}; const universe = new Set();
+  for (const sec of Object.keys(_state.sectors || {})) {
+    for (const r of _state.sectors[sec]) {
+      const tk = (r.Ticker || '').toUpperCase(); if (!tk) continue;
+      const d = normalizeDate(r.Date); const c = parseFloat(r.Close);
+      if (!d || !(c > 0)) continue;
+      (priceByTk[tk] || (priceByTk[tk] = {}))[d] = c; universe.add(tk);
+    }
+  }
+  const seriesByTk = {};
+  universe.forEach(tk => { seriesByTk[tk] = { dates: Object.keys(priceByTk[tk]).sort(), map: priceByTk[tk] }; });
+
+  const sortedTrades = trades.slice().sort((a, b) => (normalizeDate(a.date) || '').localeCompare(normalizeDate(b.date) || ''));
+  const heldTickers = new Set(sortedTrades.map(t => t.ticker.toUpperCase()));
+  const acctDateSet = new Set();
+  heldTickers.forEach(tk => { if (seriesByTk[tk]) seriesByTk[tk].dates.forEach(d => acctDateSet.add(d)); });
+  let acctDates = Array.from(acctDateSet).sort();
+  if (acctDates.length < 30) return { ready: false, scores: {} };
+  acctDates = acctDates.slice(-252);
+
+  function qtyOnDate(tk, date) {
+    let q = 0; for (const t of sortedTrades) { if (t.ticker.toUpperCase() !== tk) continue;
+      if ((normalizeDate(t.date) || '') > date) break; q += (t.action === '매수' ? 1 : -1) * (parseFloat(t.qty) || 0); } return Math.max(0, q);
+  }
+  function closeFFill(tk, date) { const sx = seriesByTk[tk]; if (!sx) return null; if (sx.map[date] != null) return sx.map[date];
+    const ds = sx.dates; let lo = 0, hi = ds.length - 1, ans = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (ds[m] <= date) { ans = m; lo = m + 1; } else hi = m - 1; } return ans >= 0 ? sx.map[ds[ans]] : null; }
+
+  const heldArr = Array.from(heldTickers).filter(tk => seriesByTk[tk]);
+  const V = []; const contrib = {}; heldArr.forEach(tk => contrib[tk] = []);
+  for (const d of acctDates) { let v = 0; for (const tk of heldArr) { const q = qtyOnDate(tk, d), c = closeFFill(tk, d); const val = (q > 0 && c > 0) ? q * c : 0; contrib[tk].push(val); v += val; } V.push(v); }
+  function returnsFrom(values) { const r = [null]; for (let i = 1; i < values.length; i++) { const p = values[i - 1]; r.push(p > 0 ? values[i] / p - 1 : null); } return r; }
+  const Racct = returnsFrom(V);
+  const upIdxFull = [], downIdxFull = []; for (let i = 0; i < Racct.length; i++) { if (Racct[i] == null) continue; if (Racct[i] > 0) upIdxFull.push(i); else if (Racct[i] < 0) downIdxFull.push(i); }
+  const meanUpFull = upIdxFull.length ? upIdxFull.reduce((a, i) => a + Racct[i], 0) / upIdxFull.length : null;
+  const meanDownFull = downIdxFull.length ? downIdxFull.reduce((a, i) => a + Racct[i], 0) / downIdxFull.length : null;
+  if (upIdxFull.length < 5 || downIdxFull.length < 5 || !meanUpFull || !meanDownFull) return { ready: false, scores: {} };
+
+  const lastV = V[V.length - 1] || 0; const exSelf = {};
+  heldArr.forEach(tk => { const w = lastV > 0 ? (contrib[tk][contrib[tk].length - 1] / lastV) : 0; if (w < 0.02) return;
+    const Vx = V.map((v, i) => v - contrib[tk][i]); const Rx = returnsFrom(Vx); const up = [], dn = [];
+    for (let i = 0; i < Rx.length; i++) { if (Rx[i] == null) continue; if (Rx[i] > 0) up.push(i); else if (Rx[i] < 0) dn.push(i); }
+    const mu = up.length ? up.reduce((a, i) => a + Rx[i], 0) / up.length : null, md = dn.length ? dn.reduce((a, i) => a + Rx[i], 0) / dn.length : null;
+    if (up.length >= 5 && dn.length >= 5 && mu && md) exSelf[tk] = { upIdx: up, downIdx: dn, meanUp: mu, meanDown: md }; });
+
+  function tickerReturns(tk) { const sx = seriesByTk[tk]; if (!sx) return null; const closes = acctDates.map(d => closeFFill(tk, d));
+    let valid = 0; for (const c of closes) if (c > 0) valid++; if (valid < 60) return null; return returnsFrom(closes); }
+
+  const rawAsym = {};
+  universe.forEach(tk => { const rX = tickerReturns(tk); if (!rX) return;
+    let upIdx = upIdxFull, downIdx = downIdxFull, mUp = meanUpFull, mDn = meanDownFull;
+    if (exSelf[tk]) { upIdx = exSelf[tk].upIdx; downIdx = exSelf[tk].downIdx; mUp = exSelf[tk].meanUp; mDn = exSelf[tk].meanDown; }
+    let su = 0, nu = 0; upIdx.forEach(i => { if (rX[i] != null) { su += rX[i]; nu++; } });
+    let sd = 0, nd = 0; downIdx.forEach(i => { if (rX[i] != null) { sd += rX[i]; nd++; } });
+    if (nu < 3 || nd < 3) return; const upCap = (su / nu) / mUp, downCap = (sd / nd) / mDn, asym = upCap - downCap; if (isFinite(asym)) rawAsym[tk] = asym; });
+
+  const vals = Object.values(rawAsym);
+  if (vals.length < 10) return { ready: true, scores: {} };
+  const sorted = vals.slice().sort((a, b) => a - b);
+  const q = p => { const idx = (sorted.length - 1) * p, lo = Math.floor(idx), hi = Math.ceil(idx); return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo); };
+  const p1 = q(0.01), p99 = q(0.99);
+  const absSorted = vals.map(v => Math.abs(Math.max(p1, Math.min(p99, v)))).sort((a, b) => a - b);
+  const qa = p => { const idx = (absSorted.length - 1) * p, lo = Math.floor(idx), hi = Math.ceil(idx); return absSorted[lo] + (absSorted[hi] - absSorted[lo]) * (idx - lo); };
+  let s95 = qa(0.95); if (!(s95 > 0)) s95 = absSorted[absSorted.length - 1] || 1;
+  const scores = {};
+  Object.keys(rawAsym).forEach(tk => { const x = Math.max(p1, Math.min(p99, rawAsym[tk])); const sc = 5.5 + 4.5 * Math.max(-1, Math.min(1, x / s95)); scores[tk] = Math.max(1, Math.min(10, sc)); });
+  return { ready: true, scores };
+}
+function aqRunAsymmetry() {
+  try {
+    const r = aqComputeAsymmetryScores();
+    _aqAsymScores = r.scores || {}; _aqAsymReady = !!r.ready; _aqAsymComputed = true;
+    console.log('[asymmetry] 계좌기반 방어 — ready:' + _aqAsymReady + ', ' + Object.keys(_aqAsymScores).length + '종목');
+  } catch (e) { _aqAsymComputed = true; _aqAsymReady = false; console.warn('[asymmetry]', e); }
+}
+window.aqRunAsymmetry = aqRunAsymmetry;
 
 // 1자리 반올림 + 'N배' 포맷 (없으면 '—')
 function aqValFmt(v) {
@@ -10711,7 +10800,7 @@ function setMarket(mkt) {
           .catch(() => {});
       if (typeof fetchHexagon === 'function')
         fetchHexagon(false)
-          .then(() => { try { if (typeof buildDiscoverFeed === 'function' && _state._feedRes) buildDiscoverFeed(_state._feedRes, true); if (typeof aqRefreshModalHex === 'function') aqRefreshModalHex(); } catch (e) {} })
+          .then(() => { try { if (typeof aqRunAsymmetry === 'function') aqRunAsymmetry(); if (typeof buildDiscoverFeed === 'function' && _state._feedRes) buildDiscoverFeed(_state._feedRes, true); if (typeof aqRefreshModalHex === 'function') aqRefreshModalHex(); } catch (e) {} })
           .catch(() => {});
     } catch (e) {}
   }, 300);
@@ -11602,7 +11691,7 @@ async function autoLoadData(opts) {
             .catch(() => {});
         if (typeof fetchHexagon === 'function')
           fetchHexagon(false)
-            .then(() => { try { if (typeof buildDiscoverFeed === 'function' && _state._feedRes) buildDiscoverFeed(_state._feedRes, true); if (typeof aqRefreshModalHex === 'function') aqRefreshModalHex(); } catch (e) {} })
+            .then(() => { try { if (typeof aqRunAsymmetry === 'function') aqRunAsymmetry(); if (typeof buildDiscoverFeed === 'function' && _state._feedRes) buildDiscoverFeed(_state._feedRes, true); if (typeof aqRefreshModalHex === 'function') aqRefreshModalHex(); } catch (e) {} })
             .catch(() => {});
       } catch (e) {}
     }, 500);
