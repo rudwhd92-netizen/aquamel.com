@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.29';
+window.AQ_PWA_VERSION = '3.30';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -9432,11 +9432,14 @@ window.aqHexagonFor = aqHexagonFor; window.aqHexSvg = aqHexSvg;
 // v3.28: 방어(축6) = 현재 사용자 계좌 기반 비대칭성 (시트의 소유자 값 대신 클라에서 계산)
 let _aqAsymScores = {}; let _aqAsymReady = false; let _aqAsymComputed = false;
 function aqComputeAsymmetryScores() {
+  // v3.30: Colab US_HEXAGON Scorer 방식에 최대한 근접 (TWR / 풀 윈도우 / 날짜별 ex-self / 윈저 제거)
+  const MIN_DAYS = 60, MIN_UPDOWN = 5;
   let trades = [];
   try { trades = lsGet(lsKeyTrades('US'), []) || []; } catch (e) { trades = []; }
-  trades = trades.filter(t => t && t.ticker && t.action && t.date && (parseFloat(t.qty) || 0) > 0);
+  trades = trades.filter(t => t && t.ticker && t.action && t.date && (parseFloat(t.qty) || 0) > 0 && (parseFloat(t.price) || 0) > 0);
   if (!trades.length) return { ready: false, scores: {} };
 
+  // 가격 패널 (universe) — _state.sectors
   const priceByTk = {}; const universe = new Set();
   for (const sec of Object.keys(_state.sectors || {})) {
     for (const r of _state.sectors[sec]) {
@@ -9448,60 +9451,109 @@ function aqComputeAsymmetryScores() {
   }
   const seriesByTk = {};
   universe.forEach(tk => { seriesByTk[tk] = { dates: Object.keys(priceByTk[tk]).sort(), map: priceByTk[tk] }; });
-
-  const sortedTrades = trades.slice().sort((a, b) => (normalizeDate(a.date) || '').localeCompare(normalizeDate(b.date) || ''));
-  const heldTickers = new Set(sortedTrades.map(t => t.ticker.toUpperCase()));
-  const acctDateSet = new Set();
-  heldTickers.forEach(tk => { if (seriesByTk[tk]) seriesByTk[tk].dates.forEach(d => acctDateSet.add(d)); });
-  let acctDates = Array.from(acctDateSet).sort();
-  if (acctDates.length < 30) return { ready: false, scores: {} };
-  acctDates = acctDates.slice(-252);
-
-  function qtyOnDate(tk, date) {
-    let q = 0; for (const t of sortedTrades) { if (t.ticker.toUpperCase() !== tk) continue;
-      if ((normalizeDate(t.date) || '') > date) break; q += (t.action === '매수' ? 1 : -1) * (parseFloat(t.qty) || 0); } return Math.max(0, q);
-  }
-  function closeFFill(tk, date) { const sx = seriesByTk[tk]; if (!sx) return null; if (sx.map[date] != null) return sx.map[date];
+  function closeOnOrBefore(tk, date) { const sx = seriesByTk[tk]; if (!sx) return null; if (sx.map[date] != null) return sx.map[date];
     const ds = sx.dates; let lo = 0, hi = ds.length - 1, ans = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (ds[m] <= date) { ans = m; lo = m + 1; } else hi = m - 1; } return ans >= 0 ? sx.map[ds[ans]] : null; }
 
-  const heldArr = Array.from(heldTickers).filter(tk => seriesByTk[tk]);
-  const V = []; const contrib = {}; heldArr.forEach(tk => contrib[tk] = []);
-  for (const d of acctDates) { let v = 0; for (const tk of heldArr) { const q = qtyOnDate(tk, d), c = closeFFill(tk, d); const val = (q > 0 && c > 0) ? q * c : 0; contrib[tk].push(val); v += val; } V.push(v); }
-  function returnsFrom(values) { const r = [null]; for (let i = 1; i < values.length; i++) { const p = values[i - 1]; r.push(p > 0 ? values[i] / p - 1 : null); } return r; }
-  const Racct = returnsFrom(V);
-  const upIdxFull = [], downIdxFull = []; for (let i = 0; i < Racct.length; i++) { if (Racct[i] == null) continue; if (Racct[i] > 0) upIdxFull.push(i); else if (Racct[i] < 0) downIdxFull.push(i); }
-  const meanUpFull = upIdxFull.length ? upIdxFull.reduce((a, i) => a + Racct[i], 0) / upIdxFull.length : null;
-  const meanDownFull = downIdxFull.length ? downIdxFull.reduce((a, i) => a + Racct[i], 0) / downIdxFull.length : null;
-  if (upIdxFull.length < 5 || downIdxFull.length < 5 || !meanUpFull || !meanDownFull) return { ready: false, scores: {} };
+  // 매매 → 날짜별 그룹 (정규화)
+  const tradesByDate = {}; let earliest = null;
+  trades.forEach(t => {
+    const tk = String(t.ticker).toUpperCase().trim(); if (!tk) return;
+    const ar = String(t.action);
+    const act = (ar === '매수' || /buy/i.test(ar)) ? '매수' : ((ar === '매도' || /sell/i.test(ar)) ? '매도' : null);
+    if (!act) return;
+    const qty = parseFloat(t.qty) || 0, price = parseFloat(t.price) || 0; if (qty <= 0 || price <= 0) return;
+    const d = normalizeDate(t.date); if (!d) return;
+    (tradesByDate[d] || (tradesByDate[d] = [])).push({ ticker: tk, action: act, qty, price });
+    if (earliest === null || d < earliest) earliest = d;
+  });
+  if (earliest === null) return { ready: false, scores: {} };
 
-  const lastV = V[V.length - 1] || 0; const exSelf = {};
-  heldArr.forEach(tk => { const w = lastV > 0 ? (contrib[tk][contrib[tk].length - 1] / lastV) : 0; if (w < 0.02) return;
-    const Vx = V.map((v, i) => v - contrib[tk][i]); const Rx = returnsFrom(Vx); const up = [], dn = [];
-    for (let i = 0; i < Rx.length; i++) { if (Rx[i] == null) continue; if (Rx[i] > 0) up.push(i); else if (Rx[i] < 0) dn.push(i); }
-    const mu = up.length ? up.reduce((a, i) => a + Rx[i], 0) / up.length : null, md = dn.length ? dn.reduce((a, i) => a + Rx[i], 0) / dn.length : null;
-    if (up.length >= 5 && dn.length >= 5 && mu && md) exSelf[tk] = { upIdx: up, downIdx: dn, meanUp: mu, meanDown: md }; });
+  // 시뮬 날짜 = 모든 가격일 ∪ 매매일 (≥ earliest)
+  const dateSet = new Set();
+  universe.forEach(tk => seriesByTk[tk].dates.forEach(d => { if (d >= earliest) dateSet.add(d); }));
+  Object.keys(tradesByDate).forEach(d => { if (d >= earliest) dateSet.add(d); });
+  const allDates = Array.from(dateSet).sort();
+  if (allDates.length < 2) return { ready: false, scores: {} };
 
-  function tickerReturns(tk) { const sx = seriesByTk[tk]; if (!sx) return null; const closes = acctDates.map(d => closeFFill(tk, d));
-    let valid = 0; for (const c of closes) if (c > 0) valid++; if (valid < 60) return null; return returnsFrom(closes); }
+  // 동일일 재정렬 (매도→매수 순서로 음수 qty 방지)
+  function reorderSameDay(tt, state) {
+    const byTk = {}; tt.forEach(t => { (byTk[t.ticker] || (byTk[t.ticker] = [])).push(t); });
+    const out = [];
+    Object.keys(byTk).forEach(tk => {
+      let temp = (state[tk] && state[tk].qty) || 0, feasible = true;
+      for (const t of byTk[tk]) { temp += (t.action === '매도' ? -t.qty : t.qty); if (temp < -1e-9) { feasible = false; break; } }
+      if (feasible) out.push.apply(out, byTk[tk]);
+      else { out.push.apply(out, byTk[tk].filter(t => t.action === '매수')); out.push.apply(out, byTk[tk].filter(t => t.action === '매도')); }
+    });
+    return out;
+  }
+  function applyTrade(state, t) {
+    const tk = t.ticker; if (!state[tk]) state[tk] = { qty: 0, cost: 0, avgpx: 0 };
+    if (t.action === '매수') { state[tk].cost += t.qty * t.price; state[tk].qty += t.qty; state[tk].avgpx = state[tk].qty > 0 ? state[tk].cost / state[tk].qty : 0; }
+    else { const avg = state[tk].avgpx; state[tk].qty -= t.qty; state[tk].cost = Math.max(0, state[tk].cost - avg * t.qty); if (state[tk].qty <= 1e-9) { state[tk].qty = 0; state[tk].cost = 0; state[tk].avgpx = 0; } }
+  }
 
+  // forward simulation → 날짜별 보유 스냅샷 (qty>0만)
+  const state = {}; const snaps = [];
+  for (const date of allDates) {
+    if (tradesByDate[date]) { const ord = reorderSameDay(tradesByDate[date], state); for (const t of ord) applyTrade(state, t); }
+    const snap = {}; for (const tk in state) { if (state[tk].qty > 1e-9) snap[tk] = state[tk].qty; }
+    snaps.push({ date, state: snap });
+  }
+
+  // TWR 일간 계좌수익률 + 날짜별 ex-self (전일 보유분을 전일·당일 종가로 평가)
+  const acctRet = {}; const exSelf = {};
+  for (let i = 1; i < snaps.length; i++) {
+    const sp = snaps[i - 1], sc = snaps[i];
+    let Vp = 0, Vt = 0; const perTk = {};
+    for (const tk in sp.state) {
+      const qty = sp.state[tk]; if (qty <= 0) continue;
+      const cp = closeOnOrBefore(tk, sp.date), cc = closeOnOrBefore(tk, sc.date);
+      if (cp == null || cc == null) continue;
+      Vp += qty * cp; Vt += qty * cc; perTk[tk] = [qty * cp, qty * cc];
+    }
+    if (Vp <= 0) continue;
+    acctRet[sc.date] = (Vt - Vp) / Vp;
+    const ex = {};
+    for (const tk in perTk) { const vp = perTk[tk][0], vc = perTk[tk][1]; const Vpx = Vp - vp, Vtx = Vt - vc; ex[tk] = Vpx > 0 ? (Vtx - Vpx) / Vpx : null; }
+    exSelf[sc.date] = ex;
+  }
+  const acctDates = Object.keys(acctRet).sort();
+  if (acctDates.length < MIN_DAYS) return { ready: false, scores: {} };
+
+  // 종목 일간수익률 (자기 시계열 pct_change)
+  function tickerRet(tk) { const sx = seriesByTk[tk]; if (!sx) return null; const ds = sx.dates; if (ds.length < 2) return null;
+    const m = {}; for (let i = 1; i < ds.length; i++) { const p = sx.map[ds[i - 1]], c = sx.map[ds[i]]; if (p > 0) m[ds[i]] = c / p - 1; } return m; }
+
+  // asym = (tu/bu) - (td/bd), 벤치=보유일 ex-self / 비보유일 raw 계좌수익률, 풀 공통일
   const rawAsym = {};
-  universe.forEach(tk => { const rX = tickerReturns(tk); if (!rX) return;
-    let upIdx = upIdxFull, downIdx = downIdxFull, mUp = meanUpFull, mDn = meanDownFull;
-    if (exSelf[tk]) { upIdx = exSelf[tk].upIdx; downIdx = exSelf[tk].downIdx; mUp = exSelf[tk].meanUp; mDn = exSelf[tk].meanDown; }
-    let su = 0, nu = 0; upIdx.forEach(i => { if (rX[i] != null) { su += rX[i]; nu++; } });
-    let sd = 0, nd = 0; downIdx.forEach(i => { if (rX[i] != null) { sd += rX[i]; nd++; } });
-    if (nu < 3 || nd < 3) return; const upCap = (su / nu) / mUp, downCap = (sd / nd) / mDn, asym = upCap - downCap; if (isFinite(asym)) rawAsym[tk] = asym; });
+  universe.forEach(tk => {
+    const tr = tickerRet(tk); if (!tr) return;
+    let upB = 0, dnB = 0, upT = 0, dnT = 0, nu = 0, nd = 0, n = 0;
+    for (const d of acctDates) {
+      const r = tr[d]; if (r == null || isNaN(r)) continue;
+      const ex = exSelf[d] || {};
+      const b = (tk in ex && ex[tk] != null) ? ex[tk] : acctRet[d];
+      if (b == null || isNaN(b)) continue;
+      n++;
+      if (b > 0) { upB += b; upT += r; nu++; } else if (b < 0) { dnB += b; dnT += r; nd++; }
+    }
+    if (n < MIN_DAYS || nu < MIN_UPDOWN || nd < MIN_UPDOWN) return;
+    const bu = upB / nu, bd = dnB / nd, tu = upT / nu, td = dnT / nd;
+    if (bu === 0 || bd === 0) return;
+    const asym = (tu / bu) - (td / bd);
+    if (isFinite(asym)) rawAsym[tk] = asym;
+  });
 
   const vals = Object.values(rawAsym);
-  if (vals.length < 10) return { ready: true, scores: {} };
-  const sorted = vals.slice().sort((a, b) => a - b);
-  const q = p => { const idx = (sorted.length - 1) * p, lo = Math.floor(idx), hi = Math.ceil(idx); return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo); };
-  const p1 = q(0.01), p99 = q(0.99);
-  const absSorted = vals.map(v => Math.abs(Math.max(p1, Math.min(p99, v)))).sort((a, b) => a - b);
+  if (vals.length < 5) return { ready: true, scores: {} };
+  // two-way 스코어링 (Colab score_two_way 동일): 윈저 없이 |asym| 95분위 = s, 5.5 + 4.5*clip(asym/s,-1,1)
+  const absSorted = vals.map(v => Math.abs(v)).sort((a, b) => a - b);
   const qa = p => { const idx = (absSorted.length - 1) * p, lo = Math.floor(idx), hi = Math.ceil(idx); return absSorted[lo] + (absSorted[hi] - absSorted[lo]) * (idx - lo); };
-  let s95 = qa(0.95); if (!(s95 > 0)) s95 = absSorted[absSorted.length - 1] || 1;
+  const s95 = qa(0.95);
   const scores = {};
-  Object.keys(rawAsym).forEach(tk => { const x = Math.max(p1, Math.min(p99, rawAsym[tk])); const sc = 5.5 + 4.5 * Math.max(-1, Math.min(1, x / s95)); scores[tk] = Math.max(1, Math.min(10, sc)); });
+  if (!(s95 > 0)) { Object.keys(rawAsym).forEach(tk => scores[tk] = 5.5); return { ready: true, scores }; }
+  Object.keys(rawAsym).forEach(tk => { const norm = Math.max(-1, Math.min(1, rawAsym[tk] / s95)); scores[tk] = Math.round((5.5 + 4.5 * norm) * 100) / 100; });
   return { ready: true, scores };
 }
 function aqRunAsymmetry() {
