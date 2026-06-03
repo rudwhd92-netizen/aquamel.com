@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.31';
+window.AQ_PWA_VERSION = '3.32';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1913,6 +1913,26 @@ table.sheet tbody tr.drop-below td:last-child {
 .analysis-card:last-child { border-bottom: none; }
 .analysis-card:active { opacity: 0.6; }
 .analysis-card-sector { color: var(--text-mute); font-weight: 500; }
+/* v3.32: 종목 비교 분석 */
+.cmp-picker { display: flex; gap: 6px; margin-bottom: 10px; }
+.cmp-picker input { flex: 1; min-width: 0; background: var(--bg-2, #2d2d30); border: 1px solid var(--line); border-radius: 8px; color: var(--text); padding: 8px 10px; font-size: 13px; font-family: inherit; }
+.cmp-add-btn { flex-shrink: 0; background: var(--accent, #569cd6); color: #fff; border: none; border-radius: 8px; padding: 0 14px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit; }
+.cmp-add-btn:active { opacity: 0.8; }
+.cmp-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.cmp-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-3, #2d2d30); border-radius: 999px; padding: 4px 6px 4px 10px; font-size: 12px; font-weight: 700; color: var(--text); }
+.cmp-chip-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--cc, #569cd6); flex-shrink: 0; }
+.cmp-chip button { background: none; border: none; color: var(--text-mute); font-size: 16px; line-height: 1; cursor: pointer; padding: 0 2px; }
+.cmp-chip-empty { color: var(--text-mute); font-size: 12px; }
+.cmp-placeholder { padding: 40px 12px; text-align: center; color: var(--text-mute); font-size: 13px; }
+.cmp-section-label { font-size: 11.5px; font-weight: 700; color: var(--text-dim); margin: 16px 0 6px; }
+.cmp-tf { display: inline-flex; gap: 2px; background: var(--bg-3, #2d2d30); border-radius: 7px; padding: 2px; margin-bottom: 6px; }
+.cmp-tf button { border: none; background: transparent; color: var(--text-dim); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 5px; cursor: pointer; font-family: inherit; }
+.cmp-tf button.active { background: var(--accent, #569cd6); color: #fff; }
+.cmp-chart-wrap { position: relative; height: 260px; background: var(--bg, #1e1e1e); border-radius: 8px; padding: 8px; }
+.cmp-hex-wrap { max-width: 340px; margin: 4px auto 0; }
+.cmp-hex-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
+.cmp-leg { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text); }
+.cmp-leg-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--cc, #569cd6); flex-shrink: 0; }
 /* v3.29: 추천 ACTION 알약 (보고서 상단 액션 텍스트만) */
 .an-action-pill { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; letter-spacing: -0.01em; line-height: 1.3; }
 .an-action-pill.an-pending { width: 44px; height: 18px; padding: 0; background: rgba(255,255,255,0.05); }
@@ -6963,6 +6983,23 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
+  <!-- v3.32: 종목 비교 분석 (US 유니버스 최대 3개 — 리베이스 차트 + 멀티 헥사곤) -->
+  <section class="card" id="compareCard" data-mtab="analysis" style="display:none;">
+    <div class="card-header"><h2>종목 비교 분석</h2></div>
+    <div class="card-body">
+      <div class="cmp-picker">
+        <input id="cmpInput" list="cmpTickerList" placeholder="티커 검색 (최대 3개)" autocomplete="off"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();cmpAddTicker();}">
+        <button class="cmp-add-btn" onclick="cmpAddTicker()">추가</button>
+        <datalist id="cmpTickerList"></datalist>
+      </div>
+      <div class="cmp-chips" id="cmpChips"></div>
+      <div class="cmp-result" id="cmpResult">
+        <div class="cmp-placeholder">비교할 종목을 2개 이상 선택하세요 (최대 3개)</div>
+      </div>
+    </div>
+  </section>
+
   <section class="card" id="analysisCard" data-mtab="analysis" style="display:none;">
     <div class="card-header">
       <h2>분석 보고서</h2>
@@ -12690,6 +12727,7 @@ function aqActionPillHtml(mkt, tk) {
 }
 
 async function buildAnalysisGrid() {
+  try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   const area = document.getElementById('analysisGridArea');
   if (!area) return;
   const reports = _state.reports || { US: {}, KR: {} };
@@ -12807,6 +12845,147 @@ function toggleAnalysisSortMenu() {
   menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
 }
 window.toggleAnalysisSortMenu = toggleAnalysisSortMenu;
+
+// v3.32: 종목 비교 분석 — US 유니버스, 최대 3개, 리베이스 차트 + 멀티 헥사곤
+const CMP_COLORS = ['#569cd6', '#fa5252', '#4ec9b0'];
+let _cmpTickers = [];
+let _cmpTf = '6M';
+let _cmpChart = null;
+
+function cmpUniverseList() {
+  const set = new Set();
+  for (const sec of Object.keys(_state.sectors || {})) {
+    for (const r of _state.sectors[sec]) { const tk = (r.Ticker || '').toUpperCase(); if (tk) set.add(tk); }
+  }
+  return Array.from(set).sort();
+}
+function cmpBuildDatalist() {
+  const dl = document.getElementById('cmpTickerList'); if (!dl) return;
+  const comp = (_state.tickerCompanyMaps && _state.tickerCompanyMaps[getCurrentMarket()]) || {};
+  dl.innerHTML = cmpUniverseList().map(tk => {
+    const c = (comp[tk] && comp[tk] !== tk) ? ' ' + comp[tk] : '';
+    return `<option value="${escapeAttr(tk)}">${escapeAttr(tk + c)}</option>`;
+  }).join('');
+}
+function cmpAddTicker() {
+  const inp = document.getElementById('cmpInput'); if (!inp) return;
+  let v = String(inp.value || '').trim().toUpperCase(); inp.value = '';
+  if (!v) return;
+  v = v.split(/\s+/)[0];
+  if (_cmpTickers.includes(v)) return;
+  if (_cmpTickers.length >= 3) { alert('최대 3개까지 비교할 수 있어요'); return; }
+  if (!findTickerSeries(v)) { alert(v + ' — 가격 데이터가 없어 비교할 수 없어요'); return; }
+  _cmpTickers.push(v); buildCompare();
+}
+function cmpRemoveTicker(tk) { _cmpTickers = _cmpTickers.filter(t => t !== tk); buildCompare(); }
+window.cmpAddTicker = cmpAddTicker; window.cmpRemoveTicker = cmpRemoveTicker;
+function cmpSetTf(tf) {
+  _cmpTf = tf;
+  document.querySelectorAll('#cmpResult .cmp-tf button').forEach(b => b.classList.toggle('active', b.dataset.tf === tf));
+  drawCompareChart();
+}
+window.cmpSetTf = cmpSetTf;
+
+function drawCompareChart() {
+  const canvas = document.getElementById('cmpChartCanvas'); if (!canvas) return;
+  const series = [];
+  _cmpTickers.forEach((tk, i) => {
+    const fnd = findTickerSeries(tk); if (!fnd || !fnd.rows || !fnd.rows.length) return;
+    const win = sampleTimeframe(fnd.rows, _cmpTf); if (!win || win.length < 2) return;
+    series.push({ tk, rows: win, color: CMP_COLORS[i % CMP_COLORS.length] });
+  });
+  if (_cmpChart) { try { _cmpChart.destroy(); } catch (e) {} _cmpChart = null; }
+  if (series.length < 2 || typeof Chart === 'undefined') return;
+  // 공통 시작점 = 가장 늦은 첫 날짜 (모두 0%에서 출발)
+  const commonStart = series.map(s => s.rows[0].Date).reduce((a, b) => a > b ? a : b);
+  const dateSet = new Set();
+  series.forEach(s => s.rows.forEach(r => { if (r.Date >= commonStart) dateSet.add(r.Date); }));
+  const labels = Array.from(dateSet).sort();
+  const datasets = series.map(s => {
+    const m = {}; s.rows.forEach(r => { m[r.Date] = r.Close; });
+    let last = null, base = null;
+    const data = labels.map(d => {
+      if (m[d] != null) last = m[d];
+      if (last == null) return null;
+      if (base == null) base = last;
+      return base > 0 ? +(((last / base) - 1) * 100).toFixed(2) : null;
+    });
+    return { label: displayName(s.tk), data, borderColor: s.color, backgroundColor: s.color,
+             borderWidth: 1.8, pointRadius: 0, tension: 0.12, spanGaps: true };
+  });
+  _cmpChart = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, position: 'top', labels: { color: '#d4d4d4', boxWidth: 10, boxHeight: 10, font: { size: 11 }, usePointStyle: true } },
+        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${c.parsed.y >= 0 ? '+' : ''}${c.parsed.y}%` } },
+      },
+      scales: {
+        x: { ticks: { color: '#6a6a6a', maxTicksLimit: 6, font: { size: 9 }, maxRotation: 0 }, grid: { display: false } },
+        y: { ticks: { color: '#6a6a6a', font: { size: 9 }, callback: v => (v >= 0 ? '+' : '') + v + '%' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+      },
+    },
+  });
+}
+
+// 멀티 헥사곤 (크게, 색상별 오버레이)
+function aqHexSvgMulti(items) {
+  const R = 66, cx = 100, cy = 95;
+  const angs = [90, 30, -30, -90, 210, 150].map(d => d * Math.PI / 180);
+  const px = (i, r) => cx + r * Math.cos(angs[i]); const py = (i, r) => cy - r * Math.sin(angs[i]);
+  const sr = v => (v == null || isNaN(v)) ? R * 0.5 : R * (Math.max(1, Math.min(10, v)) - 1) / 9;
+  const ringPoly = rt => Array.from({ length: 6 }, (_, i) => px(i, R * rt).toFixed(1) + ',' + py(i, R * rt).toFixed(1)).join(' ');
+  let g = '';
+  [1, 0.75, 0.5, 0.25].forEach(rt => { g += `<polygon points="${ringPoly(rt)}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>`; });
+  for (let i = 0; i < 6; i++) g += `<line x1="${cx}" y1="${cy}" x2="${px(i, R).toFixed(1)}" y2="${py(i, R).toFixed(1)}" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>`;
+  items.forEach(it => {
+    if (!it.scores) return;
+    const dpts = it.scores.map((v, i) => px(i, sr(v)).toFixed(1) + ',' + py(i, sr(v)).toFixed(1)).join(' ');
+    g += `<polygon points="${dpts}" fill="${it.color}22" stroke="${it.color}" stroke-width="2" stroke-linejoin="round"/>`;
+  });
+  const LR = R + 12;
+  ['배당', '베타', '공매', '변동', '후행', '방어'].forEach((nm, i) => {
+    const lx = px(i, LR), ly = py(i, LR), c = Math.cos(angs[i]);
+    const anchor = c > 0.3 ? 'start' : c < -0.3 ? 'end' : 'middle';
+    g += `<text x="${lx.toFixed(1)}" y="${(ly + 3).toFixed(1)}" text-anchor="${anchor}" font-size="10" font-weight="700" fill="#9d9d9d">${nm}</text>`;
+  });
+  return `<svg viewBox="0 0 200 190" width="100%" height="100%">${g}</svg>`;
+}
+
+function buildCompare() {
+  cmpBuildDatalist();
+  const chips = document.getElementById('cmpChips');
+  if (chips) {
+    chips.innerHTML = _cmpTickers.map((tk, i) =>
+      `<span class="cmp-chip" style="--cc:${CMP_COLORS[i % CMP_COLORS.length]}"><span class="cmp-chip-dot"></span>${escapeHtml(displayName(tk))}<button onclick="cmpRemoveTicker('${escapeAttr(tk)}')" aria-label="제거">×</button></span>`
+    ).join('') || '<span class="cmp-chip-empty">선택된 종목 없음</span>';
+  }
+  const result = document.getElementById('cmpResult'); if (!result) return;
+  if (getCurrentMarket() !== 'US') { result.innerHTML = '<div class="cmp-placeholder">비교 분석은 미국 시장에서만 제공됩니다</div>'; return; }
+  if (_cmpTickers.length < 2) { result.innerHTML = '<div class="cmp-placeholder">비교할 종목을 2개 이상 선택하세요 (최대 3개)</div>'; return; }
+  result.innerHTML = `
+    <div class="cmp-section-label">📈 가격 추이 (시작점 0% 기준 등락률)</div>
+    <div class="cmp-tf">
+      <button data-tf="3M" onclick="cmpSetTf('3M')">3M</button>
+      <button data-tf="6M" onclick="cmpSetTf('6M')">6M</button>
+      <button data-tf="1Y" onclick="cmpSetTf('1Y')">1Y</button>
+    </div>
+    <div class="cmp-chart-wrap"><canvas id="cmpChartCanvas"></canvas></div>
+    <div class="cmp-section-label">🔷 성격 비교 (육각형)</div>
+    <div class="cmp-hex-wrap" id="cmpHexWrap"></div>
+    <div class="cmp-hex-legend" id="cmpHexLegend"></div>`;
+  result.querySelectorAll('.cmp-tf button').forEach(b => b.classList.toggle('active', b.dataset.tf === _cmpTf));
+  drawCompareChart();
+  const items = _cmpTickers.map((tk, i) => ({ tk, scores: (typeof aqHexagonFor === 'function' ? aqHexagonFor(tk) : null), color: CMP_COLORS[i % CMP_COLORS.length] }));
+  const hexWrap = document.getElementById('cmpHexWrap');
+  if (hexWrap) hexWrap.innerHTML = items.some(it => it.scores) ? aqHexSvgMulti(items) : '<div class="cmp-placeholder" style="padding:20px;">헥사곤 점수 데이터가 아직 없어요</div>';
+  const legend = document.getElementById('cmpHexLegend');
+  if (legend) legend.innerHTML = items.map(it => `<span class="cmp-leg" style="--cc:${it.color}"><span class="cmp-leg-dot"></span>${escapeHtml(displayName(it.tk))}${it.scores ? '' : ' (점수없음)'}</span>`).join('');
+}
+window.buildCompare = buildCompare;
 document.addEventListener('click', (e) => {
   const menu = document.getElementById('anSortMenu'); const toggle = document.getElementById('anSortToggleBtn');
   if (!menu || menu.style.display === 'none') return;
@@ -19383,6 +19562,8 @@ function relocateCardsForPC() {
   }
   // v2.03 Phase 2: analysisCard도 PC에선 사이드 패널 안으로 이동 (탐색과 동일 UX)
   if (analysisPanel) {
+    const cc = document.getElementById('compareCard');
+    if (cc && cc.parentElement !== analysisPanel) { analysisPanel.appendChild(cc); cc.style.display = ''; }
     const ac = document.getElementById('analysisCard');
     if (ac && ac.parentElement !== analysisPanel) {
       analysisPanel.appendChild(ac);
