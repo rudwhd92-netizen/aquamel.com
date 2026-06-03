@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.34';
+window.AQ_PWA_VERSION = '3.35';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -6778,6 +6778,11 @@ table.combo-eval tbody td .nodata {
         <button class="short-sort-btn active" data-sort="float" onclick="setShortSort('float')">잔고비율순</button>
         <button class="short-sort-btn" data-sort="dtc" onclick="setShortSort('dtc')">Days to Cover순</button>
       </div>
+      <div class="short-sort" id="instFlowSort" style="display:none;">
+        <button class="short-sort-btn" data-p="1d" onclick="setKrFlowPeriod('inst','1d')">1d</button>
+        <button class="short-sort-btn active" data-p="5d" onclick="setKrFlowPeriod('inst','5d')">5d</button>
+        <button class="short-sort-btn" data-p="20d" onclick="setKrFlowPeriod('inst','20d')">20d</button>
+      </div>
     </div>
     <div class="card-body">
       <div class="archive-mobile-list" id="shortingList">
@@ -7250,6 +7255,11 @@ table.combo-eval tbody td .nodata {
   <section class="card mobile-only" id="insiderArchiveCard" data-mtab="explore" data-xtab="insider">
     <div class="card-header">
       <h2>내부자 누적</h2>
+      <div class="short-sort" id="foreignFlowSort" style="display:none;">
+        <button class="short-sort-btn" data-p="1d" onclick="setKrFlowPeriod('foreign','1d')">1d</button>
+        <button class="short-sort-btn active" data-p="5d" onclick="setKrFlowPeriod('foreign','5d')">5d</button>
+        <button class="short-sort-btn" data-p="20d" onclick="setKrFlowPeriod('foreign','20d')">20d</button>
+      </div>
     </div>
     <div class="card-body">
       <div class="archive-mobile-list" id="insiderArchiveList">
@@ -10683,6 +10693,12 @@ function applyMarketState(mkt) {
   console.log(`[applyMarketState/${mkt}] archive=${_state.archive.length}, sectors=${Object.keys(_state.sectors).length}, kjpSectorMap=${Object.keys(_state.kjpSectorMap).length}, tickerSectorMap=${Object.keys(_state.tickerSectorMap).length}`);
   // v2.03 Phase 2: 분석 패널이 열려있으면 현재 시장 기준으로 그리드 재빌드
   try { if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  // v3.35: 탐색 서브탭 라벨/내용 시장별 갱신 (KR=외국인/기관 매수, US=내부자/공매도)
+  try {
+    if (typeof aqApplyExploreMarketUI === 'function') aqApplyExploreMarketUI();
+    const _x = document.body.getAttribute('data-xtab');
+    if (_x && typeof setExploreSubtab === 'function') setExploreSubtab(_x);
+  } catch (e) {}
 }
 
 // ============================================================================
@@ -19551,9 +19567,11 @@ function setExploreSubtab(x) {
   document.body.setAttribute('data-xtab', x);
   document.querySelectorAll('.xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.xtab === x));
   try {
+    if (typeof aqApplyExploreMarketUI === 'function') aqApplyExploreMarketUI();
+    const _isKR = getCurrentMarket() === 'KR';
     if (x === 'signals' && typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
-    else if (x === 'insider' && typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList();
-    else if (x === 'shorting' && typeof buildShortingList === 'function') buildShortingList();
+    else if (x === 'insider') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('foreign'); } else if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); }
+    else if (x === 'shorting') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('inst'); } else if (typeof buildShortingList === 'function') buildShortingList(); }
     else if (x === 'all' && typeof buildStockList === 'function') buildStockList();
   } catch (e) {}
 }
@@ -20222,15 +20240,96 @@ function setShortSort(key) {
   buildShortingList();
 }
 window.setShortSort = setShortSort;
-function loadMoreShorting() { _shortingShown += 15; buildShortingList(); }
+function loadMoreShorting() { if (getCurrentMarket() === 'KR') { loadMoreKrFlow('inst'); return; } _shortingShown += 15; buildShortingList(); }
 window.loadMoreShorting = loadMoreShorting;
 window.buildInsiderArchiveList = buildInsiderArchiveList;
 
 function loadMoreInsiderArchive() {
+  if (getCurrentMarket() === 'KR') { loadMoreKrFlow('foreign'); return; }
   _insiderArchiveShown += 10;
   buildInsiderArchiveList();
 }
 window.loadMoreInsiderArchive = loadMoreInsiderArchive;
+
+// v3.35: KR 외국인/기관 수급 — 1d/5d/20d 합산 순매수 ÷ 총거래량 비중순
+let _krFlowPeriod = { foreign: '5d', inst: '5d' };
+let _krFlowShown  = { foreign: 15, inst: 15 };
+function _krPeriodDays(p) { return p === '1d' ? 1 : p === '20d' ? 20 : 5; }
+
+function aqApplyExploreMarketUI() {
+  const isKR = getCurrentMarket() === 'KR';
+  const bIns = document.querySelector('.xtab-btn[data-xtab="insider"]');
+  const bShort = document.querySelector('.xtab-btn[data-xtab="shorting"]');
+  if (bIns) bIns.textContent = isKR ? '외국인 매수' : '내부자 매수';
+  if (bShort) bShort.textContent = isKR ? '기관 매수' : '공매도 이력';
+  const insH = document.querySelector('#insiderArchiveCard .card-header h2');
+  if (insH) insH.textContent = isKR ? '외국인 순매수 비중' : '내부자 누적';
+  const shH = document.querySelector('#shortingCard .card-header h2');
+  if (shH) shH.textContent = isKR ? '기관 순매수 비중' : '공매도 이력';
+  const ss = document.getElementById('shortingSort'); if (ss) ss.style.display = isKR ? 'none' : '';
+  const ifs = document.getElementById('instFlowSort'); if (ifs) ifs.style.display = isKR ? '' : 'none';
+  const ffs = document.getElementById('foreignFlowSort'); if (ffs) ffs.style.display = isKR ? '' : 'none';
+}
+window.aqApplyExploreMarketUI = aqApplyExploreMarketUI;
+
+function buildKrFlow(kind) {
+  const isForeign = kind === 'foreign';
+  const listEl = document.getElementById(isForeign ? 'insiderArchiveList' : 'shortingList');
+  const moreBtn = document.getElementById(isForeign ? 'insiderArchiveMore' : 'shortingMore');
+  if (!listEl) return;
+  if (getCurrentMarket() !== 'KR') return;
+  const N = _krPeriodDays(_krFlowPeriod[kind]);
+  const seen = new Set();
+  for (const sec of Object.keys(_state.sectors || {})) {
+    for (const r of _state.sectors[sec]) { const tk = (r.Ticker || '').toUpperCase(); if (tk) seen.add(tk); }
+  }
+  const rowsOut = [];
+  seen.forEach(tk => {
+    const f = findTickerSeries(tk); if (!f || !f.rows || !f.rows.length) return;
+    const rows = f.rows.slice(-N);
+    let net = 0, vol = 0;
+    rows.forEach(r => { net += Number(isForeign ? r.Foreign : r.Inst) || 0; vol += Number(r.Volume) || 0; });
+    if (vol <= 0) return;
+    rowsOut.push({ tk, ratio: net / vol * 100, net, vol });
+  });
+  rowsOut.sort((a, b) => b.ratio - a.ratio);
+  if (!rowsOut.length) { listEl.innerHTML = '<div class="buy-points-empty">수급 데이터 없음</div>'; if (moreBtn) moreBtn.style.display = 'none'; return; }
+  const shown = rowsOut.slice(0, _krFlowShown[kind]);
+  const label = isForeign ? '외국인' : '기관';
+  listEl.innerHTML = shown.map((r, i) => {
+    const tk = r.tk;
+    const sector = (_state.tickerSectorMap || {})[tk] || '';
+    const valColor = r.ratio >= 0 ? 'var(--kr-up, #fa5252)' : 'var(--kr-down, #339af0)';
+    return `
+      <div class="insider-archive-item short-item" data-ticker="${escapeAttr(tk)}">
+        <div class="short-rank">${i + 1}</div>
+        ${aqWrapLogo(aqLogoHtml(tk, sector, 'ia-logo'), tk)}
+        <div class="ia-info">
+          <div class="ia-ticker" title="${escapeAttr(displayName(tk))}">${escapeHtml(displayName(tk))}</div>
+          <div class="ia-company">${escapeHtml(displaySub(tk))}</div>
+          <div class="ia-sector">${escapeHtml(aqStripSectorEmoji(sector))}</div>
+        </div>
+        <div class="short-meta">
+          <div class="sm-row sm-on"><span class="sm-k">${label}</span><span class="sm-v" style="color:${valColor}">${r.ratio >= 0 ? '+' : ''}${r.ratio.toFixed(1)}%</span></div>
+        </div>
+      </div>`;
+  }).join('');
+  if (moreBtn) {
+    if (rowsOut.length > _krFlowShown[kind]) { moreBtn.style.display = ''; moreBtn.textContent = `더 보기 (${rowsOut.length - _krFlowShown[kind]}개 남음)`; }
+    else moreBtn.style.display = 'none';
+  }
+  listEl.querySelectorAll('.insider-archive-item').forEach(el => el.addEventListener('click', () => openChart(el.dataset.ticker)));
+}
+window.buildKrFlow = buildKrFlow;
+function setKrFlowPeriod(kind, p) {
+  _krFlowPeriod[kind] = p; _krFlowShown[kind] = 15;
+  const sortId = kind === 'foreign' ? 'foreignFlowSort' : 'instFlowSort';
+  document.querySelectorAll('#' + sortId + ' button').forEach(b => b.classList.toggle('active', b.dataset.p === p));
+  buildKrFlow(kind);
+}
+window.setKrFlowPeriod = setKrFlowPeriod;
+function loadMoreKrFlow(kind) { _krFlowShown[kind] += 15; buildKrFlow(kind); }
+window.loadMoreKrFlow = loadMoreKrFlow;
 
 // ============================================================================
 // v1.52 종목 리스트 (탐색 탭 — 매크로 하단)
