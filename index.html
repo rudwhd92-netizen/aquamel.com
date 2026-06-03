@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.25';
+window.AQ_PWA_VERSION = '3.26';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -9343,8 +9343,11 @@ async function fetchHexagon(forceFresh) {
     if (!res || !res.ok || !Array.isArray(res.rows)) { console.warn('[fetchHexagon] 응답 비정상:', res && res.error); return _aqHexagon; }
     const byTicker = {};
     res.rows.forEach(r => {
-      const tk = String(r['티커'] || r.Ticker || r.ticker || '').toUpperCase(); if (!tk) return;
-      byTicker[tk] = AQ_HEX_AXES.map(k => _aqNum(r[k]));
+      const keys = Object.keys(r);   // 헤더 순서 = 컬럼 순서 (A,B,C,...)
+      const tk = String(r.Ticker || r.ticker || (keys[1] != null ? r[keys[1]] : '') || '').toUpperCase();
+      if (!tk) return;
+      // 위치 기반: C~H(index 2~7) = 배당/베타/공매/변동/후행/방어 (헤더명 무관)
+      byTicker[tk] = [2, 3, 4, 5, 6, 7].map(i => (keys[i] !== undefined ? _aqNum(r[keys[i]]) : null));
     });
     _aqHexagon = byTicker; _aqHexagonLoaded = true;
     try { await aqDbSet(AQ_HEX_CACHE_KEY, { fetchedAt: new Date().toISOString(), byTicker }); } catch (e) {}
