@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.26';
+window.AQ_PWA_VERSION = '3.27';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -9313,7 +9313,7 @@ window.fetchCrowding = fetchCrowding;
 
 // v3.25: 육각형 종목 성격 스코어 (US_HEXAGON 탭 — C~H: 배당/베타/공매/변동/후행/방어)
 const AQ_US_HEXAGON_TAB = 'US_HEXAGON';
-const AQ_HEX_CACHE_KEY = 'us_hexagon_v1';
+const AQ_HEX_CACHE_KEY = 'us_hexagon_v2';  // v3.27: 옛 깨진 캐시 무효화
 const AQ_HEX_CACHE_TTL_MIN = 360;
 const AQ_HEX_AXES = ['배당', '베타', '공매', '변동', '후행', '방어'];
 let _aqHexagon = {};
