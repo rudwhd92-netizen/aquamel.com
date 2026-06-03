@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.35';
+window.AQ_PWA_VERSION = '3.36';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -20286,7 +20286,10 @@ function buildKrFlow(kind) {
   const rowsOut = [];
   seen.forEach(tk => {
     const f = findTickerSeries(tk); if (!f || !f.rows || !f.rows.length) return;
-    const rows = f.rows.slice(-N);
+    // v3.36: 휴장일(거래량 0) 제외 → 최근 N '실거래일' 기준 (오늘 휴장이어도 직전 거래일로)
+    const trading = f.rows.filter(r => (Number(r.Volume) || 0) > 0);
+    const rows = trading.slice(-N);
+    if (!rows.length) return;
     let net = 0, vol = 0;
     rows.forEach(r => { net += Number(isForeign ? r.Foreign : r.Inst) || 0; vol += Number(r.Volume) || 0; });
     if (vol <= 0) return;
