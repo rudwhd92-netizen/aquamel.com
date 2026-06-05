@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.37';
+window.AQ_PWA_VERSION = '3.38';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3598,6 +3598,15 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
     font-size: 13px !important;
     margin-bottom: 8px;
   }
+  /* v3.38: MO 보드 — 바깥 프레임(테두리/배경/그림자/패딩) 제거 → 내부 .dash-card 폭 확장 */
+  body[data-mtab="board"] #dashboardCard {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+  body[data-mtab="board"] #dashboardCard > .card-body { padding: 0 !important; }
 }
 
 /* ============ SPLASH OVERLAY (v1.26 — game-style boot loader) ============ */
