@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.39';
+window.AQ_PWA_VERSION = '3.40';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3432,6 +3432,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   transition: opacity 0.12s;
 }
 .stock-list-row:active { opacity: 0.65; }
+.stock-list-row.long-pressing { background: var(--panel-hi); border-radius: 8px; }
 .stock-list-row .sl-sector {
   font-size: 10px;
   color: var(--text-mute);
@@ -6968,7 +6969,7 @@ table.combo-eval tbody td .nodata {
           </div>
         </div>
         <!-- 오른쪽 도넛 -->
-        <div class="dash-card dash-donut-card">
+        <div class="dash-card dash-donut-card" id="dashPortfolioCard">
           <div class="dash-card-title">주식 포트폴리오</div>
           <div class="dash-donut-wrap"><canvas id="dashDonutCanvas"></canvas></div>
           <div class="dash-donut-legend" id="dashDonutLegend"></div>
@@ -6982,7 +6983,7 @@ table.combo-eval tbody td .nodata {
             <div class="dash-card-title">30일 평가수익금 추이</div>
             <div class="dash-chart-wrap"><canvas id="dashTrendCanvas"></canvas></div>
           </div>
-          <div class="dash-card dash-holdings-card">
+          <div class="dash-card dash-holdings-card" id="dashHoldingsCard">
             <div class="dash-card-header">
               <div class="dash-card-title">보유 종목 현황</div>
               <span class="dash-meta" id="dashHoldingsMeta">총 0종목</span>
@@ -14273,23 +14274,26 @@ function renderDashHoldingsList(holdings, hiddenHoldings) {
   if (holdings.length === 0) {
     body.innerHTML = '<div style="text-align:center;color:var(--text-mute);font-size:11px;padding:30px;">보유 종목 없음</div>';
   } else {
+    const market = getCurrentMarket();
     const html = holdings.map(h => {
-      const logo = tickerLogoHtml(h.ticker, h.sector);
-      // 로고 사이즈 override (32px)
-      const logoBig = logo.replace('class="ticker-logo"', 'class="dash-hold-logo"');
-      return `<div class="dash-hold-row" data-ticker="${escapeAttr(h.ticker)}">
-        <div class="dash-hold-left">
-          ${logoBig}
-          <div class="dash-hold-info">
-            <span class="dash-hold-ticker" title="${escapeAttr(h.ticker)}">${escapeHtml(displayName(h.ticker))}</span>
-            <span class="dash-hold-meta">${h.qty.toLocaleString(undefined,{maximumFractionDigits:2})}주 · ${escapeHtml(h.sector || '미분류')}</span>
+      // v3.40: 표준 종목 리스트(.stock-list-row) 룩앤필 — 로고 | 종목명 | 섹터·수량 | 평가금/손익
+      const layer = SECTOR_TO_LAYER[h.sector] || '기타';
+      const layerFile = (market === 'KR') ? '' : layerFileName(layer);
+      const tkFile = tickerFileName(h.ticker);
+      const logoHtml = tkFile
+        ? `<img class="sl-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+        : `<img class="sl-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+      const pcls = h.profit > 0 ? 'up' : h.profit < 0 ? 'down' : 'zero';
+      return `
+        <div class="stock-list-row" data-ticker="${escapeAttr(h.ticker)}">
+          ${aqWrapLogo(logoHtml, h.ticker)}
+          <div class="sl-ticker" title="${escapeAttr(displayName(h.ticker))}">${escapeHtml(displayName(h.ticker))}</div>
+          <div class="sl-sector">${escapeHtml(h.sector || '미분류')} · ${h.qty.toLocaleString(undefined, { maximumFractionDigits: 2 })}주</div>
+          <div class="sl-meta">
+            <div class="sl-price">${fmtUSD(h.evalVal)}</div>
+            <div class="sl-chg ${pcls}">${fmtUSDPlus(h.profit)} (${h.roi >= 0 ? '+' : ''}${h.roi.toFixed(1)}%)</div>
           </div>
-        </div>
-        <div class="dash-hold-right">
-          <span class="dash-hold-eval">${fmtUSD(h.evalVal)}</span>
-          <span class="dash-hold-pnl ${cls(h.profit)}">${fmtUSDPlus(h.profit)} (${h.roi >= 0 ? '+' : ''}${h.roi.toFixed(1)}%)</span>
-        </div>
-      </div>`;
+        </div>`;
     }).join('');
     body.innerHTML = html;
   }
@@ -14315,7 +14319,7 @@ function attachHoldingInteractions() {
 
   // 좌클릭 → 차트 보기
   body.addEventListener('click', (e) => {
-    const row = e.target.closest('.dash-hold-row');
+    const row = e.target.closest('.stock-list-row');
     if (!row) return;
     const tk = row.getAttribute('data-ticker');
     if (tk && typeof openChart === 'function') openChart(tk);
@@ -14323,7 +14327,7 @@ function attachHoldingInteractions() {
 
   // 우클릭 → 컨텍스트 메뉴
   body.addEventListener('contextmenu', (e) => {
-    const row = e.target.closest('.dash-hold-row');
+    const row = e.target.closest('.stock-list-row');
     if (!row) return;
     e.preventDefault();
     const tk = row.getAttribute('data-ticker');
@@ -14337,7 +14341,7 @@ function attachHoldingInteractions() {
   let pressStartX = 0, pressStartY = 0;
 
   body.addEventListener('touchstart', (e) => {
-    const row = e.target.closest('.dash-hold-row');
+    const row = e.target.closest('.stock-list-row');
     if (!row) return;
     pressTarget = row;
     pressMoved = false;
@@ -19505,6 +19509,7 @@ function initMobileTabs() {
   }
   if (!document.body.getAttribute('data-xtab')) document.body.setAttribute('data-xtab', 'signals');
   if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'performance');
+  try { if (typeof aqLayoutBoardHoldings === 'function') aqLayoutBoardHoldings(); } catch (e) {}
   // 디폴트 = 발견
   switchMobileTab(document.body.getAttribute('data-mtab') || 'discover');
 }
@@ -19600,10 +19605,29 @@ function setPCTab(tab) {
 function setBoardSubtab(x) {
   document.body.setAttribute('data-btab', x);
   document.querySelectorAll('.xtab-btn[data-btab]').forEach(b => b.classList.toggle('active', b.dataset.btab === x));
-  // 누적 성과 = 기존 대시보드 콘텐츠 / 보유 종목·계좌 분석 = 추후 구현
+  if (x === 'holdings') {
+    try { aqLayoutBoardHoldings(); } catch (e) {}
+    // 도넛은 숨김 컨테이너에서 0크기로 그려졌을 수 있어 → 표시 직후 리사이즈
+    try { requestAnimationFrame(() => { try { if (typeof _dashCharts !== 'undefined' && _dashCharts.donut) _dashCharts.donut.resize(); } catch (e) {} }); } catch (e) {}
+  }
   try { if (typeof rerunCardAnimations === 'function') rerunCardAnimations(); } catch (e) {}
 }
 window.setBoardSubtab = setBoardSubtab;
+
+// v3.40: MO 보드 — 주식 포트폴리오 + 보유 종목 현황 카드를 "보유 종목" 서브탭으로 이동
+function aqLayoutBoardHoldings() {
+  if (typeof isMobileViewport === 'function' && !isMobileViewport()) return; // MO 전용 (PC 대시보드는 그대로)
+  const host = document.getElementById('boardHoldingsCard');
+  if (!host) return;
+  const body = host.querySelector('.card-body') || host;
+  const pf = document.getElementById('dashPortfolioCard');
+  const hd = document.getElementById('dashHoldingsCard');
+  if (!pf && !hd) return;
+  const ph = body.querySelector('.cmp-placeholder'); if (ph) ph.remove();
+  if (pf && pf.parentElement !== body) body.appendChild(pf);   // 1) 주식 포트폴리오
+  if (hd && hd.parentElement !== body) body.appendChild(hd);   // 2) 보유 종목 현황
+}
+window.aqLayoutBoardHoldings = aqLayoutBoardHoldings;
 
 function setExploreSubtab(x) {
   document.body.setAttribute('data-xtab', x);
