@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.44';
+window.AQ_PWA_VERSION = '3.45';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3553,13 +3553,18 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   /* 활성 탭에 매핑된 카드만 표시 */
   body[data-mtab="discover"] section.card[data-mtab~="discover"] { display: block !important; }
   body[data-mtab="sector"]   section.card[data-mtab~="sector"]   { display: block !important; }
+  /* v3.45: 섹터 서브탭 게이팅 (FRAME / 일간 동향 / 전체 리스트) */
+  body[data-mtab="sector"] section.card[data-stab] { display: none !important; }
+  body[data-mtab="sector"][data-stab="frame"] section.card[data-stab~="frame"],
+  body[data-mtab="sector"][data-stab="trend"] section.card[data-stab~="trend"],
+  body[data-mtab="sector"][data-stab="all"]   section.card[data-stab~="all"] { display: block !important; }
   body[data-mtab="explore"]  section.card[data-mtab~="explore"]  { display: block !important; }
   /* v3.14: MO 탐색 서브탭 — 활성 서브탭 카드만 */
   body[data-mtab="explore"] section.card[data-xtab] { display: none !important; }
   body[data-mtab="explore"][data-xtab="signals"]  section.card[data-xtab="signals"],
   body[data-mtab="explore"][data-xtab="insider"]  section.card[data-xtab="insider"],
   body[data-mtab="explore"][data-xtab="shorting"] section.card[data-xtab="shorting"],
-  body[data-mtab="explore"][data-xtab="all"]      section.card[data-xtab="all"] { display: block !important; }
+  body[data-mtab="explore"][data-xtab="report"]   section.card[data-xtab="report"] { display: block !important; }
   /* v3.43: MO 탐색에서 매크로 지표 카드 제거 (마퀴 탭으로 대체). PC 탐색은 유지 */
   body[data-mtab="explore"] #macroCard { display: none !important; }
   body[data-mtab="board"]    section.card[data-mtab~="board"]    { display: block !important; }
@@ -6828,7 +6833,7 @@ table.combo-eval tbody td .nodata {
       <button class="xtab-btn active" data-xtab="signals" onclick="setExploreSubtab('signals')">누적 시그널</button>
       <button class="xtab-btn" data-xtab="insider" onclick="setExploreSubtab('insider')">내부자 매수</button>
       <button class="xtab-btn" data-xtab="shorting" onclick="setExploreSubtab('shorting')">공매도 이력</button>
-      <button class="xtab-btn" data-xtab="all" onclick="setExploreSubtab('all')">전체 리스트</button>
+      <button class="xtab-btn" data-xtab="report" onclick="setExploreSubtab('report')">분석 보고서</button>
     </div>
   </section>
 
@@ -6854,7 +6859,16 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-  <section class="card mobile-only" id="stockListCard" data-mtab="explore" data-xtab="all">
+  <!-- v3.45: 섹터 서브탭 (섹터 FRAME / 일간 섹터 동향 / 전체 리스트) -->
+  <section class="card mobile-only explore-subtabs" id="sectorSubtabs" data-mtab="sector">
+    <div class="xtab-row">
+      <button class="xtab-btn active" data-stab="frame" onclick="setSectorSubtab('frame')">섹터 FRAME</button>
+      <button class="xtab-btn" data-stab="trend" onclick="setSectorSubtab('trend')">일간 섹터 동향</button>
+      <button class="xtab-btn" data-stab="all" onclick="setSectorSubtab('all')">전체 리스트</button>
+    </div>
+  </section>
+
+  <section class="card mobile-only" id="stockListCard" data-mtab="sector" data-xtab="all" data-stab="all">
     <div class="card-header">
       <h2>종목 리스트</h2>
       <div class="stock-list-sort">
@@ -6876,7 +6890,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ SECTOR FRAMEWORK (정적 도식 + 정의) ============ -->
-  <section class="card" id="sectorFrameworkCard" data-mtab="sector">
+  <section class="card" id="sectorFrameworkCard" data-mtab="sector" data-stab="frame">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>섹터 FRAME</h2>
       <span class="toggle-icon">▼</span>
@@ -6904,7 +6918,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ SECTOR ANALYSIS (Equal-Weight Bars + 30D Cycle Heatmap) ============ -->
-  <section class="card" id="sectorAnalysisCard" data-mtab="sector">
+  <section class="card" id="sectorAnalysisCard" data-mtab="sector" data-stab="trend">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>일간 섹터 동향</h2>
       <span class="toggle-icon">▼</span>
@@ -7066,7 +7080,7 @@ table.combo-eval tbody td .nodata {
 
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
   <!-- v3.32: 종목 비교 분석 (US 유니버스 최대 3개 — 리베이스 차트 + 멀티 헥사곤) -->
-  <section class="card" id="compareCard" data-mtab="analysis" style="display:none;">
+  <section class="card" id="compareCard" data-mtab="watch" style="display:none;">
     <div class="card-header"><h2>종목 비교 분석</h2></div>
     <div class="card-body">
       <div class="cmp-picker">
@@ -7082,7 +7096,7 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-  <section class="card" id="analysisCard" data-mtab="analysis" style="display:none;">
+  <section class="card" id="analysisCard" data-mtab="explore" data-xtab="report" style="display:none;">
     <div class="card-header">
       <h2>분석 보고서</h2>
       <div class="stock-list-sort">
@@ -7489,11 +7503,11 @@ table.combo-eval tbody td .nodata {
       <span class="mtab-label">일정</span>
     </button>
     <!-- v2.92: 5번째 — 분석 -->
-    <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
+    <button class="mtab-btn" data-mtab="board" onclick="switchMobileTab('board')" aria-label="자산">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
+        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
       </svg>
-      <span class="mtab-label">분석</span>
+      <span class="mtab-label">자산</span>
     </button>
   </nav>
 
@@ -7513,10 +7527,6 @@ table.combo-eval tbody td .nodata {
       <button class="mo-drawer-item" onclick="moDrawerNav('todo')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
         <span>To-Do</span>
-      </button>
-      <button class="mo-drawer-item" onclick="moDrawerNav('board')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-        <span>자산</span>
       </button>
       <button class="mo-drawer-item" onclick="moDrawerNav('my')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
@@ -10770,6 +10780,7 @@ function applyMarketState(mkt) {
   console.log(`[applyMarketState/${mkt}] archive=${_state.archive.length}, sectors=${Object.keys(_state.sectors).length}, kjpSectorMap=${Object.keys(_state.kjpSectorMap).length}, tickerSectorMap=${Object.keys(_state.tickerSectorMap).length}`);
   // v2.03 Phase 2: 분석 패널이 열려있으면 현재 시장 기준으로 그리드 재빌드
   try { if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   // v3.35: 탐색 서브탭 라벨/내용 시장별 갱신 (KR=외국인/기관 매수, US=내부자/공매도)
   try {
     if (typeof aqApplyExploreMarketUI === 'function') aqApplyExploreMarketUI();
@@ -12836,7 +12847,6 @@ function aqActionPillHtml(mkt, tk) {
 }
 
 async function buildAnalysisGrid() {
-  try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   const area = document.getElementById('analysisGridArea');
   if (!area) return;
   const reports = _state.reports || { US: {}, KR: {} };
@@ -19526,10 +19536,7 @@ function switchMobileTab(tab) {
     _archiveMobileShown = 10;
     buildArchiveMobileList();
   } else if (tab === 'explore') {
-    buildStockList();
-  } else if (tab === 'analysis') {
-    // v2.01 Phase 2: 보고서 등록 ticker 그리드
-    buildAnalysisGrid();
+    if (typeof setExploreSubtab === 'function') setExploreSubtab(document.body.getAttribute('data-xtab') || 'signals');
   } else if (tab === 'schedule') {
     // v2.46: 캘린더 렌더
     try { aqCalendarRender(); } catch (e) {}
@@ -19555,6 +19562,17 @@ function switchMobileTab(tab) {
   } else if (tab === 'watch') {
     // v2.92: 관심 칸반 빌드
     try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {}
+    // v3.45: 종목 비교 분석을 관심 종목 카드 아래로 이동 + 빌드
+    try {
+      const _wc = document.getElementById('watchBoardCard');
+      const _cc = document.getElementById('compareCard');
+      if (_wc && _cc && _wc.parentElement && _cc.previousElementSibling !== _wc) _wc.parentElement.insertBefore(_cc, _wc.nextSibling);
+    } catch (e) {}
+    try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
+  } else if (tab === 'sector') {
+    // v3.45: 섹터 서브탭 기본값 = 섹터 FRAME
+    if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'frame');
+    try { if (typeof setSectorSubtab === 'function') setSectorSubtab(document.body.getAttribute('data-stab') || 'frame'); } catch (e) {}
   } else if (tab === 'board') {
     // v3.39: 보드 서브탭 기본값 = 누적 성과
     if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'performance');
@@ -19588,6 +19606,9 @@ function initMobileTabs() {
   }
   if (!document.body.getAttribute('data-xtab')) document.body.setAttribute('data-xtab', 'signals');
   if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'performance');
+  if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'frame');
+  // v3.45: 분석 탭 폐지 → 잔존 상태면 탐색으로
+  if (document.body.getAttribute('data-mtab') === 'analysis') document.body.setAttribute('data-mtab', 'explore');
   try { if (typeof aqLayoutBoardHoldings === 'function') aqLayoutBoardHoldings(); } catch (e) {}
   // 디폴트 = 발견
   switchMobileTab(document.body.getAttribute('data-mtab') || 'discover');
@@ -19693,6 +19714,19 @@ function setBoardSubtab(x) {
 }
 window.setBoardSubtab = setBoardSubtab;
 
+// v3.45: 섹터 서브탭 (섹터 FRAME / 일간 섹터 동향 / 전체 리스트)
+function setSectorSubtab(x) {
+  document.body.setAttribute('data-stab', x);
+  document.querySelectorAll('.xtab-btn[data-stab]').forEach(b => b.classList.toggle('active', b.dataset.stab === x));
+  try {
+    if (x === 'frame' && typeof renderSectorFramework === 'function') renderSectorFramework();
+    else if (x === 'trend' && typeof renderSectorAnalysis === 'function') renderSectorAnalysis();
+    else if (x === 'all' && typeof buildStockList === 'function') buildStockList();
+  } catch (e) {}
+  try { if (typeof rerunCardAnimations === 'function') rerunCardAnimations(); } catch (e) {}
+}
+window.setSectorSubtab = setSectorSubtab;
+
 // v3.40: MO 보드 — 주식 포트폴리오 + 보유 종목 현황 카드를 "보유 종목" 서브탭으로 이동
 function aqLayoutBoardHoldings() {
   if (typeof isMobileViewport === 'function' && !isMobileViewport()) return; // MO 전용 (PC 대시보드는 그대로)
@@ -19726,7 +19760,7 @@ function setExploreSubtab(x) {
     if (x === 'signals' && typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
     else if (x === 'insider') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('foreign'); } else if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); }
     else if (x === 'shorting') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('inst'); } else if (typeof buildShortingList === 'function') buildShortingList(); }
-    else if (x === 'all' && typeof buildStockList === 'function') buildStockList();
+    else if (x === 'report' && typeof buildAnalysisGrid === 'function') buildAnalysisGrid();
   } catch (e) {}
 }
 window.setExploreSubtab = setExploreSubtab;
