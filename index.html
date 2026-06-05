@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.40';
+window.AQ_PWA_VERSION = '3.41';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -6883,14 +6883,14 @@ table.combo-eval tbody td .nodata {
     <div class="xtab-row">
       <button class="xtab-btn" data-btab="holdings" onclick="setBoardSubtab('holdings')">보유 종목</button>
       <button class="xtab-btn active" data-btab="performance" onclick="setBoardSubtab('performance')">누적 성과</button>
-      <button class="xtab-btn" data-btab="account" onclick="setBoardSubtab('account')">계좌 분석</button>
+      <button class="xtab-btn" data-btab="account" onclick="setBoardSubtab('account')">상세 분석</button>
     </div>
   </section>
   <section class="card mobile-only" id="boardHoldingsCard" data-mtab="board" data-btab="holdings" style="display:none;">
     <div class="card-body"><div class="cmp-placeholder">보유 종목 — 준비 중</div></div>
   </section>
   <section class="card mobile-only" id="boardAccountCard" data-mtab="board" data-btab="account" style="display:none;">
-    <div class="card-body"><div class="cmp-placeholder">계좌 분석 — 준비 중</div></div>
+    <div class="card-body"><div class="cmp-placeholder">상세 분석 — 준비 중</div></div>
   </section>
 
   <section class="card" id="dashboardCard" data-mtab="board" data-btab="performance" style="display:none;">
@@ -6997,7 +6997,7 @@ table.combo-eval tbody td .nodata {
             <div class="dash-card-title">섹터별 평가수익금 트렌드</div>
             <div class="dash-chart-wrap"><canvas id="dashSectorTrendCanvas"></canvas></div>
           </div>
-          <div class="dash-card dash-matrix-card">
+          <div class="dash-card dash-matrix-card" id="dashMatrixCard">
             <div class="dash-card-header" style="flex-direction:column; align-items:flex-start; gap:2px;">
               <div class="dash-card-title">Decoupling Matrix</div>
               <div class="dash-meta" style="font-size:10px;">
@@ -7468,8 +7468,8 @@ table.combo-eval tbody td .nodata {
         <span>To-Do</span>
       </button>
       <button class="mo-drawer-item" onclick="moDrawerNav('board')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.2"/><rect x="14" y="3" width="7" height="5" rx="1.2"/><rect x="14" y="12" width="7" height="9" rx="1.2"/><rect x="3" y="16" width="7" height="5" rx="1.2"/></svg>
-        <span>보드</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+        <span>자산</span>
       </button>
       <button class="mo-drawer-item" onclick="moDrawerNav('my')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
@@ -19605,8 +19605,8 @@ function setPCTab(tab) {
 function setBoardSubtab(x) {
   document.body.setAttribute('data-btab', x);
   document.querySelectorAll('.xtab-btn[data-btab]').forEach(b => b.classList.toggle('active', b.dataset.btab === x));
+  try { aqLayoutBoardHoldings(); } catch (e) {}
   if (x === 'holdings') {
-    try { aqLayoutBoardHoldings(); } catch (e) {}
     // 도넛은 숨김 컨테이너에서 0크기로 그려졌을 수 있어 → 표시 직후 리사이즈
     try { requestAnimationFrame(() => { try { if (typeof _dashCharts !== 'undefined' && _dashCharts.donut) _dashCharts.donut.resize(); } catch (e) {} }); } catch (e) {}
   }
@@ -19617,15 +19617,24 @@ window.setBoardSubtab = setBoardSubtab;
 // v3.40: MO 보드 — 주식 포트폴리오 + 보유 종목 현황 카드를 "보유 종목" 서브탭으로 이동
 function aqLayoutBoardHoldings() {
   if (typeof isMobileViewport === 'function' && !isMobileViewport()) return; // MO 전용 (PC 대시보드는 그대로)
-  const host = document.getElementById('boardHoldingsCard');
-  if (!host) return;
-  const body = host.querySelector('.card-body') || host;
-  const pf = document.getElementById('dashPortfolioCard');
-  const hd = document.getElementById('dashHoldingsCard');
-  if (!pf && !hd) return;
-  const ph = body.querySelector('.cmp-placeholder'); if (ph) ph.remove();
-  if (pf && pf.parentElement !== body) body.appendChild(pf);   // 1) 주식 포트폴리오
-  if (hd && hd.parentElement !== body) body.appendChild(hd);   // 2) 보유 종목 현황
+  // 보유 종목 탭: 주식 포트폴리오 → 보유 종목 현황
+  const hHost = document.getElementById('boardHoldingsCard');
+  if (hHost) {
+    const hBody = hHost.querySelector('.card-body') || hHost;
+    const ph = hBody.querySelector('.cmp-placeholder'); if (ph) ph.remove();
+    const pf = document.getElementById('dashPortfolioCard');
+    const hd = document.getElementById('dashHoldingsCard');
+    if (pf && pf.parentElement !== hBody) hBody.appendChild(pf);
+    if (hd && hd.parentElement !== hBody) hBody.appendChild(hd);
+  }
+  // 상세 분석 탭: Decoupling Matrix
+  const aHost = document.getElementById('boardAccountCard');
+  if (aHost) {
+    const aBody = aHost.querySelector('.card-body') || aHost;
+    const ph2 = aBody.querySelector('.cmp-placeholder'); if (ph2) ph2.remove();
+    const mx = document.getElementById('dashMatrixCard');
+    if (mx && mx.parentElement !== aBody) aBody.appendChild(mx);
+  }
 }
 window.aqLayoutBoardHoldings = aqLayoutBoardHoldings;
 
