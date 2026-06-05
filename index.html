@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.45';
+window.AQ_PWA_VERSION = '3.46';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2168,6 +2168,21 @@ table.sheet tbody tr.drop-below td:last-child {
   }
   .tf-toggle button { padding: 0 12px; font-size: var(--text-xs); height: 26px; line-height: 26px; }
 }
+@media (max-width: 640px) {
+  /* v3.46: 모달 차트 tf 토글 = 피드와 동일(우하단·소형), 상세보기는 그 왼쪽에 동일 크기로 */
+  .chart-wrap .tf-toggle[data-target="modal"] {
+    top: auto; bottom: 8px; right: 10px; height: auto;
+    background: rgba(30,30,30,0.6); border-radius: 7px; padding: 2px; box-shadow: none;
+  }
+  .chart-wrap .tf-toggle[data-target="modal"] button {
+    padding: 3px 7px; font-size: 10px; font-weight: 700; height: auto; line-height: normal;
+  }
+  .chart-wrap .chart-mode-toggle {
+    top: auto; bottom: 8px; right: 110px; left: auto;
+    font-size: 10px; padding: 3px 8px; height: auto; line-height: normal;
+    border-radius: 7px; min-height: 0;
+  }
+}
 .chart-legend { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-dim); }
 .chart-legend .lg-item { display: flex; align-items: center; gap: 6px; }
 .chart-legend .lg-shape { width: 12px; height: 12px; display: inline-block; }
@@ -2223,6 +2238,15 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .feed-chart-wrap .hex-overlay.hex-left  { top: 6px; left: 6px; right: auto; }
 .feed-chart-wrap .hex-overlay.hex-right { top: 6px; right: 6px; left: auto; }
+/* v3.46: 모달 차트 헥사곤도 피드처럼 동적 코너 (상승=좌상단 / 하락=우상단) */
+.chart-wrap .hex-overlay.hex-left  { top: 6px; left: 6px; right: auto; }
+.chart-wrap .hex-overlay.hex-right { top: 6px; right: 6px; left: auto; }
+/* v3.46: 모달 접이식 섹션 (시그널 필터 / 시그널 이력) — 기본 접힘 */
+.aq-coll-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; user-select: none; }
+.aq-coll-caret { color: var(--text-mute); font-size: 11px; transition: transform 0.2s var(--ease-out); flex-shrink: 0; }
+.aq-coll.collapsed .aq-coll-body { display: none; }
+.aq-coll.collapsed .aq-coll-caret { transform: rotate(-90deg); }
+.aq-coll-body { margin-top: 10px; }
 .feed-actions { display: flex; align-items: center; gap: 16px; padding: 12px 12px 4px; }
 .feed-act { background: transparent; border: none; color: var(--text, #d4d4d4); cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 5px; }
 .feed-act .fi { width: 24px; height: 24px; display: block; }
@@ -7647,21 +7671,31 @@ table.combo-eval tbody td .nodata {
       </div>
       <!-- v2.63: 차트 하단 레전드 제거 — 차트 안 동적 레전드와 중복이라 불필요 -->
       <!-- (id=chartLegend 참조하는 JS는 element 없어도 null 가드 또는 무해 — 별도 처리) -->
-      <div class="modal-filter-block">
-        <div class="modal-filter-label">🎯 Signal Type 필터 (메인 표와 동일하게 동기화):</div>
-        <div class="signal-filter-area" id="modalSignalFilterArea"></div>
-        <!-- v2.31/v2.32: V-Shape 알고리즘 버전 토글 (US만, syncVshapeToggleUI가 표시 관리) -->
-        <div class="modal-vshape-ver" id="modalVshapeVerWrap" style="margin-top:10px;">
-          <span class="modal-filter-label" style="display:inline-block;margin-right:8px;">V-Shape 버전:</span>
-          <div class="vshape-ver-toggle" role="group">
-            <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
-            <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+      <div class="modal-filter-block aq-coll collapsed">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)">
+          <div class="modal-filter-label" style="margin:0;">🎯 Signal Type 필터 (메인 표와 동일하게 동기화)</div>
+          <span class="aq-coll-caret">▼</span>
+        </div>
+        <div class="aq-coll-body">
+          <div class="signal-filter-area" id="modalSignalFilterArea"></div>
+          <!-- v2.31/v2.32: V-Shape 알고리즘 버전 토글 (US만, syncVshapeToggleUI가 표시 관리) -->
+          <div class="modal-vshape-ver" id="modalVshapeVerWrap" style="margin-top:10px;">
+            <span class="modal-filter-label" style="display:inline-block;margin-right:8px;">V-Shape 버전:</span>
+            <div class="vshape-ver-toggle" role="group">
+              <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
+              <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="ticker-history-wrap" id="tickerHistoryWrap" style="display:none;">
-        <h4 class="ticker-history-title">📜 이 종목의 시그널 이력</h4>
-        <div id="tickerHistoryArea"></div>
+      <div class="ticker-history-wrap aq-coll collapsed" id="tickerHistoryWrap" style="display:none;">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)">
+          <h4 class="ticker-history-title" style="margin:0;">📜 이 종목의 시그널 이력</h4>
+          <span class="aq-coll-caret">▼</span>
+        </div>
+        <div class="aq-coll-body">
+          <div id="tickerHistoryArea"></div>
+        </div>
       </div>
       <!-- v2.64: 내부자 거래 이력 (SEC Form 4 P-transactions) — US 종목에만 데이터 있음 -->
       <div class="ticker-history-wrap insider-history-wrap" id="insiderHistoryWrap" style="display:none;">
@@ -9563,6 +9597,26 @@ function aqRefreshModalHex() {
   } catch (e) {}
 }
 window.aqHexagonFor = aqHexagonFor; window.aqHexSvg = aqHexSvg;
+// v3.46: 모달 헥사곤 — 피드처럼 차트 추세 따라 동적 코너 (상승=좌상단 / 하락=우상단)
+function aqSetModalHexCorner(tk, d) {
+  const el = document.getElementById('modalHex'); if (!el) return;
+  const isUS = (typeof getCurrentMarket !== 'function') || getCurrentMarket() === 'US';
+  const sc = isUS ? aqHexagonFor(tk) : null;
+  el.classList.remove('hex-left', 'hex-right');
+  if (sc && d && d.closes && d.closes.length > 3) {
+    const n = d.closes.length, h = Math.max(1, Math.floor(n / 3));
+    const lm = d.closes.slice(0, h).reduce((a, b) => a + b, 0) / h;
+    const rm = d.closes.slice(n - h).reduce((a, b) => a + b, 0) / h;
+    el.classList.add(lm <= rm ? 'hex-left' : 'hex-right');
+    el.innerHTML = aqHexSvg(sc);
+  } else {
+    el.innerHTML = sc ? aqHexSvg(sc) : '';
+  }
+}
+window.aqSetModalHexCorner = aqSetModalHexCorner;
+// v3.46: 모달 접이식 섹션 토글
+function aqToggleColl(headEl) { const c = headEl && headEl.closest('.aq-coll'); if (c) c.classList.toggle('collapsed'); }
+window.aqToggleColl = aqToggleColl;
 
 // v3.28: 방어(축6) = 현재 사용자 계좌 기반 비대칭성 (시트의 소유자 값 대신 클라에서 계산)
 let _aqAsymScores = {}; let _aqAsymReady = false; let _aqAsymComputed = false;
@@ -17150,6 +17204,15 @@ async function openChart(ticker) {
     };
     mv.innerHTML = chip('PER', val.per) + chip('Forward PER', val.fwdPer) + chip('PEG', val.peg);
   })();
+  // v3.46: 새로 열 때만 시그널 필터/이력 접힘 기본 (tf/상세 토글 재드로우 시엔 사용자 상태 유지)
+  if (!$('chartModal').classList.contains('active')) {
+    try {
+      const _fb = $('modalSignalFilterArea') && $('modalSignalFilterArea').closest('.modal-filter-block');
+      if (_fb) _fb.classList.add('collapsed');
+      const _th = document.getElementById('tickerHistoryWrap');
+      if (_th) _th.classList.add('collapsed');
+    } catch (e) {}
+  }
   if (typeof aqSetModalHex === 'function') aqSetModalHex(ticker);
 
   // Save current ticker for re-render on filter change
@@ -17201,13 +17264,23 @@ async function openChart(ticker) {
     instN    = normalize(winI);
   }
 
-  drawChart({
-    dates, closes, highs, lows, ma20, adN, vols,
-    supportMA20, supportRF, prevLow, lastPrice, recentHigh, recentHighIdx,
-    buyAvg, tradeMarkers, sigMarkersByType,
-    insiderMarkers,  // v2.64: 내부자 거래 마커
-    retailN, foreignN, instN,   // v1.89: KR 모드면 값 있음, 아니면 null
-  });
+  // v3.46: MO 기본 차트 = 피드 차트(lean, 보조선/MA 없음) / 상세보기(detailMode)면 풀 차트
+  let _drewFeed = false;
+  if (isMobileViewport() && !_state.detailMode) {
+    try {
+      const _fd = aqBuildFeedChartData(ticker, (_state.chartTimeframe && _state.chartTimeframe.modal) || '6M');
+      if (_fd) { drawChart(_fd, { feed: true }); aqSetModalHexCorner(ticker, _fd); _drewFeed = true; }
+    } catch (e) { console.warn('[modal feed chart]', e); }
+  }
+  if (!_drewFeed) {
+    drawChart({
+      dates, closes, highs, lows, ma20, adN, vols,
+      supportMA20, supportRF, prevLow, lastPrice, recentHigh, recentHighIdx,
+      buyAvg, tradeMarkers, sigMarkersByType,
+      insiderMarkers,  // v2.64: 내부자 거래 마커
+      retailN, foreignN, instN,   // v1.89: KR 모드면 값 있음, 아니면 null
+    });
+  }
 
   $('chartModal').classList.add('active');
 }
@@ -17377,7 +17450,7 @@ function closeModal() {
   // v1.23: 모바일 미니 차트도 정리
   if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
   // v1.19: 매크로 모드 정리 — 다음 일반 ticker 열기 위해 영역들 복원
-  $('modalSignalFilterArea').parentElement.style.display = '';
+  $('modalSignalFilterArea').closest('.modal-filter-block').style.display = '';
   $('tickerHistoryWrap').style.display = '';
   // v2.31: 매크로 상관관계 종목 리스트 제거 (다음 일반 종목 모달에 잔상 방지)
   const corrWrap = document.getElementById('macroCorrWrap');
@@ -17598,7 +17671,7 @@ async function openMacroChart(macroName) {
   $('modalSubtitle').innerHTML = `[매크로 지표] · ${tfLabel} 추이 · <span class="${chgPct >= 0 ? 'pos' : 'neg'}">${chgPct >= 0 ? '+' : ''}${chgPct.toFixed(2)}%</span> · Data: ${dates[dates.length - 1]} · 현재값: ${lastValStr}`;
 
   // 매크로 모드: 시그널 필터 + 시그널 이력 숨김
-  $('modalSignalFilterArea').parentElement.style.display = 'none';
+  $('modalSignalFilterArea').closest('.modal-filter-block').style.display = 'none';
   $('tickerHistoryWrap').style.display = 'none';
   // v2.64: 내부자 거래 이력도 매크로 모드에서는 숨김
   const ihWrap = $('insiderHistoryWrap');
