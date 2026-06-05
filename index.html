@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.47';
+window.AQ_PWA_VERSION = '3.48';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2199,19 +2199,25 @@ body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important;
   }
   .tf-toggle button { padding: 0 12px; font-size: var(--text-xs); height: 26px; line-height: 26px; }
 }
+/* v3.48: 차트 컨트롤 래퍼 — PC는 투명(자식 각자 배치), MO는 우하단 flex 한 줄 */
+.chart-ctrl-br { display: contents; }
 @media (max-width: 640px) {
-  /* v3.46: 모달 차트 tf 토글 = 피드와 동일(우하단·소형), 상세보기는 그 왼쪽에 동일 크기로 */
-  .chart-wrap .tf-toggle[data-target="modal"] {
-    top: auto; bottom: 8px; right: 10px; height: auto;
+  /* v3.48: 상세보기 + tf 토글을 우하단 한 줄(flex)로 묶어 겹침 방지 */
+  .chart-wrap .chart-ctrl-br {
+    display: flex; position: absolute; bottom: 8px; right: 10px;
+    gap: 6px; align-items: stretch; z-index: 5;
+  }
+  .chart-wrap .chart-ctrl-br .tf-toggle[data-target="modal"] {
+    position: static; top: auto; bottom: auto; right: auto; height: auto;
     background: rgba(30,30,30,0.6); border-radius: 7px; padding: 2px; box-shadow: none;
   }
-  .chart-wrap .tf-toggle[data-target="modal"] button {
+  .chart-wrap .chart-ctrl-br .tf-toggle[data-target="modal"] button {
     padding: 3px 7px; font-size: 10px; font-weight: 700; height: auto; line-height: normal;
   }
-  .chart-wrap .chart-mode-toggle {
-    top: auto; bottom: 8px; right: 110px; left: auto;
+  .chart-wrap .chart-ctrl-br .chart-mode-toggle {
+    position: static; top: auto; bottom: auto; right: auto; left: auto;
     font-size: 10px; padding: 3px 8px; height: auto; line-height: normal;
-    border-radius: 7px; min-height: 0;
+    border-radius: 7px; min-height: 0; display: inline-flex; align-items: center; white-space: nowrap;
   }
 }
 .chart-legend { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-dim); }
@@ -7692,12 +7698,15 @@ table.combo-eval tbody td .nodata {
       <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
       <div id="positionPanel"></div>
       <div class="chart-wrap">
+        <!-- v3.48: 상세보기 + tf 토글을 우하단 한 줄로 묶음 (겹침 방지) -->
+        <div class="chart-ctrl-br">
         <button class="chart-mode-toggle" id="modeToggleBtn" onclick="toggleChartMode()">🔬 상세보기</button>
-        <!-- v2.10: 타임프레임 세그먼트 (3M/6M/1Y) — 우상단 (모바일은 차트 아래로 이동) -->
+        <!-- v2.10: 타임프레임 세그먼트 (3M/6M/1Y) -->
         <div class="tf-toggle" data-target="modal">
           <button data-tf="3M" class="active" onclick="setChartTimeframe('modal','3M')">3M</button>
           <button data-tf="6M" onclick="setChartTimeframe('modal','6M')">6M</button>
           <button data-tf="1Y" onclick="setChartTimeframe('modal','1Y')">1Y</button>
+        </div>
         </div>
         <canvas id="chartCanvas"></canvas>
         <div class="hex-overlay" id="modalHex"></div>
@@ -7706,7 +7715,7 @@ table.combo-eval tbody td .nodata {
       <!-- (id=chartLegend 참조하는 JS는 element 없어도 null 가드 또는 무해 — 별도 처리) -->
       <div class="modal-filter-block aq-coll collapsed">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
-          <div class="modal-filter-label" style="margin:0;">🎯 Signal Type 필터 (메인 표와 동일하게 동기화)</div>
+          <h4 class="ticker-history-title" style="margin:0;">Signal Type 필터</h4>
           <span class="aq-coll-caret">▼</span>
         </div>
         <div class="aq-coll-body">
@@ -7723,7 +7732,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="ticker-history-wrap aq-coll collapsed" id="tickerHistoryWrap" style="display:none;">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
-          <h4 class="ticker-history-title" style="margin:0;">📜 이 종목의 시그널 이력</h4>
+          <h4 class="ticker-history-title" style="margin:0;">이 종목의 시그널 이력</h4>
           <span class="aq-coll-caret">▼</span>
         </div>
         <div class="aq-coll-body">
@@ -7732,8 +7741,13 @@ table.combo-eval tbody td .nodata {
       </div>
       <!-- v2.64: 내부자 거래 이력 (SEC Form 4 P-transactions) — US 종목에만 데이터 있음 -->
       <div class="ticker-history-wrap insider-history-wrap" id="insiderHistoryWrap" style="display:none;">
-        <h4 class="ticker-history-title">💼 내부자 거래 이력</h4>
+        <h4 class="ticker-history-title">내부자 거래 이력</h4>
         <div id="insiderHistoryArea"></div>
+      </div>
+      <!-- v3.48: 공매도 이력 (US_CROWDING — 잔고비율 / Days to Cover) — US 종목에만 데이터 -->
+      <div class="ticker-history-wrap short-history-wrap" id="shortHistoryWrap" style="display:none;">
+        <h4 class="ticker-history-title">공매도 이력</h4>
+        <div id="shortHistoryArea"></div>
       </div>
       </div><!-- /#mainModalBody -->
       <!-- v1.99: 보고서 패널 (보고서 모드 진입 시 표시, 평소 숨김) -->
@@ -17249,6 +17263,7 @@ async function openChart(ticker) {
   // v2.64: 내부자 거래 이력 테이블
   // v2.65: 차트 마커와 동일한 필터된 거래만 (보통주 + 가격 plausible)
   renderInsiderHistory(ticker, filteredInsiderTrades);
+  renderShortHistory(ticker);  // v3.48: 공매도 이력
 
   // Modal-level signal filter buttons (synced with main filter)
   renderSignalFilterInto($('modalSignalFilterArea'));
@@ -17768,6 +17783,8 @@ async function openMacroChart(macroName) {
   // v2.64: 내부자 거래 이력도 매크로 모드에서는 숨김
   const ihWrap = $('insiderHistoryWrap');
   if (ihWrap) ihWrap.style.display = 'none';
+  const shWrap = $('shortHistoryWrap');
+  if (shWrap) shWrap.style.display = 'none';
 
   _state.openTicker = null;
   _state.openMacro = macroName;
@@ -18444,6 +18461,35 @@ function buildTickerHistoryTable(ticker) {
 
 // v2.64: 내부자 거래 이력 테이블 — 거래자(Owner_Name)마다 일자/Relationship/Security/Shares/Price/비중%
 // v2.65: filteredTrades 파라미터 — 차트 마커와 동일하게 필터된 거래만 표시 (보통주 + 가격 plausible)
+// v3.48: 공매도 이력 — US_CROWDING(잔고비율/Days to Cover), US 종목만
+function renderShortHistory(ticker) {
+  const wrap = $('shortHistoryWrap'), area = $('shortHistoryArea');
+  if (!wrap || !area) return;
+  const tkU = String(ticker || '').toUpperCase();
+  const isUS = (typeof getCurrentMarket !== 'function') || getCurrentMarket() === 'US';
+  if (!isUS) { wrap.style.display = 'none'; area.innerHTML = ''; return; }
+  let list = []; try { list = _aqCrowdingList || []; } catch (e) {}
+  if (!list.length && typeof fetchCrowding === 'function') {
+    fetchCrowding().then(() => { try { renderShortHistory(ticker); } catch (e) {} }).catch(() => {});
+  }
+  const rec = list.find(r => r.ticker === tkU);
+  if (!rec || (rec.shortPctFloat == null && rec.daysToCover == null)) {
+    wrap.style.display = 'none'; area.innerHTML = ''; return;
+  }
+  const fmtPctV = (p) => (p == null || isNaN(p) || !isFinite(p)) ? '—' : p.toFixed(2) + '%';
+  const fmtDtc = (d) => (d == null || isNaN(d) || !isFinite(d)) ? '—' : d.toFixed(2) + '일';
+  area.innerHTML = `
+    <table class="insider-history short-history">
+      <thead><tr><th>지표</th><th style="text-align:right">값</th></tr></thead>
+      <tbody>
+        <tr><td>공매도 잔고비율</td><td class="ih-num">${fmtPctV(rec.shortPctFloat)}</td></tr>
+        <tr><td>Days to Cover</td><td class="ih-num">${fmtDtc(rec.daysToCover)}</td></tr>
+      </tbody>
+    </table>`;
+  wrap.style.display = '';
+}
+window.renderShortHistory = renderShortHistory;
+
 function renderInsiderHistory(ticker, filteredTrades) {
   const wrap = $('insiderHistoryWrap');
   const area = $('insiderHistoryArea');
