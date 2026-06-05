@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.46';
+window.AQ_PWA_VERSION = '3.47';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1547,6 +1547,37 @@ table.sheet tbody tr.drop-below td:last-child {
   transition: all 0.15s;
 }
 .report-back-btn:hover { background: var(--bg-2); border-color: var(--accent); color: var(--accent); }
+
+/* v3.47: 자산 보유 현황 패널 — 헤더는 유지, 차트/필터/이력만 가림 */
+#positionPanel { display: none; }
+body.modal-pos-mode #positionPanel { display: block; }
+body.modal-pos-mode #chartModal .chart-wrap,
+body.modal-pos-mode #chartModal .modal-filter-block,
+body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important; }
+.pos-back-row { margin: 4px 0 16px; }
+.pos-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--line); gap: 12px; }
+.pos-label { color: var(--text-dim); font-size: 13px; flex-shrink: 0; }
+.pos-val { text-align: right; }
+.pos-val .pos-main { font-size: 16px; font-weight: 700; color: var(--text-hi); }
+.pos-val .pos-pnl { font-size: 12px; font-weight: 600; margin-top: 3px; }
+.pos-val .pos-pnl.up { color: var(--kr-up); }
+.pos-val .pos-pnl.down { color: var(--kr-down); }
+.pos-val .pos-pnl.zero { color: var(--text-mute); }
+.pos-avg-big { font-size: 22px; font-weight: 800; color: var(--text-hi); margin-top: 2px; }
+.pos-orders { margin-top: 24px; }
+.pos-orders-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.pos-orders-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.pos-orders-note { font-size: 11px; color: var(--text-mute); }
+.pos-order { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.pos-order .po-date { font-size: 12px; color: var(--text-dim); }
+.pos-order .po-act { font-size: 13px; color: var(--text); }
+.pos-order .po-px { font-size: 13px; font-weight: 700; color: var(--text-hi); text-align: right; }
+.pos-orders-foot { text-align: center; color: var(--text-mute); font-size: 12px; padding: 16px 0 4px; }
+.pos-actions { display: flex; gap: 10px; margin-top: 20px; }
+.pos-actions button { flex: 1; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: default; color: #fff; }
+.pos-actions .pos-sell { background: var(--kr-down); }
+.pos-actions .pos-buy { background: var(--kr-up); }
+.pos-empty { color: var(--text-mute); font-size: 13px; padding: 20px 0; text-align: center; }
 
 /* 목록 모드 */
 .report-list-head {
@@ -7658,6 +7689,8 @@ table.combo-eval tbody td .nodata {
       <div class="modal-subtitle" id="modalSubtitle">—</div>
       <div class="modal-desc" id="modalDesc"></div>
       <div class="modal-valuation" id="modalValuation"></div>
+      <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
+      <div id="positionPanel"></div>
       <div class="chart-wrap">
         <button class="chart-mode-toggle" id="modeToggleBtn" onclick="toggleChartMode()">🔬 상세보기</button>
         <!-- v2.10: 타임프레임 세그먼트 (3M/6M/1Y) — 우상단 (모바일은 차트 아래로 이동) -->
@@ -12794,6 +12827,57 @@ function closeReportPanel() {
   if (tossBtn) tossBtn.style.display = '';
 }
 
+// v3.47: 자산 보유 현황 패널 — 종목별 평단/수량/총액/원금 + 주문 내역
+function aqFmtPosDate(d) {
+  const s = (typeof normalizeDate === 'function' ? normalizeDate(d) : '') || String(d || '');
+  const m = s.match(/^\d{4}-(\d{2})-(\d{2})/);
+  return m ? (parseInt(m[1], 10) + '.' + m[2]) : s;
+}
+function openPositionPanel(tk) {
+  tk = String(tk || _state.openTicker || '').toUpperCase().trim();
+  const panel = document.getElementById('positionPanel');
+  if (!panel || !tk) return;
+  let trades = [];
+  try { trades = lsGet(lsKeyTrades(), []) || []; } catch (e) {}
+  const pos = (computePortfolioFromTrades(trades) || {})[tk] || { qty: 0, totalCost: 0, avg: 0 };
+  let cur = 0;
+  try { const fnd = findTickerSeries(tk); if (fnd && fnd.rows && fnd.rows.length) cur = Number(fnd.rows[fnd.rows.length - 1].Close) || 0; } catch (e) {}
+  const qty = pos.qty || 0, avg = pos.avg || 0, principal = pos.totalCost || 0;
+  const mktVal = qty * cur, pnl = mktVal - principal;
+  const pnlPct = principal > 0 ? (pnl / principal * 100) : 0;
+  const pnlCls = pnl > 1e-9 ? 'up' : (pnl < -1e-9 ? 'down' : 'zero');
+  const myTrades = trades.filter(t => String(t.ticker || '').toUpperCase().trim() === tk);
+  let ordersHtml;
+  if (myTrades.length) {
+    ordersHtml = myTrades.map(t => {
+      const act = (t.action === '매도') ? '판매' : '구매';
+      const q = parseFloat(t.qty) || 0, px = parseFloat(t.price) || 0;
+      return `<div class="pos-order"><span class="po-date">${aqFmtPosDate(t.date)}</span><span class="po-act">${act} ${q}주</span><span class="po-px">주당 ${fmtMoney(px)}</span></div>`;
+    }).join('') + `<div class="pos-orders-foot">모든 주문 내역을 불러왔어요</div>`;
+  } else {
+    ordersHtml = `<div class="pos-empty">주문 내역이 없습니다.</div>`;
+  }
+  panel.innerHTML = `
+    <div class="pos-back-row"><button class="report-back-btn" onclick="closePositionPanel()">← 차트로 돌아가기</button></div>
+    <div class="pos-row"><div><div class="pos-label">1주 평균금액</div><div class="pos-avg-big">${fmtMoney(avg)}</div></div></div>
+    <div class="pos-row"><div class="pos-label">보유 수량</div><div class="pos-val"><span class="pos-main">${qty.toLocaleString()}주</span></div></div>
+    <div class="pos-row"><div class="pos-label">총 금액</div><div class="pos-val"><span class="pos-main">${fmtMoney(mktVal)}</span><div class="pos-pnl ${pnlCls}">${pnl >= 0 ? '+' : ''}${fmtMoney(pnl)} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%)</div></div></div>
+    <div class="pos-row"><div class="pos-label">투자 원금</div><div class="pos-val"><span class="pos-main">${fmtMoney(principal)}</span></div></div>
+    <div class="pos-orders">
+      <div class="pos-orders-head"><span class="pos-orders-title">주문 내역</span><span class="pos-orders-note">✓ 취소 포함</span></div>
+      ${ordersHtml}
+    </div>
+    <div class="pos-actions"><button type="button" class="pos-sell">매도</button><button type="button" class="pos-buy">매수</button></div>
+  `;
+  document.body.classList.add('modal-pos-mode');
+}
+window.openPositionPanel = openPositionPanel;
+function closePositionPanel() {
+  document.body.classList.remove('modal-pos-mode');
+  try { if (_chart && typeof _chart.resize === 'function') _chart.resize(); } catch (e) {}
+}
+window.closePositionPanel = closePositionPanel;
+
 function renderReportList() {
   const tk = _state.openTicker;
   if (!tk) return;
@@ -17009,6 +17093,8 @@ async function fetchAdhocOhlcv(ticker) {
 }
 
 async function openChart(ticker) {
+  const _freshOpen = !$('chartModal').classList.contains('active');
+  if (_freshOpen) document.body.classList.remove('modal-pos-mode');
   // v2.31: 매크로 상관관계 종목 리스트 잔상 제거 (일반 종목 모달엔 표시 X)
   const _oldCorr = document.getElementById('macroCorrWrap');
   if (_oldCorr) _oldCorr.remove();
@@ -17283,6 +17369,11 @@ async function openChart(ticker) {
   }
 
   $('chartModal').classList.add('active');
+
+  // v3.47: 자산 탭에서 종목 클릭 → 보유 현황 화면으로 진입 (차트로 돌아가기로 차트 전환)
+  if (_freshOpen && isMobileViewport() && document.body.getAttribute('data-mtab') === 'board' && _state.openTicker && !_state.openMacro) {
+    try { openPositionPanel(_state.openTicker); } catch (e) { console.warn('[positionPanel]', e); }
+  }
 }
 
 // v1.98~v2.15: 토스증권 종목 페이지/앱 이동
@@ -17447,6 +17538,7 @@ window.syncWatchButton = syncWatchButton;
 
 function closeModal() {
   $('chartModal').classList.remove('active');  if (_chart) { _chart.destroy(); _chart = null; }
+  document.body.classList.remove('modal-pos-mode');
   // v1.23: 모바일 미니 차트도 정리
   if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
   // v1.19: 매크로 모드 정리 — 다음 일반 ticker 열기 위해 영역들 복원
