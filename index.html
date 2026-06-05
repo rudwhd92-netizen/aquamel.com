@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.41';
+window.AQ_PWA_VERSION = '3.42';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2454,6 +2454,11 @@ table.sheet tbody tr.drop-below td:last-child {
 .insider-archive-item .ia-date { font-size: 10px; color: var(--text-mute); }
 .insider-archive-item .ia-shares { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
 .insider-archive-item .ia-price { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-top: 2px; }
+.insider-archive-item .ia-pnl { font-size: 12px; font-weight: 600; margin-top: 2px; }
+.insider-archive-item .ia-pnl.up { color: var(--kr-up); }
+.insider-archive-item .ia-pnl.down { color: var(--kr-down); }
+.insider-archive-item .ia-pnl.zero { color: var(--text-mute); }
+.insider-archive-item.long-pressing { background: var(--panel-hi); border-radius: 8px; }
 
 /* v3.24: 공매도 리스트 */
 .short-sort { display: inline-flex; gap: 2px; background: var(--bg-3, #2d2d30); border-radius: 8px; padding: 2px; }
@@ -3613,6 +3618,24 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
     padding: 0 !important;
   }
   body[data-mtab="board"] #dashboardCard > .card-body { padding: 0 !important; }
+  /* v3.42: 자산 서브탭(보유 종목/상세 분석) 콘텐츠 = 탐색 카드와 동일 여백·헤더 (인너 프레임 제거) */
+  body[data-mtab="board"] #boardHoldingsCard > .card-body,
+  body[data-mtab="board"] #boardAccountCard > .card-body { margin-top: 0; padding: 0; }
+  body[data-mtab="board"] #boardHoldingsCard .dash-card,
+  body[data-mtab="board"] #boardAccountCard .dash-card {
+    background: none; border: none; border-radius: 0; padding: 0; margin: 0 0 28px 0;
+  }
+  body[data-mtab="board"] #boardHoldingsCard .dash-card:last-child,
+  body[data-mtab="board"] #boardAccountCard .dash-card:last-child { margin-bottom: 0; }
+  body[data-mtab="board"] #boardHoldingsCard .dash-card-title,
+  body[data-mtab="board"] #boardAccountCard .dash-card-title {
+    font-size: var(--text-2xl); font-weight: 700; color: var(--text-hi);
+    letter-spacing: -0.4px; line-height: 1.3; margin-bottom: 14px;
+  }
+  body[data-mtab="board"] #boardHoldingsCard .dash-card-header { margin-bottom: 14px; }
+  /* 보유 종목 현황: 전용 탭이므로 내부 스크롤 제거 → 전체 표시 */
+  body[data-mtab="board"] #boardHoldingsCard .dash-holdings-card { max-height: none; }
+  body[data-mtab="board"] #boardHoldingsCard .dash-holdings-body { max-height: none; overflow: visible; }
 }
 
 /* ============ SPLASH OVERLAY (v1.26 — game-style boot loader) ============ */
@@ -14276,22 +14299,27 @@ function renderDashHoldingsList(holdings, hiddenHoldings) {
   } else {
     const market = getCurrentMarket();
     const html = holdings.map(h => {
-      // v3.40: 표준 종목 리스트(.stock-list-row) 룩앤필 — 로고 | 종목명 | 섹터·수량 | 평가금/손익
+      // v3.42: 탐색 '내부자 누적'과 동일한 .insider-archive-item 양식 (로고 | 종목명/회사명/섹터 | 주식수/평가금/손익)
       const layer = SECTOR_TO_LAYER[h.sector] || '기타';
       const layerFile = (market === 'KR') ? '' : layerFileName(layer);
       const tkFile = tickerFileName(h.ticker);
       const logoHtml = tkFile
-        ? `<img class="sl-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
-        : `<img class="sl-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+        ? `<img class="ia-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+        : `<img class="ia-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
       const pcls = h.profit > 0 ? 'up' : h.profit < 0 ? 'down' : 'zero';
+      const qtyStr = h.qty.toLocaleString(undefined, { maximumFractionDigits: 2 }) + '주';
       return `
-        <div class="stock-list-row" data-ticker="${escapeAttr(h.ticker)}">
+        <div class="insider-archive-item" data-ticker="${escapeAttr(h.ticker)}">
           ${aqWrapLogo(logoHtml, h.ticker)}
-          <div class="sl-ticker" title="${escapeAttr(displayName(h.ticker))}">${escapeHtml(displayName(h.ticker))}</div>
-          <div class="sl-sector">${escapeHtml(h.sector || '미분류')} · ${h.qty.toLocaleString(undefined, { maximumFractionDigits: 2 })}주</div>
-          <div class="sl-meta">
-            <div class="sl-price">${fmtUSD(h.evalVal)}</div>
-            <div class="sl-chg ${pcls}">${fmtUSDPlus(h.profit)} (${h.roi >= 0 ? '+' : ''}${h.roi.toFixed(1)}%)</div>
+          <div class="ia-info">
+            <div class="ia-ticker" title="${escapeAttr(displayName(h.ticker))}">${escapeHtml(displayName(h.ticker))}</div>
+            <div class="ia-company">${escapeHtml(displaySub(h.ticker))}</div>
+            <div class="ia-sector">${escapeHtml(aqStripSectorEmoji(h.sector || '미분류'))}</div>
+          </div>
+          <div class="ia-meta">
+            <div class="ia-shares">${escapeHtml(qtyStr)}</div>
+            <div class="ia-price">${fmtUSD(h.evalVal)}</div>
+            <div class="ia-pnl ${pcls}">${fmtUSDPlus(h.profit)} (${h.roi >= 0 ? '+' : ''}${h.roi.toFixed(1)}%)</div>
           </div>
         </div>`;
     }).join('');
@@ -14319,7 +14347,7 @@ function attachHoldingInteractions() {
 
   // 좌클릭 → 차트 보기
   body.addEventListener('click', (e) => {
-    const row = e.target.closest('.stock-list-row');
+    const row = e.target.closest('.insider-archive-item');
     if (!row) return;
     const tk = row.getAttribute('data-ticker');
     if (tk && typeof openChart === 'function') openChart(tk);
@@ -14327,7 +14355,7 @@ function attachHoldingInteractions() {
 
   // 우클릭 → 컨텍스트 메뉴
   body.addEventListener('contextmenu', (e) => {
-    const row = e.target.closest('.stock-list-row');
+    const row = e.target.closest('.insider-archive-item');
     if (!row) return;
     e.preventDefault();
     const tk = row.getAttribute('data-ticker');
@@ -14341,7 +14369,7 @@ function attachHoldingInteractions() {
   let pressStartX = 0, pressStartY = 0;
 
   body.addEventListener('touchstart', (e) => {
-    const row = e.target.closest('.stock-list-row');
+    const row = e.target.closest('.insider-archive-item');
     if (!row) return;
     pressTarget = row;
     pressMoved = false;
