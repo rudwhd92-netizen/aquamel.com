@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.42';
+window.AQ_PWA_VERSION = '3.43';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3560,6 +3560,8 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-mtab="explore"][data-xtab="insider"]  section.card[data-xtab="insider"],
   body[data-mtab="explore"][data-xtab="shorting"] section.card[data-xtab="shorting"],
   body[data-mtab="explore"][data-xtab="all"]      section.card[data-xtab="all"] { display: block !important; }
+  /* v3.43: MO 탐색에서 매크로 지표 카드 제거 (마퀴 탭으로 대체). PC 탐색은 유지 */
+  body[data-mtab="explore"] #macroCard { display: none !important; }
   body[data-mtab="board"]    section.card[data-mtab~="board"]    { display: block !important; }
   /* v3.39: 보드 서브탭 게이팅 — data-btab 가진 콘텐츠 카드는 현재 서브탭만 표시 (바는 항상 표시) */
   body[data-mtab="board"] section.card[data-btab] { display: none !important; }
@@ -5263,6 +5265,15 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   vertical-align: 1px;
 }
 [data-theme="light"] .macro-cell.kjp400-cell .kjp-tag { background: rgba(42,108,176,0.12); }
+/* v3.43: 매크로 지표 개요 모달 (MO) */
+.macro-overview-modal { position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; justify-content: center; }
+.macro-overview-modal.open { display: flex; }
+.macro-overview-content { background: var(--panel); width: 100%; max-width: 640px; max-height: 90vh; border-radius: 18px 18px 0 0; display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow-2); animation: macroSheetUp 0.24s var(--ease-out) both; }
+@keyframes macroSheetUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.macro-overview-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 12px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+.macro-overview-head h2 { margin: 0; font-size: var(--text-2xl); font-weight: 700; color: var(--text-hi); letter-spacing: -0.4px; }
+.macro-overview-close { background: none; border: none; color: var(--text-mute); font-size: 26px; line-height: 1; cursor: pointer; padding: 0 4px; }
+.macro-overview-body { padding: 16px 18px calc(24px + env(safe-area-inset-bottom)); overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
 footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 10px; color: var(--text-mute); text-align: center; }
 footer .accent { color: var(--accent-2); }
@@ -6796,6 +6807,17 @@ table.combo-eval tbody td .nodata {
       <div id="macroArea"></div>
     </div>
   </section>
+
+  <!-- v3.43: MO 매크로 지표 개요 모달 (HERO 마퀴 탭 시 먼저 표시) -->
+  <div class="macro-overview-modal" id="macroOverviewModal" onclick="_macroOverviewBackdrop(event)">
+    <div class="macro-overview-content">
+      <div class="macro-overview-head">
+        <h2>매크로 지표</h2>
+        <button class="macro-overview-close" onclick="closeMacroOverview()" aria-label="닫기">×</button>
+      </div>
+      <div class="macro-overview-body" id="macroOverviewBody"></div>
+    </div>
+  </div>
 
   <!-- ============ v1.52 MOBILE-ONLY: 종목 리스트 (탐색 탭) ============ -->
   <!-- v3.14: 탐색 서브탭 바 (누적 시그널 / 내부자 매수 / 공매도 이력 / 전체 리스트) -->
@@ -17616,6 +17638,29 @@ async function openMacroChart(macroName) {
 }
 window.openMacroChart = openMacroChart;
 
+// v3.43: 매크로 지표 개요 모달 — 마퀴(MO) 탭 시 전체 그리드 → 셀 탭 시 상세(openMacroChart)
+function openMacroOverview() {
+  const modal = document.getElementById('macroOverviewModal');
+  const body = document.getElementById('macroOverviewBody');
+  if (!modal || !body) return;
+  try { if (typeof renderMacro === 'function') renderMacro(); } catch (e) {}
+  const src = document.getElementById('macroArea');
+  body.innerHTML = (src && src.innerHTML.trim()) ? src.innerHTML : '<div class="empty-state">매크로 데이터 없음</div>';
+  // 셀 탭 → 개요 닫고 상세 차트(인라인 onclick=openMacroChart)가 위에 뜸
+  body.querySelectorAll('.macro-cell').forEach(c => c.addEventListener('click', () => closeMacroOverview()));
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMacroOverview() {
+  const modal = document.getElementById('macroOverviewModal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function _macroOverviewBackdrop(e) { if (e.target && e.target.id === 'macroOverviewModal') closeMacroOverview(); }
+window.openMacroOverview = openMacroOverview;
+window.closeMacroOverview = closeMacroOverview;
+window._macroOverviewBackdrop = _macroOverviewBackdrop;
+
 // ============================================================================
 // v2.25: 매크로 × KJP400 종목 상관관계 (60일 일간 수익률 Pearson correlation)
 //   US만, 클라이언트 사이드 계산 + 세션 캐시
@@ -19209,6 +19254,10 @@ function _aqRenderMarquee() {
   // 클릭 → 매크로 차트
   track.querySelectorAll('.macro-chip').forEach(el => {
     el.onclick = () => {
+      // v3.43: MO — 마퀴 탭 시 '매크로 지표' 개요 먼저 → 거기서 하나 골라 상세 / PC는 기존대로 바로 상세
+      if (typeof isMobileViewport === 'function' && isMobileViewport()) {
+        if (typeof openMacroOverview === 'function') { openMacroOverview(); return; }
+      }
       const tk = el.dataset.macro;
       if (tk && typeof openMacroChart === 'function') openMacroChart(tk);
     };
