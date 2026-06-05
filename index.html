@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.38';
+window.AQ_PWA_VERSION = '3.39';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3555,6 +3555,11 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-mtab="explore"][data-xtab="shorting"] section.card[data-xtab="shorting"],
   body[data-mtab="explore"][data-xtab="all"]      section.card[data-xtab="all"] { display: block !important; }
   body[data-mtab="board"]    section.card[data-mtab~="board"]    { display: block !important; }
+  /* v3.39: 보드 서브탭 게이팅 — data-btab 가진 콘텐츠 카드는 현재 서브탭만 표시 (바는 항상 표시) */
+  body[data-mtab="board"] section.card[data-btab] { display: none !important; }
+  body[data-mtab="board"][data-btab="holdings"]    section.card[data-btab~="holdings"],
+  body[data-mtab="board"][data-btab="performance"] section.card[data-btab~="performance"],
+  body[data-mtab="board"][data-btab="account"]     section.card[data-btab~="account"] { display: block !important; }
   body[data-mtab="my"]       section.card[data-mtab~="my"]       { display: block !important; }
   /* v2.01 Phase 2: 분석 탭 — 분석 카드만 표시 */
   body[data-mtab="analysis"] section.card[data-mtab~="analysis"] { display: block !important; }
@@ -6872,7 +6877,22 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ KJP INVESTMENT DASHBOARD (v1.29) ============ -->
-  <section class="card" id="dashboardCard" data-mtab="board" style="display:none;">
+  <!-- v3.39: 보드 서브탭 (탐색 서브탭과 동일 양식) — 보유 종목 / 누적 성과 / 계좌 분석 -->
+  <section class="card mobile-only explore-subtabs" id="boardSubtabs" data-mtab="board">
+    <div class="xtab-row">
+      <button class="xtab-btn" data-btab="holdings" onclick="setBoardSubtab('holdings')">보유 종목</button>
+      <button class="xtab-btn active" data-btab="performance" onclick="setBoardSubtab('performance')">누적 성과</button>
+      <button class="xtab-btn" data-btab="account" onclick="setBoardSubtab('account')">계좌 분석</button>
+    </div>
+  </section>
+  <section class="card mobile-only" id="boardHoldingsCard" data-mtab="board" data-btab="holdings" style="display:none;">
+    <div class="card-body"><div class="cmp-placeholder">보유 종목 — 준비 중</div></div>
+  </section>
+  <section class="card mobile-only" id="boardAccountCard" data-mtab="board" data-btab="account" style="display:none;">
+    <div class="card-body"><div class="cmp-placeholder">계좌 분석 — 준비 중</div></div>
+  </section>
+
+  <section class="card" id="dashboardCard" data-mtab="board" data-btab="performance" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>AQUAMEL Dashboard</h2>
       <span class="dash-asof" id="dashAsof"></span>
@@ -19452,6 +19472,10 @@ function switchMobileTab(tab) {
   } else if (tab === 'watch') {
     // v2.92: 관심 칸반 빌드
     try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {}
+  } else if (tab === 'board') {
+    // v3.39: 보드 서브탭 기본값 = 누적 성과
+    if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'performance');
+    try { if (typeof setBoardSubtab === 'function') setBoardSubtab(document.body.getAttribute('data-btab') || 'performance'); } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -19480,6 +19504,7 @@ function initMobileTabs() {
     document.body.setAttribute('data-mtab', 'discover');
   }
   if (!document.body.getAttribute('data-xtab')) document.body.setAttribute('data-xtab', 'signals');
+  if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'performance');
   // 디폴트 = 발견
   switchMobileTab(document.body.getAttribute('data-mtab') || 'discover');
 }
@@ -19572,9 +19597,17 @@ function setPCTab(tab) {
 }
 
 // PC에서는 모바일 전용 카드(buyPoints/archiveMobile/stockList)를 사이드 패널 안으로 DOM 이동
+function setBoardSubtab(x) {
+  document.body.setAttribute('data-btab', x);
+  document.querySelectorAll('.xtab-btn[data-btab]').forEach(b => b.classList.toggle('active', b.dataset.btab === x));
+  // 누적 성과 = 기존 대시보드 콘텐츠 / 보유 종목·계좌 분석 = 추후 구현
+  try { if (typeof rerunCardAnimations === 'function') rerunCardAnimations(); } catch (e) {}
+}
+window.setBoardSubtab = setBoardSubtab;
+
 function setExploreSubtab(x) {
   document.body.setAttribute('data-xtab', x);
-  document.querySelectorAll('.xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.xtab === x));
+  document.querySelectorAll('.xtab-btn[data-xtab]').forEach(b => b.classList.toggle('active', b.dataset.xtab === x));
   try {
     if (typeof aqApplyExploreMarketUI === 'function') aqApplyExploreMarketUI();
     const _isKR = getCurrentMarket() === 'KR';
