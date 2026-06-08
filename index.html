@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.48';
+window.AQ_PWA_VERSION = '3.49';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -12788,6 +12788,107 @@ function renderReportContent(parsed, ticker, date) {
   return parts.join('');
 }
 
+// ============================================================================
+// v3.49: 2026-06-07 이후 정량 보고서 — 구글Docs 신 포맷
+//   (헤더 "티커 (회사명) — 날짜" / 🎯 추천 ACTION / 핵심 요약 / 번호 매긴 14섹션 / TO-DO)
+//   기존(txt, ~2026-06-06) 보고서는 parseReportText/renderReportContent 그대로 유지.
+//   ※ getReport가 신규분(구글Docs)의 본문 텍스트를 반환한다는 전제 (백엔드 영역).
+// ============================================================================
+function aqReportIsV2(date) {
+  const d = String(date || '').replace(/[^0-9]/g, '');
+  if (d.length < 8) return false;
+  return parseInt(d.slice(0, 8), 10) >= 20260607;
+}
+function aqActionType(w) {
+  w = String(w || '');
+  if (/적극\s*매수|강력\s*매수|매수\s*추천/.test(w)) return 'strong-buy';
+  if (/매수\s*금지|매도|회피/.test(w))               return 'avoid';
+  if (/분할\s*매수|매수/.test(w))                     return 'buy';
+  if (/보유|관망|보류|대기|유지/.test(w))             return 'hold';
+  return 'neutral';
+}
+function aqStripBullet(str) {
+  return String(str || '').replace(/^[\-\*·•▪◦\u2022\u25CF\u25E6]+\s*/, '').trim();
+}
+function parseReportTextV2(text) {
+  const out = { action: null, summary: [], sections: [], todo: [] };
+  const lines = String(text || '').split(/\r?\n/);
+  let cur = null, curSection = null;
+  for (const raw of lines) {
+    const line = raw.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim();
+    if (!line) continue;
+    if (/추천\s*ACTION/.test(line) && line.length < 24) { cur = 'action'; continue; }
+    if (line === '핵심 요약' || (line.startsWith('핵심 요약') && line.length <= 8)) { cur = 'summary'; continue; }
+    const m = line.match(/^(\d{1,2})\.\s*(.+)$/);
+    if (m) {
+      const num = parseInt(m[1], 10), title = m[2].trim();
+      if (/TO\s*-?\s*DO/i.test(title) || title.includes('CHECK LIST') || title.includes('체크리스트')) { cur = 'todo'; curSection = null; continue; }
+      curSection = { num, title, items: [] };
+      out.sections.push(curSection); cur = 'section'; continue;
+    }
+    if (cur === 'action') {
+      const mm = line.match(/^([^—\-]+?)\s*[—\-]\s*(.+)$/);
+      if (mm && !out.action) out.action = { action: mm[1].trim(), reason: mm[2].trim(), actionType: aqActionType(mm[1].trim()) };
+      else if (!out.action)  out.action = { action: line, reason: '', actionType: aqActionType(line) };
+      else out.action.reason += (out.action.reason ? ' ' : '') + line;
+      continue;
+    }
+    if (cur === 'summary') { out.summary.push(aqStripBullet(line)); continue; }
+    if (cur === 'todo')    { out.todo.push(aqStripBullet(line)); continue; }
+    if (cur === 'section' && curSection) { curSection.items.push(aqStripBullet(line)); continue; }
+    // cur === null → 헤더(종목명 — 날짜) 줄: 무시
+  }
+  return out;
+}
+function renderReportContentV2(parsed, ticker, date) {
+  ticker = String(ticker || '').toUpperCase();
+  date = String(date || '');
+  const parts = [];
+  if (parsed.action) {
+    parts.push(`<div class="report-section rs-action">
+      <div class="report-section-head"><span class="report-icon">🎯</span><span class="report-section-title">추천 ACTION</span></div>
+      <div class="report-section-body">
+        <div class="report-action report-action-${parsed.action.actionType}">
+          <div class="report-action-badge">${escapeHtml(parsed.action.action)}</div>
+          ${parsed.action.reason ? `<div class="report-action-reason">${escapeHtml(parsed.action.reason)}</div>` : ''}
+        </div>
+      </div>
+    </div>`);
+  }
+  if (parsed.summary && parsed.summary.length) {
+    parts.push(`<div class="report-section rs-summary">
+      <div class="report-section-head"><span class="report-icon">★</span><span class="report-section-title">핵심 요약</span></div>
+      <div class="report-section-body">${parsed.summary.map(x => `<div class="report-item">${escapeHtml(x)}</div>`).join('')}</div>
+    </div>`);
+  }
+  (parsed.sections || []).forEach(sec => {
+    const body = (sec.items || []).map(it => `<div class="report-item">${escapeHtml(it)}</div>`).join('');
+    parts.push(`<div class="report-section">
+      <div class="report-section-head"><span class="report-icon">${sec.num}</span><span class="report-section-title">${escapeHtml(sec.title)}</span></div>
+      <div class="report-section-body">${body}</div>
+    </div>`);
+  });
+  if (parsed.todo && parsed.todo.length) {
+    const todoHtml = parsed.todo.map((t, idx) => {
+      const checked = (typeof _todoIsChecked === 'function') ? _todoIsChecked(ticker, date, idx) : false;
+      const p = (typeof parseTodoTags === 'function') ? parseTodoTags(t) : { body: t };
+      const disp = (p && p.body && p.body.trim()) ? p.body : t;
+      return `<label class="report-todo-item${checked ? ' checked' : ''}" data-todo-idx="${idx}" data-todo-raw="${escapeAttr(t)}">
+        <input type="checkbox" class="report-todo-cb"${checked ? ' checked' : ''} onchange="toggleReportTodo(this)">
+        <span class="report-todo-text">${escapeHtml(disp)}</span>
+      </label>`;
+    }).join('');
+    parts.push(`<div class="report-section rs-todo">
+      <div class="report-section-head"><span class="report-icon">☑</span><span class="report-section-title">TO-DO CHECK LIST</span></div>
+      <div class="report-section-body">${todoHtml}</div>
+    </div>`);
+  }
+  if (!parts.length) parts.push('<div class="report-empty">보고서 본문을 파싱할 수 없습니다. 형식을 확인해주세요.</div>');
+  return parts.join('');
+}
+window.parseReportTextV2 = parseReportTextV2;
+window.renderReportContentV2 = renderReportContentV2;
+
 // 모달 내부에서 보고서 모드로 전환
 async function openReportPanel() {
   const tk = _state.openTicker;
@@ -12922,7 +13023,8 @@ async function openReportDetail(date) {
   $('reportPanel').innerHTML = `<div class="report-loading">보고서 로드 중...</div>`;
   try {
     const content = await fetchReportContent(tk, date);
-    const parsed = parseReportText(content);
+    const _v2 = aqReportIsV2(date);
+    const parsed = _v2 ? parseReportTextV2(content) : parseReportText(content);
     const mkt = getCurrentMarket();
     // v2.63: 좌측 종목 헤더 — 차트 모달의 modalTitle/Price/Subtitle innerHTML 그대로 복사 (이미 openChart에서 채워져 있음)
     const modalTitleEl = $('modalTitle');
@@ -12952,7 +13054,7 @@ async function openReportDetail(date) {
           <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
         </div>
       </div>
-      <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${renderReportContent(parsed, tk, date)}</div>
+      <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${_v2 ? renderReportContentV2(parsed, tk, date) : renderReportContent(parsed, tk, date)}</div>
     `;
     // 스크롤 맨 위로
     const modalContent = $('reportPanel').closest('.modal-content');
@@ -12983,10 +13085,15 @@ async function aqLoadAnalysisAction(mkt, tk, date) {
   if (_analysisActions[key] !== undefined) return _analysisActions[key];
   try {
     const content = await fetchReportContent(tk, date);
-    const parsed = parseReportText(content);
-    const arr = (parsed.sections && parsed.sections.action) || [];
-    const a = arr.find(x => x && x.type === 'action');
-    _analysisActions[key] = a ? { action: a.action, type: a.actionType } : null;
+    if (aqReportIsV2(date)) {
+      const p2 = parseReportTextV2(content);
+      _analysisActions[key] = p2.action ? { action: p2.action.action, type: p2.action.actionType } : null;
+    } else {
+      const parsed = parseReportText(content);
+      const arr = (parsed.sections && parsed.sections.action) || [];
+      const a = arr.find(x => x && x.type === 'action');
+      _analysisActions[key] = a ? { action: a.action, type: a.actionType } : null;
+    }
   } catch (e) { _analysisActions[key] = null; }
   return _analysisActions[key];
 }
