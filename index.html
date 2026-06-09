@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.52';
+window.AQ_PWA_VERSION = '3.53';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1868,21 +1868,31 @@ body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important;
 .rs-negative { border-left: 3px solid #fd7e14; background: linear-gradient(90deg, rgba(253,126,20,0.08), transparent 30%); }
 .rs-negative .report-icon { color: #fd7e14; font-size: 20px; font-weight: 800; }
 .rs-negative .report-item { border-left-color: #fd7e14; }
-/* v3.52: V2 보고서 — 섹션 성격별 아이템 (블릿/칩/번호/결론) */
-.rv2-body { gap: 0 !important; padding: 2px 0; }
-.rv2-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; line-height: 1.55; font-size: 13px; }
+/* v3.53: V2 보고서 — 섹션 성격별 아이템 (블릿/인라인칩/라벨카드/결론) */
+.rv2-body { gap: 0 !important; padding: 4px 0; }
+.rv2-item { display: flex; align-items: flex-start; gap: 9px; padding: 9px 12px; line-height: 1.6; font-size: 13.5px; }
 .rv2-item + .rv2-item { border-top: 1px solid var(--line); }
-.rv2-dot { color: var(--text-mute); flex-shrink: 0; line-height: 1.55; }
-.rv2-text { flex: 1; color: var(--text); word-break: break-word; }
-.rv2-arrow { color: var(--text-mute); flex-shrink: 0; font-weight: 700; }
-.rv2-chip { flex-shrink: 0; align-self: center; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
-.rv2-chip-pos  { background: rgba(81,207,102,0.16);  color: #51cf66; }
-.rv2-chip-neg  { background: rgba(250,82,82,0.16);   color: #fa5252; }
-.rv2-chip-warn { background: rgba(255,146,43,0.16);  color: #ff922b; }
-.rv2-chip-mute { background: rgba(134,142,150,0.20); color: #adb5bd; }
-.rv2-num { flex-shrink: 0; width: 21px; height: 21px; border-radius: 50%; background: rgba(255,255,255,0.08); color: var(--text); font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
-.rv2-stage { flex-shrink: 0; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px; background: rgba(255,255,255,0.07); align-self: flex-start; margin-top: 1px; }
-.rv2-concl { background: rgba(255,255,255,0.045); border-radius: 8px; margin-top: 4px; }
+.rv2-dot { color: var(--text-mute); flex-shrink: 0; }
+.rv2-text { flex: 1; min-width: 0; color: var(--text); word-break: break-word; }
+.rv2-arrow { color: var(--text-mute); font-weight: 700; }
+.rv2-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 999px; vertical-align: middle; margin: 0 1px; }
+.rv2-pill-pos  { background: rgba(81,207,102,0.16);  color: #51cf66; }
+.rv2-pill-neg  { background: rgba(250,82,82,0.16);   color: #fa5252; }
+.rv2-pill-warn { background: rgba(255,146,43,0.16);  color: #ff922b; }
+.rv2-pill-mute { background: rgba(134,142,150,0.20); color: #adb5bd; }
+.rv2-cpos { color: #51cf66; font-weight: 700; }
+.rv2-cneg { color: #fa5252; font-weight: 700; }
+/* 5WHYS — 라벨 카드 (옛 포맷 감성) */
+.rv2-card { margin: 8px 0; padding: 11px 14px; border-radius: 10px; background: rgba(255,255,255,0.035); border-left: 3px solid var(--line); line-height: 1.65; font-size: 13.5px; color: var(--text); word-break: break-word; }
+.rv2-card-label { font-weight: 800; margin-right: 5px; }
+.rs-why-down .rv2-card { border-left-color: #339af0; }
+.rs-why-down .rv2-card-label { color: #339af0; }
+.rs-why-partner .rv2-card { border-left-color: #ae3ec9; }
+.rs-why-partner .rv2-card-label { color: #ae3ec9; }
+.rs-negative .rv2-card { border-left-color: #fd7e14; }
+.rs-negative .rv2-card-label { color: #fd7e14; }
+/* 결론 박스 */
+.rv2-concl { background: rgba(255,255,255,0.05); border-radius: 9px; margin-top: 6px; }
 .rv2-concl .rv2-text { font-weight: 600; }
 .rv2-concl .rv2-dot { color: var(--accent, #5c7cfa); }
 
@@ -12830,7 +12840,7 @@ function aqStripBullet(str) {
 function parseReportTextV2(text) {
   const out = { action: null, summary: [], sections: [], todo: [] };
   const lines = String(text || '').split(/\r?\n/);
-  let cur = null, curSection = null;
+  let cur = null, curSection = null, lastSecNum = 0;
   for (const raw of lines) {
     const line = raw.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim();
     if (!line) continue;
@@ -12839,9 +12849,18 @@ function parseReportTextV2(text) {
     const m = line.match(/^(\d{1,2})\.\s*(.+)$/);
     if (m) {
       const num = parseInt(m[1], 10), title = m[2].trim();
-      if (/TO\s*-?\s*DO/i.test(title) || title.includes('CHECK LIST') || title.includes('체크리스트')) { cur = 'todo'; curSection = null; continue; }
-      curSection = { num, title, items: [] };
-      out.sections.push(curSection); cur = 'section'; continue;
+      // v3.53: 정식 섹션 번호는 1→14 단조 증가. 5WHYS 내부 "1.~5." 재시작 번호는 섹션이 아니라 항목으로 취급.
+      if (num > lastSecNum && num <= 14) {
+        lastSecNum = num;
+        if (/TO\s*-?\s*DO/i.test(title) || title.includes('CHECK LIST') || title.includes('체크리스트')) { cur = 'todo'; curSection = null; continue; }
+        curSection = { num, title, items: [] };
+        out.sections.push(curSection); cur = 'section'; continue;
+      }
+      // 내부 번호 줄 → 현재 컨텍스트 항목으로 (선두 번호 제거)
+      if (cur === 'section' && curSection) { curSection.items.push(title); continue; }
+      if (cur === 'todo')    { out.todo.push(title); continue; }
+      if (cur === 'summary') { out.summary.push(title); continue; }
+      continue;
     }
     if (cur === 'action') {
       const mm = line.match(/^([^—–\-]+?)\s*[—–\-]\s*(.+)$/);  // em/en-dash·hyphen
@@ -12857,10 +12876,10 @@ function parseReportTextV2(text) {
   }
   return out;
 }
-// v3.52: V2 14섹션 — 섹션 성격(색상/아이콘/종류) 매핑
+// v3.53: V2 14섹션 — 섹션 성격(색상/아이콘/렌더종류) 매핑
 function aqV2SectionMeta(num, title) {
   const t = String(title || '');
-  if (/역방향/.test(t))                       return { cls:'rs-negative',    icon:'🔄', kind:'reverse' };
+  if (/역방향/.test(t))                       return { cls:'rs-negative',    icon:'🔄', kind:'why-reverse' };
   if (/악재/.test(t) && /유형|본질/.test(t))   return { cls:'rs-negative',    icon:'🧬', kind:'classify-neg' };
   if (/악재/.test(t))                         return { cls:'rs-negative',    icon:'↓',  kind:'reflect-neg' };
   if (/호재/.test(t) && /유형|본질/.test(t))   return { cls:'rs-positive',    icon:'🧬', kind:'classify-pos' };
@@ -12875,58 +12894,70 @@ function aqV2SectionMeta(num, title) {
   if (/본질|소음/.test(t))                    return { cls:'rs-opp',         icon:'⚖️', kind:'default' };
   return { cls:'rs-misc', icon:String(num), kind:'default' };
 }
+// 결론 줄 판별 / 렌더
+function aqV2IsConcl(it) { return /^(결론적으로|종합하면|결국)/.test(it) || /^결론\s*[:：]?/.test(it); }
+function aqV2ConclHTML(it) {
+  const txt = String(it).replace(/^(결론적으로|결론|종합하면|결국)\s*[:：]?\s*/, '');
+  return `<div class="rv2-item rv2-concl"><span class="rv2-dot">▸</span><span class="rv2-text"><b>결론</b> ${escapeHtml(txt)}</span></div>`;
+}
 // 악재/호재 반영상태 → 칩 색상
-function aqV2StatusChip(status, kind) {
+function aqV2StatusPill(status, kind) {
   const x = String(status || '');
-  if (/미\s*반영|깜짝/.test(x))            return 'rv2-chip-pos';   // 미반영·깜짝 파티 = 기회(초록)
-  if (/선반영|부분\s*반영|이미\s*반영/.test(x)) return 'rv2-chip-mute';  // 이미 반영 = 회색
-  if (/진행형|위협|본질|경계/.test(x))      return 'rv2-chip-warn';  // 진행·위협 = 주황
-  return (kind === 'reflect-pos') ? 'rv2-chip-pos' : 'rv2-chip-neg';
+  if (/미\s*반영|깜짝/.test(x))                 return 'rv2-pill-pos';
+  if (/선반영|부분\s*반영|이미\s*반영/.test(x)) return 'rv2-pill-mute';
+  if (/진행형|위협|본질|경계/.test(x))          return 'rv2-pill-warn';
+  return (kind === 'reflect-pos') ? 'rv2-pill-pos' : 'rv2-pill-neg';
 }
 // V2 본문 한 줄 → 섹션 성격별 HTML
 function aqV2Item(itRaw, meta, idx) {
-  const it = String(itRaw || '').replace(/^[\-\*·•▪◦\u2022\u25CF\u25E6]+\s*/, '').trim();
+  const it = String(itRaw || '').replace(/^[\-\*·•▪◦\u2022\u25CF\u25E6]+\s*/, '').replace(/^\d{1,2}[.)]\s+/, '').trim();
   const esc = escapeHtml;
-  // 결론 줄 강조 (모든 섹션 공통)
-  if (/^(결론적으로|종합하면|결국)/.test(it) || /^결론\s*[:：]?/.test(it)) {
-    const txt = it.replace(/^(결론적으로|결론|종합하면|결국)\s*[:：]?\s*/, '');
-    return `<div class="rv2-item rv2-concl"><span class="rv2-dot">▸</span><span class="rv2-text"><b>결론</b> ${esc(txt)}</span></div>`;
-  }
-  // 11. 5WHYS 하락 — "표면적으로 ~" → 번호 + 단계 칩
+  if (aqV2IsConcl(it)) return aqV2ConclHTML(it);
+
+  // 11. 5WHYS 하락 — "표면적으로 ~" → 단계 라벨 카드
   if (meta.kind === 'why-step') {
     const m = it.match(/^(표면|구조|심리|역사|본질)적?\s*으?로?\s*[,·]?\s*(.+)$/);
-    const stage = m ? m[1] : '';
-    const rest  = m ? m[2] : it;
-    return `<div class="rv2-item rv2-step"><span class="rv2-num">${idx + 1}</span>${stage ? `<span class="rv2-stage">${stage}</span>` : ''}<span class="rv2-text">${esc(rest)}</span></div>`;
+    const label = m ? m[1] : '';
+    const body  = m ? m[2] : it;
+    return `<div class="rv2-card">${label ? `<span class="rv2-card-label">${label}</span>` : ''}${esc(body)}</div>`;
   }
-  // 12. 5WHYS 동업자 — "질문 → 답변" → 번호 + 질문 강조
+  // 12. 5WHYS 동업자 — "질문 → 답변" → 질문 라벨 카드
   if (meta.kind === 'why-qa') {
     const parts = it.split(/\s*→\s*/);
     if (parts.length >= 2) {
-      const q = parts[0], a = parts.slice(1).join(' → ');
-      return `<div class="rv2-item rv2-step"><span class="rv2-num">${idx + 1}</span><span class="rv2-text"><b>${esc(q)}</b> <span class="rv2-arrow">→</span> ${esc(a)}</span></div>`;
+      const q = parts[0].replace(/[?？]\s*$/, '').trim();
+      const a = parts.slice(1).join(' → ').trim();
+      return `<div class="rv2-card"><span class="rv2-card-label">${esc(q)}?</span>${esc(a)}</div>`;
     }
-    return `<div class="rv2-item rv2-step"><span class="rv2-num">${idx + 1}</span><span class="rv2-text">${esc(it)}</span></div>`;
+    return `<div class="rv2-card">${esc(it)}</div>`;
   }
-  // 13. 역방향 5WHYS — 번호 매김
-  if (meta.kind === 'reverse') {
-    return `<div class="rv2-item rv2-step"><span class="rv2-num">${idx + 1}</span><span class="rv2-text">${esc(it)}</span></div>`;
+  // 13. 역방향 5WHYS — "표면 함정으로 ~" → 라벨 카드
+  if (meta.kind === 'why-reverse') {
+    const m = it.match(/^(.{2,12}?)(?:으로|로)\s+(.+)$/);
+    if (m) return `<div class="rv2-card"><span class="rv2-card-label">${esc(m[1])}</span>${esc(m[2])}</div>`;
+    return `<div class="rv2-card">${esc(it)}</div>`;
   }
-  // 2/8. 악재·호재 진단 — "주제 — 반영상태" → 상태 칩
+  // 2/8. 악재·호재 진단 — "주제 — 상태" → 인라인 상태 칩(텍스트 내부 → 줄바꿈 안전)
   if (meta.kind === 'reflect-neg' || meta.kind === 'reflect-pos') {
     const m = it.match(/^(.+?)\s*[—–]\s*(.+)$/);
     if (m) {
       const subj = m[1].trim(), status = m[2].replace(/[.\s]+$/, '').trim();
-      return `<div class="rv2-item"><span class="rv2-dot">•</span><span class="rv2-text">${esc(subj)}</span><span class="rv2-chip ${aqV2StatusChip(status, meta.kind)}">${esc(status)}</span></div>`;
+      const tag = (status.length <= 18)
+        ? `<span class="rv2-pill ${aqV2StatusPill(status, meta.kind)}">${esc(status)}</span>`
+        : `<span class="${meta.kind === 'reflect-pos' ? 'rv2-cpos' : 'rv2-cneg'}">${esc(status)}</span>`;
+      return `<div class="rv2-item"><span class="rv2-dot">•</span><span class="rv2-text">${esc(subj)} ${tag}</span></div>`;
     }
   }
-  // 3/9. 본질 유형화 — "주제 → 분류" → 분류 칩
+  // 3/9. 본질 유형화 — "주제 → 분류" → 인라인 분류 칩
   if (meta.kind === 'classify-neg' || meta.kind === 'classify-pos') {
     const m = it.match(/^(.+?)\s*→\s*(.+)$/);
     if (m) {
       const subj = m[1].trim(), cat = m[2].replace(/[.\s]+$/, '').trim();
-      const cc = (meta.kind === 'classify-pos') ? 'rv2-chip-pos' : 'rv2-chip-neg';
-      return `<div class="rv2-item"><span class="rv2-dot">•</span><span class="rv2-text">${esc(subj)}</span><span class="rv2-arrow">→</span><span class="rv2-chip ${cc}">${esc(cat)}</span></div>`;
+      const pos = (meta.kind === 'classify-pos');
+      const tag = (cat.length <= 18)
+        ? `<span class="rv2-pill ${pos ? 'rv2-pill-pos' : 'rv2-pill-neg'}">${esc(cat)}</span>`
+        : `<span class="${pos ? 'rv2-cpos' : 'rv2-cneg'}">${esc(cat)}</span>`;
+      return `<div class="rv2-item"><span class="rv2-dot">•</span><span class="rv2-text">${esc(subj)} <span class="rv2-arrow">→</span> ${tag}</span></div>`;
     }
   }
   // 기본 블릿
