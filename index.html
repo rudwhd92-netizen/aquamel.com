@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.49';
+window.AQ_PWA_VERSION = '3.51';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -12817,7 +12817,7 @@ function parseReportTextV2(text) {
   for (const raw of lines) {
     const line = raw.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim();
     if (!line) continue;
-    if (/추천\s*ACTION/.test(line) && line.length < 24) { cur = 'action'; continue; }
+    if (/추천\s*ACTION/.test(line) && line.length < 30) { cur = 'action'; continue; }
     if (line === '핵심 요약' || (line.startsWith('핵심 요약') && line.length <= 8)) { cur = 'summary'; continue; }
     const m = line.match(/^(\d{1,2})\.\s*(.+)$/);
     if (m) {
@@ -12827,7 +12827,7 @@ function parseReportTextV2(text) {
       out.sections.push(curSection); cur = 'section'; continue;
     }
     if (cur === 'action') {
-      const mm = line.match(/^([^—\-]+?)\s*[—\-]\s*(.+)$/);
+      const mm = line.match(/^([^—–\-]+?)\s*[—–\-]\s*(.+)$/);  // em/en-dash·hyphen
       if (mm && !out.action) out.action = { action: mm[1].trim(), reason: mm[2].trim(), actionType: aqActionType(mm[1].trim()) };
       else if (!out.action)  out.action = { action: line, reason: '', actionType: aqActionType(line) };
       else out.action.reason += (out.action.reason ? ' ' : '') + line;
@@ -12839,6 +12839,22 @@ function parseReportTextV2(text) {
     // cur === null → 헤더(종목명 — 날짜) 줄: 무시
   }
   return out;
+}
+// v3.50: V2 14섹션을 기존 색상 카드 클래스에 의미별 매핑 (기존 포맷과 동급 시각 품질)
+function aqV2SectionStyle(num, title) {
+  const t = String(title || '');
+  if (/역방향/.test(t))            return { cls: 'rs-negative',    icon: '🗑️' };
+  if (/악재/.test(t))              return { cls: 'rs-negative',    icon: '↓' };
+  if (/호재/.test(t))              return { cls: 'rs-positive',    icon: '⊕' };
+  if (/오해/.test(t))              return { cls: 'rs-misunder',    icon: '⚠' };
+  if (/군중|심리/.test(t))         return { cls: 'rs-misunder',    icon: '🧠' };
+  if (/동업자|동업/.test(t))       return { cls: 'rs-why-partner', icon: '🤝' };
+  if (/하락/.test(t))              return { cls: 'rs-why-down',    icon: '⬇' };
+  if (/비즈니스|사업|모델/.test(t)) return { cls: 'rs-summary',     icon: '🏢' };
+  if (/고평가|밸류/.test(t))       return { cls: 'rs-opp',         icon: '💲' };
+  if (/바닥/.test(t))              return { cls: 'rs-opp',         icon: '📉' };
+  if (/본질|소음/.test(t))         return { cls: 'rs-opp',         icon: '⚖️' };
+  return { cls: 'rs-misc', icon: String(num) };
 }
 function renderReportContentV2(parsed, ticker, date) {
   ticker = String(ticker || '').toUpperCase();
@@ -12862,9 +12878,15 @@ function renderReportContentV2(parsed, ticker, date) {
     </div>`);
   }
   (parsed.sections || []).forEach(sec => {
-    const body = (sec.items || []).map(it => `<div class="report-item">${escapeHtml(it)}</div>`).join('');
-    parts.push(`<div class="report-section">
-      <div class="report-section-head"><span class="report-icon">${sec.num}</span><span class="report-section-title">${escapeHtml(sec.title)}</span></div>
+    const st = aqV2SectionStyle(sec.num, sec.title);
+    const body = (sec.items || []).map(it => {
+      // 기존 포맷과 동일: "(표면) ..." 형태는 라벨 칩으로 분리 (5WHYS 등)
+      const lm = String(it).match(/^\(([^)]{1,24})\)\s*(.+)$/);
+      if (lm) return `<div class="report-item report-item-labeled"><span class="report-label">(${escapeHtml(lm[1])})</span> <span class="report-text">${escapeHtml(lm[2])}</span></div>`;
+      return `<div class="report-item">${escapeHtml(it)}</div>`;
+    }).join('');
+    parts.push(`<div class="report-section ${st.cls}">
+      <div class="report-section-head"><span class="report-icon">${st.icon}</span><span class="report-section-title">${sec.num}. ${escapeHtml(sec.title)}</span></div>
       <div class="report-section-body">${body}</div>
     </div>`);
   });
