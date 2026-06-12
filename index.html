@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.59';
+window.AQ_PWA_VERSION = '3.60';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1586,6 +1586,9 @@ body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important;
 .aq-tf-field label { display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 5px; }
 .aq-tf-field input { width: 100%; box-sizing: border-box; padding: 11px 12px; background: var(--bg-3, rgba(255,255,255,0.05)); border: 1px solid var(--line); border-radius: 9px; color: var(--text); font-size: 15px; font-family: inherit; }
 .aq-tf-field input:focus { outline: none; border-color: var(--accent, #5c7cfa); }
+.aq-tf-field select { width: 100%; box-sizing: border-box; padding: 11px 12px; background: var(--bg-3, rgba(255,255,255,0.05)); border: 1px solid var(--line); border-radius: 9px; color: var(--text); font-size: 15px; font-family: inherit; }
+.aq-tf-field select:focus { outline: none; border-color: var(--accent, #5c7cfa); }
+.aq-tf-hint { font-size: 11px; color: #51cf66; margin-top: 4px; min-height: 13px; }
 .aq-tf-row2 { display: flex; gap: 10px; }
 .aq-tf-row2 .aq-tf-field { flex: 1; }
 .aq-tf-err { color: var(--kr-down, #fa5252); font-size: 12px; min-height: 16px; margin-top: 2px; }
@@ -3738,6 +3741,12 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
     padding: 0 !important;
   }
   body[data-mtab="board"] #dashboardCard > .card-body { padding: 0 !important; }
+  /* v3.60: 누적 성과 탭 카드 사이 여백 확대 */
+  body[data-mtab="board"] #dashboardCard .dash-top-section { margin-bottom: 34px; }
+  body[data-mtab="board"] #dashboardCard .dash-bottom-section { gap: 34px; }
+  body[data-mtab="board"] #dashboardCard .dash-bottom-col { gap: 34px; }
+  body[data-mtab="board"] #dashboardCard .dash-top-row { gap: 34px; }
+  body[data-mtab="board"] #dashboardCard .dash-side-stack { gap: 34px; }
   /* v3.42: 자산 서브탭(보유 종목/상세 분석) 콘텐츠 = 탐색 카드와 동일 여백·헤더 (인너 프레임 제거) */
   body[data-mtab="board"] #boardHoldingsCard > .card-body,
   body[data-mtab="board"] #boardAccountCard > .card-body { margin-top: 0; padding: 0; }
@@ -7169,6 +7178,7 @@ table.combo-eval tbody td .nodata {
             </div>
             <div class="dash-holdings-body" id="dashHoldingsBody"></div>
             <div class="dash-hidden-bar" id="dashHiddenBar" style="display:none;"></div>
+            <button class="watch-add-btn" onclick="aqOpenHoldingForm()">+ 종목 추가</button>
           </div>
         </div>
         <div class="dash-bottom-col">
@@ -13257,6 +13267,113 @@ function aqAcctPassword() {
   try { openPasswordSetupModal(); } catch (e) {}
 }
 window.aqAcctPassword = aqAcctPassword;
+
+// v3.60: 보유 종목 추가 폼 — PORTFOLIO(보유) 표에 직접 추가. 섹터는 KJP/사용자이력 자동완성.
+function aqHoldingAutoSector() {
+  const tkEl = document.getElementById('aqHoldTicker');
+  const secEl = document.getElementById('aqHoldSector');
+  const hint = document.getElementById('aqHoldSecHint');
+  if (!tkEl || !secEl) return;
+  const tk = String(tkEl.value || '').trim();
+  if (!tk) { if (hint) hint.textContent = ''; return; }
+  let sec = null;
+  try { sec = getSectorForTicker(tk); } catch (e) {}
+  if (sec) {
+    if (![].slice.call(secEl.options).some(o => o.value === sec)) {
+      const o = document.createElement('option'); o.value = sec; o.textContent = sec; secEl.appendChild(o);
+    }
+    secEl.value = sec;
+    if (hint) hint.textContent = '자동 지정됨 (KJP·이력 기반)';
+  } else {
+    if (hint) hint.textContent = '';
+  }
+}
+window.aqHoldingAutoSector = aqHoldingAutoSector;
+function aqOpenHoldingForm() {
+  aqCloseHoldingForm();
+  const opts = (typeof getSectorOptions === 'function' ? (getSectorOptions() || SECTORS_40) : SECTORS_40);
+  const optHtml = '<option value="">(섹터 선택)</option>' + opts.map(x => `<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`).join('');
+  const ccy = (typeof _ccyLbl === 'function') ? _ccyLbl() : '';
+  const ov = document.createElement('div');
+  ov.className = 'aq-tf-overlay'; ov.id = 'aqHoldOverlay';
+  ov.addEventListener('click', (e) => { if (e.target === ov) aqCloseHoldingForm(); });
+  ov.innerHTML = `
+    <div class="aq-tf-modal" role="dialog" aria-modal="true">
+      <div class="aq-tf-title">보유 종목 추가</div>
+      <div class="aq-tf-sub">보유 종목 현황에 직접 추가</div>
+      <div class="aq-tf-field"><label>기준일자</label><input type="date" id="aqHoldDate" value="${aqTfToday()}"></div>
+      <div class="aq-tf-row2">
+        <div class="aq-tf-field"><label>티커명</label><input type="text" id="aqHoldTicker" maxlength="20" autocomplete="off" placeholder="예: AAPL" oninput="aqHoldingAutoSector()"></div>
+        <div class="aq-tf-field"><label>섹터명</label><select id="aqHoldSector">${optHtml}</select><div class="aq-tf-hint" id="aqHoldSecHint"></div></div>
+      </div>
+      <div class="aq-tf-row2">
+        <div class="aq-tf-field"><label>1주 평균금액${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqHoldAvg" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+        <div class="aq-tf-field"><label>보유수량</label><input type="number" id="aqHoldQty" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+      </div>
+      <div class="aq-tf-field"><label>투자원금${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqHoldCost" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+      <div class="aq-tf-err" id="aqHoldErr"></div>
+      <div class="aq-tf-actions">
+        <button type="button" class="aq-tf-cancel" onclick="aqCloseHoldingForm()">취소</button>
+        <button type="button" class="aq-tf-save buy" onclick="aqSubmitHoldingForm()">저장</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  setTimeout(() => { const el = document.getElementById('aqHoldTicker'); if (el) el.focus(); }, 50);
+}
+window.aqOpenHoldingForm = aqOpenHoldingForm;
+function aqCloseHoldingForm() {
+  const o = document.getElementById('aqHoldOverlay'); if (o && o.parentNode) o.parentNode.removeChild(o);
+}
+window.aqCloseHoldingForm = aqCloseHoldingForm;
+function aqSubmitHoldingForm() {
+  const g = (id) => { const e = document.getElementById(id); return e ? e.value : ''; };
+  const errEl = document.getElementById('aqHoldErr');
+  const setErr = (m) => { if (errEl) errEl.textContent = m; };
+  const asof = String(g('aqHoldDate') || '').trim();
+  const ticker = String(g('aqHoldTicker') || '').toUpperCase().trim();
+  const sector = String(g('aqHoldSector') || '').trim();
+  const avgpx = parseFloat(g('aqHoldAvg')) || 0;
+  const qty = parseFloat(g('aqHoldQty')) || 0;
+  const cost = parseFloat(g('aqHoldCost')) || 0;
+  if (!ticker) { setErr('티커명을 입력해주세요.'); return; }
+  if (qty <= 0) { setErr('보유수량을 입력해주세요.'); return; }
+  // KJP에 없는 티커에 사용자가 섹터를 골랐으면 이력 저장 (다음부터 자동완성)
+  try {
+    if (sector && !((_state.tickerSectorMap || {})[ticker])) saveUserSectorMapping(ticker, sector);
+  } catch (e) {}
+  const row = { _id: _genId(), asof, ticker, qty, cost, mv: '', avgpx, sector };
+  const key = lsKeyPF();
+  try {
+    if (typeof portfolioSheet !== 'undefined' && portfolioSheet && portfolioSheet.lsKey === key) {
+      portfolioSheet.data.push(row);
+      portfolioSheet.save();
+      portfolioSheet.render();
+    } else {
+      const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr);
+    }
+  } catch (e) {
+    try { const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr); } catch (e2) {}
+  }
+  aqCloseHoldingForm();
+  try { if (typeof renderDashboard === 'function') renderDashboard(); } catch (e) {}
+  aqAutoPushPF();
+}
+window.aqSubmitHoldingForm = aqSubmitHoldingForm;
+async function aqAutoPushPF() {
+  try {
+    if (typeof backendReady !== 'function' || !backendReady()) return;
+    const userId = String((typeof LS !== 'undefined' && lsGet(LS.USER_ID, '')) || (($('userIdInput') || {}).value) || '').trim();
+    if (!userId) { try { aqToast('폰에 저장됨 · 자산 상단에서 계정 연결하면 시트 자동 백업'); } catch (e) {} return; }
+    const passwordHash = (typeof getCachedPasswordHash === 'function') ? getCachedPasswordHash() : '';
+    const src = (typeof portfolioSheet !== 'undefined' && portfolioSheet && portfolioSheet.data) ? portfolioSheet.data : (lsGet(lsKeyPF(), []) || []);
+    const pfRows = src.filter(r => r && r.ticker);
+    const r = await _deltaSync(userId, dataTypePF(), pfRows, null, passwordHash);
+    if (r) { try { aqToast('시트에 자동 저장됨 ✓'); } catch (e) {} }
+  } catch (e) {
+    try { aqToast('폰엔 저장됨 · 시트 동기화는 계정에서 확인'); } catch (e2) {}
+  }
+}
+window.aqAutoPushPF = aqAutoPushPF;
 function aqSubmitTradeForm(action) {
   const tk = String(_state.openTicker || '').toUpperCase().trim();
   if (!tk) return;
