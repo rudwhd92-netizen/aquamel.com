@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.60';
+window.AQ_PWA_VERSION = '3.61';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1553,6 +1553,7 @@ table.sheet tbody tr.drop-below td:last-child {
 body.modal-pos-mode #positionPanel { display: block; }
 body.modal-pos-mode #chartModal .chart-wrap,
 body.modal-pos-mode #chartModal .modal-filter-block,
+body.modal-pos-mode #chartModal .modal-aux-sep,
 body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important; }
 .pos-back-row { margin: 4px 0 16px; }
 .pos-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--line); gap: 12px; }
@@ -2338,6 +2339,12 @@ body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important;
 .aq-coll-caret { color: var(--text-mute); font-size: 11px; transition: transform 0.2s var(--ease-out); flex-shrink: 0; }
 .aq-coll.collapsed .aq-coll-body { display: none; }
 .aq-coll.collapsed .aq-coll-caret { transform: rotate(-90deg); }
+/* v3.61: 개별 종목 모달 — 핵심/보조 구분선 + 보고서 진입 칩 승격 */
+.modal-aux-sep { height: 1px; background: var(--line); margin: 20px 0 6px; }
+.modal-report-chip { display: inline-flex; align-items: center; gap: 7px; margin-top: 12px; padding: 9px 15px; background: rgba(92,124,250,0.14); color: var(--accent, #5c7cfa); border: 1px solid rgba(92,124,250,0.32); border-radius: 11px; font-size: 13.5px; font-weight: 700; font-family: inherit; cursor: pointer; }
+.modal-report-chip:hover { background: rgba(92,124,250,0.22); }
+.modal-report-chip svg { width: 16px; height: 16px; flex-shrink: 0; }
+.modal-report-chip.aq-story { border-color: #ff922b; color: #ffa94d; background: rgba(255,146,43,0.14); }
 .aq-coll-body { margin-top: 10px; }
 .feed-actions { display: flex; align-items: center; gap: 16px; padding: 12px 12px 4px; }
 .feed-act { background: transparent; border: none; color: var(--text, #d4d4d4); cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 5px; }
@@ -7762,6 +7769,10 @@ table.combo-eval tbody td .nodata {
       <div class="modal-subtitle" id="modalSubtitle">—</div>
       <div class="modal-desc" id="modalDesc"></div>
       <div class="modal-valuation" id="modalValuation"></div>
+      <button class="modal-report-chip" id="modalReportChip" onclick="openReportPanel()" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+        분석 보고서 보기
+      </button>
       <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
       <div id="positionPanel"></div>
       <div class="chart-wrap">
@@ -7780,6 +7791,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <!-- v2.63: 차트 하단 레전드 제거 — 차트 안 동적 레전드와 중복이라 불필요 -->
       <!-- (id=chartLegend 참조하는 JS는 element 없어도 null 가드 또는 무해 — 별도 처리) -->
+      <div class="modal-aux-sep"></div>
       <div class="modal-filter-block aq-coll collapsed">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
           <h4 class="ticker-history-title" style="margin:0;">Signal Type 필터</h4>
@@ -7806,15 +7818,21 @@ table.combo-eval tbody td .nodata {
           <div id="tickerHistoryArea"></div>
         </div>
       </div>
-      <!-- v2.64: 내부자 거래 이력 (SEC Form 4 P-transactions) — US 종목에만 데이터 있음 -->
-      <div class="ticker-history-wrap insider-history-wrap" id="insiderHistoryWrap" style="display:none;">
-        <h4 class="ticker-history-title">내부자 거래 이력</h4>
-        <div id="insiderHistoryArea"></div>
+      <!-- v2.64/v3.61: 내부자 거래 이력 — 다른 보조 섹션과 동일 아코디언(접힘) -->
+      <div class="ticker-history-wrap insider-history-wrap aq-coll collapsed" id="insiderHistoryWrap" style="display:none;">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)">
+          <h4 class="ticker-history-title" style="margin:0;">내부자 거래 이력</h4>
+          <span class="aq-coll-caret">▼</span>
+        </div>
+        <div class="aq-coll-body"><div id="insiderHistoryArea"></div></div>
       </div>
-      <!-- v3.48: 공매도 이력 (US_CROWDING — 잔고비율 / Days to Cover) — US 종목에만 데이터 -->
-      <div class="ticker-history-wrap short-history-wrap" id="shortHistoryWrap" style="display:none;">
-        <h4 class="ticker-history-title">공매도 이력</h4>
-        <div id="shortHistoryArea"></div>
+      <!-- v3.48/v3.61: 공매도 이력 — 동일 아코디언(접힘) -->
+      <div class="ticker-history-wrap short-history-wrap aq-coll collapsed" id="shortHistoryWrap" style="display:none;">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)">
+          <h4 class="ticker-history-title" style="margin:0;">공매도 이력</h4>
+          <span class="aq-coll-caret">▼</span>
+        </div>
+        <div class="aq-coll-body"><div id="shortHistoryArea"></div></div>
       </div>
       </div><!-- /#mainModalBody -->
       <!-- v1.99: 보고서 패널 (보고서 모드 진입 시 표시, 평소 숨김) -->
@@ -12414,10 +12432,13 @@ function updateReportButtonVisibility() {
   const tkUpper = String(tk).toUpperCase();
   const list = (_state.reports[mkt] || {})[tkUpper];
   const hasReport = list && list.length > 0;
-  btn.style.display = hasReport ? '' : 'none';
+  btn.style.display = 'none';  // v3.61: 약한 플로팅 아이콘 숨김 → 헤더 칩으로 승격
+  const reportChip = document.getElementById('modalReportChip');
+  if (reportChip) reportChip.style.display = hasReport ? 'inline-flex' : 'none';
   // v2.99: 로고에 스토리 링이 붙는 종목(최근 보고서)은 보고서 아이콘에도 동일한 스토리 링 → 어디를 봐야 하는지 표시
   const recent = hasReport && (typeof aqHasRecentReport === 'function') && aqHasRecentReport(tkUpper);
   btn.classList.toggle('aq-story', !!recent);
+  if (typeof reportChip !== 'undefined' && reportChip) reportChip.classList.toggle('aq-story', !!recent);
   console.log(`[Reports] 버튼 표시 갱신 — ticker=${tkUpper}, mkt=${mkt}, 보고서 ${list ? list.length : 0}개, 표시=${hasReport}`);
 }
 
@@ -17853,6 +17874,10 @@ async function openChart(ticker) {
       if (_fb) _fb.classList.add('collapsed');
       const _th = document.getElementById('tickerHistoryWrap');
       if (_th) _th.classList.add('collapsed');
+      const _ih = document.getElementById('insiderHistoryWrap');
+      if (_ih) _ih.classList.add('collapsed');
+      const _sh = document.getElementById('shortHistoryWrap');
+      if (_sh) _sh.classList.add('collapsed');
     } catch (e) {}
   }
   if (typeof aqSetModalHex === 'function') aqSetModalHex(ticker);
