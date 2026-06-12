@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.61';
+window.AQ_PWA_VERSION = '3.62';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1553,7 +1553,7 @@ table.sheet tbody tr.drop-below td:last-child {
 body.modal-pos-mode #positionPanel { display: block; }
 body.modal-pos-mode #chartModal .chart-wrap,
 body.modal-pos-mode #chartModal .modal-filter-block,
-body.modal-pos-mode #chartModal .modal-aux-sep,
+body.modal-pos-mode #chartModal .modal-view-tabs,
 body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important; }
 .pos-back-row { margin: 4px 0 16px; }
 .pos-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--line); gap: 12px; }
@@ -2220,7 +2220,7 @@ body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important;
 .mv-chip .mv-v { font-size: 13px; font-weight: 700; color: var(--text, #d4d4d4); }
 .mv-chip .mv-v.mv-na { color: var(--text-mute, #6a6a6a); font-weight: 500; }
 
-.chart-wrap { background: var(--bg); border-radius: 4px; padding: 12px; position: relative; height: 520px; }
+.chart-wrap { background: transparent; padding: 0; position: relative; height: 520px; }  /* v3.62: 배경 제거 평탄화 */
 
 /* v2.10: 타임프레임 세그먼트 컨트롤 (3M/6M/1Y) — 차트 우상단 */
 .tf-toggle {
@@ -2339,12 +2339,15 @@ body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important;
 .aq-coll-caret { color: var(--text-mute); font-size: 11px; transition: transform 0.2s var(--ease-out); flex-shrink: 0; }
 .aq-coll.collapsed .aq-coll-body { display: none; }
 .aq-coll.collapsed .aq-coll-caret { transform: rotate(-90deg); }
-/* v3.61: 개별 종목 모달 — 핵심/보조 구분선 + 보고서 진입 칩 승격 */
-.modal-aux-sep { height: 1px; background: var(--line); margin: 20px 0 6px; }
-.modal-report-chip { display: inline-flex; align-items: center; gap: 7px; margin-top: 12px; padding: 9px 15px; background: rgba(92,124,250,0.14); color: var(--accent, #5c7cfa); border: 1px solid rgba(92,124,250,0.32); border-radius: 11px; font-size: 13.5px; font-weight: 700; font-family: inherit; cursor: pointer; }
-.modal-report-chip:hover { background: rgba(92,124,250,0.22); }
-.modal-report-chip svg { width: 16px; height: 16px; flex-shrink: 0; }
-.modal-report-chip.aq-story { border-color: #ff922b; color: #ffa94d; background: rgba(255,146,43,0.14); }
+/* v3.62: 개별 종목 모달 — 보고서 진입을 헤더 세그먼트(차트/보고서)로, 공매도 타일 */
+.modal-view-tabs { display: none; gap: 0; margin: 14px 0 6px; background: var(--bg-3, rgba(255,255,255,0.06)); border-radius: 9px; padding: 3px; width: fit-content; }
+.modal-view-tabs .mvt-btn { padding: 7px 16px; border: none; background: transparent; color: var(--text-dim); font-size: 13px; font-weight: 700; font-family: inherit; border-radius: 7px; cursor: pointer; }
+.modal-view-tabs .mvt-btn.active { background: var(--accent, #5c7cfa); color: #fff; }
+.modal-view-tabs .mvt-btn.aq-story:not(.active) { color: #ffa94d; }
+.short-stats { display: flex; gap: 10px; }
+.short-stat { flex: 1; display: flex; flex-direction: column; gap: 5px; padding: 13px 14px; background: transparent; border: 1px solid var(--line); border-radius: 10px; }
+.short-stat .ss-k { font-size: 11px; color: var(--text-mute); }
+.short-stat .ss-v { font-size: 18px; font-weight: 800; color: var(--text-hi); }
 .aq-coll-body { margin-top: 10px; }
 .feed-actions { display: flex; align-items: center; gap: 16px; padding: 12px 12px 4px; }
 .feed-act { background: transparent; border: none; color: var(--text, #d4d4d4); cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 5px; }
@@ -4519,11 +4522,11 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 
 /* ============ MODAL FILTER (signal filter inside chart modal) ============ */
 .modal-filter-block {
-  margin-top: 14px;
-  padding: 12px 14px;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 4px;
+  margin-top: 0;
+  padding: 16px 0;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--line);
 }
 .modal-filter-label {
   font-size: 11px; color: var(--text-mute); font-weight: 600;
@@ -4706,7 +4709,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 }
 
 /* ============ TICKER HISTORY (below chart) ============ */
-.ticker-history-wrap { margin-top: 18px; background: var(--bg); border-radius: 4px; padding: 14px 16px; overflow: auto; }
+.ticker-history-wrap { margin-top: 0; background: transparent; padding: 16px 0; overflow: auto; border-top: 1px solid var(--line); }
 .ticker-history-title { font-size: 12px; color: var(--text-hi); margin-bottom: 10px; font-weight: 600; }
 
 /* ============ v2.67: HERO 알림 마퀴 — 우→좌 흐름 ============
@@ -7767,12 +7770,12 @@ table.combo-eval tbody td .nodata {
       <div class="modal-title" id="modalTitle">—</div>
       <div class="modal-price" id="modalPrice"></div>
       <div class="modal-subtitle" id="modalSubtitle">—</div>
+      <div class="modal-view-tabs" id="modalViewTabs">
+        <button class="mvt-btn active" id="mvtChart" onclick="aqModalView('chart')">차트</button>
+        <button class="mvt-btn" id="mvtReport" onclick="aqModalView('report')">분석 보고서</button>
+      </div>
       <div class="modal-desc" id="modalDesc"></div>
       <div class="modal-valuation" id="modalValuation"></div>
-      <button class="modal-report-chip" id="modalReportChip" onclick="openReportPanel()" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
-        분석 보고서 보기
-      </button>
       <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
       <div id="positionPanel"></div>
       <div class="chart-wrap">
@@ -7791,7 +7794,6 @@ table.combo-eval tbody td .nodata {
       </div>
       <!-- v2.63: 차트 하단 레전드 제거 — 차트 안 동적 레전드와 중복이라 불필요 -->
       <!-- (id=chartLegend 참조하는 JS는 element 없어도 null 가드 또는 무해 — 별도 처리) -->
-      <div class="modal-aux-sep"></div>
       <div class="modal-filter-block aq-coll collapsed">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
           <h4 class="ticker-history-title" style="margin:0;">Signal Type 필터</h4>
@@ -12432,13 +12434,16 @@ function updateReportButtonVisibility() {
   const tkUpper = String(tk).toUpperCase();
   const list = (_state.reports[mkt] || {})[tkUpper];
   const hasReport = list && list.length > 0;
-  btn.style.display = 'none';  // v3.61: 약한 플로팅 아이콘 숨김 → 헤더 칩으로 승격
-  const reportChip = document.getElementById('modalReportChip');
-  if (reportChip) reportChip.style.display = hasReport ? 'inline-flex' : 'none';
+  btn.style.display = 'none';  // v3.62: 플로팅 아이콘 숨김 → 헤더 세그먼트 토글로 대체
+  const vtabs = document.getElementById('modalViewTabs');
+  if (vtabs) vtabs.style.display = hasReport ? 'flex' : 'none';
+  const mvtC = document.getElementById('mvtChart'), mvtR = document.getElementById('mvtReport');
+  if (mvtC) mvtC.classList.add('active');
+  if (mvtR) mvtR.classList.remove('active');
   // v2.99: 로고에 스토리 링이 붙는 종목(최근 보고서)은 보고서 아이콘에도 동일한 스토리 링 → 어디를 봐야 하는지 표시
   const recent = hasReport && (typeof aqHasRecentReport === 'function') && aqHasRecentReport(tkUpper);
   btn.classList.toggle('aq-story', !!recent);
-  if (typeof reportChip !== 'undefined' && reportChip) reportChip.classList.toggle('aq-story', !!recent);
+  if (typeof mvtR !== 'undefined' && mvtR) mvtR.classList.toggle('aq-story', !!recent);
   console.log(`[Reports] 버튼 표시 갱신 — ticker=${tkUpper}, mkt=${mkt}, 보고서 ${list ? list.length : 0}개, 표시=${hasReport}`);
 }
 
@@ -13395,6 +13400,16 @@ async function aqAutoPushPF() {
   }
 }
 window.aqAutoPushPF = aqAutoPushPF;
+
+// v3.62: 개별 종목 모달 뷰 전환 (차트 ↔ 분석 보고서)
+function aqModalView(v) {
+  if (v === 'report') { try { openReportPanel(); } catch (e) {} }
+  else { try { closeReportPanel(); } catch (e) {} }
+  const c = document.getElementById('mvtChart'), r = document.getElementById('mvtReport');
+  if (c) c.classList.toggle('active', v !== 'report');
+  if (r) r.classList.toggle('active', v === 'report');
+}
+window.aqModalView = aqModalView;
 function aqSubmitTradeForm(action) {
   const tk = String(_state.openTicker || '').toUpperCase().trim();
   if (!tk) return;
@@ -19045,13 +19060,10 @@ function renderShortHistory(ticker) {
   const fmtPctV = (p) => (p == null || isNaN(p) || !isFinite(p)) ? '—' : p.toFixed(2) + '%';
   const fmtDtc = (d) => (d == null || isNaN(d) || !isFinite(d)) ? '—' : d.toFixed(2) + '일';
   area.innerHTML = `
-    <table class="insider-history short-history">
-      <thead><tr><th>지표</th><th style="text-align:right">값</th></tr></thead>
-      <tbody>
-        <tr><td>공매도 잔고비율</td><td class="ih-num">${fmtPctV(rec.shortPctFloat)}</td></tr>
-        <tr><td>Days to Cover</td><td class="ih-num">${fmtDtc(rec.daysToCover)}</td></tr>
-      </tbody>
-    </table>`;
+    <div class="short-stats">
+      <div class="short-stat"><span class="ss-k">공매도 잔고비율</span><span class="ss-v">${fmtPctV(rec.shortPctFloat)}</span></div>
+      <div class="short-stat"><span class="ss-k">Days to Cover</span><span class="ss-v">${fmtDtc(rec.daysToCover)}</span></div>
+    </div>`;
   wrap.style.display = '';
 }
 window.renderShortHistory = renderShortHistory;
