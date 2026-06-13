@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.82';
+window.AQ_PWA_VERSION = '3.84';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -7800,6 +7800,13 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">탐색</span>
     </button>
+    <!-- v3.84: 섹터 — 햄버거에서 하단 탭(탐색↔관심)으로 이동 -->
+    <button class="mtab-btn" data-mtab="sector" onclick="switchMobileTab('sector')" aria-label="섹터">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 20V10M9 20V4M15 20v-8M21 20V8"/>
+      </svg>
+      <span class="mtab-label">섹터</span>
+    </button>
     <!-- v2.92: 3번째 위치 — 관심 (하트) 신설 -->
     <button class="mtab-btn" data-mtab="watch" onclick="switchMobileTab('watch')" aria-label="관심">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -7834,10 +7841,7 @@ table.combo-eval tbody td .nodata {
       <button class="mo-drawer-close" onclick="closeMoDrawer()" aria-label="닫기">×</button>
     </div>
     <nav class="mo-drawer-list">
-      <button class="mo-drawer-item" onclick="moDrawerNav('sector')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V10M9 20V4M15 20v-8M21 20V8"/></svg>
-        <span>섹터</span>
-      </button>
+      <!-- v3.84: 섹터는 하단 탭으로 이동 (드로어에서 제거) -->
       <!-- v2.92: To-Do는 하단 탭에서 햄버거 드로어로 이동 (섹터 다음) -->
       <button class="mo-drawer-item" onclick="moDrawerNav('todo')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
@@ -13696,15 +13700,17 @@ function aqSubmitTradeForm(action, editId) {
   if (!date) { setErr('일자를 입력해주세요.'); return; }
   if (qty <= 0) { setErr('주식수를 입력해주세요.'); return; }
   if (price <= 0) { setErr((action === '매수' ? '매수가' : '매도가') + '를 입력해주세요.'); return; }
+  let _sec = '';
+  try { _sec = (typeof getSectorForTicker === 'function' ? (getSectorForTicker(tk) || '') : ''); } catch (e) {}
   const key = lsKeyTrades();
   if (editId) {
-    const apply = (arr) => { const r = (arr || []).find(x => x && x._id === editId); if (r) { r.date = date; r.action = action; r.qty = qty; r.price = price; r.fee = fee; r.tax = tax; } return arr; };
+    const apply = (arr) => { const r = (arr || []).find(x => x && x._id === editId); if (r) { r.date = date; r.action = action; r.qty = qty; r.price = price; r.fee = fee; r.tax = tax; if (!r.sector) r.sector = _sec; } return arr; };
     try {
       if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === key) { apply(tradesSheet.data); tradesSheet.save(); tradesSheet.render(); }
       else { const arr = lsGet(key, []) || []; apply(arr); lsSet(key, arr); }
     } catch (e) { try { const arr = lsGet(key, []) || []; apply(arr); lsSet(key, arr); } catch (e2) {} }
   } else {
-    const row = { _id: _genId(), date, ticker: tk, action, qty, price, fee, tax, sector: '' };
+    const row = { _id: _genId(), date, ticker: tk, action, qty, price, fee, tax, sector: _sec };
     try {
       if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === key) {
         tradesSheet.data.push(row); tradesSheet.save(); tradesSheet.render();
