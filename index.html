@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.77';
+window.AQ_PWA_VERSION = '3.78';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -6565,7 +6565,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 }
 /* end v2.25 sector framework mobile */
 
-/* ============ v3.77: 모바일 섹터 FRAME — 드릴다운 리스트 + 등락률 히트맵 (D+A). 데스크탑 2D 도식은 그대로 ============ */
+/* ============ v3.78: 모바일 섹터 FRAME — 정거장 노드 레일 + 계층 역할 한 줄 (D+A 기반). 데스크탑 2D 그대로 ============ */
 #sectorFrameworkCard #sfMobile { display: none; }
 @media (max-width: 640px) {
   #sectorFrameworkCard #sfDiagram { display: none !important; }
@@ -6575,10 +6575,19 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .sfm2-sort-btn { font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text-dim); cursor: pointer; }
   .sfm2-sort-btn.on { background: var(--accent, #4c6ef5); border-color: transparent; color: #fff; }
   .sfm2-grouphdr { font-size: 10.5px; font-weight: 700; color: var(--text-mute); letter-spacing: 0.03em; margin: 16px 0 8px; }
-  .sfm2-core, .sfm2-ext { display: flex; flex-direction: column; gap: 8px; }
-  .sfm2-row { border: 1px solid var(--line); border-left: 4px solid rgb(var(--c-rgb)); border-radius: 10px; padding: 10px 12px; background: var(--heat); transition: background 0.25s; cursor: pointer; }
+  .sfm2-corelist, .sfm2-extlist { display: flex; flex-direction: column; gap: 8px; }
+  .sfm2-dir { font-size: 10px; font-weight: 700; color: var(--text-mute); letter-spacing: 0.04em; padding: 0 0 8px 42px; }
+  .sfm2-dir-bot { padding: 8px 0 0 42px; }
+  .sfm2-core:not(.sfm2-chainmode) .sfm2-dir { display: none; }
+  .sfm2-row { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: 10px; background: var(--heat); transition: background 0.25s; cursor: pointer; }
+  .sfm2-rail { position: relative; width: 40px; flex-shrink: 0; display: flex; justify-content: center; }
+  .sfm2-node { position: relative; z-index: 1; margin-top: 11px; width: 24px; height: 24px; border-radius: 50%; background: rgb(var(--c-rgb)); color: #fff; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+  .sfm2-pivot .sfm2-node { width: 30px; height: 30px; font-size: 13px; box-shadow: 0 0 0 4px rgba(var(--c-rgb),0.22); }
+  .sfm2-core.sfm2-chainmode .sfm2-rail::before { content: ''; position: absolute; z-index: 0; left: 50%; transform: translateX(-50%); top: -8px; bottom: -8px; width: 2px; background: var(--line); }
+  .sfm2-core.sfm2-chainmode .sfm2-corelist .sfm2-row:first-child .sfm2-rail::before { top: 23px; }
+  .sfm2-core.sfm2-chainmode .sfm2-corelist .sfm2-row:last-child .sfm2-rail::before { bottom: calc(100% - 23px); }
+  .sfm2-body { flex: 1; min-width: 0; padding: 10px 12px 10px 0; }
   .sfm2-head { display: flex; align-items: center; gap: 9px; }
-  .sfm2-badge { flex-shrink: 0; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 6px; background: rgb(var(--c-rgb)); color: #fff; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
   .sfm2-title { font-size: 13.5px; font-weight: 700; color: var(--text-hi); flex: 1; min-width: 0; }
   .sfm2-star { margin-left: 6px; font-size: 9px; font-weight: 700; color: rgb(var(--c-rgb)); background: rgba(var(--c-rgb),0.18); padding: 2px 6px; border-radius: 999px; }
   .sfm2-ret { font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; flex-shrink: 0; }
@@ -6587,7 +6596,8 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .sfm2-ret.neu { color: var(--text-mute); }
   .sfm2-caret { flex-shrink: 0; color: var(--text-mute); font-size: 11px; transition: transform 0.2s; }
   .sfm2-row.sfm2-open .sfm2-caret { transform: rotate(90deg); }
-  .sfm2-wt { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .sfm2-role { font-size: 11px; color: var(--text-dim); line-height: 1.45; margin-top: 3px; }
+  .sfm2-wt { display: flex; align-items: center; gap: 8px; margin-top: 9px; }
   .sfm2-wt-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.07); border-radius: 999px; overflow: hidden; }
   .sfm2-wt-bar > i { display: block; height: 100%; width: 0; background: rgb(var(--c-rgb)); border-radius: 999px; transition: width 0.35s; }
   .sfm2-wt-val { font-size: 11px; font-weight: 700; color: var(--text-dim); font-variant-numeric: tabular-nums; flex-shrink: 0; min-width: 32px; text-align: right; }
@@ -16768,17 +16778,35 @@ function _sfMobChips(g) {
   }).join('');
 }
 let _sfMobSort = 'chain';
+const _SF_ROLE = {
+  1: 'AI 인프라의 원자재 (광물·소재)',
+  2: '데이터센터를 돌리는 에너지',
+  3: 'AI 연산을 수행하는 하드웨어',
+  4: 'AI 연산이 모이는 심장 (중심축)',
+  5: '지능을 만드는 AI 모델·플랫폼',
+  6: '모델을 제품으로 만드는 소프트웨어',
+  7: '현실로 나온 AI (로봇·자율주행)',
+  h: 'AI가 바꾸는 의료·바이오',
+  d: '국방·우주 분야의 AI 적용',
+  f: 'AI 기반 금융·핀테크',
+  a: 'AI로 진화하는 농업·식품·유통',
+  o: '그 외 AI 수혜 영역'
+};
 function _sfMobRow(g, chainIdx) {
   const star = g.center ? '<span class="sfm2-star">중심축</span>' : '';
-  return `<div class="sfm2-row" data-layer-key="${g.key}" data-chain="${chainIdx}" style="--c-rgb:${g.rgb}; --heat:transparent;">
-    <div class="sfm2-head">
-      <span class="sfm2-badge">${g.num}</span>
-      <span class="sfm2-title">${escapeHtml(g.title)}${star}</span>
-      <span class="sfm2-ret neu">—</span>
-      <span class="sfm2-caret">▸</span>
+  const role = _SF_ROLE[g.key] || '';
+  return `<div class="sfm2-row${g.center ? ' sfm2-pivot' : ''}" data-layer-key="${g.key}" data-chain="${chainIdx}" style="--c-rgb:${g.rgb}; --heat:transparent;">
+    <div class="sfm2-rail"><span class="sfm2-node">${g.num}</span></div>
+    <div class="sfm2-body">
+      <div class="sfm2-head">
+        <span class="sfm2-title">${escapeHtml(g.title)}${star}</span>
+        <span class="sfm2-ret neu">—</span>
+        <span class="sfm2-caret">▸</span>
+      </div>
+      ${role ? `<div class="sfm2-role">${escapeHtml(role)}</div>` : ''}
+      <div class="sfm2-wt"><div class="sfm2-wt-bar"><i></i></div><span class="sfm2-wt-val">— %</span></div>
+      <div class="sfm2-chips">${_sfMobChips(g)}</div>
     </div>
-    <div class="sfm2-wt"><div class="sfm2-wt-bar"><i></i></div><span class="sfm2-wt-val">— %</span></div>
-    <div class="sfm2-chips">${_sfMobChips(g)}</div>
   </div>`;
 }
 function _renderSFMobile() {
@@ -16787,12 +16815,14 @@ function _renderSFMobile() {
      + '<button class="sfm2-sort-btn on" data-sort="chain">가치사슬순</button>'
      + '<button class="sfm2-sort-btn" data-sort="return">등락률</button>'
      + '<button class="sfm2-sort-btn" data-sort="weight">비중</button></div>';
-  h += '<div class="sfm2-grouphdr">AI 코어 7계층 · 가치사슬</div><div class="sfm2-core">';
+  h += '<div class="sfm2-grouphdr">AI 코어 7계층 · 가치사슬</div>';
+  h += '<div class="sfm2-core sfm2-chainmode"><div class="sfm2-dir sfm2-dir-top">▲ 인프라·펀더멘털</div><div class="sfm2-corelist">';
   SF_AI_CORE.forEach((g, i) => { h += _sfMobRow(g, i); });
-  h += '</div>';
-  h += '<div class="sfm2-grouphdr">🌐 외부 5계층 · 보조</div><div class="sfm2-ext">';
+  h += '</div><div class="sfm2-dir sfm2-dir-bot">최종고객향 ▼</div></div>';
+  h += '<div class="sfm2-grouphdr">🌐 외부 5계층 · 보조</div>';
+  h += '<div class="sfm2-ext"><div class="sfm2-extlist">';
   SF_EXTERNAL.forEach((g, i) => { h += _sfMobRow(g, 100 + i); });
-  h += '</div></div>';
+  h += '</div></div></div>';
   return h;
 }
 function _refreshSFMobile() {
@@ -16836,9 +16866,9 @@ function _refreshSFMobile() {
 function _applySfMobSort(data) {
   const mob = document.getElementById('sfMobile');
   if (!mob) return;
-  ['sfm2-core', 'sfm2-ext'].forEach(cls => {
-    const cont = mob.querySelector('.' + cls);
-    if (!cont) return;
+  const core = mob.querySelector('.sfm2-core');
+  if (core) core.classList.toggle('sfm2-chainmode', _sfMobSort === 'chain');
+  mob.querySelectorAll('.sfm2-corelist, .sfm2-extlist').forEach(cont => {
     const rows = [...cont.querySelectorAll('.sfm2-row')];
     rows.sort((x, y) => {
       if (_sfMobSort === 'chain') return (+x.dataset.chain) - (+y.dataset.chain);
