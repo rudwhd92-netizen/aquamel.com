@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.66b';
+window.AQ_PWA_VERSION = '3.68';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2348,6 +2348,24 @@ body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important;
 .modal-report-banner .mrb-arrow { margin-left: auto; color: var(--text-mute); font-size: 17px; font-weight: 700; line-height: 1; }
 .modal-report-banner.aq-recent { border-color: rgba(255,146,43,0.40); background: rgba(255,146,43,0.09); }
 .modal-report-banner.aq-recent .mrb-ico { background: rgba(255,146,43,0.18); }
+/* v3.68: 종목 모달 디테일 마감 (구조 유지 — 마감만) */
+#chartModal .modal-content { font-variant-numeric: tabular-nums; }           /* A: 숫자 자릿수 정렬 */
+#chartModal .modal-price { font-size: 33px; letter-spacing: -0.02em; }       /* B: 가격 hero */
+#chartModal .modal-title .company-name { letter-spacing: -0.01em; }
+#chartModal .modal-title .ticker-paren { color: var(--text-dim); font-weight: 600; }
+#chartModal .modal-subtitle { color: var(--text-dim); }                       /* C: 텍스트 3단 */
+#chartModal .modal-subtitle .sep { color: rgba(255,255,255,0.18); }
+#chartModal .mv-chip { padding: 5px 10px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); }  /* E: 칩 규격 통일 */
+#chartModal .mv-chip .mv-k { color: var(--text-dim); letter-spacing: 0.04em; text-transform: uppercase; font-size: 10px; }
+#chartModal .modal-filter-block, #chartModal .ticker-history-wrap { border-top-color: rgba(255,255,255,0.06); }  /* E: 헤어라인 더 옅게 */
+#chartModal .ticker-history-title, #chartModal .modal-filter-label { letter-spacing: 0.05em; }                   /* 모듈 라벨 eyebrow */
+/* D: 보고서 배너 — 중립 카드 + 좌측 추천색 바 (글로우 대신 절제) */
+#chartModal .modal-report-banner { background: rgba(255,255,255,0.035); border-color: var(--line); border-left: 2px solid var(--mrb-accent, #4C6EF5); }
+#chartModal .modal-report-banner:hover { background: rgba(255,255,255,0.06); }
+#chartModal .modal-report-banner .mrb-ico { background: rgba(255,255,255,0.06); }
+/* F: 마이크로 상태 — 손맛 */
+#chartModal .modal-report-banner, #chartModal .aq-coll-head { transition: background 0.13s ease, transform 0.1s ease; }
+#chartModal .modal-report-banner:active, #chartModal .aq-coll-head:active { transform: scale(0.992); }
 .short-stats { display: flex; gap: 10px; }
 .short-stat { flex: 1; display: flex; flex-direction: column; gap: 5px; padding: 13px 14px; background: transparent; border: 1px solid var(--line); border-radius: 10px; }
 .short-stat .ss-k { font-size: 11px; color: var(--text-mute); }
@@ -13419,6 +13437,9 @@ function aqRenderReportVerdict(mkt, tkUpper) {
     vEl.className = 'mrb-verdict an-action-pill an-' + (a.type || 'neutral');
     vEl.textContent = '추천 ' + a.action;
     vEl.style.display = '';
+    var _ACC = { 'strong-buy': '#2f9e44', 'buy': '#51cf66', 'hold': '#ffc53d', 'avoid': '#ff6b6b', 'neutral': '#adb5bd', 'none': '#adb5bd' };
+    var _bn = document.getElementById('modalReportBanner');
+    if (_bn) _bn.style.setProperty('--mrb-accent', _ACC[a.type] || '#4C6EF5');
   } else if (a === null) {
     vEl.style.display = 'none'; vEl.textContent = '';
   } else {
