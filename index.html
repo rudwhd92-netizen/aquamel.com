@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.71';
+window.AQ_PWA_VERSION = '3.72';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2375,7 +2375,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 #chartModal .modal-report-banner, #chartModal .aq-coll-head { transition: background 0.13s ease, transform 0.1s ease; }
 #chartModal .modal-report-banner:active, #chartModal .aq-coll-head:active { transform: scale(0.992); }
 /* v3.71: 차트 ↔ Signal 필터(이하 토글) 사이 — 간격 확대 + 두꺼운 어두운 분리 바 */
-#chartModal .modal-filter-block { border-top: 6px solid rgba(0,0,0,0.5); margin-top: 24px; padding-top: 22px; }
+#chartModal .modal-filter-block { border-top: 8px solid rgba(0,0,0,0.5); margin-top: 24px; margin-left: -28px; margin-right: -28px; padding-top: 22px; padding-left: 28px; padding-right: 28px; }  /* v3.72: 더 두껍게 + 좌우 꽉 차게(콘텐츠 위치 유지) */
 .short-stats { display: flex; gap: 10px; }
 .short-stat { flex: 1; display: flex; flex-direction: column; gap: 5px; padding: 13px 14px; background: transparent; border: 1px solid var(--line); border-radius: 10px; }
 .short-stat .ss-k { font-size: 11px; color: var(--text-mute); }
