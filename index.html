@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.37';
+window.AQ_PWA_VERSION = '3.70';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1548,6 +1548,73 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .report-back-btn:hover { background: var(--bg-2); border-color: var(--accent); color: var(--accent); }
 
+/* v3.47: 자산 보유 현황 패널 — 헤더는 유지, 차트/필터/이력만 가림 */
+#positionPanel { display: none; }
+body.modal-pos-mode #positionPanel { display: block; }
+body.modal-pos-mode #chartModal .chart-wrap,
+body.modal-pos-mode #chartModal .modal-filter-block,
+body.modal-pos-mode #chartModal .modal-report-banner,
+body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important; }
+/* v3.70: 보고서 모드 — hero 유지, 아래 영역만 교체 (전환 시 hero 안 움직임) */
+body.modal-report-mode #chartModal .chart-wrap,
+body.modal-report-mode #chartModal .modal-filter-block,
+body.modal-report-mode #chartModal .ticker-history-wrap,
+body.modal-report-mode #chartModal .modal-report-banner,
+body.modal-report-mode #chartModal #positionPanel { display: none !important; }
+.report-detail-head-v2.report-head-bare { align-items: center; padding-bottom: 14px; margin-bottom: 18px; }
+.pos-back-row { margin: 4px 0 16px; }
+.pos-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--line); gap: 12px; }
+.pos-label { color: var(--text-dim); font-size: 13px; flex-shrink: 0; }
+.pos-val { text-align: right; }
+.pos-val .pos-main { font-size: 16px; font-weight: 700; color: var(--text-hi); }
+.pos-val .pos-pnl { font-size: 12px; font-weight: 600; margin-top: 3px; }
+.pos-val .pos-pnl.up { color: var(--kr-up); }
+.pos-val .pos-pnl.down { color: var(--kr-down); }
+.pos-val .pos-pnl.zero { color: var(--text-mute); }
+.pos-avg-big { font-size: 22px; font-weight: 800; color: var(--text-hi); margin-top: 2px; }
+.pos-orders { margin-top: 24px; }
+.pos-orders-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.pos-orders-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.pos-orders-note { font-size: 11px; color: var(--text-mute); }
+.pos-order { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.pos-order .po-date { font-size: 12px; color: var(--text-dim); }
+.pos-order .po-act { font-size: 13px; color: var(--text); }
+.pos-order .po-px { font-size: 13px; font-weight: 700; color: var(--text-hi); text-align: right; }
+.pos-orders-foot { text-align: center; color: var(--text-mute); font-size: 12px; padding: 16px 0 4px; }
+.pos-actions { display: flex; gap: 10px; margin-top: 20px; }
+.pos-actions button { flex: 1; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; color: #fff; }
+.pos-actions .pos-sell { background: var(--kr-down); }
+.pos-actions .pos-buy { background: var(--kr-up); }
+/* v3.55: 매수/매도 입력 모달 */
+.aq-tf-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.62); z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.aq-tf-modal { width: 100%; max-width: 380px; background: var(--bg-2, #181a1f); border: 1px solid var(--line); border-radius: 16px; padding: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.aq-tf-title { font-size: 17px; font-weight: 800; color: var(--text-hi, #fff); }
+.aq-tf-sub { font-size: 12px; color: var(--text-mute); margin: 3px 0 16px; }
+.aq-tf-field { margin-bottom: 12px; }
+.aq-tf-field label { display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 5px; }
+.aq-tf-field input { width: 100%; box-sizing: border-box; padding: 11px 12px; background: var(--bg-3, rgba(255,255,255,0.05)); border: 1px solid var(--line); border-radius: 9px; color: var(--text); font-size: 15px; font-family: inherit; }
+.aq-tf-field input:focus { outline: none; border-color: var(--accent, #5c7cfa); }
+.aq-tf-field select { width: 100%; box-sizing: border-box; padding: 11px 12px; background: var(--bg-3, rgba(255,255,255,0.05)); border: 1px solid var(--line); border-radius: 9px; color: var(--text); font-size: 15px; font-family: inherit; }
+.aq-tf-field select:focus { outline: none; border-color: var(--accent, #5c7cfa); }
+.aq-tf-hint { font-size: 11px; color: #51cf66; margin-top: 4px; min-height: 13px; }
+.aq-tf-row2 { display: flex; gap: 10px; }
+.aq-tf-row2 .aq-tf-field { flex: 1; }
+.aq-tf-err { color: var(--kr-down, #fa5252); font-size: 12px; min-height: 16px; margin-top: 2px; }
+.aq-tf-actions { display: flex; gap: 10px; margin-top: 14px; }
+.aq-tf-actions button { flex: 1; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
+.aq-tf-cancel { background: var(--bg-3, rgba(255,255,255,0.08)); color: var(--text); }
+.aq-tf-save { color: #fff; }
+.aq-tf-save.buy { background: var(--kr-up); }
+.aq-tf-save.sell { background: var(--kr-down); }
+/* v3.59: 자산 계정·동기화 상태 줄 */
+.aq-acct-bar { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 9px 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; font-size: 12.5px; }
+.aq-acct-bar .aq-acct-ico { flex-shrink: 0; }
+.aq-acct-bar .aq-acct-status { flex: 1; color: var(--text-dim); min-width: 0; }
+.aq-acct-bar .aq-acct-cta { color: var(--accent, #5c7cfa); font-weight: 700; flex-shrink: 0; }
+.aq-acct-bar.warn { border-color: rgba(255,146,43,0.4); background: rgba(255,146,43,0.08); }
+.aq-acct-bar.warn .aq-acct-status { color: #ff922b; }
+.pos-empty { color: var(--text-mute); font-size: 13px; padding: 20px 0; text-align: center; }
+
 /* 목록 모드 */
 .report-list-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -1837,6 +1904,33 @@ table.sheet tbody tr.drop-below td:last-child {
 .rs-negative { border-left: 3px solid #fd7e14; background: linear-gradient(90deg, rgba(253,126,20,0.08), transparent 30%); }
 .rs-negative .report-icon { color: #fd7e14; font-size: 20px; font-weight: 800; }
 .rs-negative .report-item { border-left-color: #fd7e14; }
+/* v3.53: V2 보고서 — 섹션 성격별 아이템 (블릿/인라인칩/라벨카드/결론) */
+.rv2-body { gap: 0 !important; padding: 4px 0; }
+.rv2-item { display: flex; align-items: flex-start; gap: 9px; padding: 9px 12px; line-height: 1.6; font-size: 13.5px; }
+.rv2-item + .rv2-item { border-top: 1px solid var(--line); }
+.rv2-dot { color: var(--text-mute); flex-shrink: 0; }
+.rv2-text { flex: 1; min-width: 0; color: var(--text); word-break: break-word; }
+.rv2-arrow { color: var(--text-mute); font-weight: 700; }
+.rv2-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 999px; vertical-align: middle; margin: 0 1px; }
+.rv2-pill-pos  { background: rgba(81,207,102,0.16);  color: #51cf66; }
+.rv2-pill-neg  { background: rgba(250,82,82,0.16);   color: #fa5252; }
+.rv2-pill-warn { background: rgba(255,146,43,0.16);  color: #ff922b; }
+.rv2-pill-mute { background: rgba(134,142,150,0.20); color: #adb5bd; }
+.rv2-cpos { color: #51cf66; font-weight: 700; }
+.rv2-cneg { color: #fa5252; font-weight: 700; }
+/* 5WHYS — 라벨 카드 (옛 포맷 감성) */
+.rv2-card { margin: 8px 0; padding: 11px 14px; border-radius: 10px; background: rgba(255,255,255,0.035); border-left: 3px solid var(--line); line-height: 1.65; font-size: 13.5px; color: var(--text); word-break: break-word; }
+.rv2-card-label { font-weight: 800; margin-right: 5px; }
+.rs-why-down .rv2-card { border-left-color: #339af0; }
+.rs-why-down .rv2-card-label { color: #339af0; }
+.rs-why-partner .rv2-card { border-left-color: #ae3ec9; }
+.rs-why-partner .rv2-card-label { color: #ae3ec9; }
+.rs-negative .rv2-card { border-left-color: #fd7e14; }
+.rs-negative .rv2-card-label { color: #fd7e14; }
+/* 결론 박스 */
+.rv2-concl { background: rgba(255,255,255,0.05); border-radius: 9px; margin-top: 6px; }
+.rv2-concl .rv2-text { font-weight: 600; }
+.rv2-concl .rv2-dot { color: var(--accent, #5c7cfa); }
 
 /* 🤔 시장의 걱정과 진실 — 짝 카드 형식 */
 .rs-worry { border-left: 3px solid #15aabf; background: linear-gradient(90deg, rgba(21,170,191,0.08), transparent 30%); }
@@ -2133,7 +2227,7 @@ table.sheet tbody tr.drop-below td:last-child {
 .mv-chip .mv-v { font-size: 13px; font-weight: 700; color: var(--text, #d4d4d4); }
 .mv-chip .mv-v.mv-na { color: var(--text-mute, #6a6a6a); font-weight: 500; }
 
-.chart-wrap { background: var(--bg); border-radius: 4px; padding: 12px; position: relative; height: 520px; }
+.chart-wrap { background: transparent; padding: 0; margin: 10px 0 4px; position: relative; height: 520px; }  /* v3.62/v3.66: 평탄화 + 영역 여백 */
 
 /* v2.10: 타임프레임 세그먼트 컨트롤 (3M/6M/1Y) — 차트 우상단 */
 .tf-toggle {
@@ -2167,6 +2261,27 @@ table.sheet tbody tr.drop-below td:last-child {
     height: 30px; padding: 2px;
   }
   .tf-toggle button { padding: 0 12px; font-size: var(--text-xs); height: 26px; line-height: 26px; }
+}
+/* v3.48: 차트 컨트롤 래퍼 — PC는 투명(자식 각자 배치), MO는 우하단 flex 한 줄 */
+.chart-ctrl-br { display: contents; }
+@media (max-width: 640px) {
+  /* v3.48: 상세보기 + tf 토글을 우하단 한 줄(flex)로 묶어 겹침 방지 */
+  .chart-wrap .chart-ctrl-br {
+    display: flex; position: absolute; bottom: 8px; right: 10px;
+    gap: 6px; align-items: stretch; z-index: 5;
+  }
+  .chart-wrap .chart-ctrl-br .tf-toggle[data-target="modal"] {
+    position: static; top: auto; bottom: auto; right: auto; height: auto;
+    background: rgba(30,30,30,0.6); border-radius: 7px; padding: 2px; box-shadow: none;
+  }
+  .chart-wrap .chart-ctrl-br .tf-toggle[data-target="modal"] button {
+    padding: 3px 7px; font-size: 10px; font-weight: 700; height: auto; line-height: normal;
+  }
+  .chart-wrap .chart-ctrl-br .chart-mode-toggle {
+    position: static; top: auto; bottom: auto; right: auto; left: auto;
+    font-size: 10px; padding: 3px 8px; height: auto; line-height: normal;
+    border-radius: 7px; min-height: 0; display: inline-flex; align-items: center; white-space: nowrap;
+  }
 }
 .chart-legend { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-dim); }
 .chart-legend .lg-item { display: flex; align-items: center; gap: 6px; }
@@ -2223,6 +2338,47 @@ table.sheet tbody tr.drop-below td:last-child {
 }
 .feed-chart-wrap .hex-overlay.hex-left  { top: 6px; left: 6px; right: auto; }
 .feed-chart-wrap .hex-overlay.hex-right { top: 6px; right: 6px; left: auto; }
+/* v3.46: 모달 차트 헥사곤도 피드처럼 동적 코너 (상승=좌상단 / 하락=우상단) */
+.chart-wrap .hex-overlay.hex-left  { top: 6px; left: 6px; right: auto; }
+.chart-wrap .hex-overlay.hex-right { top: 6px; right: 6px; left: auto; }
+/* v3.46: 모달 접이식 섹션 (시그널 필터 / 시그널 이력) — 기본 접힘 */
+.aq-coll-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; user-select: none; }
+.aq-coll-caret { color: var(--text-mute); font-size: 11px; transition: transform 0.2s var(--ease-out); flex-shrink: 0; }
+.aq-coll.collapsed .aq-coll-body { display: none; }
+.aq-coll.collapsed .aq-coll-caret { transform: rotate(-90deg); }
+/* v3.62: 개별 종목 모달 — 보고서 진입을 헤더 세그먼트(차트/보고서)로, 공매도 타일 */
+.modal-report-banner { display: none; align-items: center; gap: 11px; margin: 20px 0 8px; padding: 13px 15px; background: rgba(92,124,250,0.09); border: 1px solid rgba(92,124,250,0.26); border-radius: 13px; cursor: pointer; transition: background 0.15s ease; }
+.modal-report-banner:hover { background: rgba(92,124,250,0.15); }
+.modal-report-banner .mrb-ico { flex-shrink: 0; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1; background: rgba(92,124,250,0.16); border-radius: 9px; }
+.modal-report-banner .mrb-label { font-size: 13.5px; font-weight: 700; color: var(--text-hi); letter-spacing: -0.01em; }
+.modal-report-banner .mrb-verdict { font-size: 11.5px; font-weight: 800; }
+.modal-report-banner .mrb-arrow { margin-left: auto; color: var(--text-mute); font-size: 17px; font-weight: 700; line-height: 1; }
+.modal-report-banner.aq-recent { border-color: rgba(255,146,43,0.40); background: rgba(255,146,43,0.09); }
+.modal-report-banner.aq-recent .mrb-ico { background: rgba(255,146,43,0.18); }
+/* v3.68: 종목 모달 디테일 마감 (구조 유지 — 마감만) */
+/* v3.69: 상단부 공유 모달(섹터 등)에도 동일 적용해 불일치 제거 */
+#chartModal .modal-content, #sectorModal .modal-content { font-variant-numeric: tabular-nums; }   /* A: 숫자 자릿수 정렬 */
+#chartModal .modal-price, #sectorModal .modal-price { font-size: 33px; letter-spacing: -0.02em; }  /* B: 가격 hero */
+#chartModal .modal-title .company-name, #sectorModal .modal-title .company-name { letter-spacing: -0.01em; }
+#chartModal .modal-title .ticker-paren, #sectorModal .modal-title .ticker-paren { color: var(--text-dim); font-weight: 600; }
+#chartModal .modal-subtitle, #sectorModal .modal-subtitle { color: var(--text-dim); }              /* C: 텍스트 3단 */
+#chartModal .modal-subtitle .sep, #sectorModal .modal-subtitle .sep { color: rgba(255,255,255,0.18); }
+#chartModal .mv-chip, #sectorModal .mv-chip { padding: 5px 10px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); }  /* E: 칩 규격 통일 */
+#chartModal .mv-chip .mv-k, #sectorModal .mv-chip .mv-k { color: var(--text-dim); letter-spacing: 0.04em; text-transform: uppercase; font-size: 10px; }
+#chartModal .modal-filter-block, #chartModal .ticker-history-wrap { border-top-color: rgba(255,255,255,0.06); }  /* E: 헤어라인 더 옅게 */
+#chartModal .ticker-history-title, #chartModal .modal-filter-label { letter-spacing: 0.05em; }                   /* 모듈 라벨 eyebrow */
+/* D: 보고서 배너 — 중립 카드 + 좌측 추천색 바 (글로우 대신 절제) */
+#chartModal .modal-report-banner { background: rgba(255,255,255,0.035); border-color: var(--line); border-left: 2px solid var(--mrb-accent, #4C6EF5); }
+#chartModal .modal-report-banner:hover { background: rgba(255,255,255,0.06); }
+#chartModal .modal-report-banner .mrb-ico { background: rgba(255,255,255,0.06); }
+/* F: 마이크로 상태 — 손맛 */
+#chartModal .modal-report-banner, #chartModal .aq-coll-head { transition: background 0.13s ease, transform 0.1s ease; }
+#chartModal .modal-report-banner:active, #chartModal .aq-coll-head:active { transform: scale(0.992); }
+.short-stats { display: flex; gap: 10px; }
+.short-stat { flex: 1; display: flex; flex-direction: column; gap: 5px; padding: 13px 14px; background: transparent; border: 1px solid var(--line); border-radius: 10px; }
+.short-stat .ss-k { font-size: 11px; color: var(--text-mute); }
+.short-stat .ss-v { font-size: 18px; font-weight: 800; color: var(--text-hi); }
+.aq-coll-body { margin-top: 10px; }
 .feed-actions { display: flex; align-items: center; gap: 16px; padding: 12px 12px 4px; }
 .feed-act { background: transparent; border: none; color: var(--text, #d4d4d4); cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 5px; }
 .feed-act .fi { width: 24px; height: 24px; display: block; }
@@ -2454,6 +2610,11 @@ table.sheet tbody tr.drop-below td:last-child {
 .insider-archive-item .ia-date { font-size: 10px; color: var(--text-mute); }
 .insider-archive-item .ia-shares { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
 .insider-archive-item .ia-price { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-top: 2px; }
+.insider-archive-item .ia-pnl { font-size: 12px; font-weight: 600; margin-top: 2px; }
+.insider-archive-item .ia-pnl.up { color: var(--kr-up); }
+.insider-archive-item .ia-pnl.down { color: var(--kr-down); }
+.insider-archive-item .ia-pnl.zero { color: var(--text-mute); }
+.insider-archive-item.long-pressing { background: var(--panel-hi); border-radius: 8px; }
 
 /* v3.24: 공매도 리스트 */
 .short-sort { display: inline-flex; gap: 2px; background: var(--bg-3, #2d2d30); border-radius: 8px; padding: 2px; }
@@ -3432,6 +3593,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   transition: opacity 0.12s;
 }
 .stock-list-row:active { opacity: 0.65; }
+.stock-list-row.long-pressing { background: var(--panel-hi); border-radius: 8px; }
 .stock-list-row .sl-sector {
   font-size: 10px;
   color: var(--text-mute);
@@ -3547,14 +3709,26 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   /* 활성 탭에 매핑된 카드만 표시 */
   body[data-mtab="discover"] section.card[data-mtab~="discover"] { display: block !important; }
   body[data-mtab="sector"]   section.card[data-mtab~="sector"]   { display: block !important; }
+  /* v3.45: 섹터 서브탭 게이팅 (FRAME / 일간 동향 / 전체 리스트) */
+  body[data-mtab="sector"] section.card[data-stab] { display: none !important; }
+  body[data-mtab="sector"][data-stab="frame"] section.card[data-stab~="frame"],
+  body[data-mtab="sector"][data-stab="trend"] section.card[data-stab~="trend"],
+  body[data-mtab="sector"][data-stab="all"]   section.card[data-stab~="all"] { display: block !important; }
   body[data-mtab="explore"]  section.card[data-mtab~="explore"]  { display: block !important; }
   /* v3.14: MO 탐색 서브탭 — 활성 서브탭 카드만 */
   body[data-mtab="explore"] section.card[data-xtab] { display: none !important; }
   body[data-mtab="explore"][data-xtab="signals"]  section.card[data-xtab="signals"],
   body[data-mtab="explore"][data-xtab="insider"]  section.card[data-xtab="insider"],
   body[data-mtab="explore"][data-xtab="shorting"] section.card[data-xtab="shorting"],
-  body[data-mtab="explore"][data-xtab="all"]      section.card[data-xtab="all"] { display: block !important; }
+  body[data-mtab="explore"][data-xtab="report"]   section.card[data-xtab="report"] { display: block !important; }
+  /* v3.43: MO 탐색에서 매크로 지표 카드 제거 (마퀴 탭으로 대체). PC 탐색은 유지 */
+  body[data-mtab="explore"] #macroCard { display: none !important; }
   body[data-mtab="board"]    section.card[data-mtab~="board"]    { display: block !important; }
+  /* v3.39: 보드 서브탭 게이팅 — data-btab 가진 콘텐츠 카드는 현재 서브탭만 표시 (바는 항상 표시) */
+  body[data-mtab="board"] section.card[data-btab] { display: none !important; }
+  body[data-mtab="board"][data-btab="holdings"]    section.card[data-btab~="holdings"],
+  body[data-mtab="board"][data-btab="performance"] section.card[data-btab~="performance"],
+  body[data-mtab="board"][data-btab="account"]     section.card[data-btab~="account"] { display: block !important; }
   body[data-mtab="my"]       section.card[data-mtab~="my"]       { display: block !important; }
   /* v2.01 Phase 2: 분석 탭 — 분석 카드만 표시 */
   body[data-mtab="analysis"] section.card[data-mtab~="analysis"] { display: block !important; }
@@ -3598,6 +3772,39 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
     font-size: 13px !important;
     margin-bottom: 8px;
   }
+  /* v3.38: MO 보드 — 바깥 프레임(테두리/배경/그림자/패딩) 제거 → 내부 .dash-card 폭 확장 */
+  body[data-mtab="board"] #dashboardCard {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+  body[data-mtab="board"] #dashboardCard > .card-body { padding: 0 !important; }
+  /* v3.60: 누적 성과 탭 카드 사이 여백 확대 */
+  body[data-mtab="board"] #dashboardCard .dash-top-section { margin-bottom: 34px; }
+  body[data-mtab="board"] #dashboardCard .dash-bottom-section { gap: 34px; }
+  body[data-mtab="board"] #dashboardCard .dash-bottom-col { gap: 34px; }
+  body[data-mtab="board"] #dashboardCard .dash-top-row { gap: 34px; }
+  body[data-mtab="board"] #dashboardCard .dash-side-stack { gap: 34px; }
+  /* v3.42: 자산 서브탭(보유 종목/상세 분석) 콘텐츠 = 탐색 카드와 동일 여백·헤더 (인너 프레임 제거) */
+  body[data-mtab="board"] #boardHoldingsCard > .card-body,
+  body[data-mtab="board"] #boardAccountCard > .card-body { margin-top: 0; padding: 0; }
+  body[data-mtab="board"] #boardHoldingsCard .dash-card,
+  body[data-mtab="board"] #boardAccountCard .dash-card {
+    background: none; border: none; border-radius: 0; padding: 0; margin: 0 0 40px 0;
+  }
+  body[data-mtab="board"] #boardHoldingsCard .dash-card:last-child,
+  body[data-mtab="board"] #boardAccountCard .dash-card:last-child { margin-bottom: 0; }
+  body[data-mtab="board"] #boardHoldingsCard .dash-card-title,
+  body[data-mtab="board"] #boardAccountCard .dash-card-title {
+    font-size: var(--text-xl); font-weight: 700; color: var(--text-hi);
+    letter-spacing: -0.4px; line-height: 1.3; margin-bottom: 14px;
+  }
+  body[data-mtab="board"] #boardHoldingsCard .dash-card-header { margin-bottom: 14px; }
+  /* 보유 종목 현황: 전용 탭이므로 내부 스크롤 제거 → 전체 표시 */
+  body[data-mtab="board"] #boardHoldingsCard .dash-holdings-card { max-height: none; }
+  body[data-mtab="board"] #boardHoldingsCard .dash-holdings-body { max-height: none; overflow: visible; }
 }
 
 /* ============ SPLASH OVERLAY (v1.26 — game-style boot loader) ============ */
@@ -4346,10 +4553,10 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 /* ============ MODAL FILTER (signal filter inside chart modal) ============ */
 .modal-filter-block {
   margin-top: 14px;
-  padding: 12px 14px;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 4px;
+  padding: 20px 0;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--line);
 }
 .modal-filter-label {
   font-size: 11px; color: var(--text-mute); font-weight: 600;
@@ -4532,7 +4739,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 }
 
 /* ============ TICKER HISTORY (below chart) ============ */
-.ticker-history-wrap { margin-top: 18px; background: var(--bg); border-radius: 4px; padding: 14px 16px; overflow: auto; }
+.ticker-history-wrap { margin-top: 14px; background: transparent; padding: 20px 0; overflow: auto; border-top: 1px solid var(--line); }
 .ticker-history-title { font-size: 12px; color: var(--text-hi); margin-bottom: 10px; font-weight: 600; }
 
 /* ============ v2.67: HERO 알림 마퀴 — 우→좌 흐름 ============
@@ -5225,6 +5432,15 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   vertical-align: 1px;
 }
 [data-theme="light"] .macro-cell.kjp400-cell .kjp-tag { background: rgba(42,108,176,0.12); }
+/* v3.43: 매크로 지표 개요 모달 (MO) */
+.macro-overview-modal { position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; justify-content: center; }
+.macro-overview-modal.open { display: flex; }
+.macro-overview-content { background: var(--panel); width: 100%; max-width: 640px; max-height: 90vh; border-radius: 18px 18px 0 0; display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow-2); animation: macroSheetUp 0.24s var(--ease-out) both; }
+@keyframes macroSheetUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.macro-overview-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 12px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+.macro-overview-head h2 { margin: 0; font-size: var(--text-2xl); font-weight: 700; color: var(--text-hi); letter-spacing: -0.4px; }
+.macro-overview-close { background: none; border: none; color: var(--text-mute); font-size: 26px; line-height: 1; cursor: pointer; padding: 0 4px; }
+.macro-overview-body { padding: 16px 18px calc(24px + env(safe-area-inset-bottom)); overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
 footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 10px; color: var(--text-mute); text-align: center; }
 footer .accent { color: var(--accent-2); }
@@ -5662,11 +5878,11 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 
   /* Simple mode: hide legend block + compact filter label */
   body.simple-mode .chart-legend { display: none; }
-  body.simple-mode .modal-filter-block { padding: 8px 10px; }
+  body.simple-mode .modal-filter-block { padding: 16px 0; margin-top: 16px; }  /* v3.66: 영역 간 여백 ↑ */
   body.simple-mode .modal-filter-label { font-size: 10px; margin-bottom: 6px; }
 
   /* Tighter ticker history */
-  .ticker-history-wrap { padding: 10px; margin-top: 14px; max-width: 100%; }
+  .ticker-history-wrap { padding: 16px 0; margin-top: 16px; max-width: 100%; }  /* v3.66: 영역 간 여백 ↑ */
   .ticker-history-title { font-size: 11px; }
 
   /* Signal filter buttons wrap nicer */
@@ -6594,7 +6810,9 @@ table.combo-eval tbody td .nodata {
   .hero .meta .v { font-size: 10px; padding-left: 1px; }
   .hero-refresh { width: 24px; height: 24px; font-size: 13px; }
   section.card { padding: 12px 10px; }
-  section.card h2 { font-size: 13px; }
+  section.card h2,
+  body[data-mtab="board"] #boardHoldingsCard .dash-card-title,
+  body[data-mtab="board"] #boardAccountCard .dash-card-title { font-size: 13px; }
 
   /* Sync card 버튼 더 크게 */
   .btn { padding: 11px 14px; font-size: 12px; }
@@ -6759,6 +6977,17 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+  <!-- v3.43: MO 매크로 지표 개요 모달 (HERO 마퀴 탭 시 먼저 표시) -->
+  <div class="macro-overview-modal" id="macroOverviewModal" onclick="_macroOverviewBackdrop(event)">
+    <div class="macro-overview-content">
+      <div class="macro-overview-head">
+        <h2>매크로 지표</h2>
+        <button class="macro-overview-close" onclick="closeMacroOverview()" aria-label="닫기">×</button>
+      </div>
+      <div class="macro-overview-body" id="macroOverviewBody"></div>
+    </div>
+  </div>
+
   <!-- ============ v1.52 MOBILE-ONLY: 종목 리스트 (탐색 탭) ============ -->
   <!-- v3.14: 탐색 서브탭 바 (누적 시그널 / 내부자 매수 / 공매도 이력 / 전체 리스트) -->
   <section class="card mobile-only explore-subtabs" id="exploreSubtabs" data-mtab="explore">
@@ -6766,7 +6995,7 @@ table.combo-eval tbody td .nodata {
       <button class="xtab-btn active" data-xtab="signals" onclick="setExploreSubtab('signals')">누적 시그널</button>
       <button class="xtab-btn" data-xtab="insider" onclick="setExploreSubtab('insider')">내부자 매수</button>
       <button class="xtab-btn" data-xtab="shorting" onclick="setExploreSubtab('shorting')">공매도 이력</button>
-      <button class="xtab-btn" data-xtab="all" onclick="setExploreSubtab('all')">전체 리스트</button>
+      <button class="xtab-btn" data-xtab="report" onclick="setExploreSubtab('report')">분석 보고서</button>
     </div>
   </section>
 
@@ -6792,7 +7021,16 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-  <section class="card mobile-only" id="stockListCard" data-mtab="explore" data-xtab="all">
+  <!-- v3.45: 섹터 서브탭 (섹터 FRAME / 일간 섹터 동향 / 전체 리스트) -->
+  <section class="card mobile-only explore-subtabs" id="sectorSubtabs" data-mtab="sector">
+    <div class="xtab-row">
+      <button class="xtab-btn active" data-stab="frame" onclick="setSectorSubtab('frame')">섹터 FRAME</button>
+      <button class="xtab-btn" data-stab="trend" onclick="setSectorSubtab('trend')">일간 섹터 동향</button>
+      <button class="xtab-btn" data-stab="all" onclick="setSectorSubtab('all')">전체 리스트</button>
+    </div>
+  </section>
+
+  <section class="card mobile-only" id="stockListCard" data-mtab="sector" data-xtab="all" data-stab="all">
     <div class="card-header">
       <h2>종목 리스트</h2>
       <div class="stock-list-sort">
@@ -6814,7 +7052,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ SECTOR FRAMEWORK (정적 도식 + 정의) ============ -->
-  <section class="card" id="sectorFrameworkCard" data-mtab="sector">
+  <section class="card" id="sectorFrameworkCard" data-mtab="sector" data-stab="frame">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>섹터 FRAME</h2>
       <span class="toggle-icon">▼</span>
@@ -6842,7 +7080,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ SECTOR ANALYSIS (Equal-Weight Bars + 30D Cycle Heatmap) ============ -->
-  <section class="card" id="sectorAnalysisCard" data-mtab="sector">
+  <section class="card" id="sectorAnalysisCard" data-mtab="sector" data-stab="trend">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>일간 섹터 동향</h2>
       <span class="toggle-icon">▼</span>
@@ -6863,7 +7101,27 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- ============ KJP INVESTMENT DASHBOARD (v1.29) ============ -->
-  <section class="card" id="dashboardCard" data-mtab="board" style="display:none;">
+  <!-- v3.39: 보드 서브탭 (탐색 서브탭과 동일 양식) — 보유 종목 / 누적 성과 / 계좌 분석 -->
+  <section class="card mobile-only explore-subtabs" id="boardSubtabs" data-mtab="board">
+    <div class="xtab-row">
+      <button class="xtab-btn" data-btab="holdings" onclick="setBoardSubtab('holdings')">보유 종목</button>
+      <button class="xtab-btn active" data-btab="performance" onclick="setBoardSubtab('performance')">누적 성과</button>
+      <button class="xtab-btn" data-btab="account" onclick="setBoardSubtab('account')">상세 분석</button>
+    </div>
+    <div class="aq-acct-bar" id="aqAcctBar" onclick="aqOpenAccountModal()">
+      <span class="aq-acct-ico">☁</span>
+      <span class="aq-acct-status" id="aqAcctStatus">계정 미연결 · 폰에만 저장됨</span>
+      <span class="aq-acct-cta">계정·동기화 ›</span>
+    </div>
+  </section>
+  <section class="card mobile-only" id="boardHoldingsCard" data-mtab="board" data-btab="holdings" style="display:none;">
+    <div class="card-body"><div class="cmp-placeholder">보유 종목 — 준비 중</div></div>
+  </section>
+  <section class="card mobile-only" id="boardAccountCard" data-mtab="board" data-btab="account" style="display:none;">
+    <div class="card-body"><div class="cmp-placeholder">상세 분석 — 준비 중</div></div>
+  </section>
+
+  <section class="card" id="dashboardCard" data-mtab="board" data-btab="performance" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>AQUAMEL Dashboard</h2>
       <span class="dash-asof" id="dashAsof"></span>
@@ -6939,7 +7197,7 @@ table.combo-eval tbody td .nodata {
           </div>
         </div>
         <!-- 오른쪽 도넛 -->
-        <div class="dash-card dash-donut-card">
+        <div class="dash-card dash-donut-card" id="dashPortfolioCard">
           <div class="dash-card-title">주식 포트폴리오</div>
           <div class="dash-donut-wrap"><canvas id="dashDonutCanvas"></canvas></div>
           <div class="dash-donut-legend" id="dashDonutLegend"></div>
@@ -6953,13 +7211,14 @@ table.combo-eval tbody td .nodata {
             <div class="dash-card-title">30일 평가수익금 추이</div>
             <div class="dash-chart-wrap"><canvas id="dashTrendCanvas"></canvas></div>
           </div>
-          <div class="dash-card dash-holdings-card">
+          <div class="dash-card dash-holdings-card" id="dashHoldingsCard">
             <div class="dash-card-header">
               <div class="dash-card-title">보유 종목 현황</div>
               <span class="dash-meta" id="dashHoldingsMeta">총 0종목</span>
             </div>
             <div class="dash-holdings-body" id="dashHoldingsBody"></div>
             <div class="dash-hidden-bar" id="dashHiddenBar" style="display:none;"></div>
+            <button class="watch-add-btn" onclick="aqOpenHoldingForm()">+ 종목 추가</button>
           </div>
         </div>
         <div class="dash-bottom-col">
@@ -6967,7 +7226,7 @@ table.combo-eval tbody td .nodata {
             <div class="dash-card-title">섹터별 평가수익금 트렌드</div>
             <div class="dash-chart-wrap"><canvas id="dashSectorTrendCanvas"></canvas></div>
           </div>
-          <div class="dash-card dash-matrix-card">
+          <div class="dash-card dash-matrix-card" id="dashMatrixCard">
             <div class="dash-card-header" style="flex-direction:column; align-items:flex-start; gap:2px;">
               <div class="dash-card-title">Decoupling Matrix</div>
               <div class="dash-meta" style="font-size:10px;">
@@ -6989,7 +7248,7 @@ table.combo-eval tbody td .nodata {
 
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
   <!-- v3.32: 종목 비교 분석 (US 유니버스 최대 3개 — 리베이스 차트 + 멀티 헥사곤) -->
-  <section class="card" id="compareCard" data-mtab="analysis" style="display:none;">
+  <section class="card" id="compareCard" data-mtab="watch" style="display:none;">
     <div class="card-header"><h2>종목 비교 분석</h2></div>
     <div class="card-body">
       <div class="cmp-picker">
@@ -7005,7 +7264,7 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-  <section class="card" id="analysisCard" data-mtab="analysis" style="display:none;">
+  <section class="card" id="analysisCard" data-mtab="explore" data-xtab="report" style="display:none;">
     <div class="card-header">
       <h2>분석 보고서</h2>
       <div class="stock-list-sort">
@@ -7106,6 +7365,10 @@ table.combo-eval tbody td .nodata {
         <div class="data-mgmt-row">
           <div class="label">자동 동기화 주기</div>
           <div class="value">2분 (PWA 켜 있을 때)</div>
+        </div>
+        <div class="data-mgmt-row">
+          <div class="label">타점 과다 종목 숨김<div style="font-size:11px;color:var(--text-mute);margin-top:3px;font-weight:400;">발견·탐색에서 최근 3개월 V1+V2 타점 상위 10% 종목 제외</div></div>
+          <div class="value"><input type="checkbox" id="aqExclOverSig" checked onchange="aqSetExcludeOverSignaled(this.checked)" style="width:20px;height:20px;accent-color:var(--accent,#5c7cfa);cursor:pointer;"></div>
         </div>
       </div>
       <div class="data-mgmt-actions">
@@ -7412,11 +7675,11 @@ table.combo-eval tbody td .nodata {
       <span class="mtab-label">일정</span>
     </button>
     <!-- v2.92: 5번째 — 분석 -->
-    <button class="mtab-btn" data-mtab="analysis" onclick="switchMobileTab('analysis')" aria-label="분석">
+    <button class="mtab-btn" data-mtab="board" onclick="switchMobileTab('board')" aria-label="자산">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/>
+        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
       </svg>
-      <span class="mtab-label">분석</span>
+      <span class="mtab-label">자산</span>
     </button>
   </nav>
 
@@ -7436,10 +7699,6 @@ table.combo-eval tbody td .nodata {
       <button class="mo-drawer-item" onclick="moDrawerNav('todo')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
         <span>To-Do</span>
-      </button>
-      <button class="mo-drawer-item" onclick="moDrawerNav('board')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.2"/><rect x="14" y="3" width="7" height="5" rx="1.2"/><rect x="14" y="12" width="7" height="9" rx="1.2"/><rect x="3" y="16" width="7" height="5" rx="1.2"/></svg>
-        <span>보드</span>
       </button>
       <button class="mo-drawer-item" onclick="moDrawerNav('my')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
@@ -7547,39 +7806,71 @@ table.combo-eval tbody td .nodata {
       <div class="modal-subtitle" id="modalSubtitle">—</div>
       <div class="modal-desc" id="modalDesc"></div>
       <div class="modal-valuation" id="modalValuation"></div>
+      <div class="modal-report-banner" id="modalReportBanner" onclick="openReportPanel()" style="display:none">
+        <span class="mrb-ico">📄</span>
+        <span class="mrb-label">분석 보고서</span>
+        <span class="mrb-verdict an-action-pill" id="modalReportVerdict" style="display:none"></span>
+        <span class="mrb-arrow">›</span>
+      </div>
+      <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
+      <div id="positionPanel"></div>
       <div class="chart-wrap">
+        <!-- v3.48: 상세보기 + tf 토글을 우하단 한 줄로 묶음 (겹침 방지) -->
+        <div class="chart-ctrl-br">
         <button class="chart-mode-toggle" id="modeToggleBtn" onclick="toggleChartMode()">🔬 상세보기</button>
-        <!-- v2.10: 타임프레임 세그먼트 (3M/6M/1Y) — 우상단 (모바일은 차트 아래로 이동) -->
+        <!-- v2.10: 타임프레임 세그먼트 (3M/6M/1Y) -->
         <div class="tf-toggle" data-target="modal">
           <button data-tf="3M" class="active" onclick="setChartTimeframe('modal','3M')">3M</button>
           <button data-tf="6M" onclick="setChartTimeframe('modal','6M')">6M</button>
           <button data-tf="1Y" onclick="setChartTimeframe('modal','1Y')">1Y</button>
+        </div>
         </div>
         <canvas id="chartCanvas"></canvas>
         <div class="hex-overlay" id="modalHex"></div>
       </div>
       <!-- v2.63: 차트 하단 레전드 제거 — 차트 안 동적 레전드와 중복이라 불필요 -->
       <!-- (id=chartLegend 참조하는 JS는 element 없어도 null 가드 또는 무해 — 별도 처리) -->
-      <div class="modal-filter-block">
-        <div class="modal-filter-label">🎯 Signal Type 필터 (메인 표와 동일하게 동기화):</div>
-        <div class="signal-filter-area" id="modalSignalFilterArea"></div>
-        <!-- v2.31/v2.32: V-Shape 알고리즘 버전 토글 (US만, syncVshapeToggleUI가 표시 관리) -->
-        <div class="modal-vshape-ver" id="modalVshapeVerWrap" style="margin-top:10px;">
-          <span class="modal-filter-label" style="display:inline-block;margin-right:8px;">V-Shape 버전:</span>
-          <div class="vshape-ver-toggle" role="group">
-            <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
-            <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+      <div class="modal-filter-block aq-coll collapsed">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)">
+          <h4 class="ticker-history-title" style="margin:0;">Signal Type 필터</h4>
+          <span class="aq-coll-caret">▼</span>
+        </div>
+        <div class="aq-coll-body">
+          <div class="signal-filter-area" id="modalSignalFilterArea"></div>
+          <!-- v2.31/v2.32: V-Shape 알고리즘 버전 토글 (US만, syncVshapeToggleUI가 표시 관리) -->
+          <div class="modal-vshape-ver" id="modalVshapeVerWrap" style="margin-top:10px;">
+            <span class="modal-filter-label" style="display:inline-block;margin-right:8px;">V-Shape 버전:</span>
+            <div class="vshape-ver-toggle" role="group">
+              <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
+              <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="ticker-history-wrap" id="tickerHistoryWrap" style="display:none;">
-        <h4 class="ticker-history-title">📜 이 종목의 시그널 이력</h4>
-        <div id="tickerHistoryArea"></div>
+      <div class="ticker-history-wrap aq-coll collapsed" id="tickerHistoryWrap" style="display:none;">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)">
+          <h4 class="ticker-history-title" style="margin:0;">이 종목의 시그널 이력</h4>
+          <span class="aq-coll-caret">▼</span>
+        </div>
+        <div class="aq-coll-body">
+          <div id="tickerHistoryArea"></div>
+        </div>
       </div>
-      <!-- v2.64: 내부자 거래 이력 (SEC Form 4 P-transactions) — US 종목에만 데이터 있음 -->
-      <div class="ticker-history-wrap insider-history-wrap" id="insiderHistoryWrap" style="display:none;">
-        <h4 class="ticker-history-title">💼 내부자 거래 이력</h4>
-        <div id="insiderHistoryArea"></div>
+      <!-- v2.64/v3.61: 내부자 거래 이력 — 다른 보조 섹션과 동일 아코디언(접힘) -->
+      <div class="ticker-history-wrap insider-history-wrap aq-coll collapsed" id="insiderHistoryWrap" style="display:none;">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)">
+          <h4 class="ticker-history-title" style="margin:0;">내부자 거래 이력</h4>
+          <span class="aq-coll-caret">▼</span>
+        </div>
+        <div class="aq-coll-body"><div id="insiderHistoryArea"></div></div>
+      </div>
+      <!-- v3.48/v3.61: 공매도 이력 — 동일 아코디언(접힘) -->
+      <div class="ticker-history-wrap short-history-wrap aq-coll collapsed" id="shortHistoryWrap" style="display:none;">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)">
+          <h4 class="ticker-history-title" style="margin:0;">공매도 이력</h4>
+          <span class="aq-coll-caret">▼</span>
+        </div>
+        <div class="aq-coll-body"><div id="shortHistoryArea"></div></div>
       </div>
       </div><!-- /#mainModalBody -->
       <!-- v1.99: 보고서 패널 (보고서 모드 진입 시 표시, 평소 숨김) -->
@@ -9476,6 +9767,26 @@ function aqRefreshModalHex() {
   } catch (e) {}
 }
 window.aqHexagonFor = aqHexagonFor; window.aqHexSvg = aqHexSvg;
+// v3.46: 모달 헥사곤 — 피드처럼 차트 추세 따라 동적 코너 (상승=좌상단 / 하락=우상단)
+function aqSetModalHexCorner(tk, d) {
+  const el = document.getElementById('modalHex'); if (!el) return;
+  const isUS = (typeof getCurrentMarket !== 'function') || getCurrentMarket() === 'US';
+  const sc = isUS ? aqHexagonFor(tk) : null;
+  el.classList.remove('hex-left', 'hex-right');
+  if (sc && d && d.closes && d.closes.length > 3) {
+    const n = d.closes.length, h = Math.max(1, Math.floor(n / 3));
+    const lm = d.closes.slice(0, h).reduce((a, b) => a + b, 0) / h;
+    const rm = d.closes.slice(n - h).reduce((a, b) => a + b, 0) / h;
+    el.classList.add(lm <= rm ? 'hex-left' : 'hex-right');
+    el.innerHTML = aqHexSvg(sc);
+  } else {
+    el.innerHTML = sc ? aqHexSvg(sc) : '';
+  }
+}
+window.aqSetModalHexCorner = aqSetModalHexCorner;
+// v3.46: 모달 접이식 섹션 토글
+function aqToggleColl(headEl) { const c = headEl && headEl.closest('.aq-coll'); if (c) c.classList.toggle('collapsed'); }
+window.aqToggleColl = aqToggleColl;
 
 // v3.28: 방어(축6) = 현재 사용자 계좌 기반 비대칭성 (시트의 소유자 값 대신 클라에서 계산)
 let _aqAsymScores = {}; let _aqAsymReady = false; let _aqAsymComputed = false;
@@ -10693,6 +11004,7 @@ function applyMarketState(mkt) {
   console.log(`[applyMarketState/${mkt}] archive=${_state.archive.length}, sectors=${Object.keys(_state.sectors).length}, kjpSectorMap=${Object.keys(_state.kjpSectorMap).length}, tickerSectorMap=${Object.keys(_state.tickerSectorMap).length}`);
   // v2.03 Phase 2: 분석 패널이 열려있으면 현재 시장 기준으로 그리드 재빌드
   try { if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   // v3.35: 탐색 서브탭 라벨/내용 시장별 갱신 (KR=외국인/기관 매수, US=내부자/공매도)
   try {
     if (typeof aqApplyExploreMarketUI === 'function') aqApplyExploreMarketUI();
@@ -12158,10 +12470,14 @@ function updateReportButtonVisibility() {
   const tkUpper = String(tk).toUpperCase();
   const list = (_state.reports[mkt] || {})[tkUpper];
   const hasReport = list && list.length > 0;
-  btn.style.display = hasReport ? '' : 'none';
+  btn.style.display = 'none';  // v3.64: 플로팅 아이콘 숨김 → 상단 추천 배너로 대체
+  const banner = document.getElementById('modalReportBanner');
+  if (banner) banner.style.display = hasReport ? 'flex' : 'none';
+  if (hasReport) aqRenderReportVerdict(mkt, tkUpper);
   // v2.99: 로고에 스토리 링이 붙는 종목(최근 보고서)은 보고서 아이콘에도 동일한 스토리 링 → 어디를 봐야 하는지 표시
   const recent = hasReport && (typeof aqHasRecentReport === 'function') && aqHasRecentReport(tkUpper);
   btn.classList.toggle('aq-story', !!recent);
+  if (typeof banner !== 'undefined' && banner) banner.classList.toggle('aq-recent', !!recent);
   console.log(`[Reports] 버튼 표시 갱신 — ticker=${tkUpper}, mkt=${mkt}, 보고서 ${list ? list.length : 0}개, 표시=${hasReport}`);
 }
 
@@ -12599,16 +12915,212 @@ function renderReportContent(parsed, ticker, date) {
   return parts.join('');
 }
 
+// ============================================================================
+// v3.49: 2026-06-07 이후 정량 보고서 — 구글Docs 신 포맷
+//   (헤더 "티커 (회사명) — 날짜" / 🎯 추천 ACTION / 핵심 요약 / 번호 매긴 14섹션 / TO-DO)
+//   기존(txt, ~2026-06-06) 보고서는 parseReportText/renderReportContent 그대로 유지.
+//   ※ getReport가 신규분(구글Docs)의 본문 텍스트를 반환한다는 전제 (백엔드 영역).
+// ============================================================================
+function aqReportIsV2(date) {
+  const d = String(date || '').replace(/[^0-9]/g, '');
+  if (d.length < 8) return false;
+  return parseInt(d.slice(0, 8), 10) >= 20260607;
+}
+function aqActionType(w) {
+  w = String(w || '');
+  if (/적극\s*매수|강력\s*매수|매수\s*추천/.test(w)) return 'strong-buy';
+  if (/매수\s*금지|매도|회피/.test(w))               return 'avoid';
+  if (/분할\s*매수|매수/.test(w))                     return 'buy';
+  if (/보유|관망|보류|대기|유지/.test(w))             return 'hold';
+  return 'neutral';
+}
+function aqStripBullet(str) {
+  return String(str || '').replace(/^[\-\*·•▪◦\u2022\u25CF\u25E6]+\s*/, '').trim();
+}
+function parseReportTextV2(text) {
+  const out = { action: null, summary: [], sections: [], todo: [] };
+  const lines = String(text || '').split(/\r?\n/);
+  let cur = null, curSection = null, lastSecNum = 0;
+  for (const raw of lines) {
+    const line = raw.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim();
+    if (!line) continue;
+    if (/추천\s*ACTION/.test(line) && line.length < 30) { cur = 'action'; continue; }
+    if (line === '핵심 요약' || (line.startsWith('핵심 요약') && line.length <= 8)) { cur = 'summary'; continue; }
+    const m = line.match(/^(\d{1,2})\.\s*(.+)$/);
+    if (m) {
+      const num = parseInt(m[1], 10), title = m[2].trim();
+      // v3.53: 정식 섹션 번호는 1→14 단조 증가. 5WHYS 내부 "1.~5." 재시작 번호는 섹션이 아니라 항목으로 취급.
+      if (num > lastSecNum && num <= 14) {
+        lastSecNum = num;
+        if (/TO\s*-?\s*DO/i.test(title) || title.includes('CHECK LIST') || title.includes('체크리스트')) { cur = 'todo'; curSection = null; continue; }
+        curSection = { num, title, items: [] };
+        out.sections.push(curSection); cur = 'section'; continue;
+      }
+      // 내부 번호 줄 → 현재 컨텍스트 항목으로 (선두 번호 제거)
+      if (cur === 'section' && curSection) { curSection.items.push(title); continue; }
+      if (cur === 'todo')    { out.todo.push(title); continue; }
+      if (cur === 'summary') { out.summary.push(title); continue; }
+      continue;
+    }
+    if (cur === 'action') {
+      const mm = line.match(/^([^—–\-]+?)\s*[—–\-]\s*(.+)$/);  // em/en-dash·hyphen
+      if (mm && !out.action) out.action = { action: mm[1].trim(), reason: mm[2].trim(), actionType: aqActionType(mm[1].trim()) };
+      else if (!out.action)  out.action = { action: line, reason: '', actionType: aqActionType(line) };
+      else out.action.reason += (out.action.reason ? ' ' : '') + line;
+      continue;
+    }
+    if (cur === 'summary') { out.summary.push(aqStripBullet(line)); continue; }
+    if (cur === 'todo')    { out.todo.push(aqStripBullet(line)); continue; }
+    if (cur === 'section' && curSection) { curSection.items.push(aqStripBullet(line)); continue; }
+    // cur === null → 헤더(종목명 — 날짜) 줄: 무시
+  }
+  return out;
+}
+// v3.53: V2 14섹션 — 섹션 성격(색상/아이콘/렌더종류) 매핑
+function aqV2SectionMeta(num, title) {
+  const t = String(title || '');
+  if (/역방향/.test(t))                       return { cls:'rs-negative',    icon:'🔄', kind:'why-reverse' };
+  if (/악재/.test(t) && /유형|본질/.test(t))   return { cls:'rs-negative',    icon:'🧬', kind:'classify-neg' };
+  if (/악재/.test(t))                         return { cls:'rs-negative',    icon:'↓',  kind:'reflect-neg' };
+  if (/호재/.test(t) && /유형|본질/.test(t))   return { cls:'rs-positive',    icon:'🧬', kind:'classify-pos' };
+  if (/호재/.test(t))                         return { cls:'rs-positive',    icon:'⊕',  kind:'reflect-pos' };
+  if (/오해/.test(t))                         return { cls:'rs-misunder',    icon:'⚠',  kind:'default' };
+  if (/군중|심리/.test(t))                    return { cls:'rs-misunder',    icon:'🧠', kind:'default' };
+  if (/동업자|동업/.test(t))                  return { cls:'rs-why-partner', icon:'🤝', kind:'why-qa' };
+  if (/하락/.test(t))                         return { cls:'rs-why-down',    icon:'⬇',  kind:'why-step' };
+  if (/비즈니스|사업|모델/.test(t))            return { cls:'rs-summary',     icon:'🏢', kind:'default' };
+  if (/고평가|밸류/.test(t))                  return { cls:'rs-opp',         icon:'💲', kind:'default' };
+  if (/바닥/.test(t))                         return { cls:'rs-opp',         icon:'📉', kind:'default' };
+  if (/본질|소음/.test(t))                    return { cls:'rs-opp',         icon:'⚖️', kind:'default' };
+  return { cls:'rs-misc', icon:String(num), kind:'default' };
+}
+// 결론 줄 판별 / 렌더
+function aqV2IsConcl(it) { return /^(결론적으로|종합하면|결국)/.test(it) || /^결론\s*[:：]?/.test(it); }
+function aqV2ConclHTML(it) {
+  const txt = String(it).replace(/^(결론적으로|결론|종합하면|결국)\s*[:：]?\s*/, '');
+  return `<div class="rv2-item rv2-concl"><span class="rv2-dot">▸</span><span class="rv2-text"><b>결론</b> ${escapeHtml(txt)}</span></div>`;
+}
+// 악재/호재 반영상태 → 칩 색상
+function aqV2StatusPill(status, kind) {
+  const x = String(status || '');
+  if (/미\s*반영|깜짝/.test(x))                 return 'rv2-pill-pos';
+  if (/선반영|부분\s*반영|이미\s*반영/.test(x)) return 'rv2-pill-mute';
+  if (/진행형|위협|본질|경계/.test(x))          return 'rv2-pill-warn';
+  return (kind === 'reflect-pos') ? 'rv2-pill-pos' : 'rv2-pill-neg';
+}
+// V2 본문 한 줄 → 섹션 성격별 HTML
+function aqV2Item(itRaw, meta, idx) {
+  const it = String(itRaw || '').replace(/^[\-\*·•▪◦\u2022\u25CF\u25E6]+\s*/, '').replace(/^\d{1,2}[.)]\s+/, '').trim();
+  const esc = escapeHtml;
+  if (aqV2IsConcl(it)) return aqV2ConclHTML(it);
+
+  // 11. 5WHYS 하락 — "표면적으로 ~" → 단계 라벨 카드
+  if (meta.kind === 'why-step') {
+    const m = it.match(/^(표면|구조|심리|역사|본질)적?\s*으?로?\s*[,·]?\s*(.+)$/);
+    const label = m ? m[1] : '';
+    const body  = m ? m[2] : it;
+    return `<div class="rv2-card">${label ? `<span class="rv2-card-label">${label}</span>` : ''}${esc(body)}</div>`;
+  }
+  // 12. 5WHYS 동업자 — "질문 → 답변" → 질문 라벨 카드
+  if (meta.kind === 'why-qa') {
+    const parts = it.split(/\s*→\s*/);
+    if (parts.length >= 2) {
+      const q = parts[0].replace(/[?？]\s*$/, '').trim();
+      const a = parts.slice(1).join(' → ').trim();
+      return `<div class="rv2-card"><span class="rv2-card-label">${esc(q)}?</span>${esc(a)}</div>`;
+    }
+    return `<div class="rv2-card">${esc(it)}</div>`;
+  }
+  // 13. 역방향 5WHYS — "표면 함정으로 ~" → 라벨 카드
+  if (meta.kind === 'why-reverse') {
+    const m = it.match(/^(.{2,12}?)(?:으로|로)\s+(.+)$/);
+    if (m) return `<div class="rv2-card"><span class="rv2-card-label">${esc(m[1])}</span>${esc(m[2])}</div>`;
+    return `<div class="rv2-card">${esc(it)}</div>`;
+  }
+  // 2/8. 악재·호재 진단 — "주제 — 상태" → 인라인 상태 칩(텍스트 내부 → 줄바꿈 안전)
+  if (meta.kind === 'reflect-neg' || meta.kind === 'reflect-pos') {
+    const m = it.match(/^(.+?)\s*[—–]\s*(.+)$/);
+    if (m) {
+      const subj = m[1].trim(), status = m[2].replace(/[.\s]+$/, '').trim();
+      const tag = (status.length <= 18)
+        ? `<span class="rv2-pill ${aqV2StatusPill(status, meta.kind)}">${esc(status)}</span>`
+        : `<span class="${meta.kind === 'reflect-pos' ? 'rv2-cpos' : 'rv2-cneg'}">${esc(status)}</span>`;
+      return `<div class="rv2-item"><span class="rv2-dot">•</span><span class="rv2-text">${esc(subj)} ${tag}</span></div>`;
+    }
+  }
+  // 3/9. 본질 유형화 — "주제 → 분류" → 인라인 분류 칩
+  if (meta.kind === 'classify-neg' || meta.kind === 'classify-pos') {
+    const m = it.match(/^(.+?)\s*→\s*(.+)$/);
+    if (m) {
+      const subj = m[1].trim(), cat = m[2].replace(/[.\s]+$/, '').trim();
+      const pos = (meta.kind === 'classify-pos');
+      const tag = (cat.length <= 18)
+        ? `<span class="rv2-pill ${pos ? 'rv2-pill-pos' : 'rv2-pill-neg'}">${esc(cat)}</span>`
+        : `<span class="${pos ? 'rv2-cpos' : 'rv2-cneg'}">${esc(cat)}</span>`;
+      return `<div class="rv2-item"><span class="rv2-dot">•</span><span class="rv2-text">${esc(subj)} <span class="rv2-arrow">→</span> ${tag}</span></div>`;
+    }
+  }
+  // 기본 블릿
+  return `<div class="rv2-item"><span class="rv2-dot">•</span><span class="rv2-text">${esc(it)}</span></div>`;
+}
+function renderReportContentV2(parsed, ticker, date) {
+  ticker = String(ticker || '').toUpperCase();
+  date = String(date || '');
+  const parts = [];
+  if (parsed.action) {
+    parts.push(`<div class="report-section rs-action">
+      <div class="report-section-head"><span class="report-icon">🎯</span><span class="report-section-title">추천 ACTION</span></div>
+      <div class="report-section-body">
+        <div class="report-action report-action-${parsed.action.actionType}">
+          <div class="report-action-badge">${escapeHtml(parsed.action.action)}</div>
+          ${parsed.action.reason ? `<div class="report-action-reason">${escapeHtml(parsed.action.reason)}</div>` : ''}
+        </div>
+      </div>
+    </div>`);
+  }
+  if (parsed.summary && parsed.summary.length) {
+    parts.push(`<div class="report-section rs-summary">
+      <div class="report-section-head"><span class="report-icon">★</span><span class="report-section-title">핵심 요약</span></div>
+      <div class="report-section-body rv2-body">${parsed.summary.map(x => `<div class="rv2-item"><span class="rv2-dot">•</span><span class="rv2-text">${escapeHtml(x)}</span></div>`).join('')}</div>
+    </div>`);
+  }
+  (parsed.sections || []).forEach(sec => {
+    const meta = aqV2SectionMeta(sec.num, sec.title);
+    const body = (sec.items || []).map((it, i) => aqV2Item(it, meta, i)).join('');
+    parts.push(`<div class="report-section ${meta.cls}">
+      <div class="report-section-head"><span class="report-icon">${meta.icon}</span><span class="report-section-title">${sec.num}. ${escapeHtml(sec.title)}</span></div>
+      <div class="report-section-body rv2-body">${body}</div>
+    </div>`);
+  });
+  if (parsed.todo && parsed.todo.length) {
+    const todoHtml = parsed.todo.map((t, idx) => {
+      const checked = (typeof _todoIsChecked === 'function') ? _todoIsChecked(ticker, date, idx) : false;
+      const p = (typeof parseTodoTags === 'function') ? parseTodoTags(t) : { body: t };
+      const disp = (p && p.body && p.body.trim()) ? p.body : t;
+      return `<label class="report-todo-item${checked ? ' checked' : ''}" data-todo-idx="${idx}" data-todo-raw="${escapeAttr(t)}">
+        <input type="checkbox" class="report-todo-cb"${checked ? ' checked' : ''} onchange="toggleReportTodo(this)">
+        <span class="report-todo-text">${escapeHtml(disp)}</span>
+      </label>`;
+    }).join('');
+    parts.push(`<div class="report-section rs-todo">
+      <div class="report-section-head"><span class="report-icon">☑</span><span class="report-section-title">TO-DO CHECK LIST</span></div>
+      <div class="report-section-body">${todoHtml}</div>
+    </div>`);
+  }
+  if (!parts.length) parts.push('<div class="report-empty">보고서 본문을 파싱할 수 없습니다. 형식을 확인해주세요.</div>');
+  return parts.join('');
+}
+window.parseReportTextV2 = parseReportTextV2;
+window.renderReportContentV2 = renderReportContentV2;
+
 // 모달 내부에서 보고서 모드로 전환
 async function openReportPanel() {
   const tk = _state.openTicker;
   if (!tk) return;
   _state.reportMode = 'detail';
-  // 차트/콘텐츠 영역 숨김
-  const hideEls = ['chartCanvas', 'chartLegend', 'modeToggleBtn'];
-  hideEls.forEach(id => { const el = $(id); if (el) el.closest('.chart-wrap, .chart-legend, *').style.display = ''; });
+  // v3.70: hero(제목/로고/가격/섹터)는 그대로 둔 채 아래 영역만 보고서로 교체 — 전환 시 hero가 안 움직임
+  document.body.classList.add('modal-report-mode');
   $('reportPanel').style.display = '';
-  $('mainModalBody').style.display = 'none';
   // v2.63: 보고서 모드 시 토스증권 버튼 숨김 (보고서엔 토스 연계 불필요)
   const tossBtn = $('modalTossBtn');
   if (tossBtn) tossBtn.style.display = 'none';
@@ -12624,15 +13136,8 @@ async function openReportPanel() {
     const tickerPriceHtml = (modalPriceEl && modalPriceEl.innerHTML.trim()) ? modalPriceEl.innerHTML : '';
     const tickerSubtitleHtml = (modalSubtitleEl && modalSubtitleEl.innerHTML.trim() && modalSubtitleEl.innerHTML !== '—') ? modalSubtitleEl.innerHTML : '';
     $('reportPanel').innerHTML = `
-      <div class="report-detail-head-v2">
-        <div class="report-detail-left">
-          <div class="modal-title">${tickerTitleHtml}</div>
-          <div class="modal-price">${tickerPriceHtml}</div>
-          <div class="modal-subtitle">${tickerSubtitleHtml}</div>
-        </div>
-        <div class="report-detail-right">
-          <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
-        </div>
+      <div class="report-detail-head-v2 report-head-bare">
+        <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
       </div>
       <div class="report-empty">등록된 보고서가 없습니다.</div>
     `;
@@ -12646,11 +13151,361 @@ function closeReportPanel() {
   _state.reportMode = null;
   _state.reportCurrentDate = null;
   $('reportPanel').style.display = 'none';
+  document.body.classList.remove('modal-report-mode');
   $('mainModalBody').style.display = '';
   // v2.63: 토스증권 버튼 복원 (보고서 모드 종료 시)
   const tossBtn = $('modalTossBtn');
   if (tossBtn) tossBtn.style.display = '';
 }
+
+// v3.47: 자산 보유 현황 패널 — 종목별 평단/수량/총액/원금 + 주문 내역
+function aqFmtPosDate(d) {
+  const s = (typeof normalizeDate === 'function' ? normalizeDate(d) : '') || String(d || '');
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? (m[1].slice(2) + '.' + m[2] + '.' + m[3]) : s;  // YY.MM.DD
+}
+function openPositionPanel(tk) {
+  tk = String(tk || _state.openTicker || '').toUpperCase().trim();
+  const panel = document.getElementById('positionPanel');
+  if (!panel || !tk) return;
+  let trades = [];
+  try { trades = lsGet(lsKeyTrades(), []) || []; } catch (e) {}
+  const pos = (computePortfolioFromTrades(trades) || {})[tk] || { qty: 0, totalCost: 0, avg: 0 };
+  let cur = 0;
+  try { const fnd = findTickerSeries(tk); if (fnd && fnd.rows && fnd.rows.length) cur = Number(fnd.rows[fnd.rows.length - 1].Close) || 0; } catch (e) {}
+  const qty = pos.qty || 0, avg = pos.avg || 0, principal = pos.totalCost || 0;
+  const mktVal = qty * cur, pnl = mktVal - principal;
+  const pnlPct = principal > 0 ? (pnl / principal * 100) : 0;
+  const pnlCls = pnl > 1e-9 ? 'up' : (pnl < -1e-9 ? 'down' : 'zero');
+  const _normD = (x) => (typeof normalizeDate === 'function' ? normalizeDate(x) : '') || String(x || '');
+  const myTrades = trades.filter(t => String(t.ticker || '').toUpperCase().trim() === tk)
+    .slice()
+    .sort((a, b) => { const da = _normD(a.date), db = _normD(b.date); return db < da ? -1 : (db > da ? 1 : 0); });  // 최신 → 과거
+  let ordersHtml;
+  if (myTrades.length) {
+    ordersHtml = myTrades.map(t => {
+      const act = (t.action === '매도') ? '판매' : '구매';
+      const q = parseFloat(t.qty) || 0, px = parseFloat(t.price) || 0;
+      return `<div class="pos-order"><span class="po-date">${aqFmtPosDate(t.date)}</span><span class="po-act">${act} ${q}주</span><span class="po-px">주당 ${fmtMoney(px)}</span></div>`;
+    }).join('') + `<div class="pos-orders-foot">모든 주문 내역을 불러왔어요</div>`;
+  } else {
+    ordersHtml = `<div class="pos-empty">주문 내역이 없습니다.</div>`;
+  }
+  panel.innerHTML = `
+    <div class="pos-back-row"><button class="report-back-btn" onclick="closePositionPanel()">← 차트로 돌아가기</button></div>
+    <div class="pos-row"><div><div class="pos-label">1주 평균금액</div><div class="pos-avg-big">${fmtMoney(avg)}</div></div></div>
+    <div class="pos-row"><div class="pos-label">보유 수량</div><div class="pos-val"><span class="pos-main">${qty.toLocaleString()}주</span></div></div>
+    <div class="pos-row"><div class="pos-label">총 금액</div><div class="pos-val"><span class="pos-main">${fmtMoney(mktVal)}</span><div class="pos-pnl ${pnlCls}">${pnl >= 0 ? '+' : ''}${fmtMoney(pnl)} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%)</div></div></div>
+    <div class="pos-row"><div class="pos-label">투자 원금</div><div class="pos-val"><span class="pos-main">${fmtMoney(principal)}</span></div></div>
+    <div class="pos-actions"><button type="button" class="pos-sell" onclick="aqOpenTradeForm('매도')">매도</button><button type="button" class="pos-buy" onclick="aqOpenTradeForm('매수')">매수</button></div>
+    <div class="pos-orders aq-coll collapsed">
+      <div class="aq-coll-head" onclick="aqToggleColl(this)"><span class="pos-orders-title">주문 내역</span><span class="aq-coll-caret">▼</span></div>
+      <div class="aq-coll-body">${ordersHtml}</div>
+    </div>
+  `;
+  document.body.classList.add('modal-pos-mode');
+}
+window.openPositionPanel = openPositionPanel;
+function closePositionPanel() {
+  document.body.classList.remove('modal-pos-mode');
+  try { if (_chart && typeof _chart.resize === 'function') _chart.resize(); } catch (e) {}
+}
+window.closePositionPanel = closePositionPanel;
+
+// v3.55: 매수/매도 기록 입력 모달 — 마이 매매기록(tradesSheet)과 동일 스키마로 저장 → 2분 자동 동기화로 구글시트 반영
+function aqTfToday() {
+  const d = new Date(), p = (n) => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
+function aqOpenTradeForm(action) {
+  const tk = String(_state.openTicker || '').toUpperCase().trim();
+  if (!tk) return;
+  aqCloseTradeForm();
+  const isBuy = (action === '매수');
+  const ccy = (typeof _ccyLbl === 'function') ? _ccyLbl() : '';
+  const company = (_state.tickerCompanyMap || {})[tk] || '';
+  const ov = document.createElement('div');
+  ov.className = 'aq-tf-overlay';
+  ov.id = 'aqTradeFormOverlay';
+  ov.addEventListener('click', (e) => { if (e.target === ov) aqCloseTradeForm(); });
+  ov.innerHTML = `
+    <div class="aq-tf-modal" role="dialog" aria-modal="true">
+      <div class="aq-tf-title">${isBuy ? '매수' : '매도'} 기록 추가</div>
+      <div class="aq-tf-sub">${escapeHtml(company ? company + ' · ' : '')}${escapeHtml(tk)}</div>
+      <div class="aq-tf-field"><label>일자</label><input type="date" id="aqTfDate" value="${aqTfToday()}"></div>
+      <div class="aq-tf-row2">
+        <div class="aq-tf-field"><label>주식수</label><input type="number" id="aqTfQty" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+        <div class="aq-tf-field"><label>${isBuy ? '매수가' : '매도가'}${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqTfPrice" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+      </div>
+      <div class="aq-tf-row2">
+        <div class="aq-tf-field"><label>수수료${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqTfFee" inputmode="decimal" min="0" step="any" value="0"></div>
+        <div class="aq-tf-field"><label>세금${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqTfTax" inputmode="decimal" min="0" step="any" value="0"></div>
+      </div>
+      <div class="aq-tf-err" id="aqTfErr"></div>
+      <div class="aq-tf-actions">
+        <button type="button" class="aq-tf-cancel" onclick="aqCloseTradeForm()">취소</button>
+        <button type="button" class="aq-tf-save ${isBuy ? 'buy' : 'sell'}" onclick="aqSubmitTradeForm('${action}')">저장</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  setTimeout(() => { const q = document.getElementById('aqTfQty'); if (q) q.focus(); }, 50);
+}
+window.aqOpenTradeForm = aqOpenTradeForm;
+function aqCloseTradeForm() {
+  const ov = document.getElementById('aqTradeFormOverlay');
+  if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+}
+window.aqCloseTradeForm = aqCloseTradeForm;
+
+// v3.59: 자산 계정·동기화 — 기존 계정 로직(저장/불러오기/비번) 재사용, 정규 입력칸에 값만 반영
+function aqRefreshAcctStatus() {
+  const el = document.getElementById('aqAcctStatus'); if (!el) return;
+  const bar = document.getElementById('aqAcctBar');
+  const id = String((typeof LS !== 'undefined' && lsGet(LS.USER_ID, '')) || '').trim();
+  if (id) { el.textContent = '연결됨 · ' + id + ' · 매매 시 자동 백업'; if (bar) bar.classList.remove('warn'); }
+  else    { el.textContent = '계정 미연결 · 폰에만 저장됨 (탭해서 연결)'; if (bar) bar.classList.add('warn'); }
+}
+window.aqRefreshAcctStatus = aqRefreshAcctStatus;
+function aqOpenAccountModal() {
+  aqCloseAccountModal();
+  const savedId = String((typeof LS !== 'undefined' && lsGet(LS.USER_ID, '')) || (($('userIdInput') || {}).value) || '').trim();
+  const connected = !!savedId;
+  const ov = document.createElement('div');
+  ov.className = 'aq-tf-overlay'; ov.id = 'aqAcctOverlay';
+  ov.addEventListener('click', (e) => { if (e.target === ov) aqCloseAccountModal(); });
+  ov.innerHTML = `
+    <div class="aq-tf-modal" role="dialog" aria-modal="true">
+      <div class="aq-tf-title">계정 · 동기화</div>
+      <div class="aq-tf-sub">${connected ? '연결됨 · ' + escapeHtml(savedId) : '미연결 — ID를 입력하고 시트에 저장하세요'}</div>
+      <div class="aq-tf-field"><label>사용자 ID</label><input id="aqAcctId" type="text" maxlength="20" autocomplete="off" placeholder="영문/숫자/_" value="${escapeHtml(savedId)}"></div>
+      <div class="aq-tf-field"><label>비밀번호 (선택)</label><input id="aqAcctPw" type="password" maxlength="40" autocomplete="off" placeholder="비번 건 계정만 입력"></div>
+      <div class="aq-tf-actions">
+        <button type="button" class="aq-tf-save buy" onclick="aqAcctSync('save')">💾 시트에 저장</button>
+        <button type="button" class="aq-tf-cancel" onclick="aqAcctSync('load')">📥 불러오기</button>
+      </div>
+      <div class="aq-tf-actions">
+        <button type="button" class="aq-tf-cancel" onclick="aqAcctPassword()">🔒 비밀번호</button>
+        <button type="button" class="aq-tf-cancel" onclick="aqCloseAccountModal()">닫기</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  setTimeout(() => { const el = document.getElementById(connected ? 'aqAcctPw' : 'aqAcctId'); if (el) el.focus(); }, 50);
+}
+window.aqOpenAccountModal = aqOpenAccountModal;
+function aqCloseAccountModal() {
+  const o = document.getElementById('aqAcctOverlay'); if (o && o.parentNode) o.parentNode.removeChild(o);
+}
+window.aqCloseAccountModal = aqCloseAccountModal;
+function aqAcctWriteCanonical() {
+  const id = String((($('aqAcctId') || {}).value) || '').trim();
+  const pw = String((($('aqAcctPw') || {}).value) || '');
+  const idEl = $('userIdInput'); if (idEl) idEl.value = id;
+  const pwEl = $('userPasswordInput'); if (pwEl) pwEl.value = pw;
+  return id;
+}
+async function aqAcctSync(kind) {
+  aqAcctWriteCanonical();
+  aqCloseAccountModal();
+  try {
+    if (kind === 'save') { await saveUserDataToBackend(); }
+    else { await loadUserDataFromBackend(); }
+  } catch (e) {}
+  try { aqRefreshAcctStatus(); } catch (e) {}
+}
+window.aqAcctSync = aqAcctSync;
+function aqAcctPassword() {
+  aqAcctWriteCanonical();
+  aqCloseAccountModal();
+  try { openPasswordSetupModal(); } catch (e) {}
+}
+window.aqAcctPassword = aqAcctPassword;
+
+// v3.60: 보유 종목 추가 폼 — PORTFOLIO(보유) 표에 직접 추가. 섹터는 KJP/사용자이력 자동완성.
+function aqHoldingAutoSector() {
+  const tkEl = document.getElementById('aqHoldTicker');
+  const secEl = document.getElementById('aqHoldSector');
+  const hint = document.getElementById('aqHoldSecHint');
+  if (!tkEl || !secEl) return;
+  const tk = String(tkEl.value || '').trim();
+  if (!tk) { if (hint) hint.textContent = ''; return; }
+  let sec = null;
+  try { sec = getSectorForTicker(tk); } catch (e) {}
+  if (sec) {
+    if (![].slice.call(secEl.options).some(o => o.value === sec)) {
+      const o = document.createElement('option'); o.value = sec; o.textContent = sec; secEl.appendChild(o);
+    }
+    secEl.value = sec;
+    if (hint) hint.textContent = '자동 지정됨 (KJP·이력 기반)';
+  } else {
+    if (hint) hint.textContent = '';
+  }
+}
+window.aqHoldingAutoSector = aqHoldingAutoSector;
+function aqOpenHoldingForm() {
+  aqCloseHoldingForm();
+  const opts = (typeof getSectorOptions === 'function' ? (getSectorOptions() || SECTORS_40) : SECTORS_40);
+  const optHtml = '<option value="">(섹터 선택)</option>' + opts.map(x => `<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`).join('');
+  const ccy = (typeof _ccyLbl === 'function') ? _ccyLbl() : '';
+  const ov = document.createElement('div');
+  ov.className = 'aq-tf-overlay'; ov.id = 'aqHoldOverlay';
+  ov.addEventListener('click', (e) => { if (e.target === ov) aqCloseHoldingForm(); });
+  ov.innerHTML = `
+    <div class="aq-tf-modal" role="dialog" aria-modal="true">
+      <div class="aq-tf-title">보유 종목 추가</div>
+      <div class="aq-tf-sub">보유 종목 현황에 직접 추가</div>
+      <div class="aq-tf-field"><label>기준일자</label><input type="date" id="aqHoldDate" value="${aqTfToday()}"></div>
+      <div class="aq-tf-row2">
+        <div class="aq-tf-field"><label>티커명</label><input type="text" id="aqHoldTicker" maxlength="20" autocomplete="off" placeholder="예: AAPL" oninput="aqHoldingAutoSector()"></div>
+        <div class="aq-tf-field"><label>섹터명</label><select id="aqHoldSector">${optHtml}</select><div class="aq-tf-hint" id="aqHoldSecHint"></div></div>
+      </div>
+      <div class="aq-tf-row2">
+        <div class="aq-tf-field"><label>1주 평균금액${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqHoldAvg" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+        <div class="aq-tf-field"><label>보유수량</label><input type="number" id="aqHoldQty" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+      </div>
+      <div class="aq-tf-field"><label>투자원금${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqHoldCost" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+      <div class="aq-tf-err" id="aqHoldErr"></div>
+      <div class="aq-tf-actions">
+        <button type="button" class="aq-tf-cancel" onclick="aqCloseHoldingForm()">취소</button>
+        <button type="button" class="aq-tf-save buy" onclick="aqSubmitHoldingForm()">저장</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  setTimeout(() => { const el = document.getElementById('aqHoldTicker'); if (el) el.focus(); }, 50);
+}
+window.aqOpenHoldingForm = aqOpenHoldingForm;
+function aqCloseHoldingForm() {
+  const o = document.getElementById('aqHoldOverlay'); if (o && o.parentNode) o.parentNode.removeChild(o);
+}
+window.aqCloseHoldingForm = aqCloseHoldingForm;
+function aqSubmitHoldingForm() {
+  const g = (id) => { const e = document.getElementById(id); return e ? e.value : ''; };
+  const errEl = document.getElementById('aqHoldErr');
+  const setErr = (m) => { if (errEl) errEl.textContent = m; };
+  const asof = String(g('aqHoldDate') || '').trim();
+  const ticker = String(g('aqHoldTicker') || '').toUpperCase().trim();
+  const sector = String(g('aqHoldSector') || '').trim();
+  const avgpx = parseFloat(g('aqHoldAvg')) || 0;
+  const qty = parseFloat(g('aqHoldQty')) || 0;
+  const cost = parseFloat(g('aqHoldCost')) || 0;
+  if (!ticker) { setErr('티커명을 입력해주세요.'); return; }
+  if (qty <= 0) { setErr('보유수량을 입력해주세요.'); return; }
+  // KJP에 없는 티커에 사용자가 섹터를 골랐으면 이력 저장 (다음부터 자동완성)
+  try {
+    if (sector && !((_state.tickerSectorMap || {})[ticker])) saveUserSectorMapping(ticker, sector);
+  } catch (e) {}
+  const row = { _id: _genId(), asof, ticker, qty, cost, mv: '', avgpx, sector };
+  const key = lsKeyPF();
+  try {
+    if (typeof portfolioSheet !== 'undefined' && portfolioSheet && portfolioSheet.lsKey === key) {
+      portfolioSheet.data.push(row);
+      portfolioSheet.save();
+      portfolioSheet.render();
+    } else {
+      const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr);
+    }
+  } catch (e) {
+    try { const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr); } catch (e2) {}
+  }
+  aqCloseHoldingForm();
+  try { if (typeof renderDashboard === 'function') renderDashboard(); } catch (e) {}
+  aqAutoPushPF();
+}
+window.aqSubmitHoldingForm = aqSubmitHoldingForm;
+async function aqAutoPushPF() {
+  try {
+    if (typeof backendReady !== 'function' || !backendReady()) return;
+    const userId = String((typeof LS !== 'undefined' && lsGet(LS.USER_ID, '')) || (($('userIdInput') || {}).value) || '').trim();
+    if (!userId) { try { aqToast('폰에 저장됨 · 자산 상단에서 계정 연결하면 시트 자동 백업'); } catch (e) {} return; }
+    const passwordHash = (typeof getCachedPasswordHash === 'function') ? getCachedPasswordHash() : '';
+    const src = (typeof portfolioSheet !== 'undefined' && portfolioSheet && portfolioSheet.data) ? portfolioSheet.data : (lsGet(lsKeyPF(), []) || []);
+    const pfRows = src.filter(r => r && r.ticker);
+    const r = await _deltaSync(userId, dataTypePF(), pfRows, null, passwordHash);
+    if (r) { try { aqToast('시트에 자동 저장됨 ✓'); } catch (e) {} }
+  } catch (e) {
+    try { aqToast('폰엔 저장됨 · 시트 동기화는 계정에서 확인'); } catch (e2) {}
+  }
+}
+window.aqAutoPushPF = aqAutoPushPF;
+
+// v3.64: 상단 추천 배너의 추천(ACTION) 렌더 — 캐시 우선, 없으면 비동기 로드 후 갱신
+function aqRenderReportVerdict(mkt, tkUpper) {
+  const vEl = document.getElementById('modalReportVerdict');
+  if (!vEl) return;
+  const key = mkt + '/' + tkUpper;
+  const a = _analysisActions[key];
+  if (a && a.action) {
+    vEl.className = 'mrb-verdict an-action-pill an-' + (a.type || 'neutral');
+    vEl.textContent = '추천 ' + a.action;
+    vEl.style.display = '';
+    var _ACC = { 'strong-buy': '#2f9e44', 'buy': '#51cf66', 'hold': '#ffc53d', 'avoid': '#ff6b6b', 'neutral': '#adb5bd', 'none': '#adb5bd' };
+    var _bn = document.getElementById('modalReportBanner');
+    if (_bn) _bn.style.setProperty('--mrb-accent', _ACC[a.type] || '#4C6EF5');
+  } else if (a === null) {
+    vEl.style.display = 'none'; vEl.textContent = '';
+  } else {
+    vEl.style.display = 'none';
+    const dates = ((_state.reports[mkt] || {})[tkUpper]) || [];
+    const date = dates[0];
+    if (date && typeof aqLoadAnalysisAction === 'function') {
+      aqLoadAnalysisAction(mkt, tkUpper, date).then(() => {
+        if (_state.openTicker && String(_state.openTicker).toUpperCase() === tkUpper) aqRenderReportVerdict(mkt, tkUpper);
+      }).catch(() => {});
+    }
+  }
+}
+window.aqRenderReportVerdict = aqRenderReportVerdict;
+function aqSubmitTradeForm(action) {
+  const tk = String(_state.openTicker || '').toUpperCase().trim();
+  if (!tk) return;
+  const g = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const errEl = document.getElementById('aqTfErr');
+  const setErr = (m) => { if (errEl) errEl.textContent = m; };
+  const date = String(g('aqTfDate') || '').trim();
+  const qty = parseFloat(g('aqTfQty')) || 0;
+  const price = parseFloat(g('aqTfPrice')) || 0;
+  const fee = parseFloat(g('aqTfFee')) || 0;
+  const tax = parseFloat(g('aqTfTax')) || 0;
+  if (!date) { setErr('일자를 입력해주세요.'); return; }
+  if (qty <= 0) { setErr('주식수를 입력해주세요.'); return; }
+  if (price <= 0) { setErr((action === '매수' ? '매수가' : '매도가') + '를 입력해주세요.'); return; }
+  const row = { _id: _genId(), date, ticker: tk, action, qty, price, fee, tax, sector: '' };
+  const key = lsKeyTrades();
+  try {
+    if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === key) {
+      tradesSheet.data.push(row);
+      tradesSheet.save();      // lsSet + updateSummary
+      tradesSheet.render();    // 마이 화면 즉시 반영
+    } else {
+      const arr = lsGet(key, []) || [];
+      arr.push(row);
+      lsSet(key, arr);
+    }
+  } catch (e) {
+    try { const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr); } catch (e2) {}
+  }
+  aqCloseTradeForm();
+  try { openPositionPanel(tk); } catch (e) {}  // 포지션 패널 재계산/갱신 (로컬 즉시 반영)
+  aqAutoPushTrades();  // v3.56: 시트 자동 업로드(백그라운드) — 저장된 ID/비번 재사용
+}
+window.aqSubmitTradeForm = aqSubmitTradeForm;
+
+// v3.56: 매매 추가 후 시트 자동 업로드 — 마이에서 한 번 설정한 ID(+비번)를 폰에서 꺼내 조용히 델타 동기화
+//   ID 없으면 로컬만 저장 + 안내 / 비번 필요한데 없으면 업로드만 실패(로컬은 보존)
+async function aqAutoPushTrades() {
+  try {
+    if (typeof backendReady !== 'function' || !backendReady()) return;
+    const userId = String((typeof LS !== 'undefined' && lsGet(LS.USER_ID, '')) || (($('userIdInput') || {}).value) || '').trim();
+    if (!userId) { try { aqToast('폰에 저장됨 · 마이에서 아이디 설정하면 시트 자동 백업'); } catch (e) {} return; }
+    const passwordHash = (typeof getCachedPasswordHash === 'function') ? getCachedPasswordHash() : '';
+    const src = (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.data) ? tradesSheet.data : (lsGet(lsKeyTrades(), []) || []);
+    const trRows = src.filter(r => r && r.ticker);
+    const r = await _deltaSync(userId, dataTypeTrades(), trRows, null, passwordHash);
+    if (r) { try { aqToast('시트에 자동 저장됨 ✓'); } catch (e) {} }
+  } catch (e) {
+    try { aqToast('폰엔 저장됨 · 시트 동기화는 마이에서 확인'); } catch (e2) {}
+  }
+}
+window.aqAutoPushTrades = aqAutoPushTrades;
 
 function renderReportList() {
   const tk = _state.openTicker;
@@ -12682,7 +13537,8 @@ async function openReportDetail(date) {
   $('reportPanel').innerHTML = `<div class="report-loading">보고서 로드 중...</div>`;
   try {
     const content = await fetchReportContent(tk, date);
-    const parsed = parseReportText(content);
+    const _v2 = aqReportIsV2(date);
+    const parsed = _v2 ? parseReportTextV2(content) : parseReportText(content);
     const mkt = getCurrentMarket();
     // v2.63: 좌측 종목 헤더 — 차트 모달의 modalTitle/Price/Subtitle innerHTML 그대로 복사 (이미 openChart에서 채워져 있음)
     const modalTitleEl = $('modalTitle');
@@ -12701,18 +13557,11 @@ async function openReportDetail(date) {
          </select>`
       : `<div class="report-date-big">${escapeHtml(date)}</div>`;
     $('reportPanel').innerHTML = `
-      <div class="report-detail-head-v2">
-        <div class="report-detail-left">
-          <div class="modal-title">${tickerTitleHtml}</div>
-          <div class="modal-price">${tickerPriceHtml}</div>
-          <div class="modal-subtitle">${tickerSubtitleHtml}</div>
-        </div>
-        <div class="report-detail-right">
-          ${dateUiHtml}
-          <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
-        </div>
+      <div class="report-detail-head-v2 report-head-bare">
+        <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
+        ${dateUiHtml}
       </div>
-      <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${renderReportContent(parsed, tk, date)}</div>
+      <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${_v2 ? renderReportContentV2(parsed, tk, date) : renderReportContent(parsed, tk, date)}</div>
     `;
     // 스크롤 맨 위로
     const modalContent = $('reportPanel').closest('.modal-content');
@@ -12743,10 +13592,15 @@ async function aqLoadAnalysisAction(mkt, tk, date) {
   if (_analysisActions[key] !== undefined) return _analysisActions[key];
   try {
     const content = await fetchReportContent(tk, date);
-    const parsed = parseReportText(content);
-    const arr = (parsed.sections && parsed.sections.action) || [];
-    const a = arr.find(x => x && x.type === 'action');
-    _analysisActions[key] = a ? { action: a.action, type: a.actionType } : null;
+    if (aqReportIsV2(date)) {
+      const p2 = parseReportTextV2(content);
+      _analysisActions[key] = p2.action ? { action: p2.action.action, type: p2.action.actionType } : null;
+    } else {
+      const parsed = parseReportText(content);
+      const arr = (parsed.sections && parsed.sections.action) || [];
+      const a = arr.find(x => x && x.type === 'action');
+      _analysisActions[key] = a ? { action: a.action, type: a.actionType } : null;
+    }
   } catch (e) { _analysisActions[key] = null; }
   return _analysisActions[key];
 }
@@ -12759,7 +13613,6 @@ function aqActionPillHtml(mkt, tk) {
 }
 
 async function buildAnalysisGrid() {
-  try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   const area = document.getElementById('analysisGridArea');
   if (!area) return;
   const reports = _state.reports || { US: {}, KR: {} };
@@ -14244,23 +15097,31 @@ function renderDashHoldingsList(holdings, hiddenHoldings) {
   if (holdings.length === 0) {
     body.innerHTML = '<div style="text-align:center;color:var(--text-mute);font-size:11px;padding:30px;">보유 종목 없음</div>';
   } else {
+    const market = getCurrentMarket();
     const html = holdings.map(h => {
-      const logo = tickerLogoHtml(h.ticker, h.sector);
-      // 로고 사이즈 override (32px)
-      const logoBig = logo.replace('class="ticker-logo"', 'class="dash-hold-logo"');
-      return `<div class="dash-hold-row" data-ticker="${escapeAttr(h.ticker)}">
-        <div class="dash-hold-left">
-          ${logoBig}
-          <div class="dash-hold-info">
-            <span class="dash-hold-ticker" title="${escapeAttr(h.ticker)}">${escapeHtml(displayName(h.ticker))}</span>
-            <span class="dash-hold-meta">${h.qty.toLocaleString(undefined,{maximumFractionDigits:2})}주 · ${escapeHtml(h.sector || '미분류')}</span>
+      // v3.42: 탐색 '내부자 누적'과 동일한 .insider-archive-item 양식 (로고 | 종목명/회사명/섹터 | 주식수/평가금/손익)
+      const layer = SECTOR_TO_LAYER[h.sector] || '기타';
+      const layerFile = (market === 'KR') ? '' : layerFileName(layer);
+      const tkFile = tickerFileName(h.ticker);
+      const logoHtml = tkFile
+        ? `<img class="ia-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+        : `<img class="ia-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+      const pcls = h.profit > 0 ? 'up' : h.profit < 0 ? 'down' : 'zero';
+      const qtyStr = h.qty.toLocaleString(undefined, { maximumFractionDigits: 2 }) + '주';
+      return `
+        <div class="insider-archive-item" data-ticker="${escapeAttr(h.ticker)}">
+          ${aqWrapLogo(logoHtml, h.ticker)}
+          <div class="ia-info">
+            <div class="ia-ticker" title="${escapeAttr(displayName(h.ticker))}">${escapeHtml(displayName(h.ticker))}</div>
+            <div class="ia-company">${escapeHtml(displaySub(h.ticker))}</div>
+            <div class="ia-sector">${escapeHtml(aqStripSectorEmoji(h.sector || '미분류'))}</div>
           </div>
-        </div>
-        <div class="dash-hold-right">
-          <span class="dash-hold-eval">${fmtUSD(h.evalVal)}</span>
-          <span class="dash-hold-pnl ${cls(h.profit)}">${fmtUSDPlus(h.profit)} (${h.roi >= 0 ? '+' : ''}${h.roi.toFixed(1)}%)</span>
-        </div>
-      </div>`;
+          <div class="ia-meta">
+            <div class="ia-shares">${escapeHtml(qtyStr)}</div>
+            <div class="ia-price">${fmtUSD(h.evalVal)}</div>
+            <div class="ia-pnl ${pcls}">${fmtUSDPlus(h.profit)} (${h.roi >= 0 ? '+' : ''}${h.roi.toFixed(1)}%)</div>
+          </div>
+        </div>`;
     }).join('');
     body.innerHTML = html;
   }
@@ -14286,7 +15147,7 @@ function attachHoldingInteractions() {
 
   // 좌클릭 → 차트 보기
   body.addEventListener('click', (e) => {
-    const row = e.target.closest('.dash-hold-row');
+    const row = e.target.closest('.insider-archive-item');
     if (!row) return;
     const tk = row.getAttribute('data-ticker');
     if (tk && typeof openChart === 'function') openChart(tk);
@@ -14294,7 +15155,7 @@ function attachHoldingInteractions() {
 
   // 우클릭 → 컨텍스트 메뉴
   body.addEventListener('contextmenu', (e) => {
-    const row = e.target.closest('.dash-hold-row');
+    const row = e.target.closest('.insider-archive-item');
     if (!row) return;
     e.preventDefault();
     const tk = row.getAttribute('data-ticker');
@@ -14308,7 +15169,7 @@ function attachHoldingInteractions() {
   let pressStartX = 0, pressStartY = 0;
 
   body.addEventListener('touchstart', (e) => {
-    const row = e.target.closest('.dash-hold-row');
+    const row = e.target.closest('.insider-archive-item');
     if (!row) return;
     pressTarget = row;
     pressMoved = false;
@@ -16860,6 +17721,8 @@ async function fetchAdhocOhlcv(ticker) {
 }
 
 async function openChart(ticker) {
+  const _freshOpen = !$('chartModal').classList.contains('active');
+  if (_freshOpen) { document.body.classList.remove('modal-pos-mode'); document.body.classList.remove('modal-report-mode'); const _rp0 = document.getElementById('reportPanel'); if (_rp0) _rp0.style.display = 'none'; }
   // v2.31: 매크로 상관관계 종목 리스트 잔상 제거 (일반 종목 모달엔 표시 X)
   const _oldCorr = document.getElementById('macroCorrWrap');
   if (_oldCorr) _oldCorr.remove();
@@ -17014,6 +17877,7 @@ async function openChart(ticker) {
   // v2.64: 내부자 거래 이력 테이블
   // v2.65: 차트 마커와 동일한 필터된 거래만 (보통주 + 가격 plausible)
   renderInsiderHistory(ticker, filteredInsiderTrades);
+  renderShortHistory(ticker);  // v3.48: 공매도 이력
 
   // Modal-level signal filter buttons (synced with main filter)
   renderSignalFilterInto($('modalSignalFilterArea'));
@@ -17055,6 +17919,19 @@ async function openChart(ticker) {
     };
     mv.innerHTML = chip('PER', val.per) + chip('Forward PER', val.fwdPer) + chip('PEG', val.peg);
   })();
+  // v3.46: 새로 열 때만 시그널 필터/이력 접힘 기본 (tf/상세 토글 재드로우 시엔 사용자 상태 유지)
+  if (!$('chartModal').classList.contains('active')) {
+    try {
+      const _fb = $('modalSignalFilterArea') && $('modalSignalFilterArea').closest('.modal-filter-block');
+      if (_fb) _fb.classList.add('collapsed');
+      const _th = document.getElementById('tickerHistoryWrap');
+      if (_th) _th.classList.add('collapsed');
+      const _ih = document.getElementById('insiderHistoryWrap');
+      if (_ih) _ih.classList.add('collapsed');
+      const _sh = document.getElementById('shortHistoryWrap');
+      if (_sh) _sh.classList.add('collapsed');
+    } catch (e) {}
+  }
   if (typeof aqSetModalHex === 'function') aqSetModalHex(ticker);
 
   // Save current ticker for re-render on filter change
@@ -17106,15 +17983,30 @@ async function openChart(ticker) {
     instN    = normalize(winI);
   }
 
-  drawChart({
-    dates, closes, highs, lows, ma20, adN, vols,
-    supportMA20, supportRF, prevLow, lastPrice, recentHigh, recentHighIdx,
-    buyAvg, tradeMarkers, sigMarkersByType,
-    insiderMarkers,  // v2.64: 내부자 거래 마커
-    retailN, foreignN, instN,   // v1.89: KR 모드면 값 있음, 아니면 null
-  });
+  // v3.46: MO 기본 차트 = 피드 차트(lean, 보조선/MA 없음) / 상세보기(detailMode)면 풀 차트
+  let _drewFeed = false;
+  if (isMobileViewport() && !_state.detailMode) {
+    try {
+      const _fd = aqBuildFeedChartData(ticker, (_state.chartTimeframe && _state.chartTimeframe.modal) || '6M');
+      if (_fd) { drawChart(_fd, { feed: true }); aqSetModalHexCorner(ticker, _fd); _drewFeed = true; }
+    } catch (e) { console.warn('[modal feed chart]', e); }
+  }
+  if (!_drewFeed) {
+    drawChart({
+      dates, closes, highs, lows, ma20, adN, vols,
+      supportMA20, supportRF, prevLow, lastPrice, recentHigh, recentHighIdx,
+      buyAvg, tradeMarkers, sigMarkersByType,
+      insiderMarkers,  // v2.64: 내부자 거래 마커
+      retailN, foreignN, instN,   // v1.89: KR 모드면 값 있음, 아니면 null
+    });
+  }
 
   $('chartModal').classList.add('active');
+
+  // v3.47: 자산 탭에서 종목 클릭 → 보유 현황 화면으로 진입 (차트로 돌아가기로 차트 전환)
+  if (_freshOpen && isMobileViewport() && document.body.getAttribute('data-mtab') === 'board' && _state.openTicker && !_state.openMacro) {
+    try { openPositionPanel(_state.openTicker); } catch (e) { console.warn('[positionPanel]', e); }
+  }
 }
 
 // v1.98~v2.15: 토스증권 종목 페이지/앱 이동
@@ -17279,10 +18171,11 @@ window.syncWatchButton = syncWatchButton;
 
 function closeModal() {
   $('chartModal').classList.remove('active');  if (_chart) { _chart.destroy(); _chart = null; }
+  document.body.classList.remove('modal-pos-mode');
   // v1.23: 모바일 미니 차트도 정리
   if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
   // v1.19: 매크로 모드 정리 — 다음 일반 ticker 열기 위해 영역들 복원
-  $('modalSignalFilterArea').parentElement.style.display = '';
+  $('modalSignalFilterArea').closest('.modal-filter-block').style.display = '';
   $('tickerHistoryWrap').style.display = '';
   // v2.31: 매크로 상관관계 종목 리스트 제거 (다음 일반 종목 모달에 잔상 방지)
   const corrWrap = document.getElementById('macroCorrWrap');
@@ -17503,11 +18396,13 @@ async function openMacroChart(macroName) {
   $('modalSubtitle').innerHTML = `[매크로 지표] · ${tfLabel} 추이 · <span class="${chgPct >= 0 ? 'pos' : 'neg'}">${chgPct >= 0 ? '+' : ''}${chgPct.toFixed(2)}%</span> · Data: ${dates[dates.length - 1]} · 현재값: ${lastValStr}`;
 
   // 매크로 모드: 시그널 필터 + 시그널 이력 숨김
-  $('modalSignalFilterArea').parentElement.style.display = 'none';
+  $('modalSignalFilterArea').closest('.modal-filter-block').style.display = 'none';
   $('tickerHistoryWrap').style.display = 'none';
   // v2.64: 내부자 거래 이력도 매크로 모드에서는 숨김
   const ihWrap = $('insiderHistoryWrap');
   if (ihWrap) ihWrap.style.display = 'none';
+  const shWrap = $('shortHistoryWrap');
+  if (shWrap) shWrap.style.display = 'none';
 
   _state.openTicker = null;
   _state.openMacro = macroName;
@@ -17554,6 +18449,29 @@ async function openMacroChart(macroName) {
   renderMacroCorrelationList(macroName);
 }
 window.openMacroChart = openMacroChart;
+
+// v3.43: 매크로 지표 개요 모달 — 마퀴(MO) 탭 시 전체 그리드 → 셀 탭 시 상세(openMacroChart)
+function openMacroOverview() {
+  const modal = document.getElementById('macroOverviewModal');
+  const body = document.getElementById('macroOverviewBody');
+  if (!modal || !body) return;
+  try { if (typeof renderMacro === 'function') renderMacro(); } catch (e) {}
+  const src = document.getElementById('macroArea');
+  body.innerHTML = (src && src.innerHTML.trim()) ? src.innerHTML : '<div class="empty-state">매크로 데이터 없음</div>';
+  // 셀 탭 → 개요 닫고 상세 차트(인라인 onclick=openMacroChart)가 위에 뜸
+  body.querySelectorAll('.macro-cell').forEach(c => c.addEventListener('click', () => closeMacroOverview()));
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMacroOverview() {
+  const modal = document.getElementById('macroOverviewModal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function _macroOverviewBackdrop(e) { if (e.target && e.target.id === 'macroOverviewModal') closeMacroOverview(); }
+window.openMacroOverview = openMacroOverview;
+window.closeMacroOverview = closeMacroOverview;
+window._macroOverviewBackdrop = _macroOverviewBackdrop;
 
 // ============================================================================
 // v2.25: 매크로 × KJP400 종목 상관관계 (60일 일간 수익률 Pearson correlation)
@@ -18054,15 +18972,18 @@ const crosshairPlugin = {
     ctx.stroke();
     ctx.setLineDash([]);
     // 가격 라벨 (우측 빨간 박스) — v1.92: 시장별 통화 포맷
+    // v3.63: 라벨 세로 위치를 차트 영역 안으로 클램프 → 우하단 날짜(x축) 가림 방지
     const labelText = fmtPrice(yValue);
     ctx.font = 'bold 11px Consolas, monospace';
     const tw = ctx.measureText(labelText).width;
+    const lh = 14;
+    const ly = Math.max(area.top + lh / 2 + 2, Math.min(area.bottom - lh / 2 - 2, y));
     ctx.fillStyle = '#ff3b30';
-    ctx.fillRect(area.right - tw - 10, y - 16, tw + 8, 14);
+    ctx.fillRect(area.right - tw - 10, ly - lh / 2, tw + 8, lh);
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
-    ctx.fillText(labelText, area.right - 5, y - 9);
+    ctx.fillText(labelText, area.right - 5, ly);
     ctx.restore();
   }
 };
@@ -18161,6 +19082,32 @@ function buildTickerHistoryTable(ticker) {
 
 // v2.64: 내부자 거래 이력 테이블 — 거래자(Owner_Name)마다 일자/Relationship/Security/Shares/Price/비중%
 // v2.65: filteredTrades 파라미터 — 차트 마커와 동일하게 필터된 거래만 표시 (보통주 + 가격 plausible)
+// v3.48: 공매도 이력 — US_CROWDING(잔고비율/Days to Cover), US 종목만
+function renderShortHistory(ticker) {
+  const wrap = $('shortHistoryWrap'), area = $('shortHistoryArea');
+  if (!wrap || !area) return;
+  const tkU = String(ticker || '').toUpperCase();
+  const isUS = (typeof getCurrentMarket !== 'function') || getCurrentMarket() === 'US';
+  if (!isUS) { wrap.style.display = 'none'; area.innerHTML = ''; return; }
+  let list = []; try { list = _aqCrowdingList || []; } catch (e) {}
+  if (!list.length && typeof fetchCrowding === 'function') {
+    fetchCrowding().then(() => { try { renderShortHistory(ticker); } catch (e) {} }).catch(() => {});
+  }
+  const rec = list.find(r => r.ticker === tkU);
+  if (!rec || (rec.shortPctFloat == null && rec.daysToCover == null)) {
+    wrap.style.display = 'none'; area.innerHTML = ''; return;
+  }
+  const fmtPctV = (p) => (p == null || isNaN(p) || !isFinite(p)) ? '—' : p.toFixed(2) + '%';
+  const fmtDtc = (d) => (d == null || isNaN(d) || !isFinite(d)) ? '—' : d.toFixed(2) + '일';
+  area.innerHTML = `
+    <div class="short-stats">
+      <div class="short-stat"><span class="ss-k">공매도 잔고비율</span><span class="ss-v">${fmtPctV(rec.shortPctFloat)}</span></div>
+      <div class="short-stat"><span class="ss-k">Days to Cover</span><span class="ss-v">${fmtDtc(rec.daysToCover)}</span></div>
+    </div>`;
+  wrap.style.display = '';
+}
+window.renderShortHistory = renderShortHistory;
+
 function renderInsiderHistory(ticker, filteredTrades) {
   const wrap = $('insiderHistoryWrap');
   const area = $('insiderHistoryArea');
@@ -19148,6 +20095,10 @@ function _aqRenderMarquee() {
   // 클릭 → 매크로 차트
   track.querySelectorAll('.macro-chip').forEach(el => {
     el.onclick = () => {
+      // v3.43: MO — 마퀴 탭 시 '매크로 지표' 개요 먼저 → 거기서 하나 골라 상세 / PC는 기존대로 바로 상세
+      if (typeof isMobileViewport === 'function' && isMobileViewport()) {
+        if (typeof openMacroOverview === 'function') { openMacroOverview(); return; }
+      }
       const tk = el.dataset.macro;
       if (tk && typeof openMacroChart === 'function') openMacroChart(tk);
     };
@@ -19414,10 +20365,7 @@ function switchMobileTab(tab) {
     _archiveMobileShown = 10;
     buildArchiveMobileList();
   } else if (tab === 'explore') {
-    buildStockList();
-  } else if (tab === 'analysis') {
-    // v2.01 Phase 2: 보고서 등록 ticker 그리드
-    buildAnalysisGrid();
+    if (typeof setExploreSubtab === 'function') setExploreSubtab(document.body.getAttribute('data-xtab') || 'signals');
   } else if (tab === 'schedule') {
     // v2.46: 캘린더 렌더
     try { aqCalendarRender(); } catch (e) {}
@@ -19443,6 +20391,21 @@ function switchMobileTab(tab) {
   } else if (tab === 'watch') {
     // v2.92: 관심 칸반 빌드
     try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {}
+    // v3.45: 종목 비교 분석을 관심 종목 카드 아래로 이동 + 빌드
+    try {
+      const _wc = document.getElementById('watchBoardCard');
+      const _cc = document.getElementById('compareCard');
+      if (_wc && _cc && _wc.parentElement && _cc.previousElementSibling !== _wc) _wc.parentElement.insertBefore(_cc, _wc.nextSibling);
+    } catch (e) {}
+    try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
+  } else if (tab === 'sector') {
+    // v3.45: 섹터 서브탭 기본값 = 섹터 FRAME
+    if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'frame');
+    try { if (typeof setSectorSubtab === 'function') setSectorSubtab(document.body.getAttribute('data-stab') || 'frame'); } catch (e) {}
+  } else if (tab === 'board') {
+    // v3.39: 보드 서브탭 기본값 = 누적 성과
+    if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'performance');
+    try { if (typeof setBoardSubtab === 'function') setBoardSubtab(document.body.getAttribute('data-btab') || 'performance'); } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -19471,6 +20434,11 @@ function initMobileTabs() {
     document.body.setAttribute('data-mtab', 'discover');
   }
   if (!document.body.getAttribute('data-xtab')) document.body.setAttribute('data-xtab', 'signals');
+  if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'performance');
+  if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'frame');
+  // v3.45: 분석 탭 폐지 → 잔존 상태면 탐색으로
+  if (document.body.getAttribute('data-mtab') === 'analysis') document.body.setAttribute('data-mtab', 'explore');
+  try { if (typeof aqLayoutBoardHoldings === 'function') aqLayoutBoardHoldings(); } catch (e) {}
   // 디폴트 = 발견
   switchMobileTab(document.body.getAttribute('data-mtab') || 'discover');
 }
@@ -19563,16 +20531,66 @@ function setPCTab(tab) {
 }
 
 // PC에서는 모바일 전용 카드(buyPoints/archiveMobile/stockList)를 사이드 패널 안으로 DOM 이동
+function setBoardSubtab(x) {
+  document.body.setAttribute('data-btab', x);
+  try { aqRefreshAcctStatus(); } catch (e) {}
+  document.querySelectorAll('.xtab-btn[data-btab]').forEach(b => b.classList.toggle('active', b.dataset.btab === x));
+  try { aqLayoutBoardHoldings(); } catch (e) {}
+  if (x === 'holdings') {
+    // 도넛은 숨김 컨테이너에서 0크기로 그려졌을 수 있어 → 표시 직후 리사이즈
+    try { requestAnimationFrame(() => { try { if (typeof _dashCharts !== 'undefined' && _dashCharts.donut) _dashCharts.donut.resize(); } catch (e) {} }); } catch (e) {}
+  }
+  try { if (typeof rerunCardAnimations === 'function') rerunCardAnimations(); } catch (e) {}
+}
+window.setBoardSubtab = setBoardSubtab;
+
+// v3.45: 섹터 서브탭 (섹터 FRAME / 일간 섹터 동향 / 전체 리스트)
+function setSectorSubtab(x) {
+  document.body.setAttribute('data-stab', x);
+  document.querySelectorAll('.xtab-btn[data-stab]').forEach(b => b.classList.toggle('active', b.dataset.stab === x));
+  try {
+    if (x === 'frame' && typeof renderSectorFramework === 'function') renderSectorFramework();
+    else if (x === 'trend' && typeof renderSectorAnalysis === 'function') renderSectorAnalysis();
+    else if (x === 'all' && typeof buildStockList === 'function') buildStockList();
+  } catch (e) {}
+  try { if (typeof rerunCardAnimations === 'function') rerunCardAnimations(); } catch (e) {}
+}
+window.setSectorSubtab = setSectorSubtab;
+
+// v3.40: MO 보드 — 주식 포트폴리오 + 보유 종목 현황 카드를 "보유 종목" 서브탭으로 이동
+function aqLayoutBoardHoldings() {
+  if (typeof isMobileViewport === 'function' && !isMobileViewport()) return; // MO 전용 (PC 대시보드는 그대로)
+  // 보유 종목 탭: 주식 포트폴리오 → 보유 종목 현황
+  const hHost = document.getElementById('boardHoldingsCard');
+  if (hHost) {
+    const hBody = hHost.querySelector('.card-body') || hHost;
+    const ph = hBody.querySelector('.cmp-placeholder'); if (ph) ph.remove();
+    const pf = document.getElementById('dashPortfolioCard');
+    const hd = document.getElementById('dashHoldingsCard');
+    if (pf && pf.parentElement !== hBody) hBody.appendChild(pf);
+    if (hd && hd.parentElement !== hBody) hBody.appendChild(hd);
+  }
+  // 상세 분석 탭: Decoupling Matrix
+  const aHost = document.getElementById('boardAccountCard');
+  if (aHost) {
+    const aBody = aHost.querySelector('.card-body') || aHost;
+    const ph2 = aBody.querySelector('.cmp-placeholder'); if (ph2) ph2.remove();
+    const mx = document.getElementById('dashMatrixCard');
+    if (mx && mx.parentElement !== aBody) aBody.appendChild(mx);
+  }
+}
+window.aqLayoutBoardHoldings = aqLayoutBoardHoldings;
+
 function setExploreSubtab(x) {
   document.body.setAttribute('data-xtab', x);
-  document.querySelectorAll('.xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.xtab === x));
+  document.querySelectorAll('.xtab-btn[data-xtab]').forEach(b => b.classList.toggle('active', b.dataset.xtab === x));
   try {
     if (typeof aqApplyExploreMarketUI === 'function') aqApplyExploreMarketUI();
     const _isKR = getCurrentMarket() === 'KR';
     if (x === 'signals' && typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
     else if (x === 'insider') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('foreign'); } else if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); }
     else if (x === 'shorting') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('inst'); } else if (typeof buildShortingList === 'function') buildShortingList(); }
-    else if (x === 'all' && typeof buildStockList === 'function') buildStockList();
+    else if (x === 'report' && typeof buildAnalysisGrid === 'function') buildAnalysisGrid();
   } catch (e) {}
 }
 window.setExploreSubtab = setExploreSubtab;
@@ -19895,8 +20913,11 @@ function buildDiscoverFeed(res, keepShown) {
   const today = _state.latestDate || (_state.archive || []).map(r => r.Date).filter(Boolean).sort().slice(-1)[0] || '';
   let cutoff30 = '';
   if (today) { const dd = new Date(today); dd.setDate(dd.getDate() - 30); cutoff30 = `${dd.getFullYear()}-${pad(dd.getMonth()+1)}-${pad(dd.getDate())}`; }
-  const shown = Math.min(_state.feedShown || 10, res.items.length);
-  const slice = res.items.slice(0, shown);
+  const _exSet = aqOverSignaledSet();
+  const _items = (_exSet.size ? res.items.filter(it => !_exSet.has(it.ticker)) : res.items);
+  if (!_items.length) { container.innerHTML = '<div class="buy-points-empty" style="padding:24px;">최근 5일 발견 없음 👌</div>'; return; }
+  const shown = Math.min(_state.feedShown || 10, _items.length);
+  const slice = _items.slice(0, shown);
   const fmtPct = v => (v == null || isNaN(v)) ? '—' : `${v > 0 ? '+' : ''}${v.toFixed(2)}%`;
 
   container.innerHTML = slice.map(it => {
@@ -19943,7 +20964,7 @@ function buildDiscoverFeed(res, keepShown) {
       ${desc ? `<div class="feed-caption"><b class="feed-cap-name">${escapeHtml(comp || displayName(tk))}</b> ${escapeHtml(desc)}</div>` : ''}
       ${aqFeedValTags(tk)}
     </div>`;
-  }).join('') + (res.items.length > shown ? `<button class="feed-more" onclick="aqFeedMore()">더 보기 (${res.items.length - shown})</button>` : '');
+  }).join('') + (_items.length > shown ? `<button class="feed-more" onclick="aqFeedMore()">더 보기 (${_items.length - shown})</button>` : '');
 
   // 차트 렌더 (개별 인터랙티브)
   container.querySelectorAll('.feed-item').forEach(itemEl => {
@@ -19956,6 +20977,54 @@ function buildDiscoverFeed(res, keepShown) {
   });
 }
 window.buildDiscoverFeed = buildDiscoverFeed;
+
+// v3.65: 타점 과다 종목 제외 — 최근 3개월 V1+V2 타점 상위 10% 제외 (발견·탐색)
+var AQ_LS_EXCL_OVERSIG = 'aquamel_exclude_oversignaled';
+function aqGetExcludeOverSignaled() { return lsGet(AQ_LS_EXCL_OVERSIG, true) !== false; }  // 디폴트 ON(제외)
+function aqSetExcludeOverSignaled(on) {
+  lsSet(AQ_LS_EXCL_OVERSIG, !!on);
+  _state._overSigCache = null;
+  try { aqRerenderSignalLists(); } catch (e) {}
+}
+window.aqGetExcludeOverSignaled = aqGetExcludeOverSignaled;
+window.aqSetExcludeOverSignaled = aqSetExcludeOverSignaled;
+function aqComputeOverSignaled(pool) {
+  if (!pool || !pool.length) return new Set();
+  let maxDate = '';
+  for (var i = 0; i < pool.length; i++) { var r = pool[i]; if (r.Date && r.Date > maxDate) maxDate = r.Date; }
+  if (!maxDate) return new Set();
+  var d = new Date(maxDate); d.setDate(d.getDate() - 90);
+  var pad = function (n) { return String(n).padStart(2, '0'); };
+  var cutoff = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  var counts = {};
+  for (var j = 0; j < pool.length; j++) { var x = pool[j]; if (x.Ticker && x.Date && x.Date >= cutoff) counts[x.Ticker] = (counts[x.Ticker] || 0) + 1; }
+  var tickers = Object.keys(counts);
+  if (tickers.length < 10) return new Set();  // 표본 적으면 제외 안 함
+  var vals = tickers.map(function (t) { return counts[t]; }).sort(function (a, b) { return a - b; });
+  var thr = vals[Math.floor(vals.length * 0.9)];  // 90 백분위 = 상위 10% 경계
+  var set = new Set();
+  for (var k = 0; k < tickers.length; k++) { if (counts[tickers[k]] >= thr) set.add(tickers[k]); }
+  return set;
+}
+function aqOverSignaledSet() {
+  if (!aqGetExcludeOverSignaled()) return new Set();
+  var mkt = getCurrentMarket();
+  var pool;
+  if (mkt === 'US') pool = (_state.archives.US || []).concat((_state.archivesV1 && _state.archivesV1.US) || []);
+  else pool = _state.archives[mkt] || [];
+  var cacheKey = mkt + ':' + pool.length;
+  if (_state._overSigCache && _state._overSigCache.key === cacheKey) return _state._overSigCache.set;
+  var set = aqComputeOverSignaled(pool);
+  _state._overSigCache = { key: cacheKey, set: set };
+  return set;
+}
+window.aqOverSignaledSet = aqOverSignaledSet;
+function aqRerenderSignalLists() {
+  _state._overSigCache = null;
+  try { if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList(); } catch (e) {}
+  try { if (typeof buildDiscoverFeed === 'function' && _state._feedRes) buildDiscoverFeed(_state._feedRes, true); } catch (e) {}
+}
+window.aqRerenderSignalLists = aqRerenderSignalLists;
 
 
 // ============================================================================
@@ -19992,8 +21061,12 @@ function buildArchiveMobileList() {
     }
   }
 
+  // v3.65: 설정 토글 동기화 + 타점 과다 종목 제외 집합
+  const exSet = aqOverSignaledSet();
+  const _excb = document.getElementById('aqExclOverSig'); if (_excb) _excb.checked = aqGetExcludeOverSignaled();
   // 필터된 시그널만
   const filtered = _state.archive.filter(r => {
+    if (exSet.size && exSet.has(r.Ticker)) return false;  // v3.65: 타점 과다 제외
     // 시그널 필터
     const sigs = (r.Signal_Type || '').split('+').map(s => s.trim()).filter(Boolean);
     if (!sigs.some(s => _state.signalFilter.has(s))) return false;
