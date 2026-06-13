@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.75';
+window.AQ_PWA_VERSION = '3.76';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -6564,6 +6564,41 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   }
 }
 /* end v2.25 sector framework mobile */
+
+/* ============ v3.76: 모바일 섹터 FRAME — 새 구조(타임라인+타일). 데스크탑 2D 도식은 그대로 ============ */
+#sectorFrameworkCard #sfMobile { display: none; }
+@media (max-width: 640px) {
+  #sectorFrameworkCard #sfDiagram { display: none !important; }
+  #sectorFrameworkCard #sfMobile { display: block !important; }
+  .sfm-dir { font-size: 10.5px; font-weight: 700; color: var(--text-mute); letter-spacing: 0.04em; padding: 0 0 6px 40px; }
+  .sfm-dir-bot { padding: 6px 0 0 40px; }
+  .sfm-chain { display: flex; flex-direction: column; }
+  .sfm-node { display: flex; gap: 12px; position: relative; padding-bottom: 16px; }
+  .sfm-spine { position: relative; width: 28px; flex-shrink: 0; display: flex; justify-content: center; }
+  .sfm-spine::before { content: ''; position: absolute; top: -2px; bottom: -16px; left: 50%; transform: translateX(-50%); width: 2px; background: var(--line); }
+  .sfm-node:last-of-type .sfm-spine::before { display: none; }
+  .sfm-dot { position: relative; z-index: 1; width: 26px; height: 26px; border-radius: 50%; background: rgb(var(--c-rgb)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; box-shadow: 0 0 0 4px var(--bg); }
+  .sfm-center .sfm-dot { width: 32px; height: 32px; font-size: 14px; box-shadow: 0 0 0 4px var(--bg), 0 0 0 6px rgba(var(--c-rgb),0.30); }
+  .sfm-body { flex: 1; min-width: 0; padding-top: 2px; }
+  .sfm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+  .sfm-title { font-size: 14px; font-weight: 800; color: rgb(var(--c-rgb)); letter-spacing: -0.01em; }
+  .sfm-axis { margin-left: 7px; font-size: 9.5px; font-weight: 700; color: rgb(var(--c-rgb)); background: rgba(var(--c-rgb),0.16); padding: 2px 7px; border-radius: 999px; vertical-align: middle; }
+  .sfm-metrics { font-size: 12px; font-weight: 700; flex-shrink: 0; font-variant-numeric: tabular-nums; color: var(--text-dim); white-space: nowrap; }
+  .sfm-sep { margin: 0 5px; color: var(--text-mute); }
+  .sfm-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sfm-chip { display: inline-flex; align-items: center; gap: 5px; padding: 6px 11px; border-radius: 999px; background: rgba(var(--c-rgb),0.10); border: 1px solid rgba(var(--c-rgb),0.25); cursor: pointer; }
+  .sfm-chip .sf-sub-emoji { font-size: 13px; }
+  .sfm-chip .sf-sub-name { font-size: 11.5px; font-weight: 600; white-space: nowrap; color: var(--text); }
+  .sfm-ext-header { font-size: 11px; font-weight: 700; color: var(--text-mute); margin: 22px 0 12px; padding-top: 14px; border-top: 1px dashed var(--line); letter-spacing: 0.03em; }
+  .sfm-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .sfm-tile { border: 1px solid var(--line); border-top: 3px solid rgb(var(--c-rgb)); border-radius: 12px; padding: 12px; background: rgba(var(--c-rgb),0.045); }
+  .sfm-tile-head { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+  .sfm-tile-emoji { font-size: 16px; }
+  .sfm-tile-title { font-size: 13px; font-weight: 800; color: var(--text-hi); }
+  .sfm-tile-metrics { font-size: 11.5px; font-weight: 700; color: var(--text-dim); font-variant-numeric: tabular-nums; margin-bottom: 9px; }
+  .sfm-tile .sfm-chips { gap: 5px; }
+  .sfm-tile .sfm-chip { padding: 5px 9px; }
+}
 
 /* ============ v2.27: 섹터 프레임 카드 — 자식이 다음 카드 침범 방지 ============
    v2.26 overflow:hidden은 자식을 잘랐던 실수. 이번엔 카드 height을 자식 합산만큼 확실히 늘림 */
@@ -16725,6 +16760,45 @@ function sortHeatmap(key) {
 window.sortHeatmap = sortHeatmap;
 
 
+function _sfMobChips(g) {
+  return g.cells.map(c => {
+    const tipName = c.nLong || c.n;
+    const tip = `${c.e} ${tipName} — ${c.def}`;
+    const sectorKey = `${c.e} ${tipName}`;
+    return `<div class="sf-sub sfm-chip" data-sector-key="${escapeAttr(sectorKey)}" title="${escapeAttr(tip)}"><span class="sf-sub-emoji">${c.e}</span><span class="sf-sub-name">${escapeHtml(c.n)}</span></div>`;
+  }).join('');
+}
+function _renderSFMobile() {
+  let h = '<div class="sfm-wrap">';
+  h += '<div class="sfm-chain">';
+  h += '<div class="sfm-dir sfm-dir-top">▲ 인프라·펀더멘털</div>';
+  SF_AI_CORE.forEach(g => {
+    const center = g.center ? ' sfm-center' : '';
+    h += `<div class="sfm-node${center}" style="--c-rgb:${g.rgb};">
+      <div class="sfm-spine"><span class="sfm-dot">${g.num}</span></div>
+      <div class="sfm-body">
+        <div class="sfm-head">
+          <span class="sfm-title">${escapeHtml(g.title)}${g.center ? '<span class="sfm-axis">중심축</span>' : ''}</span>
+          <span class="sfm-metrics"><span class="sf-layer-return neutral" data-layer-key="${g.key}">—</span><span class="sfm-sep">·</span><span class="sf-layer-weight" data-layer-key="${g.key}">— %</span></span>
+        </div>
+        <div class="sfm-chips">${_sfMobChips(g)}</div>
+      </div>
+    </div>`;
+  });
+  h += '<div class="sfm-dir sfm-dir-bot">최종고객향 ▼</div>';
+  h += '</div>';
+  h += '<div class="sfm-ext-header">🌐 외부 5계층 · 보조 (방향성 없음)</div>';
+  h += '<div class="sfm-tiles">';
+  SF_EXTERNAL.forEach(g => {
+    h += `<div class="sfm-tile" style="--c-rgb:${g.rgb};">
+      <div class="sfm-tile-head"><span class="sfm-tile-emoji">${g.num}</span><span class="sfm-tile-title">${escapeHtml(g.title)}</span></div>
+      <div class="sfm-tile-metrics"><span class="sf-layer-return neutral" data-layer-key="${g.key}">—</span><span class="sfm-sep">·</span><span class="sf-layer-weight" data-layer-key="${g.key}">— %</span></div>
+      <div class="sfm-chips">${_sfMobChips(g)}</div>
+    </div>`;
+  });
+  h += '</div></div>';
+  return h;
+}
 function renderSectorFramework() {
   const diag = $('sfDiagram');
   if (!diag) return;
@@ -16750,6 +16824,24 @@ function renderSectorFramework() {
   html += '</div>';
 
   diag.innerHTML = html;
+
+  // v3.76: 모바일 전용 타임라인/타일 컨테이너 (데스크탑은 CSS로 숨김) — 같은 data-layer-key/sector-key 재사용
+  let mob = document.getElementById('sfMobile');
+  if (!mob) {
+    mob = document.createElement('div');
+    mob.id = 'sfMobile';
+    diag.parentNode.insertBefore(mob, diag.nextSibling);
+  }
+  mob.innerHTML = _renderSFMobile();
+  if (!mob._sfClickBound) {
+    mob.addEventListener('click', (e) => {
+      const sub = e.target.closest('.sf-sub');
+      if (!sub) return;
+      const key = sub.getAttribute('data-sector-key');
+      if (key) openSectorModal(key);
+    });
+    mob._sfClickBound = true;
+  }
 
   // 4) 계층별 포트폴리오 비중 채우기
   refreshLayerWeights();
