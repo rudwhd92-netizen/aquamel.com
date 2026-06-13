@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.69';
+window.AQ_PWA_VERSION = '3.70';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -1555,6 +1555,13 @@ body.modal-pos-mode #chartModal .chart-wrap,
 body.modal-pos-mode #chartModal .modal-filter-block,
 body.modal-pos-mode #chartModal .modal-report-banner,
 body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important; }
+/* v3.70: 보고서 모드 — hero 유지, 아래 영역만 교체 (전환 시 hero 안 움직임) */
+body.modal-report-mode #chartModal .chart-wrap,
+body.modal-report-mode #chartModal .modal-filter-block,
+body.modal-report-mode #chartModal .ticker-history-wrap,
+body.modal-report-mode #chartModal .modal-report-banner,
+body.modal-report-mode #chartModal #positionPanel { display: none !important; }
+.report-detail-head-v2.report-head-bare { align-items: center; padding-bottom: 14px; margin-bottom: 18px; }
 .pos-back-row { margin: 4px 0 16px; }
 .pos-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--line); gap: 12px; }
 .pos-label { color: var(--text-dim); font-size: 13px; flex-shrink: 0; }
@@ -13111,11 +13118,9 @@ async function openReportPanel() {
   const tk = _state.openTicker;
   if (!tk) return;
   _state.reportMode = 'detail';
-  // 차트/콘텐츠 영역 숨김
-  const hideEls = ['chartCanvas', 'chartLegend', 'modeToggleBtn'];
-  hideEls.forEach(id => { const el = $(id); if (el) el.closest('.chart-wrap, .chart-legend, *').style.display = ''; });
+  // v3.70: hero(제목/로고/가격/섹터)는 그대로 둔 채 아래 영역만 보고서로 교체 — 전환 시 hero가 안 움직임
+  document.body.classList.add('modal-report-mode');
   $('reportPanel').style.display = '';
-  $('mainModalBody').style.display = 'none';
   // v2.63: 보고서 모드 시 토스증권 버튼 숨김 (보고서엔 토스 연계 불필요)
   const tossBtn = $('modalTossBtn');
   if (tossBtn) tossBtn.style.display = 'none';
@@ -13131,15 +13136,8 @@ async function openReportPanel() {
     const tickerPriceHtml = (modalPriceEl && modalPriceEl.innerHTML.trim()) ? modalPriceEl.innerHTML : '';
     const tickerSubtitleHtml = (modalSubtitleEl && modalSubtitleEl.innerHTML.trim() && modalSubtitleEl.innerHTML !== '—') ? modalSubtitleEl.innerHTML : '';
     $('reportPanel').innerHTML = `
-      <div class="report-detail-head-v2">
-        <div class="report-detail-left">
-          <div class="modal-title">${tickerTitleHtml}</div>
-          <div class="modal-price">${tickerPriceHtml}</div>
-          <div class="modal-subtitle">${tickerSubtitleHtml}</div>
-        </div>
-        <div class="report-detail-right">
-          <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
-        </div>
+      <div class="report-detail-head-v2 report-head-bare">
+        <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
       </div>
       <div class="report-empty">등록된 보고서가 없습니다.</div>
     `;
@@ -13153,6 +13151,7 @@ function closeReportPanel() {
   _state.reportMode = null;
   _state.reportCurrentDate = null;
   $('reportPanel').style.display = 'none';
+  document.body.classList.remove('modal-report-mode');
   $('mainModalBody').style.display = '';
   // v2.63: 토스증권 버튼 복원 (보고서 모드 종료 시)
   const tossBtn = $('modalTossBtn');
@@ -13558,16 +13557,9 @@ async function openReportDetail(date) {
          </select>`
       : `<div class="report-date-big">${escapeHtml(date)}</div>`;
     $('reportPanel').innerHTML = `
-      <div class="report-detail-head-v2">
-        <div class="report-detail-left">
-          <div class="modal-title">${tickerTitleHtml}</div>
-          <div class="modal-price">${tickerPriceHtml}</div>
-          <div class="modal-subtitle">${tickerSubtitleHtml}</div>
-        </div>
-        <div class="report-detail-right">
-          ${dateUiHtml}
-          <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
-        </div>
+      <div class="report-detail-head-v2 report-head-bare">
+        <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
+        ${dateUiHtml}
       </div>
       <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${_v2 ? renderReportContentV2(parsed, tk, date) : renderReportContent(parsed, tk, date)}</div>
     `;
@@ -17730,7 +17722,7 @@ async function fetchAdhocOhlcv(ticker) {
 
 async function openChart(ticker) {
   const _freshOpen = !$('chartModal').classList.contains('active');
-  if (_freshOpen) document.body.classList.remove('modal-pos-mode');
+  if (_freshOpen) { document.body.classList.remove('modal-pos-mode'); document.body.classList.remove('modal-report-mode'); const _rp0 = document.getElementById('reportPanel'); if (_rp0) _rp0.style.display = 'none'; }
   // v2.31: 매크로 상관관계 종목 리스트 잔상 제거 (일반 종목 모달엔 표시 X)
   const _oldCorr = document.getElementById('macroCorrWrap');
   if (_oldCorr) _oldCorr.remove();
