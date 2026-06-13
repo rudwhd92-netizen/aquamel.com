@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.81';
+window.AQ_PWA_VERSION = '3.82';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2360,6 +2360,14 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .modal-view-tabs .mvt-action { margin-left: 5px; font-size: 9.5px; font-weight: 800; padding: 1px 6px; border-radius: 999px; line-height: 1.4; vertical-align: middle; }
 #chartModal .pos-back-row { display: none; }
 #reportPanel .report-back-btn { display: none; }
+/* v3.82: 매매 내역 롱프레스 메뉴 */
+.pos-order[data-trade-id] { cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.pos-order.lp-active { background: rgba(255,255,255,0.06); border-radius: 8px; }
+.aq-order-menu { max-width: 340px; }
+.aq-om-btn { display: block; width: 100%; padding: 14px; margin-top: 8px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--text); font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
+.aq-om-btn:active { transform: scale(0.985); }
+.aq-om-btn.danger { color: #ff6b6b; border-color: rgba(255,107,107,0.40); }
+.aq-om-btn.cancel { color: var(--text-dim); margin-top: 12px; }
 /* v3.68: 종목 모달 디테일 마감 (구조 유지 — 마감만) */
 /* v3.69: 상단부 공유 모달(섹터 등)에도 동일 적용해 불일치 제거 */
 #chartModal .modal-content, #sectorModal .modal-content { font-variant-numeric: tabular-nums; }   /* A: 숫자 자릿수 정렬 */
@@ -13344,8 +13352,9 @@ function openPositionPanel(tk) {
     ordersHtml = myTrades.map(t => {
       const act = (t.action === '매도') ? '판매' : '구매';
       const q = parseFloat(t.qty) || 0, px = parseFloat(t.price) || 0;
-      return `<div class="pos-order"><span class="po-date">${aqFmtPosDate(t.date)}</span><span class="po-act">${act} ${q}주</span><span class="po-px">주당 ${fmtMoney(px)}</span></div>`;
-    }).join('') + `<div class="pos-orders-foot">모든 주문 내역을 불러왔어요</div>`;
+      const idAttr = t._id ? ` data-trade-id="${escapeAttr(t._id)}"` : '';
+      return `<div class="pos-order"${idAttr}><span class="po-date">${aqFmtPosDate(t.date)}</span><span class="po-act">${act} ${q}주</span><span class="po-px">주당 ${fmtMoney(px)}</span></div>`;
+    }).join('') + `<div class="pos-orders-foot">길게 눌러 수정·삭제 · 모든 매매 내역을 불러왔어요</div>`;
   } else {
     ordersHtml = `<div class="pos-empty">주문 내역이 없습니다.</div>`;
   }
@@ -13356,11 +13365,30 @@ function openPositionPanel(tk) {
     <div class="pos-row"><div class="pos-label">총 금액</div><div class="pos-val"><span class="pos-main">${fmtMoney(mktVal)}</span><div class="pos-pnl ${pnlCls}">${pnl >= 0 ? '+' : ''}${fmtMoney(pnl)} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%)</div></div></div>
     <div class="pos-row"><div class="pos-label">투자 원금</div><div class="pos-val"><span class="pos-main">${fmtMoney(principal)}</span></div></div>
     <div class="pos-actions"><button type="button" class="pos-sell" onclick="aqOpenTradeForm('매도')">매도</button><button type="button" class="pos-buy" onclick="aqOpenTradeForm('매수')">매수</button></div>
-    <div class="pos-orders aq-coll collapsed">
-      <div class="aq-coll-head" onclick="aqToggleColl(this)"><span class="pos-orders-title">주문 내역</span><span class="aq-coll-caret">▼</span></div>
+    <div class="pos-orders aq-coll">
+      <div class="aq-coll-head" onclick="aqToggleColl(this)"><span class="pos-orders-title">매매 내역</span><span class="aq-coll-caret">▼</span></div>
       <div class="aq-coll-body">${ordersHtml}</div>
     </div>
   `;
+  if (!panel._lpBound) {
+    let lpTimer = null, lpId = null, lpRow = null;
+    const lpStart = (e) => {
+      const row = e.target.closest('.pos-order[data-trade-id]');
+      if (!row) return;
+      lpRow = row; lpId = row.getAttribute('data-trade-id');
+      row.classList.add('lp-active');
+      lpTimer = setTimeout(() => { lpTimer = null; if (lpRow) lpRow.classList.remove('lp-active'); if (lpId) aqOpenOrderMenu(lpId); }, 480);
+    };
+    const lpCancel = () => { if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; } if (lpRow) { lpRow.classList.remove('lp-active'); lpRow = null; } };
+    panel.addEventListener('touchstart', lpStart, { passive: true });
+    panel.addEventListener('touchend', lpCancel);
+    panel.addEventListener('touchmove', lpCancel, { passive: true });
+    panel.addEventListener('mousedown', lpStart);
+    panel.addEventListener('mouseup', lpCancel);
+    panel.addEventListener('mouseleave', lpCancel);
+    panel.addEventListener('contextmenu', (e) => { if (e.target.closest('.pos-order[data-trade-id]')) e.preventDefault(); });
+    panel._lpBound = true;
+  }
   document.body.classList.add('modal-pos-mode');
   if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('position');
 }
@@ -13377,11 +13405,12 @@ function aqTfToday() {
   const d = new Date(), p = (n) => String(n).padStart(2, '0');
   return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
 }
-function aqOpenTradeForm(action) {
+function aqOpenTradeForm(action, editId) {
   const tk = String(_state.openTicker || '').toUpperCase().trim();
   if (!tk) return;
   aqCloseTradeForm();
   const isBuy = (action === '매수');
+  const edit = editId ? _aqFindTrade(editId) : null;
   const ccy = (typeof _ccyLbl === 'function') ? _ccyLbl() : '';
   const company = (_state.tickerCompanyMap || {})[tk] || '';
   const ov = document.createElement('div');
@@ -13390,21 +13419,21 @@ function aqOpenTradeForm(action) {
   ov.addEventListener('click', (e) => { if (e.target === ov) aqCloseTradeForm(); });
   ov.innerHTML = `
     <div class="aq-tf-modal" role="dialog" aria-modal="true">
-      <div class="aq-tf-title">${isBuy ? '매수' : '매도'} 기록 추가</div>
+      <div class="aq-tf-title">${isBuy ? '매수' : '매도'} 기록 ${edit ? '수정' : '추가'}</div>
       <div class="aq-tf-sub">${escapeHtml(company ? company + ' · ' : '')}${escapeHtml(tk)}</div>
-      <div class="aq-tf-field"><label>일자</label><input type="date" id="aqTfDate" value="${aqTfToday()}"></div>
+      <div class="aq-tf-field"><label>일자</label><input type="date" id="aqTfDate" value="${edit ? escapeAttr(edit.date) : aqTfToday()}"></div>
       <div class="aq-tf-row2">
-        <div class="aq-tf-field"><label>주식수</label><input type="number" id="aqTfQty" inputmode="decimal" min="0" step="any" placeholder="0"></div>
-        <div class="aq-tf-field"><label>${isBuy ? '매수가' : '매도가'}${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqTfPrice" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+        <div class="aq-tf-field"><label>주식수</label><input type="number" id="aqTfQty" inputmode="decimal" min="0" step="any" placeholder="0" value="${edit ? (parseFloat(edit.qty) || '') : ''}"></div>
+        <div class="aq-tf-field"><label>${isBuy ? '매수가' : '매도가'}${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqTfPrice" inputmode="decimal" min="0" step="any" placeholder="0" value="${edit ? (parseFloat(edit.price) || '') : ''}"></div>
       </div>
       <div class="aq-tf-row2">
-        <div class="aq-tf-field"><label>수수료${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqTfFee" inputmode="decimal" min="0" step="any" value="0"></div>
-        <div class="aq-tf-field"><label>세금${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqTfTax" inputmode="decimal" min="0" step="any" value="0"></div>
+        <div class="aq-tf-field"><label>수수료${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqTfFee" inputmode="decimal" min="0" step="any" value="${edit ? (parseFloat(edit.fee) || 0) : 0}"></div>
+        <div class="aq-tf-field"><label>세금${ccy ? ' ' + escapeHtml(ccy) : ''}</label><input type="number" id="aqTfTax" inputmode="decimal" min="0" step="any" value="${edit ? (parseFloat(edit.tax) || 0) : 0}"></div>
       </div>
       <div class="aq-tf-err" id="aqTfErr"></div>
       <div class="aq-tf-actions">
         <button type="button" class="aq-tf-cancel" onclick="aqCloseTradeForm()">취소</button>
-        <button type="button" class="aq-tf-save ${isBuy ? 'buy' : 'sell'}" onclick="aqSubmitTradeForm('${action}')">저장</button>
+        <button type="button" class="aq-tf-save ${isBuy ? 'buy' : 'sell'}" onclick="aqSubmitTradeForm('${action}'${editId ? `, '${editId}'` : ''})">저장</button>
       </div>
     </div>`;
   document.body.appendChild(ov);
@@ -13416,6 +13445,48 @@ function aqCloseTradeForm() {
   if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
 }
 window.aqCloseTradeForm = aqCloseTradeForm;
+function _aqFindTrade(id) {
+  try { return (lsGet(lsKeyTrades(), []) || []).find(r => r && r._id === id) || null; } catch (e) { return null; }
+}
+function aqOpenOrderMenu(id) {
+  if (!id) return;
+  aqCloseOrderMenu();
+  const t = _aqFindTrade(id);
+  const sub = t ? `${aqFmtPosDate(t.date)} · ${(t.action === '매도') ? '판매' : '구매'} ${parseFloat(t.qty) || 0}주` : '';
+  const ov = document.createElement('div');
+  ov.className = 'aq-tf-overlay'; ov.id = 'aqOrderMenuOverlay';
+  ov.addEventListener('click', (e) => { if (e.target === ov) aqCloseOrderMenu(); });
+  ov.innerHTML = `<div class="aq-tf-modal aq-order-menu" role="dialog" aria-modal="true">
+    <div class="aq-tf-title">매매 내역</div>
+    ${sub ? `<div class="aq-tf-sub">${escapeHtml(sub)}</div>` : ''}
+    <button type="button" class="aq-om-btn" onclick="aqEditTrade('${escapeAttr(id)}')">수정</button>
+    <button type="button" class="aq-om-btn danger" onclick="aqConfirmDeleteTrade('${escapeAttr(id)}')">삭제</button>
+    <button type="button" class="aq-om-btn cancel" onclick="aqCloseOrderMenu()">취소</button>
+  </div>`;
+  document.body.appendChild(ov);
+}
+function aqCloseOrderMenu() { const ov = document.getElementById('aqOrderMenuOverlay'); if (ov && ov.parentNode) ov.parentNode.removeChild(ov); }
+function aqEditTrade(id) { const t = _aqFindTrade(id); aqCloseOrderMenu(); if (!t) return; aqOpenTradeForm(t.action || '매수', id); }
+function aqConfirmDeleteTrade(id) {
+  const t = _aqFindTrade(id);
+  const lbl = t ? `${aqFmtPosDate(t.date)} ${(t.action === '매도') ? '판매' : '구매'} ${parseFloat(t.qty) || 0}주` : '이 매매';
+  aqCloseOrderMenu();
+  if (window.confirm(lbl + ' 기록을 삭제할까요?')) aqDeleteTrade(id);
+}
+function aqDeleteTrade(id) {
+  if (!id) return;
+  const key = lsKeyTrades();
+  const flt = (arr) => (arr || []).filter(r => r && r._id !== id);
+  try {
+    if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === key) { tradesSheet.data = flt(tradesSheet.data); tradesSheet.save(); tradesSheet.render(); }
+    else { lsSet(key, flt(lsGet(key, []) || [])); }
+  } catch (e) { try { lsSet(key, flt(lsGet(key, []) || [])); } catch (e2) {} }
+  try { openPositionPanel(_state.openTicker); } catch (e) {}
+  try { if (typeof renderDashboard === 'function') renderDashboard(); } catch (e) {}
+  aqAutoPushTrades();
+}
+window.aqOpenOrderMenu = aqOpenOrderMenu; window.aqCloseOrderMenu = aqCloseOrderMenu;
+window.aqEditTrade = aqEditTrade; window.aqConfirmDeleteTrade = aqConfirmDeleteTrade; window.aqDeleteTrade = aqDeleteTrade;
 
 // v3.59: 자산 계정·동기화 — 기존 계정 로직(저장/불러오기/비번) 재사용, 정규 입력칸에 값만 반영
 function aqRefreshAcctStatus() {
@@ -13611,7 +13682,7 @@ function aqRenderReportVerdict(mkt, tkUpper) {
   }
 }
 window.aqRenderReportVerdict = aqRenderReportVerdict;
-function aqSubmitTradeForm(action) {
+function aqSubmitTradeForm(action, editId) {
   const tk = String(_state.openTicker || '').toUpperCase().trim();
   if (!tk) return;
   const g = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
@@ -13625,24 +13696,25 @@ function aqSubmitTradeForm(action) {
   if (!date) { setErr('일자를 입력해주세요.'); return; }
   if (qty <= 0) { setErr('주식수를 입력해주세요.'); return; }
   if (price <= 0) { setErr((action === '매수' ? '매수가' : '매도가') + '를 입력해주세요.'); return; }
-  const row = { _id: _genId(), date, ticker: tk, action, qty, price, fee, tax, sector: '' };
   const key = lsKeyTrades();
-  try {
-    if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === key) {
-      tradesSheet.data.push(row);
-      tradesSheet.save();      // lsSet + updateSummary
-      tradesSheet.render();    // 마이 화면 즉시 반영
-    } else {
-      const arr = lsGet(key, []) || [];
-      arr.push(row);
-      lsSet(key, arr);
-    }
-  } catch (e) {
-    try { const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr); } catch (e2) {}
+  if (editId) {
+    const apply = (arr) => { const r = (arr || []).find(x => x && x._id === editId); if (r) { r.date = date; r.action = action; r.qty = qty; r.price = price; r.fee = fee; r.tax = tax; } return arr; };
+    try {
+      if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === key) { apply(tradesSheet.data); tradesSheet.save(); tradesSheet.render(); }
+      else { const arr = lsGet(key, []) || []; apply(arr); lsSet(key, arr); }
+    } catch (e) { try { const arr = lsGet(key, []) || []; apply(arr); lsSet(key, arr); } catch (e2) {} }
+  } else {
+    const row = { _id: _genId(), date, ticker: tk, action, qty, price, fee, tax, sector: '' };
+    try {
+      if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === key) {
+        tradesSheet.data.push(row); tradesSheet.save(); tradesSheet.render();
+      } else { const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr); }
+    } catch (e) { try { const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr); } catch (e2) {} }
   }
   aqCloseTradeForm();
-  try { openPositionPanel(tk); } catch (e) {}  // 포지션 패널 재계산/갱신 (로컬 즉시 반영)
-  aqAutoPushTrades();  // v3.56: 시트 자동 업로드(백그라운드) — 저장된 ID/비번 재사용
+  try { openPositionPanel(tk); } catch (e) {}
+  try { if (typeof renderDashboard === 'function') renderDashboard(); } catch (e) {}
+  aqAutoPushTrades();
 }
 window.aqSubmitTradeForm = aqSubmitTradeForm;
 
