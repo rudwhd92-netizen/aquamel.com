@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.78';
+window.AQ_PWA_VERSION = '3.79';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2355,6 +2355,15 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .modal-report-banner .mrb-arrow { margin-left: auto; color: var(--text-mute); font-size: 17px; font-weight: 700; line-height: 1; }
 .modal-report-banner.aq-recent { border-color: rgba(255,146,43,0.40); background: rgba(255,146,43,0.09); }
 .modal-report-banner.aq-recent .mrb-ico { background: rgba(255,146,43,0.18); }
+/* v3.79: 종목 모달 HERO 3탭 (차트 / 분석 보고서 / 내 주식) — 상시 유지 */
+.modal-view-tabs { display: flex; gap: 6px; margin: 14px 0 6px; }
+.mvt-tab { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 6px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--text-dim); font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s, color .15s, border-color .15s; white-space: nowrap; }
+.mvt-tab:active { transform: scale(0.98); }
+.mvt-tab.on { background: var(--accent, #4c6ef5); border-color: transparent; color: #fff; }
+.mvt-tab .mvt-action { font-size: 9.5px; font-weight: 800; padding: 1px 6px; border-radius: 999px; line-height: 1.4; }
+#chartModal .pos-back-row { display: none; }
+#reportPanel .report-back-btn { display: none; }
+@media (max-width: 640px) { .mvt-tab { font-size: 12px; padding: 9px 4px; gap: 4px; } }
 /* v3.68: 종목 모달 디테일 마감 (구조 유지 — 마감만) */
 /* v3.69: 상단부 공유 모달(섹터 등)에도 동일 적용해 불일치 제거 */
 #chartModal .modal-content, #sectorModal .modal-content { font-variant-numeric: tabular-nums; }   /* A: 숫자 자릿수 정렬 */
@@ -7936,11 +7945,10 @@ table.combo-eval tbody td .nodata {
       <div class="modal-subtitle" id="modalSubtitle">—</div>
       <div class="modal-desc" id="modalDesc"></div>
       <div class="modal-valuation" id="modalValuation"></div>
-      <div class="modal-report-banner" id="modalReportBanner" onclick="openReportPanel()" style="display:none">
-        <span class="mrb-ico">📄</span>
-        <span class="mrb-label">분석 보고서</span>
-        <span class="mrb-verdict an-action-pill" id="modalReportVerdict" style="display:none"></span>
-        <span class="mrb-arrow">›</span>
+      <div class="modal-view-tabs" id="modalViewTabs">
+        <button class="mvt-tab on" data-view="chart" onclick="aqSetModalView('chart')">차트</button>
+        <button class="mvt-tab" data-view="report" onclick="aqSetModalView('report')">분석 보고서<span class="mvt-action an-action-pill" id="modalReportVerdict" style="display:none"></span></button>
+        <button class="mvt-tab" data-view="position" onclick="aqSetModalView('position')">내 주식</button>
       </div>
       <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
       <div id="positionPanel"></div>
@@ -12603,7 +12611,9 @@ function updateReportButtonVisibility() {
   btn.style.display = 'none';  // v3.64: 플로팅 아이콘 숨김 → 상단 추천 배너로 대체
   const banner = document.getElementById('modalReportBanner');
   if (banner) banner.style.display = hasReport ? 'flex' : 'none';
-  if (hasReport) aqRenderReportVerdict(mkt, tkUpper);
+  const _vd = document.getElementById('modalReportVerdict');
+  if (hasReport) { aqRenderReportVerdict(mkt, tkUpper); }
+  else if (_vd) { _vd.style.display = 'none'; _vd.textContent = ''; }
   // v2.99: 로고에 스토리 링이 붙는 종목(최근 보고서)은 보고서 아이콘에도 동일한 스토리 링 → 어디를 봐야 하는지 표시
   const recent = hasReport && (typeof aqHasRecentReport === 'function') && aqHasRecentReport(tkUpper);
   btn.classList.toggle('aq-story', !!recent);
@@ -13244,12 +13254,33 @@ window.parseReportTextV2 = parseReportTextV2;
 window.renderReportContentV2 = renderReportContentV2;
 
 // 모달 내부에서 보고서 모드로 전환
+function _aqSetActiveTab(view) {
+  const bar = document.getElementById('modalViewTabs');
+  if (!bar) return;
+  bar.querySelectorAll('.mvt-tab').forEach(b => b.classList.toggle('on', b.dataset.view === view));
+}
+function aqSetModalView(view) {
+  document.body.classList.remove('modal-pos-mode');
+  document.body.classList.remove('modal-report-mode');
+  if (view === 'report') {
+    if (typeof openReportPanel === 'function') openReportPanel();
+  } else if (view === 'position') {
+    if (typeof openPositionPanel === 'function') openPositionPanel(_state.openTicker);
+  } else {
+    const rp = document.getElementById('reportPanel');
+    if (rp) rp.style.display = 'none';
+    try { if (_chart && typeof _chart.resize === 'function') _chart.resize(); } catch (e) {}
+  }
+  _aqSetActiveTab(view);
+}
+window.aqSetModalView = aqSetModalView;
 async function openReportPanel() {
   const tk = _state.openTicker;
   if (!tk) return;
   _state.reportMode = 'detail';
   // v3.70: hero(제목/로고/가격/섹터)는 그대로 둔 채 아래 영역만 보고서로 교체 — 전환 시 hero가 안 움직임
   document.body.classList.add('modal-report-mode');
+  if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('report');
   $('reportPanel').style.display = '';
   // v2.63: 보고서 모드 시 토스증권 버튼 숨김 (보고서엔 토스 연계 불필요)
   const tossBtn = $('modalTossBtn');
@@ -13282,6 +13313,7 @@ function closeReportPanel() {
   _state.reportCurrentDate = null;
   $('reportPanel').style.display = 'none';
   document.body.classList.remove('modal-report-mode');
+  if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('chart');
   $('mainModalBody').style.display = '';
   // v2.63: 토스증권 버튼 복원 (보고서 모드 종료 시)
   const tossBtn = $('modalTossBtn');
@@ -13334,10 +13366,12 @@ function openPositionPanel(tk) {
     </div>
   `;
   document.body.classList.add('modal-pos-mode');
+  if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('position');
 }
 window.openPositionPanel = openPositionPanel;
 function closePositionPanel() {
   document.body.classList.remove('modal-pos-mode');
+  if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('chart');
   try { if (_chart && typeof _chart.resize === 'function') _chart.resize(); } catch (e) {}
 }
 window.closePositionPanel = closePositionPanel;
@@ -13564,12 +13598,9 @@ function aqRenderReportVerdict(mkt, tkUpper) {
   const key = mkt + '/' + tkUpper;
   const a = _analysisActions[key];
   if (a && a.action) {
-    vEl.className = 'mrb-verdict an-action-pill an-' + (a.type || 'neutral');
-    vEl.textContent = '추천 ' + a.action;
+    vEl.className = 'mvt-action an-action-pill an-' + (a.type || 'neutral');
+    vEl.textContent = a.action;
     vEl.style.display = '';
-    var _ACC = { 'strong-buy': '#2f9e44', 'buy': '#51cf66', 'hold': '#ffc53d', 'avoid': '#ff6b6b', 'neutral': '#adb5bd', 'none': '#adb5bd' };
-    var _bn = document.getElementById('modalReportBanner');
-    if (_bn) _bn.style.setProperty('--mrb-accent', _ACC[a.type] || '#4C6EF5');
   } else if (a === null) {
     vEl.style.display = 'none'; vEl.textContent = '';
   } else {
@@ -17990,7 +18021,7 @@ async function fetchAdhocOhlcv(ticker) {
 
 async function openChart(ticker) {
   const _freshOpen = !$('chartModal').classList.contains('active');
-  if (_freshOpen) { document.body.classList.remove('modal-pos-mode'); document.body.classList.remove('modal-report-mode'); const _rp0 = document.getElementById('reportPanel'); if (_rp0) _rp0.style.display = 'none'; }
+  if (_freshOpen) { document.body.classList.remove('modal-pos-mode'); document.body.classList.remove('modal-report-mode'); const _rp0 = document.getElementById('reportPanel'); if (_rp0) _rp0.style.display = 'none'; if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('chart'); }
   // v2.31: 매크로 상관관계 종목 리스트 잔상 제거 (일반 종목 모달엔 표시 X)
   const _oldCorr = document.getElementById('macroCorrWrap');
   if (_oldCorr) _oldCorr.remove();
