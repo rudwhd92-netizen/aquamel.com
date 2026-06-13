@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.73';
+window.AQ_PWA_VERSION = '3.74';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -6602,6 +6602,69 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   #sectorFrameworkCard .sf-external-header {
     text-align: center !important;
   }
+}
+
+/* ============ v3.74: 섹터 FRAME 모바일 — 깔끔한 세로 카드 흐름 (정보·체계 100% 유지) ============ */
+@media (max-width: 640px) {
+  #sectorFrameworkCard .sf-core,
+  #sectorFrameworkCard .sf-external {
+    display: flex !important; flex-direction: column; gap: 10px;
+    text-align: left !important;
+  }
+  #sectorFrameworkCard .sf-core::before {
+    text-align: left !important; letter-spacing: 0.04em;
+    background: transparent !important; padding: 0 0 4px !important;
+    margin-bottom: 8px !important; color: var(--text-dim);
+  }
+  #sectorFrameworkCard .sf-arrow { margin: 2px 0 !important; opacity: 0.5; }
+  #sectorFrameworkCard .sf-layer {
+    width: 100% !important; margin: 0 !important;
+    border: 1px solid var(--line) !important;
+    border-left: 4px solid rgb(var(--c-rgb)) !important;
+    border-radius: 12px !important;
+    background: rgba(var(--c-rgb), 0.045) !important;
+    text-align: left !important; overflow: hidden;
+  }
+  #sectorFrameworkCard .sf-layer-title {
+    text-align: left !important;
+    background: transparent !important;
+    color: rgb(var(--c-rgb)) !important;
+    font-size: 13px !important; font-weight: 800 !important;
+    padding: 11px 14px 7px !important; letter-spacing: -0.01em;
+  }
+  #sectorFrameworkCard .sf-layer-grid {
+    display: flex !important; flex-wrap: wrap; gap: 6px !important;
+    grid-template: none !important;
+    justify-content: flex-start !important;
+    padding: 0 14px 11px !important;
+  }
+  #sectorFrameworkCard .sf-sub {
+    grid-column: auto !important; grid-row: auto !important;
+    display: inline-flex !important; align-items: center; gap: 5px;
+    flex: 0 0 auto;
+    padding: 6px 11px !important; border-radius: 999px !important;
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid var(--line) !important;
+    transform: none !important;
+  }
+  #sectorFrameworkCard .sf-sub-emoji { font-size: 13px !important; margin: 0 !important; }
+  #sectorFrameworkCard .sf-sub-name { font-size: 11.5px !important; font-weight: 600; white-space: nowrap; }
+  #sectorFrameworkCard .sf-layer-footer {
+    justify-content: flex-start !important;
+    border-top: 1px solid var(--line);
+    background: transparent !important;
+    padding: 8px 14px !important; font-size: 12px !important; gap: 8px;
+  }
+  #sectorFrameworkCard .sf-layer.sf-center {
+    border-left-width: 6px !important;
+    box-shadow: 0 0 0 1px rgba(var(--c-rgb),0.3), 0 4px 18px rgba(var(--c-rgb),0.15) !important;
+  }
+  #sectorFrameworkCard .sf-layer.sf-center .sf-layer-title::after {
+    content: '중심축'; margin-left: 8px; font-size: 9.5px; font-weight: 700;
+    color: rgb(var(--c-rgb)); background: rgba(var(--c-rgb),0.16);
+    padding: 2px 7px; border-radius: 999px; vertical-align: middle;
+  }
+  #sectorFrameworkCard .sf-external-header { text-align: left !important; margin: 18px 0 10px !important; }
 }
 
 /* ============ v2.31: V-Shape 알고리즘 버전 토글 (V1/V2) ============ */
