@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.64';
+window.AQ_PWA_VERSION = '3.65';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -7338,6 +7338,10 @@ table.combo-eval tbody td .nodata {
         <div class="data-mgmt-row">
           <div class="label">자동 동기화 주기</div>
           <div class="value">2분 (PWA 켜 있을 때)</div>
+        </div>
+        <div class="data-mgmt-row">
+          <div class="label">타점 과다 종목 숨김<div style="font-size:11px;color:var(--text-mute);margin-top:3px;font-weight:400;">발견·탐색에서 최근 3개월 V1+V2 타점 상위 10% 종목 제외</div></div>
+          <div class="value"><input type="checkbox" id="aqExclOverSig" checked onchange="aqSetExcludeOverSignaled(this.checked)" style="width:20px;height:20px;accent-color:var(--accent,#5c7cfa);cursor:pointer;"></div>
         </div>
       </div>
       <div class="data-mgmt-actions">
@@ -20894,8 +20898,11 @@ function buildDiscoverFeed(res, keepShown) {
   const today = _state.latestDate || (_state.archive || []).map(r => r.Date).filter(Boolean).sort().slice(-1)[0] || '';
   let cutoff30 = '';
   if (today) { const dd = new Date(today); dd.setDate(dd.getDate() - 30); cutoff30 = `${dd.getFullYear()}-${pad(dd.getMonth()+1)}-${pad(dd.getDate())}`; }
-  const shown = Math.min(_state.feedShown || 10, res.items.length);
-  const slice = res.items.slice(0, shown);
+  const _exSet = aqOverSignaledSet();
+  const _items = (_exSet.size ? res.items.filter(it => !_exSet.has(it.ticker)) : res.items);
+  if (!_items.length) { container.innerHTML = '<div class="buy-points-empty" style="padding:24px;">최근 5일 발견 없음 👌</div>'; return; }
+  const shown = Math.min(_state.feedShown || 10, _items.length);
+  const slice = _items.slice(0, shown);
   const fmtPct = v => (v == null || isNaN(v)) ? '—' : `${v > 0 ? '+' : ''}${v.toFixed(2)}%`;
 
   container.innerHTML = slice.map(it => {
@@ -20942,7 +20949,7 @@ function buildDiscoverFeed(res, keepShown) {
       ${desc ? `<div class="feed-caption"><b class="feed-cap-name">${escapeHtml(comp || displayName(tk))}</b> ${escapeHtml(desc)}</div>` : ''}
       ${aqFeedValTags(tk)}
     </div>`;
-  }).join('') + (res.items.length > shown ? `<button class="feed-more" onclick="aqFeedMore()">더 보기 (${res.items.length - shown})</button>` : '');
+  }).join('') + (_items.length > shown ? `<button class="feed-more" onclick="aqFeedMore()">더 보기 (${_items.length - shown})</button>` : '');
 
   // 차트 렌더 (개별 인터랙티브)
   container.querySelectorAll('.feed-item').forEach(itemEl => {
@@ -20955,6 +20962,54 @@ function buildDiscoverFeed(res, keepShown) {
   });
 }
 window.buildDiscoverFeed = buildDiscoverFeed;
+
+// v3.65: 타점 과다 종목 제외 — 최근 3개월 V1+V2 타점 상위 10% 제외 (발견·탐색)
+var AQ_LS_EXCL_OVERSIG = 'aquamel_exclude_oversignaled';
+function aqGetExcludeOverSignaled() { return lsGet(AQ_LS_EXCL_OVERSIG, true) !== false; }  // 디폴트 ON(제외)
+function aqSetExcludeOverSignaled(on) {
+  lsSet(AQ_LS_EXCL_OVERSIG, !!on);
+  _state._overSigCache = null;
+  try { aqRerenderSignalLists(); } catch (e) {}
+}
+window.aqGetExcludeOverSignaled = aqGetExcludeOverSignaled;
+window.aqSetExcludeOverSignaled = aqSetExcludeOverSignaled;
+function aqComputeOverSignaled(pool) {
+  if (!pool || !pool.length) return new Set();
+  let maxDate = '';
+  for (var i = 0; i < pool.length; i++) { var r = pool[i]; if (r.Date && r.Date > maxDate) maxDate = r.Date; }
+  if (!maxDate) return new Set();
+  var d = new Date(maxDate); d.setDate(d.getDate() - 90);
+  var pad = function (n) { return String(n).padStart(2, '0'); };
+  var cutoff = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  var counts = {};
+  for (var j = 0; j < pool.length; j++) { var x = pool[j]; if (x.Ticker && x.Date && x.Date >= cutoff) counts[x.Ticker] = (counts[x.Ticker] || 0) + 1; }
+  var tickers = Object.keys(counts);
+  if (tickers.length < 10) return new Set();  // 표본 적으면 제외 안 함
+  var vals = tickers.map(function (t) { return counts[t]; }).sort(function (a, b) { return a - b; });
+  var thr = vals[Math.floor(vals.length * 0.9)];  // 90 백분위 = 상위 10% 경계
+  var set = new Set();
+  for (var k = 0; k < tickers.length; k++) { if (counts[tickers[k]] >= thr) set.add(tickers[k]); }
+  return set;
+}
+function aqOverSignaledSet() {
+  if (!aqGetExcludeOverSignaled()) return new Set();
+  var mkt = getCurrentMarket();
+  var pool;
+  if (mkt === 'US') pool = (_state.archives.US || []).concat((_state.archivesV1 && _state.archivesV1.US) || []);
+  else pool = _state.archives[mkt] || [];
+  var cacheKey = mkt + ':' + pool.length;
+  if (_state._overSigCache && _state._overSigCache.key === cacheKey) return _state._overSigCache.set;
+  var set = aqComputeOverSignaled(pool);
+  _state._overSigCache = { key: cacheKey, set: set };
+  return set;
+}
+window.aqOverSignaledSet = aqOverSignaledSet;
+function aqRerenderSignalLists() {
+  _state._overSigCache = null;
+  try { if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList(); } catch (e) {}
+  try { if (typeof buildDiscoverFeed === 'function' && _state._feedRes) buildDiscoverFeed(_state._feedRes, true); } catch (e) {}
+}
+window.aqRerenderSignalLists = aqRerenderSignalLists;
 
 
 // ============================================================================
@@ -20991,8 +21046,12 @@ function buildArchiveMobileList() {
     }
   }
 
+  // v3.65: 설정 토글 동기화 + 타점 과다 종목 제외 집합
+  const exSet = aqOverSignaledSet();
+  const _excb = document.getElementById('aqExclOverSig'); if (_excb) _excb.checked = aqGetExcludeOverSignaled();
   // 필터된 시그널만
   const filtered = _state.archive.filter(r => {
+    if (exSet.size && exSet.has(r.Ticker)) return false;  // v3.65: 타점 과다 제외
     // 시그널 필터
     const sigs = (r.Signal_Type || '').split('+').map(s => s.trim()).filter(Boolean);
     if (!sigs.some(s => _state.signalFilter.has(s))) return false;
