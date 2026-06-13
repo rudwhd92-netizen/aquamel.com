@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.65';
+window.AQ_PWA_VERSION = '3.66b';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2220,7 +2220,7 @@ body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important;
 .mv-chip .mv-v { font-size: 13px; font-weight: 700; color: var(--text, #d4d4d4); }
 .mv-chip .mv-v.mv-na { color: var(--text-mute, #6a6a6a); font-weight: 500; }
 
-.chart-wrap { background: transparent; padding: 0; position: relative; height: 520px; }  /* v3.62: 배경 제거 평탄화 */
+.chart-wrap { background: transparent; padding: 0; margin: 10px 0 4px; position: relative; height: 520px; }  /* v3.62/v3.66: 평탄화 + 영역 여백 */
 
 /* v2.10: 타임프레임 세그먼트 컨트롤 (3M/6M/1Y) — 차트 우상단 */
 .tf-toggle {
@@ -2340,13 +2340,14 @@ body.modal-pos-mode #chartModal .ticker-history-wrap { display: none !important;
 .aq-coll.collapsed .aq-coll-body { display: none; }
 .aq-coll.collapsed .aq-coll-caret { transform: rotate(-90deg); }
 /* v3.62: 개별 종목 모달 — 보고서 진입을 헤더 세그먼트(차트/보고서)로, 공매도 타일 */
-.modal-report-banner { display: none; align-items: center; gap: 9px; margin: 14px 0 4px; padding: 11px 14px; background: rgba(92,124,250,0.10); border: 1px solid rgba(92,124,250,0.28); border-radius: 11px; cursor: pointer; }
-.modal-report-banner:hover { background: rgba(92,124,250,0.16); }
-.modal-report-banner .mrb-ico { font-size: 15px; flex-shrink: 0; }
-.modal-report-banner .mrb-label { font-size: 13.5px; font-weight: 700; color: var(--text-hi); }
-.modal-report-banner .mrb-verdict { font-size: 12px; font-weight: 700; }
-.modal-report-banner .mrb-arrow { margin-left: auto; color: var(--text-mute); font-size: 18px; font-weight: 700; }
-.modal-report-banner.aq-recent { border-color: #ff922b; background: rgba(255,146,43,0.10); }
+.modal-report-banner { display: none; align-items: center; gap: 11px; margin: 20px 0 8px; padding: 13px 15px; background: rgba(92,124,250,0.09); border: 1px solid rgba(92,124,250,0.26); border-radius: 13px; cursor: pointer; transition: background 0.15s ease; }
+.modal-report-banner:hover { background: rgba(92,124,250,0.15); }
+.modal-report-banner .mrb-ico { flex-shrink: 0; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1; background: rgba(92,124,250,0.16); border-radius: 9px; }
+.modal-report-banner .mrb-label { font-size: 13.5px; font-weight: 700; color: var(--text-hi); letter-spacing: -0.01em; }
+.modal-report-banner .mrb-verdict { font-size: 11.5px; font-weight: 800; }
+.modal-report-banner .mrb-arrow { margin-left: auto; color: var(--text-mute); font-size: 17px; font-weight: 700; line-height: 1; }
+.modal-report-banner.aq-recent { border-color: rgba(255,146,43,0.40); background: rgba(255,146,43,0.09); }
+.modal-report-banner.aq-recent .mrb-ico { background: rgba(255,146,43,0.18); }
 .short-stats { display: flex; gap: 10px; }
 .short-stat { flex: 1; display: flex; flex-direction: column; gap: 5px; padding: 13px 14px; background: transparent; border: 1px solid var(--line); border-radius: 10px; }
 .short-stat .ss-k { font-size: 11px; color: var(--text-mute); }
@@ -4525,8 +4526,8 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 
 /* ============ MODAL FILTER (signal filter inside chart modal) ============ */
 .modal-filter-block {
-  margin-top: 0;
-  padding: 16px 0;
+  margin-top: 14px;
+  padding: 20px 0;
   background: transparent;
   border: none;
   border-top: 1px solid var(--line);
@@ -4712,7 +4713,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 }
 
 /* ============ TICKER HISTORY (below chart) ============ */
-.ticker-history-wrap { margin-top: 0; background: transparent; padding: 16px 0; overflow: auto; border-top: 1px solid var(--line); }
+.ticker-history-wrap { margin-top: 14px; background: transparent; padding: 20px 0; overflow: auto; border-top: 1px solid var(--line); }
 .ticker-history-title { font-size: 12px; color: var(--text-hi); margin-bottom: 10px; font-weight: 600; }
 
 /* ============ v2.67: HERO 알림 마퀴 — 우→좌 흐름 ============
@@ -5851,11 +5852,11 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 
   /* Simple mode: hide legend block + compact filter label */
   body.simple-mode .chart-legend { display: none; }
-  body.simple-mode .modal-filter-block { padding: 8px 10px; }
+  body.simple-mode .modal-filter-block { padding: 16px 0; margin-top: 16px; }  /* v3.66: 영역 간 여백 ↑ */
   body.simple-mode .modal-filter-label { font-size: 10px; margin-bottom: 6px; }
 
   /* Tighter ticker history */
-  .ticker-history-wrap { padding: 10px; margin-top: 14px; max-width: 100%; }
+  .ticker-history-wrap { padding: 16px 0; margin-top: 16px; max-width: 100%; }  /* v3.66: 영역 간 여백 ↑ */
   .ticker-history-title { font-size: 11px; }
 
   /* Signal filter buttons wrap nicer */
