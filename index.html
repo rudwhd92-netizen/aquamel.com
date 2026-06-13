@@ -79,7 +79,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.84';
+window.AQ_PWA_VERSION = '3.85';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3741,6 +3741,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-mtab="board"]    section.card[data-mtab~="board"]    { display: block !important; }
   /* v3.39: 보드 서브탭 게이팅 — data-btab 가진 콘텐츠 카드는 현재 서브탭만 표시 (바는 항상 표시) */
   body[data-mtab="board"] section.card[data-btab] { display: none !important; }
+  body[data-mtab="board"][data-btab="watch"]       section.card[data-btab~="watch"],
   body[data-mtab="board"][data-btab="holdings"]    section.card[data-btab~="holdings"],
   body[data-mtab="board"][data-btab="performance"] section.card[data-btab~="performance"],
   body[data-mtab="board"][data-btab="account"]     section.card[data-btab~="account"] { display: block !important; }
@@ -7167,8 +7168,8 @@ table.combo-eval tbody td .nodata {
   <!-- v3.45: 섹터 서브탭 (섹터 FRAME / 일간 섹터 동향 / 전체 리스트) -->
   <section class="card mobile-only explore-subtabs" id="sectorSubtabs" data-mtab="sector">
     <div class="xtab-row">
-      <button class="xtab-btn active" data-stab="frame" onclick="setSectorSubtab('frame')">섹터 FRAME</button>
-      <button class="xtab-btn" data-stab="trend" onclick="setSectorSubtab('trend')">일간 섹터 동향</button>
+      <button class="xtab-btn" data-stab="frame" onclick="setSectorSubtab('frame')">섹터 FRAME</button>
+      <button class="xtab-btn active" data-stab="trend" onclick="setSectorSubtab('trend')">일간 섹터 동향</button>
       <button class="xtab-btn" data-stab="all" onclick="setSectorSubtab('all')">전체 리스트</button>
     </div>
   </section>
@@ -7247,8 +7248,9 @@ table.combo-eval tbody td .nodata {
   <!-- v3.39: 보드 서브탭 (탐색 서브탭과 동일 양식) — 보유 종목 / 누적 성과 / 계좌 분석 -->
   <section class="card mobile-only explore-subtabs" id="boardSubtabs" data-mtab="board">
     <div class="xtab-row">
+      <button class="xtab-btn active" data-btab="watch" onclick="setBoardSubtab('watch')">관심 종목</button>
       <button class="xtab-btn" data-btab="holdings" onclick="setBoardSubtab('holdings')">보유 종목</button>
-      <button class="xtab-btn active" data-btab="performance" onclick="setBoardSubtab('performance')">누적 성과</button>
+      <button class="xtab-btn" data-btab="performance" onclick="setBoardSubtab('performance')">누적 성과</button>
       <button class="xtab-btn" data-btab="account" onclick="setBoardSubtab('account')">상세 분석</button>
     </div>
     <div class="aq-acct-bar" id="aqAcctBar" onclick="aqOpenAccountModal()">
@@ -7391,7 +7393,7 @@ table.combo-eval tbody td .nodata {
 
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
   <!-- v3.32: 종목 비교 분석 (US 유니버스 최대 3개 — 리베이스 차트 + 멀티 헥사곤) -->
-  <section class="card" id="compareCard" data-mtab="watch" style="display:none;">
+  <section class="card" id="compareCard" data-mtab="board" data-btab="watch" style="display:none;">
     <div class="card-header"><h2>종목 비교 분석</h2></div>
     <div class="card-body">
       <div class="cmp-picker">
@@ -7456,7 +7458,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- v2.92: 관심 칸반 보드 — 단기 모니터링 / 매수고려 / 장기 모니터링 / 매수완료. To-Do와 동일 룩앤필. -->
-  <section class="card" id="watchBoardCard" data-mtab="watch">
+  <section class="card" id="watchBoardCard" data-mtab="board" data-btab="watch">
     <div class="card-header"><h2>관심 종목</h2></div>
     <div class="card-body">
       <div class="todo-board" id="watchBoard">
@@ -7807,13 +7809,7 @@ table.combo-eval tbody td .nodata {
       </svg>
       <span class="mtab-label">섹터</span>
     </button>
-    <!-- v2.92: 3번째 위치 — 관심 (하트) 신설 -->
-    <button class="mtab-btn" data-mtab="watch" onclick="switchMobileTab('watch')" aria-label="관심">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-      </svg>
-      <span class="mtab-label">관심</span>
-    </button>
+    <!-- v3.85: 관심 탭 삭제 — 관심 종목은 자산 서브탭(좌측)으로 이동 -->
     <!-- v2.92: 4번째 — 일정 -->
     <button class="mtab-btn" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -20772,13 +20768,13 @@ function switchMobileTab(tab) {
     } catch (e) {}
     try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   } else if (tab === 'sector') {
-    // v3.45: 섹터 서브탭 기본값 = 섹터 FRAME
-    if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'frame');
-    try { if (typeof setSectorSubtab === 'function') setSectorSubtab(document.body.getAttribute('data-stab') || 'frame'); } catch (e) {}
+    // v3.85: 섹터 서브탭 기본값 = 일간 섹터 동향
+    if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'trend');
+    try { if (typeof setSectorSubtab === 'function') setSectorSubtab(document.body.getAttribute('data-stab') || 'trend'); } catch (e) {}
   } else if (tab === 'board') {
-    // v3.39: 보드 서브탭 기본값 = 누적 성과
-    if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'performance');
-    try { if (typeof setBoardSubtab === 'function') setBoardSubtab(document.body.getAttribute('data-btab') || 'performance'); } catch (e) {}
+    // v3.85: 보드 서브탭 기본값 = 관심 종목
+    if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'watch');
+    try { if (typeof setBoardSubtab === 'function') setBoardSubtab(document.body.getAttribute('data-btab') || 'watch'); } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -20807,8 +20803,8 @@ function initMobileTabs() {
     document.body.setAttribute('data-mtab', 'discover');
   }
   if (!document.body.getAttribute('data-xtab')) document.body.setAttribute('data-xtab', 'signals');
-  if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'performance');
-  if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'frame');
+  if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'watch');
+  if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'trend');
   // v3.45: 분석 탭 폐지 → 잔존 상태면 탐색으로
   if (document.body.getAttribute('data-mtab') === 'analysis') document.body.setAttribute('data-mtab', 'explore');
   try { if (typeof aqLayoutBoardHoldings === 'function') aqLayoutBoardHoldings(); } catch (e) {}
@@ -20912,6 +20908,14 @@ function setBoardSubtab(x) {
   if (x === 'holdings') {
     // 도넛은 숨김 컨테이너에서 0크기로 그려졌을 수 있어 → 표시 직후 리사이즈
     try { requestAnimationFrame(() => { try { if (typeof _dashCharts !== 'undefined' && _dashCharts.donut) _dashCharts.donut.resize(); } catch (e) {} }); } catch (e) {}
+  } else if (x === 'watch') {
+    try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {}
+    try {
+      const _wc = document.getElementById('watchBoardCard');
+      const _cc = document.getElementById('compareCard');
+      if (_wc && _cc && _wc.parentElement && _cc.previousElementSibling !== _wc) _wc.parentElement.insertBefore(_cc, _wc.nextSibling);
+    } catch (e) {}
+    try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   }
   try { if (typeof rerunCardAnimations === 'function') rerunCardAnimations(); } catch (e) {}
 }
