@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.03';
+window.AQ_PWA_VERSION = '4.04';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -16646,6 +16646,8 @@ function refreshLayerReturns() {
     else                    el.className = 'sf-layer-return neutral';
     el.title = `${period}일 평균 등락률: ${r.avg.toFixed(2)}% — ${r.count}개 티커 균등평균${r.missing ? ` (${r.missing}개 데이터 부족)` : ''}`;
   });
+  // v4.04: 커버플로우도 동일 데이터로 재계산 (섹터 시계열 로드 후 포함)
+  try { const _d=document.getElementById('sfDiagram'); if(_d && _d.querySelector('.sfx') && typeof _sfxBuildData==='function'){ _sfxBuildData(); _d.innerHTML=_sfxShell(); _sfxBind(_d); _sfxLayout(); } } catch(e){}
 }
 
 function onLayerReturnPeriodChange() {
@@ -17120,6 +17122,7 @@ function setSfMobSort(s) {
 let _sfxIdx = 3, _sfxMetric = 'momentum', _sfxHero = 'donut';
 let _sfxLayers = [], _sfxNote = {};
 function _sfxAll(){ return [...SF_AI_CORE, ...SF_EXTERNAL]; }
+function _sfxEmj(g){ return (typeof g.key==='number') ? ((g.cells&&g.cells[0]&&g.cells[0].e)||'📊') : (g.num||'📊'); }
 function _sfxFmt(v, isSig){ if(v==null||!isFinite(v)) return '—'; return (v>=0?'+':'')+v.toFixed(1)+(isSig?'σ':'%'); }
 function _sfxHeat(v, lo, hi, isSig){ if(v==null||!isFinite(v)) return 'var(--bg-3)'; const up=v>=0; const m=Math.min(Math.abs(v)/(isSig?2.5:4.5),1); const a=(lo+(hi-lo)*m).toFixed(2); return up?('rgba(250,82,82,'+a+')'):('rgba(51,154,240,'+a+')'); }
 function _sfxCls(v){ return v==null?'':(v>=0?'sfx-up':'sfx-dn'); }
@@ -17162,7 +17165,7 @@ function _sfxDonut(L){
   let p='';
   L.keys.forEach((k,i)=>{ const d0=i*step+gap/2,d1=(i+1)*step-gap/2; const A=P(d0,R),B=P(d1,R),C=P(d1,ri),D=P(d0,ri); const lg=(d1-d0)>180?1:0; const sec=L.sa[k]; const v=sec?(_sfxMetric==='momentum'?sec.sigma:sec.change):null; p+='<path d="M'+A[0].toFixed(2)+' '+A[1].toFixed(2)+' A'+R+' '+R+' 0 '+lg+' 1 '+B[0].toFixed(2)+' '+B[1].toFixed(2)+' L'+C[0].toFixed(2)+' '+C[1].toFixed(2)+' A'+ri+' '+ri+' 0 '+lg+' 0 '+D[0].toFixed(2)+' '+D[1].toFixed(2)+' Z" fill="'+_sfxHeat(v,0.22,0.7,_sfxMetric==='momentum')+'" stroke="#1e1e1e" stroke-width="0.8"/>'; });
   const av=_sfxMetric==='momentum'?L.avgSig:L.avgChg;
-  return '<svg viewBox="0 0 100 100" class="sfx-donut">'+p+'<text x="50" y="46" text-anchor="middle" font-size="13">'+L.g.emj+'</text><text x="50" y="61" text-anchor="middle" font-size="11" font-weight="800" fill="'+(av>=0?'#ff6b6b':'#4dabf7')+'">'+_sfxFmt(av,_sfxMetric==='momentum')+'</text></svg>';
+  return '<svg viewBox="0 0 100 100" class="sfx-donut">'+p+'<text x="50" y="46" text-anchor="middle" font-size="13">'+_sfxEmj(L.g)+'</text><text x="50" y="61" text-anchor="middle" font-size="11" font-weight="800" fill="'+(av>=0?'#ff6b6b':'#4dabf7')+'">'+_sfxFmt(av,_sfxMetric==='momentum')+'</text></svg>';
 }
 function _sfxSpark(L){
   const sp=L.spark.slice().reverse();
@@ -17181,7 +17184,7 @@ function _sfxCardFull(L,i){
   const streak=L.streak>=3?('<span class="sfx-streak '+(L.dir>0?'sfx-up':'sfx-dn')+'">'+(L.dir>0?'▲':'▼')+' '+L.streak+'일 연속 · '+(L.cum>=0?'+':'')+L.cum.toFixed(1)+'σ</span>'):'';
   const chips=L.keys.map(k=>{ const sec=L.sa[k]; const v=sec?(isSig?sec.sigma:sec.change):null; const nm=k.replace(/^\S+\s/,''); return '<span class="sfx-chip" data-sec="'+escapeAttr(k)+'" style="background:'+_sfxHeat(v,0.10,0.32,isSig)+'"><span class="sfx-cn">'+escapeHtml(nm)+'</span><span class="sfx-cv '+_sfxCls(v)+'">'+_sfxFmt(v,isSig)+'</span></span>'; }).join('');
   const tks=L.tks.slice(0,8).map(tk=>'<span class="sfx-tk" data-tk="'+escapeAttr(tk)+'" title="'+escapeAttr(typeof displayName==='function'?displayName(tk):tk)+'">'+(typeof tickerLogoHtml==='function'?tickerLogoHtml(tk):'')+'</span>').join('');
-  return '<div class="sfx-head"><span class="sfx-emoji">'+L.g.emj+'</span><div class="sfx-htext"><div class="sfx-title">'+(L.g.num||'')+' '+escapeHtml(L.g.title)+'</div><div class="sfx-grp">'+grp+'</div></div>'+badge+'</div>'
+  return '<div class="sfx-head"><span class="sfx-emoji">'+_sfxEmj(L.g)+'</span><div class="sfx-htext"><div class="sfx-title">'+(L.g.num||'')+' '+escapeHtml(L.g.title)+'</div><div class="sfx-grp">'+grp+'</div></div>'+badge+'</div>'
     +'<div class="sfx-body"><div class="sfx-hero">'+hero+'</div><div class="sfx-stats"><div class="sfx-bigval '+_sfxCls(val)+'">'+_sfxFmt(val,isSig)+'</div>'+streak+'<div class="sfx-spark">'+_sfxSpark(L)+'</div></div></div>'
     +'<div class="sfx-pills2"><div class="sfx-st"><label>평균 등락률</label><b class="'+_sfxCls(L.ret)+'">'+_sfxFmt(L.ret,false)+'</b></div><div class="sfx-st"><label>비중</label><b>'+L.wPct.toFixed(0)+'%</b></div></div>'
     +(chips?'<div class="sfx-sectors">'+chips+'</div>':'')
@@ -17190,7 +17193,7 @@ function _sfxCardFull(L,i){
 function _sfxCardPrev(L,i){
   const isSig=_sfxMetric==='momentum'; const val=isSig?L.avgSig:L.avgChg;
   const dot=_sfxNote[i]?'<span class="sfx-pdot" title="'+escapeAttr(_sfxNote[i])+'"></span>':'';
-  return '<div class="sfx-prevbox"><span class="sfx-pemoji">'+L.g.emj+'</span><div class="sfx-pname">'+escapeHtml(L.g.title)+'</div><div class="sfx-pval '+_sfxCls(val)+'">'+_sfxFmt(val,isSig)+'</div>'+dot+'</div>';
+  return '<div class="sfx-prevbox"><span class="sfx-pemoji">'+_sfxEmj(L.g)+'</span><div class="sfx-pname">'+escapeHtml(L.g.title)+'</div><div class="sfx-pval '+_sfxCls(val)+'">'+_sfxFmt(val,isSig)+'</div>'+dot+'</div>';
 }
 function _sfxShell(){
   let cards='';
