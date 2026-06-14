@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.00';
+window.AQ_PWA_VERSION = '4.01';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2380,6 +2380,57 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .feed-stat i { font-style: normal; font-size: 13px; font-weight: 600; color: var(--text, #d4d4d4); }
 .feed-act.on .fi { fill: #fa5252; stroke: #fa5252; }
 .feed-dm { margin-left: auto; cursor: pointer; }
+/* ===== v4.01: PC 섹터 FRAME — 가치사슬 관제 콘솔 (PC 전용; 모바일은 #sfMobile) ===== */
+.sfc-console { display: none; }
+@media (min-width: 641px) {
+  #sfDiagram .sfc-console { display: grid; grid-template-columns: 1fr 280px; grid-template-areas: "tool tool" "stage inspect"; gap: 18px 20px; align-items: start; }
+  .sfc-toolbar { grid-area: tool; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .sfc-dir { display: flex; gap: 18px; font-size: 11px; color: var(--text-mute); letter-spacing: 0.04em; }
+  .sfc-dir-r { color: var(--text-dim); }
+  .sfc-metric { display: inline-flex; gap: 4px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 9px; padding: 3px; }
+  .sfc-mbtn { background: transparent; border: none; color: var(--text-dim); font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+  .sfc-mbtn.active { background: var(--accent); color: #fff; }
+  .sfc-stage { grid-area: stage; min-width: 0; }
+  .sfc-chain { display: flex; align-items: stretch; gap: 0; overflow-x: auto; padding-bottom: 6px; }
+  .sfc-col { flex: 1 1 0; min-width: 96px; background: var(--bg-2); border: 1px solid var(--border); border-top: 2px solid rgba(var(--c-rgb), 0.9); border-radius: 12px; padding: 11px 9px; display: flex; flex-direction: column; gap: 9px; }
+  .sfc-col-head { display: flex; flex-direction: column; gap: 3px; }
+  .sfc-col-title b { font-size: 13px; color: var(--text-hi); }
+  .sfc-col-role { font-size: 9.5px; color: var(--text-mute); line-height: 1.3; min-height: 26px; }
+  .sfc-col-stat { display: flex; align-items: center; gap: 5px; font-size: 10px; }
+  .sfc-ret { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .sfc-ret.up { color: #fa5252; } .sfc-ret.down { color: #339af0; } .sfc-ret.neutral { color: var(--text-mute); }
+  .sfc-wbar { flex: 1; height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; }
+  .sfc-wbar i { display: block; height: 100%; background: rgba(var(--c-rgb), 0.85); }
+  .sfc-wpct { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+  .sfc-tiles { display: flex; flex-direction: column; gap: 5px; }
+  .sfc-tile { display: flex; align-items: center; gap: 6px; padding: 7px 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease; }
+  .sfc-tile:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.35); border-color: rgba(255,255,255,0.20); }
+  .sfc-tile-emoji { font-size: 15px; line-height: 1; }
+  .sfc-tile-name { font-size: 11px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sfc-flow { flex: 0 0 20px; align-self: stretch; margin-top: 48px; height: 2px; background: linear-gradient(90deg, transparent, rgba(92,124,250,0.55), transparent); background-size: 200% 100%; animation: sfcFlow 2.2s linear infinite; }
+  @keyframes sfcFlow { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .sfc-col.sfc-heart { border: 1px solid rgba(var(--c-rgb), 0.65); box-shadow: 0 0 0 1px rgba(var(--c-rgb),0.30), 0 0 30px rgba(var(--c-rgb),0.30); background: linear-gradient(180deg, rgba(var(--c-rgb),0.16), var(--bg-2)); }
+  .sfc-col.sfc-heart .sfc-col-title b::after { content: ' \2605'; color: rgba(var(--c-rgb),1); }
+  .sfc-ext-wrap { margin-top: 16px; }
+  .sfc-ext-label { font-size: 11px; color: var(--text-mute); margin-bottom: 8px; }
+  .sfc-ext { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .sfc-ext .sfc-col { border-top-color: rgba(var(--c-rgb), 0.6); }
+  .sfc-inspect { grid-area: inspect; position: sticky; top: 12px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; min-height: 240px; }
+  .sfc-insp-empty { color: var(--text-mute); font-size: 12px; line-height: 1.6; text-align: center; padding: 44px 8px; }
+  .sfc-insp-head { display: flex; align-items: center; gap: 8px; font-size: 16px; color: var(--text-hi); font-weight: 700; }
+  .sfc-insp-emoji { font-size: 22px; }
+  .sfc-insp-layer { font-size: 10.5px; color: var(--text-mute); margin: 6px 0 10px; }
+  .sfc-insp-def { font-size: 12px; color: var(--text-dim); line-height: 1.5; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .sfc-insp-metrics { display: flex; gap: 22px; padding: 12px 0; }
+  .sfc-insp-metrics div { display: flex; flex-direction: column; gap: 3px; }
+  .sfc-insp-metrics label { font-size: 9.5px; color: var(--text-mute); }
+  .sfc-insp-metrics span { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .sfc-insp-metrics .up { color: #fa5252; } .sfc-insp-metrics .down { color: #339af0; }
+  .sfc-insp-chips-label { font-size: 9.5px; color: var(--text-mute); margin-bottom: 6px; }
+  .sfc-insp-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .sfc-chip { font-size: 10px; padding: 3px 8px; background: var(--bg-3); border-radius: 6px; color: var(--text-dim); }
+  .sfc-insp-open { margin-top: 14px; width: 100%; padding: 9px; background: var(--accent); color: #fff; border: none; border-radius: 9px; font-size: 12px; font-weight: 700; cursor: pointer; }
+}
 .feed-cap-name { font-weight: 800; color: var(--text-hi, #fff); margin-right: 5px; }
 .feed-caption { padding: 6px 12px 0; font-size: 12.5px; line-height: 1.5; color: var(--text, #d4d4d4); white-space: pre-wrap; word-break: break-word; }
 .feed-tags { padding: 4px 12px 0; font-size: 12px; line-height: 1.5; color: var(--accent, #569cd6); word-break: break-word; white-space: pre-wrap; }
@@ -16598,6 +16649,7 @@ function onLayerReturnPeriodChange() {
   lsSet(LS.LAYER_RETURN_PERIOD, sel.value);
   refreshLayerReturns();
   if (typeof _refreshSFMobile === 'function') _refreshSFMobile();
+  try { const _dg = document.getElementById('sfDiagram'); if (_dg && typeof _renderSFConsole === 'function') { _dg.innerHTML = _renderSFConsole(); _sfcBind(_dg); } } catch (e) {}
 }
 window.onLayerReturnPeriodChange = onLayerReturnPeriodChange;
 
@@ -17059,31 +17111,106 @@ function setSfMobSort(s) {
   if (mob) mob.querySelectorAll('.sfm2-sort-btn').forEach(b => b.classList.toggle('on', b.dataset.sort === s));
   _refreshSFMobile();
 }
+// ===== v4.01: PC 섹터 FRAME — 가치사슬 관제 콘솔 =====
+let _sfcMetric = 'momentum';   // 'momentum'(σ) | 'change'(오늘 %)
+let _sfcSA = {};
+function _sfcHeat(v, metric) {
+  if (v == null || !isFinite(v)) return 'var(--bg-3)';
+  const up = v >= 0;
+  const mag = metric === 'momentum' ? Math.min(Math.abs(v) / 2.5, 1) : Math.min(Math.abs(v) / 5, 1);
+  const a = (0.10 + 0.55 * mag).toFixed(2);
+  return up ? 'rgba(250,82,82,' + a + ')' : 'rgba(51,154,240,' + a + ')';
+}
+function _sfcCellMap() {
+  const m = {};
+  [...SF_AI_CORE, ...SF_EXTERNAL].forEach(g => g.cells.forEach(c => { m[(c.e + ' ' + (c.nLong || c.n))] = { c, g }; }));
+  return m;
+}
+function _sfcLayerCol(g, ctx) {
+  const lrv = ctx.lr[g.key] && ctx.lr[g.key].avg;
+  const retStr = (lrv == null) ? '—' : (lrv >= 0 ? '+' : '') + lrv.toFixed(1) + '%';
+  const retCls = lrv == null ? 'neutral' : (lrv >= 0 ? 'up' : 'down');
+  const wCost = (ctx.lw.byLayer && ctx.lw.byLayer[g.key]) || 0;
+  const wPct = ctx.lw.total > 0 ? (wCost / ctx.lw.total * 100) : 0;
+  const role = (typeof _SF_ROLE !== 'undefined' && _SF_ROLE[g.key]) || '';
+  const tiles = g.cells.map(c => {
+    const key = c.e + ' ' + (c.nLong || c.n);
+    const d = ctx.sa[key];
+    const v = d ? (ctx.metric === 'momentum' ? d.sigma : d.change) : null;
+    return '<div class="sfc-tile" data-sector-key="' + escapeAttr(key) + '" style="background:' + _sfcHeat(v, ctx.metric) + ';">' +
+      '<span class="sfc-tile-emoji">' + c.e + '</span><span class="sfc-tile-name">' + escapeHtml(c.n) + '</span></div>';
+  }).join('');
+  const heart = g.center ? ' sfc-heart' : '';
+  return '<div class="sfc-col' + heart + '" style="--c-rgb:' + g.rgb + ';">' +
+    '<div class="sfc-col-head"><div class="sfc-col-title"><b>' + (g.num || '') + ' ' + escapeHtml(g.title) + '</b></div>' +
+    '<div class="sfc-col-role">' + escapeHtml(role) + '</div>' +
+    '<div class="sfc-col-stat"><span class="sfc-ret ' + retCls + '">' + retStr + '</span>' +
+    '<span class="sfc-wbar"><i style="width:' + Math.min(wPct, 100).toFixed(0) + '%"></i></span>' +
+    '<span class="sfc-wpct">' + wPct.toFixed(0) + '%</span></div></div>' +
+    '<div class="sfc-tiles">' + tiles + '</div></div>';
+}
+function _renderSFConsole() {
+  _sfcSA = (typeof computeSectorAnalysis === 'function') ? (computeSectorAnalysis() || {}) : {};
+  const selp = document.getElementById('layerReturnPeriod');
+  const period = selp ? (parseInt(selp.value, 10) || 20) : 20;
+  const lr = (typeof computeLayerReturns === 'function') ? computeLayerReturns(period) : {};
+  const lw = (typeof computeLayerWeights === 'function') ? computeLayerWeights() : { byLayer: {}, total: 0 };
+  const ctx = { sa: _sfcSA, lr, lw, metric: _sfcMetric };
+  let core = '';
+  SF_AI_CORE.forEach((g, i) => { if (i > 0) core += '<div class="sfc-flow" aria-hidden="true"></div>'; core += _sfcLayerCol(g, ctx); });
+  let ext = '';
+  SF_EXTERNAL.forEach(g => { ext += _sfcLayerCol(g, ctx); });
+  return '<div class="sfc-console">' +
+    '<div class="sfc-toolbar"><div class="sfc-dir"><span>← 인프라·펀더멘털</span><span class="sfc-dir-r">최종 고객향 →</span></div>' +
+    '<div class="sfc-metric"><button class="sfc-mbtn' + (_sfcMetric === 'momentum' ? ' active' : '') + '" onclick="_sfcSetMetric(\'momentum\')">모멘텀 σ</button>' +
+    '<button class="sfc-mbtn' + (_sfcMetric === 'change' ? ' active' : '') + '" onclick="_sfcSetMetric(\'change\')">오늘 등락</button></div></div>' +
+    '<div class="sfc-stage"><div class="sfc-chain">' + core + '</div>' +
+    '<div class="sfc-ext-wrap"><div class="sfc-ext-label">🌐 AI 수혜 5계층</div><div class="sfc-ext">' + ext + '</div></div></div>' +
+    '<aside class="sfc-inspect" id="sfcInspect"><div class="sfc-insp-empty">섹터에 마우스를 올리거나 클릭하면<br>상세가 여기에 표시돼요.</div></aside>' +
+    '</div>';
+}
+function _sfcSetMetric(m) {
+  _sfcMetric = m;
+  const diag = document.getElementById('sfDiagram');
+  if (diag) { diag.innerHTML = _renderSFConsole(); _sfcBind(diag); }
+}
+window._sfcSetMetric = _sfcSetMetric;
+function _sfcInspect(key) {
+  const box = document.getElementById('sfcInspect'); if (!box) return;
+  const entry = _sfcCellMap()[key]; if (!entry) return;
+  const c = entry.c, g = entry.g, d = _sfcSA[key];
+  const chg = d && isFinite(d.change) ? (d.change >= 0 ? '+' : '') + d.change.toFixed(2) + '%' : '—';
+  const sig = d && isFinite(d.sigma) ? (d.sigma >= 0 ? '+' : '') + d.sigma.toFixed(1) + 'σ' : '—';
+  const cls = d && d.change >= 0 ? 'up' : 'down';
+  let chips = '';
+  try {
+    const tsm = _state.tickerSectorMap || {};
+    const tks = Object.keys(tsm).filter(t => tsm[t] === key).slice(0, 10);
+    chips = tks.map(t => '<span class="sfc-chip">' + escapeHtml(typeof displayName === 'function' ? displayName(t) : t) + '</span>').join('');
+  } catch (e) {}
+  box.innerHTML = '<div class="sfc-insp-head"><span class="sfc-insp-emoji">' + c.e + '</span><span>' + escapeHtml(c.nLong || c.n) + '</span></div>' +
+    '<div class="sfc-insp-layer">' + (g.num || '') + ' ' + escapeHtml(g.title) + ' · ' + escapeHtml((typeof _SF_ROLE !== 'undefined' && _SF_ROLE[g.key]) || '') + '</div>' +
+    '<div class="sfc-insp-def">' + escapeHtml(c.def || '') + '</div>' +
+    '<div class="sfc-insp-metrics"><div><label>오늘 등락</label><span class="' + cls + '">' + chg + '</span></div><div><label>모멘텀</label><span class="' + cls + '">' + sig + '</span></div></div>' +
+    (chips ? '<div class="sfc-insp-chips-label">구성 종목</div><div class="sfc-insp-chips">' + chips + '</div>' : '') +
+    '<button class="sfc-insp-open" onclick="openSectorModal(\'' + escapeAttr(key) + '\')">상세 모달 열기 →</button>';
+}
+window._sfcInspect = _sfcInspect;
+function _sfcBind(diag) {
+  if (diag._sfcBound) return;
+  diag.addEventListener('mouseover', (e) => { const t = e.target.closest('.sfc-tile'); if (t) _sfcInspect(t.getAttribute('data-sector-key')); });
+  diag.addEventListener('click', (e) => { const t = e.target.closest('.sfc-tile'); if (t) { const k = t.getAttribute('data-sector-key'); if (k && typeof openSectorModal === 'function') openSectorModal(k); } });
+  diag._sfcBound = true;
+}
+window._sfcBind = _sfcBind;
+
 function renderSectorFramework() {
   const diag = $('sfDiagram');
   if (!diag) return;
 
-  // 1) 방향 라벨
-  let html = `<div class="sf-dir-row">
-    <span class="sf-dir-left">← 인프라·펀더멘털</span>
-    <span class="sf-dir-right">최종고객향 →</span>
-  </div>`;
-
-  // 2) AI Core 7 layers — 번호 표시
-  html += '<div class="sf-core">';
-  SF_AI_CORE.forEach((g, i) => {
-    if (i > 0) html += '<div class="sf-arrow">→</div>';
-    html += _renderSFLayer(g, { showNum: true });
-  });
-  html += '</div>';
-
-  // 3) External 5 layers — 계층명 이모지 숨김
-  html += '<div class="sf-external-header">🌐 외부 5계층 (보조 영역 · 좌우 방향성 없음)</div>';
-  html += '<div class="sf-external">';
-  SF_EXTERNAL.forEach(g => { html += _renderSFLayer(g, { showNum: false }); });
-  html += '</div>';
-
-  diag.innerHTML = html;
+  // v4.01: PC = 가치사슬 관제 콘솔 (모바일은 아래 #sfMobile 그대로)
+  diag.innerHTML = _renderSFConsole();
+  _sfcBind(diag);
 
   // v3.76: 모바일 전용 타임라인/타일 컨테이너 (데스크탑은 CSS로 숨김) — 같은 data-layer-key/sector-key 재사용
   let mob = document.getElementById('sfMobile');
