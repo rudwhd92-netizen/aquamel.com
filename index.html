@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.97';
+window.AQ_PWA_VERSION = '3.98';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2791,12 +2791,12 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
 
 /* 사이드 패널 안 카드 — mobile-only 강제 표시 */
 .pc-side-panel section.card { margin-bottom: 14px; }
-/* v3.96: PC 탐색 — 서브탭바 아래 간격 확대(#6) + 분석보고서 서브탭은 PC에선 숨김(분석 탭이 담당)(#3) */
+/* v3.96: PC 탐색 — 서브탭바 아래 간격 확대(#6) */
 .pc-side-panel section.card.explore-subtabs { margin-bottom: 26px; }
-.pc-side-panel .xtab-btn[data-xtab="report"] { display: none; }
 .pc-side-panel section.card.mobile-only { display: block !important; }
 /* v3.14: PC 탐색 서브탭 — 활성 서브탭 카드만 */
 .pc-side-panel section.card[data-xtab] { display: none !important; }
+body[data-xtab="report"]   .pc-side-panel section.card[data-xtab="report"],
 body[data-xtab="signals"]  .pc-side-panel section.card[data-xtab="signals"],
 body[data-xtab="insider"]  .pc-side-panel section.card[data-xtab="insider"],
 body[data-xtab="shorting"] .pc-side-panel section.card[data-xtab="shorting"],
@@ -20959,7 +20959,10 @@ function setPCTab(tab) {
   } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis' || tab === 'todo' || tab === 'watch') {
     // v2.03: analysis도 사이드 패널 (탐색과 동일 UI/UX). v2.90: todo. v2.92: watch.
     togglePCPanel(tab);
-    if (tab === 'analysis') buildAnalysisGrid();
+    if (tab === 'analysis') {
+      try { const _ac = document.getElementById('analysisCard'), _an = document.getElementById('pcPanelAnalysis'); if (_ac && _an && _ac.parentElement !== _an) { _an.appendChild(_ac); _ac.style.display = ''; } } catch (e) {}
+      buildAnalysisGrid();
+    }
     if (tab === 'todo') { try { if (typeof buildTodoKanban === 'function') buildTodoKanban(); } catch (e) {} }
     if (tab === 'watch') { try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {} }
   }
@@ -21033,7 +21036,15 @@ function setExploreSubtab(x) {
     if (x === 'signals' && typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
     else if (x === 'insider') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('foreign'); } else if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); }
     else if (x === 'shorting') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('inst'); } else if (typeof buildShortingList === 'function') buildShortingList(); }
-    else if (x === 'report' && typeof buildAnalysisGrid === 'function') buildAnalysisGrid();
+    else if (x === 'report') {
+      try {
+        if (typeof isPCViewport === 'function' && isPCViewport()) {
+          const _ac = document.getElementById('analysisCard'), _ep = document.getElementById('pcPanelExplore');
+          if (_ac && _ep && _ac.parentElement !== _ep) { _ep.appendChild(_ac); _ac.style.display = ''; }
+        }
+      } catch (e) {}
+      try { if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+    }
   } catch (e) {}
 }
 window.setExploreSubtab = setExploreSubtab;
