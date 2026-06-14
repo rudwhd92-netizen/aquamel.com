@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.07';
+window.AQ_PWA_VERSION = '4.08';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2384,6 +2384,8 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .sfx{ display:none; }
 @media (min-width:641px){
  #sfDiagram .sfx{ display:block; }
+ #sfDiagram{ min-width:0 !important; }
+ #sectorFrameworkCard .sf-diagram-scroll{ overflow-x:visible; }
  .sfx-toolbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
  .sfx-tt{ font-size:13px; font-weight:800; color:var(--text-hi); letter-spacing:-.01em; }
  .sfx-ctl{ display:flex; gap:8px; }
@@ -2435,7 +2437,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
  .sfx-pemoji{ font-size:30px; } .sfx-pname{ font-size:13px; font-weight:700; color:var(--text-dim); } .sfx-pval{ font-size:13px; font-weight:800; font-variant-numeric:tabular-nums; }
  .sfx-pdot{ position:absolute; top:-6px; right:-12px; width:8px; height:8px; border-radius:50%; background:var(--string); box-shadow:0 0 0 3px rgba(206,145,120,.25); }
  .sfx-spine{ display:flex; gap:6px; margin-top:14px; padding-top:12px; border-top:1px solid #383840; }
- .sfx-tick{ flex:1; background:transparent; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; padding:2px 0; opacity:.55; transition:.15s; }
+ .sfx-tick{ flex:1; min-width:0; overflow:hidden; background:transparent; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; padding:2px 0; opacity:.55; transition:.15s; }
  .sfx-tick:hover{ opacity:1; } .sfx-tick.on{ opacity:1; }
  .sfx-tk-bar{ width:100%; height:6px; border-radius:3px; }
  .sfx-tick.on .sfx-tk-bar{ height:9px; }
