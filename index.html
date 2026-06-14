@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.06';
+window.AQ_PWA_VERSION = '4.07';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2391,7 +2391,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
  .sfx-pill{ background:transparent; border:none; color:var(--text-dim); font:600 11.5px Pretendard; padding:5px 11px; border-radius:6px; cursor:pointer; }
  .sfx-pill.on{ background:var(--accent); color:#fff; }
  .sfx-stage{ position:relative; height:444px; overflow:hidden; }
- .sfx-card{ position:absolute; left:50%; top:6px; width:min(448px,72%); background:linear-gradient(180deg,#26262a,#202024); border:1px solid #3e3e46; border-radius:16px; padding:14px 16px; overflow:hidden; transition:transform .34s cubic-bezier(.22,.61,.36,1), opacity .3s; }
+ .sfx-card{ position:absolute; left:50%; top:6px; width:clamp(240px,58%,448px); background:linear-gradient(180deg,#26262a,#202024); border:1px solid #3e3e46; border-radius:16px; padding:14px 16px; overflow:hidden; transition:transform .34s cubic-bezier(.22,.61,.36,1), opacity .3s; }
  .sfx-card:not(.focus){ filter:blur(2.4px); }
  .sfx-card:not(.focus) *{ pointer-events:none; }
  .sfx-card.focus{ box-shadow:0 18px 50px rgba(0,0,0,.55); border-color:#4a4a54; }
@@ -2945,6 +2945,31 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-pc-page="schedule"] #scheduleCard { display: block !important; }
   body[data-pc-page="schedule"] #majorEventsCard { display: block !important; }
 }
+
+/* ===== v4.07: 태블릿(641~1024px) 최적화 ===== */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* ② 사이드 패널 열림 → 뒷배경 블러 (패널/사이드바는 위에 선명) */
+  body[data-pc-panel="discover"] #pcPanelBackdrop,
+  body[data-pc-panel="explore"] #pcPanelBackdrop,
+  body[data-pc-panel="analysis"] #pcPanelBackdrop,
+  body[data-pc-panel="todo"] #pcPanelBackdrop,
+  body[data-pc-panel="watch"] #pcPanelBackdrop { display: block; }
+
+  /* ③ 패널 열려 있어도 종목 모달은 전체폭 (좁힘 무효화) + 배경 전체 블러 */
+  body[data-pc-panel="discover"] .modal-overlay,
+  body[data-pc-panel="explore"] .modal-overlay,
+  body[data-pc-panel="analysis"] .modal-overlay,
+  body[data-pc-panel="todo"] .modal-overlay,
+  body[data-pc-panel="watch"] .modal-overlay { width: 100vw; }
+  .modal-overlay { background: rgba(0,0,0,0.55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+
+  /* ④ 대시보드 — 좁은 폭에서 단일 컬럼 (우측 텍스트 잘림 방지) */
+  .dash-top-section { grid-template-columns: 1fr; }
+  .dash-top-row { grid-template-columns: 1fr; }
+  .dash-bottom-section { grid-template-columns: 1fr; }
+}
+/* ② 패널 백드롭 (기본 숨김 — 위 태블릿 미디어쿼리에서만 노출) */
+#pcPanelBackdrop { display: none; position: fixed; inset: 0; z-index: 78; background: rgba(0,0,0,0.4); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
 
 /* v2.46: MO 일정 탭 — scheduleCard만 표시 */
 @media (max-width: 640px) {
@@ -8112,6 +8137,7 @@ table.combo-eval tbody td .nodata {
 </div>
 
 <!-- v1.57 PC 사이드 패널 — 발견/탐색 클릭 시 표시 (모바일에선 display:none) -->
+<div id="pcPanelBackdrop" onclick="document.body.removeAttribute('data-pc-panel');try{updatePCSidebarActive();}catch(e){}"></div>
 <aside class="pc-side-panel" id="pcSidePanel" aria-label="PC 사이드 패널">
   <div class="pc-panel-content" id="pcPanelDiscover" data-pc-tab="discover">
     <!-- buyPointsCard + archiveMobileCard 가 JS로 여기로 이동 -->
@@ -17218,16 +17244,17 @@ function _sfxShell(){
 function _sfxLayout(){
   const diag=document.getElementById('sfDiagram'); if(!diag) return;
   diag.querySelectorAll('.sfx-pill').forEach((b,bi)=>{ b.classList.toggle('on',(bi===0)===(_sfxMetric==='momentum')); });
+  const stg=diag.querySelector('.sfx-stage'); const sw=stg?stg.offsetWidth:900; const narrow=sw<720; const maxoff=narrow?1:2;
   diag.querySelectorAll('.sfx-card').forEach(card=>{ const i=+card.dataset.i; const o=i-_sfxIdx, ao=Math.abs(o);
     let ox=0,ty=0,sc=1,z=20,op=1;
     if(ao===0){ox=0;ty=0;sc=1;z=20;op=1;}
-    else if(ao===1){ox=o>0?60:-60;ty=-3;sc=.84;z=14;op=.7;}
-    else if(ao===2){ox=o>0?108:-108;ty=-1;sc=.68;z=10;op=.4;}
+    else if(ao===1){ox=o>0?(narrow?50:60):(narrow?-50:-60);ty=-3;sc=narrow?.8:.84;z=14;op=narrow?.5:.7;}
+    else if(ao===2 && !narrow){ox=o>0?108:-108;ty=-1;sc=.68;z=10;op=.4;}
     else {ox=o>0?150:-150;ty=0;sc=.6;z=5;op=0;}
     card.style.transform='translate(-50%,'+ty+'%) translateX('+ox+'%) scale('+sc+')';
     card.style.zIndex=z; card.style.opacity=op; card.style.pointerEvents=op>0?'auto':'none';
     card.classList.toggle('focus',ao===0);
-    card.innerHTML = ao<=2 ? _sfxCardFull(_sfxLayers[i],i) : '';
+    card.innerHTML = ao<=maxoff ? _sfxCardFull(_sfxLayers[i],i) : '';
   });
   diag.querySelectorAll('.sfx-tick').forEach(t=>{ t.classList.toggle('on',+t.dataset.i===_sfxIdx); });
 }
@@ -17253,6 +17280,7 @@ function _sfxBind(diag){
   let sx=null;
   diag.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; },{passive:true});
   diag.addEventListener('touchend',e=>{ if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40) _sfxGo(dx<0?1:-1); sx=null; },{passive:true});
+  let _sfxRz; window.addEventListener('resize',()=>{ clearTimeout(_sfxRz); _sfxRz=setTimeout(()=>{ const d=document.getElementById('sfDiagram'); if(d&&d.querySelector('.sfx')&&typeof _sfxLayout==='function') _sfxLayout(); },150); });
   diag._sfxBound=true;
 }
 window._sfxBind=_sfxBind;
