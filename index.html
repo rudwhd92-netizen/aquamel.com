@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.98';
+window.AQ_PWA_VERSION = '3.99';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2315,6 +2315,11 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 /* v3.46: 모달 차트 헥사곤도 피드처럼 동적 코너 (상승=좌상단 / 하락=우상단) */
 .chart-wrap .hex-overlay.hex-left  { top: 6px; left: 6px; right: auto; }
 .chart-wrap .hex-overlay.hex-right { top: 6px; right: 6px; left: auto; }
+/* v3.99: PC 모달 헥사곤도 추세 따라 동적 코너 — PC 좌표(top:54px) */
+@media (min-width: 641px) {
+  .chart-wrap .hex-overlay.hex-left  { top: 54px; left: 14px; right: auto; }
+  .chart-wrap .hex-overlay.hex-right { top: 54px; right: 14px; left: auto; }
+}
 /* v3.46: 모달 접이식 섹션 (시그널 필터 / 시그널 이력) — 기본 접힘 */
 .aq-coll-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; user-select: none; }
 .aq-coll-caret { color: var(--text-mute); font-size: 11px; transition: transform 0.2s var(--ease-out); flex-shrink: 0; }
@@ -2743,7 +2748,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .pc-sidebar .pc-tab-btn.active .pc-tab-label { font-weight: 700; }
 
 /* v2.59: PC 사이드바 — 설정 버튼은 맨 아래로 밀기 (flex auto) */
-.pc-sidebar .pc-tab-btn[data-pc-tab="settings"] { margin-top: auto; }
+.pc-sidebar .pc-tab-btn[data-pc-tab="my"] { margin-top: auto; }
 .pc-sidebar .pc-sidebar-divider.bottom { margin-top: auto; margin-bottom: 6px; }
 
 /* v2.59: MO drawer 분리선 (마이 ↔ 설정 사이) */
@@ -2792,7 +2797,7 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
 /* 사이드 패널 안 카드 — mobile-only 강제 표시 */
 .pc-side-panel section.card { margin-bottom: 14px; }
 /* v3.96: PC 탐색 — 서브탭바 아래 간격 확대(#6) */
-.pc-side-panel section.card.explore-subtabs { margin-bottom: 26px; }
+.pc-side-panel section.card.explore-subtabs { margin-bottom: 40px; }
 .pc-side-panel section.card.mobile-only { display: block !important; }
 /* v3.14: PC 탐색 서브탭 — 활성 서브탭 카드만 */
 .pc-side-panel section.card[data-xtab] { display: none !important; }
@@ -8073,12 +8078,8 @@ table.combo-eval tbody td .nodata {
     <span class="pc-tab-label">일정</span>
   </button>
   <button class="pc-tab-btn" data-pc-tab="board" onclick="setPCTab('board')" aria-label="보드">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v9h9"/></svg>
     <span class="pc-tab-label">보드</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="로그">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
-    <span class="pc-tab-label">로그</span>
   </button>
 
   <!-- v2.44: 영역 구분선 -->
@@ -8107,6 +8108,11 @@ table.combo-eval tbody td .nodata {
     <span class="pc-tab-label">To-Do</span>
   </button>
 
+  <!-- v3.99: 로그 — 설정 바로 위 (하단 그룹) -->
+  <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="로그">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+    <span class="pc-tab-label">로그</span>
+  </button>
   <!-- v2.59: 설정 — 사이드바 맨 아래 (margin-top: auto) -->
   <button class="pc-tab-btn" data-pc-tab="settings" onclick="setPCTab('settings')" aria-label="설정">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -18434,6 +18440,7 @@ async function openChart(ticker) {
       insiderMarkers,  // v2.64: 내부자 거래 마커
       retailN, foreignN, instN,   // v1.89: KR 모드면 값 있음, 아니면 null
     });
+    try { if (typeof aqSetModalHexCorner === 'function') aqSetModalHexCorner(ticker, { closes }); } catch (e) {}
   }
 
   $('chartModal').classList.add('active');
