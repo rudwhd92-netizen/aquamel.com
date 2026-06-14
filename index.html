@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.08';
+window.AQ_PWA_VERSION = '4.09';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2964,11 +2964,6 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-pc-panel="todo"] .modal-overlay,
   body[data-pc-panel="watch"] .modal-overlay { width: 100vw; }
   .modal-overlay { background: rgba(0,0,0,0.55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-
-  /* ④ 대시보드 — 좁은 폭에서 단일 컬럼 (우측 텍스트 잘림 방지) */
-  .dash-top-section { grid-template-columns: 1fr; }
-  .dash-top-row { grid-template-columns: 1fr; }
-  .dash-bottom-section { grid-template-columns: 1fr; }
 }
 /* ② 패널 백드롭 (기본 숨김 — 위 태블릿 미디어쿼리에서만 노출) */
 #pcPanelBackdrop { display: none; position: fixed; inset: 0; z-index: 78; background: rgba(0,0,0,0.4); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
@@ -4625,6 +4620,11 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   .dash-kpi-total { min-height: auto; }
   .dash-side-stack { flex-direction: column; }
   .dash-side-stack .dash-mini { min-height: auto; }
+}
+/* v4.09: 태블릿 — 주식 포트폴리오(도넛)를 KPI 아래로 줄바꿈 (우측 잘림 방지). #dashboardCard로 특이도 ↑ */
+@media (min-width: 641px) and (max-width: 1200px) {
+  #dashboardCard .dash-top-section { grid-template-columns: 1fr; }
+  #dashboardCard .dash-bottom-section { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .dash-card { padding: 12px; }
