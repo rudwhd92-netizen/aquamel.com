@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.95';
+window.AQ_PWA_VERSION = '3.97';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2769,7 +2769,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
   z-index: 80;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 18px 16px 32px;
+  padding: 56px 16px 32px;
   box-sizing: border-box;
   /* 디폴트: 화면 우측 밖으로 숨겨둠 (사이드바 폭 + 자기 폭만큼 우측으로) */
   transform: translateX(calc(100% + 64px));
@@ -2791,6 +2791,9 @@ body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
 
 /* 사이드 패널 안 카드 — mobile-only 강제 표시 */
 .pc-side-panel section.card { margin-bottom: 14px; }
+/* v3.96: PC 탐색 — 서브탭바 아래 간격 확대(#6) + 분석보고서 서브탭은 PC에선 숨김(분석 탭이 담당)(#3) */
+.pc-side-panel section.card.explore-subtabs { margin-bottom: 26px; }
+.pc-side-panel .xtab-btn[data-xtab="report"] { display: none; }
 .pc-side-panel section.card.mobile-only { display: block !important; }
 /* v3.14: PC 탐색 서브탭 — 활성 서브탭 카드만 */
 .pc-side-panel section.card[data-xtab] { display: none !important; }
@@ -7598,6 +7601,32 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+
+  <!-- ============ ARCHIVE TABLE ============ -->
+  <section class="card" id="archiveCard" data-mtab="discover" style="display:none;">
+    <div class="card-header" onclick="toggleCard(this)">
+      <h2>V-Shape Archive — 누적 신호</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="subtitle">티커 클릭 → 차트 모달 · 헤더 클릭 → 정렬</p>
+      <div id="archiveTableArea"></div>
+    </div>
+  </section>
+
+  <!-- ============ v1.44 MOBILE-ONLY: 누적 신호 모바일 리스트 ============ -->
+  <section class="card mobile-only" id="archiveMobileCard" data-mtab="explore" data-xtab="signals">
+    <div class="card-header">
+      <h2>누적 시그널</h2>
+    </div>
+    <div class="card-body">
+      <div class="archive-mobile-list" id="archiveMobileList">
+        <div class="buy-points-empty">로딩 중…</div>
+      </div>
+      <button class="archive-mobile-more" id="archiveMobileMore" onclick="loadMoreArchiveMobile()" style="display:none;">더 보기</button>
+    </div>
+  </section>
+
   <!-- ============ SIGNAL FILTER & 평가 ============ -->
   <section class="card" id="filterCard" data-mtab="explore" data-xtab="signals" style="display:none;">
     <div class="card-header" onclick="toggleCard(this)">
@@ -7629,31 +7658,6 @@ table.combo-eval tbody td .nodata {
 
       <!-- BOTTOM: Signal Type 필터 (V/Tree × Core/Sub) -->
       <div class="signal-filter-area" id="signalFilterArea"></div>
-    </div>
-  </section>
-
-  <!-- ============ ARCHIVE TABLE ============ -->
-  <section class="card" id="archiveCard" data-mtab="discover" style="display:none;">
-    <div class="card-header" onclick="toggleCard(this)">
-      <h2>V-Shape Archive — 누적 신호</h2>
-      <span class="toggle-icon">▼</span>
-    </div>
-    <div class="card-body">
-      <p class="subtitle">티커 클릭 → 차트 모달 · 헤더 클릭 → 정렬</p>
-      <div id="archiveTableArea"></div>
-    </div>
-  </section>
-
-  <!-- ============ v1.44 MOBILE-ONLY: 누적 신호 모바일 리스트 ============ -->
-  <section class="card mobile-only" id="archiveMobileCard" data-mtab="explore" data-xtab="signals">
-    <div class="card-header">
-      <h2>누적 시그널</h2>
-    </div>
-    <div class="card-body">
-      <div class="archive-mobile-list" id="archiveMobileList">
-        <div class="buy-points-empty">로딩 중…</div>
-      </div>
-      <button class="archive-mobile-more" id="archiveMobileMore" onclick="loadMoreArchiveMobile()" style="display:none;">더 보기</button>
     </div>
   </section>
 
@@ -7843,7 +7847,7 @@ table.combo-eval tbody td .nodata {
         <span>To-Do</span>
       </button>
       <button class="mo-drawer-item" onclick="moDrawerNav('my')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
         <span>로그</span>
       </button>
       <!-- v2.59: 분리선 + 설정 -->
@@ -8072,9 +8076,9 @@ table.combo-eval tbody td .nodata {
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
     <span class="pc-tab-label">보드</span>
   </button>
-  <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="마이">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
-    <span class="pc-tab-label">마이</span>
+  <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="로그">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+    <span class="pc-tab-label">로그</span>
   </button>
 
   <!-- v2.44: 영역 구분선 -->
@@ -21048,7 +21052,7 @@ function relocateCardsForPC() {
   }
   if (explorePanel) {
     // v3.14: 탐색 서브탭 — 서브탭바 + (시그널필터+누적시그널) + 내부자 + 공매도 + 전체리스트 순
-    ['exploreSubtabs', 'filterCard', 'archiveMobileCard', 'insiderArchiveCard', 'shortingCard', 'stockListCard'].forEach(id => {
+    ['exploreSubtabs', 'archiveMobileCard', 'filterCard', 'insiderArchiveCard', 'shortingCard', 'stockListCard'].forEach(id => {
       const el = document.getElementById(id);
       if (el && el.parentElement !== explorePanel) explorePanel.appendChild(el);
     });
