@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.94';
+window.AQ_PWA_VERSION = '3.95';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -5794,8 +5794,8 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 /* ============ MOBILE (≤640px) — 폰만 대상. 태블릿 (iPad Mini 744px+ 포함) 은 PC 레이아웃 ============ */
 @media (max-width: 640px) {
   .container { padding: 16px 20px 40px; }
-  /* v3.94: 섹터 탭 — 페이지 전체 좌우 여백 확대(20→30px). 모든 섹터 서브탭에 동일 적용 → 서브탭 전환 시 점프 없음 */
-  body[data-mtab="sector"] .container { padding-left: 30px; padding-right: 30px; }
+  /* v3.95: 섹터 동향 — 콘텐츠 카드만 가로폭 확대(여백 20→10px). 히어로/컨테이너는 불변 */
+  body[data-mtab="sector"][data-stab="trend"] section.card[data-stab~="trend"] { margin-left: -10px; margin-right: -10px; }
   /* v1.32 / v2.11 / v2.17 / v2.19 / v2.20: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단 정렬
      끝선 정렬 X (사용자 요청: PC랑 똑같은 폰트로 적되 줄바꿈만 유지) */
   /* v1.32 / v2.11 / v2.17 / v2.19 / v2.25: 모바일 hero — PC와 같은 폰트, 줄바꿈만, meta 우상단
