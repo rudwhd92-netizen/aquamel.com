@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.04';
+window.AQ_PWA_VERSION = '4.05';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2391,9 +2391,10 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
  .sfx-pill{ background:transparent; border:none; color:var(--text-dim); font:600 11.5px Pretendard; padding:5px 11px; border-radius:6px; cursor:pointer; }
  .sfx-pill.on{ background:var(--accent); color:#fff; }
  .sfx-stage{ position:relative; height:444px; overflow:hidden; }
- .sfx-card{ position:absolute; left:50%; top:6px; width:min(448px,72%); transition:transform .34s cubic-bezier(.22,.61,.36,1), opacity .3s; }
- .sfx-card:not(.focus){ background:var(--bg-2); border:1px solid #383840; border-radius:14px; height:312px; display:flex; align-items:center; justify-content:center; }
- .sfx-card.focus{ background:linear-gradient(180deg,#26262a,#202024); border:1px solid #3e3e46; border-radius:16px; padding:14px 16px; box-shadow:0 18px 50px rgba(0,0,0,.5); overflow:hidden; }
+ .sfx-card{ position:absolute; left:50%; top:6px; width:min(448px,72%); background:linear-gradient(180deg,#26262a,#202024); border:1px solid #3e3e46; border-radius:16px; padding:14px 16px; overflow:hidden; transition:transform .34s cubic-bezier(.22,.61,.36,1), opacity .3s; }
+ .sfx-card:not(.focus){ filter:blur(2.4px); }
+ .sfx-card:not(.focus) *{ pointer-events:none; }
+ .sfx-card.focus{ box-shadow:0 18px 50px rgba(0,0,0,.55); border-color:#4a4a54; }
  .sfx-arrow{ position:absolute; top:46%; transform:translateY(-50%); z-index:30; width:38px; height:38px; border-radius:50%; background:var(--bg-3); border:1px solid #383840; color:var(--text-hi); font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; }
  .sfx-arrow.left{ left:4px; } .sfx-arrow.right{ right:4px; }
  .sfx-arrow:hover{ background:var(--accent); border-color:transparent; }
@@ -2402,15 +2403,20 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
  .sfx-htext{ flex:1; min-width:0; }
  .sfx-title{ font-size:15px; font-weight:800; color:var(--text-hi); }
  .sfx-grp{ font-size:10px; color:var(--text-mute); letter-spacing:.04em; }
- .sfx-badge{ font-size:10px; font-weight:700; color:#e9d9cc; background:rgba(206,145,120,.18); border:1px solid rgba(206,145,120,.4); padding:3px 8px; border-radius:999px; white-space:nowrap; }
+ .sfx-badges{ display:flex; gap:6px; align-items:center; margin-left:auto; }
+ .sfx-badge{ font-size:10px; font-weight:700; padding:3px 9px; border-radius:999px; background:var(--bg-3); white-space:nowrap; }
+ .sfx-badge.note{ color:#e9d9cc; background:rgba(206,145,120,.18); border:1px solid rgba(206,145,120,.4); }
  .sfx-body{ display:flex; gap:14px; align-items:center; margin:12px 0; }
  .sfx-hero{ width:118px; height:118px; flex-shrink:0; }
  .sfx-donut{ width:100%; height:100%; } .sfx-radar svg{ width:100%; height:100%; }
+ .sfx-donut .sfx-seg{ cursor:pointer; transition:opacity .12s ease; }
+ .sfx-donut:hover .sfx-seg{ opacity:.25; }
+ .sfx-donut .sfx-seg:hover{ opacity:1; }
  .sfx-stats{ flex:1; min-width:0; }
  .sfx-bigval{ font-size:26px; font-weight:800; font-variant-numeric:tabular-nums; line-height:1; }
  .sfx-streak{ display:inline-block; margin-top:7px; font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:999px; background:var(--bg-3); }
- .sfx-spark{ margin-top:9px; height:30px; }
- .sfx-sparksvg{ width:100%; height:30px; }
+ .sfx-spark{ height:96px; display:flex; align-items:center; }
+ .sfx-sparksvg{ width:100%; height:96px; }
  .sfx-spark-empty{ font-size:10px; color:var(--text-mute); padding-top:10px; }
  .sfx-up{ color:#ff6b6b; } .sfx-dn{ color:#4dabf7; }
  .sfx-pills2{ display:flex; gap:9px; margin:6px 0 11px; }
@@ -2422,7 +2428,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
  .sfx-chip:hover{ border-color:#4a4a50; }
  .sfx-cn{ font-size:11px; color:var(--text-hi); } .sfx-cv{ font-size:10px; font-weight:800; font-variant-numeric:tabular-nums; }
  .sfx-tickers{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
- .sfx-tk{ width:26px; height:26px; border-radius:7px; overflow:hidden; background:var(--bg-3); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; border:1px solid #383840; }
+ .sfx-tk{ width:30px; height:30px; border-radius:50%; overflow:hidden; background:#fff; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; border:1px solid #383840; }
  .sfx-tk img{ width:100%; height:100%; object-fit:cover; }
  .sfx-tk:hover{ border-color:var(--accent); }
  .sfx-prevbox{ display:flex; flex-direction:column; align-items:center; gap:5px; position:relative; }
@@ -2434,6 +2440,8 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
  .sfx-tk-bar{ width:100%; height:6px; border-radius:3px; }
  .sfx-tick.on .sfx-tk-bar{ height:9px; }
  .sfx-tk-c{ width:14px; height:14px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:8px; color:#fff; }
+ .sfx-tk-label{ font-size:8px; color:var(--text-mute); white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; text-align:center; line-height:1.1; }
+ .sfx-tick.on .sfx-tk-label{ color:var(--text-dim); }
  .sfx-tick.on .sfx-tk-c{ box-shadow:0 0 0 3px rgba(86,156,214,.3); }
 }
 .feed-cap-name { font-weight: 800; color: var(--text-hi, #fff); margin-right: 5px; }
@@ -17122,7 +17130,7 @@ function setSfMobSort(s) {
 let _sfxIdx = 3, _sfxMetric = 'momentum', _sfxHero = 'donut';
 let _sfxLayers = [], _sfxNote = {};
 function _sfxAll(){ return [...SF_AI_CORE, ...SF_EXTERNAL]; }
-function _sfxEmj(g){ return (typeof g.key==='number') ? ((g.cells&&g.cells[0]&&g.cells[0].e)||'📊') : (g.num||'📊'); }
+function _sfxEmj(g){ const ov={1:'💎',2:'⚡',7:'🦾',d:'🚀'}; if(ov[g.key]!=null) return ov[g.key]; return (typeof g.key==='number') ? ((g.cells&&g.cells[0]&&g.cells[0].e)||'📊') : (g.num||'📊'); }
 function _sfxFmt(v, isSig){ if(v==null||!isFinite(v)) return '—'; return (v>=0?'+':'')+v.toFixed(1)+(isSig?'σ':'%'); }
 function _sfxHeat(v, lo, hi, isSig){ if(v==null||!isFinite(v)) return 'var(--bg-3)'; const up=v>=0; const m=Math.min(Math.abs(v)/(isSig?2.5:4.5),1); const a=(lo+(hi-lo)*m).toFixed(2); return up?('rgba(250,82,82,'+a+')'):('rgba(51,154,240,'+a+')'); }
 function _sfxCls(v){ return v==null?'':(v>=0?'sfx-up':'sfx-dn'); }
@@ -17160,33 +17168,32 @@ function _sfxBuildData(){
   let ri=-1,rvv=0; _sfxLayers.forEach((L,i)=>{ const sp=L.spark; if(sp.length>1&&sp[0]&&sp[1]&&((sp[0]>0)!==(sp[1]>0))&&Math.abs(sp[0])>rvv){rvv=Math.abs(sp[0]);ri=i;} }); if(ri>=0&&_sfxNote[ri]==null) _sfxNote[ri]='⚡ 반전';
 }
 function _sfxDonut(L){
-  const n=L.keys.length, gap=n>1?4:0, step=360/n, R=46, ri=27;
+  const n=L.keys.length, gap=n>1?4:0, step=360/n, R=46, ri=27, isSig=_sfxMetric==='momentum';
   const P=(d,r)=>{const a=(d-90)*Math.PI/180;return [50+r*Math.cos(a),50+r*Math.sin(a)];};
   let p='';
-  L.keys.forEach((k,i)=>{ const d0=i*step+gap/2,d1=(i+1)*step-gap/2; const A=P(d0,R),B=P(d1,R),C=P(d1,ri),D=P(d0,ri); const lg=(d1-d0)>180?1:0; const sec=L.sa[k]; const v=sec?(_sfxMetric==='momentum'?sec.sigma:sec.change):null; p+='<path d="M'+A[0].toFixed(2)+' '+A[1].toFixed(2)+' A'+R+' '+R+' 0 '+lg+' 1 '+B[0].toFixed(2)+' '+B[1].toFixed(2)+' L'+C[0].toFixed(2)+' '+C[1].toFixed(2)+' A'+ri+' '+ri+' 0 '+lg+' 0 '+D[0].toFixed(2)+' '+D[1].toFixed(2)+' Z" fill="'+_sfxHeat(v,0.22,0.7,_sfxMetric==='momentum')+'" stroke="#1e1e1e" stroke-width="0.8"/>'; });
-  const av=_sfxMetric==='momentum'?L.avgSig:L.avgChg;
-  return '<svg viewBox="0 0 100 100" class="sfx-donut">'+p+'<text x="50" y="46" text-anchor="middle" font-size="13">'+_sfxEmj(L.g)+'</text><text x="50" y="61" text-anchor="middle" font-size="11" font-weight="800" fill="'+(av>=0?'#ff6b6b':'#4dabf7')+'">'+_sfxFmt(av,_sfxMetric==='momentum')+'</text></svg>';
+  L.keys.forEach((k,i)=>{ const d0=i*step+gap/2,d1=(i+1)*step-gap/2; const A=P(d0,R),B=P(d1,R),C=P(d1,ri),D=P(d0,ri); const lg=(d1-d0)>180?1:0; const sec=L.sa[k]; const v=sec?(isSig?sec.sigma:sec.change):null; const nm=k.replace(/^\S+\s/,''); p+='<path class="sfx-seg" data-sec="'+escapeAttr(k)+'" d="M'+A[0].toFixed(2)+' '+A[1].toFixed(2)+' A'+R+' '+R+' 0 '+lg+' 1 '+B[0].toFixed(2)+' '+B[1].toFixed(2)+' L'+C[0].toFixed(2)+' '+C[1].toFixed(2)+' A'+ri+' '+ri+' 0 '+lg+' 0 '+D[0].toFixed(2)+' '+D[1].toFixed(2)+' Z" fill="'+_sfxHeat(v,0.22,0.7,isSig)+'" stroke="#1e1e1e" stroke-width="0.8"><title>'+escapeHtml(nm)+' '+_sfxFmt(v,isSig)+'</title></path>'; });
+  const av=isSig?L.avgSig:L.avgChg;
+  return '<svg viewBox="0 0 100 100" class="sfx-donut">'+p+'<text x="50" y="54" text-anchor="middle" font-size="15" font-weight="800" fill="'+(av>=0?'#ff6b6b':'#4dabf7')+'">'+_sfxFmt(av,isSig)+'</text></svg>';
 }
 function _sfxSpark(L){
   const sp=L.spark.slice().reverse();
   if(sp.length<2) return '<div class="sfx-spark-empty">σ 추이 데이터 부족</div>';
   const n=sp.length, cl=v=>Math.max(-1,Math.min(1,v/3));
-  const pts=sp.map((v,i)=>(i/(n-1)*100).toFixed(1)+','+(15-cl(v)*13).toFixed(1)).join(' ');
+  const pts=sp.map((v,i)=>(i/(n-1)*100).toFixed(1)+','+(30-cl(v)*26).toFixed(1)).join(' ');
   const last=sp[sp.length-1], col=last>=0?'#ff6b6b':'#4dabf7';
-  return '<svg viewBox="0 0 100 30" class="sfx-sparksvg" preserveAspectRatio="none"><line x1="0" y1="15" x2="100" y2="15" stroke="rgba(255,255,255,0.10)" stroke-width="0.5"/><polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+  return '<svg viewBox="0 0 100 60" class="sfx-sparksvg" preserveAspectRatio="none"><line x1="0" y1="30" x2="100" y2="30" stroke="rgba(255,255,255,0.10)" stroke-width="0.6"/><polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="1.3" stroke-linejoin="round"/></svg>';
 }
 function _sfxCardFull(L,i){
   const isSig=_sfxMetric==='momentum';
   const val=isSig?L.avgSig:L.avgChg;
   const grp=L.g.center?'AI 코어 · 심장':(typeof L.g.key==='number'?'AI 코어':'AI 수혜');
-  const badge=_sfxNote[i]?'<span class="sfx-badge">'+_sfxNote[i]+'</span>':'';
-  const hero=_sfxHero==='radar'?('<div class="sfx-radar">'+(typeof aqHexSvg==='function'?aqHexSvg(L.radar):'')+'</div>'):_sfxDonut(L);
-  const streak=L.streak>=3?('<span class="sfx-streak '+(L.dir>0?'sfx-up':'sfx-dn')+'">'+(L.dir>0?'▲':'▼')+' '+L.streak+'일 연속 · '+(L.cum>=0?'+':'')+L.cum.toFixed(1)+'σ</span>'):'';
+  const note=_sfxNote[i]?'<span class="sfx-badge note">'+_sfxNote[i]+'</span>':'';
+  const streak=L.streak>=3?('<span class="sfx-badge '+(L.dir>0?'sfx-up':'sfx-dn')+'">'+(L.dir>0?'▲':'▼')+' '+L.streak+'일 연속 · '+(L.cum>=0?'+':'')+L.cum.toFixed(1)+'σ</span>'):'';
   const chips=L.keys.map(k=>{ const sec=L.sa[k]; const v=sec?(isSig?sec.sigma:sec.change):null; const nm=k.replace(/^\S+\s/,''); return '<span class="sfx-chip" data-sec="'+escapeAttr(k)+'" style="background:'+_sfxHeat(v,0.10,0.32,isSig)+'"><span class="sfx-cn">'+escapeHtml(nm)+'</span><span class="sfx-cv '+_sfxCls(v)+'">'+_sfxFmt(v,isSig)+'</span></span>'; }).join('');
   const tks=L.tks.slice(0,8).map(tk=>'<span class="sfx-tk" data-tk="'+escapeAttr(tk)+'" title="'+escapeAttr(typeof displayName==='function'?displayName(tk):tk)+'">'+(typeof tickerLogoHtml==='function'?tickerLogoHtml(tk):'')+'</span>').join('');
-  return '<div class="sfx-head"><span class="sfx-emoji">'+_sfxEmj(L.g)+'</span><div class="sfx-htext"><div class="sfx-title">'+(L.g.num||'')+' '+escapeHtml(L.g.title)+'</div><div class="sfx-grp">'+grp+'</div></div>'+badge+'</div>'
-    +'<div class="sfx-body"><div class="sfx-hero">'+hero+'</div><div class="sfx-stats"><div class="sfx-bigval '+_sfxCls(val)+'">'+_sfxFmt(val,isSig)+'</div>'+streak+'<div class="sfx-spark">'+_sfxSpark(L)+'</div></div></div>'
-    +'<div class="sfx-pills2"><div class="sfx-st"><label>평균 등락률</label><b class="'+_sfxCls(L.ret)+'">'+_sfxFmt(L.ret,false)+'</b></div><div class="sfx-st"><label>비중</label><b>'+L.wPct.toFixed(0)+'%</b></div></div>'
+  return '<div class="sfx-head"><span class="sfx-emoji">'+_sfxEmj(L.g)+'</span><div class="sfx-htext"><div class="sfx-title">'+(L.g.num||'')+' '+escapeHtml(L.g.title)+'</div><div class="sfx-grp">'+grp+'</div></div><div class="sfx-badges">'+streak+note+'</div></div>'
+    +'<div class="sfx-body"><div class="sfx-hero">'+_sfxDonut(L)+'</div><div class="sfx-stats"><div class="sfx-spark">'+_sfxSpark(L)+'</div></div></div>'
+    +'<div class="sfx-pills2"><div class="sfx-st"><label>평균 등락률</label><b class="'+_sfxCls(L.ret)+'">'+_sfxFmt(L.ret,false)+'</b></div><div class="sfx-st"><label>내 계좌 비중</label><b>'+L.wPct.toFixed(0)+'%</b></div></div>'
     +(chips?'<div class="sfx-sectors">'+chips+'</div>':'')
     +(tks?'<div class="sfx-tickers">'+tks+'</div>':'');
 }
@@ -17199,26 +17206,25 @@ function _sfxShell(){
   let cards='';
   for(let i=0;i<_sfxLayers.length;i++){ cards+='<div class="sfx-card" data-i="'+i+'"></div>'; }
   let ticks='';
-  _sfxLayers.forEach((L,i)=>{ const isSig=_sfxMetric==='momentum'; const v=isSig?L.avgSig:L.avgChg; ticks+='<button class="sfx-tick" data-i="'+i+'" title="'+escapeAttr(L.g.title)+'"><span class="sfx-tk-bar" style="background:'+_sfxHeat(v,0.35,0.95,isSig)+'"></span><span class="sfx-tk-c" style="background:rgb('+L.g.rgb+')">'+(L.g.center?'◆':'')+'</span></button>'; });
+  _sfxLayers.forEach((L,i)=>{ const isSig=_sfxMetric==='momentum'; const v=isSig?L.avgSig:L.avgChg; ticks+='<button class="sfx-tick" data-i="'+i+'" title="'+escapeAttr(L.g.title)+'"><span class="sfx-tk-bar" style="background:'+_sfxHeat(v,0.35,0.95,isSig)+'"></span><span class="sfx-tk-c" style="background:rgb('+L.g.rgb+')">'+(L.g.center?'◆':'')+'</span><span class="sfx-tk-label">'+escapeHtml(L.g.title)+'</span></button>'; });
   return '<div class="sfx"><div class="sfx-toolbar"><div class="sfx-tt">AI 가치사슬 · 계층 탐색</div><div class="sfx-ctl">'
-    +'<div class="sfx-pills"><button class="sfx-pill" onclick="_sfxSetMetric(\'momentum\')">모멘텀 σ</button><button class="sfx-pill" onclick="_sfxSetMetric(\'change\')">오늘 등락</button></div>'
-    +'<div class="sfx-pills"><button class="sfx-pill" onclick="_sfxSetHero(\'donut\')">도넛</button><button class="sfx-pill" onclick="_sfxSetHero(\'radar\')">육각</button></div></div></div>'
+    +'<div class="sfx-pills"><button class="sfx-pill" onclick="_sfxSetMetric(\'momentum\')">모멘텀 σ</button><button class="sfx-pill" onclick="_sfxSetMetric(\'change\')">오늘 등락</button></div></div></div>'
     +'<div class="sfx-stage"><button class="sfx-arrow left" onclick="_sfxGo(-1)" aria-label="이전">‹</button>'+cards+'<button class="sfx-arrow right" onclick="_sfxGo(1)" aria-label="다음">›</button></div>'
     +'<div class="sfx-spine">'+ticks+'</div></div>';
 }
 function _sfxLayout(){
   const diag=document.getElementById('sfDiagram'); if(!diag) return;
-  diag.querySelectorAll('.sfx-pills').forEach((row,ridx)=>{ row.querySelectorAll('.sfx-pill').forEach((b,bi)=>{ if(ridx===0) b.classList.toggle('on',(bi===0)===(_sfxMetric==='momentum')); else b.classList.toggle('on',(bi===0)===(_sfxHero==='donut')); }); });
+  diag.querySelectorAll('.sfx-pill').forEach((b,bi)=>{ b.classList.toggle('on',(bi===0)===(_sfxMetric==='momentum')); });
   diag.querySelectorAll('.sfx-card').forEach(card=>{ const i=+card.dataset.i; const o=i-_sfxIdx, ao=Math.abs(o);
     let ox=0,ty=0,sc=1,z=20,op=1;
     if(ao===0){ox=0;ty=0;sc=1;z=20;op=1;}
-    else if(ao===1){ox=o>0?64:-64;ty=-4;sc=.82;z=14;op=.92;}
-    else if(ao===2){ox=o>0?112:-112;ty=-2;sc=.66;z=10;op=.5;}
+    else if(ao===1){ox=o>0?60:-60;ty=-3;sc=.84;z=14;op=.7;}
+    else if(ao===2){ox=o>0?108:-108;ty=-1;sc=.68;z=10;op=.4;}
     else {ox=o>0?150:-150;ty=0;sc=.6;z=5;op=0;}
     card.style.transform='translate(-50%,'+ty+'%) translateX('+ox+'%) scale('+sc+')';
     card.style.zIndex=z; card.style.opacity=op; card.style.pointerEvents=op>0?'auto':'none';
     card.classList.toggle('focus',ao===0);
-    card.innerHTML = ao===0 ? _sfxCardFull(_sfxLayers[i],i) : (ao<=2? _sfxCardPrev(_sfxLayers[i],i) : '');
+    card.innerHTML = ao<=2 ? _sfxCardFull(_sfxLayers[i],i) : '';
   });
   diag.querySelectorAll('.sfx-tick').forEach(t=>{ t.classList.toggle('on',+t.dataset.i===_sfxIdx); });
 }
@@ -17232,9 +17238,12 @@ function _sfxBind(diag){
   if(diag._sfxBound) return;
   diag.addEventListener('click',e=>{
     const tick=e.target.closest('.sfx-tick'); if(tick){ _sfxJump(+tick.dataset.i); return; }
-    const tk=e.target.closest('.sfx-tk'); if(tk){ const t=tk.getAttribute('data-tk'); if(t&&typeof openChart==='function') openChart(t); return; }
-    const chip=e.target.closest('.sfx-chip'); if(chip){ const sc=chip.getAttribute('data-sec'); if(sc&&typeof openSectorModal==='function') openSectorModal(sc); return; }
-    const card=e.target.closest('.sfx-card'); if(card){ const i=+card.dataset.i; if(i!==_sfxIdx) _sfxJump(i); return; }
+    const card=e.target.closest('.sfx-card');
+    if(card){ const i=+card.dataset.i; if(i!==_sfxIdx){ _sfxJump(i); return; }
+      const tk=e.target.closest('.sfx-tk'); if(tk){ const t=tk.getAttribute('data-tk'); if(t&&typeof openChart==='function') openChart(t); return; }
+      const seg=e.target.closest('.sfx-seg'); if(seg){ const s2=seg.getAttribute('data-sec'); if(s2&&typeof openSectorModal==='function') openSectorModal(s2); return; }
+      const chip=e.target.closest('.sfx-chip'); if(chip){ const s3=chip.getAttribute('data-sec'); if(s3&&typeof openSectorModal==='function') openSectorModal(s3); return; }
+    }
   });
   document.addEventListener('keydown',e=>{ const d=document.getElementById('sfDiagram'); if(!d||!d.querySelector('.sfx')||d.offsetParent===null) return; if(e.key==='ArrowLeft') _sfxGo(-1); else if(e.key==='ArrowRight') _sfxGo(1); });
   let sx=null;
