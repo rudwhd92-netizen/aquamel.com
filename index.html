@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '3.89';
+window.AQ_PWA_VERSION = '3.91';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2458,6 +2458,17 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
   margin-top: 3px;
   letter-spacing: 0.2px;
 }
+/* v3.91: 섹터 연속 기록 — 로고 자리에 섹터 이모지 원 */
+.buy-point-item .bp-emoji {
+  width: 56px; height: 56px; border-radius: 50%;
+  margin: 0 auto 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; line-height: 1;
+  background: var(--bg-3);
+}
+.buy-point-item .bp-emoji.up   { background: rgba(255,107,135,0.20); border: 1px solid rgba(255,107,135,0.40); }
+.buy-point-item .bp-emoji.down { background: rgba(77,171,247,0.20);  border: 1px solid rgba(77,171,247,0.40); }
+.buy-point-item .bp-streak { font-size: 10px; color: var(--text-dim); line-height: 1.2; margin-top: 2px; }
 
 /* ===== 누적 신호 리스트 (발견 탭 하단) — 토스 "관심 종목" 레퍼런스 ===== */
 .archive-mobile-list {
@@ -7143,7 +7154,7 @@ table.combo-eval tbody td .nodata {
   <section class="card mobile-only explore-subtabs" id="sectorSubtabs" data-mtab="sector">
     <div class="xtab-row">
       <button class="xtab-btn" data-stab="frame" onclick="setSectorSubtab('frame')">섹터 FRAME</button>
-      <button class="xtab-btn active" data-stab="trend" onclick="setSectorSubtab('trend')">일간 섹터 동향</button>
+      <button class="xtab-btn active" data-stab="trend" onclick="setSectorSubtab('trend')">섹터 동향</button>
       <button class="xtab-btn" data-stab="all" onclick="setSectorSubtab('all')">전체 리스트</button>
     </div>
   </section>
@@ -7197,10 +7208,22 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
+  <!-- v3.91: 섹터 연속 기록 (금주의 발견 UI 재사용, 섹터 동향 탭 최상단) -->
+  <section class="card mobile-only" id="sectorStreakCard" data-mtab="sector" data-stab="trend">
+    <div class="card-header">
+      <h2>섹터 연속 기록</h2>
+    </div>
+    <div class="card-body">
+      <div class="buy-points-scroll" id="sectorStreakScroll">
+        <div class="buy-points-empty">로딩 중…</div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ SECTOR ANALYSIS (Equal-Weight Bars + 30D Cycle Heatmap) ============ -->
   <section class="card" id="sectorAnalysisCard" data-mtab="sector" data-stab="trend">
     <div class="card-header" onclick="toggleCard(this)">
-      <h2>일간 섹터 동향</h2>
+      <h2>섹터 동향</h2>
       <span class="toggle-icon">▼</span>
     </div>
     <div class="card-body">
@@ -8575,7 +8598,7 @@ function autoCollapseHeavyCardsOnMobile() {
   const states = lsGet(LS.CARDS, {});
   const heavyCardH2s = [
     '섹터 FRAME',       // v1.54 (ex: '🗺️ AI 산업 12계층 40섹터 Framework')
-    '일간 섹터 동향',    // v1.54 (ex: '📊 40섹터 일간 동향 분석')
+    '섹터 동향',    // v1.54 (ex: '📊 40섹터 일간 동향 분석')
     '시그널 필터',
   ];
   heavyCardH2s.forEach(h2Text => {
@@ -16688,6 +16711,7 @@ function renderSectorAnalysis() {
     $('saBarList').innerHTML = '<div class="sa-empty">데이터 업데이트 후 표시됩니다.</div>';
     $('saHeatmap').innerHTML = '';
     $('saInsight').innerHTML = '';
+    try { buildSectorStreaks({}); } catch (e) {}
     return;
   }
 
@@ -16827,8 +16851,70 @@ function renderSectorAnalysis() {
     });
     cardEl._saClickBound = true;
   }
+
+  try { buildSectorStreaks(metrics); } catch (e) {}
 }
 window.renderSectorAnalysis = renderSectorAnalysis;
+
+// v3.91: 섹터 연속 기록 — 2일 이상 연속 상승/하락 섹터를 금주의 발견 UI로 표시
+//   연속일수 = sigmaHist30(최신순)에서 같은 부호가 이어지는 일수, 누적시그마 = 그 구간 σ 합
+function buildSectorStreaks(metrics) {
+  const scroll = document.getElementById('sectorStreakScroll');
+  if (!scroll) return;
+  const m = metrics || (typeof computeSectorAnalysis === 'function' ? computeSectorAnalysis() : null);
+  if (!m || Object.keys(m).length === 0) {
+    scroll.innerHTML = '<div class="buy-points-empty">데이터 업데이트 후 표시됩니다.</div>';
+    return;
+  }
+  const items = [];
+  Object.entries(m).forEach(([key, v]) => {
+    const hist = v && v.sigmaHist30;          // 최신순 [{date, sigma}]
+    if (!hist || hist.length < 2) return;
+    const s0 = hist[0] && hist[0].sigma;
+    if (s0 == null || !isFinite(s0) || s0 === 0) return;
+    const dir = s0 > 0 ? 1 : -1;
+    let streak = 0, cum = 0;
+    for (let i = 0; i < hist.length; i++) {
+      const sg = hist[i] && hist[i].sigma;
+      if (sg == null || !isFinite(sg) || sg === 0) break;
+      if ((sg > 0 ? 1 : -1) !== dir) break;
+      streak++; cum += sg;
+    }
+    if (streak < 2) return;
+    const name = (typeof aqStripSectorEmoji === 'function') ? aqStripSectorEmoji(key) : key;
+    const idx = name ? String(key).indexOf(name) : -1;
+    const emoji = (idx > 0 ? String(key).slice(0, idx) : '').trim() || '📊';
+    items.push({ key, emoji, name: name || key, dir, streak, cum });
+  });
+  if (items.length === 0) {
+    scroll.innerHTML = '<div class="buy-points-empty">2일 이상 연속 상승·하락 중인 섹터가 없어요.</div>';
+    return;
+  }
+  items.sort((a, b) => (b.streak - a.streak) || (Math.abs(b.cum) - Math.abs(a.cum)));
+  scroll.innerHTML = items.map(it => {
+    const col = it.dir > 0 ? '#fa5252' : '#339af0';
+    const dirCls = it.dir > 0 ? 'up' : 'down';
+    const dirTxt = it.dir > 0 ? '▲ 상승' : '▼ 하락';
+    const sigTxt = (it.cum > 0 ? '+' : '') + it.cum.toFixed(1) + 'σ';
+    return `<div class="buy-point-item" data-sector-key="${escapeAttr(it.key)}">
+        <div class="bp-emoji ${dirCls}">${escapeHtml(it.emoji)}</div>
+        <div class="bp-name" title="${escapeAttr(it.name)}">${escapeHtml(it.name)}</div>
+        <div class="bp-type" style="color:${col}">${dirTxt}</div>
+        <div class="bp-streak">${it.streak}일 연속</div>
+        <div class="bp-ret" style="color:${col};font-weight:700;">${sigTxt}</div>
+      </div>`;
+  }).join('');
+  if (!scroll._streakClickBound) {
+    scroll.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-sector-key]');
+      if (!el) return;
+      const key = el.getAttribute('data-sector-key');
+      if (key && typeof openSectorModal === 'function') openSectorModal(key);
+    });
+    scroll._streakClickBound = true;
+  }
+}
+window.buildSectorStreaks = buildSectorStreaks;
 
 // v1.19: 히트맵 컬럼 클릭 → 정렬 토글
 function sortHeatmap(key) {
