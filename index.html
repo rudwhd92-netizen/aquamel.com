@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.20';
+window.AQ_PWA_VERSION = '4.21';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -18536,7 +18536,9 @@ async function openChart(ticker) {
   getSignalTypes().forEach(s => sigMarkersByType[s] = []);
   if (tf !== '1Y') {
     // v2.35: V1 모드면 4개 T_*, 그 외 T 하나
-    const priority = _isV1Mode()
+    const priority = _isAllMode()
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'T', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      : _isV1Mode()
       ? ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
       : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
@@ -21536,7 +21538,9 @@ function aqBuildFeedChartData(tk, tf) {
   const sigMarkersByType = {};
   getSignalTypes().forEach(sx => sigMarkersByType[sx] = []);
   if (tf !== '1Y') {
-    const priority = _isV1Mode()
+    const priority = _isAllMode()
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'T', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      : _isV1Mode()
       ? ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
       : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === tk).forEach(r => {
