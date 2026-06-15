@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.19';
+window.AQ_PWA_VERSION = '4.20';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8085,6 +8085,7 @@ table.combo-eval tbody td .nodata {
           <div class="modal-vshape-ver" id="modalVshapeVerWrap" style="margin-top:10px;">
             <span class="modal-filter-label" style="display:inline-block;margin-right:8px;">V-Shape 버전:</span>
             <div class="vshape-ver-toggle" role="group">
+              <button type="button" data-ver="ALL" onclick="setVshapeVersion('ALL')" title="통합: V1+V2 모두 보기">통합</button>
               <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
               <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
             </div>
@@ -8334,20 +8335,33 @@ const KR_SIGNAL_GROUPS = [
 function _isV1Mode() {
   return getCurrentMarket() === 'US' && _state && _state.vshapeVersion === 'V1';
 }
+// v4.20: 통합(ALL) 모드용 — V1+V2 신호 체계 합집합
+const AQ_SIGNAL_TYPES_ALL  = [...new Set([...SIGNAL_TYPES, ...SIGNAL_TYPES_V1])];
+const AQ_SIGNAL_COLORS_ALL = Object.assign({}, SIGNAL_COLORS_V1, SIGNAL_COLORS);
+const AQ_SIGNAL_SHAPE_ALL  = Object.assign({}, SIGNAL_SHAPE_V1, SIGNAL_SHAPE);
+const AQ_SIGNAL_GROUPS_ALL = [
+  { key: 'V', label: 'V 알고리즘', core: ['V_Main', 'V_Vol'], sub: ['V_Panic'] },
+  { key: 'T', label: 'Tree 알고리즘', core: ['T', 'T_KJP_Sharp', 'T_Claude_Sharp'], sub: ['T_KJP_Wide', 'T_Claude_Wide'] },
+];
+function _isAllMode() { return getCurrentMarket() === 'US' && _state && _state.vshapeVersion === 'ALL'; }
 function getSignalTypes()  {
   if (getCurrentMarket() === 'KR') return KR_SIGNAL_TYPES;
+  if (_isAllMode()) return AQ_SIGNAL_TYPES_ALL;
   return _isV1Mode() ? SIGNAL_TYPES_V1 : SIGNAL_TYPES;
 }
 function getSignalColors() {
   if (getCurrentMarket() === 'KR') return KR_SIGNAL_COLORS;
+  if (_isAllMode()) return AQ_SIGNAL_COLORS_ALL;
   return _isV1Mode() ? SIGNAL_COLORS_V1 : SIGNAL_COLORS;
 }
 function getSignalShapes() {
   if (getCurrentMarket() === 'KR') return KR_SIGNAL_SHAPE;
+  if (_isAllMode()) return AQ_SIGNAL_SHAPE_ALL;
   return _isV1Mode() ? SIGNAL_SHAPE_V1 : SIGNAL_SHAPE;
 }
 function getSignalGroups() {
   if (getCurrentMarket() === 'KR') return KR_SIGNAL_GROUPS;
+  if (_isAllMode()) return AQ_SIGNAL_GROUPS_ALL;
   return _isV1Mode() ? SIGNAL_GROUPS_V1 : SIGNAL_GROUPS;
 }
 
@@ -11205,7 +11219,7 @@ let _state = {
 
   // v1.68: signalFilter default — 현재 시장의 신호 타입 모두 켬 (KR이면 KR_SIGNAL_TYPES)
   signalFilter: new Set(
-    (lsGet('aquamel_vshape_market', 'US') === 'KR') ? KR_SIGNAL_TYPES : (lsGet('aquamel_vshape_version', 'V2') === 'V1' ? SIGNAL_TYPES_V1 : SIGNAL_TYPES)
+    (lsGet('aquamel_vshape_market', 'US') === 'KR') ? KR_SIGNAL_TYPES : AQ_SIGNAL_TYPES_ALL
   ),
   sortKey: 'Date',
   sortDir: 'desc',
@@ -11218,7 +11232,7 @@ let _state = {
   openSector: null,   // v2.10: 섹터 모달 열린 상태 식별 {key, name}
   detailMode: false,  // 모바일 디폴트 = simple mode (false). 토글로 true 전환
   // v2.31: V-Shape 알고리즘 버전 토글 (US만 적용. V1=V_Shape_Archive 옛, V2=V_Shape_Archive_EMA 새 기본)
-  vshapeVersion: lsGet('aquamel_vshape_version', 'V2'),
+  vshapeVersion: 'ALL',   // v4.20: 통합(V1+V2) 기본
   tickerSectorMap: {},
   kjpSectorMap:    {},
   tickerDescMap:   {},
@@ -11232,6 +11246,8 @@ function applyMarketState(mkt) {
   // v2.31: US일 때만 vshapeVersion 적용. V1 선택 + V1 데이터 있으면 V1, 그 외엔 기본(V2)
   if (mkt === 'US' && _state.vshapeVersion === 'V1' && _state.archivesV1.US && _state.archivesV1.US.length > 0) {
     _state.archive = _state.archivesV1.US;
+  } else if (mkt === 'US' && _state.vshapeVersion === 'ALL') {
+    _state.archive = (_state.archives.US || []).concat((_state.archivesV1 && _state.archivesV1.US) || []);  // v4.20: 통합 = 단순 이어붙이기 (dedup 없음)
   } else {
     _state.archive          = _state.archives[mkt] || [];
   }
@@ -11270,19 +11286,19 @@ function hasVshapeV1Data() {
 }
 
 function setVshapeVersion(ver) {
-  if (ver !== 'V1' && ver !== 'V2') ver = 'V2';
-  if (ver === 'V1' && !hasVshapeV1Data()) {
-    // v2.33: alert 안 띄움 — lazy fetch로 즉시 가져옴 (Code.gs 배포/cron 대기 불필요)
+  if (ver !== 'V1' && ver !== 'V2' && ver !== 'ALL') ver = 'ALL';
+  if ((ver === 'V1' || ver === 'ALL') && !hasVshapeV1Data()) {
+    // v4.20: V1 데이터 필요(V1 또는 통합) — 없으면 단독 fetch. V1은 도착해야 의미있어 대기, 통합은 V2만으로라도 즉시 표시 후 V1 도착 시 갱신.
     _lazyFetchVshapeV1().then(ok => {
       if (ok) {
-        // 데이터 도착 → 다시 V1 swap 시도
-        setVshapeVersion('V1');
-      } else {
+        setVshapeVersion(ver);   // 데이터 도착 → 재적용 (이번엔 hasVshapeV1Data true)
+      } else if (ver === 'V1') {
         alert('V1 데이터를 가져올 수 없습니다. 백엔드/네트워크 확인 필요.');
         syncVshapeToggleUI();
       }
     });
-    return;
+    if (ver === 'V1') return;
+    // ALL은 아래로 진행 (V2만이라도 즉시 표시)
   }
   _state.vshapeVersion = ver;
   lsSet('aquamel_vshape_version', ver);
@@ -11349,6 +11365,7 @@ function syncVshapeToggleUI() {
 // 토글 컴포넌트 HTML 생성 — 어디든 같은 구조 사용
 function vshapeToggleHtml() {
   return `<div class="vshape-ver-toggle" role="group" aria-label="V-Shape 버전">
+    <button type="button" data-ver="ALL" onclick="setVshapeVersion('ALL')" title="통합: V1+V2 모두 보기">통합</button>
     <button type="button" data-ver="V1" onclick="setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
     <button type="button" data-ver="V2" onclick="setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
   </div>`;
@@ -12164,6 +12181,10 @@ async function autoLoadData(opts) {
       console.log(`[V1] 메인 로딩에서 미국V1 갱신: ${_state.archivesV1.US.length}건`);
     } else {
       console.warn('[V1] 미국V1 메인 로딩 fetch 실패 — 기존 데이터 유지');
+    }
+    // v4.20: 통합(ALL) 기본 → 첫 렌더 전에 V1 적재 보장 (배치 V1이 비면 단독 fetch 1회)
+    if (!_state.archivesV1.US || _state.archivesV1.US.length === 0) {
+      try { await _lazyFetchVshapeV1(); } catch (e) { console.warn('[V1] 통합용 단독 fetch 실패:', e); }
     }
 
     if (!listRes.ok) throw new Error('시트 목록 로드 실패: ' + listRes.error);
@@ -20904,6 +20925,7 @@ window.addEventListener('resize', () => {
       // v2.36: 우측 정렬 — flex justify-content:space-between 안에서 margin-left:auto로 push
       wrap.style.cssText = 'margin-left:auto;display:flex;align-items:center;';
       wrap.innerHTML = `<div class="vshape-ver-toggle" role="group">
+        <button type="button" data-ver="ALL" onclick="event.stopPropagation();setVshapeVersion('ALL')" title="통합: V1+V2 모두 보기">통합</button>
         <button type="button" data-ver="V1" onclick="event.stopPropagation();setVshapeVersion('V1')" title="V1: V_Shape_Archive (옛)">V1</button>
         <button type="button" data-ver="V2" onclick="event.stopPropagation();setVshapeVersion('V2')" title="V2: V_Shape_Archive_EMA (새)">V2</button>
       </div>`;
