@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.15';
+window.AQ_PWA_VERSION = '4.16';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -12170,16 +12170,13 @@ async function autoLoadData(opts) {
     splashUpdate(10);
     const cfgUS = MARKET_CONFIG.US;
     const cfgKR = MARKET_CONFIG.KR;
-    const [arcUSRes, arcKRRes, kjpUSRes, kjpKRRes, listRes, krOhlcvFolderRes, arcUSV1Res] = await Promise.all([
+    const [arcUSRes, arcKRRes, kjpUSRes, kjpKRRes, listRes, krOhlcvFolderRes] = await Promise.all([
       apiCall('getBuyList',     { sheetId: cfgUS.archiveSheetId, tab: cfgUS.archiveTab }),
       apiCall('getBuyList',     { sheetId: cfgKR.archiveSheetId, tab: cfgKR.archiveTab }),
       apiCall('getOneSheet',    { sheetId: cfgUS.masterSheetId,  tab: cfgUS.masterTab  }),
       apiCall('getOneSheet',    { sheetId: cfgKR.masterSheetId,  tab: cfgKR.masterTab  }),
       apiCall('listSheetNames', { folderId: cfgUS.sectorFolderId || BACKEND.SECTOR_FOLDER_ID }),
       apiCall('listSheetNames', { folderId: cfgKR.ohlcvFolderId }),
-      // v3.03: 미국V1(V_Shape_Archive)도 메인 로딩에 포함 — 미국V2/한국과 동일하게 항상 fresh.
-      //   실패해도 메인 로딩 안 깨지게 .catch로 null 반환 (격리).
-      apiCall('getBuyList',     { sheetId: cfgUS.archiveSheetId, tab: 'V_Shape_Archive' }).catch(() => null),
     ]);
 
     // Archive 정규화 + 시장별 저장 — US는 필수, KR은 실패해도 진행 (시트 비어있을 수 있음)
@@ -12190,6 +12187,10 @@ async function autoLoadData(opts) {
     // v3.03: 미국V1 (V_Shape_Archive) 저장 — 성공 시에만 갱신(실패 시 기존 데이터 유지).
     //   applyMarketState 이전에 채워야 V1 모드 사용자도 이 로딩에서 바로 fresh로 렌더됨.
     if (!_state.archivesV1) _state.archivesV1 = { US: [] };
+    // v4.16: V1을 7-wide 배치에서 빼서 단독·순차 fetch. JSONP 동시요청 7개 중 마지막·최대(1.2MB)였던 V1이 배치에서 조용히 떨어지던 게 누락 원인. 단독 호출은 경쟁이 없어 안정적.
+    let arcUSV1Res = null;
+    try { arcUSV1Res = await apiCall('getBuyList', { sheetId: cfgUS.archiveSheetId, tab: 'V_Shape_Archive' }); }
+    catch (e) { console.warn('[V1] 단독 fetch 예외:', e); arcUSV1Res = null; }
     if (arcUSV1Res && arcUSV1Res.ok) {
       const _v1raw = arcUSV1Res.rows || [];
       _state.archivesV1.US = _v1raw.map(r => normalizeArchiveRow(r, 'US')).filter(r => r.Ticker && r.Date);
