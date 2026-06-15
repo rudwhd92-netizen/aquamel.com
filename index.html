@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.16';
+window.AQ_PWA_VERSION = '4.17';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -18097,7 +18097,7 @@ function applyFilterAndRender() {
     va = va ?? -Infinity; vb = vb ?? -Infinity;
     return _state.sortDir === 'asc' ? va - vb : vb - va;
   });
-  $('filterCount').textContent = `${_state.filteredArchive.length} / ${_state.archive.length}건`;
+  $('filterCount').textContent = `${_state.filteredArchive.length} / ${_state.archive.length}건` + ` · [진단 V1:${(_state.archivesV1&&_state.archivesV1.US?_state.archivesV1.US.length:0)} V2:${(_state.archives&&_state.archives.US?_state.archives.US.length:0)} 병합:${_state.archive.length}]`;
   renderArchiveTable();
   // v1.44: 모바일 발견 탭 컴포넌트도 재빌드 (필터 변경 반영)
   if (isMobileViewport()) {
