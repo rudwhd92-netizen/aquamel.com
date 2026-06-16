@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.34';
+window.AQ_PWA_VERSION = '4.36';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -911,6 +911,13 @@ section.card.collapsed > .card-header { border-radius: 0; margin-bottom: 0; }
 }
 .filter-controls .label { color: var(--text-mute); font-size: 11px; }
 .filter-controls .count { color: var(--accent-2); font-size: 11px; margin-left: auto; font-weight: 600; }
+/* v4.36: 매매이력 월 네비게이터 */
+.trades-month-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trades-month-nav .tmn-arrow { width: 30px; height: 30px; border: 1px solid var(--border); background: var(--panel); color: var(--text); border-radius: 8px; font-size: 16px; line-height: 1; cursor: pointer; font-family: inherit; }
+.trades-month-nav .tmn-arrow:hover { background: var(--panel-hi); color: var(--accent); }
+.trades-month-nav .tmn-label { min-width: 110px; text-align: center; border: 1px solid var(--border); background: var(--panel); color: var(--text-hi); border-radius: 8px; height: 30px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.trades-month-nav .tmn-label:hover { border-color: var(--accent); color: var(--accent); }
+.trades-month-nav .count { color: var(--accent-2); font-size: 11px; margin-left: auto; font-weight: 600; }
 
 /* ============ SIGNAL FILTER — GROUPED GRID (V/Tree × Core/Sub) ============ */
 .signal-filter-grouped {
@@ -7654,7 +7661,6 @@ table.combo-eval tbody td .nodata {
 
       <div class="tabs-row">
         <button class="tab-btn active" data-tab="trades">📜 매매이력</button>
-        <button class="tab-btn" data-tab="portfolio">📊 현재 포트폴리오</button>
       </div>
 
       <!-- Trades tab (v1.58: 디폴트) -->
@@ -7663,6 +7669,12 @@ table.combo-eval tbody td .nodata {
           <button class="btn sm secondary" onclick="tradesSheet.addRow()">+ 행 추가</button>
           <button class="btn sm secondary" onclick="tradesSheet.clearAll()">🗑️ 전체 삭제</button>
           <span class="sheet-help">엑셀 셀 복사 → 표 안에서 <kbd>Ctrl+V</kbd> 붙여넣기로 일괄 입력</span>
+        </div>
+        <div class="trades-month-nav" id="tradesMonthNav">
+          <button type="button" class="tmn-arrow" onclick="aqShiftTradesMonth(-1)" aria-label="이전 달">‹</button>
+          <button type="button" class="tmn-label" id="tradesMonthLabel" onclick="aqResetTradesMonth()" title="이번 달로">2026년 6월</button>
+          <button type="button" class="tmn-arrow" onclick="aqShiftTradesMonth(1)" aria-label="다음 달">›</button>
+          <span class="count" id="tradesFilterCount"></span>
         </div>
         <div id="tradesSheetMount"></div>
         <div class="sheet-summary" id="tradesSummary"></div>
@@ -9112,6 +9124,10 @@ class SpreadsheetTable {
   // 정렬 + 필터 적용해서 viewIndices 계산
   computeView() {
     let indices = this.data.map((_, i) => i);
+    // v4.35: 외부 필터 (매매이력 월별 등)
+    if (typeof this.extraFilter === 'function') {
+      indices = indices.filter(i => { try { return this.extraFilter(this.data[i]); } catch (e) { return true; } });
+    }
     // 컬럼 필터
     Object.keys(this.colFilters).forEach(k => {
       const allowed = this.colFilters[k];
@@ -10667,7 +10683,7 @@ const TRADE_COLS = [
     enabled: (row) => !!row.ticker },
   { key: 'date',    label: '일자',       type: 'date',     width: '110px' },
   { key: 'ticker',  label: '티커',       type: 'text',     width: '80px'  },
-  { key: 'action',  label: '액션',       type: 'dropdown', options: ['매수','매도','진입'], width: '70px' },
+  { key: 'action',  label: '액션',       type: 'dropdown', options: ['매수','매도'], width: '70px' },
   { key: 'qty',     label: '수량',       type: 'number',   width: '80px'  },
   { key: 'price',   label: '단가',       type: 'number',   width: '90px',  dynamicLabel: () => '단가 '   + _ccyLbl() },
   { key: 'fee',     label: '수수료',     type: 'number',   width: '90px',  dynamicLabel: () => '수수료 ' + _ccyLbl() },
@@ -11179,7 +11195,7 @@ function computePortfolioFromTrades(trades) {
     if (!t || !r.action) return;
     const qty = parseFloat(r.qty) || 0, px = parseFloat(r.price) || 0;
     if (!pos[t]) pos[t] = { qty: 0, totalCost: 0, sector: r.sector || '' };
-    if (r.action === '매수' || r.action === '진입') {
+    if (r.action === '매수') {
       pos[t].totalCost += qty * px;
       pos[t].qty += qty;
       if (r.sector) pos[t].sector = r.sector;
@@ -13506,7 +13522,7 @@ function openPositionPanel(tk) {
   let ordersHtml;
   if (myTrades.length) {
     ordersHtml = myTrades.map(t => {
-      const act = (t.action === '매도') ? '판매' : (t.action === '진입' ? '진입' : '구매');
+      const act = (t.action === '매도') ? '판매' : '구매';
       const q = parseFloat(t.qty) || 0, px = parseFloat(t.price) || 0;
       const idAttr = t._id ? ` data-trade-id="${escapeAttr(t._id)}"` : '';
       return `<div class="pos-order"${idAttr}><span class="po-date">${aqFmtPosDate(t.date)}</span><span class="po-act">${act} ${q}주</span><span class="po-px">주당 ${fmtMoney(px)}</span></div>`;
@@ -13780,10 +13796,10 @@ function aqSubmitHoldingForm() {
   try {
     if (sector && !((_state.tickerSectorMap || {})[ticker])) saveUserSectorMapping(ticker, sector);
   } catch (e) {}
-  // v4.32: 포트폴리오가 아니라 매매이력에 '진입'으로 기록 (구매와 구분, 내 주식·대시보드에 정상 반영)
+  // v4.35: 종목 추가 = 매매이력에 '매수' 한 건으로 기록 (포트폴리오 별도 저장 안 함)
   const price = avgpx || (qty > 0 && cost > 0 ? cost / qty : 0);
   if (price <= 0) { setErr('1주 평균금액 또는 투자원금을 입력해주세요.'); return; }
-  const row = { _id: _genId(), date: asof, ticker, action: '진입', qty, price, fee: 0, tax: 0, sector };
+  const row = { _id: _genId(), date: asof, ticker, action: '매수', qty, price, fee: 0, tax: 0, sector };
   const key = lsKeyTrades();
   try {
     if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === key) {
@@ -14442,7 +14458,7 @@ function simulatePortfolioDaily() {
         result.push(...tickerTrades);
       } else {
         // 매수 먼저, 그 다음 매도 (원본 순서 유지)
-        const buys = tickerTrades.filter(t => t.action === '매수' || t.action === '진입');
+        const buys = tickerTrades.filter(t => t.action === '매수');
         const sells = tickerTrades.filter(t => t.action === '매도');
         result.push(...buys, ...sells);
       }
@@ -14454,7 +14470,7 @@ function simulatePortfolioDaily() {
     const tk = t.ticker;
     if (!state[tk]) state[tk] = { qty: 0, cost: 0, avgpx: 0, sector: t.sector || '', mv_fallback: 0 };
     if (!state[tk].sector && t.sector) state[tk].sector = t.sector;
-    if (t.action === '매수' || t.action === '진입') {
+    if (t.action === '매수') {
       // v1.94: Python KJP 코드와 동일 — 매수 수수료를 평단가에 포함하지 않음 (순수 매수단가의 가중평균)
       //   cost(total_buy) = 누적 매수금액 (qty × price), 수수료 별도
       //   avgpx = cost / qty = 순수 매수단가의 가중평균
@@ -14866,33 +14882,72 @@ function getNumFont() {
   return "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif";
 }
 
-// v4.34: 기존 포트폴리오(lsKeyPF) 보유분을 '진입' 매매이력으로 1회 이관 — 매매이력 단일 소스화
+// v4.36: 매매이력 월 네비게이터 — 기본값 현재 월, 좌우 화살표로 월 단위 이동
+var _aqTradesMonth = null;  // {y, m} (m: 1~12). null이면 현재 월로 초기화
+function _aqTradesMonthInit() {
+  if (_aqTradesMonth) return;
+  var d = new Date();
+  _aqTradesMonth = { y: d.getFullYear(), m: d.getMonth() + 1 };
+}
+function aqShiftTradesMonth(delta) {
+  _aqTradesMonthInit();
+  var idx = _aqTradesMonth.y * 12 + (_aqTradesMonth.m - 1) + delta;
+  _aqTradesMonth = { y: Math.floor(idx / 12), m: (idx % 12) + 1 };
+  aqBuildTradesMonthFilter();
+}
+function aqResetTradesMonth() {
+  var d = new Date();
+  _aqTradesMonth = { y: d.getFullYear(), m: d.getMonth() + 1 };
+  aqBuildTradesMonthFilter();
+}
+function aqBuildTradesMonthFilter() {
+  if (typeof tradesSheet === 'undefined' || !tradesSheet) return;
+  _aqTradesMonthInit();
+  var y = _aqTradesMonth.y, m = _aqTradesMonth.m;
+  var mm = String(m).padStart(2, '0');
+  var lblEl = document.getElementById('tradesMonthLabel');
+  if (lblEl) lblEl.textContent = y + '년 ' + m + '월';
+  tradesSheet.extraFilter = function (row) {
+    var mt = String((row && row.date) || '').match(/^(\d{4})-(\d{2})/);
+    if (!mt) return false;
+    return mt[1] === String(y) && mt[2] === mm;
+  };
+  try { tradesSheet.render(); } catch (e) {}
+  var cEl = document.getElementById('tradesFilterCount');
+  if (cEl) cEl.textContent = (tradesSheet.viewIndices ? tradesSheet.viewIndices.length : 0) + '건';
+}
+window.aqBuildTradesMonthFilter = aqBuildTradesMonthFilter;
+window.aqShiftTradesMonth = aqShiftTradesMonth;
+window.aqResetTradesMonth = aqResetTradesMonth;
+
+// v4.35: 기존 포트폴리오 보유분 + 옛 '진입' 거래를 모두 '매수' 매매이력으로 1회 정규화
 function aqMigratePortfolioToTrades() {
   try {
-    if (lsGet('aq_pf2trades_v1', false)) return;
+    if (lsGet('aq_pf2buy_v2', false)) return;
     var today = (function(){ try { return aqTfToday(); } catch(e){ return new Date().toISOString().slice(0,10); } })();
     ['US','KR'].forEach(function (mkt) {
       var pfKey = lsKeyPF(mkt), trKey = lsKeyTrades(mkt);
-      var pf = lsGet(pfKey, []) || [];
-      if (!pf.length) { return; }
       var trades = lsGet(trKey, []) || [];
-      var have = new Set(trades.map(function (t) { return String((t && t.ticker) || '').toUpperCase().trim(); }));
-      var added = 0;
-      pf.forEach(function (p) {
-        if (!p || !p.ticker) return;
-        var tk = String(p.ticker).toUpperCase().trim();
-        if (have.has(tk)) return;  // 이미 매매이력에 있으면 중복 방지
-        var qty = parseFloat(p.qty) || 0;
-        var cost = parseFloat(p.cost) || 0;
-        var avgpx = parseFloat(p.avgpx) || (qty > 0 && cost > 0 ? cost / qty : 0);
-        if (qty <= 0 || avgpx <= 0) return;
-        trades.push({ _id: _genId(), date: p.asof || today, ticker: tk, action: '진입', qty: qty, price: avgpx, fee: 0, tax: 0, sector: p.sector || '' });
-        have.add(tk); added++;
-      });
-      if (added > 0) lsSet(trKey, trades);
-      lsSet(pfKey, []);  // 포트폴리오 비움 — 매매이력 단일 소스
+      var changed = false;
+      trades.forEach(function (t) { if (t && t.action === '진입') { t.action = '매수'; changed = true; } });
+      var pf = lsGet(pfKey, []) || [];
+      if (pf.length) {
+        var have = new Set(trades.map(function (t) { return String((t && t.ticker) || '').toUpperCase().trim(); }));
+        pf.forEach(function (p) {
+          if (!p || !p.ticker) return;
+          var tk = String(p.ticker).toUpperCase().trim();
+          if (have.has(tk)) return;
+          var qty = parseFloat(p.qty) || 0, cost = parseFloat(p.cost) || 0;
+          var avgpx = parseFloat(p.avgpx) || (qty > 0 && cost > 0 ? cost / qty : 0);
+          if (qty <= 0 || avgpx <= 0) return;
+          trades.push({ _id: _genId(), date: p.asof || today, ticker: tk, action: '매수', qty: qty, price: avgpx, fee: 0, tax: 0, sector: p.sector || '' });
+          have.add(tk); changed = true;
+        });
+        lsSet(pfKey, []);
+      }
+      if (changed) lsSet(trKey, trades);
     });
-    lsSet('aq_pf2trades_v1', true);
+    lsSet('aq_pf2buy_v2', true);
     try { if (typeof invalidateDashSim === 'function') invalidateDashSim(); } catch (e) {}
     try { if (typeof tradesSheet !== 'undefined' && tradesSheet) tradesSheet.reload(); } catch (e) {}
     try { if (typeof portfolioSheet !== 'undefined' && portfolioSheet) portfolioSheet.reload(); } catch (e) {}
@@ -14903,6 +14958,7 @@ async function renderDashboard() {
   const card = document.getElementById('dashboardCard');
   if (!card) return;
   try { aqMigratePortfolioToTrades(); } catch (e) {}
+  try { aqBuildTradesMonthFilter(); } catch (e) {}
 
   // 데이터 있는지 확인 (포트폴리오 or 매매이력)
   const portfolio = lsGet(lsKeyPF(), []);
@@ -19495,7 +19551,7 @@ function drawChart(d, opts) {
 
   // Trade markers — sparse array로 변환 (v1.39 fix)
   if (d.tradeMarkers.length) {
-    const buyMarkers  = d.tradeMarkers.filter(t => t.action === '매수' || t.action === '진입');
+    const buyMarkers  = d.tradeMarkers.filter(t => t.action === '매수');
     const sellMarkers = d.tradeMarkers.filter(t => t.action === '매도');
     if (buyMarkers.length) {
       sigDatasets.push({
