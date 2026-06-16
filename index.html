@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.50';
+window.AQ_PWA_VERSION = '4.51';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -7673,8 +7673,9 @@ table.combo-eval tbody td .nodata {
       <div class="tab-content active" id="tab-trades">
         <div class="sheet-toolbar">
           <button class="btn sm secondary" onclick="tradesSheet.addRow()">+ 행 추가</button>
+          <button class="btn sm secondary" onclick="aqOpenTradesPasteModal()">📋 엑셀 붙여넣기</button>
           <button class="btn sm secondary" onclick="tradesSheet.clearAll()">🗑️ 전체 삭제</button>
-          <span class="sheet-help">엑셀 셀 복사 → 표 안에서 <kbd>Ctrl+V</kbd> 붙여넣기로 일괄 입력</span>
+          <span class="sheet-help">엑셀에서 <b>일자·티커·액션·수량·단가·수수료·세금·섹터</b> 순으로 복사 → <b>📋 엑셀 붙여넣기</b> 버튼 (일자 칸은 달력이라 표에 직접 붙여넣기 불가)</span>
         </div>
         <div class="trades-month-nav" id="tradesMonthNav">
           <button type="button" class="tmn-arrow" onclick="aqShiftTradesMonth(-1)" aria-label="이전 달">‹</button>
@@ -8622,6 +8623,72 @@ function aqOpenLogoPicker(tk) {
   document.body.appendChild(back);
 }
 window.aqOpenLogoPicker = aqOpenLogoPicker;
+// v4.51: 엑셀 붙여넣기 모달 — 일자 칸이 달력 input이라 표에 직접 Ctrl+V가 안 됨 → 텍스트영역에 통째 붙여넣어 일괄 입력
+function aqOpenTradesPasteModal() {
+  if (typeof tradesSheet === 'undefined' || !tradesSheet) return;
+  const back = document.createElement('div');
+  back.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:20px;';
+  back.innerHTML = `<div style="background:var(--panel,#1e1e1e);border:1px solid var(--line,#444);border-radius:14px;padding:18px;max-width:560px;width:100%;max-height:85vh;overflow:auto;" onclick="event.stopPropagation()">
+    <div style="font-weight:700;margin-bottom:6px;color:var(--text-hi,#eee);">📋 엑셀 붙여넣기</div>
+    <div style="font-size:11px;color:var(--text-mid,#aaa);line-height:1.6;margin-bottom:10px;">
+      엑셀에서 아래 <b>컬럼 순서</b>대로 복사한 뒤 칸에 붙여넣고 추가를 누르세요. (탭으로 구분된 그대로)<br>
+      <b>일자 · 티커 · 액션(매수/매도) · 수량 · 단가 · 수수료 · 세금 · 섹터</b><br>
+      · 일자: 2026-06-16 형식 권장 (2026/6/16 도 인식)<br>· 헤더 행이 있으면 자동으로 건너뜀
+    </div>
+    <textarea id="aqPasteArea" style="width:100%;min-height:160px;background:var(--bg-3,#181818);color:var(--text-hi,#eee);border:1px solid var(--line,#444);border-radius:8px;padding:10px;font-family:Consolas,monospace;font-size:12px;box-sizing:border-box;" placeholder="2026-06-16\t삼성전자\t매수\t10\t72000\t100\t0\t..."></textarea>
+    <div id="aqPasteMsg" style="font-size:11px;color:var(--text-mute,#888);margin-top:8px;min-height:14px;"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px;">
+      <button id="aqPasteCancel" style="background:transparent;border:1px solid var(--line,#444);border-radius:8px;padding:8px 14px;cursor:pointer;color:var(--text-mid,#aaa);font-family:inherit;">취소</button>
+      <button id="aqPasteDo" style="background:var(--accent,#4dabf7);border:none;border-radius:8px;padding:8px 16px;cursor:pointer;color:#fff;font-weight:600;font-family:inherit;">추가</button>
+    </div></div>`;
+  back.addEventListener('click', () => back.remove());
+  document.body.appendChild(back);
+  const ta = back.querySelector('#aqPasteArea');
+  setTimeout(() => { try { ta.focus(); } catch (e) {} }, 50);
+  back.querySelector('#aqPasteCancel').addEventListener('click', () => back.remove());
+  back.querySelector('#aqPasteDo').addEventListener('click', () => {
+    const text = ta.value || '';
+    const colKeys = TRADE_COLS.filter(c => c.type !== 'button').map(c => c.key);  // date,ticker,action,qty,price,fee,tax,sector,name
+    const lines = text.split(/\r?\n/).map(l => l.replace(/\s+$/, '')).filter(l => l.trim().length > 0);
+    let added = 0;
+    lines.forEach((line, idx) => {
+      const cells = line.split('\t');
+      // 헤더 행 스킵 (첫 줄이고 첫 칸이 날짜로 안 읽히면 헤더로 간주)
+      if (idx === 0 && cells[0] && isNaN(new Date(cells[0].trim()).getTime()) && /일자|날짜|date|티커/i.test(line)) return;
+      const row = { _id: _genId() };
+      colKeys.forEach(k => row[k] = '');
+      cells.forEach((cell, ci) => {
+        if (ci >= colKeys.length) return;
+        const key = colKeys[ci];
+        const col = TRADE_COLS.find(c => c.key === key);
+        let val = String(cell).trim();
+        if (col && col.type === 'date' && val) { const d = new Date(val); if (!isNaN(d.getTime())) val = d.toISOString().split('T')[0]; }
+        else if (col && col.type === 'number' && val) { val = val.replace(/[,$\s]/g, ''); }
+        else if (col && col.type === 'dropdown' && col.options === SECTORS_40 && val) {
+          const mm = SECTORS_40.find(sx => sx.includes(val) || val.includes(sx.replace(/^[^\w가-힣]+/, '').trim()));
+          if (mm) val = mm;
+        }
+        row[key] = val;
+      });
+      if (!row.ticker && !row.date) return;  // 완전 빈 줄 무시
+      // 티커 기반 섹터 자동 채움
+      try { if (tradesSheet.onCellChange && row.ticker && !row.sector) { const u = tradesSheet.onCellChange(row, 'ticker', row.ticker); if (u) Object.assign(row, u); } } catch (e) {}
+      tradesSheet.data.push(row); added++;
+    });
+    if (added > 0) {
+      try { tradesSheet.save(); } catch (e) {}
+      try { aqBackfillTradeNames(); } catch (e) {}
+      try { aqBuildTradesMonthFilter(); } catch (e) {}
+      try { tradesSheet.render(); } catch (e) {}
+      try { if (typeof renderDashboard === 'function') renderDashboard(); } catch (e) {}
+      back.remove();
+    } else {
+      const msg = back.querySelector('#aqPasteMsg');
+      if (msg) msg.textContent = '인식된 행이 없습니다. 탭으로 구분된 엑셀 데이터인지 확인하세요.';
+    }
+  });
+}
+window.aqOpenTradesPasteModal = aqOpenTradesPasteModal;
 function displayName(ticker) {
   if (!ticker) return '';
   const _cn = aqGetCustomName(ticker);   // v4.27: 사용자 지정 이름 최우선
