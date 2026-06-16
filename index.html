@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.22';
+window.AQ_PWA_VERSION = '4.23';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -7613,7 +7613,7 @@ table.combo-eval tbody td .nodata {
           <div class="value">2분 (PWA 켜 있을 때)</div>
         </div>
         <div class="data-mgmt-row">
-          <div class="label">타점 과다 종목 숨김<div style="font-size:11px;color:var(--text-mute);margin-top:3px;font-weight:400;">발견·탐색에서 최근 3개월 V1+V2 타점 상위 10% 종목 제외</div></div>
+          <div class="label">타점 과다 종목 숨김<div style="font-size:11px;color:var(--text-mute);margin-top:3px;font-weight:400;">발견·탐색에서 최근 3개월 V1+V2 타점 상위 10% 종목 제외 (단, 최근 30일 내 내부자 매수 있으면 예외)</div></div>
           <div class="value"><input type="checkbox" id="aqExclOverSig" checked onchange="aqSetExcludeOverSignaled(this.checked)" style="width:20px;height:20px;accent-color:var(--accent,#5c7cfa);cursor:pointer;"></div>
         </div>
       </div>
@@ -21726,6 +21726,22 @@ function aqComputeOverSignaled(pool) {
   for (var k = 0; k < tickers.length; k++) { if (counts[tickers[k]] >= thr) set.add(tickers[k]); }
   return set;
 }
+// v4.23: 최근 N일 내 내부자 매수(transCode 'P')가 있는 종목 집합 — 타점 과다 제외의 예외 대상
+function aqRecentInsiderBuyTickers(days) {
+  var out = new Set();
+  if (typeof _aqInsiderTrades === 'undefined' || !_aqInsiderTrades) return out;
+  var d = new Date(); d.setDate(d.getDate() - (days || 30));
+  var pad = function (n) { return String(n).padStart(2, '0'); };
+  var cutoff = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  Object.keys(_aqInsiderTrades).forEach(function (tk) {
+    var arr = _aqInsiderTrades[tk] || [];
+    for (var i = 0; i < arr.length; i++) {
+      var t = arr[i];
+      if (t && t.transCode === 'P' && t.transDate && t.transDate >= cutoff) { out.add(String(tk).toUpperCase()); break; }
+    }
+  });
+  return out;
+}
 function aqOverSignaledSet() {
   if (!aqGetExcludeOverSignaled()) return new Set();
   var mkt = getCurrentMarket();
@@ -21733,10 +21749,15 @@ function aqOverSignaledSet() {
   if (mkt === 'US') pool = (_state.archives.US || []).concat((_state.archivesV1 && _state.archivesV1.US) || []);
   else pool = _state.archives[mkt] || [];
   var cacheKey = mkt + ':' + pool.length;
-  if (_state._overSigCache && _state._overSigCache.key === cacheKey) return _state._overSigCache.set;
-  var set = aqComputeOverSignaled(pool);
-  _state._overSigCache = { key: cacheKey, set: set };
-  return set;
+  var base;
+  if (_state._overSigCache && _state._overSigCache.key === cacheKey) base = _state._overSigCache.set;
+  else { base = aqComputeOverSignaled(pool); _state._overSigCache = { key: cacheKey, set: base }; }
+  // v4.23: 예외 — 최근 30일 내 내부자 매수가 있는 종목은 제외하지 않고 노출
+  var excused = aqRecentInsiderBuyTickers(30);
+  if (!excused.size) return base;
+  var out = new Set();
+  base.forEach(function (t) { if (!excused.has(t)) out.add(t); });
+  return out;
 }
 window.aqOverSignaledSet = aqOverSignaledSet;
 function aqRerenderSignalLists() {
