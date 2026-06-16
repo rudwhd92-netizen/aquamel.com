@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.42';
+window.AQ_PWA_VERSION = '4.43';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4608,6 +4608,8 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   background: var(--bg-3); color: var(--text-hi);
 }
 .dash-ctx-item[data-action="hide"] { color: #ff8787; }
+.dash-ctx-item[data-action="delete"] { color: #ff8787; }
+.dash-ctx-item[data-action="delete"]:hover { background: rgba(250,82,82,0.15); color: #ff7373; }
 .dash-ctx-item[data-action="hide"]:hover { background: rgba(250,82,82,0.15); color: #ff7373; }
 [data-theme="light"] .dash-ctx-item[data-action="hide"] { color: #d63838; }
 [data-theme="light"] .dash-ctx-item[data-action="hide"]:hover { background: rgba(214,56,56,0.12); }
@@ -7503,6 +7505,7 @@ table.combo-eval tbody td .nodata {
   <div class="dash-context-menu" id="dashContextMenu" style="display:none;">
     <div class="dash-ctx-item" data-action="chart">📊 차트 보기</div>
     <div class="dash-ctx-item" data-action="rename">✏️ 주식명 수정</div>
+    <div class="dash-ctx-item" data-action="delete">🗑️ 종목 삭제</div>
     <div class="dash-ctx-item" data-action="hide">🚫 숨기기</div>
   </div>
 
@@ -15745,6 +15748,20 @@ function showDashContextMenu(ticker, x, y) {
         const _cur = aqGetCustomName(tk) || displayName(tk) || tk;
         const _v = prompt(tk + ' 표시 이름 입력 (비우면 기본 이름으로 복원):', _cur);
         if (_v !== null) { aqSetCustomName(tk, _v); try { renderDashboard(); } catch (e) {} try { if (typeof rerenderAll === 'function') rerenderAll(); } catch (e) {} }
+      }
+      else if (action === 'delete') {
+        const _nm = displayName(tk) || tk;
+        if (window.confirm(_nm + ' 종목의 매매이력을 모두 삭제할까요?\n(이 종목 보유가 사라집니다)')) {
+          const _key = lsKeyTrades();
+          const _flt = (arr) => (arr || []).filter(r => String((r && r.ticker) || '').toUpperCase().trim() !== tk);
+          try {
+            if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === _key) { tradesSheet.data = _flt(tradesSheet.data); tradesSheet.save(); tradesSheet.render(); }
+            else { lsSet(_key, _flt(lsGet(_key, []) || [])); }
+          } catch (e) { try { lsSet(_key, _flt(lsGet(_key, []) || [])); } catch (e2) {} }
+          try { if (typeof invalidateDashSim === 'function') invalidateDashSim(); } catch (e) {}
+          try { renderDashboard(); } catch (e) {}
+          try { if (typeof aqAutoPushTrades === 'function') aqAutoPushTrades(); } catch (e) {}
+        }
       }
       else if (action === 'hide') {
         toggleTickerHidden(tk);
