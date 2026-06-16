@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.47';
+window.AQ_PWA_VERSION = '4.48';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -15076,6 +15076,19 @@ async function renderDashboard() {
   const hasAnyData = portfolio.some(p => p.ticker) || trades.some(t => t.ticker);
   if (!hasAnyData) {
     card.style.display = 'none';
+    // v4.48: board(마이) 탭은 CSS가 카드를 display:block !important 로 강제 표시 → 숨김만으론 이전 시장 보유가 남음.
+    //   시장 전환 시 KR→US(빈 시장) 멈춤 현상 → 내용을 명시적으로 비워 빈 시장 상태를 반영.
+    try {
+      const _hb = document.getElementById('dashHoldingsBody');
+      if (_hb) _hb.innerHTML = '<div style="text-align:center;color:var(--text-mute);font-size:11px;padding:30px;">보유 종목 없음</div>';
+      const _hm = document.getElementById('dashHoldingsMeta');
+      if (_hm) _hm.textContent = '총 0종목';
+      const _hbar = document.getElementById('dashHiddenBar');
+      if (_hbar) _hbar.style.display = 'none';
+      const _dl = document.getElementById('dashDonutLegend');
+      if (_dl) _dl.innerHTML = '<div style="color:var(--text-mute);font-size:11px;">보유 종목 없음</div>';
+      ['donut','trend','sectorTrend'].forEach(k => { if (_dashCharts[k]) { try { _dashCharts[k].destroy(); } catch (e) {} _dashCharts[k] = null; } });
+    } catch (e) {}
     return;
   }
   card.style.display = '';
