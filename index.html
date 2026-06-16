@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.46';
+window.AQ_PWA_VERSION = '4.47';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -7505,6 +7505,7 @@ table.combo-eval tbody td .nodata {
   <div class="dash-context-menu" id="dashContextMenu" style="display:none;">
     <div class="dash-ctx-item" data-action="chart">📊 차트 보기</div>
     <div class="dash-ctx-item" data-action="rename">✏️ 주식명 수정</div>
+    <div class="dash-ctx-item" data-action="logo">🖼️ 로고 변경</div>
     <div class="dash-ctx-item" data-action="delete">🗑️ 종목 삭제</div>
     <div class="dash-ctx-item" data-action="hide">🚫 숨기기</div>
   </div>
@@ -8555,10 +8556,72 @@ function aqBackfillTradeNames() {
     const tk = String(r.ticker).toUpperCase().trim();
     const nm = aqGetCustomName(tk);
     if (nm && (r.name || '') !== nm) { r.name = nm; changed = true; }
+    const lg = (typeof aqGetCustomLogo === 'function') ? aqGetCustomLogo(tk) : '';
+    if (lg && (r.logo || '') !== lg) { r.logo = lg; changed = true; }
   });
   if (changed) { try { tradesSheet.save(); } catch (e) {} }
 }
 window.aqSyncNameToTrades = aqSyncNameToTrades; window.aqBackfillTradeNames = aqBackfillTradeNames;
+// v4.47: 커스텀 종목 로고 (logos/layers/*.png 중 선택) — 시장별, localStorage 'aq_custom_logos_v1'
+let _aqCustomLogosCache = null;
+function aqGetCustomLogos() {
+  if (_aqCustomLogosCache) return _aqCustomLogosCache;
+  try { _aqCustomLogosCache = JSON.parse(localStorage.getItem('aq_custom_logos_v1') || '{}'); } catch (e) { _aqCustomLogosCache = {}; }
+  return _aqCustomLogosCache;
+}
+function aqGetCustomLogo(tk) { return aqGetCustomLogos()[aqCustomNameKey(tk)] || ''; }
+function aqSetCustomLogo(tk, layer) {
+  const all = aqGetCustomLogos(); const k = aqCustomNameKey(tk);
+  if (layer && String(layer).trim()) all[k] = String(layer).trim(); else delete all[k];
+  _aqCustomLogosCache = all;
+  try { localStorage.setItem('aq_custom_logos_v1', JSON.stringify(all)); } catch (e) {}
+}
+window.aqGetCustomLogo = aqGetCustomLogo; window.aqSetCustomLogo = aqSetCustomLogo;
+function aqSyncLogoToTrades(tk, layer) {
+  if (typeof tradesSheet === 'undefined' || !tradesSheet) return;
+  tk = String(tk || '').toUpperCase().trim(); if (!tk) return;
+  const lg = (layer == null) ? '' : String(layer).trim();
+  let changed = false;
+  (tradesSheet.data || []).forEach(r => {
+    if (r && String(r.ticker || '').toUpperCase().trim() === tk && (r.logo || '') !== lg) { r.logo = lg; changed = true; }
+  });
+  if (changed) { try { tradesSheet.save(); } catch (e) {} }
+}
+window.aqSyncLogoToTrades = aqSyncLogoToTrades;
+// v4.47: 로고 선택 모달 — logos/layers/ 12개 계층 로고 중 선택 (기본=자동/국기)
+function aqOpenLogoPicker(tk) {
+  if (!tk) return;
+  tk = String(tk).toUpperCase().trim();
+  const layers = [];
+  try { [...SF_AI_CORE, ...SF_EXTERNAL].forEach(g => { if (g && g.title && layers.indexOf(g.title) < 0) layers.push(g.title); }); } catch (e) {}
+  const cur = aqGetCustomLogo(tk);
+  const back = document.createElement('div');
+  back.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:20px;';
+  const items = layers.map(t => {
+    const fnm = layerFileName(t);
+    const sel = (cur === t);
+    return `<button data-logo="${escapeAttr(t)}" style="display:flex;flex-direction:column;align-items:center;gap:5px;background:${sel?'var(--accent)':'var(--bg-3,#2a2a2a)'};border:1px solid ${sel?'var(--accent)':'var(--line,#444)'};border-radius:10px;padding:8px 4px;cursor:pointer;color:var(--text-hi,#eee);font-family:inherit;">`
+      + `<img src="./logos/layers/${encodeURIComponent(fnm)}.png" style="width:38px;height:38px;border-radius:50%;object-fit:cover;background:#fff;" onerror="this.style.opacity=0.25" alt="">`
+      + `<span style="font-size:10px;">${escapeHtml(t)}</span></button>`;
+  }).join('');
+  back.innerHTML = `<div style="background:var(--panel,#1e1e1e);border:1px solid var(--line,#444);border-radius:14px;padding:16px;max-width:420px;width:100%;max-height:80vh;overflow:auto;" onclick="event.stopPropagation()">`
+    + `<div style="font-weight:700;margin-bottom:12px;color:var(--text-hi,#eee);">${escapeHtml(displayName(tk)||tk)} — 로고 선택</div>`
+    + `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">${items}</div>`
+    + `<button data-logo="" style="margin-top:12px;width:100%;background:transparent;border:1px solid var(--line,#444);border-radius:8px;padding:9px;cursor:pointer;color:var(--text-mid,#aaa);font-family:inherit;">기본값(자동/국기)으로</button></div>`;
+  back.addEventListener('click', () => back.remove());
+  back.querySelectorAll('[data-logo]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const choice = btn.getAttribute('data-logo') || '';
+      aqSetCustomLogo(tk, choice);
+      try { aqSyncLogoToTrades(tk, choice); } catch (e) {}
+      try { renderDashboard(); } catch (e) {}
+      try { if (typeof rerenderAll === 'function') rerenderAll(); } catch (e) {}
+      back.remove();
+    });
+  });
+  document.body.appendChild(back);
+}
+window.aqOpenLogoPicker = aqOpenLogoPicker;
 function displayName(ticker) {
   if (!ticker) return '';
   const _cn = aqGetCustomName(ticker);   // v4.27: 사용자 지정 이름 최우선
@@ -11124,7 +11187,12 @@ async function loadUserDataFromBackend() {
     tradesSheet.sortKey = null;
     tradesSheet.colFilters = {};
     // v4.45: 매매이력 name 컬럼 → 커스텀 종목명 localStorage 반영 (다른 기기 동기화)
-    try { trRows.forEach(r => { if (r && r.ticker && r.name != null && String(r.name).trim()) aqSetCustomName(String(r.ticker).toUpperCase().trim(), String(r.name).trim()); }); } catch (e) {}
+    try { trRows.forEach(r => {
+      if (!r || !r.ticker) return;
+      const _tk = String(r.ticker).toUpperCase().trim();
+      if (r.name != null && String(r.name).trim()) aqSetCustomName(_tk, String(r.name).trim());
+      if (r.logo != null && String(r.logo).trim()) aqSetCustomLogo(_tk, String(r.logo).trim());
+    }); } catch (e) {}
     tradesSheet.save();
     try { aqBackfillTradeNames(); } catch (e) {}
     tradesSheet.render();
@@ -15625,10 +15693,13 @@ function renderDashHoldingsList(holdings, hiddenHoldings) {
       // v3.42: 탐색 '내부자 누적'과 동일한 .insider-archive-item 양식 (로고 | 종목명/회사명/섹터 | 주식수/평가금/손익)
       const layer = SECTOR_TO_LAYER[h.sector] || '기타';
       const layerFile = (market === 'KR') ? '' : layerFileName(layer);
+      const _customLg = (typeof aqGetCustomLogo === 'function') ? aqGetCustomLogo(h.ticker) : '';
       const tkFile = tickerFileName(h.ticker);
-      const logoHtml = tkFile
+      const logoHtml = _customLg
+        ? `<img class="ia-logo" src="./logos/layers/${encodeURIComponent(layerFileName(_customLg))}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+        : (tkFile
         ? `<img class="ia-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
-        : `<img class="ia-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+        : `<img class="ia-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`);
       const pcls = h.profit > 0 ? 'up' : h.profit < 0 ? 'down' : 'zero';
       const qtyStr = h.qty.toLocaleString(undefined, { maximumFractionDigits: 2 }) + '주';
       return `
@@ -15781,6 +15852,9 @@ function showDashContextMenu(ticker, x, y) {
         const _cur = aqGetCustomName(tk) || displayName(tk) || tk;
         const _v = prompt(tk + ' 표시 이름 입력 (비우면 기본 이름으로 복원):', _cur);
         if (_v !== null) { aqSetCustomName(tk, _v); try { aqSyncNameToTrades(tk, _v); } catch (e) {} try { renderDashboard(); } catch (e) {} try { if (typeof rerenderAll === 'function') rerenderAll(); } catch (e) {} }
+      }
+      else if (action === 'logo') {
+        if (typeof aqOpenLogoPicker === 'function') aqOpenLogoPicker(tk);
       }
       else if (action === 'delete') {
         const _nm = displayName(tk) || tk;
@@ -16679,6 +16753,10 @@ function tickerLogoHtml(ticker, sectorOverride) {
   const sector = sectorOverride || (_state.tickerSectorMap || {})[ticker] || '';
   const layer = SECTOR_TO_LAYER[sector] || '기타';
   const layerFile = (market === 'KR') ? '' : layerFileName(layer);  // KR은 계층 로고 없음
+  const _custom = (typeof aqGetCustomLogo === 'function') ? aqGetCustomLogo(ticker) : '';
+  if (_custom) {
+    return `<img class="ticker-logo" src="./logos/layers/${encodeURIComponent(layerFileName(_custom))}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy" />`;
+  }
   const tkFile = tickerFileName(ticker);
   if (!tkFile) {
     // 비정상 티커 → 즉시 국기
@@ -21662,6 +21740,10 @@ function aqDiscoverItems() {
 function aqLogoHtml(tk, sector, cls) {
   const layer = SECTOR_TO_LAYER[sector] || '기타';
   const layerFile = layerFileName(layer);
+  const _custom = (typeof aqGetCustomLogo === 'function') ? aqGetCustomLogo(tk) : '';
+  if (_custom) {
+    return `<img class="${cls}" src="./logos/layers/${encodeURIComponent(layerFileName(_custom))}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`;
+  }
   const tkFile = tickerFileName(tk);
   return tkFile
     ? `<img class="${cls}" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
