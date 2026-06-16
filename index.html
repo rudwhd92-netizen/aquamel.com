@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.27';
+window.AQ_PWA_VERSION = '4.28';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -18525,7 +18525,7 @@ async function openChart(ticker) {
   const buyAvg = pos[ticker]?.avg || 0;
 
   // v1.39 BUGFIX: 매수/매도 마커가 잘못된 일자에 찍히는 문제 — t.date를 normalizeDate로 변환 (LS에 'YYYY/MM/DD', Date object, ISO string 등 다양한 형식 혼재 가능)
-  const tradeMarkers = trades
+  let tradeMarkers = trades
     .filter(t => (t.ticker || '').toUpperCase() === ticker)
     .map(t => ({
       x: normalizeDate(t.date) || '',
@@ -18534,6 +18534,14 @@ async function openChart(ticker) {
       qty: t.qty,
     }))
     .filter(t => t.x && t.x >= cutoffStr);
+  // v4.28: 포트폴리오(종목 추가)로 등록된 보유분도 '매수'로 가정 → 매수 마커 추가 (날짜=기준일자, 가격=평단)
+  try {
+    const _pf = lsGet(lsKeyPF(), []) || [];
+    const _pfMk = _pf.filter(p => p && String(p.ticker || '').toUpperCase() === ticker)
+      .map(p => { const q = parseFloat(p.qty) || 0, c = parseFloat(p.cost) || 0; const px = parseFloat(p.avgpx) || (q > 0 && c > 0 ? c / q : 0); return { x: normalizeDate(p.asof) || '', y: px, action: '매수', qty: q }; })
+      .filter(m => m.x && m.y > 0 && m.x >= cutoffStr);
+    if (_pfMk.length) tradeMarkers = tradeMarkers.concat(_pfMk);
+  } catch (e) {}
 
   // v2.64: 내부자 거래 마커 (US만, _aqInsiderTrades에서 종목별 데이터 가져옴)
   // v2.65: 2단계 필터
@@ -21574,9 +21582,17 @@ function aqBuildFeedChartData(tk, tf) {
   const trades = lsGet(lsKeyTrades(), []);
   const pos = computePortfolioFromTrades(trades);
   const buyAvg = (pos[tk] && pos[tk].avg) || 0;
-  const tradeMarkers = trades.filter(t => (t.ticker || '').toUpperCase() === tk)
+  let tradeMarkers = trades.filter(t => (t.ticker || '').toUpperCase() === tk)
     .map(t => ({ x: normalizeDate(t.date) || '', y: parseFloat(t.price) || 0, action: t.action, qty: t.qty }))
     .filter(t => t.x && t.x >= cutoffStr);
+  // v4.28: 포트폴리오 보유분도 '매수' 마커로 추가
+  try {
+    const _pf = lsGet(lsKeyPF(), []) || [];
+    const _pfMk = _pf.filter(p => p && String(p.ticker || '').toUpperCase() === tk)
+      .map(p => { const q = parseFloat(p.qty) || 0, c = parseFloat(p.cost) || 0; const px = parseFloat(p.avgpx) || (q > 0 && c > 0 ? c / q : 0); return { x: normalizeDate(p.asof) || '', y: px, action: '매수', qty: q }; })
+      .filter(m => m.x && m.y > 0 && m.x >= cutoffStr);
+    if (_pfMk.length) tradeMarkers = tradeMarkers.concat(_pfMk);
+  } catch (e) {}
   const _allIns = ((typeof _aqInsiderTrades !== 'undefined') && _aqInsiderTrades[tk]) ? _aqInsiderTrades[tk] : [];
   const insiderMarkers = _allIns
     .filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
