@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.23';
+window.AQ_PWA_VERSION = '4.24';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -21422,14 +21422,24 @@ function aqDiscoverItems() {
   if (market === 'US') { addSig(_state.archivesV1.US, 'V-Shape'); addSig(_state.archives.US, 'V-Shape'); }
   else if (market === 'KR') { addSig(_state.archives.KR, '신호'); }
 
-  // v4.11: 최근 3일 이내 보고서 있는 종목도 노출 (시그널/내부자 없어도) — 이미 노출된 종목은 링으로 표시되므로 스킵
+  // v4.11: 최근 3일 이내 보고서 있는 종목 노출. v4.24: 단, 추천 ACTION에 '매수'가 포함된 경우에만.
   const _repObj = (_state.reports && _state.reports[market]) || {};
+  const _needLoad = [];
   Object.keys(_repObj).forEach(tkU => {
     if (typeof aqHasRecentReport !== 'function' || !aqHasRecentReport(tkU)) return;
     if (merged[tkU]) return;
     const rdate = String((_repObj[tkU] || [])[0] || '').slice(0, 10);
+    const akey = market + '/' + tkU;
+    const a = (typeof _analysisActions !== 'undefined') ? _analysisActions[akey] : null;
+    if (a === undefined) { _needLoad.push([tkU, rdate]); return; }     // 액션 미로드 → 백그라운드 로드 예약, 지금은 노출 보류
+    if (!a || !a.action || a.action.indexOf('매수') < 0) return;        // 추천 ACTION에 '매수' 없으면 노출 안 함
     const it = ensure(tkU, rdate); addType(it, '보고서');
   });
+  // 미로드 액션들 백그라운드 로드 → 완료 시 1회 재렌더 (undefined일 때만 예약하므로 무한루프 없음)
+  if (_needLoad.length && typeof aqLoadAnalysisAction === 'function') {
+    Promise.all(_needLoad.map(function (e) { return aqLoadAnalysisAction(market, e[0], e[1]).catch(function () {}); }))
+      .then(function () { try { if (typeof aqRerenderSignalLists === 'function') aqRerenderSignalLists(); } catch (e) {} });
+  }
 
   const TYPE_ORDER = { 'V-Shape': 0, '신호': 1, '내부자': 2, '보고서': 3 };
   Object.values(merged).forEach(it => it.types.sort((a, b) => (TYPE_ORDER[a] != null ? TYPE_ORDER[a] : 9) - (TYPE_ORDER[b] != null ? TYPE_ORDER[b] : 9)));
