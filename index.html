@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.43';
+window.AQ_PWA_VERSION = '4.46';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8489,6 +8489,7 @@ function lsKeyTrades(mkt) {
 // 백엔드 dataType — US: 'PF'/'HISTORY' (기존 탭), KR: 'PF_KR'/'HISTORY_KR' (새 탭)
 function dataTypePF()     { return getCurrentMarket() === 'KR' ? 'PF_KR'      : 'PF'; }
 function dataTypeTrades() { return getCurrentMarket() === 'KR' ? 'HISTORY_KR' : 'HISTORY'; }
+function dataTypeWatch()  { return getCurrentMarket() === 'KR' ? 'WATCHLIST_KR' : 'WATCHLIST_US'; }
 
 // v1.85: v1.71~v1.83에서 강제로 _us로 옮긴 데이터를 원래 자리로 복원
 //   (사용자가 그동안 매매이력 저장 못 했을 수 있어 LS 데이터만 보존)
@@ -8535,6 +8536,29 @@ function aqSetCustomName(tk, name) {
   try { localStorage.setItem('aq_custom_names_v1', JSON.stringify(all)); } catch (e) {}
 }
 window.aqGetCustomName = aqGetCustomName; window.aqSetCustomName = aqSetCustomName;
+// v4.45: 커스텀 종목명을 매매이력(로그) name 컬럼과 동기화 — 백엔드 백업에 같이 실려 다른 기기 반영
+function aqSyncNameToTrades(tk, name) {
+  if (typeof tradesSheet === 'undefined' || !tradesSheet) return;
+  tk = String(tk || '').toUpperCase().trim(); if (!tk) return;
+  const nm = (name == null) ? '' : String(name).trim();
+  let changed = false;
+  (tradesSheet.data || []).forEach(r => {
+    if (r && String(r.ticker || '').toUpperCase().trim() === tk && (r.name || '') !== nm) { r.name = nm; changed = true; }
+  });
+  if (changed) { try { tradesSheet.save(); } catch (e) {} }
+}
+function aqBackfillTradeNames() {
+  if (typeof tradesSheet === 'undefined' || !tradesSheet) return;
+  let changed = false;
+  (tradesSheet.data || []).forEach(r => {
+    if (!r || !r.ticker) return;
+    const tk = String(r.ticker).toUpperCase().trim();
+    const nm = aqGetCustomName(tk);
+    if (nm && (r.name || '') !== nm) { r.name = nm; changed = true; }
+  });
+  if (changed) { try { tradesSheet.save(); } catch (e) {} }
+}
+window.aqSyncNameToTrades = aqSyncNameToTrades; window.aqBackfillTradeNames = aqBackfillTradeNames;
 function displayName(ticker) {
   if (!ticker) return '';
   const _cn = aqGetCustomName(ticker);   // v4.27: 사용자 지정 이름 최우선
@@ -10699,6 +10723,7 @@ const TRADE_COLS = [
   { key: 'fee',     label: '수수료',     type: 'number',   width: '90px',  dynamicLabel: () => '수수료 ' + _ccyLbl() },
   { key: 'tax',     label: '세금',       type: 'number',   width: '90px',  dynamicLabel: () => '세금 '   + _ccyLbl() },
   { key: 'sector',  label: '섹터 (자동/수동)', type: 'dropdown', options: SECTORS_40, dynamicOptions: getSectorOptions, width: '170px' },
+  { key: 'name',    label: '주식명',     type: 'text',     width: '130px' },
 ];
 
 function portfolioSummary(rows) {
@@ -10812,6 +10837,12 @@ async function saveUserDataToBackend() {
       _deltaSync(userId, dataTypePF(),     pfRows, makeCb('pf'),   passwordHash),
       _deltaSync(userId, dataTypeTrades(), trRows, makeCb('hist'), passwordHash),
     ]);
+
+    // v4.46: 관심 종목(하트) 동기화 — 현재 시장 항목 풀세이브 (작아서 청크 불필요)
+    try {
+      const _watchItems = (window.AqWatchStore ? AqWatchStore.getAll() : []).filter(it => String((it && it.market) || 'US') === getCurrentMarket());
+      await apiCall('saveUserData', { userId, dataType: dataTypeWatch(), data: JSON.stringify(_watchItems), seq: 0, total: 1, passwordHash });
+    } catch (e) { console.warn('[watchlist save]', e); }
 
     // framework 비중 갱신 (트리거)
     try { refreshLayerWeights(); } catch(e) {}
@@ -11039,9 +11070,10 @@ async function loadUserDataFromBackend() {
 
   try {
     // v1.71: dataType에 시장 suffix 자동 추가
-    const [pfRes, trRes] = await Promise.all([
+    const [pfRes, trRes, watchRes] = await Promise.all([
       apiCall('loadUserData', { userId, dataType: dataTypePF(),     passwordHash }),
       apiCall('loadUserData', { userId, dataType: dataTypeTrades(), passwordHash }),
+      apiCall('loadUserData', { userId, dataType: dataTypeWatch(),  passwordHash }).catch(() => null),
     ]);
 
     // v1.64: 비밀번호 에러 처리 (한쪽이라도 인증 실패면 안내)
@@ -11091,17 +11123,29 @@ async function loadUserDataFromBackend() {
     tradesSheet.data = trRows;
     tradesSheet.sortKey = null;
     tradesSheet.colFilters = {};
+    // v4.45: 매매이력 name 컬럼 → 커스텀 종목명 localStorage 반영 (다른 기기 동기화)
+    try { trRows.forEach(r => { if (r && r.ticker && r.name != null && String(r.name).trim()) aqSetCustomName(String(r.ticker).toUpperCase().trim(), String(r.name).trim()); }); } catch (e) {}
     tradesSheet.save();
+    try { aqBackfillTradeNames(); } catch (e) {}
     tradesSheet.render();
 
     // 12계층 framework 비중 재계산
     try { refreshLayerWeights(); } catch (e) {}
 
+    // v4.46: 관심 종목(하트) 복원 — 현재 시장 항목 교체 반영
+    try {
+      if (watchRes && watchRes.ok && Array.isArray(watchRes.rows) && window.AqWatchStore && typeof AqWatchStore.replaceMarket === 'function') {
+        AqWatchStore.replaceMarket(getCurrentMarket(), watchRes.rows);
+        if (typeof buildWatchKanban === 'function') { try { buildWatchKanban(); } catch (e) {} }
+      }
+    } catch (e) { console.warn('[watchlist load]', e); }
+
     const pfN = pfRows.filter(r => r.ticker).length;
     const trN = trRows.filter(r => r.ticker).length;
     const pfMsg = (pfRes && pfRes.ok) ? `${pfN}건` : '저장된 데이터 없음';
     const trMsg = (trRes && trRes.ok) ? `${trN}건` : '저장된 데이터 없음';
-    alert(`✓ 불러오기 완료\n· ${userId}_${dataTypePF()}: ${pfMsg}\n· ${userId}_${dataTypeTrades()}: ${trMsg}\n\nLocalStorage 갱신됨, 12계층 비중 재계산됨.`);
+    const watchN = (watchRes && watchRes.ok && Array.isArray(watchRes.rows)) ? watchRes.rows.length : 0;
+    alert(`✓ 불러오기 완료\n· ${userId}_${dataTypePF()}: ${pfMsg}\n· ${userId}_${dataTypeTrades()}: ${trMsg}\n· 관심종목: ${watchN}건\n\nLocalStorage 갱신됨, 12계층 비중 재계산됨.`);
   } catch (err) {
     const msg = String(err && err.message || err);
     // v1.82: 백엔드 v2.9 미배포 명확히 안내
@@ -11191,6 +11235,16 @@ function autoFillSector(row, key, val) {
       // 동기 setCell 내부에서 re-render하면 위험 — 다음 tick에서 전파
       setTimeout(() => propagateSectorChange(tk, val), 0);
     }
+  }
+  // (c) v4.45: 주식명 변경 → 커스텀 종목명 저장 + 같은 티커 전파 + 표시 갱신 (백엔드 동기화)
+  if (key === 'name' && row.ticker) {
+    const tk = String(row.ticker).toUpperCase().trim();
+    aqSetCustomName(tk, val);
+    setTimeout(() => {
+      try { aqSyncNameToTrades(tk, val); } catch (e) {}
+      try { if (typeof renderDashboard === 'function') renderDashboard(); } catch (e) {}
+      try { if (typeof rerenderAll === 'function') rerenderAll(); } catch (e) {}
+    }, 0);
   }
   return null;
 }
@@ -11435,45 +11489,23 @@ function updateCcyBanner() {
 
 // v1.69: 시장 전환 시 모든 화면 재렌더링 — setMarket이 호출
 function rerenderAll() {
-  try {
-    // v1.73: 신호 미래수익률 재계산 (시장에 따라 OHLCV 소스 다름)
-    if (typeof computeSignalReturns === 'function') computeSignalReturns();
-    // v1.81: 매크로 카드 (시장별 — US: S&P/NASDAQ/KJP400, KR: KOSPI/KOSDAQ)
-    if (typeof renderMacro === 'function') renderMacro();
-    // 매크로 카드 가시성 (매크로 데이터 없으면 숨김)
-    const macroCardEl = document.getElementById('macroCard');
-    if (macroCardEl) macroCardEl.style.display = (_state.macro && _state.macro.length) ? '' : 'none';
-    // 신호 필터 카드 (시장에 따라 그룹 구조 다름)
-    if (typeof renderSignalFilter === 'function') renderSignalFilter();
-    if (typeof renderSectorFilter === 'function') renderSectorFilter();
-    // V-Shape Archive 테이블 (Archive 행 swap 됨)
-    if (typeof applyFilterAndRender === 'function') applyFilterAndRender();
-    // 매수 포인트 카드
-    if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard();
-    // 누적 시그널 (모바일)
-    if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
-    // 종목 리스트
-    if (typeof buildStockList === 'function') buildStockList();
-    // 섹터 분석 카드 (티커 매핑 변경 영향)
-    if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis();
-    // 콤보 평가표 (시그널 종류가 시장마다 다름)
-    if (typeof renderComboEval === 'function') renderComboEval(_state.archive);
-    // 대시보드 (보유 종목 표시 — 현재는 통합이지만 추후 시장별 분리 가능)
-    if (typeof renderDashboard === 'function') renderDashboard().catch(() => {});
-    // v2.56: 시장 전환 시 캘린더 + 주요 이벤트 재렌더 (KR이면 시트 일정 안 보임)
-    if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) {
-      try { aqCalendarRender(); } catch (e) {}
-    }
-    if (typeof renderMajorEventsCard === 'function') {
-      try { renderMajorEventsCard(); } catch (e) {}
-    }
-    // 차트 모달이 열려있으면 닫음 (시장 다른 종목이라 데이터 안 맞음)
-    if (_state.openTicker && document.getElementById('chartModal')?.classList.contains('active')) {
-      if (typeof closeModal === 'function') closeModal();
-    }
-  } catch (err) {
-    console.error('rerenderAll 실패:', err);
-  }
+  // v4.44: 각 렌더를 개별 격리 — 한 렌더가 던져도(예: 빈 시장 데이터) 나머지가 계속 돌아 시장 전환이 끝까지 완료됨
+  const _safe = (fn) => { try { fn(); } catch (e) { console.warn('[rerenderAll]', e); } };
+  _safe(() => { if (typeof computeSignalReturns === 'function') computeSignalReturns(); });
+  _safe(() => { if (typeof renderMacro === 'function') renderMacro(); });
+  _safe(() => { const macroCardEl = document.getElementById('macroCard'); if (macroCardEl) macroCardEl.style.display = (_state.macro && _state.macro.length) ? '' : 'none'; });
+  _safe(() => { if (typeof renderSignalFilter === 'function') renderSignalFilter(); });
+  _safe(() => { if (typeof renderSectorFilter === 'function') renderSectorFilter(); });
+  _safe(() => { if (typeof applyFilterAndRender === 'function') applyFilterAndRender(); });
+  _safe(() => { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); });
+  _safe(() => { if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList(); });
+  _safe(() => { if (typeof buildStockList === 'function') buildStockList(); });
+  _safe(() => { if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); });
+  _safe(() => { if (typeof renderComboEval === 'function') renderComboEval(_state.archive); });
+  _safe(() => { if (typeof renderDashboard === 'function') renderDashboard().catch(() => {}); });
+  _safe(() => { if (typeof aqCalendarRender === 'function' && document.getElementById('calendarGrid')) aqCalendarRender(); });
+  _safe(() => { if (typeof renderMajorEventsCard === 'function') renderMajorEventsCard(); });
+  _safe(() => { if (_state.openTicker && document.getElementById('chartModal') && document.getElementById('chartModal').classList.contains('active') && typeof closeModal === 'function') closeModal(); });
 }
 
 function isMobileViewport() { return window.matchMedia('(max-width: 640px)').matches; }
@@ -14960,6 +14992,7 @@ function aqMigratePortfolioToTrades() {
     lsSet('aq_pf2buy_v2', true);
     try { if (typeof invalidateDashSim === 'function') invalidateDashSim(); } catch (e) {}
     try { if (typeof tradesSheet !== 'undefined' && tradesSheet) tradesSheet.reload(); } catch (e) {}
+    try { aqBackfillTradeNames(); } catch (e) {}
     try { if (typeof portfolioSheet !== 'undefined' && portfolioSheet) portfolioSheet.reload(); } catch (e) {}
   } catch (e) { console.warn('[migratePF]', e); }
 }
@@ -15747,7 +15780,7 @@ function showDashContextMenu(ticker, x, y) {
       else if (action === 'rename') {
         const _cur = aqGetCustomName(tk) || displayName(tk) || tk;
         const _v = prompt(tk + ' 표시 이름 입력 (비우면 기본 이름으로 복원):', _cur);
-        if (_v !== null) { aqSetCustomName(tk, _v); try { renderDashboard(); } catch (e) {} try { if (typeof rerenderAll === 'function') rerenderAll(); } catch (e) {} }
+        if (_v !== null) { aqSetCustomName(tk, _v); try { aqSyncNameToTrades(tk, _v); } catch (e) {} try { renderDashboard(); } catch (e) {} try { if (typeof rerenderAll === 'function') rerenderAll(); } catch (e) {} }
       }
       else if (action === 'delete') {
         const _nm = displayName(tk) || tk;
@@ -18928,6 +18961,25 @@ window.AqWatchStore = (function() {
     has(market, ticker) { return !!load()[keyOf(market, ticker)]; },
     get(market, ticker) { return load()[keyOf(market, ticker)] || null; },
     getAll() { return Object.values(load()); },
+    // v4.46: 특정 시장 관심항목을 백엔드 복원본으로 교체 (다른 기기 동기화)
+    replaceMarket(market, items) {
+      market = String(market || 'US');
+      const raw = load();
+      Object.keys(raw).forEach(k => { if (String((raw[k] && raw[k].market) || 'US') === market) delete raw[k]; });
+      (items || []).forEach(it => {
+        if (!it || !it.ticker) return;
+        const mk = String(it.market || market);
+        const k = keyOf(mk, it.ticker);
+        raw[k] = {
+          ticker: String(it.ticker).toUpperCase(),
+          market: mk,
+          col: COLS.indexOf(it.col) >= 0 ? it.col : DEFAULT_COL,
+          addedAt: it.addedAt || new Date().toISOString(),
+          order: Number(it.order) || Date.now(),
+        };
+      });
+      save(raw); notify({ type: 'replaced' });
+    },
     add(market, ticker, col) {
       const raw = load();
       const k = keyOf(market, ticker);
@@ -21012,6 +21064,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // v1.71: lsKey를 함수로 전달 — 시장 변경 시 자동 갱신
   portfolioSheet = new SpreadsheetTable('portfolioSheetMount', PORTFOLIO_COLS, lsKeyPF,     portfolioSummary, autoFillSector);
   tradesSheet    = new SpreadsheetTable('tradesSheetMount',    TRADE_COLS,     lsKeyTrades, tradesSummary,    autoFillSector);
+  try { aqBackfillTradeNames(); } catch (e) {}
   try { aqBuildTradesMonthFilter(); } catch (e) {}
   // 저장된 기간 선택 복원 (framework 등락률용)
   const savedPeriod = lsGet(LS.LAYER_RETURN_PERIOD, '5');
