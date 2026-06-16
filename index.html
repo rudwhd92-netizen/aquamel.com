@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.51';
+window.AQ_PWA_VERSION = '4.52';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -11269,8 +11269,8 @@ async function loadUserDataFromBackend() {
 
     // v4.46: 관심 종목(하트) 복원 — 현재 시장 항목 교체 반영
     try {
-      if (watchRes && watchRes.ok && Array.isArray(watchRes.rows) && window.AqWatchStore && typeof AqWatchStore.replaceMarket === 'function') {
-        AqWatchStore.replaceMarket(getCurrentMarket(), watchRes.rows);
+      if (watchRes && watchRes.ok && Array.isArray(watchRes.rows) && watchRes.rows.length > 0 && window.AqWatchStore && typeof AqWatchStore.mergeMarket === 'function') {
+        AqWatchStore.mergeMarket(getCurrentMarket(), watchRes.rows);
         if (typeof buildWatchKanban === 'function') { try { buildWatchKanban(); } catch (e) {} }
       }
     } catch (e) { console.warn('[watchlist load]', e); }
@@ -19140,6 +19140,25 @@ window.AqWatchStore = (function() {
         };
       });
       save(raw); notify({ type: 'replaced' });
+    },
+    // v4.52: 비파괴 병합 — 백엔드 항목을 upsert만, 로컬 하트 삭제 안 함 (불러오기로 하트 날아가던 문제 수정)
+    mergeMarket(market, items) {
+      market = String(market || 'US');
+      const raw = load();
+      (items || []).forEach(it => {
+        if (!it || !it.ticker) return;
+        const mk = String(it.market || market);
+        const k = keyOf(mk, it.ticker);
+        const ex = raw[k];
+        raw[k] = {
+          ticker: String(it.ticker).toUpperCase(),
+          market: mk,
+          col: COLS.indexOf(it.col) >= 0 ? it.col : ((ex && ex.col) || DEFAULT_COL),
+          addedAt: it.addedAt || (ex && ex.addedAt) || new Date().toISOString(),
+          order: Number(it.order) || (ex && ex.order) || Date.now(),
+        };
+      });
+      save(raw); notify({ type: 'merged' });
     },
     add(market, ticker, col) {
       const raw = load();
