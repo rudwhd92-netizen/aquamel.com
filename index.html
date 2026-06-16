@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.53';
+window.AQ_PWA_VERSION = '4.54';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -12033,24 +12033,30 @@ function _aqRenderAllAfterIngest() {
 //   PWA는 CDN에서 data.json 1번 fetch → 2-3초에 모든 데이터 로드 완료
 //   실패 시 → autoLoadData가 자동으로 백엔드 직접 호출 fallback
 // ============================================================================
-async function tryLoadFromBundle() {
+async function tryLoadFromBundle(preBundle) {
   const t0 = performance.now();
   try {
-    // cache-bust query — 새로고침 버튼 누를 땐 최신, 평소엔 SW 캐시 사용
-    const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
-    splashUpdate(15);
-    const res = await fetch(url, { cache: 'default' });
-    if (!res.ok) {
-      console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
-      return false;
+    let bundle;
+    if (preBundle) {
+      bundle = preBundle;            // v4.54: 라이브 dumpAllToJson 응답 직접 주입 (정적 파일 아님 → 신선도 동일)
+      splashUpdate(55);
+    } else {
+      // cache-bust query — 새로고침 버튼 누를 땐 최신, 평소엔 SW 캐시 사용
+      const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
+      splashUpdate(15);
+      const res = await fetch(url, { cache: 'default' });
+      if (!res.ok) {
+        console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
+        return false;
+      }
+      splashUpdate(40);
+      bundle = await res.json();
+      splashUpdate(55);
     }
-    splashUpdate(40);
-    const bundle = await res.json();
     if (!bundle || !bundle.ok) {
-      console.warn('[tryLoadFromBundle] data.json invalid:', bundle);
+      console.warn('[tryLoadFromBundle] bundle invalid:', bundle);
       return false;
     }
-    splashUpdate(55);
 
     // ─── _state 채우기 — 기존 autoLoadData 로직 모방 ───
 
@@ -12358,7 +12364,33 @@ async function autoLoadData(opts) {
       console.log('[autoLoadData] fast path 비활성화 (v2.83) → backend 직접 호출 (시트 fresh 보장)');
     }
 
-    // ─── Fallback: 기존 백엔드 직접 호출 (data.json 없거나 실패 시, 또는 forceFresh) ───
+    // v4.54: dumpAllToJson 1회 통합 호출 — 40+ 개별 시트 호출을 백엔드가 한 번에 모아 응답.
+    //   라이브 시트를 그 순간 읽으므로 신선도는 개별 호출과 100% 동일, 왕복만 40+→1 (체감 5~7초).
+    //   forceFresh 여부 무관하게 라이브라 항상 fresh. 실패 시 아래 개별 호출 fallback으로 자동 진행.
+    try {
+      const dumpRes = await apiCall('dumpAllToJson', {});
+      if (dumpRes && dumpRes.ok) {
+        const usedDump = await tryLoadFromBundle(dumpRes);
+        if (usedDump) {
+          splashUpdate(100);
+          if (!silent) setTimeout(() => splashHide(), 200);
+          if (refreshBtn) refreshBtn.classList.remove('spinning');
+          if (mobileRefreshBtn) mobileRefreshBtn.classList.remove('spinning');
+          fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+          try { aqCacheSaveState(); } catch (e) {}
+          _aqStartPolling();
+          _autoLoadInProgress = false;
+          console.log('[autoLoadData] ✓ dumpAllToJson 통합 경로 완료');
+          return;
+        }
+      } else {
+        console.warn('[autoLoadData] dumpAllToJson 응답 비정상 → 개별 호출 fallback:', dumpRes && dumpRes.error);
+      }
+    } catch (e) {
+      console.warn('[autoLoadData] dumpAllToJson 예외 → 개별 호출 fallback:', e);
+    }
+
+    // ─── Fallback: 기존 백엔드 직접 호출 (dumpAllToJson 실패 시, 또는 개별 호출 필요 시) ───
     if (!forceFresh) {
       console.warn('[autoLoadData] data.json fast path 실패 → 백엔드 직접 호출 fallback (시간 더 걸림)');
     }
