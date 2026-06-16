@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.25';
+window.AQ_PWA_VERSION = '4.27';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -7489,6 +7489,7 @@ table.combo-eval tbody td .nodata {
   <!-- ============ HOLDINGS CONTEXT MENU (v1.29) ============ -->
   <div class="dash-context-menu" id="dashContextMenu" style="display:none;">
     <div class="dash-ctx-item" data-action="chart">📊 차트 보기</div>
+    <div class="dash-ctx-item" data-action="rename">✏️ 주식명 수정</div>
     <div class="dash-ctx-item" data-action="hide">🚫 숨기기</div>
   </div>
 
@@ -8501,8 +8502,26 @@ _migrateLegacyUserData();
 // v1.70: 시장에 맞는 종목 표시명
 //   US: 티커 그대로 (NVDA)
 //   KR: 회사명 (삼성전자) — KJP100의 B컬럼. 매핑 없으면 ticker fallback
+// v4.27: 사용자 지정 종목명 저장소 (시장별 분리, localStorage 'aq_custom_names_v1' = { "US:AAPL": "내 이름" })
+let _aqCustomNamesCache = null;
+function aqGetCustomNames() {
+  if (_aqCustomNamesCache) return _aqCustomNamesCache;
+  try { _aqCustomNamesCache = JSON.parse(localStorage.getItem('aq_custom_names_v1') || '{}'); } catch (e) { _aqCustomNamesCache = {}; }
+  return _aqCustomNamesCache;
+}
+function aqCustomNameKey(tk) { return ((typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US') + ':' + String(tk || '').toUpperCase(); }
+function aqGetCustomName(tk) { return aqGetCustomNames()[aqCustomNameKey(tk)] || ''; }
+function aqSetCustomName(tk, name) {
+  const all = aqGetCustomNames(); const k = aqCustomNameKey(tk);
+  if (name && String(name).trim()) all[k] = String(name).trim(); else delete all[k];
+  _aqCustomNamesCache = all;
+  try { localStorage.setItem('aq_custom_names_v1', JSON.stringify(all)); } catch (e) {}
+}
+window.aqGetCustomName = aqGetCustomName; window.aqSetCustomName = aqSetCustomName;
 function displayName(ticker) {
   if (!ticker) return '';
+  const _cn = aqGetCustomName(ticker);   // v4.27: 사용자 지정 이름 최우선
+  if (_cn) return _cn;
   const cfg = getMarketConfig();
   if (cfg.displayMode === 'company') {
     return ((_state.tickerCompanyMaps && _state.tickerCompanyMaps[getCurrentMarket()]) || _state.tickerCompanyMap || {})[ticker] || ticker;
@@ -15622,6 +15641,11 @@ function showDashContextMenu(ticker, x, y) {
       hideDashContextMenu();
       if (!tk) return;
       if (action === 'chart' && typeof openChart === 'function') openChart(tk);
+      else if (action === 'rename') {
+        const _cur = aqGetCustomName(tk) || displayName(tk) || tk;
+        const _v = prompt(tk + ' 표시 이름 입력 (비우면 기본 이름으로 복원):', _cur);
+        if (_v !== null) { aqSetCustomName(tk, _v); try { renderDashboard(); } catch (e) {} try { if (typeof rerenderAll === 'function') rerenderAll(); } catch (e) {} }
+      }
       else if (action === 'hide') {
         toggleTickerHidden(tk);
         renderDashboard();
@@ -20442,7 +20466,8 @@ function buildWatchKanban() {
       if (colEl) board.appendChild(colEl);
     });
   }
-  const items = (window.AqWatchStore && typeof AqWatchStore.getAll === 'function') ? AqWatchStore.getAll() : [];
+  const _wmkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';   // v4.26: 관심 종목 시장별 분리 — 현재 시장 것만
+  const items = ((window.AqWatchStore && typeof AqWatchStore.getAll === 'function') ? AqWatchStore.getAll() : []).filter(it => (it.market || 'US') === _wmkt);
   const cols = { short: [], consider: [], longterm: [], done: [] };
   items.forEach(it => { (cols[it.col] ? cols[it.col] : cols.short).push(it); });
   Object.keys(cols).forEach(c => cols[c].sort((a, b) => (a.order || 0) - (b.order || 0)));
