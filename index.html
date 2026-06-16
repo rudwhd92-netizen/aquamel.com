@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.38';
+window.AQ_PWA_VERSION = '4.39';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -14960,7 +14960,6 @@ async function renderDashboard() {
   const card = document.getElementById('dashboardCard');
   if (!card) return;
   try { aqMigratePortfolioToTrades(); } catch (e) {}
-  try { aqBuildTradesMonthFilter(); } catch (e) {}
 
   // 데이터 있는지 확인 (포트폴리오 or 매매이력)
   const portfolio = lsGet(lsKeyPF(), []);
@@ -20991,6 +20990,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // v1.71: lsKey를 함수로 전달 — 시장 변경 시 자동 갱신
   portfolioSheet = new SpreadsheetTable('portfolioSheetMount', PORTFOLIO_COLS, lsKeyPF,     portfolioSummary, autoFillSector);
   tradesSheet    = new SpreadsheetTable('tradesSheetMount',    TRADE_COLS,     lsKeyTrades, tradesSummary,    autoFillSector);
+  try { aqBuildTradesMonthFilter(); } catch (e) {}
   // 저장된 기간 선택 복원 (framework 등락률용)
   const savedPeriod = lsGet(LS.LAYER_RETURN_PERIOD, '5');
   const periodSel = $('layerReturnPeriod');
