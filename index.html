@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.39';
+window.AQ_PWA_VERSION = '4.41';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -7144,6 +7144,9 @@ table.combo-eval tbody td .nodata {
         <path d="M21 21l-4.35-4.35"/>
       </svg>
     </button>
+    <button class="mobile-topbar-btn" id="mobileLoadBtn" onclick="loadUserDataFromBackend()" aria-label="매매이력 불러오기" title="매매이력 불러오기 — 다른 기기에서 저장한 내역 동기화">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+    </button>
     <button class="mobile-topbar-btn" id="mobileRefreshBtn" onclick="aqForceRefreshAll()" aria-label="데이터 새로고침">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 12a9 9 0 1 1-3-6.7L21 8"/>
@@ -7172,6 +7175,9 @@ table.combo-eval tbody td .nodata {
           <circle cx="11" cy="11" r="7"/>
           <path d="M21 21l-4.35-4.35"/>
         </svg>
+      </button>
+      <button class="hero-search" id="heroLoadBtn" onclick="loadUserDataFromBackend()" title="매매이력 불러오기 — 다른 기기에서 저장한 내역 동기화" aria-label="매매이력 불러오기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
       </button>
       <button class="hero-refresh" id="heroRefreshBtn" onclick="aqForceRefreshAll()" title="데이터 새로고침" aria-label="데이터 새로고침">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -7472,7 +7478,6 @@ table.combo-eval tbody td .nodata {
             <div class="dash-holdings-body" id="dashHoldingsBody"></div>
             <div class="dash-hidden-bar" id="dashHiddenBar" style="display:none;"></div>
             <button class="watch-add-btn" onclick="aqOpenHoldingForm()">+ 종목 추가</button>
-            <button class="watch-add-btn" onclick="loadUserDataFromBackend()" title="구글 시트 백업에서 매매이력 불러오기 — 다른 기기(폰 등)에서 저장한 내역을 이 기기로 동기화">📥 매매이력 불러오기</button>
           </div>
         </div>
         <div class="dash-bottom-col">
