@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.36';
+window.AQ_PWA_VERSION = '4.37';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -10657,12 +10657,17 @@ function _ccyLbl() {
 
 // v1.75: 섹터 dropdown 옵션 — 시장에 따라 (US: SECTORS_40 / KR: KJP100 섹터들)
 function getSectorOptions() {
+  let base;
   if (getCurrentMarket() === 'KR') {
     const krMap = (_state.kjpSectorMaps && _state.kjpSectorMaps.KR) || _state.kjpSectorMap || {};
     const ks = Object.keys(krMap).filter(Boolean).sort();
-    return ks.length > 0 ? ks : SECTORS_40;  // KR 매핑 아직 안 됐으면 fallback
+    base = ks.length > 0 ? ks : SECTORS_40;  // KR 매핑 아직 안 됐으면 fallback
+  } else {
+    base = SECTORS_40;
   }
-  return SECTORS_40;
+  // v4.37: ETF·지수 — KJP400 외 ETF(QQQ 등) 기록용. 마이에서만 인식, 분석(계층 비중) 제외.
+  const ETF = '🌳 ETF·지수';
+  return base.indexOf(ETF) >= 0 ? base : base.concat([ETF]);
 }
 
 const PORTFOLIO_COLS = [
@@ -16707,6 +16712,7 @@ function computeLayerWeights() {
       if (!p || p.qty <= 1e-9 || p.totalCost <= 0) return;
       tickersFromTrades.add(tk);
       const sec = p.sector || (_state.tickerSectorMap || {})[tk] || (_state.userSectorMap || {})[tk];
+      if (sec === '🌳 ETF·지수') return;   // v4.37: ETF·지수는 분석 계층 비중에서 제외
       total += p.totalCost;
       if (!sec || !layerByCell[sec]) { unclassified += p.totalCost; return; }
       layerCosts[layerByCell[sec]] = (layerCosts[layerByCell[sec]] || 0) + p.totalCost;
@@ -16722,6 +16728,7 @@ function computeLayerWeights() {
       const cost = parseFloat(r.cost) || 0;
       if (cost <= 0) return;
       const sec = r.sector || (_state.tickerSectorMap || {})[tk] || (_state.userSectorMap || {})[tk];
+      if (sec === '🌳 ETF·지수') return;   // v4.37: ETF·지수는 분석 계층 비중에서 제외
       total += cost;
       if (!sec || !layerByCell[sec]) { unclassified += cost; return; }
       layerCosts[layerByCell[sec]] = (layerCosts[layerByCell[sec]] || 0) + cost;
