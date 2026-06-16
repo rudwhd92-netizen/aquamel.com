@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.53';
+window.AQ_PWA_VERSION = '4.56';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -12033,24 +12033,30 @@ function _aqRenderAllAfterIngest() {
 //   PWA는 CDN에서 data.json 1번 fetch → 2-3초에 모든 데이터 로드 완료
 //   실패 시 → autoLoadData가 자동으로 백엔드 직접 호출 fallback
 // ============================================================================
-async function tryLoadFromBundle() {
+async function tryLoadFromBundle(preBundle) {
   const t0 = performance.now();
   try {
-    // cache-bust query — 새로고침 버튼 누를 땐 최신, 평소엔 SW 캐시 사용
-    const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
-    splashUpdate(15);
-    const res = await fetch(url, { cache: 'default' });
-    if (!res.ok) {
-      console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
-      return false;
+    let bundle;
+    if (preBundle) {
+      bundle = preBundle;            // v4.56: 신선도 게이트에서 이미 받은 번들 재사용 (중복 fetch 방지)
+      splashUpdate(55);
+    } else {
+      // cache-bust query — 새로고침 버튼 누를 땐 최신, 평소엔 SW 캐시 사용
+      const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
+      splashUpdate(15);
+      const res = await fetch(url, { cache: 'default' });
+      if (!res.ok) {
+        console.warn('[tryLoadFromBundle] data.json fetch 실패:', res.status);
+        return false;
+      }
+      splashUpdate(40);
+      bundle = await res.json();
+      splashUpdate(55);
     }
-    splashUpdate(40);
-    const bundle = await res.json();
     if (!bundle || !bundle.ok) {
-      console.warn('[tryLoadFromBundle] data.json invalid:', bundle);
+      console.warn('[tryLoadFromBundle] bundle invalid:', bundle);
       return false;
     }
-    splashUpdate(55);
 
     // ─── _state 채우기 — 기존 autoLoadData 로직 모방 ───
 
@@ -12344,18 +12350,48 @@ async function autoLoadData(opts) {
     // v2.48: forceFresh=true이면 fast path 건너뛰고 바로 backend 직접 호출 (시트 fresh)
     // v2.83: fast path 자체 비활성화 — data.json이 옛 빌드 시점에서 멈춰 stale data 제공 (사용자 보고: 5/29 시트인데 5/27 받음).
     //   모든 진입이 backend 직접 호출로 fresh 보장. 진입 1-2초 늦지만 사용자 요청 "항상 시트에서 가져와" 충족.
-    if (false && !forceFresh) {
-      const usedFastPath = await tryLoadFromBundle();
-      if (usedFastPath) {
-        splashUpdate(100);
-        setTimeout(() => splashHide(), 200);
-        fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
-        aqCacheSaveState();
-        _aqStartPolling();
-        return;
+    // v4.56: 신선도 검사 fast path — data.json(정적, fetch로 큰 파일 OK)이 시트보다 최신이면 사용(2~3초),
+    //   stale이면 버리고 아래 라이브 개별 호출로 폴백. → 신선도는 라이브와 동일하게 보장하면서 평상시 빠름.
+    //   forceFresh(새로고침 버튼)는 항상 라이브로 직행.
+    if (!forceFresh) {
+      try {
+        splashUpdate(10);
+        const [lmRes, bundle] = await Promise.all([
+          apiCall('getSheetsLastModified', {}).catch(() => null),
+          fetch('./data/data.json?t=' + Math.floor(Date.now() / 60000), { cache: 'default' })
+            .then(r => r.ok ? r.json() : null).catch(() => null),
+        ]);
+        if (bundle && bundle.ok && bundle.timestamp && lmRes && lmRes.ok && lmRes.sheets) {
+          const bundleTime = new Date(bundle.timestamp).getTime();
+          const sheetTimes = [lmRes.sheets.us_sheet, lmRes.sheets.kr_sheet, lmRes.sheets.sectors]
+            .map(t => new Date(t).getTime()).filter(t => !isNaN(t));
+          const maxSheet = sheetTimes.length ? Math.max.apply(null, sheetTimes) : Infinity;
+          if (!isNaN(bundleTime) && bundleTime >= maxSheet) {
+            console.log('[autoLoadData] data.json 신선 (빌드 ' + bundle.timestamp + ' ≥ 시트 ' + new Date(maxSheet).toISOString() + ') → fast path 사용');
+            const used = await tryLoadFromBundle(bundle);
+            if (used) {
+              splashUpdate(100);
+              if (!silent) setTimeout(() => splashHide(), 200);
+              if (refreshBtn) refreshBtn.classList.remove('spinning');
+              if (mobileRefreshBtn) mobileRefreshBtn.classList.remove('spinning');
+              fetchReportsIndex().catch(e => console.warn('[Reports] index fetch failed:', e));
+              try { aqCacheSaveState(); } catch (e) {}
+              _aqStartPolling();
+              _autoLoadInProgress = false;
+              console.log('[autoLoadData] ✓ fast path 완료 (신선도 검사 통과)');
+              return;
+            }
+          } else {
+            console.log('[autoLoadData] data.json stale (빌드 ' + bundle.timestamp + ' < 시트 ' + new Date(maxSheet).toISOString() + ') → 라이브 폴백');
+          }
+        } else {
+          console.log('[autoLoadData] 신선도 검사 불가(응답 누락) → 라이브 폴백');
+        }
+      } catch (e) {
+        console.warn('[autoLoadData] fast path 검사 예외 → 라이브 폴백:', e);
       }
     } else {
-      console.log('[autoLoadData] fast path 비활성화 (v2.83) → backend 직접 호출 (시트 fresh 보장)');
+      console.log('[autoLoadData] forceFresh → fast path 건너뛰고 라이브 직행');
     }
 
     // ─── Fallback: 기존 백엔드 직접 호출 (data.json 없거나 실패 시, 또는 forceFresh) ───
