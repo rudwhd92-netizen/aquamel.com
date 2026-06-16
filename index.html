@@ -53,7 +53,11 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
+<<<<<<< HEAD
+window.AQ_PWA_VERSION = '4.30';
+=======
 window.AQ_PWA_VERSION = '4.28';
+>>>>>>> dcaf167ce724b23e98ef496215a3e38a6f039404
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -10641,12 +10645,17 @@ function _ccyLbl() {
 
 // v1.75: 섹터 dropdown 옵션 — 시장에 따라 (US: SECTORS_40 / KR: KJP100 섹터들)
 function getSectorOptions() {
+  let base;
   if (getCurrentMarket() === 'KR') {
     const krMap = (_state.kjpSectorMaps && _state.kjpSectorMaps.KR) || _state.kjpSectorMap || {};
     const ks = Object.keys(krMap).filter(Boolean).sort();
-    return ks.length > 0 ? ks : SECTORS_40;  // KR 매핑 아직 안 됐으면 fallback
+    base = ks.length > 0 ? ks : SECTORS_40;  // KR 매핑 아직 안 됐으면 fallback
+  } else {
+    base = SECTORS_40;
   }
-  return SECTORS_40;
+  // v4.30: ETF·지수 — KJP400 외 ETF(QQQ 등) 기록용. 마이에서만 인식, 분석(계층 비중) 제외.
+  const ETF = '🌳 ETF·지수';
+  return base.indexOf(ETF) >= 0 ? base : base.concat([ETF]);
 }
 
 const PORTFOLIO_COLS = [
@@ -10667,7 +10676,7 @@ const TRADE_COLS = [
     enabled: (row) => !!row.ticker },
   { key: 'date',    label: '일자',       type: 'date',     width: '110px' },
   { key: 'ticker',  label: '티커',       type: 'text',     width: '80px'  },
-  { key: 'action',  label: '액션',       type: 'dropdown', options: ['매수','매도'], width: '70px' },
+  { key: 'action',  label: '액션',       type: 'dropdown', options: ['매수','매도','진입'], width: '70px' },
   { key: 'qty',     label: '수량',       type: 'number',   width: '80px'  },
   { key: 'price',   label: '단가',       type: 'number',   width: '90px',  dynamicLabel: () => '단가 '   + _ccyLbl() },
   { key: 'fee',     label: '수수료',     type: 'number',   width: '90px',  dynamicLabel: () => '수수료 ' + _ccyLbl() },
@@ -11179,7 +11188,7 @@ function computePortfolioFromTrades(trades) {
     if (!t || !r.action) return;
     const qty = parseFloat(r.qty) || 0, px = parseFloat(r.price) || 0;
     if (!pos[t]) pos[t] = { qty: 0, totalCost: 0, sector: r.sector || '' };
-    if (r.action === '매수') {
+    if (r.action === '매수' || r.action === '진입') {
       pos[t].totalCost += qty * px;
       pos[t].qty += qty;
       if (r.sector) pos[t].sector = r.sector;
@@ -13506,7 +13515,7 @@ function openPositionPanel(tk) {
   let ordersHtml;
   if (myTrades.length) {
     ordersHtml = myTrades.map(t => {
-      const act = (t.action === '매도') ? '판매' : '구매';
+      const act = (t.action === '매도') ? '판매' : (t.action === '진입' ? '진입' : '구매');
       const q = parseFloat(t.qty) || 0, px = parseFloat(t.price) || 0;
       const idAttr = t._id ? ` data-trade-id="${escapeAttr(t._id)}"` : '';
       return `<div class="pos-order"${idAttr}><span class="po-date">${aqFmtPosDate(t.date)}</span><span class="po-act">${act} ${q}주</span><span class="po-px">주당 ${fmtMoney(px)}</span></div>`;
@@ -13780,22 +13789,26 @@ function aqSubmitHoldingForm() {
   try {
     if (sector && !((_state.tickerSectorMap || {})[ticker])) saveUserSectorMapping(ticker, sector);
   } catch (e) {}
-  const row = { _id: _genId(), asof, ticker, qty, cost, mv: '', avgpx, sector };
-  const key = lsKeyPF();
+  // v4.29: 포트폴리오가 아니라 매매이력에 '진입'으로 기록 (구매와 구분, 내 주식·대시보드에 정상 반영)
+  const price = avgpx || (qty > 0 && cost > 0 ? cost / qty : 0);
+  if (price <= 0) { setErr('1주 평균금액 또는 투자원금을 입력해주세요.'); return; }
+  const row = { _id: _genId(), date: asof, ticker, action: '진입', qty, price, fee: 0, tax: 0, sector };
+  const key = lsKeyTrades();
   try {
-    if (typeof portfolioSheet !== 'undefined' && portfolioSheet && portfolioSheet.lsKey === key) {
-      portfolioSheet.data.push(row);
-      portfolioSheet.save();
-      portfolioSheet.render();
+    if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.lsKey === key) {
+      tradesSheet.data.push(row);
+      tradesSheet.save();
+      tradesSheet.render();
     } else {
       const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr);
     }
   } catch (e) {
     try { const arr = lsGet(key, []) || []; arr.push(row); lsSet(key, arr); } catch (e2) {}
   }
+  try { if (typeof invalidateDashSim === 'function') invalidateDashSim(); } catch (e) {}
   aqCloseHoldingForm();
   try { if (typeof renderDashboard === 'function') renderDashboard(); } catch (e) {}
-  aqAutoPushPF();
+  aqAutoPushTrades();
 }
 window.aqSubmitHoldingForm = aqSubmitHoldingForm;
 async function aqAutoPushPF() {
@@ -14438,7 +14451,7 @@ function simulatePortfolioDaily() {
         result.push(...tickerTrades);
       } else {
         // 매수 먼저, 그 다음 매도 (원본 순서 유지)
-        const buys = tickerTrades.filter(t => t.action === '매수');
+        const buys = tickerTrades.filter(t => t.action === '매수' || t.action === '진입');
         const sells = tickerTrades.filter(t => t.action === '매도');
         result.push(...buys, ...sells);
       }
@@ -14450,7 +14463,7 @@ function simulatePortfolioDaily() {
     const tk = t.ticker;
     if (!state[tk]) state[tk] = { qty: 0, cost: 0, avgpx: 0, sector: t.sector || '', mv_fallback: 0 };
     if (!state[tk].sector && t.sector) state[tk].sector = t.sector;
-    if (t.action === '매수') {
+    if (t.action === '매수' || t.action === '진입') {
       // v1.94: Python KJP 코드와 동일 — 매수 수수료를 평단가에 포함하지 않음 (순수 매수단가의 가중평균)
       //   cost(total_buy) = 누적 매수금액 (qty × price), 수수료 별도
       //   avgpx = cost / qty = 순수 매수단가의 가중평균
@@ -16613,6 +16626,7 @@ function computeLayerWeights() {
       if (!p || p.qty <= 1e-9 || p.totalCost <= 0) return;
       tickersFromTrades.add(tk);
       const sec = p.sector || (_state.tickerSectorMap || {})[tk] || (_state.userSectorMap || {})[tk];
+      if (sec === '🌳 ETF·지수') return;   // v4.30: ETF·지수는 분석 계층 비중에서 제외
       total += p.totalCost;
       if (!sec || !layerByCell[sec]) { unclassified += p.totalCost; return; }
       layerCosts[layerByCell[sec]] = (layerCosts[layerByCell[sec]] || 0) + p.totalCost;
@@ -16628,6 +16642,7 @@ function computeLayerWeights() {
       const cost = parseFloat(r.cost) || 0;
       if (cost <= 0) return;
       const sec = r.sector || (_state.tickerSectorMap || {})[tk] || (_state.userSectorMap || {})[tk];
+      if (sec === '🌳 ETF·지수') return;   // v4.30: ETF·지수는 분석 계층 비중에서 제외
       total += cost;
       if (!sec || !layerByCell[sec]) { unclassified += cost; return; }
       layerCosts[layerByCell[sec]] = (layerCosts[layerByCell[sec]] || 0) + cost;
@@ -19457,7 +19472,7 @@ function drawChart(d, opts) {
 
   // Trade markers — sparse array로 변환 (v1.39 fix)
   if (d.tradeMarkers.length) {
-    const buyMarkers  = d.tradeMarkers.filter(t => t.action === '매수');
+    const buyMarkers  = d.tradeMarkers.filter(t => t.action === '매수' || t.action === '진입');
     const sellMarkers = d.tradeMarkers.filter(t => t.action === '매도');
     if (buyMarkers.length) {
       sigDatasets.push({
