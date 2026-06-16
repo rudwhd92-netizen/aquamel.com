@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.52';
+window.AQ_PWA_VERSION = '4.53';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -20923,11 +20923,9 @@ function _aqInitWatchDnD() {
 // 관심 저장소 변경 시 — 칸반 보이고 있으면 재렌더 (+ 모달 하트 동기화)
 if (window.AqWatchStore && typeof AqWatchStore.subscribe === 'function') {
   AqWatchStore.subscribe(() => {
-    const pcPanel = document.body.getAttribute('data-pc-panel');
-    const mtab = document.body.getAttribute('data-mtab');
-    if (pcPanel === 'watch' || mtab === 'watch') {
-      try { buildWatchKanban(); } catch (e) {}
-    }
+    // v4.53: 탭 조건 제거 — 관심 보드는 board 서브탭(btab='watch')으로도 보여서 mtab==='watch' 조건이 안 맞아
+    //   스토어 변경(추가/삭제/드래그/토글) 후 보드가 안 그려지던 문제. buildWatchKanban은 카드 없으면 스스로 return하므로 항상 호출해도 안전.
+    try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {}
     try { if (typeof syncWatchButton === 'function') syncWatchButton(); } catch (e) {}
   });
 }
