@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.21';
+window.AQ_PWA_VERSION = '4.22';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -12798,6 +12798,8 @@ async function fetchReportContent(ticker, date) {
     throw new Error((res && res.error) || '보고서 로드 실패');
   }
   _state.reportCache[key] = res.content;
+  if (!_state.reportFilenameCache) _state.reportFilenameCache = {};
+  _state.reportFilenameCache[key] = res.filename || '';   // v4.22: 양식 판별용 파일명 (txt/md=과거, 구글Docs=신규)
   return res.content;
 }
 
@@ -13195,6 +13197,14 @@ function aqReportIsV2(date) {
   const d = String(date || '').replace(/[^0-9]/g, '');
   if (d.length < 8) return false;
   return parseInt(d.slice(0, 8), 10) >= 20260607;
+}
+// v4.22: 양식 판별을 '생성일자' → '파일 유형'으로. .txt/.md=과거 양식, 구글Docs(확장자 없음)=신규 양식. (파일명은 fetchReportContent가 캐시)
+function aqReportIsNewFormat(ticker, date) {
+  const mkt = getCurrentMarket();
+  const key = `${mkt}/${ticker}/${date}`;
+  const fn = (_state.reportFilenameCache && _state.reportFilenameCache[key]) || '';
+  if (fn) return !/\.(txt|md)$/i.test(fn);   // 확장자 있으면 과거(txt/md), 없으면 구글Docs=신규
+  return aqReportIsV2(date);                 // 파일명 미상 시 일자 휴리스틱 폴백
 }
 function aqActionType(w) {
   w = String(w || '');
@@ -13895,7 +13905,7 @@ async function openReportDetail(date) {
   $('reportPanel').innerHTML = `<div class="report-loading">보고서 로드 중...</div>`;
   try {
     const content = await fetchReportContent(tk, date);
-    const _v2 = aqReportIsV2(date);
+    const _v2 = aqReportIsNewFormat(tk, date);
     const parsed = _v2 ? parseReportTextV2(content) : parseReportText(content);
     const mkt = getCurrentMarket();
     // v2.63: 좌측 종목 헤더 — 차트 모달의 modalTitle/Price/Subtitle innerHTML 그대로 복사 (이미 openChart에서 채워져 있음)
@@ -13950,7 +13960,7 @@ async function aqLoadAnalysisAction(mkt, tk, date) {
   if (_analysisActions[key] !== undefined) return _analysisActions[key];
   try {
     const content = await fetchReportContent(tk, date);
-    if (aqReportIsV2(date)) {
+    if (aqReportIsNewFormat(tk, date)) {
       const p2 = parseReportTextV2(content);
       _analysisActions[key] = p2.action ? { action: p2.action.action, type: p2.action.actionType } : null;
     } else {
