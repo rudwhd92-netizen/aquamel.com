@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.59';
+window.AQ_PWA_VERSION = '4.60';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -22077,6 +22077,14 @@ window.setPCTab = setPCTab;
 //   - 카드 양식은 기존과 100% 동일: 로고 / 이름 / 일자 / (하단 슬롯엔 매수 단가 $).
 // ============================================================================
 // v3.15: 발견 종목 목록/순서 계산 — 금주의 발견 카드 + 피드가 공유
+// v4.60: KR 외국인/기관 연속 순매수 일수 (최신 거래일부터 >0 연속). rows = 날짜 오름차순(수급 집계된 행만)
+function _aqKrFlowStreak(rows, key) {
+  let n = 0;
+  for (let i = rows.length - 1; i >= 0; i--) {
+    if ((Number(rows[i][key]) || 0) > 0) n++; else break;
+  }
+  return n;
+}
 function aqDiscoverItems() {
   const market = getCurrentMarket();
   if (market === 'US' && !_aqInsiderLoaded) return null;  // 로딩중
@@ -22123,7 +22131,32 @@ function aqDiscoverItems() {
     });
   };
   if (market === 'US') { addSig(_state.archivesV1.US, 'V-Shape'); addSig(_state.archives.US, 'V-Shape'); }
-  else if (market === 'KR') { addSig(_state.archives.KR, '신호'); }
+  else if (market === 'KR') {
+    addSig(_state.archives.KR, '신호');
+    // v4.60: 외국인 OR 기관 연속 순매수 5일 이상 → 금주의 발견/피드에 노출
+    try {
+      const seen = new Set();
+      for (const sec of Object.keys(_state.sectors || {})) {
+        for (const r of _state.sectors[sec]) { const tk = (r.Ticker || '').toUpperCase(); if (tk) seen.add(tk); }
+      }
+      seen.forEach(tk => {
+        const fnd = findTickerSeries(tk); if (!fnd || !fnd.rows || !fnd.rows.length) return;
+        const trading = fnd.rows.filter(r =>
+          (Number(r.Volume) || 0) > 0 &&
+          ((Number(r.Foreign) || 0) !== 0 || (Number(r.Inst) || 0) !== 0 || (Number(r.Retail) || 0) !== 0));
+        if (trading.length < 5) return;
+        const fStreak = _aqKrFlowStreak(trading, 'Foreign');
+        const iStreak = _aqKrFlowStreak(trading, 'Inst');
+        if (fStreak >= 5 || iStreak >= 5) {
+          const lastDate = trading[trading.length - 1].Date;
+          const it = ensure(tk, lastDate);
+          if (fStreak >= 5) addType(it, '외국인 ' + fStreak + '일');
+          if (iStreak >= 5) addType(it, '기관 ' + iStreak + '일');
+          if (lastDate > (it.date || '')) it.date = lastDate;
+        }
+      });
+    } catch (e) { console.warn('[discover] KR flow streak', e); }
+  }
 
   // v4.11: 최근 3일 이내 보고서 있는 종목 노출. v4.24: 단, 추천 ACTION에 '매수'가 포함된 경우에만.
   const _repObj = (_state.reports && _state.reports[market]) || {};
