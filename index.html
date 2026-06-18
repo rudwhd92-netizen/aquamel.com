@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.62';
+window.AQ_PWA_VERSION = '4.63';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3204,6 +3204,11 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   border-left-color: #fab005;
 }
 .cal-event-chip.cal-evt-13f:hover { background: rgba(250, 176, 5, 0.34); }
+/* v4.63: 매매 이력 칩 (매수=빨강 / 매도=파랑) */
+.cal-event-chip.cal-evt-buy { background: rgba(250,82,82,0.18); color: #ffc9c9; }
+.cal-event-chip.cal-evt-buy:hover { background: rgba(250,82,82,0.30); }
+.cal-event-chip.cal-evt-sell { background: rgba(51,154,240,0.18); color: #a5d8ff; }
+.cal-event-chip.cal-evt-sell:hover { background: rgba(51,154,240,0.30); }
 .cal-event-chip-logo {
   width: 12px;
   height: 12px;
@@ -3216,6 +3221,8 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .cal-cell-dot.cal-dot-earnings { background: #7950f2; }
 .cal-cell-dot.cal-dot-fomc { background: #ff6b6b; }
 .cal-cell-dot.cal-dot-13f { background: #fab005; }
+.cal-cell-dot.cal-dot-buy { background: #fa5252; }
+.cal-cell-dot.cal-dot-sell { background: #339af0; }
 
 .cal-event-row.is-readonly {
   cursor: default;
@@ -3659,6 +3666,8 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .cal-filter-chip[data-filter="earnings_unheld"] .cal-filter-chip-dot { background: #ae8eff; }
 .cal-filter-chip[data-filter="fomc"] .cal-filter-chip-dot { background: #ff6b6b; }
 .cal-filter-chip[data-filter="thirteenF"] .cal-filter-chip-dot { background: #fab005; }
+.cal-filter-chip[data-filter="tradeBuy"] .cal-filter-chip-dot { background: #fa5252; }
+.cal-filter-chip[data-filter="tradeSell"] .cal-filter-chip-dot { background: #339af0; }
 [data-theme="light"] .cal-filter-chip {
   background: rgba(0,0,0,0.025);
   border-color: rgba(0,0,0,0.12);
@@ -7902,6 +7911,12 @@ table.combo-eval tbody td .nodata {
         <button class="cal-filter-chip" data-filter="thirteenF" onclick="aqCalToggleFilter('thirteenF')" type="button">
           <span class="cal-filter-chip-dot"></span>13F
         </button>
+        <button class="cal-filter-chip" data-filter="tradeBuy" onclick="aqCalToggleFilter('tradeBuy')" type="button">
+          <span class="cal-filter-chip-dot"></span>매수
+        </button>
+        <button class="cal-filter-chip" data-filter="tradeSell" onclick="aqCalToggleFilter('tradeSell')" type="button">
+          <span class="cal-filter-chip-dot"></span>매도
+        </button>
       </div>
       <div class="cal-weekdays">
         <div class="cal-weekday">월</div>
@@ -9856,12 +9871,35 @@ function aqCalSheetEventsFor(dateStr) {
     });
 }
 
-// v2.53: 캘린더 필터 (4가지 ON/OFF) — localStorage 영속
+// v4.63: 매매 이력(매수/매도) — 현재 시장의 tradesSheet에서 해당 날짜 거래 추출 (시장별 자동)
+function aqCalTradeEventsFor(dateStr) {
+  try {
+    if (typeof tradesSheet === 'undefined' || !tradesSheet || !Array.isArray(tradesSheet.data)) return [];
+    const out = [];
+    tradesSheet.data.forEach(r => {
+      if (!r || !r.ticker) return;
+      const d = String(r.date || '').slice(0, 10);
+      if (d !== dateStr) return;
+      const isSell = String(r.action || '').indexOf('매도') >= 0;
+      const ev = { date: d, category: 'Trade', _kind: isSell ? 'sell' : 'buy',
+        action: r.action || (isSell ? '매도' : '매수'), ticker: String(r.ticker).toUpperCase(),
+        qty: r.qty, price: r.price };
+      if (!_aqCalEventMatchesFilter(ev)) return;
+      out.push(ev);
+    });
+    out.sort((a, b) => (a._kind === b._kind) ? a.ticker.localeCompare(b.ticker) : (a._kind === 'buy' ? -1 : 1));
+    return out;
+  } catch (e) { return []; }
+}
+
+// v2.53: 캘린더 필터 — localStorage 영속 (v4.63: 매수/매도 추가)
 const aqCalFilters = {
   earnings_held:   true,   // 실적발표 - 보유
   earnings_unheld: true,   // 실적발표 - 미보유
   fomc:            true,
   thirteenF:       true,
+  tradeBuy:        true,   // v4.63: 매수 이력
+  tradeSell:       true,   // v4.63: 매도 이력
 };
 function aqCalLoadFilters() {
   try {
@@ -9895,6 +9933,7 @@ function _aqCalEventMatchesFilter(ev) {
   }
   if (ev.category === 'FOMC') return aqCalFilters.fomc;
   if (ev.category === '13F')  return aqCalFilters.thirteenF;
+  if (ev.category === 'Trade') return ev._kind === 'sell' ? aqCalFilters.tradeSell : aqCalFilters.tradeBuy;
   return true;
 }
 
@@ -9933,7 +9972,13 @@ function renderMajorEventsCard() {
   const isUS = typeof getCurrentMarket !== 'function' || getCurrentMarket() === 'US';
   if (card) card.style.display = isUS ? '' : 'none';
   const filterRow = document.querySelector('.cal-filter-row');
-  if (filterRow) filterRow.style.display = isUS ? '' : 'none';
+  if (filterRow) {
+    filterRow.style.display = '';   // v4.63: 매수/매도 필터는 KR에서도 필요 → 행 항상 표시
+    ['earnings_held','earnings_unheld','fomc','thirteenF'].forEach(k => {
+      const c = filterRow.querySelector('.cal-filter-chip[data-filter="' + k + '"]');
+      if (c) c.style.display = isUS ? '' : 'none';   // US 전용 일정 칩만 US에서 표시
+    });
+  }
   if (!isUS) return;
   _aqCalRefreshHoldings();  // 캐시 갱신
   if (!Array.isArray(_aqCalSheetEvents) || _aqCalSheetEvents.length === 0) {
@@ -10710,8 +10755,10 @@ function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
   const userEvents = aqCalEventsFor(dateStr);
   // v2.51: 시트 일정 합치기 — 사용자 일정 먼저, 그 다음 시트 일정
   const sheetEvents = (typeof aqCalSheetEventsFor === 'function') ? aqCalSheetEventsFor(dateStr) : [];
+  const tradeEvents = (typeof aqCalTradeEventsFor === 'function') ? aqCalTradeEventsFor(dateStr) : [];
   const allEvents = [
     ...userEvents.map(e => Object.assign({}, e, { _type: 'user' })),
+    ...tradeEvents.map(e => Object.assign({}, e, { _type: 'trade' })),
     ...sheetEvents.map(e => Object.assign({}, e, { _type: 'sheet' })),
   ];
   const cell = document.createElement('div');
@@ -10745,6 +10792,8 @@ function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
           if (ev.category === 'Earnings') dotCls += ' cal-dot-earnings';
           else if (ev.category === 'FOMC') dotCls += ' cal-dot-fomc';
           else if (ev.category === '13F') dotCls += ' cal-dot-13f';
+        } else if (ev._type === 'trade') {
+          dotCls += (ev._kind === 'sell' ? ' cal-dot-sell' : ' cal-dot-buy');
         }
         dot.className = dotCls;
         dotsDiv.appendChild(dot);
@@ -10761,6 +10810,14 @@ function _buildCalCell(dayNum, dateStr, isOther, todayStr, isMobile) {
           chip.textContent = ev.allDay ? ev.title : ((ev.startTime ? ev.startTime + ' ' : '') + ev.title);
           chip.title = ev.title;
           chip.onclick = (e) => { e.stopPropagation(); aqCalendarOpenModal(ev.id); };
+        } else if (ev._type === 'trade') {
+          chip.className = 'cal-event-chip ' + (ev._kind === 'sell' ? 'cal-evt-sell' : 'cal-evt-buy');
+          const tflag = './flags/' + ((typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US') + '.png';
+          const tlogo = ev.ticker ? './logos/tickers/' + ev.ticker + '.png' : tflag;
+          chip.innerHTML = '<img class="cal-event-chip-logo" src="' + tlogo + '" onerror="this.onerror=null;this.src=\'' + tflag + '\';" alt=""/>' + escapeHtml(ev.ticker || '');
+          chip.title = (ev.action || '') + (ev.ticker ? ' ' + ev.ticker : '');
+          if (ev.ticker && typeof openChart === 'function') { chip.style.cursor = 'pointer'; chip.onclick = (e) => { e.stopPropagation(); openChart(ev.ticker); }; }
+          else chip.style.cursor = 'default';
         } else {
           // v2.51: 시트 일정 — 카테고리별 색상 + 로고 + read-only (클릭 시 그냥 날짜 선택)
           // v2.53: Earnings 중 보유 종목은 is-held 클래스 (더 진한 색)
@@ -10824,7 +10881,8 @@ function _renderSelectedSection() {
   const events = aqCalEventsFor(aqCal.selected);
   // v2.51: 시트 일정도 같이 합쳐서 표시 (read-only)
   const sheetEvents = (typeof aqCalSheetEventsFor === 'function') ? aqCalSheetEventsFor(aqCal.selected) : [];
-  if (events.length === 0 && sheetEvents.length === 0) {
+  const tradeEvents = (typeof aqCalTradeEventsFor === 'function') ? aqCalTradeEventsFor(aqCal.selected) : [];
+  if (events.length === 0 && sheetEvents.length === 0 && tradeEvents.length === 0) {
     list.innerHTML = '<div class="cal-event-empty">이 날짜에 등록된 일정이 없습니다.</div>';
     return;
   }
@@ -10854,6 +10912,30 @@ function _renderSelectedSection() {
       memoEl.textContent = ev.memo;
       info.appendChild(memoEl);
     }
+    row.appendChild(info);
+    list.appendChild(row);
+  });
+
+  // v4.63: 매매 이력 (매수/매도) — read-only
+  tradeEvents.forEach(ev => {
+    const row = document.createElement('div');
+    row.className = 'cal-event-row is-readonly';
+    if (ev.ticker && typeof openChart === 'function') { row.style.cursor = 'pointer'; row.onclick = () => openChart(ev.ticker); }
+    const logoEl = document.createElement('img');
+    logoEl.className = 'cal-event-row-logo'; logoEl.alt = '';
+    const tflag = './flags/' + ((typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US') + '.png';
+    logoEl.src = ev.ticker ? './logos/tickers/' + ev.ticker + '.png' : tflag;
+    logoEl.onerror = function() { this.onerror = null; this.src = tflag; };
+    row.appendChild(logoEl);
+    const info = document.createElement('div'); info.className = 'cal-event-info';
+    const titleEl = document.createElement('div'); titleEl.className = 'cal-event-title';
+    const actCol = ev._kind === 'sell' ? '#339af0' : '#fa5252';
+    titleEl.innerHTML = '<strong>' + escapeHtml(ev.ticker || '') + '</strong> <span style="color:' + actCol + ';font-weight:700;">' + escapeHtml(ev.action || (ev._kind === 'sell' ? '매도' : '매수')) + '</span>';
+    info.appendChild(titleEl);
+    const qp = [];
+    if (ev.qty != null && ev.qty !== '') qp.push(escapeHtml(String(ev.qty)) + '주');
+    if (ev.price != null && ev.price !== '') qp.push('@' + escapeHtml(String(ev.price)));
+    if (qp.length) { const m = document.createElement('div'); m.className = 'cal-event-memo'; m.textContent = qp.join(' · '); info.appendChild(m); }
     row.appendChild(info);
     list.appendChild(row);
   });
