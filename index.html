@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.61';
+window.AQ_PWA_VERSION = '4.62';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -9928,6 +9928,7 @@ function renderMajorEventsCard() {
   const card = document.getElementById('majorEventsCard');
   const scroll = document.getElementById('majorEventsScroll');
   if (!scroll) return;
+  try { if (typeof _aqRenderMarquee === 'function') _aqRenderMarquee(); } catch (e) {}  // v4.62: 일정 변동 → 마퀴 임박 일정 갱신
   // v2.56: KR 시장은 미국 일정 카드 자체를 숨김 (필터 chip도 같이)
   const isUS = typeof getCurrentMarket !== 'function' || getCurrentMarket() === 'US';
   if (card) card.style.display = isUS ? '' : 'none';
@@ -21431,6 +21432,29 @@ window._aqTriggerCheckTick = _aqTriggerCheckTick;
 
 // HERO 마퀴 렌더 — 알림 큐를 우→좌 흐르는 텍스트로
 // v2.69: 임박 카드 실시간 합치기 — 시점 기반 todo(date/range/quarter/soft)가 D-7 이내(=칸반 '임박' 컬럼)면 마퀴에 표시
+// v4.62: 마퀴용 2일 이내 임박 일정 칩 (US 일정 — Earnings/FOMC/13F). 주요이벤트 카드와 동일 소스/계산.
+function _aqMarqueeEventChips() {
+  try {
+    if (typeof _aqCalSheetEvents === 'undefined' || !Array.isArray(_aqCalSheetEvents) || !_aqCalSheetEvents.length) return [];
+    if (typeof _aqCalDaysUntil !== 'function') return [];
+    const evtName = (cat) => cat === 'Earnings' ? '실적발표' : cat === 'FOMC' ? 'FOMC' : cat === '13F' ? '13F' : cat;
+    const dLabel = (n) => n === 0 ? 'D-DAY' : ('D-' + n);
+    const list = _aqCalSheetEvents
+      .map(e => Object.assign({}, e, { _dn: _aqCalDaysUntil(e.date) }))
+      .filter(e => typeof e._dn === 'number' && e._dn >= 0 && e._dn <= 2)   // 2일 이내 (D-DAY 포함)
+      .sort((a, b) => {
+        if (a._dn !== b._dn) return a._dn - b._dn;
+        const ord = { FOMC: 0, '13F': 1, Earnings: 2 };
+        return (ord[a.category] != null ? ord[a.category] : 9) - (ord[b.category] != null ? ord[b.category] : 9);
+      });
+    return list.map(ev => {
+      const lbl = ev.category === 'Earnings' ? (ev.ticker || '') : ev.category;
+      const txt = (lbl ? (escapeHtml(lbl) + ' ') : '') + escapeHtml(evtName(ev.category)) + ' ' + dLabel(ev._dn);
+      const tkAttr = (ev.category === 'Earnings' && ev.ticker) ? ` data-ev-ticker="${escapeAttr(ev.ticker)}"` : '';
+      return { html: `<span class="notif notif-urgent macro-ev"${tkAttr} title="${escapeAttr(ev.description || '')}">📅 ${txt}</span>` };
+    });
+  } catch (e) { return []; }
+}
 function _aqRenderMarquee() {
   const track = document.getElementById('heroMarqueeTrack');
   if (!track) return;
@@ -21465,7 +21489,10 @@ function _aqRenderMarquee() {
     }
   } catch (e) {}
 
-  if (items.length === 0) {
+  // v4.62: 2일 이내 임박 일정 칩 (앞에 배치)
+  const evChips = (typeof _aqMarqueeEventChips === 'function') ? _aqMarqueeEventChips() : [];
+
+  if (items.length === 0 && evChips.length === 0) {
     track.classList.add('empty');
     track.textContent = '매크로 데이터 불러오는 중…';
     return;
@@ -21475,14 +21502,21 @@ function _aqRenderMarquee() {
   // 등락률 절댓값 큰 순 (큰 변동 먼저)
   items.sort((a, b) => Math.abs(b.chg) - Math.abs(a.chg));
 
-  const inner = items.map(it => {
+  const macroInner = items.map(it => {
     const up = it.chg >= 0;
     const color = up ? 'var(--kr-up)' : 'var(--kr-down)';
     const emoji = (typeof MACRO_EMOJI !== 'undefined' && MACRO_EMOJI[it.ticker]) ? MACRO_EMOJI[it.ticker] : '📊';
     const chgStr = (up ? '+' : '') + it.chg.toFixed(2) + '%';
     return `<span class="notif macro-chip" data-macro="${escapeAttr(it.ticker)}" title="${escapeAttr(it.ticker)} 매크로 차트">${emoji} ${escapeHtml(it.ticker)} <b style="color:${color};font-weight:700;">${escapeHtml(chgStr)}</b></span>`;
   }).join('<span class="notif-sep">·</span>');
-  track.innerHTML = inner;
+  const evInner = evChips.map(e => e.html).join('<span class="notif-sep">·</span>');
+  const midSep = (evInner && macroInner) ? '<span class="notif-sep">·</span>' : '';
+  track.innerHTML = evInner + midSep + macroInner;
+
+  // 임박 일정(실적발표) 칩 클릭 → 종목 차트
+  track.querySelectorAll('.macro-ev[data-ev-ticker]').forEach(el => {
+    el.onclick = () => { const tk = el.dataset.evTicker; if (tk && typeof openChart === 'function') openChart(tk); };
+  });
 
   // 클릭 → 매크로 차트
   track.querySelectorAll('.macro-chip').forEach(el => {
