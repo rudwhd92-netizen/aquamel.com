@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.60';
+window.AQ_PWA_VERSION = '4.61';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2514,9 +2514,11 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  /* v4.55: 글로우 링(.aq-story 펄스)이 로고 위로 ~21px 번지는데 기존 상단 8px라 잘렸음.
-     overflow-y:hidden은 유지(세로 스크롤 방지)하되 상/하/좌우 패딩으로 글로우 공간 확보 → 외곽 안 잘림. */
-  padding: 22px 10px 12px;
+  /* v4.61: 글로우 공간은 패딩으로 확보하되(상22/하14), 음수 마진으로 상쇄해
+     줄의 시각적 위치는 예전(상8/하4)과 동일하게 복원. → 글로우 안 잘림 + 위치 안 밀림.
+     (overflow-y:hidden은 유지해 세로 스크롤 방지; 가로는 overflow 위험 없게 음수 마진 미적용) */
+  padding: 22px 4px 14px;
+  margin: -14px 0 -10px;
   scrollbar-width: none;
 }
 .buy-points-scroll::-webkit-scrollbar { display: none; }
