@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.53';
+window.AQ_PWA_VERSION = '4.54';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -11168,22 +11168,24 @@ async function _deltaSync(userId, dataType, localRows, onProgress, passwordHash)
 window.saveUserDataToBackend = saveUserDataToBackend;
 
 // 구글 시트 → LocalStorage로 역방향 로드 ({userId}_PF + {userId}_HISTORY)
-async function loadUserDataFromBackend() {
-  const userId = ($('userIdInput').value || '').trim();
-  if (!userId) { alert('사용자 ID를 먼저 입력하세요 (영문/숫자/언더스코어).'); return; }
+async function loadUserDataFromBackend(opts) {
+  opts = opts || {};
+  const silentLoad = !!opts.silent;   // v4.54: 부팅 자동 동기화 — confirm/alert 없이 백엔드=마스터로 조용히
+  const userId = silentLoad ? ((lsGet(LS.USER_ID) || '').trim()) : (($('userIdInput').value || '').trim());
+  if (!userId) { if (!silentLoad) alert('사용자 ID를 먼저 입력하세요 (영문/숫자/언더스코어).'); return; }
   if (!/^[a-zA-Z0-9_]{1,20}$/.test(userId)) {
-    alert('사용자 ID는 영문/숫자/언더스코어 조합 1~20자만 가능합니다.');
+    if (!silentLoad) alert('사용자 ID는 영문/숫자/언더스코어 조합 1~20자만 가능합니다.');
     return;
   }
   if (!backendReady()) {
-    alert('Apps Script URL이 설정되지 않았습니다.');
+    if (!silentLoad) alert('Apps Script URL이 설정되지 않았습니다.');
     return;
   }
 
-  // 현재 LocalStorage에 데이터가 있으면 덮어쓰기 경고
+  // 현재 LocalStorage에 데이터가 있으면 덮어쓰기 경고 (silent 자동 동기화는 백엔드=마스터로 바로 진행)
   const hasPf = (portfolioSheet.data || []).filter(r => r.ticker).length > 0;
   const hasTr = (tradesSheet.data || []).filter(r => r.ticker).length > 0;
-  if (hasPf || hasTr) {
+  if (!silentLoad && (hasPf || hasTr)) {
     const msg = `현재 LocalStorage 데이터를 백업 내용으로 덮어씁니다.\n\n· 포트폴리오: ${hasPf ? '있음' : '없음'}\n· 매매이력: ${hasTr ? '있음' : '없음'}\n\n계속하시겠습니까?`;
     if (!confirm(msg)) return;
   }
@@ -11193,10 +11195,9 @@ async function loadUserDataFromBackend() {
   // v1.64: 비밀번호 hash
   const { passwordHash } = await getCurrentUserAuth();
 
-  const btn = $('loadDataBtn');
-  const origText = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = '불러오는 중…';
+  const btn = silentLoad ? null : $('loadDataBtn');
+  const origText = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '불러오는 중…'; }
 
   try {
     // v1.71: dataType에 시장 suffix 자동 추가
@@ -11208,10 +11209,10 @@ async function loadUserDataFromBackend() {
 
     // v1.64: 비밀번호 에러 처리 (한쪽이라도 인증 실패면 안내)
     if (pfRes && (pfRes.needPassword || pfRes.wrongPassword)) {
-      handlePasswordError(pfRes); return;
+      if (silentLoad) return; handlePasswordError(pfRes); return;
     }
     if (trRes && (trRes.needPassword || trRes.wrongPassword)) {
-      handlePasswordError(trRes); return;
+      if (silentLoad) return; handlePasswordError(trRes); return;
     }
 
     // 둘 다 실패한 경우만 throw — 하나만 없는 건 OK (예: PF만 저장된 사용자)
@@ -11280,11 +11281,13 @@ async function loadUserDataFromBackend() {
     const pfMsg = (pfRes && pfRes.ok) ? `${pfN}건` : '저장된 데이터 없음';
     const trMsg = (trRes && trRes.ok) ? `${trN}건` : '저장된 데이터 없음';
     const watchN = (watchRes && watchRes.ok && Array.isArray(watchRes.rows)) ? watchRes.rows.length : 0;
-    alert(`✓ 불러오기 완료\n· ${userId}_${dataTypePF()}: ${pfMsg}\n· ${userId}_${dataTypeTrades()}: ${trMsg}\n· 관심종목: ${watchN}건\n\nLocalStorage 갱신됨, 12계층 비중 재계산됨.`);
+    if (!silentLoad) alert(`✓ 불러오기 완료\n· ${userId}_${dataTypePF()}: ${pfMsg}\n· ${userId}_${dataTypeTrades()}: ${trMsg}\n· 관심종목: ${watchN}건\n\nLocalStorage 갱신됨, 12계층 비중 재계산됨.`);
   } catch (err) {
     const msg = String(err && err.message || err);
     // v1.82: 백엔드 v2.9 미배포 명확히 안내
-    if (/dataType은 PF 또는 HISTORY 만 가능|PF\/HISTORY 또는 PF_US/.test(msg)) {
+    if (silentLoad) {
+      console.warn('[auto-sync 실패]', msg);
+    } else if (/dataType은 PF 또는 HISTORY 만 가능|PF\/HISTORY 또는 PF_US/.test(msg)) {
       alert(`❌ 백엔드 버전이 옛 버전입니다.\n\nApps Script Code.gs를 v2.9로 교체하고 재배포 해주세요.\n(매매이력 시장별 분리를 위해 dataType에 _US/_KR 접미사를 허용해야 함)\n\n원본 에러: ${msg}`);
     } else if (/unknown action|action.*not found|loadUserData/.test(msg)) {
       alert(`백엔드에 'loadUserData' 함수가 없습니다.\n\nApps Script를 v2.9 통합본으로 업데이트해주세요. (제공된 .gs 파일 전체를 Apps Script 에디터에 붙여넣고 재배포)\n\n원본 에러: ${msg}`);
@@ -11292,8 +11295,7 @@ async function loadUserDataFromBackend() {
       alert(`불러오기 실패: ${msg}`);
     }
   } finally {
-    btn.disabled = false;
-    btn.textContent = origText;
+    if (btn) { btn.disabled = false; btn.textContent = origText; }
   }
 }
 window.loadUserDataFromBackend = loadUserDataFromBackend;
@@ -12610,6 +12612,13 @@ async function autoLoadData(opts) {
     // v2.48: 다음 일반 로드를 위해 loadingTitle 원복
     if (loadingTitle) loadingTitle.textContent = '데이터 업데이트 & 분석';
     _autoLoadInProgress = false;
+    // v4.54: 부팅 마지막에 매매이력/관심종목 자동 동기화 (백엔드=마스터). userId 저장돼 있을 때만, 조용히.
+    //   화면 이미 렌더 완료 → 첫 화면 지연 없음. 동기화 끝나면 매매이력/관심 표가 조용히 갱신됨.
+    try {
+      if (typeof loadUserDataFromBackend === 'function' && (lsGet(LS.USER_ID) || '').trim()) {
+        setTimeout(() => { try { loadUserDataFromBackend({ silent: true }); } catch (e) {} }, 300);
+      }
+    } catch (e) {}
     // v2.64: 내부자 거래 데이터 background fetch (US만, 메인 로딩 영향 X — 비동기 / await 안 함)
     // v2.85: fetch 완료 후 내부자 매수 카드 재빌드
     // v2.86: 내부자 누적 리스트도 재빌드
