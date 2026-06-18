@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.63';
+window.AQ_PWA_VERSION = '4.66';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2219,7 +2219,9 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
   backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); justify-content: center; align-items: flex-start; }
 .aqval-modal.open { display: flex; }
 .aqval-content { margin-top: 8vh; width: min(560px, 92vw); max-height: 80vh; display: flex; flex-direction: column;
-  background: var(--panel, #232327); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+  background: var(--panel, #232327); border: 1px solid var(--line); border-radius: 16px;
+  /* v4.64: 콘텐츠 자체를 스크롤러로 (종목 모달과 동일 구조) + overscroll-behavior로 페이지 풀투리프레시 차단 */
+  overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
 .aqval-head { display: flex; align-items: center; gap: 6px; padding: 16px 18px 0; }
 .aqval-title { font-size: 14.5px; font-weight: 800; color: var(--text-hi); }
@@ -2245,7 +2247,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; -webkit-tap-highlight-color: transparent; }
 .aqval-dd-opt:active, .aqval-dd-opt:hover { background: var(--bg-3); }
 .aqval-dd-opt.sel { color: var(--accent-2); font-weight: 800; }
-.aqval-body { overflow-y: auto; padding: 10px 8px 18px; }
+.aqval-body { padding: 10px 8px 18px; }
 .aqval-bar-fill { background: var(--accent-2) !important; }
 .aqval-bar-row { padding: 6px 14px; }
 .aqval-bar-row.is-self { background: rgba(78,201,176,0.12); border-radius: 4px; }
@@ -8086,7 +8088,6 @@ table.combo-eval tbody td .nodata {
       <div class="aqval-head">
         <span class="aqval-title" id="aqValTitle">밸류에이션 비교</span>
         <span class="aqval-sub" id="aqValSub"></span>
-        <button class="aqval-close" onclick="closeAqValModal()" aria-label="닫기">&times;</button>
       </div>
       <div class="aqval-tabs" id="aqValTabs"></div>
       <div class="aqval-sector-row">
@@ -10065,6 +10066,7 @@ let _aqInsiderTrades = {};  // { TICKER: [trade, trade, ...] }
 let _aqInsiderLoaded = false;  // v2.85: 내부자 데이터 fetch 완료 여부 (로딩중 vs 비어있음 구분용)
 
 async function fetchInsiderTrades(forceFresh) {
+  try { if (typeof fetchInsiderSells === 'function') fetchInsiderSells(forceFresh); } catch (e) {}  // v4.65: 매도도 병렬 fetch
   if (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US') {
     if (Object.keys(_aqInsiderTrades).length > 0) _aqInsiderTrades = {};
     return _aqInsiderTrades;
@@ -10132,6 +10134,52 @@ async function fetchInsiderTrades(forceFresh) {
   }
 }
 window.fetchInsiderTrades = fetchInsiderTrades;
+
+// v4.65: 내부자 매도 (US_SELL, SEC Form 4 매도) — 매수와 동일 구조, getOneSheet로 받음(백엔드 수정 불필요)
+const AQ_US_INSIDER_SELL_TAB = 'US_SELL';
+const AQ_INS_SELL_CACHE_KEY = 'us_insider_sell_v1';
+let _aqInsiderSells = {};
+let _aqInsiderSellsLoaded = false;
+async function fetchInsiderSells(forceFresh) {
+  if (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US') {
+    if (Object.keys(_aqInsiderSells).length > 0) _aqInsiderSells = {};
+    return _aqInsiderSells;
+  }
+  if (!forceFresh) {
+    try {
+      const cached = await aqDbGet(AQ_INS_SELL_CACHE_KEY);
+      if (cached && cached.fetchedAt && cached.byTicker) {
+        const ageMin = (Date.now() - new Date(cached.fetchedAt).getTime()) / 60000;
+        if (ageMin < AQ_INS_CACHE_TTL_MIN) { _aqInsiderSells = cached.byTicker; _aqInsiderSellsLoaded = true; return _aqInsiderSells; }
+      }
+    } catch (e) {}
+  }
+  if (typeof apiCall !== 'function' || !backendReady()) return _aqInsiderSells;
+  try {
+    const res = await apiCall('getOneSheet', { sheetId: AQ_US_CALENDAR_SHEET, tab: AQ_US_INSIDER_SELL_TAB });
+    if (!res || !res.ok || !Array.isArray(res.rows)) { console.warn('[fetchInsiderSells] 응답 비정상:', res && res.error); return _aqInsiderSells; }
+    const byTicker = {};
+    res.rows.forEach(r => {
+      const tk = String(r.Ticker || '').toUpperCase(); if (!tk) return;
+      const transDate = r.TransDate_ET ? String(r.TransDate_ET).slice(0, 10) : '';
+      const price = Number(r.Price) || 0;
+      if (!transDate || price <= 0) return;
+      if (!byTicker[tk]) byTicker[tk] = [];
+      byTicker[tk].push({
+        transDate, ticker: tk, ownerName: String(r.Owner_Name || ''), ownerType: String(r.Owner_Type || ''),
+        relationship: String(r.Relationship || ''), security: String(r.Security || ''), transCode: String(r.TransCode || 'S'),
+        shares: Number(r.Shares) || 0, price, valueUsd: Number(r.Value_USD) || 0, sharesAfter: Number(r.Shares_After) || 0,
+        filedDate: r.Filed_Date_KST ? String(r.Filed_Date_KST).slice(0, 10) : '', formUrl: String(r.Form_URL || ''),
+      });
+    });
+    Object.keys(byTicker).forEach(tk => byTicker[tk].sort((a, b) => (b.transDate || '').localeCompare(a.transDate || '')));
+    _aqInsiderSells = byTicker; _aqInsiderSellsLoaded = true;
+    try { await aqDbSet(AQ_INS_SELL_CACHE_KEY, { fetchedAt: new Date().toISOString(), byTicker }); } catch (e) {}
+    console.log('[fetchInsiderSells] fetch 완료 — ' + Object.keys(byTicker).length + '종목, ' + res.rows.length + '건');
+    return byTicker;
+  } catch (e) { console.warn('[fetchInsiderSells]', e); return _aqInsiderSells; }
+}
+window.fetchInsiderSells = fetchInsiderSells;
 window.aqCalSheetEventsFor = aqCalSheetEventsFor;
 
 // v3.22: 밸류에이션 데이터 (US_VALUATION 탭 — Trailing_PE / Forward_PE / PEG_Ratio) fetch
@@ -10625,6 +10673,7 @@ function aqOpenValModal(ticker, metric) {
   }
   _aqRenderValBars();
   modal.classList.add('open');
+  try { if (typeof attachSwipeToClose === 'function') attachSwipeToClose(modal, closeAqValModal); } catch (e) {}  // v4.64: 스크롤다운 닫기
 }
 function closeAqValModal() { const m = document.getElementById('aqValModal'); if (m) m.classList.remove('open'); }
 function aqValModalBackdrop(e) {
@@ -19218,6 +19267,13 @@ async function openChart(ticker) {
     ownerName: t.ownerName,
     relationship: t.relationship,
   }));
+  // v4.65: 내부자 매도 마커 (US_SELL)
+  const _allInsiderSells = (typeof _aqInsiderSells !== 'undefined' && _aqInsiderSells[ticker]) ? _aqInsiderSells[ticker] : [];
+  const insiderSellMarkers = _allInsiderSells
+    .filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
+    .filter(t => isCommonEquityTrade(t.security))
+    .filter(t => { const idx = dates.indexOf(t.transDate); if (idx < 0) return true; const cc = closes[idx]; if (!cc || cc <= 0) return true; const ra = t.price / cc; return ra > 0.5 && ra < 2; })
+    .map(t => ({ x: t.transDate, y: t.price, shares: t.shares, sharesAfter: t.sharesAfter, ownerName: t.ownerName, relationship: t.relationship }));
 
   // Signal markers from archive — respect global signal filter
   // v1.81: priority도 시장별 — KR엔 'T' 한 종류만, US는 4가지 T_*
@@ -19365,7 +19421,8 @@ async function openChart(ticker) {
       dates, closes, highs, lows, ma20, adN, vols,
       supportMA20, supportRF, prevLow, lastPrice, recentHigh, recentHighIdx,
       buyAvg, tradeMarkers, sigMarkersByType,
-      insiderMarkers,  // v2.64: 내부자 거래 마커
+      insiderMarkers,  // v2.64: 내부자 매수 마커
+      insiderSellMarkers,  // v4.65: 내부자 매도 마커
       retailN, foreignN, instN,   // v1.89: KR 모드면 값 있음, 아니면 null
     });
     try { if (typeof aqSetModalHexCorner === 'function') aqSetModalHexCorner(ticker, { closes }); } catch (e) {}
@@ -19616,7 +19673,7 @@ function closeModalIfOverlay(e) { if (e.target.id === 'chartModal') closeModal()
 //   드래그 거리 100px 이상 또는 빠른 플릭(속도 0.5px/ms)에 트리거.
 // ============================================================================
 function attachSwipeToClose(modalEl, closeFn) {
-  const content = modalEl.querySelector('.modal-content');
+  const content = modalEl.querySelector('.modal-content, .aqval-content');
   if (!content || content._swipeBound) return;
   content._swipeBound = true;
 
@@ -20180,20 +20237,16 @@ function drawChart(d, opts) {
     }
   }
 
-  // v2.64: 내부자 매수 마커 — 황금색 역삼각형 (▼), V_Main 등과 같은 사이즈
+  // v4.65: 내부자 매수 마커 — 빨간색 역삼각형 (▼)
   if (d.insiderMarkers && d.insiderMarkers.length) {
-    // 같은 일자에 여러 거래 가능 → 일자별 그룹 (tooltip에 모두 표시)
     const _insiderByDate = {};
-    d.insiderMarkers.forEach(m => {
-      if (!_insiderByDate[m.x]) _insiderByDate[m.x] = [];
-      _insiderByDate[m.x].push(m);
-    });
+    d.insiderMarkers.forEach(m => { if (!_insiderByDate[m.x]) _insiderByDate[m.x] = []; _insiderByDate[m.x].push(m); });
     sigDatasets.push({
       label: '내부자 매수',
       data: buildSparse(d.insiderMarkers),
       showLine: false,
-      backgroundColor: '#FFD700',       // 황금색
-      borderColor: '#8B6914',
+      backgroundColor: '#fa5252',       // v4.65: 빨강 (매수)
+      borderColor: '#c92a2a',
       borderWidth: 0,
       pointStyle: 'triangle',
       pointRotation: 180,               // ▼ 역삼각형
@@ -20202,7 +20255,28 @@ function drawChart(d, opts) {
       yAxisID: 'yPrice',
       order: 0,
       spanGaps: false,
-      _insiderByDate,                   // tooltip callback에서 사용
+      _insiderByDate,
+    });
+  }
+  // v4.65: 내부자 매도 마커 — 파란색 역삼각형 (▼)
+  if (d.insiderSellMarkers && d.insiderSellMarkers.length) {
+    const _insiderSellByDate = {};
+    d.insiderSellMarkers.forEach(m => { if (!_insiderSellByDate[m.x]) _insiderSellByDate[m.x] = []; _insiderSellByDate[m.x].push(m); });
+    sigDatasets.push({
+      label: '내부자 매도',
+      data: buildSparse(d.insiderSellMarkers),
+      showLine: false,
+      backgroundColor: '#339af0',       // 파랑 (매도)
+      borderColor: '#1971c2',
+      borderWidth: 0,
+      pointStyle: 'triangle',
+      pointRotation: 180,               // ▼ 역삼각형
+      pointRadius: simple ? 5 : 6,
+      pointHoverRadius: simple ? 7 : 8,
+      yAxisID: 'yPrice',
+      order: 0,
+      spanGaps: false,
+      _insiderSellByDate,
     });
   }
 
@@ -20296,14 +20370,18 @@ function drawChart(d, opts) {
               if (c.dataset.label === '외국인 누적' || c.dataset.label === '기관 누적' || c.dataset.label === '개인 누적' || c.dataset.label === 'A/D Line') {
                 return `${c.dataset.label}: ${typeof v === 'number' ? v.toFixed(1) : v}`;
               }
-              // v2.64: 내부자 매수 마커 — 거래주식수 + 거래가 표시 (같은 일자에 여러 거래면 모두)
+              // v4.65: 내부자 매수/매도 마커 — 유형 명시 + 거래주식수 + 거래가
               if (c.dataset.label === '내부자 매수') {
                 const date = c.chart.data.labels[c.dataIndex];
                 const metas = (c.dataset._insiderByDate || {})[date];
-                if (metas && metas.length) {
-                  return metas.map(m => `💼 ${m.shares.toLocaleString()}주 @ ${fmtPrice(m.price)}`);
-                }
-                return `💼 ${fmtPrice(v)}`;
+                if (metas && metas.length) return metas.map(m => `🔴 내부자 매수 · ${m.shares.toLocaleString()}주 @ ${fmtPrice(m.price)}`);
+                return `🔴 내부자 매수 · ${fmtPrice(v)}`;
+              }
+              if (c.dataset.label === '내부자 매도') {
+                const date = c.chart.data.labels[c.dataIndex];
+                const metas = (c.dataset._insiderSellByDate || {})[date];
+                if (metas && metas.length) return metas.map(m => `🔵 내부자 매도 · ${m.shares.toLocaleString()}주 @ ${fmtPrice(m.price)}`);
+                return `🔵 내부자 매도 · ${fmtPrice(v)}`;
               }
               // 종가/고가/저가/MA20/시그널 마커 등 — 시장별 통화 포맷
               return `${c.dataset.label}: ${fmtPrice(v)}`;
@@ -22390,7 +22468,11 @@ function aqFeedCounts(tk, market, cutoff30) {
   (((typeof _aqInsiderTrades !== 'undefined') && _aqInsiderTrades[tk]) || []).forEach(t => {
     if (t.transDate && t.transDate >= cutoff30 && (t.shares || 0) > 0) shares += t.shares;
   });
-  return { sig, shares };
+  let sellShares = 0;   // v4.66: 최근 30일 내부자 매도 주식수
+  (((typeof _aqInsiderSells !== 'undefined') && _aqInsiderSells[tk]) || []).forEach(t => {
+    if (t.transDate && t.transDate >= cutoff30 && (t.shares || 0) > 0) sellShares += t.shares;
+  });
+  return { sig, shares, sellShares };
 }
 
 // 피드용 차트 데이터 (모달과 동일 마커/시그널, 지지선·MA·수급선 제외 — drawChart feed 옵션이 처리)
@@ -22446,6 +22528,13 @@ function aqBuildFeedChartData(tk, tf) {
     supportMA20: lastPrice, supportRF: lastPrice, prevLow: lastPrice,
     lastPrice, recentHigh, recentHighIdx, buyAvg,
     tradeMarkers, sigMarkersByType, insiderMarkers,
+    insiderSellMarkers: (function(){
+      const _s = ((typeof _aqInsiderSells !== 'undefined') && _aqInsiderSells[tk]) ? _aqInsiderSells[tk] : [];
+      return _s.filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
+        .filter(t => isCommonEquityTrade(t.security))
+        .filter(t => { const ix = dates.indexOf(t.transDate); if (ix < 0) return true; const cc = closes[ix]; if (!cc || cc <= 0) return true; const ra = t.price / cc; return ra > 0.5 && ra < 2; })
+        .map(t => ({ x: t.transDate, y: t.price, shares: t.shares, sharesAfter: t.sharesAfter, ownerName: t.ownerName, relationship: t.relationship }));
+    })(),
     retailN: null, foreignN: null, instN: null,
   };
 }
@@ -22558,7 +22647,7 @@ function buildDiscoverFeed(res, keepShown) {
         <button class="feed-act${watched ? ' on' : ''}" title="관심" onclick="aqFeedToggleWatch('${escapeAttr(tk)}',this)">${AQ_SVG.heart}</button>
         <span class="feed-act feed-stat" title="최근 30일 시그널" onclick="aqToast('최근 30일 시그널 수')">${AQ_SVG.comment}<i>${cnt.sig}</i></span>
         <span class="feed-act feed-stat" title="최근 30일 내부자 매수 주식 수" onclick="aqToast('최근 30일 내부자 매수 주식 수')">${AQ_SVG.regram}<i>${cnt.shares ? cnt.shares.toLocaleString() : 0}</i></span>
-        <span class="feed-act feed-dm" title="종목 상세" onclick="openChart('${escapeAttr(tk)}')">${AQ_SVG.dm}</span>
+        <span class="feed-act feed-stat feed-dm" title="최근 30일 내부자 매도 주식 수" onclick="aqToast('최근 30일 내부자 매도 주식 수')">${AQ_SVG.dm}<i>${cnt.sellShares ? cnt.sellShares.toLocaleString() : 0}</i></span>
       </div>
       ${desc ? `<div class="feed-caption"><b class="feed-cap-name">${escapeHtml(comp || displayName(tk))}</b> ${escapeHtml(desc)}</div>` : ''}
       ${aqFeedValTags(tk)}
