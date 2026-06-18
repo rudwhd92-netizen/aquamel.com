@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.66';
+window.AQ_PWA_VERSION = '4.68';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -7309,10 +7309,10 @@ table.combo-eval tbody td .nodata {
   <!-- v3.14: 탐색 서브탭 바 (누적 시그널 / 내부자 매수 / 공매도 이력 / 전체 리스트) -->
   <section class="card mobile-only explore-subtabs" id="exploreSubtabs" data-mtab="explore">
     <div class="xtab-row">
-      <button class="xtab-btn active" data-xtab="signals" onclick="setExploreSubtab('signals')">누적 시그널</button>
-      <button class="xtab-btn" data-xtab="insider" onclick="setExploreSubtab('insider')">내부자 매수</button>
-      <button class="xtab-btn" data-xtab="shorting" onclick="setExploreSubtab('shorting')">공매도 이력</button>
       <button class="xtab-btn" data-xtab="report" onclick="setExploreSubtab('report')">분석 보고서</button>
+      <button class="xtab-btn active" data-xtab="signals" onclick="setExploreSubtab('signals')">누적 시그널</button>
+      <button class="xtab-btn" data-xtab="insider" onclick="setExploreSubtab('insider')">내부자 매매</button>
+      <button class="xtab-btn" data-xtab="shorting" onclick="setExploreSubtab('shorting')">공매도 이력</button>
     </div>
   </section>
 
@@ -7854,6 +7854,10 @@ table.combo-eval tbody td .nodata {
   <section class="card mobile-only" id="insiderArchiveCard" data-mtab="explore" data-xtab="insider">
     <div class="card-header">
       <h2>내부자 누적</h2>
+      <div class="short-sort" id="insiderModeToggle">
+        <button class="short-sort-btn active" data-im="buy" onclick="setInsiderArchiveMode('buy')">매수</button>
+        <button class="short-sort-btn" data-im="sell" onclick="setInsiderArchiveMode('sell')">매도</button>
+      </div>
       <div class="short-sort" id="foreignFlowSort" style="display:none;">
         <button class="short-sort-btn" data-p="1d" onclick="setKrFlowPeriod('foreign','1d')">1d</button>
         <button class="short-sort-btn active" data-p="5d" onclick="setKrFlowPeriod('foreign','5d')">5d</button>
@@ -8221,10 +8225,18 @@ table.combo-eval tbody td .nodata {
       <!-- v2.64/v3.61: 내부자 거래 이력 — 다른 보조 섹션과 동일 아코디언(접힘) -->
       <div class="ticker-history-wrap insider-history-wrap aq-coll collapsed" id="insiderHistoryWrap" style="display:none;">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
-          <h4 class="ticker-history-title" style="margin:0;">내부자 거래 이력</h4>
+          <h4 class="ticker-history-title" style="margin:0;">내부자 매수이력</h4>
           <span class="aq-coll-caret">▼</span>
         </div>
         <div class="aq-coll-body"><div id="insiderHistoryArea"></div></div>
+      </div>
+      <!-- v4.68: 내부자 매도이력 (US_SELL) — 매수이력과 동일 UX -->
+      <div class="ticker-history-wrap insider-history-wrap aq-coll collapsed" id="insiderSellHistoryWrap" style="display:none;">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)">
+          <h4 class="ticker-history-title" style="margin:0;">내부자 매도이력</h4>
+          <span class="aq-coll-caret">▼</span>
+        </div>
+        <div class="aq-coll-body"><div id="insiderSellHistoryArea"></div></div>
       </div>
       <!-- v3.48/v3.61: 공매도 이력 — 동일 아코디언(접힘) -->
       <div class="ticker-history-wrap short-history-wrap aq-coll collapsed" id="shortHistoryWrap" style="display:none;">
@@ -19269,11 +19281,11 @@ async function openChart(ticker) {
   }));
   // v4.65: 내부자 매도 마커 (US_SELL)
   const _allInsiderSells = (typeof _aqInsiderSells !== 'undefined' && _aqInsiderSells[ticker]) ? _aqInsiderSells[ticker] : [];
-  const insiderSellMarkers = _allInsiderSells
+  const filteredInsiderSells = _allInsiderSells
     .filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
     .filter(t => isCommonEquityTrade(t.security))
-    .filter(t => { const idx = dates.indexOf(t.transDate); if (idx < 0) return true; const cc = closes[idx]; if (!cc || cc <= 0) return true; const ra = t.price / cc; return ra > 0.5 && ra < 2; })
-    .map(t => ({ x: t.transDate, y: t.price, shares: t.shares, sharesAfter: t.sharesAfter, ownerName: t.ownerName, relationship: t.relationship }));
+    .filter(t => { const idx = dates.indexOf(t.transDate); if (idx < 0) return true; const cc = closes[idx]; if (!cc || cc <= 0) return true; const ra = t.price / cc; return ra > 0.5 && ra < 2; });
+  const insiderSellMarkers = filteredInsiderSells.map(t => ({ x: t.transDate, y: t.price, shares: t.shares, sharesAfter: t.sharesAfter, ownerName: t.ownerName, relationship: t.relationship }));
 
   // Signal markers from archive — respect global signal filter
   // v1.81: priority도 시장별 — KR엔 'T' 한 종류만, US는 4가지 T_*
@@ -19301,6 +19313,7 @@ async function openChart(ticker) {
   // v2.64: 내부자 거래 이력 테이블
   // v2.65: 차트 마커와 동일한 필터된 거래만 (보통주 + 가격 plausible)
   renderInsiderHistory(ticker, filteredInsiderTrades);
+  renderInsiderSellHistory(ticker, filteredInsiderSells);  // v4.68: 내부자 매도이력
   renderShortHistory(ticker);  // v3.48: 공매도 이력
 
   // Modal-level signal filter buttons (synced with main filter)
@@ -20651,6 +20664,43 @@ function renderInsiderHistory(ticker, filteredTrades) {
   wrap.style.display = '';
 }
 window.renderInsiderHistory = renderInsiderHistory;
+
+// v4.68: 내부자 매도이력 — renderInsiderHistory와 동일 UX, 소스만 _aqInsiderSells
+function renderInsiderSellHistory(ticker, filteredTrades) {
+  const wrap = $('insiderSellHistoryWrap');
+  const area = $('insiderSellHistoryArea');
+  if (!wrap || !area) return;
+  const tkU = String(ticker || '').toUpperCase();
+  let trades = filteredTrades;
+  if (!Array.isArray(trades)) {
+    const raw = (typeof _aqInsiderSells !== 'undefined' && _aqInsiderSells[tkU]) ? _aqInsiderSells[tkU] : [];
+    trades = raw.filter(t => isCommonEquityTrade(t.security));
+  }
+  if (!trades.length || (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US')) {
+    wrap.style.display = 'none'; area.innerHTML = ''; return;
+  }
+  const fmtPct = (p) => { if (p == null || isNaN(p) || !isFinite(p)) return '—'; if (p < 0.01) return '<0.01%'; if (p >= 100) return '100%'; return p.toFixed(2) + '%'; };
+  const rows = trades.map(t => {
+    const pct = (t.sharesAfter > 0) ? (t.shares / t.sharesAfter * 100) : null;
+    const pctCls = (pct == null) ? 'ih-pct ih-pct-low' : (pct < 1 ? 'ih-pct ih-pct-low' : 'ih-pct');
+    return `<tr>
+      <td class="ih-owner">${escapeHtml(t.ownerName || '—')}</td>
+      <td>${escapeHtml(t.transDate || '—')}</td>
+      <td class="col-rel ih-rel">${escapeHtml(t.relationship || '—')}</td>
+      <td class="col-sec ih-sec">${escapeHtml(t.security || '—')}</td>
+      <td class="ih-num">${(t.shares || 0).toLocaleString()}</td>
+      <td class="ih-num">${fmtPrice(t.price || 0)}</td>
+      <td class="${pctCls}">${fmtPct(pct)}</td>
+    </tr>`;
+  }).join('');
+  area.innerHTML = `
+    <table class="insider-history">
+      <thead><tr><th>거래자</th><th>일자</th><th class="col-rel">관계</th><th class="col-sec">증권</th><th style="text-align:right">주식 수</th><th style="text-align:right">가격</th><th style="text-align:right">비중%</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  wrap.style.display = '';
+}
+window.renderInsiderSellHistory = renderInsiderSellHistory;
 
 // ============================================================================
 // v2.66: TO-DO 칸반 보드 — 보고서에서 체크된 todo를 시점별 4개 컬럼으로 분류
@@ -22876,11 +22926,21 @@ function loadMoreArchiveMobile() {
 // ============================================================================
 let _insiderArchiveShown = 10;
 
+let _aqInsiderArchiveMode = 'buy';   // v4.67: 'buy' | 'sell'
+function setInsiderArchiveMode(mode) {
+  _aqInsiderArchiveMode = (mode === 'sell') ? 'sell' : 'buy';
+  const tg = document.getElementById('insiderModeToggle');
+  if (tg) tg.querySelectorAll('.short-sort-btn').forEach(b => b.classList.toggle('active', b.dataset.im === _aqInsiderArchiveMode));
+  _insiderArchiveShown = 10;
+  buildInsiderArchiveList();
+}
+window.setInsiderArchiveMode = setInsiderArchiveMode;
 function _buildInsiderFlatList() {
-  // _aqInsiderTrades(종목별) → 일반주만 평탄화 → transDate desc 정렬
+  // v4.67: 모드별 — 매수(_aqInsiderTrades) / 매도(_aqInsiderSells) 평탄화 → transDate desc
+  const src = (_aqInsiderArchiveMode === 'sell' && typeof _aqInsiderSells !== 'undefined') ? _aqInsiderSells : _aqInsiderTrades;
   const flat = [];
-  Object.keys(_aqInsiderTrades || {}).forEach(tk => {
-    (_aqInsiderTrades[tk] || []).forEach(t => {
+  Object.keys(src || {}).forEach(tk => {
+    (src[tk] || []).forEach(t => {
       if (!isCommonEquityTrade(t.security)) return;
       if (!t.transDate || !(t.price > 0)) return;
       flat.push(t);
@@ -22896,12 +22956,16 @@ function buildInsiderArchiveList() {
   if (!listEl) return;
 
   const market = getCurrentMarket();
+  const _tg = document.getElementById('insiderModeToggle');
+  if (_tg) _tg.style.display = (market === 'US') ? '' : 'none';   // v4.67: 매수/매도 토글은 US만
   if (market !== 'US') {
     listEl.innerHTML = '<div class="buy-points-empty">내부자 누적은 미국 시장에서만 제공됩니다</div>';
     if (moreBtn) moreBtn.style.display = 'none';
     return;
   }
-  if (!_aqInsiderLoaded) {
+  const _isSell = _aqInsiderArchiveMode === 'sell';
+  const _loaded = _isSell ? (typeof _aqInsiderSellsLoaded !== 'undefined' && _aqInsiderSellsLoaded) : _aqInsiderLoaded;
+  if (!_loaded) {
     listEl.innerHTML = '<div class="buy-points-empty">데이터 로딩 중…</div>';
     if (moreBtn) moreBtn.style.display = 'none';
     return;
@@ -22909,7 +22973,7 @@ function buildInsiderArchiveList() {
 
   const flat = _buildInsiderFlatList();
   if (flat.length === 0) {
-    listEl.innerHTML = '<div class="buy-points-empty">내부자 매수 이력 없음</div>';
+    listEl.innerHTML = '<div class="buy-points-empty">내부자 ' + (_isSell ? '매도' : '매수') + ' 이력 없음</div>';
     if (moreBtn) moreBtn.style.display = 'none';
     return;
   }
