@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.56';
+window.AQ_PWA_VERSION = '4.57';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2207,6 +2207,32 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .mv-chip .mv-k { font-size: 10.5px; color: var(--text-mute, #6a6a6a); letter-spacing: 0.02em; }
 .mv-chip .mv-v { font-size: 13px; font-weight: 700; color: var(--text, #d4d4d4); }
 .mv-chip .mv-v.mv-na { color: var(--text-mute, #6a6a6a); font-weight: 500; }
+/* v4.57: 밸류에이션 칩 — 클릭 가능 + 섹터 분위 색(연하게) */
+.modal-valuation .mv-chip { cursor: pointer; transition: background .12s, border-color .12s; }
+.modal-valuation .mv-chip:hover { border-color: var(--accent-2); }
+#chartModal .mv-chip.mv-q1, #sectorModal .mv-chip.mv-q1 { background: rgba(51,154,240,0.12); }
+#chartModal .mv-chip.mv-q2, #sectorModal .mv-chip.mv-q2 { background: rgba(255,255,255,0.04); }
+#chartModal .mv-chip.mv-q3, #sectorModal .mv-chip.mv-q3 { background: rgba(250,176,5,0.13); }
+#chartModal .mv-chip.mv-q4, #sectorModal .mv-chip.mv-q4 { background: rgba(250,82,82,0.13); }
+/* v4.57: 밸류에이션 비교 팝업 */
+.aqval-modal { display: none; position: fixed; inset: 0; z-index: 10001; background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); justify-content: center; align-items: flex-start; }
+.aqval-modal.open { display: flex; }
+.aqval-content { margin-top: 8vh; width: min(560px, 92vw); max-height: 80vh; display: flex; flex-direction: column;
+  background: var(--panel, #232327); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.aqval-head { display: flex; align-items: center; gap: 6px; padding: 16px 18px 0; }
+.aqval-title { font-size: 14.5px; font-weight: 800; color: var(--text-hi); }
+.aqval-sub { font-size: 12px; color: var(--text-mute); margin-left: 2px; }
+.aqval-close { margin-left: auto; background: none; border: none; color: var(--text-mute); font-size: 22px; line-height: 1; cursor: pointer; padding: 2px 6px; -webkit-tap-highlight-color: transparent; }
+.aqval-close:hover { color: var(--text-hi); }
+.aqval-tabs { display: flex; gap: 2px; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 0 14px; margin-top: 12px; }
+.aqval-body { overflow-y: auto; padding: 12px 12px 18px; }
+.aqval-bar-fill { left: 0 !important; background: var(--accent-2) !important; }
+.aqval-bar-row.is-self { background: rgba(78,201,176,0.12); border-radius: 4px; }
+.aqval-bar-row.is-self .sa-bar-label { color: var(--accent-2); font-weight: 800; }
+.aqval-num { font-weight: 700; color: var(--text); }
+.aqval-num.na { color: var(--text-mute); font-weight: 500; }
 
 .chart-wrap { background: transparent; padding: 0; margin: 10px 0 4px; position: relative; height: 520px; }  /* v3.62/v3.66: 평탄화 + 영역 여백 */
 
@@ -8018,6 +8044,19 @@ table.combo-eval tbody td .nodata {
     </div>
   </div>
 
+  <!-- v4.57: 밸류에이션(PER/선행PER/PEG) 섹터 비교 팝업 -->
+  <div class="aqval-modal" id="aqValModal" onclick="aqValModalBackdrop(event)">
+    <div class="aqval-content">
+      <div class="aqval-head">
+        <span class="aqval-title" id="aqValTitle">밸류에이션 비교</span>
+        <span class="aqval-sub" id="aqValSub"></span>
+        <button class="aqval-close" onclick="closeAqValModal()" aria-label="닫기">&times;</button>
+      </div>
+      <div class="aqval-tabs" id="aqValTabs"></div>
+      <div class="aqval-body" id="aqValBody"></div>
+    </div>
+  </div>
+
   <!-- v1.64 비밀번호 설정/변경 모달 -->
   <div class="modal-overlay" id="passwordSetupModal" onclick="closePasswordModalIfOverlay(event)">
     <div class="modal-content" style="max-width:440px; padding:28px;">
@@ -10396,6 +10435,116 @@ function aqValFmt(v) {
 function aqValuationFor(tk) {
   return _aqValuation[String(tk || '').toUpperCase()] || null;
 }
+// ===== v4.57: 밸류에이션 섹터 분위 색 + 비교 팝업 =====
+function _aqSectorOf(tk) {
+  const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
+  const m = (_state && _state.tickerSectorMaps && _state.tickerSectorMaps[mkt]) || (_state && _state.tickerSectorMap) || {};
+  return m[String(tk || '').toUpperCase()] || '';
+}
+function _aqSectorPeers(sector) {
+  if (!sector || typeof _aqGetAllSearchables !== 'function') return [];
+  return _aqGetAllSearchables().filter(it => it.sector === sector).map(it => {
+    const v = (typeof aqValuationFor === 'function') ? (aqValuationFor(it.ticker) || {}) : {};
+    return { ticker: it.ticker, per: (v.per ?? null), fwdPer: (v.fwdPer ?? null), peg: (v.peg ?? null) };
+  });
+}
+function _aqQuartileBounds(vals) {
+  const a = (vals || []).filter(v => v !== null && v !== undefined && !isNaN(v)).map(Number).sort((x, y) => x - y);
+  if (a.length === 0) return null;
+  const q = (p) => {
+    const idx = (a.length - 1) * p, lo = Math.floor(idx), hi = Math.ceil(idx);
+    return lo === hi ? a[lo] : a[lo] + (a[hi] - a[lo]) * (idx - lo);
+  };
+  return { p25: q(0.25), p50: q(0.50), p75: q(0.75) };
+}
+function _aqQuartileClass(v, bounds) {
+  if (v === null || v === undefined || isNaN(v) || !bounds) return '';
+  if (v <= bounds.p25) return 'mv-q1';
+  if (v <= bounds.p50) return 'mv-q2';
+  if (v <= bounds.p75) return 'mv-q3';
+  return 'mv-q4';
+}
+function _aqPegClass(v) {
+  if (v === null || v === undefined || isNaN(v)) return '';
+  if (v <= 1) return 'mv-q1';
+  if (v <= 1.5) return 'mv-q2';
+  if (v <= 2) return 'mv-q3';
+  return 'mv-q4';
+}
+// 칩 분위 색: PER/선행PER은 섹터 PER(정상) 분위 기준, PEG는 고정 구간
+function aqValChipClasses(ticker) {
+  const peers = _aqSectorPeers(_aqSectorOf(ticker));
+  const perBounds = _aqQuartileBounds(peers.map(p => p.per));
+  const v = (typeof aqValuationFor === 'function') ? (aqValuationFor(ticker) || {}) : {};
+  return {
+    per:    _aqQuartileClass(v.per, perBounds),
+    fwdPer: _aqQuartileClass(v.fwdPer, perBounds),
+    peg:    _aqPegClass(v.peg),
+  };
+}
+const AQ_VAL_METRICS = [
+  { key: 'per',    label: 'PER' },
+  { key: 'fwdPer', label: '선행PER' },
+  { key: 'peg',    label: 'PEG' },
+];
+let _aqValModalState = { ticker: null, sector: '', metric: 'per' };
+function aqOpenValModal(ticker, metric) {
+  const isUS = (typeof getCurrentMarket !== 'function') || getCurrentMarket() === 'US';
+  if (!isUS) return;
+  const modal = document.getElementById('aqValModal'); if (!modal) return;
+  _aqValModalState.ticker = ticker;
+  _aqValModalState.sector = _aqSectorOf(ticker);
+  _aqValModalState.metric = AQ_VAL_METRICS.some(m => m.key === metric) ? metric : 'per';
+  const t = document.getElementById('aqValTitle'); if (t) t.textContent = displayName(ticker) + ' · 밸류에이션 비교';
+  const sub = document.getElementById('aqValSub'); if (sub) sub.textContent = _aqValModalState.sector || '';
+  const tabsEl = document.getElementById('aqValTabs');
+  tabsEl.innerHTML = AQ_VAL_METRICS.map(m =>
+    `<button class="xtab-btn${m.key === _aqValModalState.metric ? ' active' : ''}" data-vmetric="${m.key}">${m.label}</button>`
+  ).join('');
+  tabsEl.querySelectorAll('.xtab-btn').forEach(b => {
+    b.onclick = () => {
+      _aqValModalState.metric = b.dataset.vmetric;
+      tabsEl.querySelectorAll('.xtab-btn').forEach(x => x.classList.toggle('active', x === b));
+      _aqRenderValBars();
+    };
+  });
+  _aqRenderValBars();
+  modal.classList.add('open');
+}
+function closeAqValModal() { const m = document.getElementById('aqValModal'); if (m) m.classList.remove('open'); }
+function aqValModalBackdrop(e) { if (e.target && e.target.id === 'aqValModal') closeAqValModal(); }
+function _aqRenderValBars() {
+  const body = document.getElementById('aqValBody'); if (!body) return;
+  const ticker = _aqValModalState.ticker, sector = _aqValModalState.sector, metric = _aqValModalState.metric;
+  const peers = _aqSectorPeers(sector);
+  const withVal = peers.filter(p => p[metric] !== null && p[metric] !== undefined && !isNaN(p[metric]));
+  withVal.sort((a, b) => b[metric] - a[metric]);   // 숫자 높은 순
+  const selfIdx = withVal.findIndex(p => p.ticker === ticker);
+  let ordered;
+  if (selfIdx >= 0) ordered = [withVal[selfIdx]].concat(withVal.slice(0, selfIdx), withVal.slice(selfIdx + 1));  // 선택종목 최상단
+  else ordered = withVal.slice();
+  const maxV = Math.max.apply(null, withVal.map(p => Math.abs(p[metric])).concat([0.0001]));
+  const fmt = (metric === 'peg')
+    ? (v => (v === null || isNaN(v)) ? '' : Number(v).toFixed(2))
+    : (v => (v === null || isNaN(v)) ? '' : Number(v).toFixed(1) + '배');
+  const rowHtml = (p, isSelf) => {
+    const v = p[metric];
+    const w = (v !== null && !isNaN(v)) ? (Math.abs(v) / maxV) * 96 : 0;
+    const nm = (typeof displayName === 'function') ? displayName(p.ticker) : p.ticker;
+    return `<div class="sa-bar-row aqval-bar-row${isSelf ? ' is-self' : ''}">
+      <div class="sa-bar-label" title="${escapeAttr(nm)}">${escapeHtml(nm)}</div>
+      <div class="sa-bar-track"><div class="sa-bar-fill aqval-bar-fill" style="width:${w}%;"></div></div>
+      <div class="sa-bar-val"><span class="aqval-num${(v === null || isNaN(v)) ? ' na' : ''}">${fmt(v)}</span></div>
+    </div>`;
+  };
+  let html = '';
+  if (selfIdx < 0 && ticker) html += rowHtml({ ticker: ticker, per: null, fwdPer: null, peg: null }, true);  // 선택종목 값 없으면 공란 최상단
+  html += ordered.map(p => rowHtml(p, p.ticker === ticker)).join('');
+  body.innerHTML = html || '<div class="search-modal-empty">표시할 데이터가 없습니다.</div>';
+}
+window.aqOpenValModal = aqOpenValModal;
+window.closeAqValModal = closeAqValModal;
+window.aqValModalBackdrop = aqValModalBackdrop;
 // v3.22: 피드 해시태그 형식 — #PER_30.0배 #Foward.PER_20.0배 #PEG_1.2배 (US 전용, 값 있을 때만)
 function aqFeedValTags(tk) {
   const isUS = (typeof getCurrentMarket !== 'function') || getCurrentMarket() === 'US';
@@ -18966,11 +19115,12 @@ async function openChart(ticker) {
     const val = (typeof aqValuationFor === 'function') ? aqValuationFor(ticker) : null;
     const isUS = (typeof getCurrentMarket !== 'function') || getCurrentMarket() === 'US';
     if (!isUS || !val) { mv.innerHTML = ''; return; }
-    const chip = (k, v) => {
+    const cls = (typeof aqValChipClasses === 'function') ? aqValChipClasses(ticker) : {};
+    const chip = (k, v, metric, qcls) => {
       const na = (v === null || v === undefined || isNaN(v));
-      return `<span class="mv-chip"><span class="mv-k">${k}</span><span class="mv-v${na?' mv-na':''}">${aqValFmt(v)}</span></span>`;
+      return `<span class="mv-chip ${qcls || ''}" data-val-metric="${metric}" onclick="aqOpenValModal('${ticker}','${metric}')"><span class="mv-k">${k}</span><span class="mv-v${na?' mv-na':''}">${aqValFmt(v)}</span></span>`;
     };
-    mv.innerHTML = chip('PER', val.per) + chip('Forward PER', val.fwdPer) + chip('PEG', val.peg);
+    mv.innerHTML = chip('PER', val.per, 'per', cls.per) + chip('Forward PER', val.fwdPer, 'fwdPer', cls.fwdPer) + chip('PEG', val.peg, 'peg', cls.peg);
   })();
   // v3.46: 새로 열 때만 시그널 필터/이력 접힘 기본 (tf/상세 토글 재드로우 시엔 사용자 상태 유지)
   if (!$('chartModal').classList.contains('active')) {
