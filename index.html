@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.57';
+window.AQ_PWA_VERSION = '4.58';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2227,8 +2227,13 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .aqval-close { margin-left: auto; background: none; border: none; color: var(--text-mute); font-size: 22px; line-height: 1; cursor: pointer; padding: 2px 6px; -webkit-tap-highlight-color: transparent; }
 .aqval-close:hover { color: var(--text-hi); }
 .aqval-tabs { display: flex; gap: 2px; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 0 14px; margin-top: 12px; }
-.aqval-body { overflow-y: auto; padding: 12px 12px 18px; }
-.aqval-bar-fill { left: 0 !important; background: var(--accent-2) !important; }
+.aqval-sector-row { display: flex; align-items: center; gap: 8px; padding: 12px 16px 2px; }
+.aqval-sector-row label { font-size: 11px; color: var(--text-mute); font-weight: 700; flex-shrink: 0; }
+.aqval-sector { flex: 1; min-width: 0; background: var(--panel-2, #2d2d30); color: var(--text); border: 1px solid var(--line);
+  border-radius: 8px; padding: 7px 10px; font-size: 12.5px; font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.aqval-body { overflow-y: auto; padding: 10px 8px 18px; }
+.aqval-bar-fill { background: var(--accent-2) !important; }
+.aqval-bar-row { padding: 6px 14px; }
 .aqval-bar-row.is-self { background: rgba(78,201,176,0.12); border-radius: 4px; }
 .aqval-bar-row.is-self .sa-bar-label { color: var(--accent-2); font-weight: 800; }
 .aqval-num { font-weight: 700; color: var(--text); }
@@ -8053,6 +8058,10 @@ table.combo-eval tbody td .nodata {
         <button class="aqval-close" onclick="closeAqValModal()" aria-label="닫기">&times;</button>
       </div>
       <div class="aqval-tabs" id="aqValTabs"></div>
+      <div class="aqval-sector-row">
+        <label for="aqValSector">비교 섹터</label>
+        <select class="aqval-sector" id="aqValSector"></select>
+      </div>
       <div class="aqval-body" id="aqValBody"></div>
     </div>
   </div>
@@ -10435,11 +10444,17 @@ function aqValFmt(v) {
 function aqValuationFor(tk) {
   return _aqValuation[String(tk || '').toUpperCase()] || null;
 }
-// ===== v4.57: 밸류에이션 섹터 분위 색 + 비교 팝업 =====
+// ===== v4.57/4.58: 밸류에이션 섹터 분위 색 + 비교 팝업 (중앙정렬 바 / 음수 처리 / 섹터 드롭다운) =====
 function _aqSectorOf(tk) {
   const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
   const m = (_state && _state.tickerSectorMaps && _state.tickerSectorMaps[mkt]) || (_state && _state.tickerSectorMap) || {};
   return m[String(tk || '').toUpperCase()] || '';
+}
+function _aqAllSectors() {
+  if (typeof _aqGetAllSearchables !== 'function') return [];
+  const set = {};
+  _aqGetAllSearchables().forEach(it => { if (it.sector) set[it.sector] = 1; });
+  return Object.keys(set).sort((a, b) => a.localeCompare(b, 'ko'));
 }
 function _aqSectorPeers(sector) {
   if (!sector || typeof _aqGetAllSearchables !== 'function') return [];
@@ -10448,8 +10463,9 @@ function _aqSectorPeers(sector) {
     return { ticker: it.ticker, per: (v.per ?? null), fwdPer: (v.fwdPer ?? null), peg: (v.peg ?? null) };
   });
 }
+// 분위 모수: 양수만 (음수는 제외)
 function _aqQuartileBounds(vals) {
-  const a = (vals || []).filter(v => v !== null && v !== undefined && !isNaN(v)).map(Number).sort((x, y) => x - y);
+  const a = (vals || []).filter(v => v !== null && v !== undefined && !isNaN(v) && v > 0).map(Number).sort((x, y) => x - y);
   if (a.length === 0) return null;
   const q = (p) => {
     const idx = (a.length - 1) * p, lo = Math.floor(idx), hi = Math.ceil(idx);
@@ -10457,8 +10473,11 @@ function _aqQuartileBounds(vals) {
   };
   return { p25: q(0.25), p50: q(0.50), p75: q(0.75) };
 }
+// 음수는 무조건 4분위(연빨강). 그 외 양수만 분위 판정.
 function _aqQuartileClass(v, bounds) {
-  if (v === null || v === undefined || isNaN(v) || !bounds) return '';
+  if (v === null || v === undefined || isNaN(v)) return '';
+  if (v < 0) return 'mv-q4';
+  if (!bounds) return '';
   if (v <= bounds.p25) return 'mv-q1';
   if (v <= bounds.p50) return 'mv-q2';
   if (v <= bounds.p75) return 'mv-q3';
@@ -10466,12 +10485,13 @@ function _aqQuartileClass(v, bounds) {
 }
 function _aqPegClass(v) {
   if (v === null || v === undefined || isNaN(v)) return '';
+  if (v < 0) return 'mv-q4';            // 음수 PEG도 연빨강
   if (v <= 1) return 'mv-q1';
   if (v <= 1.5) return 'mv-q2';
   if (v <= 2) return 'mv-q3';
   return 'mv-q4';
 }
-// 칩 분위 색: PER/선행PER은 섹터 PER(정상) 분위 기준, PEG는 고정 구간
+// 칩 분위 색: PER/선행PER은 (종목 자기 섹터의) 정상 PER 분위 기준, PEG는 고정 구간. 음수는 무조건 연빨강.
 function aqValChipClasses(ticker) {
   const peers = _aqSectorPeers(_aqSectorOf(ticker));
   const perBounds = _aqQuartileBounds(peers.map(p => p.per));
@@ -10487,16 +10507,18 @@ const AQ_VAL_METRICS = [
   { key: 'fwdPer', label: '선행PER' },
   { key: 'peg',    label: 'PEG' },
 ];
-let _aqValModalState = { ticker: null, sector: '', metric: 'per' };
+let _aqValModalState = { ticker: null, sector: '', compareSector: '', metric: 'per' };
 function aqOpenValModal(ticker, metric) {
   const isUS = (typeof getCurrentMarket !== 'function') || getCurrentMarket() === 'US';
   if (!isUS) return;
   const modal = document.getElementById('aqValModal'); if (!modal) return;
   _aqValModalState.ticker = ticker;
   _aqValModalState.sector = _aqSectorOf(ticker);
+  _aqValModalState.compareSector = _aqValModalState.sector;   // 기본=종목 섹터
   _aqValModalState.metric = AQ_VAL_METRICS.some(m => m.key === metric) ? metric : 'per';
   const t = document.getElementById('aqValTitle'); if (t) t.textContent = displayName(ticker) + ' · 밸류에이션 비교';
   const sub = document.getElementById('aqValSub'); if (sub) sub.textContent = _aqValModalState.sector || '';
+  // 탭
   const tabsEl = document.getElementById('aqValTabs');
   tabsEl.innerHTML = AQ_VAL_METRICS.map(m =>
     `<button class="xtab-btn${m.key === _aqValModalState.metric ? ' active' : ''}" data-vmetric="${m.key}">${m.label}</button>`
@@ -10508,6 +10530,16 @@ function aqOpenValModal(ticker, metric) {
       _aqRenderValBars();
     };
   });
+  // 섹터 드롭다운 (기본=종목 섹터)
+  const selEl = document.getElementById('aqValSector');
+  if (selEl) {
+    const sectors = _aqAllSectors();
+    if (_aqValModalState.sector && sectors.indexOf(_aqValModalState.sector) < 0) sectors.unshift(_aqValModalState.sector);
+    selEl.innerHTML = sectors.map(sec =>
+      `<option value="${escapeAttr(sec)}"${sec === _aqValModalState.compareSector ? ' selected' : ''}>${escapeHtml(sec)}</option>`
+    ).join('');
+    selEl.onchange = () => { _aqValModalState.compareSector = selEl.value; _aqRenderValBars(); };
+  }
   _aqRenderValBars();
   modal.classList.add('open');
 }
@@ -10515,31 +10547,41 @@ function closeAqValModal() { const m = document.getElementById('aqValModal'); if
 function aqValModalBackdrop(e) { if (e.target && e.target.id === 'aqValModal') closeAqValModal(); }
 function _aqRenderValBars() {
   const body = document.getElementById('aqValBody'); if (!body) return;
-  const ticker = _aqValModalState.ticker, sector = _aqValModalState.sector, metric = _aqValModalState.metric;
+  const ticker = _aqValModalState.ticker;
+  const sector = _aqValModalState.compareSector || _aqValModalState.sector;
+  const metric = _aqValModalState.metric;
   const peers = _aqSectorPeers(sector);
-  const withVal = peers.filter(p => p[metric] !== null && p[metric] !== undefined && !isNaN(p[metric]));
-  withVal.sort((a, b) => b[metric] - a[metric]);   // 숫자 높은 순
+  const hasVal = (p) => p[metric] !== null && p[metric] !== undefined && !isNaN(p[metric]);
+  const withVal = peers.filter(hasVal);
+  withVal.sort((a, b) => b[metric] - a[metric]);   // 숫자 높은 순 (음수는 자연히 아래로)
+  // 선택 종목 최상단: 비교 섹터에 있으면 끌어올리고, 없으면(다른 섹터 비교) 자기 값으로 별도 최상단 행
   const selfIdx = withVal.findIndex(p => p.ticker === ticker);
-  let ordered;
-  if (selfIdx >= 0) ordered = [withVal[selfIdx]].concat(withVal.slice(0, selfIdx), withVal.slice(selfIdx + 1));  // 선택종목 최상단
-  else ordered = withVal.slice();
-  const maxV = Math.max.apply(null, withVal.map(p => Math.abs(p[metric])).concat([0.0001]));
+  let selfRow = null, rest;
+  if (selfIdx >= 0) { selfRow = withVal[selfIdx]; rest = withVal.slice(0, selfIdx).concat(withVal.slice(selfIdx + 1)); }
+  else {
+    rest = withVal.slice();
+    const sv = (typeof aqValuationFor === 'function') ? (aqValuationFor(ticker) || {}) : {};
+    selfRow = { ticker: ticker, per: (sv.per ?? null), fwdPer: (sv.fwdPer ?? null), peg: (sv.peg ?? null) };
+  }
+  // 바 스케일: 표시되는 모든 값(자기 포함)의 절댓값 최대 (음수 포함 → 중앙정렬 좌측 확장)
+  const scaleVals = withVal.map(p => p[metric]).concat(hasVal(selfRow) ? [selfRow[metric]] : []);
+  const maxAbs = Math.max.apply(null, scaleVals.map(v => Math.abs(v)).concat([0.0001]));
   const fmt = (metric === 'peg')
     ? (v => (v === null || isNaN(v)) ? '' : Number(v).toFixed(2))
     : (v => (v === null || isNaN(v)) ? '' : Number(v).toFixed(1) + '배');
   const rowHtml = (p, isSelf) => {
     const v = p[metric];
-    const w = (v !== null && !isNaN(v)) ? (Math.abs(v) / maxV) * 96 : 0;
+    const has = (v !== null && v !== undefined && !isNaN(v));
+    const w = has ? (Math.abs(v) / maxAbs) * 46 : 0;            // 한쪽 최대 46%
+    const left = !has ? '50%' : (v >= 0 ? '50%' : `calc(50% - ${w}%)`);  // 0 기준 중앙정렬
     const nm = (typeof displayName === 'function') ? displayName(p.ticker) : p.ticker;
     return `<div class="sa-bar-row aqval-bar-row${isSelf ? ' is-self' : ''}">
       <div class="sa-bar-label" title="${escapeAttr(nm)}">${escapeHtml(nm)}</div>
-      <div class="sa-bar-track"><div class="sa-bar-fill aqval-bar-fill" style="width:${w}%;"></div></div>
-      <div class="sa-bar-val"><span class="aqval-num${(v === null || isNaN(v)) ? ' na' : ''}">${fmt(v)}</span></div>
+      <div class="sa-bar-track"><div class="sa-bar-center-line"></div><div class="sa-bar-fill aqval-bar-fill" style="width:${w}%;left:${left};"></div></div>
+      <div class="sa-bar-val"><span class="aqval-num${has ? '' : ' na'}">${fmt(v)}</span></div>
     </div>`;
   };
-  let html = '';
-  if (selfIdx < 0 && ticker) html += rowHtml({ ticker: ticker, per: null, fwdPer: null, peg: null }, true);  // 선택종목 값 없으면 공란 최상단
-  html += ordered.map(p => rowHtml(p, p.ticker === ticker)).join('');
+  let html = rowHtml(selfRow, true) + rest.map(p => rowHtml(p, false)).join('');
   body.innerHTML = html || '<div class="search-modal-empty">표시할 데이터가 없습니다.</div>';
 }
 window.aqOpenValModal = aqOpenValModal;
