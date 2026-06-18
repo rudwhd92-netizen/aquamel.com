@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.54';
+window.AQ_PWA_VERSION = '4.56';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2469,7 +2469,9 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: 8px 0 4px;
+  /* v4.55: 글로우 링(.aq-story 펄스)이 로고 위로 ~21px 번지는데 기존 상단 8px라 잘렸음.
+     overflow-y:hidden은 유지(세로 스크롤 방지)하되 상/하/좌우 패딩으로 글로우 공간 확보 → 외곽 안 잘림. */
+  padding: 22px 10px 12px;
   scrollbar-width: none;
 }
 .buy-points-scroll::-webkit-scrollbar { display: none; }
@@ -4781,6 +4783,15 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   color: var(--text-mute);
   font-size: 13px;
 }
+/* v4.56: 최근 검색 히스토리 */
+.aq-recent-head { display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 18px 6px; font-size: 11px; font-weight: 700; color: var(--text-mute); letter-spacing: .3px; }
+.aq-recent-clear { background: none; border: none; color: var(--text-mute); font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: inherit; padding: 2px 4px; -webkit-tap-highlight-color: transparent; }
+.aq-recent-clear:hover { color: var(--text-hi); }
+.aq-recent-del { margin-left: auto; background: none; border: none; color: var(--text-mute);
+  font-size: 18px; line-height: 1; cursor: pointer; padding: 4px 8px; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+.aq-recent-del:hover { color: var(--text-hi); }
 
 .search-modal-result {
   display: flex;
@@ -20384,6 +20395,73 @@ function _aqHighlight(text, query) {
   }
 }
 
+const AQ_RECENT_SEARCH_KEY = 'aq_recent_search_v1';
+function _aqRecentSearchGet() {
+  try { const v = JSON.parse(localStorage.getItem(AQ_RECENT_SEARCH_KEY) || '[]'); return Array.isArray(v) ? v : []; }
+  catch (e) { return []; }
+}
+function _aqRecentSearchSave(arr) {
+  try { localStorage.setItem(AQ_RECENT_SEARCH_KEY, JSON.stringify(arr.slice(0, 10))); } catch (e) {}
+}
+function _aqRecentSearchAdd(item) {
+  if (!item || !item.ticker) return;
+  const mkt = item.market || ((typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US');
+  const entry = { ticker: item.ticker, company: item.company || '', sector: item.sector || '', market: mkt };
+  const arr = _aqRecentSearchGet().filter(r => !(r.ticker === entry.ticker && (r.market || 'US') === mkt));
+  arr.unshift(entry);
+  _aqRecentSearchSave(arr);
+}
+function _aqRecentSearchRemove(tk, mkt) {
+  _aqRecentSearchSave(_aqRecentSearchGet().filter(r => !(r.ticker === tk && (r.market || 'US') === (mkt || 'US'))));
+}
+function _aqRecentSearchClear(mkt) {
+  if (!mkt) { _aqRecentSearchSave([]); return; }
+  _aqRecentSearchSave(_aqRecentSearchGet().filter(r => (r.market || 'US') !== mkt));
+}
+// 입력이 비어있을 때: 최근 검색 목록(현재 시장) 표시, 없으면 안내 문구
+function _aqRenderRecentSearches(resultsEl, all) {
+  const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
+  const recent = _aqRecentSearchGet().filter(r => (r.market || 'US') === mkt);
+  const hint = '<div class="search-modal-empty">티커명 또는 회사명을 입력하세요 (' + ((all && all.length) || 0).toLocaleString() + '개 종목 대상)</div>';
+  if (!recent.length) { resultsEl.innerHTML = hint; return; }
+  const logoFn = (typeof tickerFileName === 'function') ? tickerFileName : (t) => t;
+  const rows = recent.map((it) => {
+    const logoFile = logoFn(it.ticker);
+    const logoHtml = `<img class="search-modal-result-logo" src="./logos/tickers/${encodeURIComponent(logoFile)}.png" onerror="this.style.display='none'" alt=""/>`;
+    return `
+      <div class="search-modal-result" data-ticker="${escapeAttr(it.ticker)}">
+        ${aqWrapLogo(logoHtml, it.ticker)}
+        <div class="search-modal-result-text">
+          <div class="search-modal-result-main">
+            ${it.company ? `<span>${escapeHtml(it.company)}</span>` : ''}
+            <span class="search-modal-result-ticker">${escapeHtml(it.ticker)}</span>
+          </div>
+          ${it.sector ? `<div class="search-modal-result-sector">${escapeHtml(it.sector)}</div>` : ''}
+        </div>
+        <button class="aq-recent-del" data-ticker="${escapeAttr(it.ticker)}" title="기록 삭제" aria-label="기록 삭제">&times;</button>
+      </div>`;
+  }).join('');
+  resultsEl.innerHTML = '<div class="aq-recent-head"><span>최근 검색</span><button type="button" class="aq-recent-clear">전체 삭제</button></div>' + rows;
+  resultsEl.querySelectorAll('.search-modal-result').forEach(el => {
+    el.onclick = () => {
+      const tk = el.dataset.ticker; if (!tk) return;
+      const item = _aqRecentSearchGet().find(r => r.ticker === tk && (r.market || 'US') === mkt) || { ticker: tk, market: mkt };
+      _aqRecentSearchAdd(item);
+      closeSearchModal();
+      if (typeof openChart === 'function') openChart(tk);
+    };
+  });
+  resultsEl.querySelectorAll('.aq-recent-del').forEach(el => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      _aqRecentSearchRemove(el.dataset.ticker, mkt);
+      _aqRenderRecentSearches(resultsEl, all);
+    };
+  });
+  const clr = resultsEl.querySelector('.aq-recent-clear');
+  if (clr) clr.onclick = () => { _aqRecentSearchClear(mkt); _aqRenderRecentSearches(resultsEl, all); };
+}
+
 function _aqRenderSearchResults(query) {
   const resultsEl = document.getElementById('aqSearchResults');
   if (!resultsEl) { console.warn('[SEARCH] aqSearchResults element not found'); return; }
@@ -20396,9 +20474,9 @@ function _aqRenderSearchResults(query) {
     return;
   }
   if (!q) {
-    resultsEl.innerHTML = '<div class="search-modal-empty">티커명 또는 회사명을 입력하세요 (' + all.length.toLocaleString() + '개 종목 대상)</div>';
     _aqSearchLastResults = [];
     _aqSearchActiveIdx = 0;
+    _aqRenderRecentSearches(resultsEl, all);   // v4.56: 최근 검색 히스토리 표시
     return;
   }
   const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
@@ -20472,6 +20550,7 @@ function _aqRenderSearchResults(query) {
     el.onclick = () => {
       const tk = el.dataset.ticker;
       if (!tk) return;
+      try { _aqRecentSearchAdd((_aqSearchLastResults || []).find(x => x.ticker === tk) || { ticker: tk }); } catch (e) {}  // v4.56
       closeSearchModal();
       if (typeof openChart === 'function') openChart(tk);
     };
