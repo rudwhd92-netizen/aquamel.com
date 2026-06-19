@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.68';
+window.AQ_PWA_VERSION = '4.70';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -415,7 +415,7 @@ section.card {
 }
 #dashboardCard > .card-body { padding: 0 0 4px 0; }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   #dashboardCard { padding: 16px; }
   #dashboardCard > .card-header { margin: -16px -16px 0 -16px; padding: 14px 16px; }
 }
@@ -520,7 +520,7 @@ section.card {
   color: #fff;
 }
 .market-switch .mkt-btn.active:hover { color: #fff; }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .market-switch { padding: 2px; }
   .market-switch .mkt-btn { padding: 3px 8px 3px 3px; font-size: 11px; gap: 4px; }
   .market-switch .mkt-flag { width: 16px; height: 16px; }
@@ -558,7 +558,7 @@ section.card {
   box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 .aq-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-@media (min-width: 641px) { .aq-toast { bottom: 40px; } }
+@media (min-width: 1025px) { .aq-toast { bottom: 40px; } }
 [data-theme="light"] .aq-toast { background: rgba(45,35,15,0.92); color: #fff; }
 
 /* v2.44: PC 사이드바 영역 구분선 */
@@ -585,7 +585,7 @@ section.card {
 .mobile-topbar {
   display: none;  /* PC 숨김 */
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .mobile-topbar {
     display: flex;
     justify-content: flex-end;
@@ -701,7 +701,7 @@ section.card {
   animation: card-enter 0.32s var(--ease-out) both;
 }
 /* v2.40/v4.10: 카드 사이 여백 — 모바일 32px, 태블릿·PC(≥641px)는 56px로 호흡 */
-@media (min-width: 641px) {
+@media (min-width: 1025px) {
   section.card { margin-bottom: 56px; }
 }
 @keyframes card-enter {
@@ -1469,7 +1469,7 @@ table.sheet tbody tr.drop-below td:last-child {
     opacity: 1;
   }
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .modal-content {
     animation: modal-push-in 0.34s var(--ease-out);
   }
@@ -1505,7 +1505,7 @@ table.sheet tbody tr.drop-below td:last-child {
   top: 16px; left: 16px;
 }
 /* 모바일: 차트 우하단 모서리 (여백 12px) */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .chart-wrap .modal-report {
     position: absolute;
     top: auto; right: auto;
@@ -1713,7 +1713,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 }
 
 /* 모바일 대응 — 좌우 stack */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .report-detail-head-v2 {
     flex-direction: column;
     gap: 14px;
@@ -1950,7 +1950,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 }
 .report-pair-text { flex: 1; color: var(--text); }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .rs-action .report-action-badge { font-size: 16px; padding: 8px 18px; }
   .rs-action .report-action-reason { font-size: 13px; }
   .report-pair-worry, .report-pair-truth {
@@ -2048,14 +2048,14 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 }
 .analysis-card-arrow { color: var(--text-mute); font-size: 18px; flex-shrink: 0; }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .analysis-grid { gap: 0; }
   .analysis-card { padding: 10px 12px; }
   .analysis-card-logo { width: 32px; height: 32px; }
   .analysis-card-name { font-size: 12px; }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .report-list-title, .report-detail-title { font-size: 14px; }
   .report-section { padding: 12px 14px; }
   .report-item { font-size: 12.5px; padding: 7px 8px 7px 12px; }
@@ -2078,7 +2078,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .modal-content .modal-watch:active { transform: scale(0.9); }
 /* v2.99: 관심 등록 시 배경이 아니라 하트 내부를 빨갛게 (사용자 요청) */
 .modal-content .modal-watch.watched svg { fill: #fa5252; stroke: #fa5252; }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .modal-content .modal-watch {
     top: calc(28px + env(safe-area-inset-top, 0px)); right: 4px;
     width: 36px; height: 36px; border-radius: 10px;
@@ -2100,7 +2100,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .modal-content .modal-toss:hover { background: rgba(50,108,255,0.20); border-color: rgba(50,108,255,0.55); }
 .modal-content .modal-toss img { width: 18px; height: 18px; }
 /* v2.14: 모바일 토스 override — base 정의 뒤에 위치해야 cascade 우선 (이전 v2.13까지는 base 앞에 있어서 적용 X) */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .modal-content .modal-toss {
     top: calc(28px + env(safe-area-inset-top, 0px));
     right: 4px;
@@ -2136,7 +2136,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
   background: var(--text-mute); opacity: 0.4;
   margin: 0 auto 10px;
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .modal-content .modal-drag-handle { display: block; }
   /* 모바일에서는 우상단 X 비활성화 — 손가락 닿기 어려운 위치 */
   .modal-content .modal-close { display: none; }
@@ -2280,7 +2280,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
   background: var(--accent); color: white;
   box-shadow: var(--shadow-1);
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   /* v2.13: 모바일 tf-toggle + 상세보기 모두 차트 우상단에 같은 라인 (높이/끝선 정렬)
      배치: [🔬 상세보기] gap [3M|6M|1Y]  우측 정렬 */
   .tf-toggle {
@@ -2292,7 +2292,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 }
 /* v3.48: 차트 컨트롤 래퍼 — PC는 투명(자식 각자 배치), MO는 우하단 flex 한 줄 */
 .chart-ctrl-br { display: contents; }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   /* v3.48: 상세보기 + tf 토글을 우하단 한 줄(flex)로 묶어 겹침 방지 */
   .chart-wrap .chart-ctrl-br {
     display: flex; position: absolute; bottom: 8px; right: 10px;
@@ -2361,7 +2361,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .hex-overlay { position: absolute; width: 104px; height: 95px; z-index: 6; pointer-events: none; }
 .hex-overlay:empty { display: none; }
 .chart-wrap .hex-overlay { top: 6px; left: 6px; }
-@media (min-width: 641px) {
+@media (min-width: 1025px) {
   .chart-wrap .hex-overlay { top: 54px; right: 14px; left: auto; width: 122px; height: 111px; }
 }
 .feed-chart-wrap .hex-overlay.hex-left  { top: 6px; left: 6px; right: auto; }
@@ -2370,7 +2370,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .chart-wrap .hex-overlay.hex-left  { top: 6px; left: 6px; right: auto; }
 .chart-wrap .hex-overlay.hex-right { top: 6px; right: 6px; left: auto; }
 /* v3.99: PC 모달 헥사곤도 추세 따라 동적 코너 — PC 좌표(top:54px) */
-@media (min-width: 641px) {
+@media (min-width: 1025px) {
   .chart-wrap .hex-overlay.hex-left  { top: 54px; left: 14px; right: auto; }
   .chart-wrap .hex-overlay.hex-right { top: 54px; right: 14px; left: auto; }
 }
@@ -2436,7 +2436,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .feed-dm { margin-left: auto; cursor: pointer; }
 /* ===== v4.03: PC 섹터 FRAME — 가치사슬 커버플로우 (개별 계층 탐색) ===== */
 .sfx{ display:none; }
-@media (min-width:641px){
+@media (min-width:1025px){
  #sfDiagram .sfx{ display:block; }
  #sfDiagram{ min-width:0 !important; }
  #sectorFrameworkCard .sf-diagram-scroll{ overflow-x:visible; }
@@ -2935,7 +2935,7 @@ body[data-xtab="shorting"] .pc-side-panel section.card[data-xtab="shorting"],
 body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { display: block !important; }
 
 /* PC 전용 표시 컨트롤 */
-@media (min-width: 641px) {
+@media (min-width: 1025px) {
   .pc-sidebar { display: flex; }
   /* v2.64: PC에서는 mo-drawer 안 씀 — transform translateX(-100%) 상태에서도 box-shadow + 일부 잔상 보이는 문제 차단 */
   .mo-drawer, .mo-drawer-backdrop { display: none !important; }
@@ -3007,7 +3007,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 }
 
 /* ===== v4.07: 태블릿(641~1024px) 최적화 ===== */
-@media (min-width: 641px) and (max-width: 1024px) {
+@media (min-width: 1025px) and (max-width: 1024px) {
   /* ② 사이드 패널 열림 → 뒷배경 블러 (패널/사이드바는 위에 선명) */
   body[data-pc-panel="discover"] #pcPanelBackdrop,
   body[data-pc-panel="explore"] #pcPanelBackdrop,
@@ -3027,7 +3027,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 #pcPanelBackdrop { display: none; position: fixed; inset: 0; z-index: 78; background: rgba(0,0,0,0.4); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
 
 /* v2.46: MO 일정 탭 — scheduleCard만 표시 */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   body[data-mtab="schedule"] section.card[data-mtab~="schedule"] { display: block !important; }
   body[data-mtab="schedule"] #scheduleCard { display: block !important; }
   body[data-mtab="schedule"] #majorEventsCard { display: block !important; }
@@ -3271,7 +3271,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 }
 
 /* MO: 셀 더 작게 + 일정은 점으로만 */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .calendar-title { font-size: 18px; }
   .cal-add-btn .cal-add-label { display: none; }
   .cal-add-btn { padding: 8px 10px; }
@@ -3522,7 +3522,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   gap: 14px;
   margin-bottom: 16px;
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .data-mgmt-grid { grid-template-columns: 1fr; gap: 10px; }
 }
 .data-mgmt-row {
@@ -3617,7 +3617,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 }
 .hero-data-meta .dot.stale { background: #fab005; }
 .hero-data-meta .dot.very-stale { background: #ff6b6b; }
-@media (min-width: 641px) {
+@media (min-width: 1025px) {
   .hero-data-meta { display: inline-flex; align-items: center; }
 }
 
@@ -3853,7 +3853,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 [data-theme="light"] .mtab-btn.active { color: var(--text-hi); }
 
 /* ============ v1.44 MOBILE: 탭 전환 — 모바일에서만 적용 ============ */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   /* 하단 플로팅 메뉴 표시 */
   .mobile-tab-bar { display: flex; }
 
@@ -4012,7 +4012,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   50%      { opacity: 1;    transform: scale(1.04) translateZ(0); }
 }
 /* v1.93: 모바일은 더 강하게 (작은 화면에서도 또렷이) */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .splash-logo {
     filter:
       drop-shadow(0 0 28px rgba(255,255,255,0.20))
@@ -4172,7 +4172,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   flex-shrink: 0;
 }
 /* 모바일에서는 약간 작게 (radius 그대로 50%) */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .ticker-logo { width: 16px; height: 16px; vertical-align: -4px; margin-right: 8px; }
   .modal-title .ticker-logo { width: 32px; height: 32px; }
 }
@@ -4691,11 +4691,15 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   .dash-side-stack .dash-mini { min-height: auto; }
 }
 /* v4.09: 태블릿 — 주식 포트폴리오(도넛)를 KPI 아래로 줄바꿈 (우측 잘림 방지). #dashboardCard로 특이도 ↑ */
-@media (min-width: 641px) and (max-width: 1200px) {
+@media (min-width: 1025px) and (max-width: 1200px) {
   #dashboardCard .dash-top-section { grid-template-columns: 1fr; }
   #dashboardCard .dash-bottom-section { grid-template-columns: 1fr; }
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
+  /* v4.70: 폴드/태블릿(≤1024 모바일)에서 대시보드는 단일 컬럼 — v4.69 경계 이동으로 769~1024 구간이 2열로 떨어지던 회귀 수정 */
+  .dash-top-section { grid-template-columns: 1fr; }
+  .dash-top-row { grid-template-columns: 1fr; }
+  .dash-bottom-section { grid-template-columns: 1fr; }
   .dash-card { padding: 12px; }
   .dash-main-num { font-size: 22px; }
   .dash-mini-main .dash-main-num { font-size: 18px; }
@@ -4911,7 +4915,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   font-weight: 700;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .search-modal { padding-top: 8vh; }
   .search-modal-content { margin: 0 12px; max-height: 80vh; }
   .search-modal-head { padding: 14px 14px; gap: 10px; }
@@ -5011,7 +5015,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .hero-marquee-track .notif-sep { color: var(--text-mute); opacity: 0.45; margin: 0 6px; }
 .hero-marquee:hover .hero-marquee-track { animation-play-state: paused; }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .hero-marquee { height: 32px; margin: 0 0 22px 0; }
   .hero-marquee-label { font-size: 9px; padding-right: 10px; letter-spacing: 1.4px; }
   .hero-marquee-mask { padding-left: 12px; }
@@ -5033,7 +5037,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .todo-board::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 3px; }
 [data-theme="light"] .todo-board::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.10); }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .todo-board { grid-template-columns: 1fr; gap: 12px; overflow-x: visible; }
 }
 
@@ -5350,7 +5354,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 [data-theme="light"] .insider-history-wrap table.insider-history tbody td { border-bottom-color: rgba(0,0,0,0.05); }
 [data-theme="light"] .insider-history-wrap table.insider-history tbody tr:hover { background: rgba(184,134,11,0.06); }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .insider-history-wrap table.insider-history { font-size: 11px; }
   .insider-history-wrap table.insider-history thead th,
   .insider-history-wrap table.insider-history tbody td { padding: 6px 6px; }
@@ -5972,7 +5976,7 @@ table.sec-modal-table tbody tr:hover { background: var(--bg-3); }
 table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 
 /* ============ MOBILE (≤640px) — 폰만 대상. 태블릿 (iPad Mini 744px+ 포함) 은 PC 레이아웃 ============ */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .container { padding: 16px 20px 40px; }
   /* v3.95: 섹터 동향 — 콘텐츠 카드만 가로폭 확대(여백 20→10px). 히어로/컨테이너는 불변 */
   body[data-mtab="sector"][data-stab="trend"] section.card[data-stab~="trend"] { margin-left: -10px; margin-right: -10px; }
@@ -6748,7 +6752,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 
 /* ============ v3.78: 모바일 섹터 FRAME — 정거장 노드 레일 + 계층 역할 한 줄 (D+A 기반). 데스크탑 2D 그대로 ============ */
 #sectorFrameworkCard #sfMobile { display: none; }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   #sectorFrameworkCard #sfDiagram { display: none !important; }
   #sectorFrameworkCard #sfMobile { display: block !important; }
   .sfm2-sorts { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
@@ -6810,7 +6814,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   contain: none !important;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   /* 모바일에서 SF 카드는 명시적으로 자식 합산 + 충분한 bottom padding으로 다음 카드와 격리 */
   #sectorFrameworkCard {
     padding: 0 0 24px 0 !important;
@@ -6844,7 +6848,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 }
 
 /* ============ v3.74: 섹터 FRAME 모바일 — 깔끔한 세로 카드 흐름 (정보·체계 100% 유지) ============ */
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   #sectorFrameworkCard .sf-core,
   #sectorFrameworkCard .sf-external {
     display: flex !important; flex-direction: column; gap: 10px;
@@ -6934,7 +6938,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   background: var(--accent);
   color: #fff;
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .vshape-ver-toggle button { padding: 3px 8px; font-size: 10px; }
 }
 /* end v2.31 vshape toggle */
@@ -6962,7 +6966,7 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
 #macroCorrWrap .sec-modal-table-wrap {
   margin-bottom: 4px;
 }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   #macroCorrWrap { margin-top: 20px; padding-top: 16px; }
   .macro-corr-label { font-size: 13px; margin: 20px 0 8px 0; }
 }
@@ -7010,7 +7014,7 @@ table.combo-eval tbody td.mode-cell {
 }
 .btn-load-more:hover { background: var(--accent); color: white; }
 .btn-load-more:active { transform: scale(0.98); }
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .btn-load-more { padding: 12px 16px; font-size: 12px; }
 }
 
@@ -9014,7 +9018,7 @@ function restoreCardStates() {
 // v1.19: 모바일 첫 방문 시 무거운/큰 카드 자동 접기
 // (Framework 도식 1080px, 40섹터 분석 — 모바일에서 펼쳐 두면 가독성 망. 사용자가 수동 펼치면 그 선택 LocalStorage에 기억됨)
 function autoCollapseHeavyCardsOnMobile() {
-  if (!window.matchMedia('(max-width: 640px)').matches) return;
+  if (!window.matchMedia('(max-width: 1024px)').matches) return;
   const states = lsGet(LS.CARDS, {});
   const heavyCardH2s = [
     '섹터 FRAME',       // v1.54 (ex: '🗺️ AI 산업 12계층 40섹터 Framework')
@@ -10788,7 +10792,7 @@ function aqCalendarRender() {
   // 월화수목금토일 시작 → 월(JS day=1)이 첫번째 → offset = (day + 6) % 7
   const startOffset = (firstDay.getDay() + 6) % 7;
   const todayStr = aqCalTodayStr();
-  const isMobile = window.matchMedia('(max-width: 640px)').matches;
+  const isMobile = window.matchMedia('(max-width: 1024px)').matches;
 
   grid.innerHTML = '';
 
@@ -12032,7 +12036,7 @@ function rerenderAll() {
   _safe(() => { if (_state.openTicker && document.getElementById('chartModal') && document.getElementById('chartModal').classList.contains('active') && typeof closeModal === 'function') closeModal(); });
 }
 
-function isMobileViewport() { return window.matchMedia('(max-width: 640px)').matches; }
+function isMobileViewport() { return window.matchMedia('(max-width: 1024px)').matches; }
 function useSimpleMode() { return isMobileViewport() && !_state.detailMode; }
 
 // v1.65: 다크/라이트 토글 제거 → 항상 다크 강제
@@ -16818,7 +16822,7 @@ function renderComboEval(rows) {
     return `<span class="combo-mode-tag ${tagCls}">${tagText}</span>`;
   };
 
-  const isNarrow = window.matchMedia('(max-width: 640px)').matches;
+  const isNarrow = window.matchMedia('(max-width: 1024px)').matches;
   const titleMeta = isNarrow
     ? `${rows.length}건 · ${metrics.length}그룹 · ${sk}${sd==='asc'?'↑':'↓'}`
     : `총 ${rows.length}건 신호 · ${metrics.length}개 그룹 (포함=다른 시그널 동시발생 포함 / 단독=해당 시그널만) · 정렬: ${sk}${sd==='asc'?'↑':'↓'}`;
@@ -20723,7 +20727,7 @@ function _aqRouteTodoCard(todo) {
   if (!todo) return;
   const ticker = String(todo.ticker || todo.reportTicker || '').toUpperCase();
   const w = todo.when, what = todo.what;
-  const isMobile = window.innerWidth <= 640;
+  const isMobile = window.innerWidth <= 1024;
 
   // F. 조건부 트리거 → 차트 모달
   if (what && what.type === 'trigger') {
@@ -22088,7 +22092,7 @@ function initMobileTabs() {
 //   page: "main" | "board" | "my" (메인/보드/마이 클릭 → 페이지 교체, 패널은 닫힘)
 //   panel: ""/null | "discover" | "explore" (발견/탐색 클릭 → 페이지 유지, 패널 토글)
 // ============================================================================
-function isPCViewport() { return window.matchMedia('(min-width: 641px)').matches; }
+function isPCViewport() { return window.matchMedia('(min-width: 1025px)').matches; }
 
 // 페이지 전환 (메인 / 보드 / 마이) — 사이드 패널은 닫음
 function setPCPage(page) {
