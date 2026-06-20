@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.70';
+window.AQ_PWA_VERSION = '4.72';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -7170,6 +7170,37 @@ table.combo-eval tbody td .nodata {
   /* 푸터 헤어라인 */
   footer { font-size: 8px; }
 }
+
+/* v4.72: 룩백 (매수 복기) */
+#lookbackModal .lb-content { max-width: 760px; width: 95vw; max-height: 88vh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; position: relative; padding: 16px 14px 20px; }
+.lb-wrap { padding: 2px 0 6px; }
+.lb-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0 14px; flex-wrap: wrap; }
+.lb-title { font-size: 18px; font-weight: 800; color: var(--text); }
+.lb-seg { display: inline-flex; background: var(--panel-2, #2d2d30); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.lb-seg button { padding: 7px 13px; font-size: 12.5px; font-weight: 700; color: var(--text-mute); background: transparent; border: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.lb-seg button.active { background: var(--accent, #4dabf7); color: #0b0b0d; }
+.lb-card { background: var(--panel-2, #2d2d30); border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+.lb-card h3 { margin: 0 0 10px; font-size: 13px; font-weight: 800; color: var(--text); }
+.lb-kv { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; padding: 4px 0; color: var(--text); }
+.lb-kv .k { color: var(--text-mute); }
+.lb-cohort-date { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.lb-item { border-top: 1px solid var(--line); padding: 10px 0; }
+.lb-item:first-of-type { border-top: none; }
+.lb-row { display: flex; align-items: center; gap: 7px; }
+.lb-tk { font-weight: 800; font-size: 14px; color: var(--text); }
+.lb-badge { font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 999px; }
+.lb-b-ml { background: rgba(77,171,247,0.18); color: #74c0fc; }
+.lb-b-ins { background: rgba(250,82,82,0.18); color: #ffa8a8; }
+.lb-b-self { background: rgba(255,255,255,0.10); color: var(--text-mute); }
+.lb-ret { margin-left: auto; font-weight: 800; font-size: 14px; }
+.lb-pct { font-size: 11.5px; color: var(--text-mute); margin-top: 3px; }
+.lb-toggle-cf { font-size: 11.5px; color: var(--accent, #4dabf7); cursor: pointer; margin-top: 7px; display: inline-block; -webkit-tap-highlight-color: transparent; }
+.lb-cf { margin-top: 8px; display: none; padding: 8px 10px; background: var(--bg-3, rgba(255,255,255,0.03)); border-radius: 10px; }
+.lb-cf.open { display: block; }
+.lb-cf-row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; padding: 3px 0; color: var(--text); }
+.lb-cf-h { font-size: 11px; font-weight: 800; color: var(--text-mute); margin: 6px 0 2px; }
+.lb-empty { color: var(--text-mute); text-align: center; padding: 40px 12px; line-height: 1.6; }
+
 </style>
 </head>
 <body>
@@ -8042,6 +8073,11 @@ table.combo-eval tbody td .nodata {
       <button class="mo-drawer-close" onclick="closeMoDrawer()" aria-label="닫기">×</button>
     </div>
     <nav class="mo-drawer-list">
+      <!-- v4.72: 룩백 (매수 복기) -->
+      <button class="mo-drawer-item" onclick="openLookback()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>룩백</span>
+      </button>
       <!-- v3.84: 섹터는 하단 탭으로 이동 (드로어에서 제거) -->
       <!-- v2.92: To-Do는 하단 탭에서 햄버거 드로어로 이동 (섹터 다음) -->
       <button class="mo-drawer-item" onclick="moDrawerNav('todo')">
@@ -8060,6 +8096,14 @@ table.combo-eval tbody td .nodata {
       </button>
     </nav>
   </aside>
+
+  <!-- ============ v4.72: 룩백 (매수 복기) 모달 ============ -->
+  <div class="modal-overlay" id="lookbackModal" onclick="_lbBackdrop(event)">
+    <div class="modal-content lb-content">
+      <button class="modal-bottom-close" style="position:absolute;top:10px;right:12px;width:auto;padding:6px 12px;" onclick="closeLookback()">닫기</button>
+      <div class="lb-wrap" id="lookbackBody"></div>
+    </div>
+  </div>
 
   <!-- ============ LOADING OVERLAY ============ -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -11782,7 +11826,16 @@ let portfolioSheet, tradesSheet;
 // Compute portfolio from trades (FIFO-ish avg)
 function computePortfolioFromTrades(trades) {
   const pos = {};
-  trades.forEach(r => {
+  // v4.71: 날짜 오름차순(같은 날은 매수 먼저) 정렬 후 처리 —
+  //   정렬 안 하면 매도가 매수보다 배열 앞에 있을 때 음수→0 리셋되며 유령 보유분이 남는 버그
+  const _nd = (x) => (typeof normalizeDate === 'function' ? normalizeDate(x) : '') || String(x || '');
+  const ordered = (trades || []).slice().sort((a, b) => {
+    const da = _nd(a.date), db = _nd(b.date);
+    if (da !== db) return da < db ? -1 : 1;
+    const ra = (a.action === '매도') ? 1 : 0, rb = (b.action === '매도') ? 1 : 0;
+    return ra - rb;  // 같은 날: 매수 → 매도
+  });
+  ordered.forEach(r => {
     const t = (r.ticker || '').toUpperCase().trim();
     if (!t || !r.action) return;
     const qty = parseFloat(r.qty) || 0, px = parseFloat(r.price) || 0;
@@ -11874,7 +11927,19 @@ function applyMarketState(mkt) {
   if (mkt === 'US' && _state.vshapeVersion === 'V1' && _state.archivesV1 && _state.archivesV1.US && _state.archivesV1.US.length > 0) {
     _state.archive = _state.archivesV1.US;
   } else if (mkt === 'US' && _state.vshapeVersion === 'ALL') {
-    _state.archive = (_state.archives.US || []).concat((_state.archivesV1 && _state.archivesV1.US) || []);  // v4.20: 통합 = 단순 이어붙이기 (dedup 없음)
+    // v4.71: 통합 = V2 우선 + V1 합치되 종목·날짜 중복은 한 행으로 병합(신호 union) — 같은 날 같은 종목 2행 방지
+    const _mergeSig = (a, b) => {
+      const set = new Set();
+      [a, b].forEach(x => String(x || '').split('+').map(s => s.trim()).filter(Boolean).forEach(s => set.add(s)));
+      return Array.from(set).join(' + ');
+    };
+    const byKey = {}, order = [];
+    (_state.archives.US || []).concat((_state.archivesV1 && _state.archivesV1.US) || []).forEach(r => {
+      const key = (r.Ticker || '') + '|' + (r.Date || '');
+      if (!byKey[key]) { byKey[key] = Object.assign({}, r); order.push(key); }
+      else { byKey[key].Signal_Type = _mergeSig(byKey[key].Signal_Type, r.Signal_Type); }
+    });
+    _state.archive = order.map(k => byKey[k]);
   } else {
     _state.archive          = _state.archives[mkt] || [];
   }
@@ -21987,6 +22052,189 @@ function closeMoDrawer() {
   if (b) { b.classList.remove('open'); b.setAttribute('aria-hidden', 'true'); }
   document.body.style.overflow = '';
 }
+// ============================================================================
+// v4.72: 룩백 (매수 복기) — 일자 코호트 + 근거 자동태깅 + 5/10/20거래일 평가 + 달러 단위 반사실 비교
+// ============================================================================
+const LB_START = '2026-06-01';
+const LB_HORIZONS = [5, 10, 20];
+let _lbHorizon = 5;
+
+function _lbNd(x) { return (typeof normalizeDate === 'function' ? normalizeDate(x) : '') || String(x || ''); }
+function _lbAddDays(dStr, n) { const d = new Date(dStr + 'T00:00:00'); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
+function _lbRows(tk) { const f = findTickerSeries(tk); return (f && f.rows && f.rows.length) ? f.rows : null; }
+function _lbIdxOnOrBefore(rows, dStr) { let lo = 0, hi = rows.length - 1, res = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (rows[m].Date <= dStr) { res = m; lo = m + 1; } else hi = m - 1; } return res; }
+function _lbCloseOn(tk, dStr) { const rows = _lbRows(tk); if (!rows) return null; const i = _lbIdxOnOrBefore(rows, dStr); if (i < 0) return null; const c = Number(rows[i].Close); return c > 0 ? { close: c, idx: i } : null; }
+function _lbCloseAtOffset(tk, dStr, n) { const rows = _lbRows(tk); if (!rows) return null; const base = _lbIdxOnOrBefore(rows, dStr); if (base < 0) return null; const j = base + n; if (j >= rows.length) return { pending: true }; const c = Number(rows[j].Close); return c > 0 ? { close: c, idx: j, date: rows[j].Date } : null; }
+
+// 근거 판정
+function _lbHasSignal(tk, D) { const lo = _lbAddDays(D, -1); return (_state.archive || []).some(r => String(r.Ticker || '').toUpperCase() === tk && r.Date && r.Date >= lo && r.Date <= D); }
+function _lbHasInsider(tk, D) { const lo = _lbAddDays(D, -7), hi = _lbAddDays(D, -1); const arr = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[tk]) ? _aqInsiderTrades[tk] : []; return arr.some(t => t.transDate && isCommonEquityTrade(t.security) && t.transDate >= lo && t.transDate <= hi); }
+function _lbTags(tk, D) { const tags = []; if (_lbHasSignal(tk, D)) tags.push('ML'); if (_lbHasInsider(tk, D)) tags.push('INS'); if (!tags.length) tags.push('SELF'); return tags; }
+
+// 후보 유니버스 (그날 신호 OR 내부자 충족했는데 안 산 종목, 시그널 타입 무관)
+function _lbCandidates(D, boughtSet) {
+  const lo = _lbAddDays(D, -1), insLo = _lbAddDays(D, -7), insHi = _lbAddDays(D, -1);
+  const set = new Set();
+  (_state.archive || []).forEach(r => { const tk = String(r.Ticker || '').toUpperCase(); if (tk && r.Date >= lo && r.Date <= D) set.add(tk); });
+  if (typeof _aqInsiderTrades !== 'undefined') {
+    Object.keys(_aqInsiderTrades).forEach(tk => { if ((_aqInsiderTrades[tk] || []).some(t => isCommonEquityTrade(t.security) && t.transDate >= insLo && t.transDate <= insHi)) set.add(String(tk).toUpperCase()); });
+  }
+  boughtSet.forEach(tk => set.delete(tk));
+  return Array.from(set);
+}
+
+// 현재 5일 변동성(%) — 일간수익률 표준편차
+function _lb5dVolNow(tk) {
+  const rows = _lbRows(tk); if (!rows || rows.length < 6) return null;
+  const rets = []; for (let k = rows.length - 5; k < rows.length; k++) { const a = Number(rows[k - 1].Close), b = Number(rows[k].Close); if (a > 0 && b > 0) rets.push(b / a - 1); }
+  if (rets.length < 3) return null;
+  const m = rets.reduce((s, x) => s + x, 0) / rets.length;
+  const v = rets.reduce((s, x) => s + (x - m) * (x - m), 0) / rets.length;
+  return Math.sqrt(v) * 100;
+}
+
+// 팩터 평균 (PER/선행PER/PEG/5일변동성)
+function _lbFactors(tks) {
+  const uniq = Array.from(new Set(tks.map(t => String(t).toUpperCase())));
+  const acc = { per: [], fwd: [], peg: [], vol: [] };
+  uniq.forEach(tk => {
+    const v = (typeof aqValuationFor === 'function') ? aqValuationFor(tk) : null;
+    if (v) { if (v.per > 0) acc.per.push(v.per); if (v.fwdPer > 0) acc.fwd.push(v.fwdPer); if (v.peg > 0) acc.peg.push(v.peg); }
+    const vol = _lb5dVolNow(tk); if (vol != null) acc.vol.push(vol);
+  });
+  const avg = a => a.length ? a.reduce((s, x) => s + x, 0) / a.length : null;
+  return { per: avg(acc.per), fwd: avg(acc.fwd), peg: avg(acc.peg), vol: avg(acc.vol) };
+}
+
+// 엔진 — 코호트별 평가 + 반사실
+function _lbBuild() {
+  let trades = []; try { trades = lsGet(lsKeyTrades(), []) || []; } catch (e) {}
+  const buys = trades.filter(t => t.action === '매수' && _lbNd(t.date) >= LB_START);
+  const sells = trades.filter(t => t.action === '매도');
+  const byDate = {};
+  buys.forEach(t => { const D = _lbNd(t.date); const tk = String(t.ticker || '').toUpperCase(); if (!tk || !D) return; (byDate[D] = byDate[D] || []).push({ tk, qty: parseFloat(t.qty) || 0, price: parseFloat(t.price) || 0, D }); });
+  const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
+  const H = _lbHorizon;
+  const cohorts = [];
+  dates.forEach(D => {
+    const boughtSet = new Set(byDate[D].map(b => b.tk));
+    const cands = _lbCandidates(D, boughtSet);
+    const items = byDate[D].map(b => {
+      const invest = b.qty * b.price;
+      const o = _lbCloseAtOffset(b.tk, D, H);
+      const horizonDate = (o && o.date) ? o.date : _lbAddDays(D, H * 2);
+      const soldBefore = sells.some(s => String(s.ticker || '').toUpperCase() === b.tk && _lbNd(s.date) > D && _lbNd(s.date) <= horizonDate);
+      let myRet = null, pending = false, excluded = false;
+      if (soldBefore) excluded = true;
+      else if (!o) myRet = null;
+      else if (o.pending) pending = true;
+      else { const base = _lbCloseOn(b.tk, D); if (base) myRet = o.close / base.close - 1; }
+      let cf = [];
+      if (!excluded && !pending && o && !o.pending) {
+        cands.forEach(c => {
+          const cb = _lbCloseOn(c, D), co = _lbCloseAtOffset(c, D, H);
+          if (cb && co && !co.pending) { const ret = co.close / cb.close - 1; cf.push({ tk: c, ret, val: invest * (1 + ret) }); }
+        });
+        cf.sort((a, b) => b.ret - a.ret);
+      }
+      let pct = null;
+      if (myRet != null && cf.length) { const worse = cf.filter(x => x.ret < myRet).length; pct = worse / cf.length; }
+      return { tk: b.tk, invest, qty: b.qty, price: b.price, tags: _lbTags(b.tk, D), myRet, pending, excluded, pct, cfN: cf.length, cfTop: cf.slice(0, 5), cfBot: cf.slice(-5).reverse(), myVal: (myRet != null ? invest * (1 + myRet) : null) };
+    });
+    cohorts.push({ date: D, items, cands: cands.length });
+  });
+  return cohorts;
+}
+
+// ---- 렌더 ----
+function _lbPctStr(r) { return (r >= 0 ? '+' : '') + (r * 100).toFixed(1) + '%'; }
+function _lbPctSpan(r) { return `<span class="${r >= 0 ? 'up' : 'down'}">${_lbPctStr(r)}</span>`; }
+function _lbKv(k, v) { return `<div class="lb-kv"><span class="k">${k}</span><span>${v}</span></div>`; }
+function _lbFac(label, my, cand, suf) {
+  suf = suf || '';
+  const f = x => (x == null ? '—' : x.toFixed(suf === '%' ? 1 : 2) + suf);
+  return `<div class="lb-kv"><span class="k">${label}</span><span>${f(my)} <span style="color:var(--text-mute)">/ ${f(cand)}</span></span></div>`;
+}
+function _lbSetH(h) { _lbHorizon = h; _lbRender(); }
+function _lbToggleCf(id) { const el = document.getElementById(id); if (el) el.classList.toggle('open'); }
+window._lbSetH = _lbSetH; window._lbToggleCf = _lbToggleCf;
+
+function _lbRender() {
+  const body = document.getElementById('lookbackBody'); if (!body) return;
+  if (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US') { body.innerHTML = '<div class="lb-empty">룩백은 현재 미국 시장 기준으로 제공됩니다.<br>상단에서 US로 전환해 주세요.</div>'; return; }
+  const cohorts = _lbBuild();
+  let html = `<div class="lb-h"><div class="lb-title">룩백 · 매수 복기</div><div class="lb-seg">${LB_HORIZONS.map(h => `<button class="${h === _lbHorizon ? 'active' : ''}" onclick="_lbSetH(${h})">${h}일</button>`).join('')}</div></div>`;
+  if (!cohorts.length) { body.innerHTML = html + '<div class="lb-empty">2026년 6월 이후 매수 내역이 없습니다.</div>'; return; }
+
+  const evald = []; cohorts.forEach(c => c.items.forEach(it => { if (!it.excluded && !it.pending && it.myRet != null) evald.push(it); }));
+  if (evald.length) {
+    const pcts = evald.filter(x => x.pct != null).map(x => x.pct);
+    const avgPct = pcts.length ? pcts.reduce((s, x) => s + x, 0) / pcts.length : null;
+    const avgRet = evald.reduce((s, x) => s + x.myRet, 0) / evald.length;
+    html += `<div class="lb-card"><h3>종합 (평가완료 ${evald.length}건 · ${_lbHorizon}거래일)</h3>`;
+    html += _lbKv('내 매수 평균 수익률', _lbPctSpan(avgRet));
+    if (avgPct != null) { const rank = Math.round((1 - avgPct) * 100); html += _lbKv('후보 중 평균 등수', `상위 ${rank}% ${avgPct >= 0.5 ? '✅ 선별력 우수' : '⚠️ 무작위보다 아쉬움'}`); }
+    html += '</div>';
+
+    const grp = { ML: [], INS: [], SELF: [] };
+    evald.forEach(x => { const key = x.tags.includes('ML') ? 'ML' : (x.tags.includes('INS') ? 'INS' : 'SELF'); grp[key].push(x.myRet); });
+    html += '<div class="lb-card"><h3>매수 근거별 성적</h3>';
+    [['ML', 'ML신호'], ['INS', '내부자매수'], ['SELF', '자체판단(정량보고서)']].forEach(([k, lbl]) => {
+      const a = grp[k]; if (!a.length) { html += _lbKv(lbl, '—'); return; }
+      const m = a.reduce((s, x) => s + x, 0) / a.length; const win = a.filter(x => x > 0).length / a.length * 100;
+      html += _lbKv(lbl, `${_lbPctSpan(m)} · 승률 ${win.toFixed(0)}% (${a.length}건)`);
+    });
+    html += '</div>';
+
+    const myF = _lbFactors(evald.map(x => x.tk));
+    const candTks = []; cohorts.forEach(c => { if (c.items.some(it => !it.excluded && !it.pending && it.myRet != null)) c.items.forEach(it => { (it.cfTop || []).concat(it.cfBot || []).forEach(cc => candTks.push(cc.tk)); }); });
+    const cF = _lbFactors(candTks);
+    html += '<div class="lb-card"><h3>내가 산 종목 vs 안 산 후보 (팩터)</h3>';
+    html += '<div class="lb-kv"><span class="k">　</span><span style="color:var(--text-mute)">내 매수 / 후보</span></div>';
+    html += _lbFac('PER', myF.per, cF.per) + _lbFac('선행 PER', myF.fwd, cF.fwd) + _lbFac('PEG', myF.peg, cF.peg) + _lbFac('5일 변동성', myF.vol, cF.vol, '%');
+    html += '</div>';
+  } else {
+    html += '<div class="lb-card"><h3>종합</h3><div class="lb-kv"><span class="k">아직 5거래일 이상 지난 매수가 없어 평가 대기 중입니다.</span><span></span></div></div>';
+  }
+
+  cohorts.forEach((c, ci) => {
+    html += `<div class="lb-card"><div class="lb-cohort-date">${c.date} · 매수 ${c.items.length}건 · 후보 ${c.cands}개</div>`;
+    c.items.forEach((it, ii) => {
+      html += `<div class="lb-item"><div class="lb-row"><span class="lb-tk">${escapeHtml(it.tk)}</span>`;
+      html += it.tags.map(t => t === 'ML' ? '<span class="lb-badge lb-b-ml">ML</span>' : t === 'INS' ? '<span class="lb-badge lb-b-ins">내부자</span>' : '<span class="lb-badge lb-b-self">자체</span>').join('');
+      if (it.excluded) html += '<span class="lb-ret" style="color:var(--text-mute)">조기청산 제외</span>';
+      else if (it.pending) html += '<span class="lb-ret" style="color:var(--text-mute)">평가 대기</span>';
+      else if (it.myRet != null) html += `<span class="lb-ret ${it.myRet >= 0 ? 'up' : 'down'}">${_lbPctStr(it.myRet)}</span>`;
+      else html += '<span class="lb-ret" style="color:var(--text-mute)">데이터 없음</span>';
+      html += '</div>';
+      if (it.pct != null) html += `<div class="lb-pct">투자 ${fmtMoney(it.invest)} → ${fmtMoney(it.myVal)} · 후보 ${it.cfN}개 중 상위 ${Math.round((1 - it.pct) * 100)}%</div>`;
+      if (it.cfTop && it.cfTop.length) {
+        const cid = `lbcf_${ci}_${ii}`;
+        html += `<span class="lb-toggle-cf" onclick="_lbToggleCf('${cid}')">이 돈으로 다른 걸 샀다면 ▾</span>`;
+        html += `<div class="lb-cf" id="${cid}">`;
+        html += '<div class="lb-cf-h">이 돈을 넣었으면 더 좋았던 Top 5</div>';
+        it.cfTop.forEach(x => { html += `<div class="lb-cf-row"><span>${escapeHtml(x.tk)}</span><span class="${x.ret >= 0 ? 'up' : 'down'}">${_lbPctStr(x.ret)} · ${fmtMoney(x.val)}</span></div>`; });
+        html += '<div class="lb-cf-h">안 사길 잘한(더 나빴던) Bottom 5</div>';
+        it.cfBot.forEach(x => { html += `<div class="lb-cf-row"><span>${escapeHtml(x.tk)}</span><span class="${x.ret >= 0 ? 'up' : 'down'}">${_lbPctStr(x.ret)} · ${fmtMoney(x.val)}</span></div>`; });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  body.innerHTML = html;
+}
+
+function openLookback() {
+  try { closeMoDrawer(); } catch (e) {}
+  const m = document.getElementById('lookbackModal'); if (!m) return;
+  m.classList.add('active');
+  try { _lbRender(); } catch (e) { const b = document.getElementById('lookbackBody'); if (b) b.innerHTML = '<div class="lb-empty">렌더 중 오류가 발생했습니다.</div>'; console.warn('[lookback]', e); }
+}
+function closeLookback() { const m = document.getElementById('lookbackModal'); if (m) m.classList.remove('active'); }
+function _lbBackdrop(e) { if (e.target && e.target.id === 'lookbackModal') closeLookback(); }
+window.openLookback = openLookback; window.closeLookback = closeLookback; window._lbBackdrop = _lbBackdrop;
+
 function moDrawerNav(tab) {
   closeMoDrawer();
   // 작은 지연 — 드로어 닫힘 애니메이션과 탭 전환 시각 분리
