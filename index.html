@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.72';
+window.AQ_PWA_VERSION = '4.73';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -12151,6 +12151,21 @@ function setMarket(mkt) {
 
   // 6) 모든 화면 재렌더링
   rerenderAll();
+
+  // v4.73: 시장 전환 후 현재 활성 탭 재렌더 — rerenderAll에 없는 화면(마이/board 서브탭·로그·탐색 등)도
+  //   새 시장 데이터로 다시 그림. (이전엔 board 서브탭/계좌상태/로그가 US 렌더 그대로 남아있던 버그)
+  try {
+    const _mt = document.body.getAttribute('data-mtab');
+    if (_mt === 'board') {
+      if (typeof setBoardSubtab === 'function') setBoardSubtab(document.body.getAttribute('data-btab') || 'watch');
+    } else if (_mt === 'explore') {
+      if (typeof setExploreSubtab === 'function') setExploreSubtab(document.body.getAttribute('data-xtab') || 'signals');
+    } else if (_mt === 'sector') {
+      if (typeof setSectorSubtab === 'function') setSectorSubtab(document.body.getAttribute('data-stab') || 'trend');
+    } else if (_mt && typeof switchMobileTab === 'function') {
+      switchMobileTab(_mt);   // my(로그)/schedule 등 — lazy 렌더 재사용
+    }
+  } catch (e) { console.warn('[setMarket/activeTab]', e); }
 
   // v2.31/v2.32: 시장 전환 후 vshape 토글 표시 갱신 (KR이면 숨김)
   try {
