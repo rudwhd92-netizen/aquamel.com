@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.73';
+window.AQ_PWA_VERSION = '4.74';
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -22696,8 +22696,39 @@ function aqDiscoverItems() {
   const TYPE_ORDER = { 'V-Shape': 0, '신호': 1, '내부자': 2, '보고서': 3 };
   Object.values(merged).forEach(it => it.types.sort((a, b) => (TYPE_ORDER[a] != null ? TYPE_ORDER[a] : 9) - (TYPE_ORDER[b] != null ? TYPE_ORDER[b] : 9)));
   const items = Object.values(merged);
+  // 보고서 링은 표시용으로만 유지 (정렬 1순위에서는 제외 — v4.74)
   items.forEach(it => { it._ring = (typeof aqHasRecentReport === 'function') ? !!aqHasRecentReport(it.ticker) : false; });
-  items.sort((a, b) => { if (a._ring !== b._ring) return a._ring ? -1 : 1; return (b.date || '').localeCompare(a.date || ''); });
+
+  // v4.74: 새 정렬 — ① V-Shape·보고서·내부자 최신일 desc → ② 내가 보유한 종목 → ③ 최근 3개월 V-Shape(신호) 타점 적은 순
+  let _heldSet = new Set();
+  try {
+    if (typeof computeHoldingsState === 'function') {
+      const _sim = computeHoldingsState();
+      _heldSet = new Set((_sim.holdings || []).map(h => String(h.ticker || '').toUpperCase()));
+    }
+  } catch (e) {}
+  // 최근 3개월(90일) 종목별 V-Shape/신호 타점 수 — aqComputeOverSignaled와 동일 풀/기준
+  const _sigCount90 = {};
+  try {
+    const _pool = (_state.archives && _state.archives.US ? _state.archives.US : []).concat(_state.archivesV1 && _state.archivesV1.US ? _state.archivesV1.US : []);
+    const _src = (market === 'US' && _pool.length) ? _pool : (_state.archive || []);
+    let _maxD = '';
+    _src.forEach(r => { if (r.Date && r.Date > _maxD) _maxD = r.Date; });
+    if (_maxD) {
+      const _d = new Date(_maxD); _d.setDate(_d.getDate() - 90);
+      const _cut = _d.getFullYear() + '-' + pad(_d.getMonth() + 1) + '-' + pad(_d.getDate());
+      _src.forEach(r => { if (r.Ticker && r.Date && r.Date >= _cut) { const tk = String(r.Ticker).toUpperCase(); _sigCount90[tk] = (_sigCount90[tk] || 0) + 1; } });
+    }
+  } catch (e) {}
+  const _held = it => _heldSet.has(String(it.ticker || '').toUpperCase()) ? 0 : 1;   // 보유=0(앞), 미보유=1
+  const _cnt = it => _sigCount90[String(it.ticker || '').toUpperCase()] || 0;
+  items.sort((a, b) => {
+    const dc = (b.date || '').localeCompare(a.date || '');   // ① 최신일 desc
+    if (dc !== 0) return dc;
+    const hc = _held(a) - _held(b);                          // ② 보유 우선
+    if (hc !== 0) return hc;
+    return _cnt(a) - _cnt(b);                                // ③ 3개월 타점 적은 순
+  });
   return { market, cutoff, items };
 }
 
