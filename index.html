@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.80';   // v4.80: 운영 MO — 시간 폰트 고정, 구분 띠 전체 폭·상하 여백 균등
+window.AQ_PWA_VERSION = '4.81';   // v4.81: 운영 — 실행 중 버튼 스피너 + 진행 로딩바
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3531,6 +3531,15 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .ops-ic.run { color: #fff; background: linear-gradient(135deg, #e03131 0%, #c2255c 55%, #862e9c 100%); box-shadow: 0 3px 10px rgba(224,49,49,.35), inset 0 1px 0 rgba(255,255,255,.25); }
 .ops-ic.run.kr { background: linear-gradient(135deg, #1c7ed6 0%, #0b7285 55%, #087f5b 100%); box-shadow: 0 3px 10px rgba(28,126,214,.35), inset 0 1px 0 rgba(255,255,255,.25); }
 .ops-ic.run svg { margin-left: 2px; }
+.ops-ic { position: relative; }
+.ops-ic.spin::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid rgba(255,255,255,.18); border-top-color: #fff; animation: ops-spin .8s linear infinite; }
+.ops-ic.play.spin::after { border-top-color: var(--text-hi); }
+.ops-ic.spin:disabled { opacity: 1; cursor: progress; }
+@keyframes ops-spin { to { transform: rotate(360deg); } }
+.ops-prog { display: inline-block; width: 140px; max-width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; vertical-align: middle; position: relative; }
+.ops-prog i { position: absolute; top: 0; bottom: 0; width: 40%; border-radius: 3px; background: linear-gradient(90deg, #4dabf7, #1c7ed6); animation: ops-prog 1.2s ease-in-out infinite; }
+@keyframes ops-prog { 0% { left: -40%; } 100% { left: 100%; } }
+.ops-prog-lbl { font-size: 11px; color: #4dabf7; margin-left: 8px; vertical-align: middle; }
 .ops-ic.play { color: var(--text); background: rgba(255,255,255,.10); border: 1px solid var(--line); width: 24px; height: 24px; }
 .ops-ic.play svg { width: 10px; height: 10px; margin-left: 1px; }
 .ops-ic.play:hover { background: rgba(255,255,255,.18); }
@@ -23934,7 +23943,7 @@ function aqOpsChanged(mk) {
 // ---------- 렌더 ----------
 function _opsResultHtml(def, run) {
   if (!run) return '<span class="none">—</span>';
-  if (run.running) return `<span class="run">⏳ 실행 중 ${_opsFmtDur(run.elapsed)}</span>`;
+  if (run.running) return `<span class="ops-prog"><i></i></span><span class="ops-prog-lbl">실행 중</span>`;
   let main = '';
   if (run.last_status === 'success') main = `<span class="ok">✅ 성공${run.summary ? ' · ' + _esc(run.summary) : ''}</span>`;
   else if (run.last_status === 'warn') main = `<span class="warn">⚠️ 경고${run.summary ? ' · ' + _esc(run.summary) : ''}</span>`;
@@ -23971,7 +23980,7 @@ function aqOpsRenderTable(mk, keepValues) {
       <td class="ops-res">${_opsResultHtml(def, run)}</td>
       <td>${_opsFmtDur(run.last_duration)}</td>
       <td>${autoCell}</td>
-      <td><button class="ops-ic play" ${dis} title="실행" onclick="aqOpsRun('${id}')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg></button></td>
+      <td><button class="ops-ic play ${run.running ? 'spin' : ''}" ${dis} title="실행" onclick="aqOpsRun('${id}')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg></button></td>
     </tr>`;
   }).join('');
   // dow + cond
@@ -23980,7 +23989,7 @@ function aqOpsRenderTable(mk, keepValues) {
   if (!keepValues) document.querySelectorAll(`#opsCond_${mk} input[data-cond]`).forEach(i => { i.checked = !!cfg.cond[i.dataset.cond]; });
   const btn = document.getElementById('opsRunAll_' + mk);
   const anyRun = cfg.order.some(id => (_ops.runs[id] || {}).running);
-  if (btn) btn.disabled = _ops.serverOk === false || anyRun;
+  if (btn) { btn.disabled = _ops.serverOk === false || anyRun; btn.classList.toggle('spin', anyRun); }
   // ---- MO list ----
   const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg>';
   const list = document.getElementById('opsList_' + mk);
@@ -23988,9 +23997,9 @@ function aqOpsRenderTable(mk, keepValues) {
     const def = _opsJobDef(id); const a = cfg.jobs[id]; const run = _ops.runs[id] || {};
     const dis = (_ops.serverOk === false || run.running) ? 'disabled' : '';
     const prev = idx > 0 ? _opsJobDef(cfg.order[idx - 1]) : null;
-    const status = run.last_run_at ? `<span>${_opsFmtTime(run.last_run_at)}</span><span>·</span>${_opsResultHtml(def, run)}${run.last_duration != null ? `<span>· ${_opsFmtDur(run.last_duration)}</span>` : ''}` : '<span>실행 기록 없음</span>';
+    const status = run.running ? _opsResultHtml(def, run) : (run.last_run_at ? `<span>${_opsFmtTime(run.last_run_at)}</span><span>·</span>${_opsResultHtml(def, run)}${run.last_duration != null ? `<span>· ${_opsFmtDur(run.last_duration)}</span>` : ''}` : '<span>실행 기록 없음</span>');
     return `<div class="ops-item" data-job="${id}">
-      <div class="r1"><span class="num">${idx + 1}</span><span class="nm">${_esc(def.name)}</span><button class="ops-ic play" ${dis} title="실행" onclick="aqOpsRun('${id}')">${PLAY}</button></div>
+      <div class="r1"><span class="num">${idx + 1}</span><span class="nm">${_esc(def.name)}</span><button class="ops-ic play ${run.running ? 'spin' : ''}" ${dis} title="실행" onclick="aqOpsRun('${id}')">${PLAY}</button></div>
       <div class="r2 ops-res">${status}</div>
       <div class="r3"><span class="ops-auto">
         <select class="auto-mode" onchange="aqOpsChanged('${mk}')"><option value="off" ${a.mode === 'off' ? 'selected' : ''}>끔</option><option value="time" ${a.mode === 'time' ? 'selected' : ''}>시각</option><option value="chain" ${a.mode === 'chain' ? 'selected' : ''} ${idx === 0 ? 'disabled' : ''}>연속</option></select>
