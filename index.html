@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.83';   // v4.83: 운영 — 대기/실행 구분, 실제 진척도 %, 중단 버튼
+window.AQ_PWA_VERSION = '4.84';   // v4.84: 신호 스캔 일수 기본값 5 (원복)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -24081,7 +24081,7 @@ function _opsMarkRunning(ids, runId) {
 async function aqOpsRun(id) {
   const def = _opsJobDef(id); if (!def) return;
   const p = { job: id };
-  if (def.scanDays) { const v = prompt(`${def.name}을(를) 지금 실행합니다.\n스캔 범위(거래일 수)를 입력하세요. 과거 소급이 필요하면 크게:`, '2'); if (v === null) return; p.scanDays = parseInt(v, 10) || 2; }
+  if (def.scanDays) { const v = prompt(`${def.name}을(를) 지금 실행합니다.\n스캔 범위(거래일 수)를 입력하세요. 과거 소급이 필요하면 크게:`, '5'); if (v === null) return; p.scanDays = parseInt(v, 10) || 5; }
   else if (!confirm(`${def.name}을(를) 지금 실행할까요?`)) return;
   const r = await _opsCall('runJob', p);
   if (!r || !r.ok) { if (r && r.notReady) alert('실행 요청 실패'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
