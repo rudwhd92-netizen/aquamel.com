@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.82';   // v4.82: 운영 — 시트 동기화 작업(US/KR)
+window.AQ_PWA_VERSION = '4.83';   // v4.83: 운영 — 대기/실행 구분, 실제 진척도 %, 중단 버튼
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3540,6 +3540,11 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .ops-prog i { position: absolute; top: 0; bottom: 0; width: 40%; border-radius: 3px; background: linear-gradient(90deg, #4dabf7, #1c7ed6); animation: ops-prog 1.2s ease-in-out infinite; }
 @keyframes ops-prog { 0% { left: -40%; } 100% { left: 100%; } }
 .ops-prog-lbl { font-size: 11px; color: #4dabf7; margin-left: 8px; vertical-align: middle; }
+.ops-ic.stop { color: #fff; background: #495057; border: 1px solid var(--line); }
+.ops-ic.stop svg { width: 10px; height: 10px; }
+.ops-ic.stop:hover { background: #c92a2a; }
+.ops-prog.det i { animation: none; left: 0; transition: width .6s; }
+.ops-prog-lbl.q { color: var(--text-mute); }
 .ops-ic.play { color: var(--text); background: rgba(255,255,255,.10); border: 1px solid var(--line); width: 24px; height: 24px; }
 .ops-ic.play svg { width: 10px; height: 10px; margin-left: 1px; }
 .ops-ic.play:hover { background: rgba(255,255,255,.18); }
@@ -23945,7 +23950,11 @@ function aqOpsChanged(mk) {
 // ---------- 렌더 ----------
 function _opsResultHtml(def, run) {
   if (!run) return '<span class="none">—</span>';
-  if (run.running) return `<span class="ops-prog"><i></i></span><span class="ops-prog-lbl">실행 중</span>`;
+  if (run.running) {
+    const p = (run.progress != null && run.progress >= 0) ? Math.min(100, run.progress) : null;
+    return p != null ? `<span class="ops-prog det"><i style="width:${p}%"></i></span><span class="ops-prog-lbl">${p}%</span>` : `<span class="ops-prog"><i></i></span><span class="ops-prog-lbl">실행 중</span>`;
+  }
+  if (run.queued) return `<span class="ops-prog-lbl q">대기 중${run.position ? ` (${run.position}번째)` : ''}</span>`;
   let main = '';
   if (run.last_status === 'success') main = `<span class="ok">✅ 성공${run.summary ? ' · ' + _esc(run.summary) : ''}</span>`;
   else if (run.last_status === 'warn') main = `<span class="warn">⚠️ 경고${run.summary ? ' · ' + _esc(run.summary) : ''}</span>`;
@@ -23963,7 +23972,7 @@ function aqOpsRenderTable(mk, keepValues) {
   const n = cfg.order.length;
   tb.innerHTML = cfg.order.map((id, idx) => {
     const def = _opsJobDef(id); const a = cfg.jobs[id]; const run = _ops.runs[id] || {};
-    const dis = (_ops.serverOk === false || run.running) ? 'disabled' : '';
+    const dis = _ops.serverOk === false ? 'disabled' : '';
     const prev = idx > 0 ? _opsJobDef(cfg.order[idx - 1]) : null;
     const autoCell = `<span class="ops-auto">
       <select class="auto-mode" onchange="aqOpsChanged('${mk}')">
@@ -23982,7 +23991,7 @@ function aqOpsRenderTable(mk, keepValues) {
       <td class="ops-res">${_opsResultHtml(def, run)}</td>
       <td>${_opsFmtDur(run.last_duration)}</td>
       <td>${autoCell}</td>
-      <td><button class="ops-ic play ${run.running ? 'spin' : ''}" ${dis} title="실행" onclick="aqOpsRun('${id}')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg></button></td>
+      <td>${(run.running || run.queued) ? `<button class="ops-ic stop ${run.running ? 'spin' : ''}" title="중단" onclick="aqOpsCancel('${id}')"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></button>` : `<button class="ops-ic play" ${dis} title="실행" onclick="aqOpsRun('${id}')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg></button>`}</td>
     </tr>`;
   }).join('');
   // dow + cond
@@ -23991,17 +24000,23 @@ function aqOpsRenderTable(mk, keepValues) {
   if (!keepValues) document.querySelectorAll(`#opsCond_${mk} input[data-cond]`).forEach(i => { i.checked = !!cfg.cond[i.dataset.cond]; });
   const btn = document.getElementById('opsRunAll_' + mk);
   const anyRun = cfg.order.some(id => (_ops.runs[id] || {}).running);
-  if (btn) { btn.disabled = _ops.serverOk === false || anyRun; btn.classList.toggle('spin', anyRun); }
+  const anyActive = cfg.order.some(id => { const r = _ops.runs[id] || {}; return r.running || r.queued; });
+  if (btn) {
+    btn.disabled = _ops.serverOk === false; btn.classList.toggle('spin', anyRun); btn.classList.toggle('stop', anyActive);
+    btn.title = anyActive ? '전체 중단' : '전체 실행';
+    btn.innerHTML = anyActive ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>' : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg>';
+    btn.onclick = anyActive ? () => aqOpsCancel('all_' + mk) : () => aqOpsRunAll(mk);
+  }
   // ---- MO list ----
   const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg>';
   const list = document.getElementById('opsList_' + mk);
   if (list) list.innerHTML = cfg.order.map((id, idx) => {
     const def = _opsJobDef(id); const a = cfg.jobs[id]; const run = _ops.runs[id] || {};
-    const dis = (_ops.serverOk === false || run.running) ? 'disabled' : '';
+    const dis = _ops.serverOk === false ? 'disabled' : '';
     const prev = idx > 0 ? _opsJobDef(cfg.order[idx - 1]) : null;
-    const status = run.running ? _opsResultHtml(def, run) : (run.last_run_at ? `<span>${_opsFmtTime(run.last_run_at)}</span><span>·</span>${_opsResultHtml(def, run)}${run.last_duration != null ? `<span>· ${_opsFmtDur(run.last_duration)}</span>` : ''}` : '<span>실행 기록 없음</span>');
+    const status = (run.running || run.queued) ? _opsResultHtml(def, run) : (run.last_run_at ? `<span>${_opsFmtTime(run.last_run_at)}</span><span>·</span>${_opsResultHtml(def, run)}${run.last_duration != null ? `<span>· ${_opsFmtDur(run.last_duration)}</span>` : ''}` : '<span>실행 기록 없음</span>');
     return `<div class="ops-item" data-job="${id}">
-      <div class="r1"><span class="num">${idx + 1}</span><span class="nm">${_esc(def.name)}</span><button class="ops-ic play ${run.running ? 'spin' : ''}" ${dis} title="실행" onclick="aqOpsRun('${id}')">${PLAY}</button></div>
+      <div class="r1"><span class="num">${idx + 1}</span><span class="nm">${_esc(def.name)}</span>${(run.running || run.queued) ? `<button class="ops-ic stop ${run.running ? 'spin' : ''}" title="중단" onclick="aqOpsCancel('${id}')"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></button>` : `<button class="ops-ic play" ${dis} title="실행" onclick="aqOpsRun('${id}')">${PLAY}</button>`}</div>
       <div class="r2 ops-res">${status}</div>
       <div class="r3"><span class="ops-auto">
         <select class="auto-mode" onchange="aqOpsChanged('${mk}')"><option value="off" ${a.mode === 'off' ? 'selected' : ''}>끔</option><option value="time" ${a.mode === 'time' ? 'selected' : ''}>시각</option><option value="chain" ${a.mode === 'chain' ? 'selected' : ''} ${idx === 0 ? 'disabled' : ''}>연속</option></select>
@@ -24054,7 +24069,7 @@ async function aqOpsRefresh() {
   const lj = await _opsCall('listJobs');
   if (lj && lj.ok && Array.isArray(lj.jobs)) { _ops.runs = {}; lj.jobs.forEach(j => { _ops.runs[j.id] = j; }); }
   aqOpsRenderTable('us', true); aqOpsRenderTable('kr', true);
-  const anyRunning = Object.values(_ops.runs).some(j => j.running);
+  const anyRunning = Object.values(_ops.runs).some(j => j.running || j.queued);
   if (anyRunning && !_ops.pollTimer) _ops.pollTimer = setInterval(aqOpsRefresh, 5000);
   if (!anyRunning && _ops.pollTimer) { clearInterval(_ops.pollTimer); _ops.pollTimer = null; }
 }
@@ -24079,6 +24094,14 @@ async function aqOpsRunAll(mk) {
   if (!r || !r.ok) { if (r && r.notReady) alert('실행 요청 실패'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
   _opsMarkRunning(cfg.order, r.run_id); if (typeof aqToast === 'function') aqToast('전체 실행 시작');
 }
+async function aqOpsCancel(target) {
+  const isAll = target.startsWith('all_'); const def = isAll ? null : _opsJobDef(target);
+  if (!confirm(isAll ? `${target.endsWith('us') ? '미국' : '한국'}주식 작업을 전부 중단할까요? (실행 중인 것은 끊고, 대기 중인 것은 취소)` : `${def ? def.name : target}을(를) 중단할까요?`)) return;
+  const r = await _opsCall('cancelJob', { job: target });
+  if (!r || !r.ok) { if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; alert('중단 실패: ' + (r && r.error || '')); return; }
+  if (typeof aqToast === 'function') aqToast(`중단 ${r.cancelled}건`);
+  setTimeout(aqOpsRefresh, 800);
+}
 async function aqOpsShowLog(id) {
   const run = _ops.runs[id]; if (!run || !run.last_run_id) return;
   const def = _opsJobDef(id);
@@ -24097,7 +24120,7 @@ async function aqOpsEnter() {
   await aqOpsLoadCfg(); aqOpsRenderTable('us'); aqOpsRenderTable('kr');
   await aqOpsRefresh();
 }
-Object.assign(window, { aqOpsEnter, aqOpsRefresh, aqOpsRun, aqOpsRunAll, aqOpsShowLog, aqOpsCloseLog, aqOpsChanged, aqOpsMove, aqOpsDragStart, aqOpsDragOver, aqOpsDragLeave, aqOpsDrop, aqOpsDragEnd, aqOpsToggleSettings });
+Object.assign(window, { aqOpsEnter, aqOpsRefresh, aqOpsRun, aqOpsRunAll, aqOpsCancel, aqOpsShowLog, aqOpsCloseLog, aqOpsChanged, aqOpsMove, aqOpsDragStart, aqOpsDragOver, aqOpsDragLeave, aqOpsDrop, aqOpsDragEnd, aqOpsToggleSettings });
 
 // ============================================================================
 // 자동 페이지 — 신호 선택 (요건 구체화 전 최소 기능)
