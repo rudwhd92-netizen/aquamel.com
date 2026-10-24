@@ -8548,7 +8548,7 @@ function getSignalGroups() {
 // ⚠️ Apps Script URL만 본인 배포 직후 한 번 교체하세요. 그 외는 손대지 않음.
 const BACKEND = {
   // Apps Script Web App URL (배포 후 받은 .../exec URL)
-  URL: 'https://script.google.com/macros/s/AKfycbzBCVv5txxprNM-1WxB1YZrawu4sjGernf5Y5AD10xYwqF-8XxsS7L6jLTthP8FT6wO/exec',
+  URL: 'https://aquamel.duckdns.org/api',   // v3.10: AQUAMEL server (was Apps Script)
   // V_Shape_Archive_EMA 탭이 들어있는 구글 시트 (v2.30: EMA 기반 알고리즘으로 교체)
   ARCHIVE_SHEET_ID: '1KsyEM7DEODYFVgki7NEb_9gmYmF8a6dtL8B55J5i1XI',
   ARCHIVE_TAB: 'V_Shape_Archive_EMA',
@@ -9131,7 +9131,7 @@ function getConfig() {
   };
 }
 function backendReady() {
-  return BACKEND.URL && !BACKEND.URL.includes('PASTE_YOUR') && BACKEND.URL.startsWith('https://script.google.com');
+  return BACKEND.URL && !BACKEND.URL.includes('PASTE_YOUR') && BACKEND.URL.startsWith('https://');   // v3.10: server backend
 }
 
 // ============================================================================
@@ -12510,7 +12510,7 @@ async function tryLoadFromBundle() {
   const t0 = performance.now();
   try {
     // cache-bust query — 새로고침 버튼 누를 땐 최신, 평소엔 SW 캐시 사용
-    const url = './data/data.json?t=' + Math.floor(Date.now() / 60000);  // 1분 단위 캐시
+    const url = 'https://aquamel.duckdns.org/data.json?t=' + Math.floor(Date.now() / 60000);   // v3.10: served by AQUAMEL server  // 1분 단위 캐시
     splashUpdate(15);
     const res = await fetch(url, { cache: 'default' });
     if (!res.ok) {
