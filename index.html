@@ -2875,7 +2875,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .pc-sidebar .pc-tab-btn.active .pc-tab-label { font-weight: 700; }
 
 /* v2.59: PC 사이드바 — 설정 버튼은 맨 아래로 밀기 (flex auto) */
-.pc-sidebar .pc-tab-btn[data-pc-tab="my"] { margin-top: auto; }
+.pc-sidebar .pc-tab-btn[data-pc-tab="ops"] { margin-top: auto; }   /* v4.78: 로그 제거 → 운영부터 하단 그룹 */
 .pc-sidebar .pc-sidebar-divider.bottom { margin-top: auto; margin-bottom: 6px; }
 
 /* v2.59: MO drawer 분리선 (마이 ↔ 설정 사이) */
@@ -3522,23 +3522,31 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 [data-theme="light"] .cal-modal-btn-secondary:hover { background: rgba(0,0,0,0.04); }
 [data-theme="light"] .calendar-title { color: var(--text-hi); }
 
-/* ===== v4.76: 운영 / 자동 페이지 컴포넌트 ===== */
-.ops-chips { display: flex; gap: 6px; flex-wrap: wrap; font-size: 11px; color: var(--text-mute); margin-bottom: 10px; }
-.ops-chips span { padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.02); }
+/* v4.78: 폐기 UI 숨김 — 섹터 FRAME, 매매이력(로그) 카드, V-Shape 버전 토글 */
+#sectorFrameworkCard, #myPortfolioCard, .vshape-ver-toggle, #modalVshapeVerWrap { display: none !important; }
+/* ===== v4.78: 운영 / 자동 페이지 컴포넌트 ===== */
+.ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
+.ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
+.ops-ic svg { width: 13px; height: 13px; }
+.ops-ic.run { color: #fff; background: linear-gradient(135deg, #e03131 0%, #c2255c 55%, #862e9c 100%); box-shadow: 0 3px 10px rgba(224,49,49,.35), inset 0 1px 0 rgba(255,255,255,.25); }
+.ops-ic.run.kr { background: linear-gradient(135deg, #1c7ed6 0%, #0b7285 55%, #087f5b 100%); box-shadow: 0 3px 10px rgba(28,126,214,.35), inset 0 1px 0 rgba(255,255,255,.25); }
+.ops-ic.run svg { margin-left: 2px; }
+.ops-ic.gear { color: var(--text-mute); background: rgba(255,255,255,.06); border: 1px solid var(--line); }
+.ops-ic.gear.on { color: var(--text-hi); background: rgba(255,255,255,.14); }
+.ops-ic:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.ops-ic:disabled { opacity: .4; cursor: not-allowed; transform: none; filter: none; box-shadow: none; }
+.ops-ic.sm { width: 30px; height: 30px; }
+.ops-chips { display: none; gap: 6px; flex-wrap: wrap; font-size: 11px; color: var(--text-mute); margin-bottom: 10px; }
+.ops-chips.has { display: flex; }
+.ops-chips span { padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; }
 .ops-chips b { color: var(--text-hi); font-weight: 700; }
-.ops-hdr { display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 8px; position: relative; }
-.ops-runall { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px 7px 9px; border: none; border-radius: 999px; cursor: pointer; font-weight: 800; font-size: 12px; color: #fff; background: linear-gradient(135deg, #e03131 0%, #c2255c 55%, #862e9c 100%); box-shadow: 0 4px 12px rgba(224,49,49,.35), inset 0 1px 0 rgba(255,255,255,.25); transition: transform .12s, filter .12s; white-space: nowrap; }
-.ops-runall.kr { background: linear-gradient(135deg, #1c7ed6 0%, #0b7285 55%, #087f5b 100%); box-shadow: 0 4px 12px rgba(28,126,214,.35), inset 0 1px 0 rgba(255,255,255,.25); }
-.ops-runall .ic { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.18); display: inline-flex; align-items: center; justify-content: center; font-size: 10px; flex: none; }
-.ops-runall:hover { transform: translateY(-1px); filter: brightness(1.06); }
-.ops-runall:active { transform: translateY(0); }
-.ops-help { width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--line); color: var(--text-mute); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; cursor: help; position: relative; flex: none; user-select: none; }
-.ops-help .tip { display: none; position: absolute; right: 0; top: 26px; width: 270px; padding: 10px 12px; background: var(--panel-2, #2d2d30); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 24px rgba(0,0,0,.45); color: var(--text); font-size: 11.5px; font-weight: 400; line-height: 1.55; text-align: left; white-space: normal; z-index: 50; cursor: default; }
-.ops-help .tip b { color: var(--text-hi); }
-@media (hover: hover) { .ops-help:hover .tip { display: block; } }
-.ops-help.open .tip { display: block; }
-.ops-runall:disabled { opacity: .45; cursor: not-allowed; transform: none; filter: none; box-shadow: none; }
-.ops-table-wrap { overflow-x: auto; }
+.ops-settings { display: none; gap: 10px 18px; flex-wrap: wrap; align-items: center; padding: 10px 12px; margin-bottom: 10px; background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 10px; font-size: 12px; }
+.ops-settings.open { display: flex; }
+.ops-dow { display: flex; gap: 3px; } .ops-dow label { cursor: pointer; user-select: none; } .ops-dow input { display: none; }
+.ops-dow span { display: inline-block; font-size: 10px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 5px; color: var(--text-mute); }
+.ops-dow input:checked + span { color: var(--text-hi); border-color: #e03131; background: rgba(224,49,49,.15); }
+.ops-cond { display: flex; gap: 12px; flex-wrap: wrap; } .ops-cond label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; color: var(--text); }
+.ops-table-wrap.ops-pc { display: block; overflow-x: auto; }
 .ops-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .ops-table th, .ops-table td { padding: 8px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; white-space: nowrap; }
 .ops-table th { font-size: 11px; color: var(--text-mute); text-transform: uppercase; letter-spacing: .3px; }
@@ -3552,20 +3560,28 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .ops-table .mv:disabled { opacity: .3; cursor: default; }
 .ops-table td.name b { color: var(--text-hi); font-weight: 700; }
 .ops-table td.name small { display: block; color: var(--text-mute); font-size: 10px; margin-top: 1px; }
-.ops-table td.res .ok { color: #40c057; font-weight: 700; } .ops-table td.res .warn { color: #fab005; font-weight: 700; }
-.ops-table td.res .fail { color: #ff6b6b; font-weight: 700; } .ops-table td.res .run { color: #4dabf7; font-weight: 700; }
-.ops-table td.res .none { color: var(--text-mute); } .ops-table td.res small { display: block; font-weight: 500; font-size: 10px; color: var(--text-mute); margin-top: 1px; }
-.ops-table td.res small.supply-bad { color: #fab005; font-weight: 700; }
+.ops-res .ok { color: #40c057; font-weight: 700; } .ops-res .warn { color: #fab005; font-weight: 700; }
+.ops-res .fail { color: #ff6b6b; font-weight: 700; } .ops-res .run { color: #4dabf7; font-weight: 700; }
+.ops-res .none { color: var(--text-mute); } .ops-res .sub { font-weight: 500; font-size: 10px; color: var(--text-mute); }
+.ops-res .supply-bad { color: #fab005; font-weight: 700; }
 .ops-table .btn.sm { padding: 5px 9px; font-size: 11px; }
 .ops-auto { display: inline-flex; align-items: center; gap: 4px; }
 .ops-auto select, .ops-auto input[type=time] { background: var(--panel-2, #2d2d30); color: var(--text-hi); border: 1px solid var(--line); border-radius: 6px; padding: 4px 5px; font-size: 12px; font-family: inherit; }
 .ops-auto input[type=time] { width: auto; min-width: 118px; }
 .ops-auto .chain { font-size: 11px; color: var(--text-mute); }
-.ops-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: 12px; }
-.ops-dow { display: flex; gap: 3px; } .ops-dow label { cursor: pointer; user-select: none; } .ops-dow input { display: none; }
-.ops-dow span { display: inline-block; font-size: 10px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 5px; color: var(--text-mute); }
-.ops-dow input:checked + span { color: var(--text-hi); border-color: #e03131; background: rgba(224,49,49,.15); }
-.ops-cond { display: flex; gap: 12px; flex-wrap: wrap; } .ops-cond label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; color: var(--text); }
+.ops-list.ops-mo { display: none; flex-direction: column; }
+.ops-item { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.ops-item:last-child { border-bottom: none; }
+.ops-item .r1 { display: flex; align-items: center; gap: 10px; }
+.ops-item .r1 .num { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.08); color: var(--text-mute); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.ops-item .r1 .nm { flex: 1; font-weight: 700; color: var(--text-hi); font-size: 16px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ops-item .r2 { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 12px; color: var(--text-mute); margin: 5px 0 9px 32px; }
+.ops-item .r3 { display: flex; align-items: center; gap: 6px; margin-left: 32px; }
+.ops-item .r3 .ops-auto { flex: 1; min-width: 0; }
+.ops-item .r3 .mv { background: none; border: 1px solid var(--line); color: var(--text-mute); border-radius: 6px; font-size: 11px; padding: 4px 8px; }
+.ops-item .r3 .mv:disabled { opacity: .3; }
+.ops-item .r3 .lg { background: none; border: 1px solid var(--line); color: var(--text-mute); border-radius: 6px; font-size: 11px; padding: 4px 8px; }
+.ops-item .r3 .lg:disabled { opacity: .3; }
 .ops-badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; background: rgba(255,255,255,.08); color: var(--text-mute); margin-left: 6px; vertical-align: middle; }
 .ops-badge.saved { color: #40c057; } .ops-badge.local { color: #fab005; }
 .ops-note { font-size: 11px; color: var(--text-mute); margin-top: 8px; line-height: 1.5; }
@@ -3579,25 +3595,10 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .aq-switch .sl { position: absolute; inset: 0; background: #495057; border-radius: 24px; cursor: pointer; transition: .15s; }
 .aq-switch .sl:before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .15s; }
 .aq-switch input:checked + .sl { background: #e03131; } .aq-switch input:checked + .sl:before { transform: translateX(18px); }
-.ops-mo { display: none; }
-.ops-list { display: flex; flex-direction: column; gap: 8px; }
-.ops-item { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 12px; }
-.ops-item .r1 { display: flex; align-items: center; gap: 8px; }
-.ops-item .r1 .num { width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.08); color: var(--text-mute); font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex: none; }
-.ops-item .r1 .nm { flex: 1; font-weight: 700; color: var(--text-hi); font-size: 14px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ops-item .r1 .mv { background: none; border: 1px solid var(--line); color: var(--text-mute); border-radius: 6px; font-size: 11px; padding: 3px 7px; }
-.ops-item .r1 .mv:disabled { opacity: .3; }
-.ops-item .r2 { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 11px; color: var(--text-mute); margin: 6px 0 8px 26px; }
-.ops-item .r2 .ok { color: #40c057; font-weight: 700; } .ops-item .r2 .warn { color: #fab005; font-weight: 700; } .ops-item .r2 .fail { color: #ff6b6b; font-weight: 700; } .ops-item .r2 .run { color: #4dabf7; font-weight: 700; } .ops-item .r2 .supply-bad { color: #fab005; font-weight: 700; }
-.ops-item .r3 { display: flex; align-items: center; gap: 6px; margin-left: 26px; flex-wrap: wrap; }
-.ops-item .r3 .ops-auto { flex: 1; min-width: 0; }
-.ops-item .r3 .btn.sm { padding: 6px 10px; font-size: 11px; }
 @media (max-width: 1024px) {
-  .ops-pc { display: none; } .ops-mo { display: flex; }
-  .card-header .ops-hdr { margin-right: 6px; }
-  .ops-runall { padding: 6px 11px 6px 7px; font-size: 11px; }
-  .ops-foot { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .ops-help .tip { right: -30px; width: min(300px, 86vw); }
+  .ops-table-wrap.ops-pc { display: none; } .ops-list.ops-mo { display: flex; }
+  #opsUsCard .card-header h2, #opsKrCard .card-header h2, #autoSignalCard .card-header h2 { font-size: 19px; }
+  .ops-settings { flex-direction: column; align-items: flex-start; }
 }
 
 /* v2.58: 데이터 관리 카드 (마이 페이지) — 캐시 클리어 + 데이터 시점 표시 */
@@ -7464,7 +7465,6 @@ table.combo-eval tbody td .nodata {
   <!-- v3.45: 섹터 서브탭 (섹터 FRAME / 일간 섹터 동향 / 전체 리스트) -->
   <section class="card mobile-only explore-subtabs" id="sectorSubtabs" data-mtab="sector">
     <div class="xtab-row">
-      <button class="xtab-btn" data-stab="frame" onclick="setSectorSubtab('frame')">섹터 FRAME</button>
       <button class="xtab-btn active" data-stab="trend" onclick="setSectorSubtab('trend')">섹터 동향</button>
       <button class="xtab-btn" data-stab="all" onclick="setSectorSubtab('all')">전체 리스트</button>
     </div>
@@ -7845,23 +7845,16 @@ table.combo-eval tbody td .nodata {
     <!-- ============ v4.76: 운영 페이지 — 미국 / 한국 작업 ============ -->
     <section class="card" id="opsUsCard" data-mtab="ops">
       <div class="card-header" onclick="toggleCard(this)">
-        <h2>🇺🇸 미국주식 작업 <span class="ops-badge" id="opsBadge_us">—</span></h2>
+        <h2>🇺🇸 미국주식 작업</h2>
         <div class="ops-hdr" onclick="event.stopPropagation()">
-          <button class="ops-runall us" id="opsRunAll_us" onclick="aqOpsRunAll('us')"><span class="ic">▶</span>전체 실행</button>
-          <span class="ops-help" tabindex="0" onclick="aqOpsHelpToggle(this)">?<span class="tip">전체 실행은 목록 순서대로 차례로 돕니다.<br><br><b>자동</b> 열 — <b>끔</b> / <b>시각</b> (정해진 시간에 시작, 미 동부 ET) / <b>연속</b> (바로 윗줄 작업이 자동으로 실행돼 끝나면 이어서 시작).<br><br>순서는 ⠿ 드래그(PC) 또는 ▲▼로 바꾸며, 전체 실행과 연속 모두 이 순서를 따릅니다. 변경은 자동 저장.</span></span>
+          <button class="ops-ic run us" id="opsRunAll_us" title="전체 실행" onclick="aqOpsRunAll('us')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg></button>
+          <button class="ops-ic gear" id="opsGear_us" title="자동 실행 조건" onclick="aqOpsToggleSettings('us')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         </div>
         <span class="toggle-icon">▼</span>
       </div>
       <div class="card-body">
-        <div class="ops-chips" id="opsChips_us"><span>서버 연결 확인 중…</span></div>
-        <div class="ops-table-wrap ops-pc">
-          <table class="ops-table" id="opsTable_us">
-            <thead><tr><th>순서</th><th>작업</th><th>마지막 실행</th><th>결과</th><th>소요</th><th>자동</th><th></th></tr></thead>
-            <tbody id="opsBody_us"></tbody>
-          </table>
-        </div>
-        <div class="ops-list ops-mo" id="opsList_us"></div>
-        <div class="ops-foot">
+        <div class="ops-chips" id="opsChips_us"></div>
+        <div class="ops-settings" id="opsSettings_us">
           <div class="ops-dow" id="opsDow_us"></div>
           <div class="ops-cond" id="opsCond_us">
             <label><input type="checkbox" data-cond="skipHoliday" onchange="aqOpsChanged('us')"> 휴장일 건너뜀</label>
@@ -7869,28 +7862,28 @@ table.combo-eval tbody td .nodata {
             <label><input type="checkbox" data-cond="catchUp" onchange="aqOpsChanged('us')"> 밀린 실행 보충</label>
           </div>
         </div>
+        <div class="ops-table-wrap ops-pc">
+          <table class="ops-table" id="opsTable_us">
+            <thead><tr><th>순서</th><th>작업</th><th>마지막 실행</th><th>결과</th><th>소요</th><th>자동</th><th></th></tr></thead>
+            <tbody id="opsBody_us"></tbody>
+          </table>
+        </div>
+        <div class="ops-list ops-mo" id="opsList_us"></div>
       </div>
     </section>
 
     <section class="card" id="opsKrCard" data-mtab="ops">
       <div class="card-header" onclick="toggleCard(this)">
-        <h2>🇰🇷 한국주식 작업 <span class="ops-badge" id="opsBadge_kr">—</span></h2>
+        <h2>🇰🇷 한국주식 작업</h2>
         <div class="ops-hdr" onclick="event.stopPropagation()">
-          <button class="ops-runall kr" id="opsRunAll_kr" onclick="aqOpsRunAll('kr')"><span class="ic">▶</span>전체 실행</button>
-          <span class="ops-help" tabindex="0" onclick="aqOpsHelpToggle(this)">?<span class="tip">전체 실행은 목록 순서대로 차례로 돕니다.<br><br><b>자동</b> 열 — <b>끔</b> / <b>시각</b> (정해진 시간에 시작, 한국 KST) / <b>연속</b> (바로 윗줄 작업이 자동으로 실행돼 끝나면 이어서 시작).<br><br>순서는 ⠿ 드래그(PC) 또는 ▲▼로 바꾸며, 전체 실행과 연속 모두 이 순서를 따릅니다. 변경은 자동 저장.</span></span>
+          <button class="ops-ic run kr" id="opsRunAll_kr" title="전체 실행" onclick="aqOpsRunAll('kr')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg></button>
+          <button class="ops-ic gear" id="opsGear_kr" title="자동 실행 조건" onclick="aqOpsToggleSettings('kr')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         </div>
         <span class="toggle-icon">▼</span>
       </div>
       <div class="card-body">
-        <div class="ops-chips" id="opsChips_kr"><span>서버 연결 확인 중…</span></div>
-        <div class="ops-table-wrap ops-pc">
-          <table class="ops-table" id="opsTable_kr">
-            <thead><tr><th>순서</th><th>작업</th><th>마지막 실행</th><th>결과</th><th>소요</th><th>자동</th><th></th></tr></thead>
-            <tbody id="opsBody_kr"></tbody>
-          </table>
-        </div>
-        <div class="ops-list ops-mo" id="opsList_kr"></div>
-        <div class="ops-foot">
+        <div class="ops-chips" id="opsChips_kr"></div>
+        <div class="ops-settings" id="opsSettings_kr">
           <div class="ops-dow" id="opsDow_kr"></div>
           <div class="ops-cond" id="opsCond_kr">
             <label><input type="checkbox" data-cond="skipHoliday" onchange="aqOpsChanged('kr')"> 휴장일 건너뜀</label>
@@ -7898,13 +7891,20 @@ table.combo-eval tbody td .nodata {
             <label><input type="checkbox" data-cond="catchUp" onchange="aqOpsChanged('kr')"> 밀린 실행 보충</label>
           </div>
         </div>
+        <div class="ops-table-wrap ops-pc">
+          <table class="ops-table" id="opsTable_kr">
+            <thead><tr><th>순서</th><th>작업</th><th>마지막 실행</th><th>결과</th><th>소요</th><th>자동</th><th></th></tr></thead>
+            <tbody id="opsBody_kr"></tbody>
+          </table>
+        </div>
+        <div class="ops-list ops-mo" id="opsList_kr"></div>
       </div>
     </section>
 
     <!-- v4.76: 자동 페이지 (요건 구체화 예정 — 우선 신호 선택만) -->
     <section class="card" id="autoSignalCard" data-mtab="auto">
       <div class="card-header" onclick="toggleCard(this)">
-        <h2>자동매수 신호 설정 <span class="ops-badge" id="autoSigBadge">—</span></h2>
+        <h2>자동매수 신호 설정</h2>
         <span class="toggle-icon">▼</span>
       </div>
       <div class="card-body">
@@ -8257,10 +8257,6 @@ table.combo-eval tbody td .nodata {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
         <span>To-Do</span>
       </button>
-      <button class="mo-drawer-item" onclick="moDrawerNav('my')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
-        <span>로그</span>
-      </button>
       <button class="mo-drawer-item" onclick="moDrawerNav('ops')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
           <span>운영</span>
@@ -8563,10 +8559,6 @@ table.combo-eval tbody td .nodata {
   </button>
 
   <!-- v3.99: 로그 — 설정 바로 위 (하단 그룹) -->
-  <button class="pc-tab-btn" data-pc-tab="my" onclick="setPCTab('my')" aria-label="로그">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
-    <span class="pc-tab-label">로그</span>
-  </button>
   <!-- v2.59: 설정 — 사이드바 맨 아래 (margin-top: auto) -->
   <button class="pc-tab-btn" data-pc-tab="ops" onclick="setPCTab('ops')" aria-label="운영">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
@@ -12101,7 +12093,7 @@ let _state = {
   openSector: null,   // v2.10: 섹터 모달 열린 상태 식별 {key, name}
   detailMode: false,  // 모바일 디폴트 = simple mode (false). 토글로 true 전환
   // v2.31: V-Shape 알고리즘 버전 토글 (US만 적용. V1=V_Shape_Archive 옛, V2=V_Shape_Archive_EMA 새 기본)
-  vshapeVersion: 'ALL',   // v4.20: 통합(V1+V2) 기본
+  vshapeVersion: 'V1',    // v4.78: V2(EMA) 폐기 — V1(V_Shape_Archive) 고정, 토글 숨김
   tickerSectorMap: {},
   kjpSectorMap:    {},
   tickerDescMap:   {},
@@ -23899,11 +23891,7 @@ async function aqOpsLoadCfg() {
   }
   if (r && r.ok && r.value) { try { localStorage.setItem(AQ_OPS_LSKEY, JSON.stringify(r.value)); } catch (e) {} }
 }
-function _opsBadge(mk, state, text) {
-  const b = document.getElementById('opsBadge_' + mk); if (!b) return;
-  b.className = 'ops-badge ' + (state || '');
-  b.textContent = text || (state === 'saved' ? '서버 저장됨' : state === 'local' ? '서버 미연결 · 이 기기에만 저장' : state === 'saving' ? '저장 중…' : '기본값');
-}
+function _opsBadge() {}
 function aqOpsChanged(mk) {
   // DOM → cfg
   const cfg = _ops.cfg[mk];
@@ -23942,7 +23930,7 @@ function _opsResultHtml(def, run) {
   else return '<span class="none">—</span>';
   if (def.supply && run.supply) {
     const sp = run.supply; const bad = sp.total && sp.got < sp.total;
-    main += `<small class="${bad ? 'supply-bad' : ''}">${bad ? '⚠️ 수급 미확정' : '수급 확정'} ${sp.got ?? '?'}/${sp.total ?? '?'}${sp.asof ? ' · ' + sp.asof : ''}</small>`;
+    main += ` <span class="sub ${bad ? 'supply-bad' : ''}">${bad ? '⚠️ 수급 미확정' : '수급 확정'} ${sp.got ?? '?'}/${sp.total ?? '?'}${sp.asof ? ' · ' + sp.asof : ''}</span>`;
   }
   return main;
 }
@@ -23968,7 +23956,7 @@ function aqOpsRenderTable(mk, keepValues) {
       <td class="order"><span class="grip" title="드래그로 순서 변경">⠿</span>${idx + 1}<button class="mv" ${idx === 0 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',-1)">▲</button><button class="mv" ${idx === n - 1 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',1)">▼</button></td>
       <td class="name"><b>${_esc(def.name)}</b><small>${_esc(def.desc)}</small></td>
       <td>${_opsFmtTime(run.last_run_at)}${run.last_trigger ? `<span class="ops-badge">${run.last_trigger === 'auto' ? '자동' : '수동'}</span>` : ''}</td>
-      <td class="res">${_opsResultHtml(def, run)}</td>
+      <td class="ops-res">${_opsResultHtml(def, run)}</td>
       <td>${_opsFmtDur(run.last_duration)}</td>
       <td>${autoCell}</td>
       <td><button class="btn sm" ${dis} onclick="aqOpsRun('${id}')">▶ 실행</button> <button class="btn sm secondary" ${run.last_run_id ? '' : 'disabled'} onclick="aqOpsShowLog('${id}')">📄 로그</button></td>
@@ -23982,26 +23970,29 @@ function aqOpsRenderTable(mk, keepValues) {
   const anyRun = cfg.order.some(id => (_ops.runs[id] || {}).running);
   if (btn) btn.disabled = _ops.serverOk === false || anyRun;
   // ---- MO list ----
+  const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg>';
   const list = document.getElementById('opsList_' + mk);
   if (list) list.innerHTML = cfg.order.map((id, idx) => {
     const def = _opsJobDef(id); const a = cfg.jobs[id]; const run = _ops.runs[id] || {};
     const dis = (_ops.serverOk === false || run.running) ? 'disabled' : '';
     const prev = idx > 0 ? _opsJobDef(cfg.order[idx - 1]) : null;
+    const status = run.last_run_at ? `<span>${_opsFmtTime(run.last_run_at)}</span><span>·</span>${_opsResultHtml(def, run)}${run.last_duration != null ? `<span>· ${_opsFmtDur(run.last_duration)}</span>` : ''}` : '<span>실행 기록 없음</span>';
     return `<div class="ops-item" data-job="${id}">
-      <div class="r1"><span class="num">${idx + 1}</span><span class="nm">${_esc(def.name)}</span>
-        <button class="mv" ${idx === 0 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',-1)">▲</button><button class="mv" ${idx === n - 1 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',1)">▼</button></div>
-      <div class="r2"><span>${_opsFmtTime(run.last_run_at)}</span><span>·</span>${_opsResultHtml(def, run).replace(/<small/g, '<span').replace(/<\/small>/g, '</span>')}${run.last_duration != null ? `<span>· ${_opsFmtDur(run.last_duration)}</span>` : ''}</div>
+      <div class="r1"><span class="num">${idx + 1}</span><span class="nm">${_esc(def.name)}</span><button class="ops-ic run ${mk} sm" ${dis} title="실행" onclick="aqOpsRun('${id}')">${PLAY}</button></div>
+      <div class="r2 ops-res">${status}</div>
       <div class="r3"><span class="ops-auto">
         <select class="auto-mode" onchange="aqOpsChanged('${mk}')"><option value="off" ${a.mode === 'off' ? 'selected' : ''}>끔</option><option value="time" ${a.mode === 'time' ? 'selected' : ''}>시각</option><option value="chain" ${a.mode === 'chain' ? 'selected' : ''} ${idx === 0 ? 'disabled' : ''}>연속</option></select>
         <input type="time" class="auto-time" value="${a.time || ''}" ${a.mode === 'time' ? '' : 'style="display:none"'} onchange="aqOpsChanged('${mk}')">
         ${a.mode === 'time' ? `<span class="chain">${AQ_OPS_TZ_LABEL[mk]}</span>` : ''}${a.mode === 'chain' ? `<span class="chain">↳ ${prev ? _esc(prev.name) : '—'} 뒤</span>` : ''}
       </span>
-        <button class="btn sm" ${dis} onclick="aqOpsRun('${id}')">▶ 실행</button><button class="btn sm secondary" ${run.last_run_id ? '' : 'disabled'} onclick="aqOpsShowLog('${id}')">📄</button></div>
+        <button class="mv" ${idx === 0 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',-1)">▲</button><button class="mv" ${idx === n - 1 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',1)">▼</button><button class="lg" ${run.last_run_id ? '' : 'disabled'} onclick="aqOpsShowLog('${id}')">로그</button></div>
     </div>`;
   }).join('');
 }
-function aqOpsHelpToggle(el) { event.stopPropagation(); const open = el.classList.contains('open'); document.querySelectorAll('.ops-help.open').forEach(x => x.classList.remove('open')); if (!open) el.classList.add('open'); }
-document.addEventListener('click', () => document.querySelectorAll('.ops-help.open').forEach(x => x.classList.remove('open')));
+function aqOpsToggleSettings(mk) {
+  const p = document.getElementById('opsSettings_' + mk); const g = document.getElementById('opsGear_' + mk);
+  const open = p.classList.toggle('open'); if (g) g.classList.toggle('on', open);
+}
 function aqOpsMove(mk, id, delta) {
   const cfg = _ops.cfg[mk]; const i = cfg.order.indexOf(id); const j = i + delta;
   if (i < 0 || j < 0 || j >= cfg.order.length) return;
@@ -24029,11 +24020,12 @@ async function aqOpsRefresh() {
     const el = document.getElementById('opsChips_' + mk); if (!el) continue;
     if (st && st.ok) {
       _ops.serverOk = true; const m = (st[mk] || {});
-      el.innerHTML = [`기준일 <b>${m.data_date || '—'}</b>`, `오늘 신호 <b>${m.signals_today ?? '—'}</b>건`, `다음 자동 <b>${_opsFmtTime(m.next_auto)}</b>`, m.last_all_at ? `마지막 전체 실행 <b>${_opsFmtTime(m.last_all_at)}</b>` : '', st.admin === false ? '조회 전용' : '']
+      el.innerHTML = [`기준일 <b>${m.data_date || '—'}</b>`, `오늘 신호 <b>${m.signals_today ?? '—'}</b>건`, `다음 자동 <b>${_opsFmtTime(m.next_auto)}</b>`, m.last_all_at ? `마지막 전체 실행 <b>${_opsFmtTime(m.last_all_at)}</b>` : '']
         .filter(Boolean).map(x => `<span>${x}</span>`).join('');
+      el.classList.add('has');
     } else {
       if (st && st.notReady) _ops.serverOk = false;
-      el.innerHTML = `<span>${st && st.notReady ? '서버 운영 API 준비 중' : '서버 응답 없음'}</span>`;
+      el.innerHTML = ''; el.classList.remove('has');
     }
   }
   const lj = await _opsCall('listJobs');
@@ -24054,14 +24046,14 @@ async function aqOpsRun(id) {
   if (def.scanDays) { const v = prompt(`${def.name}을(를) 지금 실행합니다.\n스캔 범위(거래일 수)를 입력하세요. 과거 소급이 필요하면 크게:`, '2'); if (v === null) return; p.scanDays = parseInt(v, 10) || 2; }
   else if (!confirm(`${def.name}을(를) 지금 실행할까요?`)) return;
   const r = await _opsCall('runJob', p);
-  if (!r || !r.ok) { if (r && r.notReady) alert('서버 운영 API가 아직 준비되지 않았습니다.'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
+  if (!r || !r.ok) { if (r && r.notReady) alert('실행 요청 실패'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
   _opsMarkRunning([id], r.run_id); if (typeof aqToast === 'function') aqToast(`${def.name} 시작`);
 }
 async function aqOpsRunAll(mk) {
   const cfg = _ops.cfg[mk]; const names = cfg.order.map(id => _opsJobDef(id).name);
   if (!confirm(`${mk === 'us' ? '미국' : '한국'}주식 작업을 아래 순서대로 전부 실행할까요?\n\n${names.map((n, i) => `${i + 1}. ${n}`).join('\n')}`)) return;
   const r = await _opsCall('runJob', { job: 'all_' + mk, order: cfg.order.join(','), stopOnFail: cfg.cond.stopOnFail ? 1 : 0 });
-  if (!r || !r.ok) { if (r && r.notReady) alert('서버 운영 API가 아직 준비되지 않았습니다.'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
+  if (!r || !r.ok) { if (r && r.notReady) alert('실행 요청 실패'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
   _opsMarkRunning(cfg.order, r.run_id); if (typeof aqToast === 'function') aqToast('전체 실행 시작');
 }
 async function aqOpsShowLog(id) {
@@ -24082,7 +24074,7 @@ async function aqOpsEnter() {
   await aqOpsLoadCfg(); aqOpsRenderTable('us'); aqOpsRenderTable('kr');
   await aqOpsRefresh();
 }
-Object.assign(window, { aqOpsEnter, aqOpsRefresh, aqOpsRun, aqOpsRunAll, aqOpsShowLog, aqOpsCloseLog, aqOpsChanged, aqOpsMove, aqOpsDragStart, aqOpsDragOver, aqOpsDragLeave, aqOpsDrop, aqOpsDragEnd, aqOpsHelpToggle });
+Object.assign(window, { aqOpsEnter, aqOpsRefresh, aqOpsRun, aqOpsRunAll, aqOpsShowLog, aqOpsCloseLog, aqOpsChanged, aqOpsMove, aqOpsDragStart, aqOpsDragOver, aqOpsDragLeave, aqOpsDrop, aqOpsDragEnd, aqOpsToggleSettings });
 
 // ============================================================================
 // 자동 페이지 — 신호 선택 (요건 구체화 전 최소 기능)
@@ -24109,20 +24101,20 @@ function aqAutoRender(state) {
 }
 function _autoState() { const st = {}; AQ_AUTO_SIGNALS.forEach(sg => { const el = document.getElementById('autoSig_' + sg.id); st[sg.id] = el ? !!el.checked : sg.def; }); return st; }
 async function aqAutoLoadSignals(fromServer) {
-  const badge = document.getElementById('autoSigBadge');
+  const badge = null;
   const r = await _opsCall('getConfig', { key: 'autotrade.signals' });
   if (r && r.ok && r.value) { _auto.perf = r.perf || {}; aqAutoRender(r.value); if (badge) { badge.className = 'ops-badge saved'; badge.textContent = '서버 저장값'; } try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(r.value)); } catch (e) {} return; }
   let local = null; try { local = JSON.parse(localStorage.getItem(AQ_AUTO_LSKEY) || 'null'); } catch (e) {}
   aqAutoRender(local || {});
-  if (badge) { badge.className = 'ops-badge ' + (local ? 'local' : ''); badge.textContent = r && r.notReady ? '서버 미연결 · 이 기기에만 저장' : (local ? '이 기기 값' : '기본값'); }
-  if (fromServer && typeof aqToast === 'function') aqToast(r && r.notReady ? '서버 운영 API 준비 중' : '불러오기 실패');
+  if (badge) { badge.className = 'ops-badge ' + (local ? 'local' : ''); badge.textContent = ''; }
+  if (fromServer && typeof aqToast === 'function') aqToast('불러오기 실패');
 }
 async function aqAutoSaveSignals() {
   const st = _autoState(); try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(st)); } catch (e) {}
   const r = await _opsCall('saveConfig', { key: 'autotrade.signals', value: JSON.stringify(st) });
-  const badge = document.getElementById('autoSigBadge');
+  const badge = null;
   if (r && r.ok) { if (badge) { badge.className = 'ops-badge saved'; badge.textContent = '서버 저장값'; } if (typeof aqToast === 'function') aqToast('신호 설정 저장'); }
-  else if (r && r.notReady) { if (badge) { badge.className = 'ops-badge local'; badge.textContent = '서버 미연결 · 이 기기에만 저장'; } if (typeof aqToast === 'function') aqToast('서버 준비 중 — 이 기기에만 저장'); }
+  else if (r && r.notReady) { if (badge) { badge.className = 'ops-badge local'; badge.textContent = ''; } if (typeof aqToast === 'function') aqToast('저장'); }
   else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return;
   else alert('저장 실패: ' + (r && r.error || ''));
 }
