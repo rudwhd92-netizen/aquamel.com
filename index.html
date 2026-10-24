@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.75';   // v4.75: 운영 탭 (작업 실행·신호 설정·자동 실행 설정)
+window.AQ_PWA_VERSION = '4.76';   // v4.76: 운영(미국/한국 작업 실행·순서·자동) + 자동(신호 설정) 페이지
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2997,54 +2997,12 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   /* v2.68: hero는 항상 상단에 노출 — hide 룰 제거 */
   body[data-pc-page="settings"] .container > section.card { display: none !important; }
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
-    /* v3.11: 운영 카드는 메인 페이지에서 숨김 (PC) */
-    body[data-pc-page="main"] section.card[data-mtab~="ops"] { display: none !important; }
-    /* v3.11: 운영 페이지 — ops 카드만 표시 (PC) */
-    body[data-pc-page="ops"] .container > section.card { display: none !important; }
-    body[data-pc-page="ops"] section.card[data-mtab~="ops"] { display: block !important; }
-    /* v3.11: 운영 탭 (MO) */
-    body[data-mtab="ops"] section.card[data-mtab~="ops"] { display: block !important; }
-    /* v3.11: 운영 카드 스타일 */
-    .ops-status { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 13px; color: var(--text); }
-    .ops-status b { color: var(--text-hi); }
-    .ops-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 12px; }
-    .ops-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .ops-table th, .ops-table td { padding: 8px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; white-space: nowrap; }
-    .ops-table th { font-size: 11px; color: var(--text-mute); text-transform: uppercase; letter-spacing: .3px; }
-    .ops-table td.mkt { font-weight: 700; color: var(--text-mute); width: 36px; }
-    .ops-table td.res .ok { color: #40c057; font-weight: 700; } .ops-table td.res .warn { color: #fab005; font-weight: 700; }
-    .ops-table td.res .fail { color: #ff6b6b; font-weight: 700; } .ops-table td.res .run { color: #4dabf7; font-weight: 700; }
-    .ops-table td.res .none { color: var(--text-mute); }
-    .ops-table .btn.sm { padding: 5px 9px; font-size: 11px; }
-    .ops-table-wrap { overflow-x: auto; }
-    .ops-note { font-size: 11px; color: var(--text-mute); margin-top: 8px; line-height: 1.5; }
-    .ops-sig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
-    .ops-sig { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; }
-    .ops-sig .name { font-weight: 700; color: var(--text-hi); font-size: 13px; }
-    .ops-sig .perf { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
-    .ops-sig.off .name { color: var(--text-mute); text-decoration: line-through; }
-    .ops-switch { position: relative; width: 42px; height: 24px; flex: none; }
-    .ops-switch input { opacity: 0; width: 0; height: 0; }
-    .ops-switch .sl { position: absolute; inset: 0; background: #495057; border-radius: 24px; cursor: pointer; transition: .15s; }
-    .ops-switch .sl:before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .15s; }
-    .ops-switch input:checked + .sl { background: #e03131; }
-    .ops-switch input:checked + .sl:before { transform: translateX(18px); }
-    .ops-log { white-space: pre-wrap; font-family: Consolas, Menlo, monospace; font-size: 11px; line-height: 1.45; max-height: 60vh; overflow: auto; background: rgba(0,0,0,.35); padding: 12px; border-radius: 8px; color: var(--text); }
-    .ops-log .err { color: #ff8787; }
-    .ops-sched { display: grid; grid-template-columns: 1fr; gap: 8px; }
-    .ops-sched-row { display: grid; grid-template-columns: 36px 1.4fr 60px 110px 150px 1.2fr 70px; gap: 8px; align-items: center; padding: 8px 10px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 12px; }
-    .ops-sched-row.head { background: transparent; border: none; color: var(--text-mute); font-size: 11px; text-transform: uppercase; letter-spacing: .3px; padding: 0 10px; }
-    .ops-sched-row input[type=time], .ops-sched-row select, .ops-sched-row input[type=text] { width: 100%; background: var(--panel-2, #2d2d30); color: var(--text-hi); border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; font-size: 12px; font-family: inherit; }
-    .ops-sched-row .dow { display: flex; gap: 3px; flex-wrap: wrap; }
-    .ops-sched-row .dow label { cursor: pointer; user-select: none; }
-    .ops-sched-row .dow input { display: none; }
-    .ops-sched-row .dow span { display: inline-block; font-size: 10px; padding: 2px 5px; border: 1px solid var(--line); border-radius: 5px; color: var(--text-mute); }
-    .ops-sched-row .dow input:checked + span { color: var(--text-hi); border-color: #e03131; background: rgba(224,49,49,.15); }
-    .ops-sched-row.off { opacity: .45; }
-    .ops-cond { display: flex; flex-wrap: wrap; gap: 14px; margin: 10px 0 4px; font-size: 12px; }
-    .ops-cond label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
-    @media (max-width: 1024px) { .ops-sched-row { grid-template-columns: 1fr 1fr; } .ops-sched-row.head { display: none; } .ops-sched-row > * { min-width: 0; } }
-    .ops-badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; background: rgba(255,255,255,.08); color: var(--text-mute); margin-left: 6px; }
+  /* v4.76: 운영 / 자동 페이지 (PC) */
+  body[data-pc-page="main"] section.card[data-mtab~="ops"], body[data-pc-page="main"] section.card[data-mtab~="auto"] { display: none !important; }
+  body[data-pc-page="ops"] .container > section.card { display: none !important; }
+  body[data-pc-page="ops"] section.card[data-mtab~="ops"] { display: block !important; }
+  body[data-pc-page="auto"] .container > section.card { display: none !important; }
+  body[data-pc-page="auto"] section.card[data-mtab~="auto"] { display: block !important; }
 
 
   /* v2.66/v2.90: To-Do는 중앙 페이지 → 사이드 패널로 전환 (data-pc-panel="todo"). 페이지 규칙 제거. */
@@ -3564,6 +3522,61 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 [data-theme="light"] .cal-modal-btn-secondary:hover { background: rgba(0,0,0,0.04); }
 [data-theme="light"] .calendar-title { color: var(--text-hi); }
 
+/* ===== v4.76: 운영 / 자동 페이지 컴포넌트 ===== */
+.ops-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.ops-chips { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--text-mute); }
+.ops-chips span { padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.02); }
+.ops-chips b { color: var(--text-hi); font-weight: 700; }
+.ops-runall { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px 11px 16px; border: none; border-radius: 999px; cursor: pointer; font-weight: 800; font-size: 14px; letter-spacing: .2px; color: #fff; text-align: left; background: linear-gradient(135deg, #e03131 0%, #c2255c 55%, #862e9c 100%); box-shadow: 0 6px 18px rgba(224,49,49,.35), inset 0 1px 0 rgba(255,255,255,.25); transition: transform .12s, box-shadow .12s, filter .12s; }
+.ops-runall.kr { background: linear-gradient(135deg, #1c7ed6 0%, #0b7285 55%, #087f5b 100%); box-shadow: 0 6px 18px rgba(28,126,214,.35), inset 0 1px 0 rgba(255,255,255,.25); }
+.ops-runall .ic { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.18); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; flex: none; }
+.ops-runall small { display: block; font-weight: 500; font-size: 10px; opacity: .85; letter-spacing: 0; }
+.ops-runall:hover { transform: translateY(-1px); filter: brightness(1.06); }
+.ops-runall:active { transform: translateY(0); }
+.ops-runall:disabled { opacity: .45; cursor: not-allowed; transform: none; filter: none; box-shadow: none; }
+.ops-table-wrap { overflow-x: auto; }
+.ops-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ops-table th, .ops-table td { padding: 8px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; white-space: nowrap; }
+.ops-table th { font-size: 11px; color: var(--text-mute); text-transform: uppercase; letter-spacing: .3px; }
+.ops-table tr.dragging { opacity: .35; }
+.ops-table tr.drop-before td { border-top: 2px solid #e03131; }
+.ops-table tr.drop-after td { border-bottom: 2px solid #e03131; }
+.ops-table td.order { width: 78px; color: var(--text-mute); }
+.ops-table .grip { cursor: grab; font-size: 16px; color: var(--text-mute); padding: 0 4px; user-select: none; }
+.ops-table .grip:active { cursor: grabbing; }
+.ops-table .mv { background: none; border: 1px solid var(--line); color: var(--text-mute); border-radius: 4px; font-size: 9px; padding: 1px 4px; cursor: pointer; margin-left: 2px; }
+.ops-table .mv:disabled { opacity: .3; cursor: default; }
+.ops-table td.name b { color: var(--text-hi); font-weight: 700; }
+.ops-table td.name small { display: block; color: var(--text-mute); font-size: 10px; margin-top: 1px; }
+.ops-table td.res .ok { color: #40c057; font-weight: 700; } .ops-table td.res .warn { color: #fab005; font-weight: 700; }
+.ops-table td.res .fail { color: #ff6b6b; font-weight: 700; } .ops-table td.res .run { color: #4dabf7; font-weight: 700; }
+.ops-table td.res .none { color: var(--text-mute); } .ops-table td.res small { display: block; font-weight: 500; font-size: 10px; color: var(--text-mute); margin-top: 1px; }
+.ops-table td.res small.supply-bad { color: #fab005; font-weight: 700; }
+.ops-table .btn.sm { padding: 5px 9px; font-size: 11px; }
+.ops-auto { display: inline-flex; align-items: center; gap: 4px; }
+.ops-auto select, .ops-auto input[type=time] { background: var(--panel-2, #2d2d30); color: var(--text-hi); border: 1px solid var(--line); border-radius: 6px; padding: 4px 5px; font-size: 12px; font-family: inherit; }
+.ops-auto input[type=time] { width: 92px; }
+.ops-auto .chain { font-size: 11px; color: var(--text-mute); }
+.ops-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: 12px; }
+.ops-dow { display: flex; gap: 3px; } .ops-dow label { cursor: pointer; user-select: none; } .ops-dow input { display: none; }
+.ops-dow span { display: inline-block; font-size: 10px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 5px; color: var(--text-mute); }
+.ops-dow input:checked + span { color: var(--text-hi); border-color: #e03131; background: rgba(224,49,49,.15); }
+.ops-cond { display: flex; gap: 12px; flex-wrap: wrap; } .ops-cond label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; color: var(--text); }
+.ops-badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; background: rgba(255,255,255,.08); color: var(--text-mute); margin-left: 6px; vertical-align: middle; }
+.ops-badge.saved { color: #40c057; } .ops-badge.local { color: #fab005; }
+.ops-note { font-size: 11px; color: var(--text-mute); margin-top: 8px; line-height: 1.5; }
+.ops-log { white-space: pre-wrap; font-family: Consolas, Menlo, monospace; font-size: 11px; line-height: 1.45; max-height: 60vh; overflow: auto; background: rgba(0,0,0,.35); padding: 12px; border-radius: 8px; color: var(--text); }
+.ops-log .err { color: #ff8787; }
+.auto-sig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.auto-sig { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; }
+.auto-sig .name { font-weight: 700; color: var(--text-hi); font-size: 13px; } .auto-sig .perf { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+.auto-sig.off .name { color: var(--text-mute); text-decoration: line-through; }
+.aq-switch { position: relative; width: 42px; height: 24px; flex: none; } .aq-switch input { opacity: 0; width: 0; height: 0; }
+.aq-switch .sl { position: absolute; inset: 0; background: #495057; border-radius: 24px; cursor: pointer; transition: .15s; }
+.aq-switch .sl:before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .15s; }
+.aq-switch input:checked + .sl { background: #e03131; } .aq-switch input:checked + .sl:before { transform: translateX(18px); }
+@media (max-width: 1024px) { .ops-runall { width: 100%; justify-content: center; } .ops-table th:nth-child(5), .ops-table td:nth-child(5) { display: none; } }
+
 /* v2.58: 데이터 관리 카드 (마이 페이지) — 캐시 클리어 + 데이터 시점 표시 */
 .data-mgmt-grid {
   display: grid;
@@ -3949,6 +3962,9 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   /* v2.59: 설정 탭 — dataManagementCard만 표시 */
   /* v2.68: hero는 항상 상단에 노출 — hide 룰 제거 */
   body[data-mtab="settings"] section.card[data-mtab~="settings"] { display: block !important; }
+  /* v4.76: 운영 / 자동 탭 (MO) */
+  body[data-mtab="ops"] section.card[data-mtab~="ops"] { display: block !important; }
+  body[data-mtab="auto"] section.card[data-mtab~="auto"] { display: block !important; }
   /* v2.66: MO To-Do 탭 — todoBoardCard만 표시 */
   body[data-mtab="todo"] section.card[data-mtab~="todo"] { display: block !important; }
   /* v2.92: MO 관심 탭 — watchBoardCard만 표시 */
@@ -7803,74 +7819,76 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-    <!-- ============ v3.11: 운영 탭 — 작업 실행 / 신호 설정 ============ -->
-    <section class="card" id="opsStatusCard" data-mtab="ops">
+    <!-- ============ v4.76: 운영 페이지 — 미국 / 한국 작업 ============ -->
+    <section class="card" id="opsUsCard" data-mtab="ops">
       <div class="card-header" onclick="toggleCard(this)">
-        <h2>운영 현황</h2>
+        <h2>🇺🇸 미국주식 작업 <span class="ops-badge" id="opsBadge_us">—</span></h2>
         <span class="toggle-icon">▼</span>
       </div>
       <div class="card-body">
-        <div class="ops-status" id="opsStatusLine">
-          <span>서버 연결 확인 중…</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" id="opsJobsCard" data-mtab="ops">
-      <div class="card-header" onclick="toggleCard(this)">
-        <h2>작업 실행 <span class="ops-badge" id="opsJobsBadge">—</span></h2>
-        <span class="toggle-icon">▼</span>
-      </div>
-      <div class="card-body">
-        <div class="ops-actions">
-          <button class="btn sm" onclick="aqOpsRunGroup('us')">▶ US 전체 실행 (1→3→2)</button>
-          <button class="btn sm" onclick="aqOpsRunGroup('kr')">▶ KR 전체 실행 (1→2→3)</button>
-          <button class="btn sm secondary" onclick="aqOpsRefresh(true)">🔄 새로고침</button>
+        <div class="ops-top">
+          <button class="ops-runall us" id="opsRunAll_us" onclick="aqOpsRunAll('us')"><span class="ic">▶</span><span>전체 실행<small id="opsRunAllSub_us">아래 순서대로</small></span></button>
+          <div class="ops-chips" id="opsChips_us"><span>서버 연결 확인 중…</span></div>
         </div>
         <div class="ops-table-wrap">
-          <table class="ops-table">
-            <thead><tr><th>시장</th><th>작업</th><th>마지막 실행</th><th>결과</th><th>소요</th><th>다음 자동</th><th></th></tr></thead>
-            <tbody id="opsJobsBody"></tbody>
+          <table class="ops-table" id="opsTable_us">
+            <thead><tr><th>순서</th><th>작업</th><th>마지막 실행</th><th>결과</th><th>소요</th><th>자동</th><th></th></tr></thead>
+            <tbody id="opsBody_us"></tbody>
           </table>
         </div>
-        <div class="ops-note">자동 실행 규칙 — US: 평일 16:10 ET Phase 1→3→2, 18:00 ET Calendar·Daily·HEXAGON / KR: 평일 18:10 KST Phase 1→2→3. 휴장일 건너뜀. 수동·자동이 겹치면 먼저 시작한 쪽이 끝난 뒤 실행.</div>
+        <div class="ops-foot">
+          <div class="ops-dow" id="opsDow_us"></div>
+          <div class="ops-cond" id="opsCond_us">
+            <label><input type="checkbox" data-cond="skipHoliday" onchange="aqOpsChanged('us')"> 휴장일 건너뜀</label>
+            <label><input type="checkbox" data-cond="stopOnFail" onchange="aqOpsChanged('us')"> 실패 시 연속 중단</label>
+            <label><input type="checkbox" data-cond="catchUp" onchange="aqOpsChanged('us')"> 서버 꺼졌으면 밀린 실행</label>
+          </div>
+        </div>
+        <div class="ops-note">자동 = <b>끔</b> / <b>시각</b>(정해진 시간에 시작, 미 동부 ET) / <b>연속</b>(바로 윗줄 작업이 자동으로 실행돼 끝나면 이어서 시작). 순서는 ⠿ 드래그 또는 ▲▼로 바꾸며, 전체 실행과 연속 모두 이 순서를 따름. 변경은 자동 저장.</div>
       </div>
     </section>
 
-    <section class="card" id="opsSignalCard" data-mtab="ops">
+    <section class="card" id="opsKrCard" data-mtab="ops">
       <div class="card-header" onclick="toggleCard(this)">
-        <h2>자동매수 신호 설정 <span class="ops-badge" id="opsSigBadge">—</span></h2>
+        <h2>🇰🇷 한국주식 작업 <span class="ops-badge" id="opsBadge_kr">—</span></h2>
         <span class="toggle-icon">▼</span>
       </div>
       <div class="card-body">
-        <div class="ops-sig-grid" id="opsSigGrid"></div>
-        <div class="ops-actions" style="margin-top:12px">
-          <button class="btn sm" onclick="aqOpsSaveSignals()">💾 저장</button>
-          <button class="btn sm secondary" onclick="aqOpsLoadSignals(true)">↺ 서버 값으로 되돌리기</button>
+        <div class="ops-top">
+          <button class="ops-runall kr" id="opsRunAll_kr" onclick="aqOpsRunAll('kr')"><span class="ic">▶</span><span>전체 실행<small id="opsRunAllSub_kr">아래 순서대로</small></span></button>
+          <div class="ops-chips" id="opsChips_kr"><span>서버 연결 확인 중…</span></div>
         </div>
-        <div class="ops-note">켜진 신호를 하나라도 가진 아카이브 행이 매수 대상. 각 신호 아래 숫자는 최근 60일 실현 성과(건수 · 5일 양수율 · 평균). V_Vol은 V_Main의 부분집합이라 선택 단위에서 제외.</div>
+        <div class="ops-table-wrap">
+          <table class="ops-table" id="opsTable_kr">
+            <thead><tr><th>순서</th><th>작업</th><th>마지막 실행</th><th>결과</th><th>소요</th><th>자동</th><th></th></tr></thead>
+            <tbody id="opsBody_kr"></tbody>
+          </table>
+        </div>
+        <div class="ops-foot">
+          <div class="ops-dow" id="opsDow_kr"></div>
+          <div class="ops-cond" id="opsCond_kr">
+            <label><input type="checkbox" data-cond="skipHoliday" onchange="aqOpsChanged('kr')"> 휴장일 건너뜀</label>
+            <label><input type="checkbox" data-cond="stopOnFail" onchange="aqOpsChanged('kr')"> 실패 시 연속 중단</label>
+            <label><input type="checkbox" data-cond="catchUp" onchange="aqOpsChanged('kr')"> 서버 꺼졌으면 밀린 실행</label>
+          </div>
+        </div>
+        <div class="ops-note">자동 = <b>끔</b> / <b>시각</b>(정해진 시간에 시작, 한국 KST) / <b>연속</b>(바로 윗줄 작업이 자동으로 실행돼 끝나면 이어서 시작). 시세·수급 수집은 수급 데이터가 다 안 들어왔으면 결과란에 <b>수급 미확정 n/100</b>으로 표시됨.</div>
       </div>
     </section>
 
-    <section class="card" id="opsScheduleCard" data-mtab="ops">
+    <!-- v4.76: 자동 페이지 (요건 구체화 예정 — 우선 신호 선택만) -->
+    <section class="card" id="autoSignalCard" data-mtab="auto">
       <div class="card-header" onclick="toggleCard(this)">
-        <h2>자동 실행 설정 <span class="ops-badge" id="opsSchedBadge">—</span></h2>
+        <h2>자동매수 신호 설정 <span class="ops-badge" id="autoSigBadge">—</span></h2>
         <span class="toggle-icon">▼</span>
       </div>
       <div class="card-body">
-        <div class="ops-sched" id="opsSchedGrid"></div>
-        <div class="ops-cond" id="opsSchedCond">
-          <label><input type="checkbox" id="opsCond_skipHoliday" checked> 휴장일 건너뜀 (NYSE / KRX 캘린더)</label>
-          <label><input type="checkbox" id="opsCond_stopOnFail" checked> 앞 단계 실패 시 뒷 단계 중단</label>
-          <label><input type="checkbox" id="opsCond_catchUp" checked> 서버가 꺼져 있었으면 켜진 뒤 밀린 실행</label>
-          <label><input type="checkbox" id="opsCond_krSupplyWait" checked> KR 수급 미확정이면 Phase 3 보류</label>
+        <div class="auto-sig-grid" id="autoSigGrid"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn sm" onclick="aqAutoSaveSignals()">💾 저장</button>
+          <button class="btn sm secondary" onclick="aqAutoLoadSignals(true)">↺ 서버 값으로 되돌리기</button>
         </div>
-        <div class="ops-actions" style="margin-top:10px">
-          <button class="btn sm" onclick="aqOpsSaveSchedule()">💾 저장</button>
-          <button class="btn sm secondary" onclick="aqOpsLoadSchedule(true)">↺ 서버 값으로 되돌리기</button>
-          <button class="btn sm secondary" onclick="aqOpsResetSchedule()">기본값</button>
-        </div>
-        <div class="ops-note">시각은 각 행의 시간대 기준(미국 작업은 ET라 서머타임 자동 반영). "뒤이어" 는 앞 작업이 끝나면 바로 실행되며 시각을 따로 두지 않음. 끈 작업은 자동 실행에서 빠지고 수동 ▶실행은 계속 가능.</div>
+        <div class="ops-note">켜진 신호를 하나라도 가진 아카이브 행이 매수 대상. 각 신호 아래 숫자는 최근 60일 실현 성과(건수 · 5일 양수율 · 평균). V_Vol은 V_Main의 부분집합이라 제외.</div>
       </div>
     </section>
 
@@ -7882,6 +7900,7 @@ table.combo-eval tbody td .nodata {
         <div class="ops-log" id="opsLogBody"></div>
       </div>
     </div>
+
 
   <!-- ============ PORTFOLIO / TRADE HISTORY ============ -->
   <section class="card" id="myPortfolioCard" data-mtab="my">
@@ -8221,6 +8240,10 @@ table.combo-eval tbody td .nodata {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
           <span>운영</span>
         </button>
+        <button class="mo-drawer-item" onclick="moDrawerNav('auto')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="5"/></svg>
+          <span>자동</span>
+        </button>
         <!-- v2.59: 분리선 + 설정 -->
       <div class="mo-drawer-divider" aria-hidden="true"></div>
       <button class="mo-drawer-item" onclick="moDrawerNav('settings')">
@@ -8523,6 +8546,10 @@ table.combo-eval tbody td .nodata {
   <button class="pc-tab-btn" data-pc-tab="ops" onclick="setPCTab('ops')" aria-label="운영">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
     <span class="pc-tab-label">운영</span>
+  </button>
+  <button class="pc-tab-btn" data-pc-tab="auto" onclick="setPCTab('auto')" aria-label="자동">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="5"/></svg>
+    <span class="pc-tab-label">자동</span>
   </button>
   <button class="pc-tab-btn" data-pc-tab="settings" onclick="setPCTab('settings')" aria-label="설정">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -22400,6 +22427,7 @@ function switchMobileTab(tab) {
   // v2.66: todo 활성화 — 칸반 빌드 (이전엔 'todo' return)
   document.body.setAttribute('data-mtab', tab);
   if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
+  if (tab === 'auto') { try { aqAutoEnter(); } catch (e) {} }
   document.querySelectorAll('.mtab-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mtab === tab);
   });
@@ -22542,9 +22570,10 @@ function updatePCSidebarActive() {
 // 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
 function setPCTab(tab) {
   // v2.66/v2.90: To-Do는 사이드 패널로 전환 — 페이지 그룹에서 제외
-  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings' || tab === 'ops') {
+  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings' || tab === 'ops' || tab === 'auto') {
     setPCPage(tab);
     if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
+    if (tab === 'auto') { try { aqAutoEnter(); } catch (e) {} }
     // v2.59: 설정 페이지 진입 시 데이터 시점 표시 갱신 (v2.58에서 마이 페이지였던 것)
     if (tab === 'settings') {
       try { if (typeof _aqUpdateDataMetaUI === 'function') _aqUpdateDataMetaUI(); } catch (e) {}
@@ -23775,32 +23804,36 @@ window.closeModalIfOverlay = closeModalIfOverlay;
 
 <script>
 // ============================================================================
-// v3.11: 운영 탭 — 작업 실행 / 신호 설정
+// v4.76: 운영 페이지 (미국/한국 작업 실행·순서·자동) + 자동 페이지 (신호 설정)
 //   backend actions: dataStatus, listJobs, runJob, jobStatus, jobLog, getConfig, saveConfig
-//   서버에 아직 없는 액션은 '준비 중'으로 표시하고 화면은 유지
+//   서버에 아직 없는 액션은 '준비 중'으로 표시하고 설정은 이 기기에 저장
 // ============================================================================
-const AQ_OPS_JOBS = [
-  { id: 'phase1_us',   mkt: 'US', name: 'Phase 1 가격·피처',    auto: '평일 16:10 ET' },
-  { id: 'phase3_us',   mkt: 'US', name: 'Phase 3 신호',         auto: 'Phase 1 뒤',   scanDays: true },
-  { id: 'phase2_us',   mkt: 'US', name: 'Phase 2 섹터·매크로',   auto: 'Phase 3 뒤' },
-  { id: 'calendar_us', mkt: 'US', name: 'Calendar 실적·내부자',  auto: '평일 18:00 ET' },
-  { id: 'daily_us',    mkt: 'US', name: 'Daily 공매도·밸류',     auto: '평일 18:00 ET' },
-  { id: 'hexagon_us',  mkt: 'US', name: 'HEXAGON 6축',          auto: '평일 18:00 ET' },
-  { id: 'phase1_kr',   mkt: 'KR', name: 'Phase 1 가격·수급',     auto: '평일 18:10 KST' },
-  { id: 'phase2_kr',   mkt: 'KR', name: 'Phase 2 섹터',         auto: 'Phase 1 뒤' },
-  { id: 'phase3_kr',   mkt: 'KR', name: 'Phase 3 신호',         auto: 'Phase 2 뒤',   scanDays: true },
-];
-const AQ_OPS_SIGNALS = [
-  { id: 'V_Main',         label: 'V_Main',         def: true,  desc: '4일 연속 하락 + V 예측' },
-  { id: 'V_Panic',        label: 'V_Panic',        def: true,  desc: '당일 -5% + V 예측' },
-  { id: 'T_KJP_Sharp',    label: 'T_KJP_Sharp',    def: false, desc: 'KJP Tree(Sharp)' },
-  { id: 'T_KJP_Wide',     label: 'T_KJP_Wide',     def: false, desc: 'KJP Tree(Wide)' },
-  { id: 'T_Claude_Sharp', label: 'T_Claude_Sharp', def: false, desc: 'Claude Tree(Sharp)' },
-  { id: 'T_Claude_Wide',  label: 'T_Claude_Wide',  def: false, desc: 'Claude Tree(Wide)' },
-  { id: 'A',              label: 'A',              def: true,  desc: 'V + 신규 Tree' },
-];
-const _ops = { jobs: {}, running: {}, pollTimer: null, sigPerf: {}, serverOk: null, entered: false };
+const AQ_OPS_JOBS = {
+  us: [
+    { id: 'us_collect',  name: '시세·지표 수집',      desc: '500종목 일봉 + 피처 재구축',          auto: { mode: 'time',  time: '16:10' } },
+    { id: 'us_signal',   name: 'V-Shape 신호 스캔',   desc: 'V + Tree 점수 → 아카이브',           auto: { mode: 'chain' }, scanDays: true },
+    { id: 'us_sector',   name: '섹터·매크로 갱신',     desc: '앱 섹터 탭·매크로 바 데이터',         auto: { mode: 'chain' } },
+    { id: 'us_calendar', name: '실적·내부자 캘린더',   desc: 'EDGAR 실적일 · Form 4 · 13F · FOMC', auto: { mode: 'time',  time: '18:00' } },
+    { id: 'us_daily',    name: '공매도·밸류에이션',    desc: 'FINRA 공매도 · P/E·PEG 밸류 점수',   auto: { mode: 'chain' } },
+    { id: 'us_hexagon',  name: 'HEXAGON 6축 점수',    desc: '종목별 6축 종합 점수',               auto: { mode: 'chain' } },
+  ],
+  kr: [
+    { id: 'kr_collect',  name: '시세·수급 수집',      desc: 'KRX 일봉 + 외국인·기관 수급',         auto: { mode: 'time',  time: '18:10' }, supply: true },
+    { id: 'kr_sector',   name: '섹터 갱신',           desc: '앱 KR 섹터 탭 데이터',               auto: { mode: 'chain' } },
+    { id: 'kr_signal',   name: 'V-Shape 신호 스캔',   desc: 'V + KOR Tree → 아카이브',            auto: { mode: 'chain' }, scanDays: true },
+  ],
+};
+const AQ_OPS_TZ = { us: 'America/New_York', kr: 'Asia/Seoul' };
+const AQ_OPS_TZ_LABEL = { us: 'ET', kr: 'KST' };
+const AQ_OPS_DOW = ['일', '월', '화', '수', '목', '금', '토'];
+const AQ_OPS_LSKEY = 'aq_ops_config_v2';
+const _ops = { cfg: { us: null, kr: null }, runs: {}, serverOk: null, entered: false, pollTimer: null, saveTimer: {}, drag: null };
 
+function _opsDefaultCfg(mk) {
+  const jobs = {}; AQ_OPS_JOBS[mk].forEach(j => { jobs[j.id] = Object.assign({ mode: 'off', time: '' }, j.auto); });
+  return { order: AQ_OPS_JOBS[mk].map(j => j.id), jobs, dow: [1, 2, 3, 4, 5], cond: { skipHoliday: true, stopOnFail: true, catchUp: true } };
+}
+function _opsJobDef(id) { for (const mk of ['us', 'kr']) { const d = AQ_OPS_JOBS[mk].find(j => j.id === id); if (d) return Object.assign({ mkt: mk }, d); } return null; }
 async function _opsCall(action, params) {
   try {
     const auth = (typeof getCurrentUserAuth === 'function') ? await getCurrentUserAuth() : {};
@@ -23813,241 +23846,242 @@ function _opsFmtTime(iso) {
   if (!iso) return '—';
   const d = new Date(iso); if (isNaN(d)) return String(iso);
   const p = n => String(n).padStart(2, '0');
-  return `${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 function _opsFmtDur(sec) {
   if (sec == null || isNaN(sec)) return '—';
-  sec = Math.round(sec); return sec >= 60 ? `${Math.floor(sec/60)}m ${String(sec%60).padStart(2,'0')}s` : `${sec}s`;
+  sec = Math.round(sec); return sec >= 60 ? `${Math.floor(sec / 60)}m ${String(sec % 60).padStart(2, '0')}s` : `${sec}s`;
 }
-function _opsResultHtml(j) {
-  if (j.running) return `<span class="run">⏳ 실행 중 ${_opsFmtDur(j.elapsed)}</span>`;
-  if (!j.last_status) return `<span class="none">—</span>`;
-  if (j.last_status === 'success') return `<span class="ok">✅ 성공${j.summary ? ' · ' + j.summary : ''}</span>`;
-  if (j.last_status === 'warn') return `<span class="warn">⚠️ 경고${j.summary ? ' · ' + j.summary : ''}</span>`;
-  return `<span class="fail">❌ 실패</span>`;
+function _esc(t) { return String(t).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c]); }
+
+// ---------- 설정 로드/저장 (자동 저장) ----------
+function _opsLocal() { try { return JSON.parse(localStorage.getItem(AQ_OPS_LSKEY) || 'null') || {}; } catch (e) { return {}; } }
+function _opsMerge(mk, raw) {
+  const d = _opsDefaultCfg(mk); if (!raw) return d;
+  const cfg = { order: [], jobs: {}, dow: Array.isArray(raw.dow) ? raw.dow : d.dow, cond: Object.assign({}, d.cond, raw.cond || {}) };
+  (Array.isArray(raw.order) ? raw.order : []).forEach(id => { if (d.jobs[id] && !cfg.order.includes(id)) cfg.order.push(id); });
+  d.order.forEach(id => { if (!cfg.order.includes(id)) cfg.order.push(id); });
+  Object.keys(d.jobs).forEach(id => { cfg.jobs[id] = Object.assign({}, d.jobs[id], (raw.jobs || {})[id] || {}); });
+  return cfg;
 }
-function aqOpsRenderJobs() {
-  const tb = document.getElementById('opsJobsBody'); if (!tb) return;
-  tb.innerHTML = AQ_OPS_JOBS.map(def => {
-    const j = Object.assign({}, def, _ops.jobs[def.id] || {});
-    const dis = (_ops.serverOk === false || j.running) ? 'disabled' : '';
-    return `<tr data-job="${def.id}">
-      <td class="mkt">${def.mkt}</td><td>${def.name}</td>
-      <td>${_opsFmtTime(j.last_run_at)}${j.last_trigger ? `<span class="ops-badge">${j.last_trigger === 'auto' ? '자동' : '수동'}</span>` : ''}</td>
-      <td class="res">${_opsResultHtml(j)}</td>
-      <td>${_opsFmtDur(j.last_duration)}</td>
-      <td>${j.next_auto ? _opsFmtTime(j.next_auto) : def.auto}</td>
-      <td><button class="btn sm" ${dis} onclick="aqOpsRun('${def.id}')">▶ 실행</button> <button class="btn sm secondary" ${j.last_run_id ? '' : 'disabled'} onclick="aqOpsShowLog('${def.id}')">📄 로그</button></td>
+async function aqOpsLoadCfg() {
+  const local = _opsLocal();
+  const r = await _opsCall('getConfig', { key: 'ops.schedule' });
+  for (const mk of ['us', 'kr']) {
+    const srv = (r && r.ok && r.value && r.value[mk]) ? r.value[mk] : null;
+    _ops.cfg[mk] = _opsMerge(mk, srv || local[mk]);
+    _opsBadge(mk, srv ? 'saved' : (r && r.notReady ? 'local' : (local[mk] ? 'local' : '')));
+  }
+  if (r && r.ok && r.value) { try { localStorage.setItem(AQ_OPS_LSKEY, JSON.stringify(r.value)); } catch (e) {} }
+}
+function _opsBadge(mk, state, text) {
+  const b = document.getElementById('opsBadge_' + mk); if (!b) return;
+  b.className = 'ops-badge ' + (state || '');
+  b.textContent = text || (state === 'saved' ? '서버 저장됨' : state === 'local' ? '서버 미연결 · 이 기기에만 저장' : state === 'saving' ? '저장 중…' : '기본값');
+}
+function aqOpsChanged(mk) {
+  // DOM → cfg
+  const cfg = _ops.cfg[mk];
+  cfg.order = [...document.querySelectorAll(`#opsBody_${mk} tr[data-job]`)].map(tr => tr.dataset.job);
+  cfg.order.forEach(id => {
+    const tr = document.querySelector(`#opsBody_${mk} tr[data-job="${id}"]`); if (!tr) return;
+    const mode = tr.querySelector('.auto-mode').value; const time = tr.querySelector('.auto-time').value;
+    cfg.jobs[id] = { mode, time: mode === 'time' ? time : (cfg.jobs[id].time || '') };
+  });
+  cfg.dow = [...document.querySelectorAll(`#opsDow_${mk} input`)].filter(i => i.checked).map(i => parseInt(i.dataset.dow, 10));
+  document.querySelectorAll(`#opsCond_${mk} input[data-cond]`).forEach(i => { cfg.cond[i.dataset.cond] = i.checked; });
+  const local = _opsLocal(); local[mk] = cfg; try { localStorage.setItem(AQ_OPS_LSKEY, JSON.stringify(local)); } catch (e) {}
+  _opsBadge(mk, 'saving');
+  clearTimeout(_ops.saveTimer[mk]);
+  _ops.saveTimer[mk] = setTimeout(async () => {
+    const all = _opsLocal();
+    const r = await _opsCall('saveConfig', { key: 'ops.schedule', value: JSON.stringify({ us: all.us || _ops.cfg.us, kr: all.kr || _ops.cfg.kr }) });
+    if (r && r.ok) _opsBadge(mk, 'saved');
+    else if (r && r.notReady) _opsBadge(mk, 'local');
+    else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) _opsBadge(mk, 'local', '저장 실패 — 로그인 필요');
+    else _opsBadge(mk, 'local', '저장 실패: ' + (r && r.error || ''));
+  }, 800);
+  aqOpsRenderTable(mk, true);
+}
+
+// ---------- 렌더 ----------
+function _opsResultHtml(def, run) {
+  if (!run) return '<span class="none">—</span>';
+  if (run.running) return `<span class="run">⏳ 실행 중 ${_opsFmtDur(run.elapsed)}</span>`;
+  let main = '';
+  if (run.last_status === 'success') main = `<span class="ok">✅ 성공${run.summary ? ' · ' + _esc(run.summary) : ''}</span>`;
+  else if (run.last_status === 'warn') main = `<span class="warn">⚠️ 경고${run.summary ? ' · ' + _esc(run.summary) : ''}</span>`;
+  else if (run.last_status === 'failed') main = '<span class="fail">❌ 실패</span>';
+  else return '<span class="none">—</span>';
+  if (def.supply && run.supply) {
+    const sp = run.supply; const bad = sp.total && sp.got < sp.total;
+    main += `<small class="${bad ? 'supply-bad' : ''}">${bad ? '⚠️ 수급 미확정' : '수급 확정'} ${sp.got ?? '?'}/${sp.total ?? '?'}${sp.asof ? ' · ' + sp.asof : ''}</small>`;
+  }
+  return main;
+}
+function aqOpsRenderTable(mk, keepValues) {
+  const tb = document.getElementById('opsBody_' + mk); if (!tb) return;
+  const cfg = _ops.cfg[mk] || _opsDefaultCfg(mk);
+  const n = cfg.order.length;
+  tb.innerHTML = cfg.order.map((id, idx) => {
+    const def = _opsJobDef(id); const a = cfg.jobs[id]; const run = _ops.runs[id] || {};
+    const dis = (_ops.serverOk === false || run.running) ? 'disabled' : '';
+    const prev = idx > 0 ? _opsJobDef(cfg.order[idx - 1]) : null;
+    const autoCell = `<span class="ops-auto">
+      <select class="auto-mode" onchange="aqOpsChanged('${mk}')">
+        <option value="off" ${a.mode === 'off' ? 'selected' : ''}>끔</option>
+        <option value="time" ${a.mode === 'time' ? 'selected' : ''}>시각</option>
+        <option value="chain" ${a.mode === 'chain' ? 'selected' : ''} ${idx === 0 ? 'disabled' : ''}>연속</option>
+      </select>
+      <input type="time" class="auto-time" value="${a.time || ''}" ${a.mode === 'time' ? '' : 'style="display:none"'} onchange="aqOpsChanged('${mk}')">
+      ${a.mode === 'time' ? `<span class="chain">${AQ_OPS_TZ_LABEL[mk]}</span>` : ''}
+      ${a.mode === 'chain' ? `<span class="chain">↳ ${prev ? _esc(prev.name) : '—'} 뒤</span>` : ''}
+    </span>`;
+    return `<tr data-job="${id}" draggable="true" ondragstart="aqOpsDragStart(event,'${mk}')" ondragover="aqOpsDragOver(event)" ondragleave="aqOpsDragLeave(event)" ondrop="aqOpsDrop(event,'${mk}')" ondragend="aqOpsDragEnd(event)">
+      <td class="order"><span class="grip" title="드래그로 순서 변경">⠿</span>${idx + 1}<button class="mv" ${idx === 0 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',-1)">▲</button><button class="mv" ${idx === n - 1 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',1)">▼</button></td>
+      <td class="name"><b>${_esc(def.name)}</b><small>${_esc(def.desc)}</small></td>
+      <td>${_opsFmtTime(run.last_run_at)}${run.last_trigger ? `<span class="ops-badge">${run.last_trigger === 'auto' ? '자동' : '수동'}</span>` : ''}</td>
+      <td class="res">${_opsResultHtml(def, run)}</td>
+      <td>${_opsFmtDur(run.last_duration)}</td>
+      <td>${autoCell}</td>
+      <td><button class="btn sm" ${dis} onclick="aqOpsRun('${id}')">▶ 실행</button> <button class="btn sm secondary" ${run.last_run_id ? '' : 'disabled'} onclick="aqOpsShowLog('${id}')">📄 로그</button></td>
     </tr>`;
   }).join('');
-  const badge = document.getElementById('opsJobsBadge');
-  if (badge) badge.textContent = _ops.serverOk === false ? '서버 API 준비 중' : (Object.values(_ops.jobs).some(j => j.running) ? '실행 중' : '대기');
+  // dow + cond
+  const dowEl = document.getElementById('opsDow_' + mk);
+  if (dowEl && !keepValues) dowEl.innerHTML = AQ_OPS_DOW.map((d, i) => `<label><input type="checkbox" data-dow="${i}" ${cfg.dow.includes(i) ? 'checked' : ''} onchange="aqOpsChanged('${mk}')"><span>${d}</span></label>`).join('');
+  if (!keepValues) document.querySelectorAll(`#opsCond_${mk} input[data-cond]`).forEach(i => { i.checked = !!cfg.cond[i.dataset.cond]; });
+  const btn = document.getElementById('opsRunAll_' + mk); const sub = document.getElementById('opsRunAllSub_' + mk);
+  const anyRun = cfg.order.some(id => (_ops.runs[id] || {}).running);
+  if (btn) btn.disabled = _ops.serverOk === false || anyRun;
+  if (sub) sub.textContent = anyRun ? '실행 중…' : cfg.order.map(id => _opsJobDef(id).name).join(' → ');
 }
-async function aqOpsRefresh(manual) {
+function aqOpsMove(mk, id, delta) {
+  const cfg = _ops.cfg[mk]; const i = cfg.order.indexOf(id); const j = i + delta;
+  if (i < 0 || j < 0 || j >= cfg.order.length) return;
+  cfg.order.splice(i, 1); cfg.order.splice(j, 0, id);
+  aqOpsRenderTable(mk, true); aqOpsChanged(mk);
+}
+// drag & drop
+function aqOpsDragStart(e, mk) { _ops.drag = { mk, id: e.currentTarget.dataset.job }; e.currentTarget.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', _ops.drag.id); } catch (x) {} }
+function aqOpsDragOver(e) { e.preventDefault(); const tr = e.currentTarget; const r = tr.getBoundingClientRect(); const before = (e.clientY - r.top) < r.height / 2; tr.classList.toggle('drop-before', before); tr.classList.toggle('drop-after', !before); }
+function aqOpsDragLeave(e) { e.currentTarget.classList.remove('drop-before', 'drop-after'); }
+function aqOpsDrop(e, mk) {
+  e.preventDefault(); const tr = e.currentTarget; const before = tr.classList.contains('drop-before'); tr.classList.remove('drop-before', 'drop-after');
+  if (!_ops.drag || _ops.drag.mk !== mk) return;
+  const cfg = _ops.cfg[mk]; const from = _ops.drag.id; const to = tr.dataset.job; if (from === to) return;
+  cfg.order.splice(cfg.order.indexOf(from), 1);
+  let idx = cfg.order.indexOf(to); if (!before) idx += 1; cfg.order.splice(idx, 0, from);
+  aqOpsRenderTable(mk, true); aqOpsChanged(mk);
+}
+function aqOpsDragEnd(e) { e.currentTarget.classList.remove('dragging'); document.querySelectorAll('.ops-table tr').forEach(t => t.classList.remove('drop-before', 'drop-after')); _ops.drag = null; }
+
+// ---------- 서버 상태 ----------
+async function aqOpsRefresh() {
   const st = await _opsCall('dataStatus');
-  const line = document.getElementById('opsStatusLine');
-  if (st && st.ok) {
-    _ops.serverOk = true;
-    line.innerHTML = [
-      `US 기준일 <b>${st.us_data_date || '—'}</b>`, `KR 기준일 <b>${st.kr_data_date || '—'}</b>`,
-      `오늘 US 신호 <b>${st.us_signals_today ?? '—'}</b>건`, `다음 자동 실행 <b>${_opsFmtTime(st.next_auto_us)}</b> (US) / <b>${_opsFmtTime(st.next_auto_kr)}</b> (KR)`,
-      st.admin ? '' : '<span class="ops-badge">조회 전용</span>'
-    ].filter(Boolean).map(x => `<span>${x}</span>`).join('');
-  } else {
-    _ops.serverOk = st && st.notReady ? false : _ops.serverOk;
-    line.innerHTML = `<span>${st && st.notReady ? '서버 운영 API 준비 중 — 화면은 준비되었고 백엔드 연결 후 동작합니다.' : ('서버 응답 없음: ' + (st && st.error || ''))}</span>`;
+  for (const mk of ['us', 'kr']) {
+    const el = document.getElementById('opsChips_' + mk); if (!el) continue;
+    if (st && st.ok) {
+      _ops.serverOk = true; const m = (st[mk] || {});
+      el.innerHTML = [`기준일 <b>${m.data_date || '—'}</b>`, `오늘 신호 <b>${m.signals_today ?? '—'}</b>건`, `다음 자동 <b>${_opsFmtTime(m.next_auto)}</b>`, m.last_all_at ? `마지막 전체 실행 <b>${_opsFmtTime(m.last_all_at)}</b>` : '', st.admin === false ? '조회 전용' : '']
+        .filter(Boolean).map(x => `<span>${x}</span>`).join('');
+    } else {
+      if (st && st.notReady) _ops.serverOk = false;
+      el.innerHTML = `<span>${st && st.notReady ? '서버 운영 API 준비 중' : '서버 응답 없음'}</span>`;
+    }
   }
   const lj = await _opsCall('listJobs');
-  if (lj && lj.ok && Array.isArray(lj.jobs)) { _ops.jobs = {}; lj.jobs.forEach(j => { _ops.jobs[j.id] = j; }); }
-  aqOpsRenderJobs();
-  const anyRunning = Object.values(_ops.jobs).some(j => j.running);
-  if (anyRunning && !_ops.pollTimer) _ops.pollTimer = setInterval(() => aqOpsRefresh(false), 5000);
+  if (lj && lj.ok && Array.isArray(lj.jobs)) { _ops.runs = {}; lj.jobs.forEach(j => { _ops.runs[j.id] = j; }); }
+  aqOpsRenderTable('us', true); aqOpsRenderTable('kr', true);
+  const anyRunning = Object.values(_ops.runs).some(j => j.running);
+  if (anyRunning && !_ops.pollTimer) _ops.pollTimer = setInterval(aqOpsRefresh, 5000);
   if (!anyRunning && _ops.pollTimer) { clearInterval(_ops.pollTimer); _ops.pollTimer = null; }
-  if (manual && typeof aqToast === 'function') aqToast('운영 현황 갱신');
 }
-async function aqOpsRun(jobId, params) {
-  const def = AQ_OPS_JOBS.find(j => j.id === jobId); if (!def) return;
-  let p = Object.assign({ job: jobId }, params || {});
-  if (def.scanDays && !p.scanDays) {
-    const v = prompt(`${def.name}을(를) 지금 실행합니다.\n스캔 범위(거래일 수)를 입력하세요. 과거 소급이 필요하면 크게:`, '2');
-    if (v === null) return; p.scanDays = parseInt(v, 10) || 2;
-  } else if (!params) {
-    if (!confirm(`${def.mkt} ${def.name}을(를) 지금 실행할까요?`)) return;
-  }
+function _opsMarkRunning(ids, runId) {
+  ids.forEach(id => { _ops.runs[id] = Object.assign({}, _ops.runs[id] || {}, { running: true, elapsed: 0, last_run_id: runId || (_ops.runs[id] || {}).last_run_id, last_trigger: 'manual' }); });
+  aqOpsRenderTable('us', true); aqOpsRenderTable('kr', true);
+  if (!_ops.pollTimer) _ops.pollTimer = setInterval(aqOpsRefresh, 5000);
+}
+async function aqOpsRun(id) {
+  const def = _opsJobDef(id); if (!def) return;
+  const p = { job: id };
+  if (def.scanDays) { const v = prompt(`${def.name}을(를) 지금 실행합니다.\n스캔 범위(거래일 수)를 입력하세요. 과거 소급이 필요하면 크게:`, '2'); if (v === null) return; p.scanDays = parseInt(v, 10) || 2; }
+  else if (!confirm(`${def.name}을(를) 지금 실행할까요?`)) return;
   const r = await _opsCall('runJob', p);
-  if (!r || !r.ok) {
-    if (r && r.notReady) alert('서버 운영 API가 아직 준비되지 않았습니다.');
-    else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return;
-    else alert('실행 실패: ' + (r && r.error || ''));
-    return;
-  }
-  _ops.jobs[jobId] = Object.assign({}, _ops.jobs[jobId] || {}, { running: true, elapsed: 0, last_run_id: r.run_id, last_trigger: 'manual' });
-  aqOpsRenderJobs();
-  if (!_ops.pollTimer) _ops.pollTimer = setInterval(() => aqOpsRefresh(false), 5000);
-  if (typeof aqToast === 'function') aqToast(`${def.name} 시작`);
+  if (!r || !r.ok) { if (r && r.notReady) alert('서버 운영 API가 아직 준비되지 않았습니다.'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
+  _opsMarkRunning([id], r.run_id); if (typeof aqToast === 'function') aqToast(`${def.name} 시작`);
 }
-async function aqOpsRunGroup(mkt) {
-  const seq = mkt === 'us' ? ['phase1_us', 'phase3_us', 'phase2_us'] : ['phase1_kr', 'phase2_kr', 'phase3_kr'];
-  if (!confirm(`${mkt.toUpperCase()} 전체 파이프라인을 순서대로 실행할까요?\n${seq.join(' → ')}`)) return;
-  const r = await _opsCall('runJob', { job: mkt === 'us' ? 'group_us' : 'group_kr' });
-  if (!r || !r.ok) { alert(r && r.notReady ? '서버 운영 API가 아직 준비되지 않았습니다.' : ('실행 실패: ' + (r && r.error || ''))); return; }
-  seq.forEach(id => { _ops.jobs[id] = Object.assign({}, _ops.jobs[id] || {}, { running: true, elapsed: 0, last_trigger: 'manual' }); });
-  aqOpsRenderJobs();
-  if (!_ops.pollTimer) _ops.pollTimer = setInterval(() => aqOpsRefresh(false), 5000);
+async function aqOpsRunAll(mk) {
+  const cfg = _ops.cfg[mk]; const names = cfg.order.map(id => _opsJobDef(id).name);
+  if (!confirm(`${mk === 'us' ? '미국' : '한국'}주식 작업을 아래 순서대로 전부 실행할까요?\n\n${names.map((n, i) => `${i + 1}. ${n}`).join('\n')}`)) return;
+  const r = await _opsCall('runJob', { job: 'all_' + mk, order: cfg.order.join(','), stopOnFail: cfg.cond.stopOnFail ? 1 : 0 });
+  if (!r || !r.ok) { if (r && r.notReady) alert('서버 운영 API가 아직 준비되지 않았습니다.'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
+  _opsMarkRunning(cfg.order, r.run_id); if (typeof aqToast === 'function') aqToast('전체 실행 시작');
 }
-async function aqOpsShowLog(jobId) {
-  const j = _ops.jobs[jobId]; if (!j || !j.last_run_id) return;
-  const def = AQ_OPS_JOBS.find(x => x.id === jobId);
-  document.getElementById('opsLogTitle').textContent = `${def ? def.name : jobId} — ${_opsFmtTime(j.last_run_at)}`;
+async function aqOpsShowLog(id) {
+  const run = _ops.runs[id]; if (!run || !run.last_run_id) return;
+  const def = _opsJobDef(id);
+  document.getElementById('opsLogTitle').textContent = `${def ? def.name : id} — ${_opsFmtTime(run.last_run_at)}`;
   document.getElementById('opsLogBody').textContent = '불러오는 중…';
   document.getElementById('opsLogModal').classList.add('active');
-  const r = await _opsCall('jobLog', { run_id: j.last_run_id });
+  const r = await _opsCall('jobLog', { run_id: run.last_run_id });
   const body = document.getElementById('opsLogBody');
   if (!r || !r.ok) { body.textContent = '로그 없음: ' + (r && r.error || ''); return; }
-  const lines = String(r.log || '').split('\n');
-  body.innerHTML = lines.map(l => /error|traceback|exit [1-9]|fatal/i.test(l) ? `<span class="err">${l.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'})[c])}</span>` : l.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'})[c])).join('\n');
+  body.innerHTML = String(r.log || '').split('\n').map(l => /error|traceback|exit [1-9]|fatal|!!/i.test(l) ? `<span class="err">${_esc(l)}</span>` : _esc(l)).join('\n');
   body.scrollTop = body.scrollHeight;
 }
 function aqOpsCloseLog() { document.getElementById('opsLogModal').classList.remove('active'); }
-
-// ---- 신호 설정 ----
-const AQ_OPS_SIG_LSKEY = 'aq_ops_signals_v1';
-function _opsSigState() {
-  const st = {}; AQ_OPS_SIGNALS.forEach(sg => { const el = document.getElementById('opsSig_' + sg.id); st[sg.id] = el ? !!el.checked : sg.def; }); return st;
+async function aqOpsEnter() {
+  if (!_ops.entered) { _ops.entered = true; _ops.cfg.us = _opsDefaultCfg('us'); _ops.cfg.kr = _opsDefaultCfg('kr'); aqOpsRenderTable('us'); aqOpsRenderTable('kr'); }
+  await aqOpsLoadCfg(); aqOpsRenderTable('us'); aqOpsRenderTable('kr');
+  await aqOpsRefresh();
 }
-function aqOpsRenderSignals(state) {
-  const g = document.getElementById('opsSigGrid'); if (!g) return;
-  g.innerHTML = AQ_OPS_SIGNALS.map(sg => {
-    const on = state && (sg.id in state) ? !!state[sg.id] : sg.def;
-    const pf = _ops.sigPerf[sg.id];
+Object.assign(window, { aqOpsEnter, aqOpsRefresh, aqOpsRun, aqOpsRunAll, aqOpsShowLog, aqOpsCloseLog, aqOpsChanged, aqOpsMove, aqOpsDragStart, aqOpsDragOver, aqOpsDragLeave, aqOpsDrop, aqOpsDragEnd });
+
+// ============================================================================
+// 자동 페이지 — 신호 선택 (요건 구체화 전 최소 기능)
+// ============================================================================
+const AQ_AUTO_SIGNALS = [
+  { id: 'V_Main',         def: true,  desc: '4일 연속 하락 + V 예측' },
+  { id: 'V_Panic',        def: true,  desc: '당일 -5% + V 예측' },
+  { id: 'T_KJP_Sharp',    def: false, desc: 'KJP Tree (Sharp)' },
+  { id: 'T_KJP_Wide',     def: false, desc: 'KJP Tree (Wide)' },
+  { id: 'T_Claude_Sharp', def: false, desc: 'Claude Tree (Sharp)' },
+  { id: 'T_Claude_Wide',  def: false, desc: 'Claude Tree (Wide)' },
+  { id: 'A',              def: true,  desc: 'V + 신규 Tree' },
+];
+const AQ_AUTO_LSKEY = 'aq_auto_signals_v1';
+const _auto = { perf: {}, entered: false };
+function aqAutoRender(state) {
+  const g = document.getElementById('autoSigGrid'); if (!g) return;
+  g.innerHTML = AQ_AUTO_SIGNALS.map(sg => {
+    const on = state && (sg.id in state) ? !!state[sg.id] : sg.def; const pf = _auto.perf[sg.id];
     const perf = pf ? `${pf.n}건 · ${Math.round(pf.pos * 100)}% · ${pf.avg >= 0 ? '+' : ''}${Number(pf.avg).toFixed(1)}%` : sg.desc;
-    return `<div class="ops-sig ${on ? '' : 'off'}" id="opsSigRow_${sg.id}">
-      <div><div class="name">${sg.label}</div><div class="perf">${perf}</div></div>
-      <label class="ops-switch"><input type="checkbox" id="opsSig_${sg.id}" ${on ? 'checked' : ''} onchange="document.getElementById('opsSigRow_${sg.id}').classList.toggle('off', !this.checked)"><span class="sl"></span></label>
-    </div>`;
+    return `<div class="auto-sig ${on ? '' : 'off'}" id="autoSigRow_${sg.id}"><div><div class="name">${sg.id}</div><div class="perf">${perf}</div></div>
+      <label class="aq-switch"><input type="checkbox" id="autoSig_${sg.id}" ${on ? 'checked' : ''} onchange="document.getElementById('autoSigRow_${sg.id}').classList.toggle('off', !this.checked)"><span class="sl"></span></label></div>`;
   }).join('');
 }
-async function aqOpsLoadSignals(fromServer) {
-  const badge = document.getElementById('opsSigBadge');
+function _autoState() { const st = {}; AQ_AUTO_SIGNALS.forEach(sg => { const el = document.getElementById('autoSig_' + sg.id); st[sg.id] = el ? !!el.checked : sg.def; }); return st; }
+async function aqAutoLoadSignals(fromServer) {
+  const badge = document.getElementById('autoSigBadge');
   const r = await _opsCall('getConfig', { key: 'autotrade.signals' });
-  if (r && r.ok && r.value) {
-    _ops.sigPerf = r.perf || {}; aqOpsRenderSignals(r.value);
-    if (badge) badge.textContent = '서버 저장값';
-    try { localStorage.setItem(AQ_OPS_SIG_LSKEY, JSON.stringify(r.value)); } catch (e) {}
-    return;
-  }
-  let local = null; try { local = JSON.parse(localStorage.getItem(AQ_OPS_SIG_LSKEY) || 'null'); } catch (e) {}
-  aqOpsRenderSignals(local || {});
-  if (badge) badge.textContent = r && r.notReady ? '서버 미연결 · 이 기기에만 저장됨' : (local ? '이 기기 값' : '기본값');
+  if (r && r.ok && r.value) { _auto.perf = r.perf || {}; aqAutoRender(r.value); if (badge) { badge.className = 'ops-badge saved'; badge.textContent = '서버 저장값'; } try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(r.value)); } catch (e) {} return; }
+  let local = null; try { local = JSON.parse(localStorage.getItem(AQ_AUTO_LSKEY) || 'null'); } catch (e) {}
+  aqAutoRender(local || {});
+  if (badge) { badge.className = 'ops-badge ' + (local ? 'local' : ''); badge.textContent = r && r.notReady ? '서버 미연결 · 이 기기에만 저장' : (local ? '이 기기 값' : '기본값'); }
   if (fromServer && typeof aqToast === 'function') aqToast(r && r.notReady ? '서버 운영 API 준비 중' : '불러오기 실패');
 }
-async function aqOpsSaveSignals() {
-  const st = _opsSigState();
-  try { localStorage.setItem(AQ_OPS_SIG_LSKEY, JSON.stringify(st)); } catch (e) {}
+async function aqAutoSaveSignals() {
+  const st = _autoState(); try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(st)); } catch (e) {}
   const r = await _opsCall('saveConfig', { key: 'autotrade.signals', value: JSON.stringify(st) });
-  const badge = document.getElementById('opsSigBadge');
-  if (r && r.ok) { if (badge) badge.textContent = '서버 저장값'; if (typeof aqToast === 'function') aqToast('신호 설정 저장'); }
-  else if (r && r.notReady) { if (badge) badge.textContent = '서버 미연결 · 이 기기에만 저장됨'; if (typeof aqToast === 'function') aqToast('서버 준비 중 — 이 기기에만 저장'); }
+  const badge = document.getElementById('autoSigBadge');
+  if (r && r.ok) { if (badge) { badge.className = 'ops-badge saved'; badge.textContent = '서버 저장값'; } if (typeof aqToast === 'function') aqToast('신호 설정 저장'); }
+  else if (r && r.notReady) { if (badge) { badge.className = 'ops-badge local'; badge.textContent = '서버 미연결 · 이 기기에만 저장'; } if (typeof aqToast === 'function') aqToast('서버 준비 중 — 이 기기에만 저장'); }
   else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return;
   else alert('저장 실패: ' + (r && r.error || ''));
 }
-// ---- 자동 실행 설정 ----
-const AQ_OPS_SCHED_LSKEY = 'aq_ops_schedule_v1';
-const AQ_OPS_SCHED_DEFAULT = {
-  jobs: {
-    phase1_us:   { enabled: true, mode: 'time',  time: '16:10', tz: 'America/New_York', dow: [1,2,3,4,5], after: '' },
-    phase3_us:   { enabled: true, mode: 'after', time: '',      tz: 'America/New_York', dow: [1,2,3,4,5], after: 'phase1_us' },
-    phase2_us:   { enabled: true, mode: 'after', time: '',      tz: 'America/New_York', dow: [1,2,3,4,5], after: 'phase3_us' },
-    calendar_us: { enabled: true, mode: 'time',  time: '18:00', tz: 'America/New_York', dow: [1,2,3,4,5], after: '' },
-    daily_us:    { enabled: true, mode: 'time',  time: '18:00', tz: 'America/New_York', dow: [1,2,3,4,5], after: '' },
-    hexagon_us:  { enabled: true, mode: 'after', time: '',      tz: 'America/New_York', dow: [1,2,3,4,5], after: 'daily_us' },
-    phase1_kr:   { enabled: true, mode: 'time',  time: '18:10', tz: 'Asia/Seoul',       dow: [1,2,3,4,5], after: '' },
-    phase2_kr:   { enabled: true, mode: 'after', time: '',      tz: 'Asia/Seoul',       dow: [1,2,3,4,5], after: 'phase1_kr' },
-    phase3_kr:   { enabled: true, mode: 'after', time: '',      tz: 'Asia/Seoul',       dow: [1,2,3,4,5], after: 'phase2_kr' },
-  },
-  cond: { skipHoliday: true, stopOnFail: true, catchUp: true, krSupplyWait: true },
-};
-const AQ_OPS_DOW = ['일','월','화','수','목','금','토'];
-function aqOpsRenderSchedule(cfg) {
-  const g = document.getElementById('opsSchedGrid'); if (!g) return;
-  cfg = cfg || AQ_OPS_SCHED_DEFAULT;
-  const rows = ['<div class="ops-sched-row head"><div>켬</div><div>작업</div><div>방식</div><div>시각</div><div>시간대</div><div>요일</div><div>뒤이어</div></div>'];
-  AQ_OPS_JOBS.forEach(def => {
-    const j = Object.assign({}, AQ_OPS_SCHED_DEFAULT.jobs[def.id], (cfg.jobs || {})[def.id] || {});
-    const others = AQ_OPS_JOBS.filter(x => x.id !== def.id && x.mkt === def.mkt).map(x => `<option value="${x.id}" ${j.after === x.id ? 'selected' : ''}>${x.name}</option>`).join('');
-    const dow = AQ_OPS_DOW.map((d, i) => `<label><input type="checkbox" data-dow="${i}" ${j.dow.includes(i) ? 'checked' : ''}><span>${d}</span></label>`).join('');
-    rows.push(`<div class="ops-sched-row ${j.enabled ? '' : 'off'}" data-job="${def.id}">
-      <div><label class="ops-switch" style="width:36px;height:20px"><input type="checkbox" class="sch-en" ${j.enabled ? 'checked' : ''} onchange="this.closest('.ops-sched-row').classList.toggle('off', !this.checked)"><span class="sl" style="border-radius:20px"></span></label></div>
-      <div><b>${def.mkt}</b> ${def.name}</div>
-      <div><select class="sch-mode" onchange="aqOpsSchedModeChange(this)"><option value="time" ${j.mode === 'time' ? 'selected' : ''}>시각</option><option value="after" ${j.mode === 'after' ? 'selected' : ''}>뒤이어</option></select></div>
-      <div><input type="time" class="sch-time" value="${j.time || ''}" ${j.mode === 'after' ? 'disabled' : ''}></div>
-      <div><select class="sch-tz" ${j.mode === 'after' ? 'disabled' : ''}><option value="America/New_York" ${j.tz === 'America/New_York' ? 'selected' : ''}>미 동부 (ET)</option><option value="Asia/Seoul" ${j.tz === 'Asia/Seoul' ? 'selected' : ''}>한국 (KST)</option><option value="UTC" ${j.tz === 'UTC' ? 'selected' : ''}>UTC</option></select></div>
-      <div class="dow">${dow}</div>
-      <div><select class="sch-after" ${j.mode === 'time' ? 'disabled' : ''}><option value="">—</option>${others}</select></div>
-    </div>`);
-  });
-  g.innerHTML = rows.join('');
-  const c = cfg.cond || AQ_OPS_SCHED_DEFAULT.cond;
-  ['skipHoliday', 'stopOnFail', 'catchUp', 'krSupplyWait'].forEach(k => { const el = document.getElementById('opsCond_' + k); if (el) el.checked = !!c[k]; });
-}
-function aqOpsSchedModeChange(sel) {
-  const row = sel.closest('.ops-sched-row'); const after = sel.value === 'after';
-  row.querySelector('.sch-time').disabled = after; row.querySelector('.sch-tz').disabled = after; row.querySelector('.sch-after').disabled = !after;
-}
-function _opsSchedState() {
-  const cfg = { jobs: {}, cond: {} };
-  document.querySelectorAll('#opsSchedGrid .ops-sched-row[data-job]').forEach(row => {
-    cfg.jobs[row.dataset.job] = {
-      enabled: row.querySelector('.sch-en').checked, mode: row.querySelector('.sch-mode').value, time: row.querySelector('.sch-time').value,
-      tz: row.querySelector('.sch-tz').value, dow: [...row.querySelectorAll('.dow input')].filter(i => i.checked).map(i => parseInt(i.dataset.dow, 10)),
-      after: row.querySelector('.sch-after').value,
-    };
-  });
-  ['skipHoliday', 'stopOnFail', 'catchUp', 'krSupplyWait'].forEach(k => { const el = document.getElementById('opsCond_' + k); cfg.cond[k] = el ? el.checked : true; });
-  return cfg;
-}
-function _opsSchedValidate(cfg) {
-  for (const [id, j] of Object.entries(cfg.jobs)) {
-    const def = AQ_OPS_JOBS.find(x => x.id === id);
-    if (!j.enabled) continue;
-    if (j.mode === 'time' && !/^\d{2}:\d{2}$/.test(j.time)) return `${def.name}: 시각을 입력하세요`;
-    if (j.mode === 'after' && !j.after) return `${def.name}: '뒤이어' 작업을 고르세요`;
-    if (j.mode === 'after' && cfg.jobs[j.after] && cfg.jobs[j.after].after === id) return `${def.name}: 서로를 기다리는 순환 설정`;
-    if (!j.dow.length) return `${def.name}: 요일을 하나 이상 고르세요`;
-  }
-  return null;
-}
-async function aqOpsLoadSchedule(fromServer) {
-  const badge = document.getElementById('opsSchedBadge');
-  const r = await _opsCall('getConfig', { key: 'ops.schedule' });
-  if (r && r.ok && r.value) { aqOpsRenderSchedule(r.value); if (badge) badge.textContent = '서버 저장값'; try { localStorage.setItem(AQ_OPS_SCHED_LSKEY, JSON.stringify(r.value)); } catch (e) {} return; }
-  let local = null; try { local = JSON.parse(localStorage.getItem(AQ_OPS_SCHED_LSKEY) || 'null'); } catch (e) {}
-  aqOpsRenderSchedule(local || AQ_OPS_SCHED_DEFAULT);
-  if (badge) badge.textContent = r && r.notReady ? '서버 미연결 · 이 기기에만 저장됨' : (local ? '이 기기 값' : '기본값');
-  if (fromServer && typeof aqToast === 'function') aqToast(r && r.notReady ? '서버 운영 API 준비 중' : '불러오기 실패');
-}
-async function aqOpsSaveSchedule() {
-  const cfg = _opsSchedState(); const err = _opsSchedValidate(cfg);
-  if (err) { alert(err); return; }
-  try { localStorage.setItem(AQ_OPS_SCHED_LSKEY, JSON.stringify(cfg)); } catch (e) {}
-  const r = await _opsCall('saveConfig', { key: 'ops.schedule', value: JSON.stringify(cfg) });
-  const badge = document.getElementById('opsSchedBadge');
-  if (r && r.ok) { if (badge) badge.textContent = '서버 저장값'; if (typeof aqToast === 'function') aqToast('자동 실행 설정 저장 — 다음 실행부터 적용'); aqOpsRefresh(false); }
-  else if (r && r.notReady) { if (badge) badge.textContent = '서버 미연결 · 이 기기에만 저장됨'; if (typeof aqToast === 'function') aqToast('서버 준비 중 — 이 기기에만 저장'); }
-  else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return;
-  else alert('저장 실패: ' + (r && r.error || ''));
-}
-function aqOpsResetSchedule() { if (confirm('자동 실행 설정을 기본값으로 되돌릴까요? (저장 전까지는 반영되지 않습니다)')) aqOpsRenderSchedule(AQ_OPS_SCHED_DEFAULT); }
-window.aqOpsSaveSchedule = aqOpsSaveSchedule; window.aqOpsLoadSchedule = aqOpsLoadSchedule; window.aqOpsResetSchedule = aqOpsResetSchedule; window.aqOpsSchedModeChange = aqOpsSchedModeChange;
-
-async function aqOpsEnter() {
-  if (!_ops.entered) { _ops.entered = true; aqOpsRenderSignals({}); aqOpsRenderJobs(); aqOpsRenderSchedule(AQ_OPS_SCHED_DEFAULT); }
-  await aqOpsRefresh(false);
-  await aqOpsLoadSignals(false);
-  await aqOpsLoadSchedule(false);
-}
-window.aqOpsEnter = aqOpsEnter; window.aqOpsRefresh = aqOpsRefresh; window.aqOpsRun = aqOpsRun; window.aqOpsRunGroup = aqOpsRunGroup;
-window.aqOpsShowLog = aqOpsShowLog; window.aqOpsCloseLog = aqOpsCloseLog; window.aqOpsSaveSignals = aqOpsSaveSignals; window.aqOpsLoadSignals = aqOpsLoadSignals;
+async function aqAutoEnter() { if (!_auto.entered) { _auto.entered = true; aqAutoRender({}); } await aqAutoLoadSignals(false); }
+Object.assign(window, { aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals });
 </script>
 </body>
 </html>
