@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.79';   // v4.79: 운영 — 영역 구분 띠, 회색 개별 실행 버튼, PC 로그 버튼 제거, MO 시간 폰트
+window.AQ_PWA_VERSION = '4.80';   // v4.80: 운영 MO — 시간 폰트 고정, 구분 띠 전체 폭·상하 여백 균등
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3603,10 +3603,11 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   .ops-table-wrap.ops-pc { display: none; } .ops-list.ops-mo { display: flex; }
   .ops-ic.run, .ops-ic.gear { width: 30px; height: 30px; } .ops-ic.run svg, .ops-ic.gear svg { width: 14px; height: 14px; }
   .ops-ic.play { width: 22px; height: 22px; } .ops-ic.play svg { width: 9px; height: 9px; }
-  .ops-auto select, .ops-auto input[type=time] { font-size: 12px; height: 30px; line-height: 1; padding: 0 6px; box-sizing: border-box; }
-  .ops-auto input[type=time] { min-width: 108px; }
-  #opsKrCard { margin-top: 20px; padding-top: 0; }
-  #opsKrCard::before { content: ""; display: block; height: 10px; background: #0b0b0c; margin: 0 -16px 22px -16px; }
+  .ops-auto select, .ops-auto input[type=time] { font-size: 12px !important; height: 30px; line-height: 1; padding: 0 6px; box-sizing: border-box; }
+  .ops-auto input[type=time] { min-width: 104px; -webkit-appearance: none; appearance: none; }
+  .ops-auto input[type=time]::-webkit-date-and-time-value { font-size: 12px; text-align: left; }
+  #opsKrCard { margin-top: 24px; }
+  #opsKrCard::before { content: ""; display: block; height: 10px; background: #0b0b0c; margin: -16px calc(50% - 50vw) 24px calc(50% - 50vw); }
   [data-theme="light"] #opsKrCard::before { background: rgba(0,0,0,.06); }
   #opsUsCard .card-header h2, #opsKrCard .card-header h2, #autoSignalCard .card-header h2 { font-size: 19px; }
   .ops-settings { flex-direction: column; align-items: flex-start; }
