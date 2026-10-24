@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.81';   // v4.81: 운영 — 실행 중 버튼 스피너 + 진행 로딩바
+window.AQ_PWA_VERSION = '4.82';   // v4.82: 운영 — 시트 동기화 작업(US/KR)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -23848,7 +23848,8 @@ window.closeModalIfOverlay = closeModalIfOverlay;
 // ============================================================================
 const AQ_OPS_JOBS = {
   us: [
-    { id: 'us_collect',  name: '시세·지표 수집',      desc: '500종목 일봉 + 피처 재구축',          auto: { mode: 'time',  time: '16:10' } },
+    { id: 'us_sheets',   name: '시트 동기화',          desc: 'US 마스터 시트(유니버스·섹터 계층·정의서) + 정량 보고서 → 서버', auto: { mode: 'time',  time: '16:08' } },
+    { id: 'us_collect',  name: '시세·지표 수집',      desc: '500종목 일봉 + 피처 재구축',          auto: { mode: 'chain' } },
     { id: 'us_signal',   name: 'V-Shape 신호 스캔',   desc: 'V + Tree 점수 → 아카이브',           auto: { mode: 'chain' }, scanDays: true },
     { id: 'us_sector',   name: '섹터·매크로 갱신',     desc: '앱 섹터 탭·매크로 바 데이터',         auto: { mode: 'chain' } },
     { id: 'us_calendar', name: '실적·내부자 캘린더',   desc: 'EDGAR 실적일 · Form 4 · 13F · FOMC', auto: { mode: 'time',  time: '18:00' } },
@@ -23856,7 +23857,8 @@ const AQ_OPS_JOBS = {
     { id: 'us_hexagon',  name: 'HEXAGON 6축 점수',    desc: '종목별 6축 종합 점수',               auto: { mode: 'chain' } },
   ],
   kr: [
-    { id: 'kr_collect',  name: '시세·수급 수집',      desc: 'KRX 일봉 + 외국인·기관 수급',         auto: { mode: 'time',  time: '18:10' }, supply: true },
+    { id: 'kr_sheets',   name: '시트 동기화',          desc: 'KR 마스터 시트(유니버스·섹터) → 서버', auto: { mode: 'time',  time: '18:08' } },
+    { id: 'kr_collect',  name: '시세·수급 수집',      desc: 'KRX 일봉 + 외국인·기관 수급',         auto: { mode: 'chain' }, supply: true },
     { id: 'kr_sector',   name: '섹터 갱신',           desc: '앱 KR 섹터 탭 데이터',               auto: { mode: 'chain' } },
     { id: 'kr_signal',   name: 'V-Shape 신호 스캔',   desc: 'V + KOR Tree → 아카이브',            auto: { mode: 'chain' }, scanDays: true },
   ],
