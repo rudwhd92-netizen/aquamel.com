@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.06';   // v5.06: 내부자 유니버스 한정, 서버 갱신시각 기반 캐시(데이터 시점표), 분석 보고서 V3(마크다운) 렌더
+window.AQ_PWA_VERSION = '5.07';   // v5.07: 보고서 데이터 연결 — 가격 조건 vs 현재가, 다시 볼 날→일정, 보고서 이후 수익률·차트 마커
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3645,6 +3645,10 @@ body[data-broker="linked"] #aqTossGateCard { display: none !important; }
 .rv3-lb-good { color: #51cf66; border-color: rgba(81,207,102,.5); } .rv3-lb-bad { color: #ff6b6b; border-color: rgba(255,107,107,.5); } .rv3-lb-mid { color: #fab005; border-color: rgba(250,176,5,.5); } .rv3-lb-weak { color: var(--text-mute); border-color: var(--line); }
 .rv3 a { color: #74c0fc; text-decoration: underline; text-underline-offset: 2px; } .rv3 code { font-size: 12px; background: rgba(255,255,255,.08); padding: 1px 4px; border-radius: 4px; }
 .rv3 strong { color: var(--text-hi); }
+.rv3-since { margin-left: auto; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; border: 1px solid; }
+.rv3-since.up { color: #51cf66; border-color: rgba(81,207,102,.5); } .rv3-since.down { color: #ff6b6b; border-color: rgba(255,107,107,.5); }
+.rv3-px { display: inline-block; margin-left: 4px; font-size: 10px; padding: 1px 6px; border-radius: 999px; border: 1px solid var(--line); color: var(--text-mute); vertical-align: 1px; white-space: nowrap; }
+.rv3-px-now { color: #fab005; border-color: rgba(250,176,5,.6); font-weight: 700; } .rv3-px-below { color: #74c0fc; } .rv3-px-above { color: var(--text-mute); }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -14348,18 +14352,65 @@ function parseReportTextV3(text) {
   idx.forEach((sec, k) => { const body = t.slice(sec.bodyStart, k + 1 < idx.length ? idx[k + 1].start : t.length).replace(/^\s*---\s*$/gm, '').trim(); if (/^출처/.test(sec.title)) out.sources = body; else if (!/^한눈에 보기/.test(sec.title)) out.sections.push({ title: sec.title, body }); });
   return out;
 }
-function renderReportContentV3(p) {
+// v5.07: 보고서 기준일 종가 → 이후 수익률
+function aqReportSinceRet(tk, dateStr) {
+  try { const ser = findTickerSeries(tk); if (!ser || !ser.rows || !ser.rows.length) return null;
+    const rows = ser.rows; let base = null; for (const r of rows) { if (r.Date <= dateStr) base = r; else break; }
+    const last = rows[rows.length - 1]; if (!base || !last || !(Number(base.Close) > 0)) return null;
+    return { base: Number(base.Close), baseDate: base.Date, cur: Number(last.Close), curDate: last.Date, ret: (Number(last.Close) / Number(base.Close) - 1) * 100 }; } catch (e) { return null; }
+}
+// v5.07: "지금 할 일" 문장의 가격(달러/원)을 현재가와 비교하는 칩
+function aqAnnotatePrices(html, cur, isKR) {
+  if (!(cur > 0)) return html;
+  const re = isKR ? /(\d{1,3}(?:,\d{3})+|\d{4,})\s*원/g : /(\d{1,4}(?:\.\d{1,2})?)\s*달러/g;
+  return html.replace(re, (m, num) => {
+    const px = Number(String(num).replace(/,/g, '')); if (!(px > 0)) return m;
+    const diff = (px / cur - 1) * 100; const cls = Math.abs(diff) <= 2 ? 'now' : (diff < 0 ? 'below' : 'above');
+    const txt = Math.abs(diff) <= 2 ? '지금 근처' : (diff < 0 ? `현재가에서 ${diff.toFixed(1)}%` : `현재가보다 +${diff.toFixed(1)}%`);
+    return `${m}<span class="rv3-px rv3-px-${cls}" title="현재가 ${isKR ? Math.round(cur).toLocaleString() + '원' : '$' + cur.toFixed(2)}">${txt}</span>`;
+  });
+}
+function renderReportContentV3(p, tk) {
   const op = p.opinion || '—'; const typ = aqV3OpinionType(op);
+  const isKR = (typeof getCurrentMarket === 'function') ? getCurrentMarket() === 'KR' : false;
+  const isoDate = aqV3IsoDate(p.date); const since = (tk && isoDate) ? aqReportSinceRet(tk, isoDate) : null;
+  const cur = tk ? _aqLatestClose(tk) : null;
+  try { if (tk && isoDate) aqReportRegisterRecheck(tk, isoDate, p); } catch (e) {}
   const glance = p.glance.filter(([k]) => !/최종 의견/.test(k));
   const openByDefault = (title) => /^8\./.test(title);
   return `<div class="rv3">
-    <div class="rv3-top"><span class="an-action-pill an-${typ} rv3-op">${escapeHtml(op)}</span><span class="rv3-meta">AI 분석${p.date ? ' · 기준일 ' + escapeHtml(p.date) : ''}</span></div>
+    <div class="rv3-top"><span class="an-action-pill an-${typ} rv3-op">${escapeHtml(op)}</span><span class="rv3-meta">AI 분석${p.date ? ' · 기준일 ' + escapeHtml(p.date) : ''}</span>
+      ${since ? `<span class="rv3-since ${since.ret >= 0 ? 'up' : 'down'}" title="기준일 종가 ${isKR ? Math.round(since.base).toLocaleString() : '$' + since.base.toFixed(2)} → ${since.curDate} ${isKR ? Math.round(since.cur).toLocaleString() : '$' + since.cur.toFixed(2)}">보고서 이후 ${since.ret >= 0 ? '+' : ''}${since.ret.toFixed(1)}%</span>` : ''}</div>
     ${glance.length ? `<div class="rv3-glance">${glance.map(([k, v]) => `<div class="rv3-g"><div class="rv3-gk">${escapeHtml(k)}</div><div class="rv3-gv">${aqMdInline(v)}</div></div>`).join('')}</div>` : ''}
-    ${p.sections.map((sec, i) => `<details class="rv3-sec" ${openByDefault(sec.title) ? 'open' : ''}><summary><span class="rv3-sec-title">${aqMdInline(sec.title)}</span><span class="rv3-chev">›</span></summary><div class="rv3-body">${aqMdToHtml(sec.body)}</div></details>`).join('')}
+    ${p.sections.map((sec, i) => { let body = aqMdToHtml(sec.body); if (/^8\./.test(sec.title)) body = aqAnnotatePrices(body, cur, isKR); return `<details class="rv3-sec" ${openByDefault(sec.title) ? 'open' : ''}><summary><span class="rv3-sec-title">${aqMdInline(sec.title)}</span><span class="rv3-chev">›</span></summary><div class="rv3-body">${body}</div></details>`; }).join('')}
     ${p.sources ? `<details class="rv3-sec rv3-src"><summary><span class="rv3-sec-title">출처</span><span class="rv3-chev">›</span></summary><div class="rv3-body">${aqMdToHtml(p.sources)}</div></details>` : ''}
   </div>`;
 }
-Object.assign(window, { aqReportIsV3, parseReportTextV3, renderReportContentV3, aqMdToHtml });
+function aqV3IsoDate(d) {
+  if (!d) return ''; d = String(d).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+  const m = d.match(/^([A-Z][a-z]{2})\s+(\d{1,2}),\s+(\d{4})$/); if (m) { const mi = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].indexOf(m[1]); if (mi >= 0) return `${m[3]}-${String(mi + 1).padStart(2, '0')}-${String(m[2]).padStart(2, '0')}`; }
+  return '';
+}
+// v5.07: "다시 볼 날" → 일정 타임라인 외부 일정으로 등록 (기기 저장, 보고서 열 때마다 갱신)
+const AQ_RECHECK_LS = 'aq_report_recheck_v1';
+function aqRecheckAll() { try { return JSON.parse(localStorage.getItem(AQ_RECHECK_LS) || '{}'); } catch (e) { return {}; } }
+function aqReportRegisterRecheck(tk, isoDate, p) {
+  const sec8 = (p.sections || []).find(x => /^8\./.test(x.title)); if (!sec8) return;
+  const m = sec8.body.match(/다시 볼 날\**\s*\n([\s\S]*?)(?=\n\*\*|\n##|$)/); if (!m) return;
+  const yearBase = Number(isoDate.slice(0, 4)); const items = [];
+  m[1].split('\n').forEach(ln => {
+    const t = ln.replace(/^\s*[-*•]\s*/, '').trim(); if (!t) return;
+    let d = null; let mm;
+    if ((mm = t.match(/(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일/))) d = `${mm[1]}-${String(mm[2]).padStart(2, '0')}-${String(mm[3]).padStart(2, '0')}`;
+    else if ((mm = t.match(/(\d{1,2})월\s*(\d{1,2})일/))) { const y = yearBase; const cand = `${y}-${String(mm[1]).padStart(2, '0')}-${String(mm[2]).padStart(2, '0')}`; d = cand < isoDate ? `${y + 1}-${cand.slice(5)}` : cand; }
+    else if ((mm = t.match(/(\d{4})년\s*(\d{1,2})월/))) d = `${mm[1]}-${String(mm[2]).padStart(2, '0')}-01`;
+    if (d) items.push({ date: d, text: t.replace(/\*\*/g, '').slice(0, 80) });
+  });
+  const all = aqRecheckAll(); all[`${tk}|${isoDate}`] = { ticker: tk, reportDate: isoDate, opinion: p.opinion || '', items };
+  try { localStorage.setItem(AQ_RECHECK_LS, JSON.stringify(all)); } catch (e) {}
+}
+Object.assign(window, { aqReportIsV3, parseReportTextV3, renderReportContentV3, aqMdToHtml, aqReportSinceRet, aqRecheckAll });
 
 function aqReportIsNewFormat(ticker, date) {
   const mkt = getCurrentMarket();
@@ -15097,7 +15148,7 @@ async function openReportDetail(date) {
         <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
         ${dateUiHtml}
       </div>
-      <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${_v3 ? renderReportContentV3(parsed) : (_v2 ? renderReportContentV2(parsed, tk, date) : renderReportContent(parsed, tk, date))}</div>
+      <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${_v3 ? renderReportContentV3(parsed, String(tk).toUpperCase()) : (_v2 ? renderReportContentV2(parsed, tk, date) : renderReportContent(parsed, tk, date))}</div>
     `;
     // 스크롤 맨 위로
     const modalContent = $('reportPanel').closest('.modal-content');
@@ -15131,6 +15182,7 @@ async function aqLoadAnalysisAction(mkt, tk, date) {
     if (aqReportIsV3(content)) {
       const p3 = parseReportTextV3(content);
       _analysisActions[key] = p3.opinion ? { action: p3.opinion, type: aqV3OpinionType(p3.opinion) } : null;
+      try { const iso = aqV3IsoDate(p3.date) || date; aqReportRegisterRecheck(tk, iso, p3); } catch (e) {}
     } else if (aqReportIsNewFormat(tk, date)) {
       const p2 = parseReportTextV2(content);
       _analysisActions[key] = p2.action ? { action: p2.action.action, type: p2.action.actionType } : null;
@@ -20880,6 +20932,13 @@ function drawChart(d, opts) {
   try { const _tkA = (opts && opts.ticker) || _state.openTicker || ''; const _sim = (window.AqWatchStore && AqWatchStore.get && _tkA) ? AqWatchStore.get(getCurrentMarket(), _tkA) : null;
     if (_sim && Number(_sim.buyPrice) > 0) annotations.simBuy = { type: 'line', yMin: Number(_sim.buyPrice), yMax: Number(_sim.buyPrice), borderColor: '#da77f2', borderWidth: 1.2, borderDash: [4, 3], yScaleID: 'yPrice',
       label: { display: !simple, content: `모의매수 ${fmtPrice(Number(_sim.buyPrice))}`, position: 'end', backgroundColor: 'rgba(30,30,30,0.95)', color: '#da77f2', font: { size: 10 } } }; } catch (e) {}
+  // v5.07: 분석 보고서 기준일 마커 (세로 점선 + 의견)
+  try { const _tkR = String((opts && opts.ticker) || _state.openTicker || '').toUpperCase(); const _mk = getCurrentMarket();
+    const _rd = (_tkR && _state.reports && _state.reports[_mk] && _state.reports[_mk][_tkR]) || [];
+    _rd.forEach((rdate, k) => { const _x = d.dates.find(x => x >= rdate); if (!_x) return;
+      const _a = (typeof _analysisActions !== 'undefined') ? _analysisActions[_mk + '/' + _tkR] : null;
+      annotations['report' + k] = { type: 'line', xMin: _x, xMax: _x, scaleID: 'x', borderColor: 'rgba(116,192,252,0.8)', borderWidth: 1, borderDash: [3, 3],
+        label: { display: !simple, content: '보고서' + (_a && _a.action ? ' · ' + _a.action : ''), position: 'start', rotation: -90, backgroundColor: 'rgba(30,30,30,0.9)', color: '#74c0fc', font: { size: 9 } } }; }); } catch (e) {}
   // Datasets — simple 모드에선 A/D Line, Volume 제외
   const datasets = [
     { label: '종가', data: d.closes, borderColor: COL.close, backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, tension: 0.05, yAxisID: 'yPrice', order: 5 },
@@ -24771,6 +24830,9 @@ function aqTLEventsFor(dateStr) {
   _aqTL.planned.forEach(pl => { const k = _aqKST(pl.at); if (!k || k.date !== dateStr) return;
     if (_aqTL.runs.some(r => r.job === pl.job && r.trigger === 'auto' && (_aqKST(r.started_at) || {}).date === dateStr)) return;
     out.push({ kind: 'auto', job: pl.job, time: k.time, title: _AQ_TL_JOBNAME[pl.job] || pl.job, detail: `자동 · 예정 (${pl.local})`, status: '예정', done: false }); });
+  // 3.5) 보고서 "다시 볼 날" — 외부
+  try { Object.values(aqRecheckAll()).forEach(r => (r.items || []).forEach(it => { if (it.date !== dateStr) return;
+    out.push({ kind: 'external', time: '', ticker: r.ticker, market: /^\d{6}$/.test(r.ticker) ? 'KR' : 'US', title: `${displayName(r.ticker) || r.ticker} 보고서 점검`, detail: it.text + (r.opinion ? ` · 의견 ${r.opinion}` : ''), status: '외부', done: dateStr < aqCalTodayStr() }); })); } catch (e) {}
   // 4) 내 일정 (앱에서 직접 등록) — 직접
   try { aqCalEventsFor(dateStr).forEach(ev => out.push({ kind: 'manual', sub: 'note', time: ev.allDay ? '' : (ev.startTime || ''), title: ev.title, detail: ev.memo || (ev.allDay ? '종일' : ''), status: '내 일정', done: dateStr < aqCalTodayStr(), userId: ev.id })); } catch (e) {}
   out.sort((a, b) => (a.time || '99:99').localeCompare(b.time || '99:99'));
