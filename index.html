@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.00';   // v5.00: 보유·매매이력·관심종목 = 서버(토스 동기화)만. 기기 저장·시트 사용자 데이터 경로 폐기 (계정 체계 3단계)
+window.AQ_PWA_VERSION = '5.01';   // v5.01: 미분류 종목 섹터 지정, 옛 계정 안내 제거, 관심종목→모의매수, 간단차트 A/D, 마커 우선순위
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3576,6 +3576,11 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .aq-admin-table th { font-size: 10px; color: var(--text-mute); text-transform: uppercase; }
 .aq-admin-table code { font-weight: 800; color: #63e6be; letter-spacing: .5px; }
 body:not([data-role="admin"]) [data-pc-tab="ops"], body:not([data-role="admin"]) [data-pc-tab="auto"], body:not([data-role="admin"]) .mo-drawer-item[data-role-admin] { display: none !important; }
+/* v5.01: 모의매수 */
+.aq-sim-summary { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-mute); padding: 4px 2px 10px; }
+.aq-sim-summary b { color: var(--text-hi); }
+.aq-sim-summary .up, #aqSimList .ia-pnl.up { color: #40c057; } .aq-sim-summary .down, #aqSimList .ia-pnl.down { color: #ff6b6b; }
+#aqSimList .insider-archive-item { cursor: pointer; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -7660,11 +7665,7 @@ table.combo-eval tbody td .nodata {
       <button class="xtab-btn" data-btab="performance" onclick="setBoardSubtab('performance')">누적 성과</button>
       <button class="xtab-btn" data-btab="account" onclick="setBoardSubtab('account')">상세 분석</button>
     </div>
-    <div class="aq-acct-bar" id="aqAcctBar" onclick="aqOpenAccountModal()">
-      <span class="aq-acct-ico">☁</span>
-      <span class="aq-acct-status" id="aqAcctStatus">계정 미연결 · 폰에만 저장됨</span>
-      <span class="aq-acct-cta">계정·동기화 ›</span>
-    </div>
+
   </section>
   <section class="card mobile-only" id="boardHoldingsCard" data-mtab="board" data-btab="holdings" style="display:none;">
     <div class="card-body"><div class="cmp-placeholder">보유 종목 — 준비 중</div></div>
@@ -7799,6 +7800,7 @@ table.combo-eval tbody td .nodata {
     <div class="dash-ctx-item" data-action="logo">🖼️ 로고 변경</div>
     <div class="dash-ctx-item" data-action="delete">🗑️ 종목 삭제</div>
     <div class="dash-ctx-item" data-action="hide">🚫 숨기기</div>
+    <div class="dash-ctx-item" data-action="sector" id="dashCtxSector">🏷️ 섹터 지정</div>
   </div>
 
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
@@ -7869,32 +7871,13 @@ table.combo-eval tbody td .nodata {
 
   <!-- v2.92: 관심 칸반 보드 — 단기 모니터링 / 매수고려 / 장기 모니터링 / 매수완료. To-Do와 동일 룩앤필. -->
   <section class="card" id="watchBoardCard" data-mtab="board" data-btab="watch">
-    <div class="card-header"><h2>관심 종목</h2></div>
-    <div class="card-body">
-      <div class="todo-board" id="watchBoard">
-        <div class="todo-column" data-col="short">
-          <div class="todo-col-head"><span>👀 단기 모니터링</span><span class="todo-col-count">0</span></div>
-          <div class="todo-col-body"></div>
-          <button class="watch-add-btn" onclick="openWatchSearch('short')">+ 종목 추가</button>
-        </div>
-        <div class="todo-column" data-col="consider">
-          <div class="todo-col-head"><span>🛒 매수고려</span><span class="todo-col-count">0</span></div>
-          <div class="todo-col-body"></div>
-          <button class="watch-add-btn" onclick="openWatchSearch('consider')">+ 종목 추가</button>
-        </div>
-        <div class="todo-column" data-col="longterm">
-          <div class="todo-col-head"><span>📈 장기 모니터링</span><span class="todo-col-count">0</span></div>
-          <div class="todo-col-body"></div>
-          <button class="watch-add-btn" onclick="openWatchSearch('longterm')">+ 종목 추가</button>
-        </div>
-        <div class="todo-column" data-col="done">
-          <div class="todo-col-head"><span>✅ 매수완료</span><span class="todo-col-count">0</span></div>
-          <div class="todo-col-body"></div>
-          <button class="watch-add-btn" onclick="openWatchSearch('done')">+ 종목 추가</button>
-        </div>
+      <div class="card-header"><h2>모의매수</h2><span class="dash-meta" id="aqSimMeta"></span></div>
+      <div class="card-body">
+        <div class="aq-sim-summary" id="aqSimSummary"></div>
+        <div class="dash-holdings-body" id="aqSimList"></div>
+        <button class="watch-add-btn" onclick="openWatchSearch('short')">+ 종목 추가 (1주 모의매수)</button>
       </div>
-    </div>
-  </section>
+    </section>
 
   <!-- v2.58: 데이터 관리 카드 — v2.59: 설정 페이지로 이동 -->
   <section class="card" id="dataManagementCard" data-mtab="settings">
@@ -14751,7 +14734,8 @@ window.aqOpenOrderMenu = aqOpenOrderMenu; window.aqCloseOrderMenu = aqCloseOrder
 window.aqEditTrade = aqEditTrade; window.aqConfirmDeleteTrade = aqConfirmDeleteTrade; window.aqDeleteTrade = aqDeleteTrade;
 
 // v3.59: 자산 계정·동기화 — 기존 계정 로직(저장/불러오기/비번) 재사용, 정규 입력칸에 값만 반영
-function aqRefreshAcctStatus() {
+function aqRefreshAcctStatus() { return;   // v5.01: 옛 계정 안내 제거 (폐기)
+
   const el = document.getElementById('aqAcctStatus'); if (!el) return;
   const bar = document.getElementById('aqAcctBar');
   const id = String((typeof LS !== 'undefined' && lsGet(LS.USER_ID, '')) || '').trim();
@@ -16829,6 +16813,8 @@ function showDashContextMenu(ticker, x, y) {
   menu.style.left = left + 'px';
   menu.style.top  = top  + 'px';
   menu.dataset.ticker = ticker;
+  // v5.01: 섹터 지정은 미분류 종목(마스터에 없는 종목)에만
+  try { const _sc = document.getElementById('dashCtxSector'); if (_sc) _sc.style.display = ((_state.tickerSectorMap || {})[String(ticker).toUpperCase()] ? 'none' : ''); } catch (e) {}
 
   // 클릭 핸들러 (한 번만)
   if (!menu._bound) {
@@ -16867,6 +16853,7 @@ function showDashContextMenu(ticker, x, y) {
         toggleTickerHidden(tk);
         renderDashboard();
       }
+      else if (action === 'sector') { aqAssignSector(tk); }
     });
   }
 }
@@ -19809,9 +19796,9 @@ async function openChart(ticker) {
   if (tf !== '1Y') {
     // v2.35: V1 모드면 4개 T_*, 그 외 T 하나
     const priority = _isAllMode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'A', 'T', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A']
       : _isV1Mode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'A', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'A']
       : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
       const dateStr = normalizeDate(r.Date);
@@ -20030,6 +20017,7 @@ function openTossInvest() {
 // ============================================================================
 window.AqWatchStore = (function() {
   const LS_KEY = 'aq_watchlist_v1';
+  try { if (!localStorage.getItem('aq_watch_v2_wiped')) { localStorage.removeItem(LS_KEY); localStorage.setItem('aq_watch_v2_wiped', '1'); } } catch (e) {}   // v5.01: 옛 하트 목록 폐기
   const listeners = new Set();
   const DEFAULT_COL = 'short';
   const COLS = ['short', 'consider', 'longterm', 'done'];
@@ -20057,6 +20045,7 @@ window.AqWatchStore = (function() {
           col: COLS.indexOf(it.col) >= 0 ? it.col : DEFAULT_COL,
           addedAt: it.addedAt || new Date().toISOString(),
           order: Number(it.order) || Date.now(),
+          buyPrice: Number(it.buyPrice) > 0 ? Number(it.buyPrice) : null,
         };
       });
       save(raw); notify({ type: 'replaced' });
@@ -20076,11 +20065,12 @@ window.AqWatchStore = (function() {
           col: COLS.indexOf(it.col) >= 0 ? it.col : ((ex && ex.col) || DEFAULT_COL),
           addedAt: it.addedAt || (ex && ex.addedAt) || new Date().toISOString(),
           order: Number(it.order) || (ex && ex.order) || Date.now(),
+          buyPrice: Number(it.buyPrice) > 0 ? Number(it.buyPrice) : ((ex && ex.buyPrice) || null),
         };
       });
       save(raw); notify({ type: 'merged' });
     },
-    add(market, ticker, col) {
+    add(market, ticker, col, extra) {
       const raw = load();
       const k = keyOf(market, ticker);
       if (raw[k]) return raw[k];
@@ -20090,6 +20080,7 @@ window.AqWatchStore = (function() {
         col: COLS.indexOf(col) >= 0 ? col : DEFAULT_COL,
         addedAt: new Date().toISOString(),
         order: Date.now(),
+        buyPrice: (extra && Number(extra.buyPrice) > 0) ? Number(extra.buyPrice) : null,   // v5.01: 모의매수가
       };
       raw[k] = item; save(raw); notify({ type: 'added', item }); return item;
     },
@@ -20130,7 +20121,10 @@ window.AqWatchStore = (function() {
     },
     toggle(market, ticker) {
       if (this.has(market, ticker)) { this.remove(market, ticker); return false; }
-      this.add(market, ticker); return true;
+      // v5.01: 모의매수 — 매수가를 물어보고 담는다 (취소하면 담지 않음)
+      const px = (typeof aqAskSimPrice === 'function') ? aqAskSimPrice(market, ticker) : null;
+      if (px === null) return false;
+      this.add(market, ticker, DEFAULT_COL, { buyPrice: px }); return true;
     },
     subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); },
     unsubscribe(fn) { listeners.delete(fn); },
@@ -20824,6 +20818,10 @@ function drawChart(d, opts) {
       label: { display: true, content: `평단가 ${fmtPrice(d.buyAvg)}`, position: 'start', backgroundColor: 'rgba(30,30,30,0.95)', color: COL.buyAvg, font: { size: 10, weight: 'bold' } } };
   }
 
+  // v5.01: 모의매수가 점선
+  try { const _tkA = (opts && opts.ticker) || _state.openTicker || ''; const _sim = (window.AqWatchStore && AqWatchStore.get && _tkA) ? AqWatchStore.get(getCurrentMarket(), _tkA) : null;
+    if (_sim && Number(_sim.buyPrice) > 0) annotations.simBuy = { type: 'line', yMin: Number(_sim.buyPrice), yMax: Number(_sim.buyPrice), borderColor: '#da77f2', borderWidth: 1.2, borderDash: [4, 3], yScaleID: 'yPrice',
+      label: { display: !simple, content: `모의매수 ${fmtPrice(Number(_sim.buyPrice))}`, position: 'end', backgroundColor: 'rgba(30,30,30,0.95)', color: '#da77f2', font: { size: 10 } } }; } catch (e) {}
   // Datasets — simple 모드에선 A/D Line, Volume 제외
   const datasets = [
     { label: '종가', data: d.closes, borderColor: COL.close, backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, tension: 0.05, yAxisID: 'yPrice', order: 5 },
@@ -20842,6 +20840,8 @@ function drawChart(d, opts) {
       datasets.push({ label: 'A/D Line', data: d.adN, borderColor: COL.ad, backgroundColor: 'transparent', borderWidth: 1, pointRadius: 0, yAxisID: 'yInd', order: 3 });
     }
   }
+  // v5.01: 간단 차트에도 A/D 라인 (파란색, 고가·저가 선 굵기, 숨긴 보조축)
+  if (simple && Array.isArray(d.adN) && d.adN.some(v => v != null && !isNaN(v))) datasets.push({ label: 'A/D Line', data: d.adN, borderColor: '#339af0', backgroundColor: 'transparent', borderWidth: 0.6, pointRadius: 0, yAxisID: 'yInd', order: 3 });
   datasets.push(...sigDatasets);
 
   // Scales — simple 모드에선 x축(일자) / yPrice(가격) 축 완전히 숨김
@@ -20861,6 +20861,7 @@ function drawChart(d, opts) {
           title: { display: true, text: yAxisTitle, color: COL.textMute, font: { size: 10 } },
         },
   };
+  if (simple) scales.yInd = { position: 'right', display: false, min: 0, max: 100 };
   if (!simple) {
     scales.yVol = { position: 'right', display: false, beginAtZero: true, max: Math.max(...d.vols) * 6 };
     // v1.89: KR 모드면 축 라벨 "투자자 누적 (0-100)"
@@ -21499,7 +21500,7 @@ function _aqRenderSearchResults(query) {
         AqWatchStore.remove(mkt, tk);
         el.classList.remove('watched'); el.setAttribute('aria-pressed', 'false');
       } else {
-        AqWatchStore.add(mkt, tk, window._aqWatchAddCol || 'short');
+        if (!AqWatchStore.toggle(mkt, tk)) return;   // v5.01: 모의매수가 입력 (취소 시 담지 않음)
         el.classList.add('watched'); el.setAttribute('aria-pressed', 'true');
       }
     };
@@ -21860,48 +21861,65 @@ function _aqRenderWatchCard(item) {
   `;
 }
 
+function _aqLatestClose(tk) {
+  try { const ser = findTickerSeries(tk); if (!ser || !ser.rows || !ser.rows.length) return null; const r = ser.rows[ser.rows.length - 1]; const c = Number(r.Close); return isNaN(c) ? null : c; } catch (e) { return null; }
+}
+// v5.01: 하트 = 1주 모의매수. 매수가 입력(기본값 현재가), 취소하면 담지 않음
+function aqAskSimPrice(market, ticker) {
+  const cur = _aqLatestClose(ticker);
+  const isKR = String(market) === 'KR';
+  const def = cur != null ? (isKR ? String(Math.round(cur)) : cur.toFixed(2)) : '';
+  const v = prompt(`${displayName(ticker) || ticker} 모의매수가 (1주 기준)` + (cur != null ? `\n현재가 ${isKR ? Math.round(cur).toLocaleString() : '$' + cur.toFixed(2)}` : ''), def);
+  if (v === null) return null;
+  const px = Number(String(v).replace(/[^0-9.]/g, ''));
+  if (!(px > 0)) { alert('매수가를 숫자로 입력하세요'); return null; }
+  return px;
+}
+window.aqAskSimPrice = aqAskSimPrice;
 function buildWatchKanban() {
-  const card = document.getElementById('watchBoardCard');
-  if (!card) return;
-  // v2.93: 저장된 컬럼 순서대로 DOM 재배치
-  const board = card.querySelector('#watchBoard') || card.querySelector('.todo-board');
-  if (board && window.AqWatchStore && AqWatchStore.getColOrder) {
-    AqWatchStore.getColOrder().forEach(col => {
-      const colEl = board.querySelector('.todo-column[data-col="' + col + '"]');
-      if (colEl) board.appendChild(colEl);
-    });
-  }
-  const _wmkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';   // v4.26: 관심 종목 시장별 분리 — 현재 시장 것만
-  const items = ((window.AqWatchStore && typeof AqWatchStore.getAll === 'function') ? AqWatchStore.getAll() : []).filter(it => (it.market || 'US') === _wmkt);
-  const cols = { short: [], consider: [], longterm: [], done: [] };
-  items.forEach(it => { (cols[it.col] ? cols[it.col] : cols.short).push(it); });
-  Object.keys(cols).forEach(c => cols[c].sort((a, b) => (a.order || 0) - (b.order || 0)));
-  ['short', 'consider', 'longterm', 'done'].forEach(col => {
-    const colEl = card.querySelector('.todo-column[data-col="' + col + '"] .todo-col-body');
-    const countEl = card.querySelector('.todo-column[data-col="' + col + '"] .todo-col-count');
-    if (countEl) countEl.textContent = String(cols[col].length);
-    if (!colEl) return;
-    colEl.innerHTML = cols[col].length === 0
-      ? '<div class="todo-empty">없음</div>'
-      : cols[col].map(it => _aqRenderWatchCard(it)).join('');
+  const card = document.getElementById('watchBoardCard'); if (!card) return;
+  const list = document.getElementById('aqSimList'); const sum = document.getElementById('aqSimSummary'); const meta = document.getElementById('aqSimMeta');
+  if (!list) return;
+  const market = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
+  const items = ((window.AqWatchStore && AqWatchStore.getAll) ? AqWatchStore.getAll() : []).filter(it => (it.market || 'US') === market).sort((a, b) => String(b.addedAt || '').localeCompare(String(a.addedAt || '')));
+  const isKR = market === 'KR';
+  const fmt = (v) => v == null ? '—' : (isKR ? Math.round(v).toLocaleString() : '$' + Math.abs(Number(v)).toFixed(2));
+  let nUp = 0, nDown = 0, sumRoi = 0, nRoi = 0;
+  const rows = items.map(it => {
+    const tk = it.ticker; const cur = _aqLatestClose(tk); const bp = Number(it.buyPrice) || null;
+    const roi = (cur != null && bp) ? (cur / bp - 1) * 100 : null; const pnl = (cur != null && bp) ? (cur - bp) : null;
+    if (roi != null) { sumRoi += roi; nRoi++; if (roi > 0) nUp++; else if (roi < 0) nDown++; }
+    const sector = (typeof getSectorForTicker === 'function' ? (getSectorForTicker(tk) || '') : '');
+    const layer = SECTOR_TO_LAYER[sector] || '기타'; const layerFile = isKR ? '' : layerFileName(layer);
+    const _customLg = (typeof aqGetCustomLogo === 'function') ? aqGetCustomLogo(tk) : ''; const tkFile = tickerFileName(tk);
+    const logoHtml = _customLg ? `<img class="ia-logo" src="./logos/layers/${encodeURIComponent(layerFileName(_customLg))}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+      : (tkFile ? `<img class="ia-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+      : `<img class="ia-logo" src="./flags/${market}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`);
+    const pcls = roi == null ? 'zero' : roi > 0 ? 'up' : roi < 0 ? 'down' : 'zero';
+    const pnlStr = pnl == null ? '—' : (pnl < 0 ? '-' : '+') + fmt(pnl);
+    return `<div class="insider-archive-item aq-sim-row" data-ticker="${escapeAttr(tk)}" data-market="${escapeAttr(market)}">
+      ${aqWrapLogo(logoHtml, tk)}
+      <div class="ia-info">
+        <div class="ia-ticker" title="${escapeAttr(displayName(tk))}">${escapeHtml(displayName(tk))}</div>
+        <div class="ia-company">${escapeHtml(displaySub(tk))}</div>
+        <div class="ia-sector">${escapeHtml(aqStripSectorEmoji(sector || '미분류'))} · ${escapeHtml(String(it.addedAt || '').slice(0, 10))}</div>
+      </div>
+      <div class="ia-meta">
+        <div class="ia-shares">매수 ${fmt(bp)}</div>
+        <div class="ia-price">현재 ${fmt(cur)}</div>
+        <div class="ia-pnl ${pcls}">${pnlStr} (${roi == null ? '—' : (roi >= 0 ? '+' : '') + roi.toFixed(1) + '%'})</div>
+      </div>
+      <button class="todo-card-close" title="모의매수 해제" style="margin-left:6px">✕</button>
+    </div>`;
   });
-  // 클릭 → 차트 / 닫기 → 관심 해제
-  card.querySelectorAll('.watch-card').forEach(el => {
-    el.onclick = (e) => {
-      if (e.target.closest('.todo-card-close')) return;
-      const tk = el.dataset.ticker;
-      if (tk && typeof openChart === 'function') openChart(tk);
-    };
+  list.innerHTML = rows.length ? rows.join('') : '<div style="text-align:center;color:var(--text-mute);font-size:11px;padding:30px;">모의매수 종목 없음 — 차트의 ♥ 또는 아래 버튼으로 담기</div>';
+  if (meta) meta.textContent = `총 ${items.length}종목`;
+  const avg = nRoi ? sumRoi / nRoi : null;
+  if (sum) sum.innerHTML = items.length ? `<span>평균 수익률 <b class="${avg > 0 ? 'up' : avg < 0 ? 'down' : ''}">${avg == null ? '—' : (avg >= 0 ? '+' : '') + avg.toFixed(1) + '%'}</b></span><span>수익 <b class="up">${nUp}</b> · 손실 <b class="down">${nDown}</b></span><span>1주 기준 · 현재가 = 마지막 종가</span>` : '';
+  list.querySelectorAll('.aq-sim-row').forEach(el => {
+    el.onclick = (e) => { if (e.target.closest('.todo-card-close')) return; const tk = el.dataset.ticker; if (tk && typeof openChart === 'function') openChart(tk); };
+    const x = el.querySelector('.todo-card-close'); if (x) x.onclick = (e) => { e.stopPropagation(); if (window.AqWatchStore) AqWatchStore.remove(el.dataset.market, el.dataset.ticker); };
   });
-  card.querySelectorAll('.watch-card .todo-card-close').forEach(el => {
-    el.onclick = (e) => {
-      e.stopPropagation();
-      const c = el.closest('.watch-card');
-      if (c && window.AqWatchStore) AqWatchStore.remove(c.dataset.market, c.dataset.ticker);
-    };
-  });
-  // v2.93: 드래그앤드롭 초기화 (한 번만)
-  try { _aqInitWatchDnD(); } catch (e) {}
 }
 window.buildWatchKanban = buildWatchKanban;
 
@@ -23300,9 +23318,9 @@ function aqBuildFeedChartData(tk, tf) {
   getSignalTypes().forEach(sx => sigMarkersByType[sx] = []);
   if (tf !== '1Y') {
     const priority = _isAllMode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'A', 'T', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A']
       : _isV1Mode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'A', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'A']
       : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === tk).forEach(r => {
       const dateStr = normalizeDate(r.Date);
@@ -24692,6 +24710,37 @@ async function aqSyncLocalFromServer(silent) {
   if (!silent && typeof aqToast === 'function') aqToast(`내 매매 데이터 반영 · 체결 ${(tr.trades || []).length} / 보유 ${(hd.holdings || []).length}`);
   return true;
 }
+// v5.01: 미분류 종목 섹터 지정 (우클릭/길게 누르기 → 섹터 지정) — 계정별 서버 저장(SECTOR_MAP)
+async function aqSectorMapLoadFromServer() {
+  if (!_aqAuth.user) return;
+  try {
+    const r = await apiCall('userDataGet', { dataType: 'SECTOR_MAP' });
+    if (r && r.ok && r.rows && typeof r.rows === 'object' && !Array.isArray(r.rows)) { lsSet(LS.USER_SECTOR_MAP, r.rows); _state.userSectorMap = r.rows; }
+  } catch (e) {}
+}
+function _aqSectorMapPush() {
+  if (!_aqAuth.user) return;
+  try { apiCall('userDataSet', { dataType: 'SECTOR_MAP', rows: JSON.stringify(_state.userSectorMap || {}) }); } catch (e) {}
+}
+function aqAssignSector(tk) {
+  if (!tk) return;
+  tk = String(tk).toUpperCase();
+  if ((_state.tickerSectorMap || {})[tk]) { if (typeof aqToast === 'function') aqToast('마스터 시트에 섹터가 정의된 종목은 시트에서 바꾸세요'); return; }
+  const known = [...new Set(Object.values(_state.tickerSectorMap || {}).filter(Boolean))].sort();
+  const cur = (_state.userSectorMap || {})[tk] || '';
+  const listTxt = known.length ? '\n\n기존 섹터 (번호로 선택 가능):\n' + known.map((x, i) => `${i + 1}. ${x}`).join('\n') : '';
+  const v = prompt(`${displayName(tk) || tk} 섹터 지정\n번호 또는 새 섹터 이름 입력 (비우면 지정 해제)${listTxt}`, cur);
+  if (v === null) return;
+  const t = String(v).trim(); let sector = t;
+  if (/^\d+$/.test(t) && known[Number(t) - 1]) sector = known[Number(t) - 1];
+  const map = Object.assign({}, _state.userSectorMap || {});
+  if (!sector) delete map[tk]; else map[tk] = sector;
+  lsSet(LS.USER_SECTOR_MAP, map); _state.userSectorMap = map; _aqSectorMapPush();
+  try { if (typeof propagateSectorChange === 'function' && sector) propagateSectorChange(tk, sector); } catch (e) {}
+  aqSyncLocalFromServer(true);
+  if (typeof aqToast === 'function') aqToast(sector ? `${tk} → ${sector}` : `${tk} 섹터 지정 해제`);
+}
+window.aqAssignSector = aqAssignSector;
 // 관심종목: 서버 user_data(WATCHLIST) ↔ 로컬 AqWatchStore 미러
 async function aqWatchLoadFromServer() {
   if (!_aqAuth.user || !window.AqWatchStore) return;
@@ -24713,7 +24762,7 @@ if (window.AqWatchStore && AqWatchStore.subscribe) AqWatchStore.subscribe(_aqWat
 function _aqReadOnlyNotice() { const m = '매매이력은 토스증권 동기화로만 관리됩니다 (앱에서 수정 불가)'; if (typeof aqToast === 'function') aqToast(m); else alert(m); }
 ['aqOpenTradeForm', 'aqDeleteTrade', 'aqConfirmDeleteTrade', 'saveUserDataToBackend', 'loadUserDataFromBackend'].forEach(fn => { window[fn] = _aqReadOnlyNotice; });
 // 로그인/동기화 후 자동 반영
-window.addEventListener('aq:login', () => { aqSyncLocalFromServer(true); aqWatchLoadFromServer(); });
+window.addEventListener('aq:login', async () => { await aqSectorMapLoadFromServer(); aqSyncLocalFromServer(true); aqWatchLoadFromServer(); });
 window.addEventListener('aq:synced', () => { aqSyncLocalFromServer(false); });
 window.addEventListener('aq:logout', () => { _aqWipeLocalUserData(); try { AqWatchStore.replaceMarket('US', []); AqWatchStore.replaceMarket('KR', []); } catch (e) {} try { invalidateDashSim(); renderDashboard(); } catch (e) {} });
 Object.assign(window, { aqSyncLocalFromServer, aqWatchLoadFromServer });
