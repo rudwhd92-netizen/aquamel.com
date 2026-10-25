@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.09';   // v5.09: 보고서 — 섹션 접기 복귀(00·08만 펼침), 구글 내보내기 이스케이프 정리, 00 넘버링, 다시 볼 날 '초/중순/말' 보정
+window.AQ_PWA_VERSION = '5.10';   // v5.10: 한눈에 보기 표 구분선(:----) 행 제외, 보고서 좌우 여백·카드 안쪽 여백 확대
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3724,6 +3724,17 @@ body[data-broker="linked"] #aqTossGateCard { display: none !important; }
 .rv4-sec.open .rv4-sec-body { display: block; }
 .rv4-sec:not(.open) { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .rv4-sec-final:not(.open) { border-bottom: none; }
+/* v5.10: 보고서 여백 */
+.rv4-main { padding: 8px 20px 40px; box-sizing: border-box; }
+@media (min-width: 600px) and (max-width: 1024px) { .rv4-main { padding: 8px 28px 40px; } }
+@media (min-width: 1025px) { .rv4-main { padding: 8px 4px 40px; } }
+.rv4-glance { gap: 10px; } .rv4-g { padding: 14px 16px; }
+.rv4-card { padding: 16px 18px; }
+@media (max-width: 1024px) {
+  .rv4-num { font-size: 24px; } .rv4-title { font-size: 18px; }
+  .rv4-mobar { margin: 0 12px; border-radius: 14px; border: 1px solid var(--line); bottom: 8px; }
+  .rv4-hero-op { margin: 18px 0 18px; }
+}
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -14428,7 +14439,7 @@ function parseReportTextV3(text) {
   const mo = t.match(/최종 의견\s*[:：]?\s*\**\s*([가-힣 ]{2,8})/); if (mo) out.opinion = mo[1].trim();
   // 한눈에 보기 (표 또는 불릿)
   const g = t.match(/##\s*한눈에 보기\s*\n([\s\S]*?)(?=\n##\s|\n---)/);
-  if (g) { g[1].split('\n').forEach(ln => { const r = ln.match(/^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|/); if (r && !/^-+$/.test(r[1]) && r[1] !== '항목') out.glance.push([r[1], r[2]]); const b = ln.match(/^\s*[-*]\s*\**([^:*]+?)\**\s*[:：]\s*(.+)$/); if (b) out.glance.push([b[1].trim(), b[2].trim()]); }); }
+  if (g) { g[1].split('\n').forEach(ln => { const r = ln.match(/^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|/); if (r && !/^:?-+:?$/.test(r[1].trim()) && !/^:?-+:?$/.test(r[2].trim()) && r[1] !== '항목') out.glance.push([r[1], r[2]]); const b = ln.match(/^\s*[-*]\s*\**([^:*]+?)\**\s*[:：]\s*(.+)$/); if (b) out.glance.push([b[1].trim(), b[2].trim()]); }); }
   // sections (## N. ... and ## 출처)
   const re = /^##\s+(.+)$/gm; let m; const idx = [];
   while ((m = re.exec(t)) !== null) idx.push({ title: m[1].trim(), start: m.index, bodyStart: m.index + m[0].length });
