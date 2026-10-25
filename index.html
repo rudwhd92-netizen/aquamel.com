@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.14';   // v5.14: 금주의 발견 전체보기, 탐색 누적시그널→섹터동향, 섹터 페이지 폐기(섹터 시트), 하단 탭 '통계'
+window.AQ_PWA_VERSION = '5.15';   // v5.15: 자동 시트·제외 목록 버튼을 수익률 오른쪽 열로 정렬
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3802,6 +3802,10 @@ body.aq-archfull-open { overflow: hidden; }
 .st-cl { font-size: 13px; font-weight: 800; color: var(--text-hi); } .st-cl span { display: block; font-size: 11px; font-weight: 500; color: var(--text-mute); margin-top: 2px; }
 .st-cbar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden; } .st-cbar i { display: block; height: 100%; } .st-cbar i.up { background: #51cf66; } .st-cbar i.down { background: #ff6b6b; }
 .st-cv { font-size: 16px; font-weight: 900; min-width: 64px; text-align: right; } .st-cv.up { color: #51cf66; } .st-cv.down { color: #ff6b6b; }
+/* v5.15: 행 끝 버튼을 4번째 열로 (기존 3열 그리드에서 줄바꿈되던 문제) */
+.insider-archive-item.auto-w-row, .insider-archive-item.auto-bl-row, #aqSimList .insider-archive-item { grid-template-columns: 42px minmax(0, 1fr) auto auto; }
+.auto-w-row > .btn, .auto-bl-row > .btn { margin-left: 4px !important; min-width: 52px; justify-self: end; }
+.auto-w-row .ia-meta, .auto-bl-row .ia-meta { margin-left: 0; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
