@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.97';   // v4.97: 토스증권 연동 — 연결 테스트·보유/체결 동기화·동기화 작업 등록 (계정 체계 2단계)
+window.AQ_PWA_VERSION = '4.99';   // v4.99: 토스 연동 게이트 — MO 마이·PC 보드에서 미연동이면 연동 화면 먼저, 연동 상태는 서버에 기억
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3003,6 +3003,20 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-pc-page="settings"] .container > section.card { display: none !important; }
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
   body[data-pc-page="settings"][data-role="admin"] #aqAdminCard { display: block !important; }
+  body[data-pc-page="board"] #aqAccountCard { display: block !important; }
+  /* v4.99: 토스 연동 게이트 — 연동 전엔 마이(MO)·보드(PC)에 게이트만 */
+  body[data-pc-page="board"] #aqTossGateCard { display: block !important; }
+  body[data-pc-page="board"]:not([data-broker="linked"]) .container > section.card:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
+  body[data-broker="linked"] #aqTossGateCard { display: none !important; }
+  body[data-mtab="my"]:not([data-broker="linked"]) section.card[data-mtab~="my"]:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
+  .aq-gate { text-align: center; padding: 10px 4px 4px; }
+  .aq-gate .ic { width: 56px; height: 56px; border-radius: 16px; background: rgba(99,230,190,.12); color: #63e6be; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .aq-gate .ic svg { width: 28px; height: 28px; }
+  .aq-gate h3 { font-size: 18px; margin: 0 0 6px; color: var(--text-hi); }
+  .aq-gate p { font-size: 13px; color: var(--text-mute); margin: 0 0 16px; line-height: 1.6; }
+  .aq-gate .aq-auth-note { text-align: left; }
+  .aq-gate input[type=text], .aq-gate input[type=password] { width: 100%; box-sizing: border-box; background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; color: var(--text-hi); font-size: 15px !important; margin-bottom: 10px; font-family: inherit; }
+  .aq-gate .aq-auth-btn { max-width: 420px; margin-left: auto; margin-right: auto; display: block; }
   /* v4.76: 운영 / 자동 페이지 (PC) */
   body[data-pc-page="main"] section.card[data-mtab~="ops"], body[data-pc-page="main"] section.card[data-mtab~="auto"] { display: none !important; }
   body[data-pc-page="ops"] .container > section.card { display: none !important; }
@@ -8059,6 +8073,21 @@ table.combo-eval tbody td .nodata {
         </div>
       </div>
     </div>
+
+    <!-- v4.99: 토스 연동 게이트 (MO 마이 · PC 보드) -->
+    <section class="card" id="aqTossGateCard" data-mtab="my">
+      <div class="card-body aq-gate">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg></div>
+        <h3>토스증권을 연결하세요</h3>
+        <p>연결하면 보유 종목·손익·체결 이력이 자동으로 들어오고,<br>이 화면이 내 투자 대시보드가 됩니다.</p>
+        <div class="aq-auth-note">토스증권 WTS → 설정 → Open API에서 앱 키·시크릿을 발급하고, 허용 IP에 <code>43.203.63.7</code>을 등록하세요. 키는 서버에 암호화 저장됩니다.</div>
+        <input type="text" id="aqGateKey" placeholder="앱 키" autocomplete="off" autocapitalize="none">
+        <input type="password" id="aqGateSecret" placeholder="시크릿" autocomplete="off">
+        <div class="aq-auth-err" id="aqGateErr"></div>
+        <div class="aq-auth-ok" id="aqGateOk" style="display:none"></div>
+        <button class="aq-auth-btn" id="aqGateBtn" onclick="aqGateTossLink()">저장하고 연결</button>
+      </div>
+    </section>
 
     <!-- v4.96: 계정 (마이) -->
     <section class="card" id="aqAccountCard" data-mtab="my">
@@ -24471,6 +24500,7 @@ Object.assign(window, { aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals });
 // ============================================================================
 const _aqAuth = { user: null, broker: null, pendingToss: false };
 function _aqSetRole(role) { document.body.setAttribute('data-role', role || 'guest'); }
+function _aqSetBroker(st) { document.body.setAttribute('data-broker', st || 'none'); }
 function _aqTok() { try { return localStorage.getItem('aq_session_token') || ''; } catch (e) { return ''; } }
 function _aqSetTok(t) { try { if (t) localStorage.setItem('aq_session_token', t); else localStorage.removeItem('aq_session_token'); } catch (e) {} }
 
@@ -24537,8 +24567,29 @@ async function aqBrokerSyncNow() {
   } catch (e) { alert('서버 연결 실패'); }
   finally { if (sb) { sb.disabled = false; sb.textContent = '지금 동기화'; } }
 }
+// v4.99: 게이트(마이·보드)에서 토스 연결 — 성공하면 서버가 기억하고 이후 로그인마다 연결 상태 유지
+async function aqGateTossLink() {
+  const k = (document.getElementById('aqGateKey').value || '').trim(); const sct = (document.getElementById('aqGateSecret').value || '').trim();
+  const err = document.getElementById('aqGateErr'); const ok = document.getElementById('aqGateOk'); const btn = document.getElementById('aqGateBtn');
+  if (!_aqAuth.user) { aqAuthShow('login'); return; }
+  if (!k || !sct) { err.textContent = '앱 키와 시크릿을 입력하세요'; return; }
+  btn.disabled = true; err.textContent = ''; ok.style.display = 'none';
+  try {
+    const r = await apiCall('brokerLink', { app_key: k, app_secret: sct });
+    if (!r || !r.ok) { err.textContent = (r && r.error) || '저장 실패'; return; }
+    const t = await apiCall('brokerTest', {});
+    if (!t || !t.ok) { err.textContent = (t && t.error) || '연결 실패'; _aqAuth.broker = { status: 'error', last_error: t && t.error }; _aqRenderAccount(); return; }
+    ok.textContent = '✅ 연결됨' + (t.account_label ? ' (' + t.account_label + ')' : '') + ' — 매매이력을 가져오는 중'; ok.style.display = '';
+    document.getElementById('aqGateSecret').value = '';
+    _aqAuth.broker = { status: 'linked', account_label: t.account_label };
+    const sr = await apiCall('brokerSync', {}).catch(() => null);
+    if (sr && sr.ok) { _aqAuth.broker.last_sync = new Date().toISOString(); if (typeof aqToast === 'function') aqToast(`토스 동기화 완료 · 보유 ${sr.holdings} / 체결 ${sr.trades}`); }
+    _aqRenderAccount();
+  } catch (e) { err.textContent = '서버 연결 실패'; }
+  finally { btn.disabled = false; }
+}
 function aqAuthFinish() { aqAuthHide(); _aqRenderAccount(); if (_aqAuth.pendingToss) { _aqAuth.pendingToss = false; } }
-function aqAuthTossFromMy() { _aqAuth.pendingToss = true; aqAuthShow('signup3'); document.getElementById('aqAuthLogin').style.display = 'none'; }
+function aqAuthTossFromMy() { _aqAuth.broker = null; _aqRenderAccount(); const g = document.getElementById('aqTossGateCard'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 async function aqAuthLogout() {
   if (!confirm('로그아웃할까요?')) return;
   try { await apiCall('logout', {}); } catch (e) {}
@@ -24555,6 +24606,7 @@ function _aqApplyUser(user, broker) {
   if (user && user.role === 'admin') aqAdminRefresh();
 }
 function _aqRenderAccount() {
+  _aqSetBroker(_aqAuth.broker && _aqAuth.broker.status === 'linked' ? 'linked' : (_aqAuth.broker ? _aqAuth.broker.status : 'none'));
   const n = document.getElementById('aqAcctName'); const m = document.getElementById('aqAcctMeta'); const b = document.getElementById('aqAcctBroker'); const bb = document.getElementById('aqAcctBrokerBtn');
   if (!n) return;
   if (_aqAuth.user) { n.textContent = _aqAuth.user.username; m.textContent = _aqAuth.user.role === 'admin' ? '관리자' : '일반'; }
@@ -24593,7 +24645,7 @@ async function aqAdminToggle(uid, st) {
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
-  _aqSetRole('guest');
+  _aqSetRole('guest'); _aqSetBroker('none');
   const t = _aqTok();
   if (t) {
     try {
@@ -24604,7 +24656,7 @@ async function aqAuthBoot() {
   }
   aqAuthShow('login');
 }
-Object.assign(window, { aqBrokerSyncNow, aqAuthShow, aqAuthLogin, aqAuthRegister, aqAuthTossLink, aqAuthFinish, aqAuthTossFromMy, aqAuthLogout, aqAuthChangePw, aqAdminInvite, aqAdminRefresh, aqAdminToggle, aqAuthBoot });
+Object.assign(window, { aqGateTossLink, aqBrokerSyncNow, aqAuthShow, aqAuthLogin, aqAuthRegister, aqAuthTossLink, aqAuthFinish, aqAuthTossFromMy, aqAuthLogout, aqAuthChangePw, aqAdminInvite, aqAdminRefresh, aqAdminToggle, aqAuthBoot });
 document.addEventListener('DOMContentLoaded', () => { setTimeout(aqAuthBoot, 0); });
 </script>
 </body>
