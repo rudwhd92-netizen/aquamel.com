@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.15';   // v5.15: 자동 시트·제외 목록 버튼을 수익률 오른쪽 열로 정렬
+window.AQ_PWA_VERSION = '5.16';   // v5.16: 자동 — 보유일 1~7거래일 선택 (평균 수익률·승률·후보 종목)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3806,6 +3806,10 @@ body.aq-archfull-open { overflow: hidden; }
 .insider-archive-item.auto-w-row, .insider-archive-item.auto-bl-row, #aqSimList .insider-archive-item { grid-template-columns: 42px minmax(0, 1fr) auto auto; }
 .auto-w-row > .btn, .auto-bl-row > .btn { margin-left: 4px !important; min-width: 52px; justify-self: end; }
 .auto-w-row .ia-meta, .auto-bl-row .ia-meta { margin-left: 0; }
+/* v5.16: 자동 컨트롤 */
+.auto-ctl { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.auto-ctl-g { display: inline-flex; align-items: center; gap: 8px; } .auto-ctl-l, .auto-ctl-u { font-size: 11px; font-weight: 800; color: var(--text-mute); letter-spacing: .4px; }
+.auto-seg-sm button { padding: 7px 11px; min-width: 32px; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8214,9 +8218,12 @@ table.combo-eval tbody td .nodata {
     <section class="card" id="autoSignalCard" data-mtab="auto">
       <div class="card-header"><h2>자동매수 신호</h2></div>
       <div class="card-body">
-        <div class="auto-seg" id="autoWinSeg"><button data-w="20" onclick="aqAutoSetWin(20)">20일</button><button data-w="40" onclick="aqAutoSetWin(40)">40일</button><button data-w="60" onclick="aqAutoSetWin(60)">60일</button></div>
+        <div class="auto-ctl">
+          <div class="auto-ctl-g"><span class="auto-ctl-l">기간</span><div class="auto-seg" id="autoWinSeg"><button data-w="20" onclick="aqAutoSetWin(20)">20일</button><button data-w="40" onclick="aqAutoSetWin(40)">40일</button><button data-w="60" onclick="aqAutoSetWin(60)">60일</button></div></div>
+          <div class="auto-ctl-g"><span class="auto-ctl-l">보유</span><div class="auto-seg auto-seg-sm" id="autoHoldSeg"><button data-h="1" onclick="aqAutoSetHold(1)">1</button><button data-h="2" onclick="aqAutoSetHold(2)">2</button><button data-h="3" onclick="aqAutoSetHold(3)">3</button><button data-h="4" onclick="aqAutoSetHold(4)">4</button><button data-h="5" onclick="aqAutoSetHold(5)">5</button><button data-h="6" onclick="aqAutoSetHold(6)">6</button><button data-h="7" onclick="aqAutoSetHold(7)">7</button></div><span class="auto-ctl-u">거래일</span></div>
+        </div>
         <div class="auto-meta" id="autoWinMeta">불러오는 중…</div>
-        <div class="auto-head"><span>신호</span><span>평균 5일 수익률</span><span>자동매수</span></div>
+        <div class="auto-head"><span>신호</span><span id="autoHeadRet">평균 5일 수익률</span><span>자동매수</span></div>
         <div id="autoSigList"></div>
         <div class="auto-note">신호를 누르면 이 기간 수익률이 나빴던 종목(최대 10)을 보고, 신호×종목 단위로 자동매수에서 제외할 수 있어요. 토글은 바로 저장됩니다.</div>
       </div>
@@ -24962,7 +24969,8 @@ const AQ_AUTO_SIGNALS = [
   { id: 'A',              def: true,  desc: 'V + 신규 Tree' },
 ];
 const AQ_AUTO_LSKEY = 'aq_auto_signals_v1';
-const _auto = { entered: false, win: (localStorage.getItem('aq_auto_win') || '40'), stats: null, on: {}, sheetSig: null, blacklist: [] };
+const _auto = { entered: false, win: (localStorage.getItem('aq_auto_win') || '40'), hold: (localStorage.getItem('aq_auto_hold') || '5'), stats: null, on: {}, sheetSig: null, blacklist: [] };
+function _autoW() { const W = (_auto.stats && _auto.stats.windows && _auto.stats.windows[_auto.win]) || null; if (!W) return null; const H = (W.byHold && W.byHold[_auto.hold]) || W; return { start: W.start, signals: H.signals || {}, worst: H.worst || {} }; }
 function _autoFmtPct(v) { return v == null ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(1) + '%'; }
 function _autoLogo(tk) {
   const sector = (_state.tickerSectorMap || {})[tk] || ''; const layerFile = layerFileName(SECTOR_TO_LAYER[sector] || '기타'); const tkFile = tickerFileName(tk);
@@ -24971,11 +24979,13 @@ function _autoLogo(tk) {
 function aqAutoRender() {
   const box = document.getElementById('autoSigList'); if (!box) return;
   document.querySelectorAll('#autoWinSeg button').forEach(b => b.classList.toggle('on', b.dataset.w === _auto.win));
-  const W = (_auto.stats && _auto.stats.windows && _auto.stats.windows[_auto.win]) || null;
+  document.querySelectorAll('#autoHoldSeg button').forEach(b => b.classList.toggle('on', b.dataset.h === _auto.hold));
+  const hl = document.getElementById('autoHeadRet'); if (hl) hl.textContent = `평균 ${_auto.hold}일 수익률`;
+  const W = _autoW();
   const sigs = W ? W.signals : {};
   const maxAbs = Math.max(1, ...AQ_AUTO_SIGNALS.map(sg => Math.abs((sigs[sg.id] || {}).avg || 0)));
   const meta = document.getElementById('autoWinMeta');
-  if (meta) meta.textContent = W ? `${W.start} ~ ${_auto.stats.asof} · ${_auto.win}거래일 · 신호일 종가 → 5거래일 뒤 종가 · 최근 5거래일은 미판정` : '불러오는 중…';
+  if (meta) meta.textContent = W ? `${W.start} ~ ${_auto.stats.asof} · ${_auto.win}거래일 · 신호일 종가 → ${_auto.hold}거래일 뒤 종가 · 최근 ${_auto.hold}거래일은 미판정` : '불러오는 중…';
   box.innerHTML = AQ_AUTO_SIGNALS.map(sg => {
     const on = (sg.id in _auto.on) ? !!_auto.on[sg.id] : sg.def; const st = sigs[sg.id] || {}; const thin = (st.judged || 0) < 5;
     const w = st.avg == null ? 0 : Math.round(Math.abs(st.avg) / maxAbs * 100); const nBl = (_auto.blacklist || []).filter(b => b.signal === sg.id).length;
@@ -25003,8 +25013,8 @@ function aqAutoRenderBlacklist() {
     : '<div class="auto-empty">제외 중인 신호×종목이 없습니다. 신호를 눌러 성적이 나쁜 종목을 제외할 수 있어요.</div>';
 }
 function aqAutoOpenSheet(sig) {
-  _auto.sheetSig = sig; const W = (_auto.stats && _auto.stats.windows && _auto.stats.windows[_auto.win]) || null; const st = (W && W.signals[sig]) || {};
-  document.getElementById('autoSheetTitle').textContent = `${sig} · 최근 ${_auto.win}거래일`;
+  _auto.sheetSig = sig; const W = _autoW(); const st = (W && W.signals[sig]) || {};
+  document.getElementById('autoSheetTitle').textContent = `${sig} · 최근 ${_auto.win}거래일 · ${_auto.hold}일 보유`;
   document.getElementById('autoSheetMeta').textContent = `평균 ${_autoFmtPct(st.avg)} · 승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건`;
   const list = (W && W.worst[sig]) || []; const bl = _auto.blacklist || [];
   document.getElementById('autoSheetList').innerHTML = list.length ? list.map(z => { const inBl = bl.find(b => b.signal === sig && b.ticker === z.ticker);
@@ -25033,6 +25043,7 @@ async function aqAutoBlRemove(sig, tk, reopen) {
   _auto.blacklist = r.blacklist || []; aqAutoRender(); if (reopen) aqAutoOpenSheet(sig);
 }
 function aqAutoSetWin(w) { _auto.win = String(w); try { localStorage.setItem('aq_auto_win', _auto.win); } catch (e) {} aqAutoRender(); }
+function aqAutoSetHold(h) { _auto.hold = String(h); try { localStorage.setItem('aq_auto_hold', _auto.hold); } catch (e) {} aqAutoRender(); }
 let _autoSaveT = null;
 function aqAutoToggle(sig, on) {
   _auto.on[sig] = !!on; const row = document.querySelector(`.auto-row[data-sig="${sig}"]`); if (row) row.classList.toggle('off', !on);
@@ -25051,7 +25062,7 @@ async function aqAutoSaveSignals() {
   if (r && r.ok) { if (typeof aqToast === 'function') aqToast('신호 설정 저장'); } else alert('저장 실패: ' + ((r && r.error) || ''));
 }
 async function aqAutoEnter() { if (!_auto.entered) { _auto.entered = true; aqAutoRender(); } await aqAutoLoadSignals(); }
-Object.assign(window, { aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals, aqAutoSetWin, aqAutoToggle, aqAutoOpenSheet, aqAutoCloseSheet, aqAutoBlForm, aqAutoBlAdd, aqAutoBlRemove });
+Object.assign(window, { aqAutoSetHold, aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals, aqAutoSetWin, aqAutoToggle, aqAutoOpenSheet, aqAutoCloseSheet, aqAutoBlForm, aqAutoBlAdd, aqAutoBlRemove });
 
 </script>
 
