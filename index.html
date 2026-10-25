@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.91';   // v4.91: 금주의 발견 — 신호 유형 표시 제거
+window.AQ_PWA_VERSION = '4.92';   // v4.92: 발견 제외 판정을 서버에서 직접 받음(캐시·로드경로 무관) + 카드·피드 동일 적용
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -23012,7 +23012,9 @@ function aqLogoHtml(tk, sector, cls) {
 
 function buildBuyPointsCard() {
   const scrollEl = $('buyPointsScroll');
-  const res = aqDiscoverItems();
+  const res0 = aqDiscoverItems();
+  // v4.92: 카드도 피드와 같은 제외 규칙 적용 (발견 탭 전체에 동일)
+  const res = (res0 && res0.items) ? (() => { const ex = aqOverSignaledSet(); return ex.size ? Object.assign({}, res0, { items: res0.items.filter(it => !ex.has(it.ticker)) }) : res0; })() : res0;
   if (scrollEl) {
     if (res === null) { scrollEl.innerHTML = '<div class="buy-points-empty">데이터 로딩 중…</div>'; }
     else if (!res.items.length) { scrollEl.innerHTML = '<div class="buy-points-empty">최근 5일 발견 없음 👌</div>'; }
@@ -23325,6 +23327,24 @@ function aqRecentInsiderBuyTickers(days) {
   });
   return out;
 }
+// v4.92: 서버 종목 성공률 판정 직접 로드 (번들 캐시·로드 경로와 무관)
+var _aqTickerStatsLoading = false, _aqTickerStatsAt = 0;
+function aqLoadTickerStats(force) {
+  if (_aqTickerStatsLoading) return;
+  if (!force && Date.now() - _aqTickerStatsAt < 60000) return;
+  _aqTickerStatsLoading = true;
+  try {
+    Promise.resolve(apiCall('getTickerStats', { market: 'US' })).then(function (r) {
+      _aqTickerStatsLoading = false; _aqTickerStatsAt = Date.now();
+      if (r && r.ok && Array.isArray(r.stats)) {
+        _state.tickerStatsUS = r.stats; _state._overSigCache = null;
+        try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
+        try { if (typeof aqRerenderSignalLists === 'function') aqRerenderSignalLists(); } catch (e) {}
+      }
+    }).catch(function () { _aqTickerStatsLoading = false; });
+  } catch (e) { _aqTickerStatsLoading = false; }
+}
+window.aqLoadTickerStats = aqLoadTickerStats;
 function aqOverSignaledSet() {
   if (!aqGetExcludeOverSignaled()) return new Set();
   var mkt = getCurrentMarket();
@@ -23333,9 +23353,13 @@ function aqOverSignaledSet() {
   else pool = _state.archives[mkt] || [];
   var cacheKey = mkt + ':' + pool.length;
   var base;
-  if (mkt === 'US' && Array.isArray(_state.tickerStatsUS)) {
+  if (mkt === 'US' && Array.isArray(_state.tickerStatsUS) && _state.tickerStatsUS.length) {
     // v4.88: 서버 계산 종목 성공률 — 최근 40일 신호 중 5영업일 내 +5% 성공률 30% 미만(판정 3건 이상)이면 제외
     base = new Set(_state.tickerStatsUS.filter(function (x) { return x && x.excluded; }).map(function (x) { return x.ticker; }));
+  } else if (mkt === 'US') {
+    // v4.92: 서버 판정이 아직 없으면 직접 받아오고(1회), 받을 때까지는 아무 종목도 제외하지 않음
+    aqLoadTickerStats();
+    base = new Set();
   } else if (_state._overSigCache && _state._overSigCache.key === cacheKey) base = _state._overSigCache.set;
   else { base = aqComputeOverSignaled(pool); _state._overSigCache = { key: cacheKey, set: base }; }
   // v4.23: 예외 — 최근 30일 내 내부자 매수가 있는 종목은 제외하지 않고 노출
