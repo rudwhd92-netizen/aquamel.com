@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.96';   // v4.96: 로그인·초대코드 가입·역할별 탭(관리자/일반) — 계정 체계 1단계
+window.AQ_PWA_VERSION = '4.97';   // v4.97: 토스증권 연동 — 연결 테스트·보유/체결 동기화·동기화 작업 등록 (계정 체계 2단계)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8071,6 +8071,7 @@ table.combo-eval tbody td .nodata {
           <button class="btn sm secondary" onclick="aqAuthChangePw()">비밀번호</button>
           <button class="btn sm secondary" onclick="aqAuthLogout()">로그아웃</button></div>
         <div class="aq-acct-bar"><div class="who"><b>토스증권</b><small id="aqAcctBroker">연결 안 됨</small></div>
+          <button class="btn sm secondary" id="aqAcctSyncBtn" onclick="aqBrokerSyncNow()" style="display:none">지금 동기화</button>
           <button class="btn sm" id="aqAcctBrokerBtn" onclick="aqAuthTossFromMy()">연결</button></div>
       </div>
     </section>
@@ -24084,12 +24085,14 @@ const AQ_OPS_JOBS = {
     { id: 'us_calendar', icon: 'calendar', name: '실적·내부자 캘린더',   desc: 'EDGAR 실적일 · Form 4 · 13F · FOMC', auto: { mode: 'time',  time: '18:00' } },
     { id: 'us_daily', icon: 'daily',    name: '공매도·밸류에이션',    desc: 'FINRA 공매도 · P/E·PEG 밸류 점수',   auto: { mode: 'chain' } },
     { id: 'us_hexagon', icon: 'hexagon',  name: 'HEXAGON 6축 점수',    desc: '종목별 6축 종합 점수',               auto: { mode: 'chain' } },
+    { id: 'us_broker',  icon: 'broker',   name: '토스 매매이력 동기화', desc: '연결된 전 계정의 보유 종목·체결 이력을 토스증권에서 가져옴', auto: { mode: 'time',  time: '16:40' } },
   ],
   kr: [
     { id: 'kr_sheets', icon: 'sheets',   name: '시트 동기화',          desc: 'KR 마스터 시트(유니버스·섹터) → 서버', auto: { mode: 'time',  time: '18:08' } },
     { id: 'kr_collect', icon: 'collect',  name: '시세·수급 수집',      desc: 'KRX 일봉 + 외국인·기관 수급',         auto: { mode: 'chain' }, supply: true },
     { id: 'kr_sector', icon: 'sector',   name: '섹터 갱신',           desc: '앱 KR 섹터 탭 데이터',               auto: { mode: 'chain' } },
     { id: 'kr_signal', icon: 'signal',   name: 'V-Shape 신호 스캔',   desc: 'V + KOR Tree → 아카이브',            auto: { mode: 'chain' }, scanDays: true },
+    { id: 'kr_broker',  icon: 'broker',   name: '토스 매매이력 동기화', desc: '연결된 전 계정의 보유 종목·체결 이력을 토스증권에서 가져옴', auto: { mode: 'time',  time: '15:45' } },
   ],
 };
 const AQ_OPS_ICON = {
@@ -24100,6 +24103,7 @@ const AQ_OPS_ICON = {
   calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
   daily:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-6"/></svg>',
   hexagon:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2l8.7 5v10L12 22l-8.7-5V7z"/></svg>',
+  broker:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>',
 };
 const AQ_OPS_TZ = { us: 'America/New_York', kr: 'Asia/Seoul' };
 const AQ_OPS_TZ_LABEL = { us: 'ET', kr: 'KST' };
@@ -24517,12 +24521,21 @@ async function aqAuthTossLink() {
     const r = await apiCall('brokerLink', { app_key: k, app_secret: sct });
     if (!r || !r.ok) { err.textContent = (r && r.error) || '저장 실패'; return; }
     const t = await apiCall('brokerTest', {});
-    if (t && t.ok) { ok.textContent = '✅ 연결됨' + (t.account_label ? ' (' + t.account_label + ')' : ''); ok.style.display = ''; _aqAuth.broker = { status: 'linked', account_label: t.account_label }; }
+    if (t && t.ok) { ok.textContent = '✅ 연결됨' + (t.account_label ? ' (' + t.account_label + ')' : '') + ' — 매매이력을 가져오는 중'; ok.style.display = ''; _aqAuth.broker = { status: 'linked', account_label: t.account_label }; apiCall('brokerSync', {}).then(r => { if (r && r.ok && typeof aqToast === 'function') aqToast(`토스 동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}`); _aqAuth.broker.last_sync = new Date().toISOString(); _aqRenderAccount(); }).catch(() => {}); }
     else { ok.textContent = '🔒 키 저장됨 — ' + ((t && t.error) || '연결 테스트는 다음 단계에서'); ok.style.display = ''; _aqAuth.broker = { status: 'pending' }; }
     document.getElementById('aqTossSecret').value = '';
     setTimeout(aqAuthFinish, 1200);
   } catch (e) { err.textContent = '서버 연결 실패'; }
   finally { btn.disabled = false; }
+}
+async function aqBrokerSyncNow() {
+  const sb = document.getElementById('aqAcctSyncBtn'); if (sb) { sb.disabled = true; sb.textContent = '동기화 중…'; }
+  try {
+    const r = await apiCall('brokerSync', {});
+    if (r && r.ok) { if (typeof aqToast === 'function') aqToast(`동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}`); else alert(`동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}`); const me = await apiCall('me', {}); if (me && me.ok) _aqApplyUser(me.user, me.broker); }
+    else alert((r && r.error) || '동기화 실패');
+  } catch (e) { alert('서버 연결 실패'); }
+  finally { if (sb) { sb.disabled = false; sb.textContent = '지금 동기화'; } }
 }
 function aqAuthFinish() { aqAuthHide(); _aqRenderAccount(); if (_aqAuth.pendingToss) { _aqAuth.pendingToss = false; } }
 function aqAuthTossFromMy() { _aqAuth.pendingToss = true; aqAuthShow('signup3'); document.getElementById('aqAuthLogin').style.display = 'none'; }
@@ -24549,6 +24562,7 @@ function _aqRenderAccount() {
   const br = _aqAuth.broker;
   if (b) b.textContent = !br ? '연결 안 됨' : br.status === 'linked' ? ('연결됨' + (br.account_label ? ' · ' + br.account_label : '') + (br.last_sync ? ' · 동기화 ' + _opsFmtTimeSafe(br.last_sync) : '')) : br.status === 'pending' ? '키 저장됨 · 연결 테스트 대기' : ('오류 · ' + (br.last_error || ''));
   if (bb) bb.textContent = br ? '다시 연결' : '연결';
+  const sb = document.getElementById('aqAcctSyncBtn'); if (sb) sb.style.display = (br && br.status === 'linked') ? '' : 'none';
   const adm = document.getElementById('aqAdminCard'); if (adm) adm.style.display = (_aqAuth.user && _aqAuth.user.role === 'admin') ? '' : 'none';
 }
 function _opsFmtTimeSafe(iso) { try { return (typeof _opsFmtTime === 'function') ? _opsFmtTime(iso) : String(iso).slice(0, 16); } catch (e) { return ''; } }
@@ -24590,7 +24604,7 @@ async function aqAuthBoot() {
   }
   aqAuthShow('login');
 }
-Object.assign(window, { aqAuthShow, aqAuthLogin, aqAuthRegister, aqAuthTossLink, aqAuthFinish, aqAuthTossFromMy, aqAuthLogout, aqAuthChangePw, aqAdminInvite, aqAdminRefresh, aqAdminToggle, aqAuthBoot });
+Object.assign(window, { aqBrokerSyncNow, aqAuthShow, aqAuthLogin, aqAuthRegister, aqAuthTossLink, aqAuthFinish, aqAuthTossFromMy, aqAuthLogout, aqAuthChangePw, aqAdminInvite, aqAdminRefresh, aqAdminToggle, aqAuthBoot });
 document.addEventListener('DOMContentLoaded', () => { setTimeout(aqAuthBoot, 0); });
 </script>
 </body>
