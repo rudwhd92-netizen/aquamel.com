@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.03';   // v5.03: MO 마이(=보드)에서 토스 게이트·계정 카드 표시
+window.AQ_PWA_VERSION = '5.04';   // v5.04: 간단차트 A/D 제거, 게이트·계정 카드 공통 CSS로 이동(MO 정상), 계정 카드 압축형·보드 하단 고정
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3004,24 +3004,8 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
   body[data-pc-page="settings"][data-role="admin"] #aqAdminCard { display: block !important; }
   body[data-pc-page="board"] #aqAccountCard { display: block !important; }
-  /* v5.00: 옛 사용자 데이터 입력 카드 영구 숨김 */
-  #myPortfolioCard { display: none !important; }
-  /* v4.99: 토스 연동 게이트 — 연동 전엔 마이(MO)·보드(PC)에 게이트만 */
   body[data-pc-page="board"] #aqTossGateCard { display: block !important; }
   body[data-pc-page="board"]:not([data-broker="linked"]) .container > section.card:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
-  body[data-broker="linked"] #aqTossGateCard { display: none !important; }
-  body[data-mtab="board"]:not([data-broker="linked"]) section.card[data-mtab~="board"]:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
-  body[data-mtab="board"]:not([data-broker="linked"]) #aqTossGateCard { display: block !important; }
-  body[data-mtab="board"]:not([data-broker="linked"]) #aqAccountCard { display: block !important; }
-  body[data-mtab="board"]:not([data-broker="linked"]) #boardSubtabs { display: none !important; }
-  .aq-gate { text-align: center; padding: 10px 4px 4px; }
-  .aq-gate .ic { width: 56px; height: 56px; border-radius: 16px; background: rgba(99,230,190,.12); color: #63e6be; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-  .aq-gate .ic svg { width: 28px; height: 28px; }
-  .aq-gate h3 { font-size: 18px; margin: 0 0 6px; color: var(--text-hi); }
-  .aq-gate p { font-size: 13px; color: var(--text-mute); margin: 0 0 16px; line-height: 1.6; }
-  .aq-gate .aq-auth-note { text-align: left; }
-  .aq-gate input[type=text], .aq-gate input[type=password] { width: 100%; box-sizing: border-box; background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; color: var(--text-hi); font-size: 15px !important; margin-bottom: 10px; font-family: inherit; }
-  .aq-gate .aq-auth-btn { max-width: 420px; margin-left: auto; margin-right: auto; display: block; }
   /* v4.76: 운영 / 자동 페이지 (PC) */
   body[data-pc-page="main"] section.card[data-mtab~="ops"], body[data-pc-page="main"] section.card[data-mtab~="auto"] { display: none !important; }
   body[data-pc-page="ops"] .container > section.card { display: none !important; }
@@ -3592,6 +3576,28 @@ body:not([data-role="admin"]) [data-pc-tab="ops"], body:not([data-role="admin"])
 .aq-sec-chip:hover { background: rgba(255,255,255,.1); }
 .aq-sec-chip.on { border-color: #63e6be; color: #63e6be; background: rgba(99,230,190,.12); font-weight: 700; }
 @media (min-width: 1025px) { .aq-sec-sheet { left: 50%; right: auto; bottom: auto; top: 50%; transform: translate(-50%, -50%); width: 520px; border-radius: 16px; } }
+/* ===== v5.04: 토스 연동 게이트 · 계정 카드 (공통 CSS — PC/MO) ===== */
+#myPortfolioCard { display: none !important; }
+body[data-broker="linked"] #aqTossGateCard { display: none !important; }
+.aq-gate { text-align: center; padding: 10px 4px 4px; }
+.aq-gate .ic { width: 56px; height: 56px; border-radius: 16px; background: rgba(99,230,190,.12); color: #63e6be; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.aq-gate .ic svg { width: 28px; height: 28px; }
+.aq-gate h3 { font-size: 18px; margin: 0 0 6px; color: var(--text-hi); }
+.aq-gate p { font-size: 13px; color: var(--text-mute); margin: 0 0 16px; line-height: 1.6; }
+.aq-gate .aq-auth-note { text-align: left; }
+.aq-gate input[type=text], .aq-gate input[type=password] { width: 100%; box-sizing: border-box; background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; color: var(--text-hi); font-size: 15px !important; margin-bottom: 10px; font-family: inherit; }
+.aq-gate .aq-auth-btn { max-width: 420px; margin-left: auto; margin-right: auto; display: block; }
+/* 계정 카드 — 압축형 한 카드 */
+.aq-acct { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 12px; color: var(--text-mute); }
+.aq-acct .who { color: var(--text-hi); font-weight: 800; font-size: 14px; }
+.aq-acct .sep { opacity: .4; }
+.aq-acct .acts { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.aq-acct .btn.sm { padding: 6px 10px; font-size: 11px; }
+@media (max-width: 1024px) {
+  body[data-mtab="board"]:not([data-broker="linked"]) section.card[data-mtab~="board"]:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
+  body[data-mtab="board"]:not([data-broker="linked"]) #boardSubtabs { display: none !important; }
+  body[data-mtab="board"] #aqAccountCard { display: block !important; }   /* 어느 서브탭이든 맨 아래 */
+}
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8026,6 +8032,21 @@ table.combo-eval tbody td .nodata {
       </div>
     </div>
 
+    <!-- v5.04: 계정 카드 (보드 맨 아래, 압축형) -->
+    <section class="card" id="aqAccountCard" data-mtab="board">
+      <div class="card-body">
+        <div class="aq-acct">
+          <span class="who" id="aqAcctName">—</span><span id="aqAcctMeta"></span>
+          <span class="sep">·</span><span>토스 <span id="aqAcctBroker">연결 안 됨</span></span>
+          <span class="acts">
+            <button class="btn sm secondary" id="aqAcctSyncBtn" onclick="aqBrokerSyncNow()" style="display:none">지금 동기화</button>
+            <button class="btn sm secondary" id="aqAcctBrokerBtn" onclick="aqAuthTossFromMy()">연결</button>
+            <button class="btn sm secondary" onclick="aqAuthChangePw()">비밀번호</button>
+            <button class="btn sm secondary" onclick="aqAuthLogout()">로그아웃</button>
+          </span>
+        </div>
+      </div>
+    </section>
     <!-- v4.96: 로그인 / 가입 게이트 -->
     <div class="aq-auth" id="aqAuth">
       <div class="aq-auth-box">
@@ -8099,21 +8120,7 @@ table.combo-eval tbody td .nodata {
       </div>
     </section>
 
-    <!-- v4.96: 계정 (마이) -->
-    <section class="card" id="aqAccountCard" data-mtab="board" data-btab="holdings">
-      <div class="card-header" onclick="toggleCard(this)">
-        <h2>계정</h2>
-        <span class="toggle-icon">▼</span>
-      </div>
-      <div class="card-body">
-        <div class="aq-acct-bar"><div class="who"><b id="aqAcctName">—</b><small id="aqAcctMeta"></small></div>
-          <button class="btn sm secondary" onclick="aqAuthChangePw()">비밀번호</button>
-          <button class="btn sm secondary" onclick="aqAuthLogout()">로그아웃</button></div>
-        <div class="aq-acct-bar"><div class="who"><b>토스증권</b><small id="aqAcctBroker">연결 안 됨</small></div>
-          <button class="btn sm secondary" id="aqAcctSyncBtn" onclick="aqBrokerSyncNow()" style="display:none">지금 동기화</button>
-          <button class="btn sm" id="aqAcctBrokerBtn" onclick="aqAuthTossFromMy()">연결</button></div>
-      </div>
-    </section>
+
 
     <!-- v4.96: 계정 관리 (관리자) -->
     <section class="card" id="aqAdminCard" data-mtab="settings" style="display:none">
@@ -20865,8 +20872,6 @@ function drawChart(d, opts) {
       datasets.push({ label: 'A/D Line', data: d.adN, borderColor: COL.ad, backgroundColor: 'transparent', borderWidth: 1, pointRadius: 0, yAxisID: 'yInd', order: 3 });
     }
   }
-  // v5.01: 간단 차트에도 A/D 라인 (파란색, 고가·저가 선 굵기, 숨긴 보조축)
-  if (simple && Array.isArray(d.adN) && d.adN.some(v => v != null && !isNaN(v))) datasets.push({ label: 'A/D Line', data: d.adN, borderColor: '#339af0', backgroundColor: 'transparent', borderWidth: 0.6, pointRadius: 0, yAxisID: 'yInd', order: 3 });
   datasets.push(...sigDatasets);
 
   // Scales — simple 모드에선 x축(일자) / yPrice(가격) 축 완전히 숨김
@@ -20886,7 +20891,6 @@ function drawChart(d, opts) {
           title: { display: true, text: yAxisTitle, color: COL.textMute, font: { size: 10 } },
         },
   };
-  if (simple) scales.yInd = { position: 'right', display: false, min: 0, max: 100 };
   if (!simple) {
     scales.yVol = { position: 'right', display: false, beginAtZero: true, max: Math.max(...d.vols) * 6 };
     // v1.89: KR 모드면 축 라벨 "투자자 누적 (0-100)"
@@ -24657,11 +24661,11 @@ function _aqRenderAccount() {
   _aqSetBroker(_aqAuth.broker && _aqAuth.broker.status === 'linked' ? 'linked' : (_aqAuth.broker ? _aqAuth.broker.status : 'none'));
   const n = document.getElementById('aqAcctName'); const m = document.getElementById('aqAcctMeta'); const b = document.getElementById('aqAcctBroker'); const bb = document.getElementById('aqAcctBrokerBtn');
   if (!n) return;
-  if (_aqAuth.user) { n.textContent = _aqAuth.user.username; m.textContent = _aqAuth.user.role === 'admin' ? '관리자' : '일반'; }
-  else { n.textContent = '—'; m.textContent = '로그인 필요'; }
+  if (_aqAuth.user) { n.textContent = _aqAuth.user.username; m.textContent = _aqAuth.user.role === 'admin' ? ' 관리자' : ' 일반'; }
+  else { n.textContent = '—'; m.textContent = ' 로그인 필요'; }
   const br = _aqAuth.broker;
-  if (b) b.textContent = !br ? '연결 안 됨' : br.status === 'linked' ? ('연결됨' + (br.account_label ? ' · ' + br.account_label : '') + (br.last_sync ? ' · 동기화 ' + _opsFmtTimeSafe(br.last_sync) : '')) : br.status === 'pending' ? '키 저장됨 · 연결 테스트 대기' : ('오류 · ' + (br.last_error || ''));
-  if (bb) bb.textContent = br ? '다시 연결' : '연결';
+  if (b) b.textContent = !br ? '연결 안 됨' : br.status === 'linked' ? ((br.account_label || '연결됨') + (br.last_sync ? ' · 동기화 ' + _opsFmtTimeSafe(br.last_sync) : '')) : br.status === 'pending' ? '키 저장됨' : '오류';
+  if (bb) bb.textContent = br && br.status === 'linked' ? '다시 연결' : '연결';
   const sb = document.getElementById('aqAcctSyncBtn'); if (sb) sb.style.display = (br && br.status === 'linked') ? '' : 'none';
   const adm = document.getElementById('aqAdminCard'); if (adm) adm.style.display = (_aqAuth.user && _aqAuth.user.role === 'admin') ? '' : 'none';
 }
