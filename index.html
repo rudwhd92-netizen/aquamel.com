@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.85';   // v4.85: A 신호 UI 연결 + 운영 MO 플레이리스트형 재설계
+window.AQ_PWA_VERSION = '4.87';   // v4.87: 누적 시그널에서 타점 과다 제외 규칙 해제 (발견에만 적용)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -23376,11 +23376,9 @@ function buildArchiveMobileList() {
   }
 
   // v3.65: 설정 토글 동기화 + 타점 과다 종목 제외 집합
-  const exSet = aqOverSignaledSet();
   const _excb = document.getElementById('aqExclOverSig'); if (_excb) _excb.checked = aqGetExcludeOverSignaled();
-  // 필터된 시그널만
+  // v4.87: 누적 시그널은 기록 전체 — 타점 과다 제외 규칙은 발견 탭에만 적용
   const filtered = _state.archive.filter(r => {
-    if (exSet.size && exSet.has(r.Ticker)) return false;  // v3.65: 타점 과다 제외
     // 시그널 필터
     const sigs = (r.Signal_Type || '').split('+').map(s => s.trim()).filter(Boolean);
     if (!sigs.some(s => _state.signalFilter.has(s))) return false;
@@ -24094,17 +24092,24 @@ function aqOpsRenderTable(mk, keepValues) {
 function _opsBindTouchDrag(list, mk) {
   list.querySelectorAll('.grip').forEach(g => {
     g.onpointerdown = (e) => {
-      e.preventDefault(); const item = g.closest('.ops-item'); const id = item.dataset.job; item.classList.add('dragging'); g.setPointerCapture(e.pointerId);
+      e.preventDefault();
+      const item = g.closest('.ops-item'); item.classList.add('dragging');
       const move = (ev) => {
-        const items = [...list.querySelectorAll('.ops-item')]; const y = ev.clientY;
-        for (const other of items) {
+        const y = ev.clientY;
+        for (const other of [...list.querySelectorAll('.ops-item')]) {
           if (other === item) continue; const r = other.getBoundingClientRect();
-          if (y < r.top + r.height / 2 && other.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_FOLLOWING) { list.insertBefore(item, other); break; }
-          if (y > r.top + r.height / 2 && other.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_PRECEDING) { list.insertBefore(item, other.nextSibling); break; }
+          const after = other.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_FOLLOWING;   // item is after other
+          if (after && y < r.top + r.height / 2) { list.insertBefore(item, other); break; }
+          if (!after && y > r.top + r.height / 2) { list.insertBefore(item, other.nextSibling); break; }
         }
       };
-      const up = () => { item.classList.remove('dragging'); g.onpointermove = null; g.onpointerup = null; g.onpointercancel = null; _ops.cfg[mk].order = [...list.querySelectorAll('.ops-item')].map(x => x.dataset.job); aqOpsChanged(mk); };
-      g.onpointermove = move; g.onpointerup = up; g.onpointercancel = up;
+      const up = () => {
+        document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', up);
+        list.querySelectorAll('.ops-item.dragging').forEach(x => x.classList.remove('dragging'));
+        _ops.cfg[mk].order = [...list.querySelectorAll('.ops-item')].map(x => x.dataset.job);
+        aqOpsChanged(mk);
+      };
+      document.addEventListener('pointermove', move); document.addEventListener('pointerup', up); document.addEventListener('pointercancel', up);
     };
   });
 }
