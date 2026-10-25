@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.84';   // v4.84: 신호 스캔 일수 기본값 5 (원복)
+window.AQ_PWA_VERSION = '4.85';   // v4.85: A 신호 UI 연결 + 운영 MO 플레이리스트형 재설계
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -139,6 +139,7 @@ if ('serviceWorker' in navigator) {
   --t-kjp-wide: #0288d1;
   --t-claude-sharp: #ad1457;
   --t-claude-wide: #ab47bc;
+  --sig-a: #fcc419;
 
   /* Korean stock convention: up=red, down=blue */
   --kr-up: #fa5252;
@@ -896,6 +897,9 @@ section.card.collapsed > .card-header { border-radius: 0; margin-bottom: 0; }
 .sig-btn[data-sig="T_Claude_Sharp"] .dot { background: var(--t-claude-sharp); }
 .sig-btn[data-sig="T_Claude_Wide"].on { border-color: var(--t-claude-wide); }
 .sig-btn[data-sig="T_Claude_Wide"] .dot { background: var(--t-claude-wide); }
+/* v4.85: A 신호 */
+.sig-btn[data-sig="A"].on { border-color: var(--sig-a); }
+.sig-btn[data-sig="A"] .dot { background: var(--sig-a); }
 
 .filter-controls {
   display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
@@ -1249,6 +1253,7 @@ table.archive .mfi-high { color: var(--danger); font-weight: 600; }
 .sig-badge.T_KJP_Wide     { color: #64b5f6;               border-color: var(--t-kjp-wide);     background: rgba(2,136,209,0.12); }
 .sig-badge.T_Claude_Sharp { color: #f48fb1;               border-color: var(--t-claude-sharp); background: rgba(173,20,87,0.15); }
 .sig-badge.T_Claude_Wide  { color: #ce93d8;               border-color: var(--t-claude-wide);  background: rgba(171,71,188,0.12); }
+.sig-badge.A              { color: #ffe066;               border-color: var(--sig-a);         background: rgba(252,196,25,0.14); font-weight: 900; }
 
 /* ============ SPREADSHEET (Portfolio / Trade history) ============ */
 .tabs-row { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
@@ -3588,18 +3593,34 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .ops-auto input[type=time] { width: auto; min-width: 118px; }
 .ops-auto .chain { font-size: 11px; color: var(--text-mute); }
 .ops-list.ops-mo { display: none; flex-direction: column; }
-.ops-item { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.ops-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); touch-action: pan-y; }
 .ops-item:last-child { border-bottom: none; }
-.ops-item .r1 { display: flex; align-items: center; gap: 10px; }
-.ops-item .r1 .num { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.08); color: var(--text-mute); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex: none; }
-.ops-item .r1 .nm { flex: 1; font-weight: 700; color: var(--text-hi); font-size: 16px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ops-item .r2 { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 12px; color: var(--text-mute); margin: 5px 0 9px 32px; }
-.ops-item .r3 { display: flex; align-items: center; gap: 6px; margin-left: 32px; }
-.ops-item .r3 .ops-auto { flex: 1; min-width: 0; }
-.ops-item .r3 .mv { background: none; border: 1px solid var(--line); color: var(--text-mute); border-radius: 6px; font-size: 11px; padding: 4px 8px; }
-.ops-item .r3 .mv:disabled { opacity: .3; }
-.ops-item .r3 .lg { background: none; border: 1px solid var(--line); color: var(--text-mute); border-radius: 6px; font-size: 11px; padding: 4px 8px; }
-.ops-item .r3 .lg:disabled { opacity: .3; }
+.ops-item.dragging { opacity: .4; }
+.ops-item .ic { width: 42px; height: 42px; border-radius: 10px; background: rgba(255,255,255,.06); display: inline-flex; align-items: center; justify-content: center; color: var(--text); flex: none; }
+.ops-item .ic svg { width: 20px; height: 20px; }
+.ops-item .ic.us { background: rgba(224,49,49,.14); color: #ff8787; } .ops-item .ic.kr { background: rgba(28,126,214,.14); color: #74c0fc; }
+.ops-item .mid { flex: 1; min-width: 0; }
+.ops-item .meta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ops-item .meta .dot { width: 7px; height: 7px; border-radius: 50%; background: #495057; flex: none; }
+.ops-item .meta .dot.ok { background: #40c057; } .ops-item .meta .dot.warn { background: #fab005; } .ops-item .meta .dot.fail { background: #ff6b6b; } .ops-item .meta .dot.run { background: #4dabf7; }
+.ops-item .nm { font-weight: 700; color: var(--text-hi); font-size: 15px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ops-item .sub { font-size: 11px; color: var(--text-mute); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ops-item .meta .ops-prog { width: 110px; height: 5px; }
+.ops-item .act { display: flex; align-items: center; gap: 6px; flex: none; }
+.ops-item .grip { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; color: var(--text-mute); cursor: grab; touch-action: none; }
+.ops-item .grip svg { width: 18px; height: 18px; }
+.ops-ic.cfg { color: var(--text-mute); background: rgba(255,255,255,.06); border: 1px solid var(--line); width: 24px; height: 24px; }
+.ops-ic.cfg svg { width: 12px; height: 12px; }
+.ops-sheet-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 1200; }
+.ops-sheet { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 1201; background: var(--panel, #1c1c1e); border-radius: 18px 18px 0 0; padding: 10px 18px calc(22px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 30px rgba(0,0,0,.5); }
+.ops-sheet.open, .ops-sheet-bg.open { display: block; }
+.ops-sheet-grip { width: 38px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.2); margin: 0 auto 14px; }
+.ops-sheet-title { font-size: 17px; font-weight: 800; color: var(--text-hi); }
+.ops-sheet-meta { font-size: 12px; color: var(--text-mute); margin: 4px 0 14px; }
+.ops-sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+.ops-sheet-row .lbl { font-size: 13px; color: var(--text); font-weight: 600; }
+.ops-sheet-actions { display: flex; gap: 8px; margin-top: 14px; }
+.ops-sheet-actions .btn { flex: 1; padding: 10px 0; font-size: 13px; }
 .ops-badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; background: rgba(255,255,255,.08); color: var(--text-mute); margin-left: 6px; vertical-align: middle; }
 .ops-badge.saved { color: #40c057; } .ops-badge.local { color: #fab005; }
 .ops-note { font-size: 11px; color: var(--text-mute); margin-top: 8px; line-height: 1.5; }
@@ -3615,13 +3636,18 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .aq-switch input:checked + .sl { background: #e03131; } .aq-switch input:checked + .sl:before { transform: translateX(18px); }
 @media (max-width: 1024px) {
   .ops-table-wrap.ops-pc { display: none; } .ops-list.ops-mo { display: flex; }
-  .ops-ic.run, .ops-ic.gear { width: 30px; height: 30px; } .ops-ic.run svg, .ops-ic.gear svg { width: 14px; height: 14px; }
-  .ops-ic.play { width: 22px; height: 22px; } .ops-ic.play svg { width: 9px; height: 9px; }
+  .ops-ic.run, .ops-ic.gear { width: 24px; height: 24px; } .ops-ic.run svg, .ops-ic.gear svg { width: 11px; height: 11px; }
+  .ops-ic.play { width: 24px; height: 24px; } .ops-ic.play svg { width: 9px; height: 9px; }
+  .ops-ic.stop { width: 24px; height: 24px; }
   .ops-auto select, .ops-auto input[type=time] { font-size: 12px !important; height: 30px; line-height: 1; padding: 0 6px; box-sizing: border-box; }
   .ops-auto input[type=time] { min-width: 104px; -webkit-appearance: none; appearance: none; }
   .ops-auto input[type=time]::-webkit-date-and-time-value { font-size: 12px; text-align: left; }
+  .ops-chips { margin-bottom: 4px; width: 100%; }
+  .ops-settings { flex-direction: column; align-items: flex-start; }
   #opsKrCard { margin-top: 24px; }
   #opsKrCard::before { content: ""; display: block; height: 10px; background: #0b0b0c; margin: -16px calc(50% - 50vw) 24px calc(50% - 50vw); }
+  [data-theme="light"] #opsKrCard::before { background: rgba(0,0,0,.06); }
+}
   [data-theme="light"] #opsKrCard::before { background: rgba(0,0,0,.06); }
   #opsUsCard .card-header h2, #opsKrCard .card-header h2, #autoSignalCard .card-header h2 { font-size: 19px; }
   .ops-settings { flex-direction: column; align-items: flex-start; }
@@ -7879,8 +7905,8 @@ table.combo-eval tbody td .nodata {
         <span class="toggle-icon">▼</span>
       </div>
       <div class="card-body">
-        <div class="ops-chips" id="opsChips_us"></div>
         <div class="ops-settings" id="opsSettings_us">
+          <div class="ops-chips" id="opsChips_us"></div>
           <div class="ops-dow" id="opsDow_us"></div>
           <div class="ops-cond" id="opsCond_us">
             <label><input type="checkbox" data-cond="skipHoliday" onchange="aqOpsChanged('us')"> 휴장일 건너뜀</label>
@@ -7908,8 +7934,8 @@ table.combo-eval tbody td .nodata {
         <span class="toggle-icon">▼</span>
       </div>
       <div class="card-body">
-        <div class="ops-chips" id="opsChips_kr"></div>
         <div class="ops-settings" id="opsSettings_kr">
+          <div class="ops-chips" id="opsChips_kr"></div>
           <div class="ops-dow" id="opsDow_kr"></div>
           <div class="ops-cond" id="opsCond_kr">
             <label><input type="checkbox" data-cond="skipHoliday" onchange="aqOpsChanged('kr')"> 휴장일 건너뜀</label>
@@ -7942,6 +7968,22 @@ table.combo-eval tbody td .nodata {
         <div class="ops-note">켜진 신호를 하나라도 가진 아카이브 행이 매수 대상. 각 신호 아래 숫자는 최근 60일 실현 성과(건수 · 5일 양수율 · 평균). V_Vol은 V_Main의 부분집합이라 제외.</div>
       </div>
     </section>
+
+    <!-- 운영(MO): 작업별 설정 바텀시트 -->
+    <div class="ops-sheet-bg" id="opsSheetBg" onclick="aqOpsSheetClose()"></div>
+    <div class="ops-sheet" id="opsSheet">
+      <div class="ops-sheet-grip"></div>
+      <div class="ops-sheet-title" id="opsSheetTitle">작업</div>
+      <div class="ops-sheet-meta" id="opsSheetMeta"></div>
+      <div class="ops-sheet-row"><span class="lbl">자동 실행</span>
+        <span class="ops-auto"><select id="opsSheetMode" onchange="aqOpsSheetModeChange()"><option value="off">끔</option><option value="time">시각</option><option value="chain">연속</option></select>
+        <input type="time" id="opsSheetTime" onchange="aqOpsSheetSave()"><span class="chain" id="opsSheetTz"></span></span></div>
+      <div class="ops-sheet-actions">
+        <button class="btn sm" id="opsSheetRun" onclick="aqOpsSheetRun()">▶ 지금 실행</button>
+        <button class="btn sm secondary" id="opsSheetLog" onclick="aqOpsSheetLog()">로그 보기</button>
+        <button class="btn sm secondary" id="opsSheetStop" onclick="aqOpsSheetStop()">■ 중단</button>
+      </div>
+    </div>
 
     <!-- 운영: 로그 모달 -->
     <div class="modal-overlay" id="opsLogModal" onclick="if(event.target===this)aqOpsCloseLog()">
@@ -8654,7 +8696,7 @@ const SIGNAL_GROUPS = [
 // v2.35: V1 시그널 체계 (옛 V_Shape_Archive 시트 호환)
 //   US 시장 + vshapeVersion='V1' 일 때 사용. T_*가 4개로 세분화 (KJP/Claude × Sharp/Wide)
 // ============================================================================
-const SIGNAL_TYPES_V1 = ['V_Main','V_Panic','V_Vol','T_KJP_Sharp','T_KJP_Wide','T_Claude_Sharp','T_Claude_Wide'];
+const SIGNAL_TYPES_V1 = ['V_Main','V_Panic','V_Vol','T_KJP_Sharp','T_KJP_Wide','T_Claude_Sharp','T_Claude_Wide','A'];   // v4.85: A 추가
 const SIGNAL_COLORS_V1 = {
   'V_Main':         '#fa5252',
   'V_Panic':        '#b71c1c',
@@ -8663,6 +8705,7 @@ const SIGNAL_COLORS_V1 = {
   'T_KJP_Wide':     '#0288d1',
   'T_Claude_Sharp': '#ad1457',
   'T_Claude_Wide':  '#ab47bc',
+  'A':              '#fcc419',   // v4.85
 };
 const SIGNAL_SHAPE_V1 = {
   'V_Main':         'circle',
@@ -8672,12 +8715,14 @@ const SIGNAL_SHAPE_V1 = {
   'T_KJP_Wide':     'rectRot',
   'T_Claude_Sharp': 'star',
   'T_Claude_Wide':  'crossRot',
+  'A':              'rectRounded',   // v4.85
 };
 const SIGNAL_GROUPS_V1 = [
   { key: 'V', label: 'V 알고리즘',
     core: ['V_Main', 'V_Vol'],     sub: ['V_Panic'] },
   { key: 'T', label: 'Tree 알고리즘',
     core: ['T_KJP_Sharp', 'T_Claude_Sharp'], sub: ['T_KJP_Wide', 'T_Claude_Wide'] },
+  { key: 'A', label: 'A 신호', core: ['A'], sub: [] },   // v4.85
 ];
 
 // ============================================================================
@@ -8726,6 +8771,7 @@ const AQ_SIGNAL_SHAPE_ALL  = Object.assign({}, SIGNAL_SHAPE_V1, SIGNAL_SHAPE);
 const AQ_SIGNAL_GROUPS_ALL = [
   { key: 'V', label: 'V 알고리즘', core: ['V_Main', 'V_Vol'], sub: ['V_Panic'] },
   { key: 'T', label: 'Tree 알고리즘', core: ['T', 'T_KJP_Sharp', 'T_Claude_Sharp'], sub: ['T_KJP_Wide', 'T_Claude_Wide'] },
+  { key: 'A', label: 'A 신호', core: ['A'], sub: [] },
 ];
 function _isAllMode() { return getCurrentMarket() === 'US' && _state && _state.vshapeVersion === 'ALL'; }
 function getSignalTypes()  {
@@ -19586,9 +19632,9 @@ async function openChart(ticker) {
   if (tf !== '1Y') {
     // v2.35: V1 모드면 4개 T_*, 그 외 T 하나
     const priority = _isAllMode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'A', 'T', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
       : _isV1Mode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'A', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
       : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
       const dateStr = normalizeDate(r.Date);
@@ -23069,9 +23115,9 @@ function aqBuildFeedChartData(tk, tf) {
   getSignalTypes().forEach(sx => sigMarkersByType[sx] = []);
   if (tf !== '1Y') {
     const priority = _isAllMode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'A', 'T', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
       : _isV1Mode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
+      ? ['V_Panic', 'V_Vol', 'V_Main', 'A', 'T_Claude_Sharp', 'T_Claude_Wide', 'T_KJP_Sharp', 'T_KJP_Wide']
       : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === tk).forEach(r => {
       const dateStr = normalizeDate(r.Date);
@@ -23853,20 +23899,29 @@ window.closeModalIfOverlay = closeModalIfOverlay;
 // ============================================================================
 const AQ_OPS_JOBS = {
   us: [
-    { id: 'us_sheets',   name: '시트 동기화',          desc: 'US 마스터 시트(유니버스·섹터 계층·정의서) + 정량 보고서 → 서버', auto: { mode: 'time',  time: '16:08' } },
-    { id: 'us_collect',  name: '시세·지표 수집',      desc: '500종목 일봉 + 피처 재구축',          auto: { mode: 'chain' } },
-    { id: 'us_signal',   name: 'V-Shape 신호 스캔',   desc: 'V + Tree 점수 → 아카이브',           auto: { mode: 'chain' }, scanDays: true },
-    { id: 'us_sector',   name: '섹터·매크로 갱신',     desc: '앱 섹터 탭·매크로 바 데이터',         auto: { mode: 'chain' } },
-    { id: 'us_calendar', name: '실적·내부자 캘린더',   desc: 'EDGAR 실적일 · Form 4 · 13F · FOMC', auto: { mode: 'time',  time: '18:00' } },
-    { id: 'us_daily',    name: '공매도·밸류에이션',    desc: 'FINRA 공매도 · P/E·PEG 밸류 점수',   auto: { mode: 'chain' } },
-    { id: 'us_hexagon',  name: 'HEXAGON 6축 점수',    desc: '종목별 6축 종합 점수',               auto: { mode: 'chain' } },
+    { id: 'us_sheets', icon: 'sheets',   name: '시트 동기화',          desc: 'US 마스터 시트(유니버스·섹터 계층·정의서) + 정량 보고서 → 서버', auto: { mode: 'time',  time: '16:08' } },
+    { id: 'us_collect', icon: 'collect',  name: '시세·지표 수집',      desc: '500종목 일봉 + 피처 재구축',          auto: { mode: 'chain' } },
+    { id: 'us_signal', icon: 'signal',   name: 'V-Shape 신호 스캔',   desc: 'V + Tree 점수 → 아카이브',           auto: { mode: 'chain' }, scanDays: true },
+    { id: 'us_sector', icon: 'sector',   name: '섹터·매크로 갱신',     desc: '앱 섹터 탭·매크로 바 데이터',         auto: { mode: 'chain' } },
+    { id: 'us_calendar', icon: 'calendar', name: '실적·내부자 캘린더',   desc: 'EDGAR 실적일 · Form 4 · 13F · FOMC', auto: { mode: 'time',  time: '18:00' } },
+    { id: 'us_daily', icon: 'daily',    name: '공매도·밸류에이션',    desc: 'FINRA 공매도 · P/E·PEG 밸류 점수',   auto: { mode: 'chain' } },
+    { id: 'us_hexagon', icon: 'hexagon',  name: 'HEXAGON 6축 점수',    desc: '종목별 6축 종합 점수',               auto: { mode: 'chain' } },
   ],
   kr: [
-    { id: 'kr_sheets',   name: '시트 동기화',          desc: 'KR 마스터 시트(유니버스·섹터) → 서버', auto: { mode: 'time',  time: '18:08' } },
-    { id: 'kr_collect',  name: '시세·수급 수집',      desc: 'KRX 일봉 + 외국인·기관 수급',         auto: { mode: 'chain' }, supply: true },
-    { id: 'kr_sector',   name: '섹터 갱신',           desc: '앱 KR 섹터 탭 데이터',               auto: { mode: 'chain' } },
-    { id: 'kr_signal',   name: 'V-Shape 신호 스캔',   desc: 'V + KOR Tree → 아카이브',            auto: { mode: 'chain' }, scanDays: true },
+    { id: 'kr_sheets', icon: 'sheets',   name: '시트 동기화',          desc: 'KR 마스터 시트(유니버스·섹터) → 서버', auto: { mode: 'time',  time: '18:08' } },
+    { id: 'kr_collect', icon: 'collect',  name: '시세·수급 수집',      desc: 'KRX 일봉 + 외국인·기관 수급',         auto: { mode: 'chain' }, supply: true },
+    { id: 'kr_sector', icon: 'sector',   name: '섹터 갱신',           desc: '앱 KR 섹터 탭 데이터',               auto: { mode: 'chain' } },
+    { id: 'kr_signal', icon: 'signal',   name: 'V-Shape 신호 스캔',   desc: 'V + KOR Tree → 아카이브',            auto: { mode: 'chain' }, scanDays: true },
   ],
+};
+const AQ_OPS_ICON = {
+  sheets:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>',
+  collect:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>',
+  signal:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+  sector:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
+  calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  daily:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-6"/></svg>',
+  hexagon:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2l8.7 5v10L12 22l-8.7-5V7z"/></svg>',
 };
 const AQ_OPS_TZ = { us: 'America/New_York', kr: 'Asia/Seoul' };
 const AQ_OPS_TZ_LABEL = { us: 'ET', kr: 'KST' };
@@ -23921,30 +23976,31 @@ async function aqOpsLoadCfg() {
 }
 function _opsBadge() {}
 function aqOpsChanged(mk) {
-  // DOM → cfg
   const cfg = _ops.cfg[mk];
   const mobile = window.matchMedia('(max-width: 1024px)').matches;
-  const root = mobile ? `#opsList_${mk} .ops-item` : `#opsBody_${mk} tr`;
-  cfg.order = [...document.querySelectorAll(`${root}[data-job]`)].map(tr => tr.dataset.job);
-  cfg.order.forEach(id => {
-    const tr = document.querySelector(`${root}[data-job="${id}"]`); if (!tr) return;
-    const mode = tr.querySelector('.auto-mode').value; const time = tr.querySelector('.auto-time').value;
-    cfg.jobs[id] = { mode, time: mode === 'time' ? time : (cfg.jobs[id].time || '') };
-  });
+  if (!mobile) {
+    cfg.order = [...document.querySelectorAll(`#opsBody_${mk} tr[data-job]`)].map(tr => tr.dataset.job);
+    cfg.order.forEach(id => {
+      const tr = document.querySelector(`#opsBody_${mk} tr[data-job="${id}"]`); if (!tr) return;
+      const mode = tr.querySelector('.auto-mode').value; const time = tr.querySelector('.auto-time').value;
+      cfg.jobs[id] = { mode, time: mode === 'time' ? time : (cfg.jobs[id].time || '') };
+    });
+  }
   cfg.dow = [...document.querySelectorAll(`#opsDow_${mk} input`)].filter(i => i.checked).map(i => parseInt(i.dataset.dow, 10));
   document.querySelectorAll(`#opsCond_${mk} input[data-cond]`).forEach(i => { cfg.cond[i.dataset.cond] = i.checked; });
+  _opsPersist(mk);
+  aqOpsRenderTable(mk, true);
+}
+function _opsPersist(mk) {
+  const cfg = _ops.cfg[mk];
   const local = _opsLocal(); local[mk] = cfg; try { localStorage.setItem(AQ_OPS_LSKEY, JSON.stringify(local)); } catch (e) {}
-  _opsBadge(mk, 'saving');
   clearTimeout(_ops.saveTimer[mk]);
   _ops.saveTimer[mk] = setTimeout(async () => {
     const all = _opsLocal();
     const r = await _opsCall('saveConfig', { key: 'ops.schedule', value: JSON.stringify({ us: all.us || _ops.cfg.us, kr: all.kr || _ops.cfg.kr }) });
-    if (r && r.ok) _opsBadge(mk, 'saved');
-    else if (r && r.notReady) _opsBadge(mk, 'local');
-    else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) _opsBadge(mk, 'local', '저장 실패 — 로그인 필요');
-    else _opsBadge(mk, 'local', '저장 실패: ' + (r && r.error || ''));
+    if (r && !r.ok && typeof handlePasswordError === 'function' && !r.notReady) handlePasswordError(r);
+    aqOpsRenderTable(mk, true);
   }, 800);
-  aqOpsRenderTable(mk, true);
 }
 
 // ---------- 렌더 ----------
@@ -24007,26 +24063,78 @@ function aqOpsRenderTable(mk, keepValues) {
     btn.innerHTML = anyActive ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>' : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg>';
     btn.onclick = anyActive ? () => aqOpsCancel('all_' + mk) : () => aqOpsRunAll(mk);
   }
-  // ---- MO list ----
+  // ---- MO list (playlist style) ----
   const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l12 8-12 8z"/></svg>';
+  const STOPI = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>';
+  const GEAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+  const GRIP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
   const list = document.getElementById('opsList_' + mk);
   if (list) list.innerHTML = cfg.order.map((id, idx) => {
     const def = _opsJobDef(id); const a = cfg.jobs[id]; const run = _ops.runs[id] || {};
-    const dis = _ops.serverOk === false ? 'disabled' : '';
     const prev = idx > 0 ? _opsJobDef(cfg.order[idx - 1]) : null;
-    const status = (run.running || run.queued) ? _opsResultHtml(def, run) : (run.last_run_at ? `<span>${_opsFmtTime(run.last_run_at)}</span><span>·</span>${_opsResultHtml(def, run)}${run.last_duration != null ? `<span>· ${_opsFmtDur(run.last_duration)}</span>` : ''}` : '<span>실행 기록 없음</span>');
+    let meta, dot = '';
+    if (run.running) { const p = (run.progress != null && run.progress >= 0) ? Math.min(100, run.progress) : null; meta = p != null ? `<span class="ops-prog det"><i style="width:${p}%"></i></span><span>${p}%</span>` : `<span class="ops-prog"><i></i></span><span>실행 중</span>`; dot = 'run'; }
+    else if (run.queued) { meta = `<span>대기 중${run.position ? ` (${run.position}번째)` : ''}</span>`; }
+    else if (run.last_run_at) {
+      dot = run.last_status === 'success' ? 'ok' : run.last_status === 'warn' ? 'warn' : run.last_status === 'failed' ? 'fail' : '';
+      const sp = (def.supply && run.supply) ? (run.supply.total && run.supply.got < run.supply.total ? ` · 수급 ${run.supply.got}/${run.supply.total}` : '') : '';
+      meta = `<span>${_opsFmtTime(run.last_run_at)}</span>${run.last_duration != null ? `<span>· ${_opsFmtDur(run.last_duration)}</span>` : ''}${run.summary ? `<span>· ${_esc(run.summary)}</span>` : ''}${sp ? `<span>${sp}</span>` : ''}`;
+    } else meta = '<span>실행 기록 없음</span>';
+    const autoTxt = a.mode === 'time' ? `자동 ${a.time || '--:--'} ${AQ_OPS_TZ_LABEL[mk]}` : a.mode === 'chain' ? `연속 · ${prev ? _esc(prev.name) : '—'} 뒤` : '자동 끔';
+    const active = run.running || run.queued;
     return `<div class="ops-item" data-job="${id}">
-      <div class="r1"><span class="num">${idx + 1}</span><span class="nm">${_esc(def.name)}</span>${(run.running || run.queued) ? `<button class="ops-ic stop ${run.running ? 'spin' : ''}" title="중단" onclick="aqOpsCancel('${id}')"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></button>` : `<button class="ops-ic play" ${dis} title="실행" onclick="aqOpsRun('${id}')">${PLAY}</button>`}</div>
-      <div class="r2 ops-res">${status}</div>
-      <div class="r3"><span class="ops-auto">
-        <select class="auto-mode" onchange="aqOpsChanged('${mk}')"><option value="off" ${a.mode === 'off' ? 'selected' : ''}>끔</option><option value="time" ${a.mode === 'time' ? 'selected' : ''}>시각</option><option value="chain" ${a.mode === 'chain' ? 'selected' : ''} ${idx === 0 ? 'disabled' : ''}>연속</option></select>
-        <input type="time" class="auto-time" value="${a.time || ''}" ${a.mode === 'time' ? '' : 'style="display:none"'} onchange="aqOpsChanged('${mk}')">
-        ${a.mode === 'time' ? `<span class="chain">${AQ_OPS_TZ_LABEL[mk]}</span>` : ''}${a.mode === 'chain' ? `<span class="chain">↳ ${prev ? _esc(prev.name) : '—'} 뒤</span>` : ''}
-      </span>
-        <button class="mv" ${idx === 0 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',-1)">▲</button><button class="mv" ${idx === n - 1 ? 'disabled' : ''} onclick="aqOpsMove('${mk}','${id}',1)">▼</button><button class="lg" ${run.last_run_id ? '' : 'disabled'} onclick="aqOpsShowLog('${id}')">로그</button></div>
+      <div class="ic ${mk}">${AQ_OPS_ICON[def.icon] || AQ_OPS_ICON.collect}</div>
+      <div class="mid" onclick="aqOpsSheetOpen('${mk}','${id}')"><div class="meta">${dot !== '' || !active ? `<span class="dot ${dot}"></span>` : ''}${meta}</div><div class="nm">${_esc(def.name)}</div><div class="sub">${autoTxt}</div></div>
+      <div class="act"><span class="grip" data-grip="${id}">${GRIP}</span>${active ? `<button class="ops-ic stop ${run.running ? 'spin' : ''}" title="중단" onclick="aqOpsCancel('${id}')">${STOPI}</button>` : `<button class="ops-ic play" title="실행" onclick="aqOpsRun('${id}')">${PLAY}</button>`}<button class="ops-ic cfg" title="설정" onclick="aqOpsSheetOpen('${mk}','${id}')">${GEAR}</button></div>
     </div>`;
   }).join('');
+  if (list) _opsBindTouchDrag(list, mk);
 }
+// ---- MO: touch drag reorder via grip ----
+function _opsBindTouchDrag(list, mk) {
+  list.querySelectorAll('.grip').forEach(g => {
+    g.onpointerdown = (e) => {
+      e.preventDefault(); const item = g.closest('.ops-item'); const id = item.dataset.job; item.classList.add('dragging'); g.setPointerCapture(e.pointerId);
+      const move = (ev) => {
+        const items = [...list.querySelectorAll('.ops-item')]; const y = ev.clientY;
+        for (const other of items) {
+          if (other === item) continue; const r = other.getBoundingClientRect();
+          if (y < r.top + r.height / 2 && other.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_FOLLOWING) { list.insertBefore(item, other); break; }
+          if (y > r.top + r.height / 2 && other.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_PRECEDING) { list.insertBefore(item, other.nextSibling); break; }
+        }
+      };
+      const up = () => { item.classList.remove('dragging'); g.onpointermove = null; g.onpointerup = null; g.onpointercancel = null; _ops.cfg[mk].order = [...list.querySelectorAll('.ops-item')].map(x => x.dataset.job); aqOpsChanged(mk); };
+      g.onpointermove = move; g.onpointerup = up; g.onpointercancel = up;
+    };
+  });
+}
+// ---- MO: per-job bottom sheet ----
+const _sheet = { mk: null, id: null };
+function aqOpsSheetOpen(mk, id) {
+  const def = _opsJobDef(id); const a = _ops.cfg[mk].jobs[id]; const run = _ops.runs[id] || {}; const idx = _ops.cfg[mk].order.indexOf(id);
+  _sheet.mk = mk; _sheet.id = id;
+  document.getElementById('opsSheetTitle').textContent = def.name;
+  document.getElementById('opsSheetMeta').textContent = run.last_run_at ? `마지막 실행 ${_opsFmtTime(run.last_run_at)} · ${run.last_status === 'success' ? '성공' : run.last_status === 'warn' ? '경고' : run.last_status === 'failed' ? '실패' : run.last_status || ''}${run.last_duration != null ? ' · ' + _opsFmtDur(run.last_duration) : ''}` : '실행 기록 없음';
+  const sel = document.getElementById('opsSheetMode'); sel.value = a.mode; sel.querySelector('option[value="chain"]').disabled = idx === 0;
+  const t = document.getElementById('opsSheetTime'); t.value = a.time || ''; t.style.display = a.mode === 'time' ? '' : 'none';
+  document.getElementById('opsSheetTz').textContent = a.mode === 'time' ? AQ_OPS_TZ_LABEL[mk] : (a.mode === 'chain' && idx > 0 ? `↳ ${_opsJobDef(_ops.cfg[mk].order[idx - 1]).name} 뒤` : '');
+  document.getElementById('opsSheetLog').disabled = !run.last_run_id;
+  document.getElementById('opsSheetRun').style.display = (run.running || run.queued) ? 'none' : '';
+  document.getElementById('opsSheetStop').style.display = (run.running || run.queued) ? '' : 'none';
+  document.getElementById('opsSheet').classList.add('open'); document.getElementById('opsSheetBg').classList.add('open');
+}
+function aqOpsSheetClose() { document.getElementById('opsSheet').classList.remove('open'); document.getElementById('opsSheetBg').classList.remove('open'); }
+function aqOpsSheetModeChange() { const m = document.getElementById('opsSheetMode').value; document.getElementById('opsSheetTime').style.display = m === 'time' ? '' : 'none'; aqOpsSheetSave(); }
+function aqOpsSheetSave() {
+  if (!_sheet.id) return; const cfg = _ops.cfg[_sheet.mk]; const m = document.getElementById('opsSheetMode').value;
+  cfg.jobs[_sheet.id] = { mode: m, time: m === 'time' ? document.getElementById('opsSheetTime').value : (cfg.jobs[_sheet.id].time || '') };
+  const idx = cfg.order.indexOf(_sheet.id);
+  document.getElementById('opsSheetTz').textContent = m === 'time' ? AQ_OPS_TZ_LABEL[_sheet.mk] : (m === 'chain' && idx > 0 ? `↳ ${_opsJobDef(cfg.order[idx - 1]).name} 뒤` : '');
+  _opsPersist(_sheet.mk);
+}
+function aqOpsSheetRun() { const id = _sheet.id; aqOpsSheetClose(); aqOpsRun(id); }
+function aqOpsSheetLog() { aqOpsShowLog(_sheet.id); }
+function aqOpsSheetStop() { const id = _sheet.id; aqOpsSheetClose(); aqOpsCancel(id); }
 function aqOpsToggleSettings(mk) {
   const p = document.getElementById('opsSettings_' + mk); const g = document.getElementById('opsGear_' + mk);
   const open = p.classList.toggle('open'); if (g) g.classList.toggle('on', open);
@@ -24120,7 +24228,7 @@ async function aqOpsEnter() {
   await aqOpsLoadCfg(); aqOpsRenderTable('us'); aqOpsRenderTable('kr');
   await aqOpsRefresh();
 }
-Object.assign(window, { aqOpsEnter, aqOpsRefresh, aqOpsRun, aqOpsRunAll, aqOpsCancel, aqOpsShowLog, aqOpsCloseLog, aqOpsChanged, aqOpsMove, aqOpsDragStart, aqOpsDragOver, aqOpsDragLeave, aqOpsDrop, aqOpsDragEnd, aqOpsToggleSettings });
+Object.assign(window, { aqOpsSheetOpen, aqOpsSheetClose, aqOpsSheetModeChange, aqOpsSheetSave, aqOpsSheetRun, aqOpsSheetLog, aqOpsSheetStop, aqOpsEnter, aqOpsRefresh, aqOpsRun, aqOpsRunAll, aqOpsCancel, aqOpsShowLog, aqOpsCloseLog, aqOpsChanged, aqOpsMove, aqOpsDragStart, aqOpsDragOver, aqOpsDragLeave, aqOpsDrop, aqOpsDragEnd, aqOpsToggleSettings });
 
 // ============================================================================
 // 자동 페이지 — 신호 선택 (요건 구체화 전 최소 기능)
