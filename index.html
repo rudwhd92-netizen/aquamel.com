@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.11';   // v5.11: 자동 — 신호별 최근 20/40/60거래일 성적, 신호×종목 블랙리스트
+window.AQ_PWA_VERSION = '5.12';   // v5.12: 액면분할 보정 — 체결 이력 분할 반영, 내 주식은 토스 보유와 대조
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3765,6 +3765,12 @@ body[data-broker="linked"] #aqTossGateCard { display: none !important; }
 .auto-bl-form { display: none; width: 100%; align-items: center; gap: 6px; padding: 8px 0 2px 44px; font-size: 12px; color: var(--text); flex-wrap: wrap; }
 .auto-w-row.form .auto-bl-form { display: flex; }
 .auto-bl-form input { width: 56px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: rgba(255,255,255,.06); color: var(--text-hi); font-size: 14px !important; text-align: center; }
+/* v5.12: 분할 표시 */
+.pos-order-wrap { display: block !important; }
+.pos-order-line { display: flex; align-items: center; gap: 12px; } .pos-order-line .po-px { margin-left: auto; }
+.po-split { font-size: 11px; color: var(--text-mute); margin: 3px 0 0 0; padding-left: 0; }
+.po-split-chip { display: inline-block; margin-left: 6px; font-size: 10px; padding: 1px 6px; border-radius: 999px; border: 1px solid rgba(116,192,252,.5); color: #74c0fc; }
+.pos-toss-chip { display: inline-block; margin-left: 6px; font-size: 10px; padding: 1px 6px; border-radius: 999px; border: 1px solid rgba(99,230,190,.5); color: #63e6be; vertical-align: 1px; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -14977,7 +14983,11 @@ function openPositionPanel(tk) {
   const pos = (computePortfolioFromTrades(trades) || {})[tk] || { qty: 0, totalCost: 0, avg: 0 };
   let cur = 0;
   try { const fnd = findTickerSeries(tk); if (fnd && fnd.rows && fnd.rows.length) cur = Number(fnd.rows[fnd.rows.length - 1].Close) || 0; } catch (e) {}
-  const qty = pos.qty || 0, avg = pos.avg || 0, principal = pos.totalCost || 0;
+  let qty = pos.qty || 0, avg = pos.avg || 0, principal = pos.totalCost || 0;
+  // v5.12: 토스 보유와 다르면(분할·오래된 보유분) 현재 보유는 토스 기준
+  let _tossNote = '';
+  try { const th = JSON.parse(localStorage.getItem('aq_toss_holdings') || '{}')[getCurrentMarket() + ':' + tk];
+    if (th && th.qty > 0 && Math.abs(th.qty - qty) > 1e-6) { qty = th.qty; avg = th.avg || avg; principal = qty * avg; _tossNote = '<span class="pos-toss-chip">토스 기준</span>'; } } catch (e) {}
   const mktVal = qty * cur, pnl = mktVal - principal;
   const pnlPct = principal > 0 ? (pnl / principal * 100) : 0;
   const pnlCls = pnl > 1e-9 ? 'up' : (pnl < -1e-9 ? 'down' : 'zero');
@@ -14991,7 +15001,9 @@ function openPositionPanel(tk) {
       const act = (t.action === '매도') ? '판매' : '구매';
       const q = parseFloat(t.qty) || 0, px = parseFloat(t.price) || 0;
       const idAttr = t._id ? ` data-trade-id="${escapeAttr(t._id)}"` : '';
-      return `<div class="pos-order"${idAttr}><span class="po-date">${aqFmtPosDate(t.date)}</span><span class="po-act">${act} ${q}주</span><span class="po-px">주당 ${fmtMoney(px)}</span></div>`;
+      const sf = Number(t._splitF) || 1;
+      const splitSub = sf > 1.000001 || sf < 0.999999 ? `<div class="po-split">분할 전 ${parseFloat(t._rawQty) || 0}주 · 주당 ${fmtMoney(parseFloat(t._rawPrice) || 0)}<span class="po-split-chip">${sf >= 1 ? (+sf.toFixed(4)) + ':1' : '1:' + (+(1 / sf).toFixed(4))} 분할 반영</span></div>` : '';
+      return `<div class="pos-order pos-order-wrap"${idAttr}><div class="pos-order-line"><span class="po-date">${aqFmtPosDate(t.date)}</span><span class="po-act">${act} ${+q.toFixed(4)}주</span><span class="po-px">주당 ${fmtMoney(px)}</span></div>${splitSub}</div>`;
     }).join('') + `<div class="pos-orders-foot">길게 눌러 수정·삭제 · 모든 매매 내역을 불러왔어요</div>`;
   } else {
     ordersHtml = `<div class="pos-empty">주문 내역이 없습니다.</div>`;
@@ -14999,7 +15011,7 @@ function openPositionPanel(tk) {
   panel.innerHTML = `
     <div class="pos-back-row"><button class="report-back-btn" onclick="closePositionPanel()">← 차트로 돌아가기</button></div>
     <div class="pos-row"><div><div class="pos-label">1주 평균금액</div><div class="pos-avg-big">${fmtMoney(avg)}</div></div></div>
-    <div class="pos-row"><div class="pos-label">보유 수량</div><div class="pos-val"><span class="pos-main">${qty.toLocaleString()}주</span></div></div>
+    <div class="pos-row"><div class="pos-label">보유 수량 ${_tossNote}</div><div class="pos-val"><span class="pos-main">${qty.toLocaleString()}주</span></div></div>
     <div class="pos-row"><div class="pos-label">총 금액</div><div class="pos-val"><span class="pos-main">${fmtMoney(mktVal)}</span><div class="pos-pnl ${pnlCls}">${pnl >= 0 ? '+' : ''}${fmtMoney(pnl)} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%)</div></div></div>
     <div class="pos-row"><div class="pos-label">투자 원금</div><div class="pos-val"><span class="pos-main">${fmtMoney(principal)}</span></div></div>
     <div class="pos-actions"><button type="button" class="pos-sell" onclick="aqOpenTradeForm('매도')">매도</button><button type="button" class="pos-buy" onclick="aqOpenTradeForm('매수')">매수</button></div>
@@ -25238,9 +25250,12 @@ async function aqSyncLocalFromServer(silent) {
   (tr.trades || []).forEach(t => {
     const mk = t.market === 'KR' ? 'KR' : 'US'; const tk = String(t.symbol || '').toUpperCase();
     const d = (t.filled_at || t.ordered_at || '').slice(0, 10); if (!tk || !d) return;
-    const qty = Number(t.quantity) || 0; const isBuy = String(t.side).toUpperCase() === 'BUY';
+    // v5.12: 액면분할 보정값 사용 (원본은 _raw*로 보존)
+    const qty = Number(t.adj_quantity != null ? t.adj_quantity : t.quantity) || 0; const isBuy = String(t.side).toUpperCase() === 'BUY';
+    const px = Number(t.adj_price != null ? t.adj_price : t.price) || 0; const sf = Number(t.split_factor) || 1;
     const kst = (typeof _aqKST === 'function') ? _aqKST(t.filled_at || t.ordered_at) : null;
-    byMkt[mk].trades.push({ _id: t.order_id, date: kst ? kst.date : d, time: kst ? kst.time : '', ticker: tk, action: isBuy ? '매수' : '매도', qty, price: Number(t.price) || 0, fee: Number(t.commission) || 0, tax: Number(t.tax) || 0, sector: _aqSectorOf(tk), _src: 'toss' });
+    byMkt[mk].trades.push({ _id: t.order_id, date: kst ? kst.date : d, time: kst ? kst.time : '', ticker: tk, action: isBuy ? '매수' : '매도', qty, price: px, fee: Number(t.commission) || 0, tax: Number(t.tax) || 0, sector: _aqSectorOf(tk), _src: 'toss',
+      _splitF: sf, _rawQty: Number(t.quantity) || 0, _rawPrice: Number(t.price) || 0, _splitNotes: t.split_notes || [] });
     net[mk + ':' + tk] = (net[mk + ':' + tk] || 0) + (isBuy ? qty : -qty);
   });
   const earliest = {}; Object.keys(byMkt).forEach(mk => { byMkt[mk].trades.forEach(t => { if (!earliest[mk] || t.date < earliest[mk]) earliest[mk] = t.date; }); });
@@ -25253,6 +25268,9 @@ async function aqSyncLocalFromServer(silent) {
     }
   });
   Object.keys(byMkt).forEach(mk => { lsSet(lsKeyTrades(mk), byMkt[mk].trades); lsSet(lsKeyPF(mk), byMkt[mk].pf); });
+  // v5.12: 토스 보유(분할 후 기준) — 내 주식 화면 대조용
+  try { const th = {}; (hd.holdings || []).forEach(h => { th[(h.market === 'KR' ? 'KR' : 'US') + ':' + String(h.symbol || '').toUpperCase()] = { qty: Number(h.quantity) || 0, avg: Number(h.avg_price) || 0 }; });
+    localStorage.setItem('aq_toss_holdings', JSON.stringify(th)); localStorage.setItem('aq_split_mismatch', JSON.stringify(tr.split_mismatch || [])); } catch (e) {}
   _aqUD.loaded = true;
   try { if (typeof invalidateDashSim === 'function') invalidateDashSim(); } catch (e) {}
   try { if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.reload) tradesSheet.reload(); } catch (e) {}
