@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.89';   // v4.89: 발견 — 수익률 ±2% 조건 삭제, EMA 아카이브 제외, 라벨=실제 신호 이름
+window.AQ_PWA_VERSION = '4.91';   // v4.91: 금주의 발견 — 신호 유형 표시 제거
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3530,6 +3530,10 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 /* v4.78: 폐기 UI 숨김 — 섹터 FRAME, 매매이력(로그) 카드, V-Shape 버전 토글 */
 #sectorFrameworkCard, #myPortfolioCard, .vshape-ver-toggle, #modalVshapeVerWrap { display: none !important; }
 /* ===== v4.78: 운영 / 자동 페이지 컴포넌트 ===== */
+.buy-point-item .bp-type { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; max-width: 100%; }
+.bp-chip { display: inline-block; font-size: 9px; line-height: 1; padding: 3px 5px; border-radius: 8px; border: 1px solid var(--line); color: var(--text-mute); white-space: nowrap; }
+.bp-chip.sig-badge { font-size: 9px; padding: 3px 5px; }
+.bp-chip.bp-other { color: var(--text); background: rgba(255,255,255,.06); }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -23022,7 +23026,8 @@ function buildBuyPointsCard() {
         if (!P || isNaN(P) || P <= 0 || last == null || isNaN(last)) return null;
         return (last / P - 1) * 100;
       };
-      scrollEl.innerHTML = res.items.map(it => {
+      const _bpShown = Math.min(_state.bpShown || 20, res.items.length);   // v4.90: 처음 20개만, 더 보기로 확장
+      scrollEl.innerHTML = res.items.slice(0, _bpShown).map(it => {
         const sector = (_state.tickerSectorMap || {})[it.ticker] || '';
         const types = it.types || [];
         const r = (it.ret != null) ? Number(it.ret) : curRet(it.ticker, it.date);
@@ -23034,14 +23039,14 @@ function buildBuyPointsCard() {
             ${aqWrapLogo(aqLogoHtml(it.ticker, sector, 'bp-logo'), it.ticker)}
             <div class="bp-name" title="${escapeAttr(displayName(it.ticker))}">${escapeHtml(displayName(it.ticker))}</div>
             <div class="bp-sector" title="${escapeAttr(aqStripSectorEmoji(sector))}">${escapeHtml(aqStripSectorEmoji(sector) || '—')}</div>
-            <div class="bp-type">${escapeHtml(types.join(' · '))}</div>
+            <div class="bp-type"></div>
             ${retHtml}
           </div>`;
-      }).join('');
-      scrollEl.querySelectorAll('.buy-point-item').forEach(el => el.addEventListener('click', () => openChart(el.dataset.ticker)));
+      }).join('') + (res.items.length > _bpShown ? `<div class="buy-point-item bp-more" onclick="aqBpMore()"><div class="bp-name" style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-mute)">+ ${res.items.length - _bpShown}개 더 보기</div></div>` : '');
+      scrollEl.querySelectorAll('.buy-point-item:not(.bp-more)').forEach(el => el.addEventListener('click', () => openChart(el.dataset.ticker)));
     }
   }
-  try { buildDiscoverFeed(res); } catch (e) { console.warn('[feed]', e); }
+  try { buildDiscoverFeed(res, true); } catch (e) { console.warn('[feed]', e); }   // v4.90: 더 보기 때 피드 표시 수 유지
 }
 
 // v3.15: 인스타 피드형 SVG 아이콘
@@ -23193,6 +23198,8 @@ function aqFeedOpenReport(tk) {
 }
 window.aqFeedOpenReport = aqFeedOpenReport;
 
+function aqBpMore() { _state.bpShown = (_state.bpShown || 20) + 20; try { buildBuyPointsCard(); } catch (e) {} }
+window.aqBpMore = aqBpMore;
 function aqFeedMore() { _state.feedShown = (_state.feedShown || 10) + 10; buildDiscoverFeed(_state._feedRes, true); }
 window.aqFeedMore = aqFeedMore;
 
