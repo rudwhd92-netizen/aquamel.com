@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '4.99';   // v4.99: 토스 연동 게이트 — MO 마이·PC 보드에서 미연동이면 연동 화면 먼저, 연동 상태는 서버에 기억
+window.AQ_PWA_VERSION = '5.00';   // v5.00: 보유·매매이력·관심종목 = 서버(토스 동기화)만. 기기 저장·시트 사용자 데이터 경로 폐기 (계정 체계 3단계)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3004,6 +3004,8 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
   body[data-pc-page="settings"][data-role="admin"] #aqAdminCard { display: block !important; }
   body[data-pc-page="board"] #aqAccountCard { display: block !important; }
+  /* v5.00: 옛 사용자 데이터 입력 카드 영구 숨김 */
+  #myPortfolioCard { display: none !important; }
   /* v4.99: 토스 연동 게이트 — 연동 전엔 마이(MO)·보드(PC)에 게이트만 */
   body[data-pc-page="board"] #aqTossGateCard { display: block !important; }
   body[data-pc-page="board"]:not([data-broker="linked"]) .container > section.card:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
@@ -24551,7 +24553,7 @@ async function aqAuthTossLink() {
     const r = await apiCall('brokerLink', { app_key: k, app_secret: sct });
     if (!r || !r.ok) { err.textContent = (r && r.error) || '저장 실패'; return; }
     const t = await apiCall('brokerTest', {});
-    if (t && t.ok) { ok.textContent = '✅ 연결됨' + (t.account_label ? ' (' + t.account_label + ')' : '') + ' — 매매이력을 가져오는 중'; ok.style.display = ''; _aqAuth.broker = { status: 'linked', account_label: t.account_label }; apiCall('brokerSync', {}).then(r => { if (r && r.ok && typeof aqToast === 'function') aqToast(`토스 동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}`); _aqAuth.broker.last_sync = new Date().toISOString(); _aqRenderAccount(); }).catch(() => {}); }
+    if (t && t.ok) { ok.textContent = '✅ 연결됨' + (t.account_label ? ' (' + t.account_label + ')' : '') + ' — 매매이력을 가져오는 중'; ok.style.display = ''; _aqAuth.broker = { status: 'linked', account_label: t.account_label }; apiCall('brokerSync', {}).then(r => { if (r && r.ok && typeof aqToast === 'function') aqToast(`토스 동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}`); _aqAuth.broker.last_sync = new Date().toISOString(); _aqRenderAccount(); window.dispatchEvent(new Event('aq:synced')); }).catch(() => {}); }
     else { ok.textContent = '🔒 키 저장됨 — ' + ((t && t.error) || '연결 테스트는 다음 단계에서'); ok.style.display = ''; _aqAuth.broker = { status: 'pending' }; }
     document.getElementById('aqTossSecret').value = '';
     setTimeout(aqAuthFinish, 1200);
@@ -24562,7 +24564,7 @@ async function aqBrokerSyncNow() {
   const sb = document.getElementById('aqAcctSyncBtn'); if (sb) { sb.disabled = true; sb.textContent = '동기화 중…'; }
   try {
     const r = await apiCall('brokerSync', {});
-    if (r && r.ok) { if (typeof aqToast === 'function') aqToast(`동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}`); else alert(`동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}`); const me = await apiCall('me', {}); if (me && me.ok) _aqApplyUser(me.user, me.broker); }
+    if (r && r.ok) { if (typeof aqToast === 'function') aqToast(`동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}`); else alert(`동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}`); const me = await apiCall('me', {}); if (me && me.ok) _aqApplyUser(me.user, me.broker); window.dispatchEvent(new Event('aq:synced')); }
     else alert((r && r.error) || '동기화 실패');
   } catch (e) { alert('서버 연결 실패'); }
   finally { if (sb) { sb.disabled = false; sb.textContent = '지금 동기화'; } }
@@ -24584,7 +24586,7 @@ async function aqGateTossLink() {
     _aqAuth.broker = { status: 'linked', account_label: t.account_label };
     const sr = await apiCall('brokerSync', {}).catch(() => null);
     if (sr && sr.ok) { _aqAuth.broker.last_sync = new Date().toISOString(); if (typeof aqToast === 'function') aqToast(`토스 동기화 완료 · 보유 ${sr.holdings} / 체결 ${sr.trades}`); }
-    _aqRenderAccount();
+    _aqRenderAccount(); window.dispatchEvent(new Event('aq:synced'));
   } catch (e) { err.textContent = '서버 연결 실패'; }
   finally { btn.disabled = false; }
 }
@@ -24593,7 +24595,7 @@ function aqAuthTossFromMy() { _aqAuth.broker = null; _aqRenderAccount(); const g
 async function aqAuthLogout() {
   if (!confirm('로그아웃할까요?')) return;
   try { await apiCall('logout', {}); } catch (e) {}
-  _aqSetTok(''); _aqAuth.user = null; _aqAuth.broker = null; _aqSetRole('guest'); _aqRenderAccount(); aqAuthShow('login');
+  _aqSetTok(''); _aqAuth.user = null; _aqAuth.broker = null; _aqSetRole('guest'); _aqRenderAccount(); window.dispatchEvent(new Event('aq:logout')); aqAuthShow('login');
 }
 async function aqAuthChangePw() {
   const cur = prompt('현재 비밀번호'); if (cur === null) return;
@@ -24602,8 +24604,10 @@ async function aqAuthChangePw() {
   alert(r && r.ok ? '비밀번호가 바뀌었습니다' : ('실패: ' + (r && r.error || '')));
 }
 function _aqApplyUser(user, broker) {
+  const was = _aqAuth.user && _aqAuth.user.username;
   _aqAuth.user = user || null; _aqAuth.broker = broker || null; _aqSetRole(user ? user.role : 'guest'); _aqRenderAccount();
   if (user && user.role === 'admin') aqAdminRefresh();
+  if (user && was !== user.username) window.dispatchEvent(new Event('aq:login'));
 }
 function _aqRenderAccount() {
   _aqSetBroker(_aqAuth.broker && _aqAuth.broker.status === 'linked' ? 'linked' : (_aqAuth.broker ? _aqAuth.broker.status : 'none'));
@@ -24642,6 +24646,77 @@ async function aqAdminToggle(uid, st) {
   const r = await apiCall('userSetStatus', { user_id: uid, status: st });
   if (!r || !r.ok) alert('실패: ' + (r && r.error || '')); aqAdminRefresh();
 }
+
+// ============================================================================
+// v5.00: 계정 데이터 — 서버(토스 동기화 trades/holdings, user_data 관심종목)만 소스. 기기 저장·시트 경로 폐기
+// ============================================================================
+const _aqUD = { loaded: false, watchTimer: null, watchApplying: false };
+function _aqWipeLocalUserData() {
+  ['aquamel_vshape_portfolio', 'aquamel_vshape_portfolio_kr', 'aquamel_vshape_portfolio_us', 'aquamel_vshape_trades', 'aquamel_vshape_trades_kr', 'aquamel_vshape_trades_us',
+   'aquamel_vshape_user_id', 'aquamel_vshape_user_pwd_hash'].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
+}
+function _aqSectorOf(tk) { try { return (typeof getSectorForTicker === 'function' ? (getSectorForTicker(tk) || '') : ''); } catch (e) { return ''; } }
+// 서버 trades/holdings → 앱 내부 행 포맷(시장별) — 보유 잔량 중 체결 이력(최근 1년)으로 설명되지 않는 부분은 시드(PF)로
+async function aqSyncLocalFromServer(silent) {
+  if (!_aqAuth.user) return false;
+  let tr, hd;
+  try { [tr, hd] = await Promise.all([apiCall('myTrades', { limit: 1000 }), apiCall('myHoldings', {})]); } catch (e) { return false; }
+  if (!tr || !tr.ok || !hd || !hd.ok) return false;
+  _aqWipeLocalUserData();
+  const byMkt = { US: { trades: [], pf: [] }, KR: { trades: [], pf: [] } };
+  const net = {};
+  (tr.trades || []).forEach(t => {
+    const mk = t.market === 'KR' ? 'KR' : 'US'; const tk = String(t.symbol || '').toUpperCase();
+    const d = (t.filled_at || t.ordered_at || '').slice(0, 10); if (!tk || !d) return;
+    const qty = Number(t.quantity) || 0; const isBuy = String(t.side).toUpperCase() === 'BUY';
+    byMkt[mk].trades.push({ _id: t.order_id, date: d, ticker: tk, action: isBuy ? '매수' : '매도', qty, price: Number(t.price) || 0, fee: Number(t.commission) || 0, tax: Number(t.tax) || 0, sector: _aqSectorOf(tk), _src: 'toss' });
+    net[mk + ':' + tk] = (net[mk + ':' + tk] || 0) + (isBuy ? qty : -qty);
+  });
+  const earliest = {}; Object.keys(byMkt).forEach(mk => { byMkt[mk].trades.forEach(t => { if (!earliest[mk] || t.date < earliest[mk]) earliest[mk] = t.date; }); });
+  (hd.holdings || []).forEach(h => {
+    const mk = h.market === 'KR' ? 'KR' : 'US'; const tk = String(h.symbol || '').toUpperCase();
+    const q = Number(h.quantity) || 0; const explained = net[mk + ':' + tk] || 0; const seed = q - explained;
+    if (seed > 0.000001) {
+      const avg = Number(h.avg_price) || 0; const asof = earliest[mk] ? new Date(new Date(earliest[mk]).getTime() - 86400000).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
+      byMkt[mk].pf.push({ _id: 'seed:' + tk, ticker: tk, qty: seed, avgpx: avg, cost: seed * avg, sector: _aqSectorOf(tk), asof, mv: 0, _src: 'toss' });
+    }
+  });
+  Object.keys(byMkt).forEach(mk => { lsSet(lsKeyTrades(mk), byMkt[mk].trades); lsSet(lsKeyPF(mk), byMkt[mk].pf); });
+  _aqUD.loaded = true;
+  try { if (typeof invalidateDashSim === 'function') invalidateDashSim(); } catch (e) {}
+  try { if (typeof tradesSheet !== 'undefined' && tradesSheet && tradesSheet.reload) tradesSheet.reload(); } catch (e) {}
+  try { if (typeof portfolioSheet !== 'undefined' && portfolioSheet && portfolioSheet.reload) portfolioSheet.reload(); } catch (e) {}
+  try { if (typeof renderDashboard === 'function') renderDashboard(); } catch (e) {}
+  try { if (typeof aqRerenderSignalLists === 'function') aqRerenderSignalLists(); } catch (e) {}
+  try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
+  if (!silent && typeof aqToast === 'function') aqToast(`내 매매 데이터 반영 · 체결 ${(tr.trades || []).length} / 보유 ${(hd.holdings || []).length}`);
+  return true;
+}
+// 관심종목: 서버 user_data(WATCHLIST) ↔ 로컬 AqWatchStore 미러
+async function aqWatchLoadFromServer() {
+  if (!_aqAuth.user || !window.AqWatchStore) return;
+  try {
+    const r = await apiCall('userDataGet', { dataType: 'WATCHLIST' });
+    if (!r || !r.ok) return;
+    _aqUD.watchApplying = true;
+    try { AqWatchStore.replaceMarket('US', (r.rows || []).filter(x => x.market !== 'KR')); AqWatchStore.replaceMarket('KR', (r.rows || []).filter(x => x.market === 'KR')); }
+    finally { _aqUD.watchApplying = false; }
+  } catch (e) {}
+}
+function _aqWatchPushLater() {
+  if (_aqUD.watchApplying || !_aqAuth.user) return;
+  clearTimeout(_aqUD.watchTimer);
+  _aqUD.watchTimer = setTimeout(() => { try { apiCall('userDataSet', { dataType: 'WATCHLIST', rows: JSON.stringify(AqWatchStore.getAll()) }); } catch (e) {} }, 800);
+}
+if (window.AqWatchStore && AqWatchStore.subscribe) AqWatchStore.subscribe(_aqWatchPushLater);
+// 수동 입력 경로 차단 — 토스 동기화 데이터는 앱에서 고치지 않는다
+function _aqReadOnlyNotice() { const m = '매매이력은 토스증권 동기화로만 관리됩니다 (앱에서 수정 불가)'; if (typeof aqToast === 'function') aqToast(m); else alert(m); }
+['aqOpenTradeForm', 'aqDeleteTrade', 'aqConfirmDeleteTrade', 'saveUserDataToBackend', 'loadUserDataFromBackend'].forEach(fn => { window[fn] = _aqReadOnlyNotice; });
+// 로그인/동기화 후 자동 반영
+window.addEventListener('aq:login', () => { aqSyncLocalFromServer(true); aqWatchLoadFromServer(); });
+window.addEventListener('aq:synced', () => { aqSyncLocalFromServer(false); });
+window.addEventListener('aq:logout', () => { _aqWipeLocalUserData(); try { AqWatchStore.replaceMarket('US', []); AqWatchStore.replaceMarket('KR', []); } catch (e) {} try { invalidateDashSim(); renderDashboard(); } catch (e) {} });
+Object.assign(window, { aqSyncLocalFromServer, aqWatchLoadFromServer });
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
