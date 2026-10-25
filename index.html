@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.12';   // v5.12: 액면분할 보정 — 체결 이력 분할 반영, 내 주식은 토스 보유와 대조
+window.AQ_PWA_VERSION = '5.13';   // v5.13: 자동 시트 [제외] 버튼 정렬
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3761,9 +3761,9 @@ body[data-broker="linked"] #aqTossGateCard { display: none !important; }
 .auto-bl-row .btn, .auto-w-row > .btn { margin-left: 8px; flex: none; }
 .auto-sheet-sub { font-size: 11px; font-weight: 800; letter-spacing: .5px; color: var(--text-mute); margin: 4px 0 8px; }
 .auto-sheet-list { overflow-y: auto; max-height: 56vh; }
-.auto-w-row { flex-wrap: wrap; }
+.auto-w-row { flex-wrap: nowrap; align-items: center; } .auto-w-row .ia-meta { margin-left: auto; } .auto-w-row > .btn { align-self: center; min-width: 52px; }
 .auto-bl-form { display: none; width: 100%; align-items: center; gap: 6px; padding: 8px 0 2px 44px; font-size: 12px; color: var(--text); flex-wrap: wrap; }
-.auto-w-row.form .auto-bl-form { display: flex; }
+.auto-w-item.form .auto-bl-form { display: flex; } .auto-bl-form { padding: 0 4px 12px 52px !important; }
 .auto-bl-form input { width: 56px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: rgba(255,255,255,.06); color: var(--text-hi); font-size: 14px !important; text-align: center; }
 /* v5.12: 분할 표시 */
 .pos-order-wrap { display: block !important; }
@@ -24947,19 +24947,19 @@ function aqAutoOpenSheet(sig) {
   document.getElementById('autoSheetMeta').textContent = `평균 ${_autoFmtPct(st.avg)} · 승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건`;
   const list = (W && W.worst[sig]) || []; const bl = _auto.blacklist || [];
   document.getElementById('autoSheetList').innerHTML = list.length ? list.map(z => { const inBl = bl.find(b => b.signal === sig && b.ticker === z.ticker);
-    return `<div class="insider-archive-item auto-w-row" data-tk="${escapeAttr(z.ticker)}">
+    return `<div class="auto-w-item" data-tk="${escapeAttr(z.ticker)}"><div class="insider-archive-item auto-w-row">
       ${aqWrapLogo(_autoLogo(z.ticker), z.ticker)}
       <div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(z.ticker) || z.ticker)}</div><div class="ia-company">${escapeHtml(aqStripSectorEmoji((_state.tickerSectorMap || {})[z.ticker] || ''))}</div><div class="ia-sector">신호 ${z.n}건 · 최저 ${_autoFmtPct(z.worst)}</div></div>
       <div class="ia-meta"><div class="ia-pnl down">${_autoFmtPct(z.avg)}</div>${inBl ? `<div class="ia-shares">제외 중 · D-${inBl.remaining}</div>` : ''}</div>
-      ${inBl ? `<button class="btn sm secondary" onclick="aqAutoBlRemove('${sig}','${z.ticker}', true)">해제</button>` : `<button class="btn sm" onclick="aqAutoBlForm(this)">제외</button>`}
+      ${inBl ? `<button class="btn sm secondary" onclick="aqAutoBlRemove('${sig}','${z.ticker}', true)">해제</button>` : `<button class="btn sm" onclick="aqAutoBlForm(this)">제외</button>`}</div>
       <div class="auto-bl-form"><span>앞으로</span><input type="number" min="1" max="250" value="10" inputmode="numeric"><span>거래일 동안 자동매수 제외</span><button class="btn sm" onclick="aqAutoBlAdd('${sig}','${z.ticker}', this)">확인</button></div>
     </div>`; }).join('') : '<div class="auto-empty">이 기간에 평균 수익률이 마이너스인 종목이 없습니다.</div>';
   document.getElementById('autoSheet').classList.add('open'); document.getElementById('autoSheetBg').classList.add('open');
 }
 function aqAutoCloseSheet() { document.getElementById('autoSheet').classList.remove('open'); document.getElementById('autoSheetBg').classList.remove('open'); }
-function aqAutoBlForm(btn) { const row = btn.closest('.auto-w-row'); row.classList.toggle('form'); const i = row.querySelector('input'); if (i) i.focus(); }
+function aqAutoBlForm(btn) { const row = btn.closest('.auto-w-item'); row.classList.toggle('form'); const i = row.querySelector('input'); if (i) i.focus(); }
 async function aqAutoBlAdd(sig, tk, btn) {
-  const row = btn.closest('.auto-w-row'); const n = parseInt(row.querySelector('input').value, 10) || 10;
+  const row = btn.closest('.auto-w-item'); const n = parseInt(row.querySelector('input').value, 10) || 10;
   const r = await _opsCall('blacklistAdd', { signal: sig, ticker: tk, days: n });
   if (!r || !r.ok) { alert('실패: ' + ((r && r.error) || '')); return; }
   _auto.blacklist = r.blacklist || []; if (typeof aqToast === 'function') aqToast(`${tk} · ${sig} ${n}거래일 제외 (${String(r.until).slice(5).replace('-', '/')}까지)`);
