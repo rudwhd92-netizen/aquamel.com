@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.10';   // v5.10: 한눈에 보기 표 구분선(:----) 행 제외, 보고서 좌우 여백·카드 안쪽 여백 확대
+window.AQ_PWA_VERSION = '5.11';   // v5.11: 자동 — 신호별 최근 20/40/60거래일 성적, 신호×종목 블랙리스트
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3004,6 +3004,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
   body[data-pc-page="settings"][data-role="admin"] #aqAdminCard { display: block !important; }
   body[data-pc-page="settings"] #aqStampCard { display: block !important; }
+  body[data-pc-page="auto"] #autoBlacklistCard { display: block !important; }
   body[data-pc-page="board"] #aqAccountCard { display: block !important; }
   body[data-pc-page="board"] #aqTossGateCard { display: block !important; }
   body[data-pc-page="board"]:not([data-broker="linked"]) .container > section.card:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
@@ -3735,6 +3736,35 @@ body[data-broker="linked"] #aqTossGateCard { display: none !important; }
   .rv4-mobar { margin: 0 12px; border-radius: 14px; border: 1px solid var(--line); bottom: 8px; }
   .rv4-hero-op { margin: 18px 0 18px; }
 }
+/* ===== v5.11: 자동 ===== */
+.auto-seg { display: inline-flex; padding: 3px; border-radius: 10px; background: rgba(255,255,255,.06); border: 1px solid var(--line); gap: 2px; }
+.auto-seg button { border: none; background: none; color: var(--text-mute); font-weight: 800; font-size: 13px; padding: 7px 16px; border-radius: 8px; cursor: pointer; }
+.auto-seg button.on { background: #63e6be; color: #0b1a16; }
+.auto-meta { font-size: 11px; color: var(--text-mute); margin: 8px 0 14px; }
+.auto-head { display: grid; grid-template-columns: 1fr auto 52px; gap: 12px; font-size: 10px; letter-spacing: .6px; color: var(--text-mute); font-weight: 800; padding: 0 4px 6px 22px; border-bottom: 1px solid var(--line); }
+.auto-row { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--line); }
+.auto-row:last-child { border-bottom: none; }
+.auto-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.auto-mid { flex: 1; min-width: 0; cursor: pointer; }
+.auto-name { font-weight: 800; color: var(--text-hi); font-size: 14px; display: flex; align-items: center; gap: 6px; }
+.auto-bl-n { font-size: 10px; font-weight: 700; color: #ff8787; border: 1px solid rgba(255,107,107,.45); border-radius: 999px; padding: 1px 6px; }
+.auto-sub { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+.auto-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,.06); margin-top: 7px; overflow: hidden; }
+.auto-bar i { display: block; height: 100%; border-radius: 2px; } .auto-bar i.up { background: #51cf66; } .auto-bar i.down { background: #ff6b6b; }
+.auto-ret { font-size: 17px; font-weight: 900; font-variant-numeric: tabular-nums; min-width: 70px; text-align: right; cursor: pointer; }
+.auto-ret.up { color: #51cf66; } .auto-ret.down { color: #ff6b6b; }
+.auto-row.thin .auto-ret, .auto-row.thin .auto-bar { opacity: .45; }
+.auto-row.off .auto-name { color: var(--text-mute); text-decoration: line-through; } .auto-row.off .auto-ret { opacity: .5; }
+.auto-note { font-size: 11px; color: var(--text-mute); margin-top: 12px; line-height: 1.6; }
+.auto-empty { font-size: 12px; color: var(--text-mute); padding: 18px 4px; text-align: center; }
+.auto-bl-count { font-size: 13px; color: var(--text-mute); font-weight: 700; }
+.auto-bl-row .btn, .auto-w-row > .btn { margin-left: 8px; flex: none; }
+.auto-sheet-sub { font-size: 11px; font-weight: 800; letter-spacing: .5px; color: var(--text-mute); margin: 4px 0 8px; }
+.auto-sheet-list { overflow-y: auto; max-height: 56vh; }
+.auto-w-row { flex-wrap: wrap; }
+.auto-bl-form { display: none; width: 100%; align-items: center; gap: 6px; padding: 8px 0 2px 44px; font-size: 12px; color: var(--text); flex-wrap: wrap; }
+.auto-w-row.form .auto-bl-form { display: flex; }
+.auto-bl-form input { width: 56px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: rgba(255,255,255,.06); color: var(--text-hi); font-size: 14px !important; text-align: center; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8139,19 +8169,27 @@ table.combo-eval tbody td .nodata {
 
     <!-- v4.76: 자동 페이지 (요건 구체화 예정 — 우선 신호 선택만) -->
     <section class="card" id="autoSignalCard" data-mtab="auto">
-      <div class="card-header" onclick="toggleCard(this)">
-        <h2>자동매수 신호 설정</h2>
-        <span class="toggle-icon">▼</span>
-      </div>
+      <div class="card-header"><h2>자동매수 신호</h2></div>
       <div class="card-body">
-        <div class="auto-sig-grid" id="autoSigGrid"></div>
-        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-          <button class="btn sm" onclick="aqAutoSaveSignals()">💾 저장</button>
-          <button class="btn sm secondary" onclick="aqAutoLoadSignals(true)">↺ 서버 값으로 되돌리기</button>
-        </div>
-        <div class="ops-note">켜진 신호를 하나라도 가진 아카이브 행이 매수 대상. 각 신호 아래 숫자는 최근 60일 실현 성과(건수 · 5일 양수율 · 평균). V_Vol은 V_Main의 부분집합이라 제외.</div>
+        <div class="auto-seg" id="autoWinSeg"><button data-w="20" onclick="aqAutoSetWin(20)">20일</button><button data-w="40" onclick="aqAutoSetWin(40)">40일</button><button data-w="60" onclick="aqAutoSetWin(60)">60일</button></div>
+        <div class="auto-meta" id="autoWinMeta">불러오는 중…</div>
+        <div class="auto-head"><span>신호</span><span>평균 5일 수익률</span><span>자동매수</span></div>
+        <div id="autoSigList"></div>
+        <div class="auto-note">신호를 누르면 이 기간 수익률이 나빴던 종목(최대 10)을 보고, 신호×종목 단위로 자동매수에서 제외할 수 있어요. 토글은 바로 저장됩니다.</div>
       </div>
     </section>
+    <section class="card" id="autoBlacklistCard" data-mtab="auto">
+      <div class="card-header"><h2>자동매수 제외 중 <span id="autoBlCount" class="auto-bl-count"></span></h2></div>
+      <div class="card-body"><div class="dash-holdings-body" id="autoBlList"></div></div>
+    </section>
+    <div class="ops-sheet-bg" id="autoSheetBg" onclick="aqAutoCloseSheet()"></div>
+    <div class="ops-sheet aq-sec-sheet" id="autoSheet">
+      <div class="ops-sheet-grip"></div>
+      <div class="ops-sheet-title" id="autoSheetTitle">신호</div>
+      <div class="ops-sheet-meta" id="autoSheetMeta"></div>
+      <div class="auto-sheet-sub">수익률이 나빴던 종목 (최대 10)</div>
+      <div class="dash-holdings-body auto-sheet-list" id="autoSheetList"></div>
+    </div>
 
     <!-- 운영(MO): 작업별 설정 바텀시트 -->
     <div class="ops-sheet-bg" id="opsSheetBg" onclick="aqOpsSheetClose()"></div>
@@ -24839,7 +24877,7 @@ async function aqOpsEnter() {
 Object.assign(window, { aqOpsSheetOpen, aqOpsSheetClose, aqOpsSheetModeChange, aqOpsSheetSave, aqOpsSheetRun, aqOpsSheetLog, aqOpsSheetStop, aqOpsEnter, aqOpsRefresh, aqOpsRun, aqOpsRunAll, aqOpsCancel, aqOpsShowLog, aqOpsCloseLog, aqOpsChanged, aqOpsMove, aqOpsDragStart, aqOpsDragOver, aqOpsDragLeave, aqOpsDrop, aqOpsDragEnd, aqOpsToggleSettings });
 
 // ============================================================================
-// 자동 페이지 — 신호 선택 (요건 구체화 전 최소 기능)
+// v5.11: 자동 — 신호별 최근 N거래일 성적(5거래일 뒤 종가) + 신호×종목 블랙리스트
 // ============================================================================
 const AQ_AUTO_SIGNALS = [
   { id: 'V_Main',         def: true,  desc: '4일 연속 하락 + V 예측' },
@@ -24851,37 +24889,97 @@ const AQ_AUTO_SIGNALS = [
   { id: 'A',              def: true,  desc: 'V + 신규 Tree' },
 ];
 const AQ_AUTO_LSKEY = 'aq_auto_signals_v1';
-const _auto = { perf: {}, entered: false };
-function aqAutoRender(state) {
-  const g = document.getElementById('autoSigGrid'); if (!g) return;
-  g.innerHTML = AQ_AUTO_SIGNALS.map(sg => {
-    const on = state && (sg.id in state) ? !!state[sg.id] : sg.def; const pf = _auto.perf[sg.id];
-    const perf = pf ? `${pf.n}건 · ${Math.round(pf.pos * 100)}% · ${pf.avg >= 0 ? '+' : ''}${Number(pf.avg).toFixed(1)}%` : sg.desc;
-    return `<div class="auto-sig ${on ? '' : 'off'}" id="autoSigRow_${sg.id}"><div><div class="name">${sg.id}</div><div class="perf">${perf}</div></div>
-      <label class="aq-switch"><input type="checkbox" id="autoSig_${sg.id}" ${on ? 'checked' : ''} onchange="document.getElementById('autoSigRow_${sg.id}').classList.toggle('off', !this.checked)"><span class="sl"></span></label></div>`;
-  }).join('');
+const _auto = { entered: false, win: (localStorage.getItem('aq_auto_win') || '40'), stats: null, on: {}, sheetSig: null, blacklist: [] };
+function _autoFmtPct(v) { return v == null ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(1) + '%'; }
+function _autoLogo(tk) {
+  const sector = (_state.tickerSectorMap || {})[tk] || ''; const layerFile = layerFileName(SECTOR_TO_LAYER[sector] || '기타'); const tkFile = tickerFileName(tk);
+  return tkFile ? `<img class="ia-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">` : `<img class="ia-logo" src="./flags/US.png" style="opacity:.55" alt="">`;
 }
-function _autoState() { const st = {}; AQ_AUTO_SIGNALS.forEach(sg => { const el = document.getElementById('autoSig_' + sg.id); st[sg.id] = el ? !!el.checked : sg.def; }); return st; }
-async function aqAutoLoadSignals(fromServer) {
-  const badge = null;
-  const r = await _opsCall('getConfig', { key: 'autotrade.signals' });
-  if (r && r.ok && r.value) { _auto.perf = r.perf || {}; aqAutoRender(r.value); if (badge) { badge.className = 'ops-badge saved'; badge.textContent = '서버 저장값'; } try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(r.value)); } catch (e) {} return; }
-  let local = null; try { local = JSON.parse(localStorage.getItem(AQ_AUTO_LSKEY) || 'null'); } catch (e) {}
-  aqAutoRender(local || {});
-  if (badge) { badge.className = 'ops-badge ' + (local ? 'local' : ''); badge.textContent = ''; }
-  if (fromServer && typeof aqToast === 'function') aqToast('불러오기 실패');
+function aqAutoRender() {
+  const box = document.getElementById('autoSigList'); if (!box) return;
+  document.querySelectorAll('#autoWinSeg button').forEach(b => b.classList.toggle('on', b.dataset.w === _auto.win));
+  const W = (_auto.stats && _auto.stats.windows && _auto.stats.windows[_auto.win]) || null;
+  const sigs = W ? W.signals : {};
+  const maxAbs = Math.max(1, ...AQ_AUTO_SIGNALS.map(sg => Math.abs((sigs[sg.id] || {}).avg || 0)));
+  const meta = document.getElementById('autoWinMeta');
+  if (meta) meta.textContent = W ? `${W.start} ~ ${_auto.stats.asof} · ${_auto.win}거래일 · 신호일 종가 → 5거래일 뒤 종가 · 최근 5거래일은 미판정` : '불러오는 중…';
+  box.innerHTML = AQ_AUTO_SIGNALS.map(sg => {
+    const on = (sg.id in _auto.on) ? !!_auto.on[sg.id] : sg.def; const st = sigs[sg.id] || {}; const thin = (st.judged || 0) < 5;
+    const w = st.avg == null ? 0 : Math.round(Math.abs(st.avg) / maxAbs * 100); const nBl = (_auto.blacklist || []).filter(b => b.signal === sg.id).length;
+    return `<div class="auto-row ${on ? '' : 'off'} ${thin ? 'thin' : ''}" data-sig="${sg.id}">
+      <span class="auto-dot" style="background:${(getSignalColors()[sg.id] || '#868e96')}"></span>
+      <div class="auto-mid" onclick="aqAutoOpenSheet('${sg.id}')">
+        <div class="auto-name">${sg.id}${nBl ? `<span class="auto-bl-n">제외 ${nBl}</span>` : ''}</div>
+        <div class="auto-sub">${thin ? '표본 부족 · ' : ''}승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건${st.pending ? ` (+${st.pending} 미판정)` : ''}</div>
+        <div class="auto-bar"><i class="${(st.avg || 0) >= 0 ? 'up' : 'down'}" style="width:${w}%"></i></div>
+      </div>
+      <div class="auto-ret ${(st.avg || 0) >= 0 ? 'up' : 'down'}" onclick="aqAutoOpenSheet('${sg.id}')">${_autoFmtPct(st.avg)}</div>
+      <label class="aq-switch"><input type="checkbox" id="autoSig_${sg.id}" ${on ? 'checked' : ''} onchange="aqAutoToggle('${sg.id}', this.checked)"><span class="sl"></span></label>
+    </div>`;
+  }).join('');
+  aqAutoRenderBlacklist();
+}
+function aqAutoRenderBlacklist() {
+  const el = document.getElementById('autoBlList'); const cnt = document.getElementById('autoBlCount'); if (!el) return;
+  const bl = _auto.blacklist || []; if (cnt) cnt.textContent = bl.length ? `(${bl.length})` : '';
+  el.innerHTML = bl.length ? bl.slice().sort((a, b) => String(a.until).localeCompare(String(b.until))).map(b => `<div class="insider-archive-item auto-bl-row">
+      ${aqWrapLogo(_autoLogo(b.ticker), b.ticker)}
+      <div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(b.ticker) || b.ticker)}</div><div class="ia-company">${escapeHtml(b.signal)}에서 제외</div></div>
+      <div class="ia-meta"><div class="ia-price">D-${b.remaining == null ? '?' : b.remaining}</div><div class="ia-shares">${escapeHtml(String(b.until).slice(5).replace('-', '/'))}까지</div></div>
+      <button class="btn sm secondary" onclick="aqAutoBlRemove('${b.signal}','${b.ticker}')">해제</button></div>`).join('')
+    : '<div class="auto-empty">제외 중인 신호×종목이 없습니다. 신호를 눌러 성적이 나쁜 종목을 제외할 수 있어요.</div>';
+}
+function aqAutoOpenSheet(sig) {
+  _auto.sheetSig = sig; const W = (_auto.stats && _auto.stats.windows && _auto.stats.windows[_auto.win]) || null; const st = (W && W.signals[sig]) || {};
+  document.getElementById('autoSheetTitle').textContent = `${sig} · 최근 ${_auto.win}거래일`;
+  document.getElementById('autoSheetMeta').textContent = `평균 ${_autoFmtPct(st.avg)} · 승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건`;
+  const list = (W && W.worst[sig]) || []; const bl = _auto.blacklist || [];
+  document.getElementById('autoSheetList').innerHTML = list.length ? list.map(z => { const inBl = bl.find(b => b.signal === sig && b.ticker === z.ticker);
+    return `<div class="insider-archive-item auto-w-row" data-tk="${escapeAttr(z.ticker)}">
+      ${aqWrapLogo(_autoLogo(z.ticker), z.ticker)}
+      <div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(z.ticker) || z.ticker)}</div><div class="ia-company">${escapeHtml(aqStripSectorEmoji((_state.tickerSectorMap || {})[z.ticker] || ''))}</div><div class="ia-sector">신호 ${z.n}건 · 최저 ${_autoFmtPct(z.worst)}</div></div>
+      <div class="ia-meta"><div class="ia-pnl down">${_autoFmtPct(z.avg)}</div>${inBl ? `<div class="ia-shares">제외 중 · D-${inBl.remaining}</div>` : ''}</div>
+      ${inBl ? `<button class="btn sm secondary" onclick="aqAutoBlRemove('${sig}','${z.ticker}', true)">해제</button>` : `<button class="btn sm" onclick="aqAutoBlForm(this)">제외</button>`}
+      <div class="auto-bl-form"><span>앞으로</span><input type="number" min="1" max="250" value="10" inputmode="numeric"><span>거래일 동안 자동매수 제외</span><button class="btn sm" onclick="aqAutoBlAdd('${sig}','${z.ticker}', this)">확인</button></div>
+    </div>`; }).join('') : '<div class="auto-empty">이 기간에 평균 수익률이 마이너스인 종목이 없습니다.</div>';
+  document.getElementById('autoSheet').classList.add('open'); document.getElementById('autoSheetBg').classList.add('open');
+}
+function aqAutoCloseSheet() { document.getElementById('autoSheet').classList.remove('open'); document.getElementById('autoSheetBg').classList.remove('open'); }
+function aqAutoBlForm(btn) { const row = btn.closest('.auto-w-row'); row.classList.toggle('form'); const i = row.querySelector('input'); if (i) i.focus(); }
+async function aqAutoBlAdd(sig, tk, btn) {
+  const row = btn.closest('.auto-w-row'); const n = parseInt(row.querySelector('input').value, 10) || 10;
+  const r = await _opsCall('blacklistAdd', { signal: sig, ticker: tk, days: n });
+  if (!r || !r.ok) { alert('실패: ' + ((r && r.error) || '')); return; }
+  _auto.blacklist = r.blacklist || []; if (typeof aqToast === 'function') aqToast(`${tk} · ${sig} ${n}거래일 제외 (${String(r.until).slice(5).replace('-', '/')}까지)`);
+  aqAutoRender(); aqAutoOpenSheet(sig);
+}
+async function aqAutoBlRemove(sig, tk, reopen) {
+  if (!confirm(`${tk} · ${sig} 제외를 해제할까요?`)) return;
+  const r = await _opsCall('blacklistRemove', { signal: sig, ticker: tk });
+  if (!r || !r.ok) { alert('실패: ' + ((r && r.error) || '')); return; }
+  _auto.blacklist = r.blacklist || []; aqAutoRender(); if (reopen) aqAutoOpenSheet(sig);
+}
+function aqAutoSetWin(w) { _auto.win = String(w); try { localStorage.setItem('aq_auto_win', _auto.win); } catch (e) {} aqAutoRender(); }
+let _autoSaveT = null;
+function aqAutoToggle(sig, on) {
+  _auto.on[sig] = !!on; const row = document.querySelector(`.auto-row[data-sig="${sig}"]`); if (row) row.classList.toggle('off', !on);
+  clearTimeout(_autoSaveT); _autoSaveT = setTimeout(aqAutoSaveSignals, 600);
+}
+async function aqAutoLoadSignals() {
+  const r = await _opsCall('autoSignalStats', {});
+  if (r && r.ok) { _auto.stats = { windows: r.windows, asof: r.asof }; _auto.blacklist = r.blacklist || []; _auto.on = r.signals_on || {}; try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(_auto.on)); } catch (e) {} }
+  else { try { _auto.on = JSON.parse(localStorage.getItem(AQ_AUTO_LSKEY) || '{}'); } catch (e) {} if (typeof aqToast === 'function') aqToast('신호 성적을 불러오지 못했어요'); }
+  aqAutoRender();
 }
 async function aqAutoSaveSignals() {
-  const st = _autoState(); try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(st)); } catch (e) {}
+  const st = {}; AQ_AUTO_SIGNALS.forEach(sg => { st[sg.id] = (sg.id in _auto.on) ? !!_auto.on[sg.id] : sg.def; });
+  try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(st)); } catch (e) {}
   const r = await _opsCall('saveConfig', { key: 'autotrade.signals', value: JSON.stringify(st) });
-  const badge = null;
-  if (r && r.ok) { if (badge) { badge.className = 'ops-badge saved'; badge.textContent = '서버 저장값'; } if (typeof aqToast === 'function') aqToast('신호 설정 저장'); }
-  else if (r && r.notReady) { if (badge) { badge.className = 'ops-badge local'; badge.textContent = ''; } if (typeof aqToast === 'function') aqToast('저장'); }
-  else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return;
-  else alert('저장 실패: ' + (r && r.error || ''));
+  if (r && r.ok) { if (typeof aqToast === 'function') aqToast('신호 설정 저장'); } else alert('저장 실패: ' + ((r && r.error) || ''));
 }
-async function aqAutoEnter() { if (!_auto.entered) { _auto.entered = true; aqAutoRender({}); } await aqAutoLoadSignals(false); }
-Object.assign(window, { aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals });
+async function aqAutoEnter() { if (!_auto.entered) { _auto.entered = true; aqAutoRender(); } await aqAutoLoadSignals(); }
+Object.assign(window, { aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals, aqAutoSetWin, aqAutoToggle, aqAutoOpenSheet, aqAutoCloseSheet, aqAutoBlForm, aqAutoBlAdd, aqAutoBlRemove });
+
 </script>
 
 <script>
