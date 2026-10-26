@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.32';   // v5.32: 설정 페이지 재구성 (프로필·계정·데이터·관리자 묶음 목록, 비밀번호 변경 시트)
+window.AQ_PWA_VERSION = '5.34';   // v5.34: 모든 종목 행 → 종목 페이지, 종목 페이지 UI 정리(고정 헤더·필터 칩·범례·요약)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3903,6 +3903,49 @@ body:not([data-role="admin"]) [data-role-admin-tab] { display: none !important; 
 .adm-u { display: flex; align-items: center; gap: 12px; padding: 12px 2px; border-bottom: 1px solid var(--line); } .adm-u.off { opacity: .55; }
 .adm-i { flex: 1; min-width: 0; } .adm-n { font-size: 14.5px; font-weight: 800; color: var(--text-hi); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; } .adm-n code { font-size: 13px; }
 .adm-s { font-size: 11.5px; color: var(--text-mute); margin-top: 2px; } .adm-me { font-size: 11px; color: var(--text-mute); }
+/* v5.33: 보고서 가로 넘침 방지 */
+.rv4-f, .rv4-money { grid-template-columns: 92px auto minmax(0, 1fr); }
+.rv4-f:not(:has(.rv3-lb)) { grid-template-columns: 92px minmax(0, 1fr); }
+.rv4-money { grid-template-columns: 128px minmax(0, 1fr); }
+@media (max-width: 520px) { .rv4-f { grid-template-columns: minmax(0, 1fr) auto; } .rv4-money { grid-template-columns: minmax(0, 1fr); } }
+.rv4-ft, .rv4-card-what, .rv4-q-t, .rv4-vnote, .rv4-body, .rv4 .rv3-p, .rv4 li, .rv4-gv, .rv4-quote, .rv4-step-b { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
+.rv4 a { overflow-wrap: anywhere; word-break: break-all; }
+.rv4-main, .rv4-sec, .rv4-sec-body, .rv4-card, .rv4-filters { min-width: 0; max-width: 100%; }
+.rv4-main { overflow-x: hidden; }
+.rv4-card { overflow: hidden; }
+.rv3-tblwrap { max-width: 100%; }
+/* ===== v5.34: 종목 페이지 정리 ===== */
+#chartModal .modal-view-tabs { position: sticky; top: 0; z-index: 6; background: var(--panel, #1c1c1e); flex-wrap: wrap; }
+#chartModal .mvt-mini { display: none; width: 100%; padding: 8px 2px 6px; font-size: 13px; color: var(--text-mute); gap: 8px; align-items: baseline; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#chartModal .mvt-mini b { color: var(--text-hi); font-size: 14px; } #chartModal .mvt-mini span { font-size: 12.5px; }
+#chartModal .modal-view-tabs.mini-on .mvt-mini { display: flex; }
+#chartModal .modal-desc.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; position: relative; }
+#chartModal .modal-desc { cursor: pointer; }
+/* 밸류에이션 칩: 같은 모양, 좋고 나쁨은 점 색 */
+.mv-chip.mv-q1, .mv-chip.mv-q2, .mv-chip.mv-q3, .mv-chip.mv-q4, #sectorModal .mv-chip.mv-q1, #sectorModal .mv-chip.mv-q2, #sectorModal .mv-chip.mv-q3, #sectorModal .mv-chip.mv-q4 { background: rgba(255,255,255,.04) !important; }
+.mv-chip.mv-q1 .mv-v::after, .mv-chip.mv-q2 .mv-v::after, .mv-chip.mv-q3 .mv-v::after, .mv-chip.mv-q4 .mv-v::after { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-left: 6px; vertical-align: 2px; }
+.mv-chip.mv-q1 .mv-v::after { background: #4dabf7; } .mv-chip.mv-q2 .mv-v::after { background: #868e96; } .mv-chip.mv-q3 .mv-v::after { background: #fab005; } .mv-chip.mv-q4 .mv-v::after { background: #ff6b6b; }
+/* 신호 필터: 차트 위 칩 줄 */
+#chartModal .modal-filter-block.mf-open { margin: 12px 0 4px; padding: 0; border: none; background: none; }
+#chartModal .modal-filter-block.mf-open .signal-filter-area { display: flex; gap: 6px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; scrollbar-width: none; }
+#chartModal .modal-filter-block.mf-open .signal-filter-area::-webkit-scrollbar { display: none; }
+#chartModal .modal-filter-block.mf-open .modal-vshape-ver { margin-top: 6px !important; }
+/* 기간·상세보기: 차트 위 오른쪽 */
+#chartModal .chart-wrap .chart-ctrl-br { position: static !important; display: flex; justify-content: flex-end; gap: 8px; margin: 4px 0 6px; transform: none !important; }
+/* 헥사곤: 작게·반투명, 누르면 또렷 */
+#chartModal .chart-wrap .hex-overlay { transform: scale(.78); opacity: .42; transition: opacity .15s, transform .15s; }
+#chartModal .chart-wrap .hex-overlay.hex-left, #chartModal .chart-wrap .hex-overlay:not(.hex-right) { transform-origin: top left; }
+#chartModal .chart-wrap .hex-overlay.hex-right { transform-origin: top right; }
+#chartModal .chart-wrap .hex-overlay:hover, #chartModal .chart-wrap .hex-overlay:active { opacity: 1; transform: scale(.95); }
+#chartModal .chart-wrap .hex-overlay { top: 46px; }
+/* 선 범례 */
+.mline-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 11.5px; color: var(--text-mute); margin: 6px 2px 4px; } .mline-legend:empty { display: none; }
+.ml-i { display: inline-flex; align-items: center; gap: 6px; } .ml-i i { display: inline-block; width: 16px; height: 2px; border-radius: 1px; } .ml-i i.dash { height: 0; border-top: 2px dashed; background: none !important; }
+/* 접힌 섹션: 제목 + 요약 */
+#chartModal .aq-coll-head { padding: 14px 2px; }
+#chartModal .aq-coll-head h4 { font-size: 15px !important; font-weight: 800; }
+.aq-coll-sum { margin-left: auto; margin-right: 8px; font-size: 12px; color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#chartModal .aq-coll-caret { font-size: 12px; color: var(--text-mute); }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -9034,30 +9077,14 @@ table.combo-eval tbody td .nodata {
       <div class="modal-subtitle" id="modalSubtitle">—</div>
       <div class="modal-desc" id="modalDesc"></div>
       <div class="modal-valuation" id="modalValuation"></div>
-      <div class="modal-view-tabs" id="modalViewTabs">
+      <div class="modal-view-tabs" id="modalViewTabs"><div class="mvt-mini" id="modalMini"></div>
         <button class="xtab-btn active" data-view="chart" onclick="aqSetModalView('chart')">차트</button>
         <button class="xtab-btn" data-view="report" onclick="aqSetModalView('report')">분석 보고서<span class="mvt-action an-action-pill" id="modalReportVerdict" style="display:none"></span></button>
         <button class="xtab-btn" data-view="position" onclick="aqSetModalView('position')">내 주식</button>
       </div>
       <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
       <div id="positionPanel"></div>
-      <div class="chart-wrap">
-        <!-- v3.48: 상세보기 + tf 토글을 우하단 한 줄로 묶음 (겹침 방지) -->
-        <div class="chart-ctrl-br">
-        <button class="chart-mode-toggle" id="modeToggleBtn" onclick="toggleChartMode()">🔬 상세보기</button>
-        <!-- v2.10: 타임프레임 세그먼트 (3M/6M/1Y) -->
-        <div class="tf-toggle" data-target="modal">
-          <button data-tf="3M" class="active" onclick="setChartTimeframe('modal','3M')">3M</button>
-          <button data-tf="6M" onclick="setChartTimeframe('modal','6M')">6M</button>
-          <button data-tf="1Y" onclick="setChartTimeframe('modal','1Y')">1Y</button>
-        </div>
-        </div>
-        <canvas id="chartCanvas"></canvas>
-        <div class="hex-overlay" id="modalHex"></div>
-      </div>
-      <!-- v2.63: 차트 하단 레전드 제거 — 차트 안 동적 레전드와 중복이라 불필요 -->
-      <!-- (id=chartLegend 참조하는 JS는 element 없어도 null 가드 또는 무해 — 별도 처리) -->
-      <div class="modal-filter-block aq-coll collapsed">
+      <div class="modal-filter-block mf-open">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
           <h4 class="ticker-history-title" style="margin:0;">Signal Type 필터</h4>
           <span class="aq-coll-caret">▼</span>
@@ -9075,9 +9102,27 @@ table.combo-eval tbody td .nodata {
           </div>
         </div>
       </div>
+      <div class="chart-wrap">
+        <!-- v3.48: 상세보기 + tf 토글을 우하단 한 줄로 묶음 (겹침 방지) -->
+        <div class="chart-ctrl-br">
+        <button class="chart-mode-toggle" id="modeToggleBtn" onclick="toggleChartMode()">🔬 상세보기</button>
+        <!-- v2.10: 타임프레임 세그먼트 (3M/6M/1Y) -->
+        <div class="tf-toggle" data-target="modal">
+          <button data-tf="3M" class="active" onclick="setChartTimeframe('modal','3M')">3M</button>
+          <button data-tf="6M" onclick="setChartTimeframe('modal','6M')">6M</button>
+          <button data-tf="1Y" onclick="setChartTimeframe('modal','1Y')">1Y</button>
+        </div>
+        </div>
+        <canvas id="chartCanvas"></canvas>
+        <div class="hex-overlay" id="modalHex"></div>
+      </div>
+      <div class="mline-legend" id="modalLineLegend"></div>
+      <!-- v2.63: 차트 하단 레전드 제거 — 차트 안 동적 레전드와 중복이라 불필요 -->
+      <!-- (id=chartLegend 참조하는 JS는 element 없어도 null 가드 또는 무해 — 별도 처리) -->
+      
       <div class="ticker-history-wrap aq-coll collapsed" id="tickerHistoryWrap" style="display:none;">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
-          <h4 class="ticker-history-title" style="margin:0;">이 종목의 시그널 이력</h4>
+          <h4 class="ticker-history-title" style="margin:0;">시그널 이력</h4><span class="aq-coll-sum" id="tickerHistoryWrapSum"></span>
           <span class="aq-coll-caret">▼</span>
         </div>
         <div class="aq-coll-body">
@@ -9087,7 +9132,7 @@ table.combo-eval tbody td .nodata {
       <!-- v2.64/v3.61: 내부자 거래 이력 — 다른 보조 섹션과 동일 아코디언(접힘) -->
       <div class="ticker-history-wrap insider-history-wrap aq-coll collapsed" id="insiderHistoryWrap" style="display:none;">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
-          <h4 class="ticker-history-title" style="margin:0;">내부자 매수이력</h4>
+          <h4 class="ticker-history-title" style="margin:0;">내부자 매수</h4><span class="aq-coll-sum" id="insiderHistoryWrapSum"></span>
           <span class="aq-coll-caret">▼</span>
         </div>
         <div class="aq-coll-body"><div id="insiderHistoryArea"></div></div>
@@ -9095,7 +9140,7 @@ table.combo-eval tbody td .nodata {
       <!-- v4.68: 내부자 매도이력 (US_SELL) — 매수이력과 동일 UX -->
       <div class="ticker-history-wrap insider-history-wrap aq-coll collapsed" id="insiderSellHistoryWrap" style="display:none;">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
-          <h4 class="ticker-history-title" style="margin:0;">내부자 매도이력</h4>
+          <h4 class="ticker-history-title" style="margin:0;">내부자 매도</h4><span class="aq-coll-sum" id="insiderSellHistoryWrapSum"></span>
           <span class="aq-coll-caret">▼</span>
         </div>
         <div class="aq-coll-body"><div id="insiderSellHistoryArea"></div></div>
@@ -20502,7 +20547,7 @@ async function openChart(ticker) {
   // 2줄: 최근 종가 + 전일 대비
   $('modalPrice').innerHTML = `${fmtPrice(lastPrice)} ${chgHtml}`;
   // 3줄: 섹터 + 고점 대비 + 데이터 일자
-  $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span><span class="sep">·</span><span>Data: ${escapeHtml(dates[dates.length-1])}</span>`;
+  $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span><span class="sep">·</span><span>${escapeHtml(String(dates[dates.length-1]).slice(5).replace('-', '/'))} 종가</span>`;
   // 4줄: 상세설명 (있으면 표시)
   $('modalDesc').textContent = desc;
   // v3.22: 밸류에이션 (PER / Forward PER / PEG) — US_VALUATION, US 전용
@@ -21490,10 +21535,16 @@ function drawChart(d, opts) {
         type: 'line', yMin: _bb.avg, yMax: _bb.avg, borderColor: _bb.quarters <= 2 ? 'rgba(173,181,189,0.28)' : 'rgba(173,181,189,0.6)', borderWidth: 2, yScaleID: 'yPrice',
         label: { display: true, content: `자사주 평단 ${fmtPrice(_bb.avg)} (최근 1년)`, position: _lblPos, backgroundColor: 'rgba(30,30,30,0.85)', color: 'rgba(173,181,189,0.9)', font: { size: 10, weight: 'bold' } } }; } } catch (e) {}
 
+  // v5.34: 차트 아래 선 범례 (켜진 선만)
   // v5.01: 모의매수가 점선
   try { const _tkA = (opts && opts.ticker) || _state.openTicker || ''; const _sim = (window.AqWatchStore && AqWatchStore.get && _tkA) ? AqWatchStore.get(getCurrentMarket(), _tkA) : null;
     if (_sim && Number(_sim.buyPrice) > 0) annotations.simBuy = { type: 'line', yMin: Number(_sim.buyPrice), yMax: Number(_sim.buyPrice), borderColor: '#da77f2', borderWidth: 1.2, borderDash: [4, 3], yScaleID: 'yPrice',
       label: { display: !simple, content: `모의매수 ${fmtPrice(Number(_sim.buyPrice))}`, position: 'end', backgroundColor: 'rgba(30,30,30,0.95)', color: '#da77f2', font: { size: 10 } } }; } catch (e) {}
+  try { const lg = document.getElementById('modalLineLegend'); if (lg && isModal) { const it = [];
+      if (annotations.buyAvg) it.push(`<span class="ml-i"><i style="background:${COL.buyAvg}"></i>내 평단 ${fmtPrice(annotations.buyAvg.yMin)}</span>`);
+      if (annotations.simBuy) it.push(`<span class="ml-i"><i class="dash" style="border-color:#da77f2"></i>모의매수 ${fmtPrice(annotations.simBuy.yMin)}</span>`);
+      if (annotations.bbAvg) it.push(`<span class="ml-i"><i style="background:rgba(173,181,189,.7)"></i>자사주 평단 ${fmtPrice(annotations.bbAvg.yMin)} (최근 1년)</span>`);
+      lg.innerHTML = it.join(''); } } catch (e) {}
   // v5.07: 분석 보고서 기준일 마커 (세로 점선 + 의견)
   try { const _tkR = String((opts && opts.ticker) || _state.openTicker || '').toUpperCase(); const _mk = getCurrentMarket();
     const _rd = (_tkR && _state.reports && _state.reports[_mk] && _state.reports[_mk][_tkR]) || [];
@@ -23338,7 +23389,7 @@ function _lbRender() {
   cohorts.forEach((c, ci) => {
     html += `<div class="lb-card"><div class="lb-cohort-date">${c.date} · 매수 ${c.items.length}건 · 후보 ${c.cands}개</div>`;
     c.items.forEach((it, ii) => {
-      html += `<div class="lb-item"><div class="lb-row"><span class="lb-tk">${escapeHtml(it.tk)}</span>`;
+      html += `<div class="lb-item"><div class="lb-row" data-ticker="${escapeAttr(it.tk)}"><span class="lb-tk">${escapeHtml(it.tk)}</span>`;
       html += it.tags.map(t => t === 'ML' ? '<span class="lb-badge lb-b-ml">ML</span>' : t === 'INS' ? '<span class="lb-badge lb-b-ins">내부자</span>' : '<span class="lb-badge lb-b-self">자체</span>').join('');
       if (it.excluded) html += '<span class="lb-ret" style="color:var(--text-mute)">조기청산 제외</span>';
       else if (it.pending) html += '<span class="lb-ret" style="color:var(--text-mute)">평가 대기</span>';
@@ -23351,9 +23402,9 @@ function _lbRender() {
         html += `<span class="lb-toggle-cf" onclick="_lbToggleCf('${cid}')">이 돈으로 다른 걸 샀다면 ▾</span>`;
         html += `<div class="lb-cf" id="${cid}">`;
         html += '<div class="lb-cf-h">이 돈을 넣었으면 더 좋았던 Top 5</div>';
-        it.cfTop.forEach(x => { html += `<div class="lb-cf-row"><span>${escapeHtml(x.tk)}</span><span class="${x.ret >= 0 ? 'up' : 'down'}">${_lbPctStr(x.ret)} · ${fmtMoney(x.val)}</span></div>`; });
+        it.cfTop.forEach(x => { html += `<div class="lb-cf-row" data-ticker="${escapeAttr(x.tk)}"><span>${escapeHtml(x.tk)}</span><span class="${x.ret >= 0 ? 'up' : 'down'}">${_lbPctStr(x.ret)} · ${fmtMoney(x.val)}</span></div>`; });
         html += '<div class="lb-cf-h">안 사길 잘한(더 나빴던) Bottom 5</div>';
-        it.cfBot.forEach(x => { html += `<div class="lb-cf-row"><span>${escapeHtml(x.tk)}</span><span class="${x.ret >= 0 ? 'up' : 'down'}">${_lbPctStr(x.ret)} · ${fmtMoney(x.val)}</span></div>`; });
+        it.cfBot.forEach(x => { html += `<div class="lb-cf-row" data-ticker="${escapeAttr(x.tk)}"><span>${escapeHtml(x.tk)}</span><span class="${x.ret >= 0 ? 'up' : 'down'}">${_lbPctStr(x.ret)} · ${fmtMoney(x.val)}</span></div>`; });
         html += '</div>';
       }
       html += '</div>';
@@ -25213,7 +25264,7 @@ function aqAutoRender() {
 function aqAutoRenderBlacklist() {
   const el = document.getElementById('autoBlList'); const cnt = document.getElementById('autoBlCount'); if (!el) return;
   const bl = _auto.blacklist || []; if (cnt) cnt.textContent = bl.length ? `(${bl.length})` : '';
-  el.innerHTML = bl.length ? bl.slice().sort((a, b) => String(a.until).localeCompare(String(b.until))).map(b => `<div class="insider-archive-item auto-bl-row">
+  el.innerHTML = bl.length ? bl.slice().sort((a, b) => String(a.until).localeCompare(String(b.until))).map(b => `<div class="insider-archive-item auto-bl-row" data-ticker="${escapeAttr(b.ticker)}">
       ${aqWrapLogo(_autoLogo(b.ticker), b.ticker)}
       <div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(b.ticker) || b.ticker)}</div><div class="ia-company">${escapeHtml(b.signal)}에서 제외</div></div>
       <div class="ia-meta"><div class="ia-price">D-${b.remaining == null ? '?' : b.remaining}</div><div class="ia-shares">${escapeHtml(String(b.until).slice(5).replace('-', '/'))}까지</div></div>
@@ -25227,7 +25278,7 @@ function aqAutoOpenSheet(sig) {
   aqAutoRenderRule(sig);
   const list = (W && W.worst[sig]) || []; const bl = _auto.blacklist || [];
   document.getElementById('autoSheetList').innerHTML = list.length ? list.map(z => { const inBl = bl.find(b => b.signal === sig && b.ticker === z.ticker);
-    return `<div class="auto-w-item" data-tk="${escapeAttr(z.ticker)}"><div class="insider-archive-item auto-w-row">
+    return `<div class="auto-w-item" data-tk="${escapeAttr(z.ticker)}"><div class="insider-archive-item auto-w-row" data-ticker="${escapeAttr(z.ticker)}">
       ${aqWrapLogo(_autoLogo(z.ticker), z.ticker)}
       <div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(z.ticker) || z.ticker)}</div><div class="ia-company">${escapeHtml(aqStripSectorEmoji((_state.tickerSectorMap || {})[z.ticker] || ''))}</div><div class="ia-sector">신호 ${z.n}건 · 최저 ${_autoFmtPct(z.worst)}</div></div>
       <div class="ia-meta"><div class="ia-pnl down">${_autoFmtPct(z.avg)}</div>${inBl ? `<div class="ia-shares">제외 중 · D-${inBl.remaining}</div>` : ''}</div>
@@ -26157,6 +26208,41 @@ try {
 window.addEventListener('aq:login', () => { try { aqSettingsRender(); } catch (e) {} });
 window.addEventListener('aq:synced', () => { try { aqSettingsRender(); } catch (e) {} });
 
+// v5.34: 종목 코드가 달린 행은 어디서든 누르면 종목 페이지 (행 안 버튼·토글은 제외, 자체 클릭이 있는 행은 그대로)
+document.addEventListener('click', e => {
+  const t = e.target; const row = t.closest && t.closest('[data-ticker]'); if (!row) return;
+  if (row.hasAttribute('onclick') || typeof row.onclick === 'function') return;
+  if (t.closest('button, a, input, select, textarea, label, .aq-switch, .lb-cf-toggle, [onclick]')) { const oc = t.closest('[onclick]'); if (oc && oc !== row && row.contains(oc)) return; if (t.closest('button, a, input, select, textarea, label, .aq-switch')) return; }
+  if (row.closest('#chartModal')) return;
+  const tk = String(row.dataset.ticker || '').toUpperCase(); if (!tk || typeof openChart !== 'function') return;
+  openChart(tk);
+});
+(function () {   // 같은 종목을 짧은 시간에 두 번 여는 것 방지 + 열린 뒤 요약·고정 헤더 갱신
+  const _orig = window.openChart; if (typeof _orig !== 'function') return; let last = { tk: '', at: 0 };
+  window.openChart = function (tk, ...rest) {
+    const k = String(tk || '').toUpperCase(); if (k && k === last.tk && Date.now() - last.at < 600) return; last = { tk: k, at: Date.now() };
+    const r = _orig.call(this, tk, ...rest); setTimeout(() => { try { aqModalDecorate(k); } catch (e) {} }, 350); return r;
+  };
+})();
+function aqModalDecorate(tk) {
+  const mk = getCurrentMarket(); const fmtD = d => d ? String(d).slice(5, 10).replace('-', '/') : '';
+  // 시그널 이력 요약
+  try { const rows = (_state.archive || []).filter(r => String(r.Ticker || '').toUpperCase() === tk).sort((a, b) => String(b.Date).localeCompare(String(a.Date)));
+    const el = document.getElementById('tickerHistoryWrapSum'); if (el) el.textContent = rows.length ? `${rows.length}건 · 최근 ${fmtD(rows[0].Date)} ${String(rows[0].Signal_Type || '').split('+')[0]}` : ''; } catch (e) {}
+  // 내부자 매수·매도 요약
+  const sum = (src, id) => { try { const a = (src && src[tk]) || []; const el = document.getElementById(id); if (!el) return; const d = a.map(x => x.transDate || x.filingDate || '').filter(Boolean).sort().reverse(); el.textContent = a.length ? `${a.length}건 · 최근 ${fmtD(d[0])}` : ''; } catch (e) {} };
+  if (mk === 'US') { sum(typeof _aqInsiderTrades !== 'undefined' ? _aqInsiderTrades : null, 'insiderHistoryWrapSum'); sum(typeof _aqInsiderSells !== 'undefined' ? _aqInsiderSells : null, 'insiderSellHistoryWrapSum'); }
+  // 고정 헤더용 미니 줄
+  try { const mini = document.getElementById('modalMini'); const ttl = document.getElementById('modalTitle'); const pr = document.getElementById('modalPrice');
+    if (mini && ttl && pr) mini.innerHTML = `<b>${escapeHtml((ttl.textContent || '').replace(/\s+/g, ' ').trim())}</b><span>${pr.innerHTML}</span>`; } catch (e) {}
+  // 설명 두 줄 + 더보기
+  try { const d = document.getElementById('modalDesc'); if (d) { d.classList.add('clamp'); d.onclick = () => d.classList.toggle('clamp'); } } catch (e) {}
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const mc = document.querySelector('#chartModal .modal-content'); const tabs = document.getElementById('modalViewTabs'); if (!mc || !tabs) return;
+  mc.addEventListener('scroll', () => { const pr = document.getElementById('modalPrice'); if (!pr) return; const on = pr.getBoundingClientRect().bottom < mc.getBoundingClientRect().top + 8; tabs.classList.toggle('mini-on', on); }, { passive: true });
+});
+window.aqModalDecorate = aqModalDecorate;
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
   _aqSetRole('guest'); _aqSetBroker('none');
