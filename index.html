@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.34';   // v5.34: 모든 종목 행 → 종목 페이지, 종목 페이지 UI 정리(고정 헤더·필터 칩·범례·요약)
+window.AQ_PWA_VERSION = '5.35';   // v5.35: 종목 페이지 v5.33 배치로 원복 + 필터 알약·시트, 시그널 이력 목록, 상단 정돈
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3914,38 +3914,38 @@ body:not([data-role="admin"]) [data-role-admin-tab] { display: none !important; 
 .rv4-main { overflow-x: hidden; }
 .rv4-card { overflow: hidden; }
 .rv3-tblwrap { max-width: 100%; }
-/* ===== v5.34: 종목 페이지 정리 ===== */
-#chartModal .modal-view-tabs { position: sticky; top: 0; z-index: 6; background: var(--panel, #1c1c1e); flex-wrap: wrap; }
-#chartModal .mvt-mini { display: none; width: 100%; padding: 8px 2px 6px; font-size: 13px; color: var(--text-mute); gap: 8px; align-items: baseline; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-#chartModal .mvt-mini b { color: var(--text-hi); font-size: 14px; } #chartModal .mvt-mini span { font-size: 12.5px; }
-#chartModal .modal-view-tabs.mini-on .mvt-mini { display: flex; }
-#chartModal .modal-desc.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; position: relative; }
-#chartModal .modal-desc { cursor: pointer; }
-/* 밸류에이션 칩: 같은 모양, 좋고 나쁨은 점 색 */
-.mv-chip.mv-q1, .mv-chip.mv-q2, .mv-chip.mv-q3, .mv-chip.mv-q4, #sectorModal .mv-chip.mv-q1, #sectorModal .mv-chip.mv-q2, #sectorModal .mv-chip.mv-q3, #sectorModal .mv-chip.mv-q4 { background: rgba(255,255,255,.04) !important; }
-.mv-chip.mv-q1 .mv-v::after, .mv-chip.mv-q2 .mv-v::after, .mv-chip.mv-q3 .mv-v::after, .mv-chip.mv-q4 .mv-v::after { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-left: 6px; vertical-align: 2px; }
+/* ===== v5.35: 종목 페이지 — 필터 알약·시트, 시그널 이력, 상단 정돈 ===== */
+.chart-filter-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--line); background: rgba(30,30,30,.75); color: var(--text-mute); cursor: pointer; }
+.chart-filter-pill.on { color: var(--text-hi); border-color: rgba(99,230,190,.5); }
+.sg-head { display: flex; align-items: center; margin-bottom: 6px; } .sg-all { margin-left: auto; background: none; border: none; color: #63e6be; font-size: 12.5px; font-weight: 700; cursor: pointer; }
+.sg-row { cursor: pointer; justify-content: flex-start !important; } .sg-row label { margin-right: auto; } .sg-n { font-size: 12px; color: var(--text-mute); margin-right: 10px; }
+.sg-mk { display: inline-block; width: 10px; height: 10px; flex: none; margin-right: 10px; }
+.sg-row .aq-switch { pointer-events: none; }
+#tickerHistoryArea .th-row { display: flex; align-items: center; gap: 8px; padding: 11px 2px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.th-d { width: 52px; color: var(--text-mute); font-size: 12px; font-variant-numeric: tabular-nums; flex: none; } .th-row .sg-mk { margin-right: 0; }
+.th-s { color: var(--text-hi); font-weight: 600; white-space: nowrap; } .th-s i { font-style: normal; font-size: 10.5px; color: var(--text-mute); margin-left: 3px; }
+.th-c { color: var(--text-mute); font-size: 12px; font-variant-numeric: tabular-nums; }
+.th-r { margin-left: auto; text-align: right; line-height: 1.25; } .th-r b { font-size: 14px; font-variant-numeric: tabular-nums; } .th-r small { display: block; font-size: 10.5px; color: var(--text-mute); }
+.th-r .up { color: #ff6b6b; } .th-r .down { color: #4dabf7; }
+.th-more { display: block; width: 100%; background: none; border: none; color: var(--text-mute); font-size: 12px; padding: 10px 0 2px; cursor: pointer; }
+.th-note { font-size: 10.5px; color: var(--text-mute); text-align: right; padding: 6px 2px 0; }
+.aq-coll-sum { margin-left: auto; margin-right: 8px; font-size: 12px; color: var(--text-mute); }
+/* 상단 */
+#modalTitle .mt-stack { display: inline-flex; flex-direction: column; line-height: 1.25; vertical-align: middle; } #modalTitle .mt-tk { font-size: 12px; color: var(--text-mute); font-weight: 500; letter-spacing: .3px; }
+#modalPrice { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-top: 14px !important; } #modalPrice .mp-v { letter-spacing: -0.5px; }
+#modalPrice .price-chg { font-size: 14px !important; } #modalPrice .mp-date { width: 100%; font-size: 11px; color: var(--text-mute); margin-top: -4px; font-weight: 400; }
+#modalSubtitle { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px !important; } #modalSubtitle .ms-chip { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.05); border: 1px solid var(--line); color: var(--text-mute); }
+#modalSubtitle .ms-chip .neg { color: #4dabf7; } #modalSubtitle .ms-chip .pos { color: #ff6b6b; }
+#chartModal .modal-desc { border-left: none !important; background: none !important; padding: 0 !important; margin-top: 12px !important; font-size: 13px; color: var(--text-mute); line-height: 1.6; }
+#chartModal .modal-valuation { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 14px 0 6px !important; }
+#chartModal .modal-valuation .mv-chip { display: flex !important; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 10px !important; border-radius: 10px !important; background: rgba(255,255,255,.04) !important; border: 1px solid var(--line) !important; }
+#chartModal .modal-valuation .mv-chip .mv-k { font-size: 11px !important; text-transform: none !important; letter-spacing: 0 !important; }
+#chartModal .modal-valuation .mv-chip .mv-v { font-size: 15px !important; display: inline-flex; align-items: center; }
+.mv-chip.mv-q1 .mv-v::after, .mv-chip.mv-q2 .mv-v::after, .mv-chip.mv-q3 .mv-v::after, .mv-chip.mv-q4 .mv-v::after { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-left: 6px; }
 .mv-chip.mv-q1 .mv-v::after { background: #4dabf7; } .mv-chip.mv-q2 .mv-v::after { background: #868e96; } .mv-chip.mv-q3 .mv-v::after { background: #fab005; } .mv-chip.mv-q4 .mv-v::after { background: #ff6b6b; }
-/* 신호 필터: 차트 위 칩 줄 */
-#chartModal .modal-filter-block.mf-open { margin: 12px 0 4px; padding: 0; border: none; background: none; }
-#chartModal .modal-filter-block.mf-open .signal-filter-area { display: flex; gap: 6px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; scrollbar-width: none; }
-#chartModal .modal-filter-block.mf-open .signal-filter-area::-webkit-scrollbar { display: none; }
-#chartModal .modal-filter-block.mf-open .modal-vshape-ver { margin-top: 6px !important; }
-/* 기간·상세보기: 차트 위 오른쪽 */
-#chartModal .chart-wrap .chart-ctrl-br { position: static !important; display: flex; justify-content: flex-end; gap: 8px; margin: 4px 0 6px; transform: none !important; }
-/* 헥사곤: 작게·반투명, 누르면 또렷 */
-#chartModal .chart-wrap .hex-overlay { transform: scale(.78); opacity: .42; transition: opacity .15s, transform .15s; }
-#chartModal .chart-wrap .hex-overlay.hex-left, #chartModal .chart-wrap .hex-overlay:not(.hex-right) { transform-origin: top left; }
-#chartModal .chart-wrap .hex-overlay.hex-right { transform-origin: top right; }
-#chartModal .chart-wrap .hex-overlay:hover, #chartModal .chart-wrap .hex-overlay:active { opacity: 1; transform: scale(.95); }
-#chartModal .chart-wrap .hex-overlay { top: 46px; }
-/* 선 범례 */
-.mline-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 11.5px; color: var(--text-mute); margin: 6px 2px 4px; } .mline-legend:empty { display: none; }
-.ml-i { display: inline-flex; align-items: center; gap: 6px; } .ml-i i { display: inline-block; width: 16px; height: 2px; border-radius: 1px; } .ml-i i.dash { height: 0; border-top: 2px dashed; background: none !important; }
-/* 접힌 섹션: 제목 + 요약 */
-#chartModal .aq-coll-head { padding: 14px 2px; }
-#chartModal .aq-coll-head h4 { font-size: 15px !important; font-weight: 800; }
-.aq-coll-sum { margin-left: auto; margin-right: 8px; font-size: 12px; color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#chartModal .aq-coll-caret { font-size: 12px; color: var(--text-mute); }
+/* 헥사곤: 작게·반투명 (위치는 그대로) */
+#chartModal .chart-wrap .hex-overlay { transform: scale(.78); opacity: .45; transition: opacity .15s; } #chartModal .chart-wrap .hex-overlay.hex-right { transform-origin: top right; } #chartModal .chart-wrap .hex-overlay:not(.hex-right) { transform-origin: top left; }
+#chartModal .chart-wrap .hex-overlay:hover, #chartModal .chart-wrap .hex-overlay:active { opacity: 1; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8494,6 +8494,11 @@ table.combo-eval tbody td .nodata {
       </div>
     </div>
 
+    <div class="ops-sheet-bg" id="aqSigSheetBg" onclick="aqSigSheetClose()" style="z-index:1100"></div>
+    <div class="ops-sheet aq-sec-sheet" id="aqSigSheet" style="z-index:1101"><div class="ops-sheet-grip"></div>
+      <div class="sg-head"><span class="ops-sheet-title" style="margin:0">신호 필터</span><button class="sg-all" onclick="aqSigAllOn()">전체 켜기</button></div>
+      <div class="ar-list" id="aqSigList"></div></div>
+
     <!-- v5.04: 계정 카드 (보드 맨 아래, 압축형) -->
     <section class="card" id="aqAccountCard" data-mtab="board">
       <div class="card-body">
@@ -9077,14 +9082,14 @@ table.combo-eval tbody td .nodata {
       <div class="modal-subtitle" id="modalSubtitle">—</div>
       <div class="modal-desc" id="modalDesc"></div>
       <div class="modal-valuation" id="modalValuation"></div>
-      <div class="modal-view-tabs" id="modalViewTabs"><div class="mvt-mini" id="modalMini"></div>
+      <div class="modal-view-tabs" id="modalViewTabs">
         <button class="xtab-btn active" data-view="chart" onclick="aqSetModalView('chart')">차트</button>
         <button class="xtab-btn" data-view="report" onclick="aqSetModalView('report')">분석 보고서<span class="mvt-action an-action-pill" id="modalReportVerdict" style="display:none"></span></button>
         <button class="xtab-btn" data-view="position" onclick="aqSetModalView('position')">내 주식</button>
       </div>
       <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
       <div id="positionPanel"></div>
-      <div class="modal-filter-block mf-open">
+      <div class="modal-filter-block" style="display:none !important">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
           <h4 class="ticker-history-title" style="margin:0;">Signal Type 필터</h4>
           <span class="aq-coll-caret">▼</span>
@@ -9105,7 +9110,8 @@ table.combo-eval tbody td .nodata {
       <div class="chart-wrap">
         <!-- v3.48: 상세보기 + tf 토글을 우하단 한 줄로 묶음 (겹침 방지) -->
         <div class="chart-ctrl-br">
-        <button class="chart-mode-toggle" id="modeToggleBtn" onclick="toggleChartMode()">🔬 상세보기</button>
+        <button class="chart-filter-pill" id="modalFilterPill" onclick="aqSigSheetOpen()"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg><span id="modalFilterPillTxt">필터</span></button>
+          <button class="chart-mode-toggle" id="modeToggleBtn" onclick="toggleChartMode()">🔬 상세보기</button>
         <!-- v2.10: 타임프레임 세그먼트 (3M/6M/1Y) -->
         <div class="tf-toggle" data-target="modal">
           <button data-tf="3M" class="active" onclick="setChartTimeframe('modal','3M')">3M</button>
@@ -9116,7 +9122,6 @@ table.combo-eval tbody td .nodata {
         <canvas id="chartCanvas"></canvas>
         <div class="hex-overlay" id="modalHex"></div>
       </div>
-      <div class="mline-legend" id="modalLineLegend"></div>
       <!-- v2.63: 차트 하단 레전드 제거 — 차트 안 동적 레전드와 중복이라 불필요 -->
       <!-- (id=chartLegend 참조하는 JS는 element 없어도 null 가드 또는 무해 — 별도 처리) -->
       
@@ -9132,7 +9137,7 @@ table.combo-eval tbody td .nodata {
       <!-- v2.64/v3.61: 내부자 거래 이력 — 다른 보조 섹션과 동일 아코디언(접힘) -->
       <div class="ticker-history-wrap insider-history-wrap aq-coll collapsed" id="insiderHistoryWrap" style="display:none;">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
-          <h4 class="ticker-history-title" style="margin:0;">내부자 매수</h4><span class="aq-coll-sum" id="insiderHistoryWrapSum"></span>
+          <h4 class="ticker-history-title" style="margin:0;">내부자 매수</h4>
           <span class="aq-coll-caret">▼</span>
         </div>
         <div class="aq-coll-body"><div id="insiderHistoryArea"></div></div>
@@ -9140,7 +9145,7 @@ table.combo-eval tbody td .nodata {
       <!-- v4.68: 내부자 매도이력 (US_SELL) — 매수이력과 동일 UX -->
       <div class="ticker-history-wrap insider-history-wrap aq-coll collapsed" id="insiderSellHistoryWrap" style="display:none;">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
-          <h4 class="ticker-history-title" style="margin:0;">내부자 매도</h4><span class="aq-coll-sum" id="insiderSellHistoryWrapSum"></span>
+          <h4 class="ticker-history-title" style="margin:0;">내부자 매도</h4>
           <span class="aq-coll-caret">▼</span>
         </div>
         <div class="aq-coll-body"><div id="insiderSellHistoryArea"></div></div>
@@ -20536,18 +20541,18 @@ async function openChart(ticker) {
   const dayChgPct = prevClose > 0 ? (dayChg / prevClose * 100) : 0;
   const chgCls = dayChg > 0 ? 'up' : dayChg < 0 ? 'down' : '';
   const chgSign = dayChg >= 0 ? '+' : '';
-  const chgHtml = `<span class="price-chg ${chgCls}">${chgSign}${fmtPrice(Math.abs(dayChg))} (${chgSign}${dayChgPct.toFixed(2)}%)</span>`;
+  const chgHtml = `<span class="price-chg ${chgCls}">${dayChg > 0 ? '▲' : dayChg < 0 ? '▼' : ''} ${fmtPrice(Math.abs(dayChg)).replace('$', '')} · ${chgSign}${dayChgPct.toFixed(2)}%</span>`;   // v5.35
 
   // 1줄: 로고 + 회사명 + (티커)  — 회사명 없으면 티커만 크게
   if (company) {
-    $('modalTitle').innerHTML = `${tickerLogoHtml(ticker, sec)}<span class="company-name">${escapeHtml(company)}</span><span class="ticker-paren">(${escapeHtml(ticker)})</span>`;
+    $('modalTitle').innerHTML = `${tickerLogoHtml(ticker, sec)}<span class="mt-stack"><span class="company-name">${escapeHtml(company)}</span><span class="mt-tk">${escapeHtml(ticker)}</span></span>`;
   } else {
     $('modalTitle').innerHTML = `${tickerLogoHtml(ticker, sec)}<span class="company-name">${escapeHtml(ticker)}</span>`;
   }
   // 2줄: 최근 종가 + 전일 대비
-  $('modalPrice').innerHTML = `${fmtPrice(lastPrice)} ${chgHtml}`;
-  // 3줄: 섹터 + 고점 대비 + 데이터 일자
-  $('modalSubtitle').innerHTML = `<span>${escapeHtml(sec)}</span><span class="sep">·</span><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span><span class="sep">·</span><span>${escapeHtml(String(dates[dates.length-1]).slice(5).replace('-', '/'))} 종가</span>`;
+  $('modalPrice').innerHTML = `<span class="mp-v">${fmtPrice(lastPrice)}</span>${chgHtml}<div class="mp-date">${escapeHtml(String(dates[dates.length-1]).slice(5).replace('-', '/'))} 종가</div>`;   // v5.35
+  // 3줄: 섹터 · 고점 대비 (알약 두 개)
+  $('modalSubtitle').innerHTML = `<span class="ms-chip">${escapeHtml(sec)}</span><span class="ms-chip"><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span></span>`;
   // 4줄: 상세설명 (있으면 표시)
   $('modalDesc').textContent = desc;
   // v3.22: 밸류에이션 (PER / Forward PER / PEG) — US_VALUATION, US 전용
@@ -20561,7 +20566,7 @@ async function openChart(ticker) {
       const na = (v === null || v === undefined || isNaN(v));
       return `<span class="mv-chip ${qcls || ''}" data-val-metric="${metric}" onclick="aqOpenValModal('${ticker}','${metric}')"><span class="mv-k">${k}</span><span class="mv-v${na?' mv-na':''}">${aqValFmt(v)}</span></span>`;
     };
-    mv.innerHTML = chip('PER', val.per, 'per', cls.per) + chip('Forward PER', val.fwdPer, 'fwdPer', cls.fwdPer) + chip('PEG', val.peg, 'peg', cls.peg);
+    mv.innerHTML = chip('PER', val.per, 'per', cls.per) + chip('선행 PER', val.fwdPer, 'fwdPer', cls.fwdPer) + chip('PEG', val.peg, 'peg', cls.peg);
   })();
   // v3.46: 새로 열 때만 시그널 필터/이력 접힘 기본 (tf/상세 토글 재드로우 시엔 사용자 상태 유지)
   if (!$('chartModal').classList.contains('active')) {
@@ -21540,11 +21545,7 @@ function drawChart(d, opts) {
   try { const _tkA = (opts && opts.ticker) || _state.openTicker || ''; const _sim = (window.AqWatchStore && AqWatchStore.get && _tkA) ? AqWatchStore.get(getCurrentMarket(), _tkA) : null;
     if (_sim && Number(_sim.buyPrice) > 0) annotations.simBuy = { type: 'line', yMin: Number(_sim.buyPrice), yMax: Number(_sim.buyPrice), borderColor: '#da77f2', borderWidth: 1.2, borderDash: [4, 3], yScaleID: 'yPrice',
       label: { display: !simple, content: `모의매수 ${fmtPrice(Number(_sim.buyPrice))}`, position: 'end', backgroundColor: 'rgba(30,30,30,0.95)', color: '#da77f2', font: { size: 10 } } }; } catch (e) {}
-  try { const lg = document.getElementById('modalLineLegend'); if (lg && isModal) { const it = [];
-      if (annotations.buyAvg) it.push(`<span class="ml-i"><i style="background:${COL.buyAvg}"></i>내 평단 ${fmtPrice(annotations.buyAvg.yMin)}</span>`);
-      if (annotations.simBuy) it.push(`<span class="ml-i"><i class="dash" style="border-color:#da77f2"></i>모의매수 ${fmtPrice(annotations.simBuy.yMin)}</span>`);
-      if (annotations.bbAvg) it.push(`<span class="ml-i"><i style="background:rgba(173,181,189,.7)"></i>자사주 평단 ${fmtPrice(annotations.bbAvg.yMin)} (최근 1년)</span>`);
-      lg.innerHTML = it.join(''); } } catch (e) {}
+
   // v5.07: 분석 보고서 기준일 마커 (세로 점선 + 의견)
   try { const _tkR = String((opts && opts.ticker) || _state.openTicker || '').toUpperCase(); const _mk = getCurrentMarket();
     const _rd = (_tkR && _state.reports && _state.reports[_mk] && _state.reports[_mk][_tkR]) || [];
@@ -26220,28 +26221,55 @@ document.addEventListener('click', e => {
 (function () {   // 같은 종목을 짧은 시간에 두 번 여는 것 방지 + 열린 뒤 요약·고정 헤더 갱신
   const _orig = window.openChart; if (typeof _orig !== 'function') return; let last = { tk: '', at: 0 };
   window.openChart = function (tk, ...rest) {
-    const k = String(tk || '').toUpperCase(); if (k && k === last.tk && Date.now() - last.at < 600) return; last = { tk: k, at: Date.now() };
+    const k = String(tk || '').toUpperCase(); const _act = document.getElementById('chartModal') && document.getElementById('chartModal').classList.contains('active');
+    if (!_act && k && k === last.tk && Date.now() - last.at < 600) return; last = { tk: k, at: Date.now() };   // 열려 있을 땐(필터·기간 재그리기) 막지 않음
     const r = _orig.call(this, tk, ...rest); setTimeout(() => { try { aqModalDecorate(k); } catch (e) {} }, 350); return r;
   };
 })();
-function aqModalDecorate(tk) {
-  const mk = getCurrentMarket(); const fmtD = d => d ? String(d).slice(5, 10).replace('-', '/') : '';
-  // 시그널 이력 요약
-  try { const rows = (_state.archive || []).filter(r => String(r.Ticker || '').toUpperCase() === tk).sort((a, b) => String(b.Date).localeCompare(String(a.Date)));
-    const el = document.getElementById('tickerHistoryWrapSum'); if (el) el.textContent = rows.length ? `${rows.length}건 · 최근 ${fmtD(rows[0].Date)} ${String(rows[0].Signal_Type || '').split('+')[0]}` : ''; } catch (e) {}
-  // 내부자 매수·매도 요약
-  const sum = (src, id) => { try { const a = (src && src[tk]) || []; const el = document.getElementById(id); if (!el) return; const d = a.map(x => x.transDate || x.filingDate || '').filter(Boolean).sort().reverse(); el.textContent = a.length ? `${a.length}건 · 최근 ${fmtD(d[0])}` : ''; } catch (e) {} };
-  if (mk === 'US') { sum(typeof _aqInsiderTrades !== 'undefined' ? _aqInsiderTrades : null, 'insiderHistoryWrapSum'); sum(typeof _aqInsiderSells !== 'undefined' ? _aqInsiderSells : null, 'insiderSellHistoryWrapSum'); }
-  // 고정 헤더용 미니 줄
-  try { const mini = document.getElementById('modalMini'); const ttl = document.getElementById('modalTitle'); const pr = document.getElementById('modalPrice');
-    if (mini && ttl && pr) mini.innerHTML = `<b>${escapeHtml((ttl.textContent || '').replace(/\s+/g, ' ').trim())}</b><span>${pr.innerHTML}</span>`; } catch (e) {}
-  // 설명 두 줄 + 더보기
-  try { const d = document.getElementById('modalDesc'); if (d) { d.classList.add('clamp'); d.onclick = () => d.classList.toggle('clamp'); } } catch (e) {}
+function aqModalDecorate(tk) {   // v5.35: 필터 알약 표시만 (요약·고정 헤더 등은 걷어냄)
+  try { const all = getSignalTypes(); const on = all.filter(x => _state.signalFilter.has(x)).length; const el = document.getElementById('modalFilterPillTxt');
+    if (el) el.textContent = on === all.length ? '필터' : `필터 ${on}`; document.getElementById('modalFilterPill').classList.toggle('on', on !== all.length); } catch (e) {}
 }
-document.addEventListener('DOMContentLoaded', () => {
-  const mc = document.querySelector('#chartModal .modal-content'); const tabs = document.getElementById('modalViewTabs'); if (!mc || !tabs) return;
-  mc.addEventListener('scroll', () => { const pr = document.getElementById('modalPrice'); if (!pr) return; const on = pr.getBoundingClientRect().bottom < mc.getBoundingClientRect().top + 8; tabs.classList.toggle('mini-on', on); }, { passive: true });
-});
+// v5.35: 신호 필터 바텀시트 (차트 마커 모양·색 그대로, 이 종목 신호 횟수)
+function _sigMk(sig) {
+  const col = (getSignalColors() || {})[sig] || '#868e96'; const shp = (getSignalShapes() || {})[sig] || 'circle';
+  const st = shp === 'triangle' ? 'clip-path:polygon(50% 0,100% 100%,0 100%)' : shp === 'rect' ? '' : shp === 'rectRot' ? 'transform:rotate(45deg) scale(.85)' : shp === 'star' ? 'clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)' : 'border-radius:50%';
+  return `<span class="sg-mk" style="background:${col};${st}"></span>`;
+}
+function aqSigSheetRender() {
+  const tk = _state.openTicker; const counts = {};
+  (_state.archive || []).filter(r => r.Ticker === tk).forEach(r => String(r.Signal_Type || '').split('+').forEach(x => { x = x.trim(); if (x) counts[x] = (counts[x] || 0) + 1; }));
+  const types = getSignalTypes();
+  document.getElementById('aqSigList').innerHTML = types.map(sig => `<div class="ar-row sg-row" onclick="aqSigToggle('${sig}')">${_sigMk(sig)}<label>${sig}</label><span class="sg-n">이 종목 ${counts[sig] || 0}회</span><span class="aq-switch"><input type="checkbox" ${_state.signalFilter.has(sig) ? 'checked' : ''} tabindex="-1"><span class="sl"></span></span></div>`).join('');
+}
+function aqSigSheetOpen() { aqSigSheetRender(); document.getElementById('aqSigSheet').classList.add('open'); document.getElementById('aqSigSheetBg').classList.add('open'); }
+function aqSigSheetClose() { document.getElementById('aqSigSheet').classList.remove('open'); document.getElementById('aqSigSheetBg').classList.remove('open'); }
+function aqSigToggle(sig) { toggleSignalFilter(sig); aqSigSheetRender(); aqModalDecorate(_state.openTicker); }
+function aqSigAllOn() { getSignalTypes().forEach(x => _state.signalFilter.add(x)); try { applyFilterAndRender(); } catch (e) {} if (_state.openTicker) openChart(_state.openTicker); aqSigSheetRender(); }
+// v5.35: 시그널 이력 — 한 줄 목록 (날짜 · 마커 · 신호 · 신호일 종가 · 5거래일 뒤 / 지금까지)
+let _thShown = 5;
+function buildTickerHistoryTable(ticker, more) {
+  const wrap = document.getElementById('tickerHistoryWrap'); const area = document.getElementById('tickerHistoryArea'); const cnt = document.getElementById('tickerHistoryWrapSum'); if (!area) return;
+  if (!more) _thShown = 5;
+  const filter = _state.signalFilter || new Set(getSignalTypes());
+  const rows = (_state.archive || []).filter(r => r.Ticker === ticker).filter(r => String(r.Signal_Type || '').split('+').some(x => filter.has(x.trim()))).sort((a, b) => String(b.Date).localeCompare(String(a.Date)));
+  if (wrap) wrap.style.display = rows.length ? '' : 'none'; if (cnt) cnt.textContent = rows.length ? String(rows.length) : '';
+  const ser = (typeof findTickerSeries === 'function') ? findTickerSeries(ticker) : null; const sr = (ser && ser.rows) || []; const idx = {}; sr.forEach((r, i) => { idx[String(r.Date).slice(0, 10)] = i; });
+  const last = sr.length ? Number(sr[sr.length - 1].Close) : null; const yNow = String(new Date().getFullYear());
+  const prio = ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A'];
+  const pc = v => v == null ? '' : (v > 0 ? 'up' : v < 0 ? 'down' : '');
+  const pf = v => v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+  area.innerHTML = rows.slice(0, _thShown).map(r => {
+    const d = String(r.Date).slice(0, 10); const sigs = String(r.Signal_Type || '').split('+').map(x => x.trim()).filter(Boolean); const p = prio.find(x => sigs.includes(x)) || sigs[0];
+    const c0 = Number(r.Close_Price) || (idx[d] != null ? Number(sr[idx[d]].Close) : null); const i = idx[d];
+    const r5 = (c0 && i != null && i + 5 < sr.length) ? (Number(sr[i + 5].Close) / c0 - 1) * 100 : null; const rn = (c0 && last) ? (last / c0 - 1) * 100 : null;
+    return `<div class="th-row"><span class="th-d">${d.slice(0, 4) === yNow ? d.slice(5).replace('-', '/') : d.slice(2).replace(/-/g, '.')}</span>${_sigMk(p)}<span class="th-s">${escapeHtml(p)}${sigs.length > 1 ? `<i>+${sigs.length - 1}</i>` : ''}</span><span class="th-c">${c0 ? fmtPrice(c0) : ''}</span>
+      <span class="th-r"><b class="${pc(r5)}">${r5 == null ? (i != null && c0 ? '대기' : '—') : pf(r5)}</b><small>지금 <span class="${pc(rn)}">${pf(rn)}</span></small></span></div>`;
+  }).join('') + (rows.length > _thShown ? `<button class="th-more" onclick="event.stopPropagation(); _thShown += 10; buildTickerHistoryTable('${escapeAttr(ticker)}', true)">더 보기 ${rows.length - _thShown}</button>` : '') + (rows.length ? '<div class="th-note">5거래일 뒤 수익률 · 아래 작은 글씨는 지금까지</div>' : '');
+}
+window.buildTickerHistoryTable = buildTickerHistoryTable;
+Object.assign(window, { aqSigSheetOpen, aqSigSheetClose, aqSigToggle, aqSigAllOn });
+try { AQ_SHEETS.push({ id: 'aqSigSheet', root: () => document.getElementById('aqSigSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: aqSigSheetClose, full: true }); } catch (e) {}
 window.aqModalDecorate = aqModalDecorate;
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
