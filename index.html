@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.27';   // v5.27: 자사주를 내부자 매매 카드의 토글(자사주/매수/매도)로 이동
+window.AQ_PWA_VERSION = '5.28';   // v5.28: 자사주 평단선은 차트 가격 범위 안일 때만 표시
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -21414,7 +21414,8 @@ function drawChart(d, opts) {
   // v5.26: 자사주 평단선 (옅은 회색, 최근 1년)
   try { const _tkB = (opts && opts.ticker) || _state.openTicker || '';
     if (getCurrentMarket() === 'US' && _tkB) { if (!_aqBuybackLoaded) fetchBuyback(); const _bb = aqBuybackAvg(_tkB);
-      if (_bb && _bb.avg > 0) annotations.bbAvg = { type: 'line', yMin: _bb.avg, yMax: _bb.avg, borderColor: _bb.quarters <= 2 ? 'rgba(173,181,189,0.28)' : 'rgba(173,181,189,0.6)', borderWidth: 2, yScaleID: 'yPrice',
+      const _hi = Math.max(...(d.highs || d.closes || []).filter(v => v != null && !isNaN(v))), _lo = Math.min(...(d.lows || d.closes || []).filter(v => v != null && !isNaN(v)));
+      if (_bb && _bb.avg > 0 && isFinite(_hi) && isFinite(_lo) && _bb.avg >= _lo && _bb.avg <= _hi) annotations.bbAvg = {   // v5.28: 그래프 범위 안일 때만 type: 'line', yMin: _bb.avg, yMax: _bb.avg, borderColor: _bb.quarters <= 2 ? 'rgba(173,181,189,0.28)' : 'rgba(173,181,189,0.6)', borderWidth: 2, yScaleID: 'yPrice',
         label: { display: true, content: `자사주 평단 ${fmtPrice(_bb.avg)} (최근 1년)`, position: 'end', backgroundColor: 'rgba(30,30,30,0.85)', color: 'rgba(173,181,189,0.9)', font: { size: 10, weight: 'bold' } } }; } } catch (e) {}
 
   // v5.01: 모의매수가 점선
