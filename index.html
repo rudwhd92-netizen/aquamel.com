@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.37';   // v5.37: 한국주식 정상화 1·2차 — 미국 전용 숨김, 수급 섹션, 비교·룩백 한국 지원, 성공률 필터, 연속 순매수 라벨
+window.AQ_PWA_VERSION = '5.38';   // v5.38: AI 탭(분석 보고서/자동매수), 탐색 종목 리스트 복원
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3563,7 +3563,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .aq-admin-table { width: 100%; border-collapse: collapse; font-size: 12px; } .aq-admin-table th, .aq-admin-table td { padding: 7px 6px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
 .aq-admin-table th { font-size: 10px; color: var(--text-mute); text-transform: uppercase; }
 .aq-admin-table code { font-weight: 800; color: #63e6be; letter-spacing: .5px; }
-body:not([data-role="admin"]) [data-pc-tab="ops"], body:not([data-role="admin"]) [data-pc-tab="auto"], body:not([data-role="admin"]) .mo-drawer-item[data-role-admin] { display: none !important; }
+body:not([data-role="admin"]) [data-pc-tab="ops"], body:not([data-role="admin"]) .mo-drawer-item[data-role-admin] { display: none !important; }
 /* v5.01: 모의매수 */
 .aq-sim-summary { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-mute); padding: 4px 2px 10px; }
 .aq-sim-summary b { color: var(--text-hi); }
@@ -3952,7 +3952,7 @@ body:not([data-role="admin"]) [data-role-admin-tab] { display: none !important; 
 #chartModal .chart-wrap { padding-bottom: 42px !important; box-sizing: content-box; }
 #chartModal .chart-wrap .chart-ctrl-br { bottom: 4px !important; }
 /* v5.37: 한국 선택 시 미국 전용 숨김 */
-html[data-market="KR"] .mtab-btn[data-mtab="auto"], html[data-market="KR"] [data-pc-tab="auto"] { display: none !important; }
+
 html[data-market="KR"] #insiderModeToggle { display: none !important; }
 /* 수급 섹션 */
 #krFlowArea .kf-row { display: grid; grid-template-columns: 52px repeat(3, minmax(0, 1fr)); gap: 6px; align-items: baseline; padding: 9px 2px; border-bottom: 1px solid var(--line); font-size: 13px; }
@@ -3963,6 +3963,14 @@ html[data-market="KR"] #insiderModeToggle { display: none !important; }
 .krf-sum .up, #krFlowWrapSum .up { color: #ff6b6b; } #krFlowWrapSum .down { color: #4dabf7; }
 .cmp-flow .kf-row { display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr)); gap: 6px; padding: 9px 2px; border-bottom: 1px solid var(--line); font-size: 13px; }
 .cmp-flow .kf-h { font-size: 11px; color: var(--text-mute); } .cmp-flow .kf-c { text-align: right; } .cmp-flow .up { color: #ff6b6b; } .cmp-flow .down { color: #4dabf7; }
+/* v5.38: AI 탭 (분석 보고서 / 자동매수) · 탐색 종목 리스트 */
+body[data-mtab="explore"][data-xtab="list"] section.card[data-xtab="list"] { display: block !important; }
+body[data-mtab="auto"] section.card[data-atab] { display: none !important; }
+body[data-mtab="auto"][data-atab="report"] section.card[data-atab="report"],
+body[data-mtab="auto"][data-atab="auto"] section.card[data-atab="auto"] { display: block !important; }
+body[data-pc-page="auto"] section.card[data-atab="report"] { display: block !important; }
+body[data-pc-page="auto"]:not([data-role="admin"]) section.card[data-atab="auto"], html[data-market="KR"] body[data-pc-page="auto"] section.card[data-atab="auto"] { display: none !important; }
+body:not([data-role="admin"]) #aiSubtabs, html[data-market="KR"] #aiSubtabs { display: none !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -7924,7 +7932,7 @@ table.combo-eval tbody td .nodata {
   <!-- v3.14: 탐색 서브탭 바 (누적 시그널 / 내부자 매수 / 공매도 이력 / 전체 리스트) -->
   <section class="card mobile-only explore-subtabs" id="exploreSubtabs" data-mtab="explore">
     <div class="xtab-row">
-      <button class="xtab-btn" data-xtab="report" onclick="setExploreSubtab('report')">분석 보고서</button>
+      <button class="xtab-btn" data-xtab="list" onclick="setExploreSubtab('list')">종목 리스트</button>
       <button class="xtab-btn active" data-xtab="trend" onclick="setExploreSubtab('trend')">섹터 동향</button>
       <button class="xtab-btn" data-xtab="insider" onclick="setExploreSubtab('insider')">내부자 매매</button>
       <button class="xtab-btn" data-xtab="shorting" onclick="setExploreSubtab('shorting')">공매도 이력</button>
@@ -7961,7 +7969,7 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-  <section class="card mobile-only" id="stockListCard" data-mtab="retired" style="display:none">
+  <section class="card mobile-only" id="stockListCard" data-mtab="explore" data-xtab="list">
     <div class="card-header">
       <h2>종목 리스트</h2>
       <div class="stock-list-sort">
@@ -8219,7 +8227,7 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-  <section class="card" id="analysisCard" data-mtab="explore" data-xtab="report" style="display:none;">
+  <section class="card" id="analysisCard" data-mtab="auto" data-atab="report">
     <div class="card-header">
       <h2>분석 보고서</h2>
       <div class="stock-list-sort">
@@ -8375,7 +8383,13 @@ table.combo-eval tbody td .nodata {
     </section>
 
     <!-- v4.76: 자동 페이지 (요건 구체화 예정 — 우선 신호 선택만) -->
-    <section class="card" id="autoSignalCard" data-mtab="auto">
+    <section class="card mobile-only explore-subtabs" id="aiSubtabs" data-mtab="auto">
+      <div class="xtab-row">
+        <button class="xtab-btn active" data-atab="report" onclick="setAiSubtab('report')">분석 보고서</button>
+        <button class="xtab-btn" data-atab="auto" onclick="setAiSubtab('auto')">자동매수</button>
+      </div>
+    </section>
+    <section class="card" id="autoSignalCard" data-mtab="auto" data-atab="auto">
       <div class="card-header eng-head"><h2>자동매매 엔진</h2>
         <button class="eng-gear" onclick="aqAutoCfgOpen()" aria-label="설정"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         <label class="aq-switch eng-switch"><input type="checkbox" id="engSwitch" onchange="aqEngineToggle(this)"><span class="sl"></span></label>
@@ -8400,7 +8414,7 @@ table.combo-eval tbody td .nodata {
         <div class="ar-row"><label>보유 기준</label><div class="auto-seg auto-seg-sm" id="autoHoldSeg"><button data-h="1" onclick="aqAutoSetHold(1)">1</button><button data-h="2" onclick="aqAutoSetHold(2)">2</button><button data-h="3" onclick="aqAutoSetHold(3)">3</button><button data-h="4" onclick="aqAutoSetHold(4)">4</button><button data-h="5" onclick="aqAutoSetHold(5)">5</button><button data-h="6" onclick="aqAutoSetHold(6)">6</button><button data-h="7" onclick="aqAutoSetHold(7)">7</button></div></div>
       </div></div>
     </div>
-    <section class="card" id="autoBlacklistCard" data-mtab="auto">
+    <section class="card" id="autoBlacklistCard" data-mtab="auto" data-atab="auto">
       <div class="card-header"><h2>자동매수 제외 중 <span id="autoBlCount" class="auto-bl-count"></span></h2></div>
       <div class="card-body"><div class="dash-holdings-body" id="autoBlList"></div></div>
     </section>
@@ -8933,9 +8947,9 @@ table.combo-eval tbody td .nodata {
     </button>
     <!-- v3.85: 관심 탭 삭제 — 관심 종목은 자산 서브탭(좌측)으로 이동 -->
     <!-- v2.92: 4번째 — 일정 -->
-    <button class="mtab-btn" data-mtab="auto" data-role-admin-tab onclick="switchMobileTab('auto')" aria-label="자동">
+    <button class="mtab-btn" data-mtab="auto" onclick="switchMobileTab('auto')" aria-label="AI">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3l1.6 4.4L16 9l-4.4 1.6L10 15l-1.6-4.4L4 9l4.4-1.6z"/><path d="M18 13l.8 2.2L21 16l-2.2.8L18 19l-.8-2.2L15 16l2.2-.8z"/></svg>
-      <span class="mtab-label">자동</span>
+      <span class="mtab-label">AI</span>
     </button>
     <button class="mtab-btn" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -9270,9 +9284,9 @@ table.combo-eval tbody td .nodata {
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
     <span class="pc-tab-label">운영</span>
   </button>
-  <button class="pc-tab-btn" data-pc-tab="auto" onclick="setPCTab('auto')" aria-label="자동">
+  <button class="pc-tab-btn" data-pc-tab="auto" onclick="setPCTab('auto')" aria-label="AI">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="5"/></svg>
-    <span class="pc-tab-label">자동</span>
+    <span class="pc-tab-label">AI</span>
   </button>
   <button class="pc-tab-btn" data-pc-tab="settings" onclick="setPCTab('settings')" aria-label="설정">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -23471,7 +23485,7 @@ function switchMobileTab(tab) {
   // v2.66: todo 활성화 — 칸반 빌드 (이전엔 'todo' return)
   document.body.setAttribute('data-mtab', tab);
   if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
-  if (tab === 'auto') { try { aqAutoEnter(); } catch (e) {} }
+  if (tab === 'auto') { try { setAiSubtab(document.body.getAttribute('data-atab') || 'report'); } catch (e) {} }
   if (tab === 'settings') { try { aqSettingsRender(); } catch (e) {} }
   document.querySelectorAll('.mtab-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mtab === tab);
@@ -23620,7 +23634,7 @@ function setPCTab(tab) {
   if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings' || tab === 'ops' || tab === 'auto') {
     setPCPage(tab);
     if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
-    if (tab === 'auto') { try { aqAutoEnter(); } catch (e) {} }
+    if (tab === 'auto') { try { setAiSubtab(document.body.getAttribute('data-atab') || 'report'); } catch (e) {} }
   if (tab === 'settings') { try { aqSettingsRender(); } catch (e) {} }
     // v2.59: 설정 페이지 진입 시 데이터 시점 표시 갱신 (v2.58에서 마이 페이지였던 것)
     if (tab === 'settings') {
@@ -23716,12 +23730,14 @@ window.aqLayoutBoardHoldings = aqLayoutBoardHoldings;
 
 function setExploreSubtab(x) {
   if (!x || x === 'signals') x = 'trend';   // v5.14: 누적 시그널 탭 폐지 → 섹터 동향
+  if (x === 'report') { try { switchMobileTab('auto'); setAiSubtab('report'); } catch (e) {} return; }   // v5.38: 분석 보고서는 AI 탭으로
   document.body.setAttribute('data-xtab', x);
   document.querySelectorAll('.xtab-btn[data-xtab]').forEach(b => b.classList.toggle('active', b.dataset.xtab === x));
   try {
     if (typeof aqApplyExploreMarketUI === 'function') aqApplyExploreMarketUI();
     const _isKR = getCurrentMarket() === 'KR';
-    if (x === 'buyback') { try { buildBuybackList(); } catch (e) {} }
+    if (x === 'list') { try { if (typeof buildStockList === 'function') buildStockList(); } catch (e) {} }
+    else if (x === 'buyback') { try { buildBuybackList(); } catch (e) {} }
     else if (x === 'trend') { if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); try { if (typeof buildSectorStreaks === 'function') buildSectorStreaks(); } catch (e) {} }
     else if (x === 'signals' && typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
     else if (x === 'insider') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('foreign'); } else if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); }
@@ -26346,12 +26362,21 @@ window.aqKrFlowSection = aqKrFlowSection;
 // 한국 선택 시 자동 탭에 있으면 발견으로
 function aqMarketGuards() {
   const kr = getCurrentMarket() === 'KR';
-  try { if (kr && document.body.getAttribute('data-mtab') === 'auto') switchMobileTab('discover'); } catch (e) {}
   try { if (kr && document.body.getAttribute('data-btab') === 'lookback') {} } catch (e) {}
 }
 (function () { const _o = window.setMarket; if (typeof _o !== 'function') return; window.setMarket = function (m) { const r = _o.apply(this, arguments); try { aqMarketGuards(); } catch (e) {} try { aqLoadTickerStats(true); } catch (e) {} return r; }; })();
 Object.assign(window, { aqMarketGuards });
 
+// v5.38: AI 탭 — 분석 보고서 / 자동매수(관리자·미국만)
+function setAiSubtab(x) {
+  const canAuto = document.body.getAttribute('data-role') === 'admin' && getCurrentMarket() === 'US';
+  if (x !== 'auto' || !canAuto) x = 'report';
+  document.body.setAttribute('data-atab', x);
+  document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === x));
+  try { if (x === 'auto') aqAutoEnter(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+}
+window.setAiSubtab = setAiSubtab;
+(function () { const _o = window.setMarket; if (typeof _o !== 'function') return; window.setMarket = function () { const r = _o.apply(this, arguments); try { if (document.body.getAttribute('data-mtab') === 'auto') setAiSubtab(document.body.getAttribute('data-atab')); } catch (e) {} return r; }; })();
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
   _aqSetRole('guest'); _aqSetBroker('none');
