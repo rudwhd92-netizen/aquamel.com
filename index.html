@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.24';   // v5.24: MO 상단 다운로드 아이콘도 토스 동기화
+window.AQ_PWA_VERSION = '5.25';   // v5.25: 보고서 카드 — 3필터 상시 표시·판정 근거·가능성 칩·'돈이 되나요' 상시, 8번 미분류 문단 보존
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3855,6 +3855,16 @@ body:not([data-broker="linked"]) #autoSignalCard .aq-toss-need { display: block;
 body:not([data-broker="linked"]) .aq-toss-band { display: block; }
 /* v5.23: 동기화 중 아이콘 회전 */
 #heroLoadBtn.aq-spin svg, #mobileLoadBtn.aq-spin svg { animation: aq-spin 0.9s linear infinite; } @keyframes aq-spin { to { transform: rotate(360deg); } }
+/* v5.25: 보고서 카드 추가 요소 */
+.rv4-vnote { font-size: 12px; color: var(--text-mute); margin: -2px 0 8px 28px; line-height: 1.5; }
+.rv4-filters, .rv4-money { margin: 2px 0 10px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.rv4-f, .rv4-money { display: grid; grid-template-columns: 92px auto 1fr; gap: 8px; align-items: baseline; padding: 8px 10px; font-size: .9em; }
+.rv4-f + .rv4-f { border-top: 1px dashed var(--line); }
+.rv4-money { grid-template-columns: 128px 1fr; }
+.rv4-fq { font-size: 11px; font-weight: 800; color: var(--text-hi); white-space: nowrap; } .rv4-fq i { font-style: normal; font-weight: 500; color: var(--text-mute); }
+.rv4-f .rv3-lb { font-size: 10px; padding: 1px 6px; } .rv4-f:not(:has(.rv3-lb)) { grid-template-columns: 92px 1fr; }
+.rv4-ft { color: var(--text); line-height: 1.55; }
+@media (max-width: 520px) { .rv4-f { grid-template-columns: 1fr auto; } .rv4-f .rv4-ft { grid-column: 1 / -1; } .rv4-money { grid-template-columns: 1fr; } }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -14714,7 +14724,7 @@ function _rv4Cards(body, kind) {
   const clean = _rv4Clean(body);
   const parts = clean.split(/^###\s+(?=(?:악재|호재))/m); const intro = parts.shift(); const cards = [];
   parts.forEach(p => {
-    const first = p.split('\n')[0]; const rest = p.slice(first.length + 1);
+    const first = p.split('\n')[0]; const rest = p.slice(first.length + 1).split(/\n###\s/)[0];   // v5.25: 마지막 카드에 요약표가 섞이지 않게
     const h = first.match(/^(악재|호재)\s*([①-⑩⑴-⑽\d]+)[:：]\s*(.*?)\s*(?:\(([^)]*)\))?\s*$/); if (!h) return;
     const blocks = _rv4CardBlocks(rest);
     const verdict = (blocks.find(b => /^판정/.test(b.label)) || {}).label.replace(/^판정\s*[:：]\s*/, '') || _rv4FindLabel(rest, /\*\*판정\s*[:：]\s*([^*\n]+)\*\*/);
@@ -14722,7 +14732,18 @@ function _rv4Cards(body, kind) {
     const reflLabel = _rv4FindLabel(refl, /(과반영|반영 완료|반영 중|미반영)/);
     const what = blocks.find(b => /^무슨 일이에요/.test(b.label));
     const details = blocks.filter(b => b !== what && !/^판정/.test(b.label));
-    cards.push({ kind: h[1], no: h[2], title: h[3], meta: h[4] || '', verdict, reflLabel, what: what ? what.text : rest.split('\n\n')[0], details });
+    // v5.25: 추가 파싱 — 판정 근거, 3필터, 가능성, '그래서 돈이 되나요?'
+    const vb = blocks.find(b => /^판정/.test(b.label)); const verdictNote = vb ? String(vb.text || '').replace(/^\s*\(|\)\s*$/g, '').trim() : '';
+    const filters = blocks.filter(b => /^필터\s*[1-3]/.test(b.label)).map(b => {
+      const merged = /^필터\s*1\s*[·,·]\s*2/.test(b.label); const n = merged ? 'all' : (b.label.match(/^필터\s*([1-3])/) || [])[1];
+      const side = (String(b.text).match(/\[(일시적 쪽|본질적 쪽|확인 필요)\]|(일시적 쪽|본질적 쪽|확인 필요)\s*[)\]]?\s*$/) || []).slice(1).find(Boolean) || '';
+      const first = (String(b.text).replace(/\s*\[(일시적 쪽|본질적 쪽|확인 필요)\]\s*$/, '').match(/^[\s\S]*?(?:요\.|다\.|\.\s)/) || [String(b.text)])[0].trim();
+      return { n, side, first };
+    });
+    const allText = blocks.map(b => b.text).join(' ');
+    const odds = (allText.match(/가능성[은는이]?\s*\**(높음|중간|낮음)/) || [])[1] || '';
+    const money = (blocks.find(b => /^그래서 돈이 되나요/.test(b.label)) || {}).text || '';
+    cards.push({ kind: h[1], no: h[2], title: h[3], meta: h[4] || '', verdict, reflLabel, what: what ? what.text : rest.split('\n\n')[0], details, verdictNote, filters, odds, money });
   });
   // 요약표 + 다리 문장
   let bridge = ''; const tblIdx = clean.indexOf('### ' + (kind === '악재' ? '3' : '4') + '번 요약표');
@@ -14733,11 +14754,16 @@ function _rv4RenderCards(sec, kind) {
   const { intro, cards, bridge } = _rv4Cards(sec.body, kind);
   const cardHtml = cards.map(c => `<article class="rv4-card">
     <header class="rv4-card-h"><span class="rv4-card-no">${escapeHtml(c.no)}</span><div class="rv4-card-t"><div class="rv4-card-title">${aqMdInline(c.title)}</div>${c.meta ? `<div class="rv4-card-meta">${aqMdInline(c.meta)}</div>` : ''}</div>${c.verdict ? _rv4LabelChip(c.verdict) : ''}</header>
+    ${c.verdictNote ? `<div class="rv4-vnote">판정 근거 · ${aqMdInline(c.verdictNote)}</div>` : ''}
     <div class="rv4-card-what">${_rv4Para(c.what)}</div>
+    ${c.kind === '악재' && c.filters.length ? `<div class="rv4-filters">${c.filters.map(f => { const q = f.n === 'all' ? '필터 1·2·3 <i>(합쳐 서술)</i>' : ({ 1: '고객 이탈?', 2: '돈으로 해결?', 3: '5년 뒤 기억?' })[f.n] || '필터';
+      const cls = /본질/.test(f.side) ? 'bad' : /일시/.test(f.side) ? 'good' : f.side ? 'mid' : '';
+      return `<div class="rv4-f"><span class="rv4-fq">${q}</span>${f.side ? `<span class="rv3-lb rv3-lb-${cls}">${escapeHtml(f.side)}</span>` : ''}<span class="rv4-ft">${aqMdInline(f.first)}</span></div>`; }).join('')}</div>` : ''}
+    ${c.kind === '호재' && c.money ? `<div class="rv4-money"><span class="rv4-fq">그래서 돈이 되나요?</span><span class="rv4-ft">${aqMdInline((String(c.money).match(/^[\s\S]*?(?:요\.|다\.)(?:[\s\S]*?(?:요\.|다\.))?/) || [c.money])[0])}</span></div>` : ''}
     ${c.reflLabel ? _rv4ReflectMeter(c.reflLabel) : ''}
-    ${c.details.length ? `<details class="rv4-more"><summary>자세히 — 필터 ${c.details.length}개</summary>${c.details.map(d => `<div class="rv4-q"><div class="rv4-q-l">${escapeHtml(d.label.replace(/\s*\(가장 중요한 질문\)/, ''))}</div><div class="rv4-q-t">${_rv4Para(d.text)}</div></div>`).join('')}</details>` : ''}
+    ${c.details.length ? `<details class="rv4-more"><summary>자세히</summary>${c.details.map(d => `<div class="rv4-q"><div class="rv4-q-l">${escapeHtml(d.label.replace(/\s*\(가장 중요한 질문\)/, ''))}</div><div class="rv4-q-t">${_rv4Para(d.text)}</div></div>`).join('')}</details>` : ''}
   </article>`).join('');
-  const summ = cards.length ? `<div class="rv4-summ">${cards.map(c => `<div class="rv4-summ-row"><span class="rv4-summ-t">${escapeHtml(c.no)} ${aqMdInline(c.title.length > 28 ? c.title.slice(0, 28) + '…' : c.title)}</span><span class="rv4-summ-chips">${_rv4LabelChip(c.verdict)}${c.reflLabel ? _rv4LabelChip(c.reflLabel) : ''}</span></div>`).join('')}</div>` : '';
+  const summ = cards.length ? `<div class="rv4-summ">${cards.map(c => `<div class="rv4-summ-row"><span class="rv4-summ-t">${escapeHtml(c.no)} ${aqMdInline(c.title.length > 28 ? c.title.slice(0, 28) + '…' : c.title)}</span><span class="rv4-summ-chips">${_rv4LabelChip(c.verdict)}${c.reflLabel ? _rv4LabelChip(c.reflLabel) : ''}${c.odds ? `<span class="rv3-lb rv3-lb-weak">${c.kind === '악재' ? '사라질' : '무너질'} ${escapeHtml(c.odds)}</span>` : ''}</span></div>`).join('')}</div>` : '';
   return `${intro ? `<div class="rv4-intro">${_rv4Para(intro)}</div>` : ''}${cardHtml}${summ}${bridge ? `<p class="rv4-bridge">${aqMdInline(bridge)}</p>` : ''}`;
 }
 function _rv4RenderWhy(sec) {
@@ -14781,12 +14807,18 @@ function _rv4RenderFinal(sec, p, tk, cur, isKR, isoDate) {
   const again = grab(/\*\*다시 볼 날\*\*\s*([\s\S]*?)$/);
   const todoItems = todo.split('\n').filter(l => /^\s*[-*•]\s+/.test(l)).map(l => l.replace(/^\s*[-*•]\s+/, '')); const todoRest = todo.split('\n').filter(l => l.trim() && !/^\s*[-*•]\s+/.test(l)).join('\n');
   const dates = (aqRecheckAll()[`${tk}|${isoDate}`] || {}).items || [];
+  // v5.25: 정해진 블록에 안 들어간 문단은 결론 블록 맨 아래에 그대로 보존
+  let rest = clean.replace(/^\s*\*\*최종 의견[^\n]*$/m, '')
+    .replace(/\*\*왜 이렇게 판단했나요\?\*\*[\s\S]*?(?=\n\*\*|$)/, '').replace(/\*\*지금 할 일\*\*[\s\S]*?(?=\n\*\*|$)/, '')
+    .replace(/\*\*딱 하나만 지켜본다면[^*]*\*\*[\s\S]*?(?=\n\*\*|$)/, '').replace(/\*\*다시 볼 날\*\*[\s\S]*$/, '').trim();
+  const restHtml = rest.replace(/[\s*]/g, '').length > 10 ? `<div class="rv4-block"><div class="rv4-block-t">그 밖의 내용</div>${_rv4Para(rest)}</div>` : '';
   return `<div class="rv4-final">
     <div class="rv4-final-op"><span class="an-action-pill an-${aqV3OpinionType(op)} rv4-op-big">${escapeHtml(op || '—')}</span></div>
     ${why ? `<div class="rv4-why">${_rv4Para(why)}</div>` : ''}
     ${todoItems.length ? `<div class="rv4-block"><div class="rv4-block-t">지금 할 일</div><ol class="rv4-todo">${todoItems.map(t => `<li><span class="rv4-tick"></span><span>${aqAnnotatePrices(aqMdInline(t), cur, isKR)}</span></li>`).join('')}</ol>${todoRest ? `<div class="rv4-todo-note">${aqAnnotatePrices(_rv4Para(todoRest), cur, isKR)}</div>` : ''}</div>` : (todo ? `<div class="rv4-block"><div class="rv4-block-t">지금 할 일</div>${aqAnnotatePrices(_rv4Para(todo), cur, isKR)}</div>` : '')}
     ${watchT || watchB ? `<div class="rv4-block"><div class="rv4-block-t">딱 하나만 지켜본다면</div>${watchT ? `<div class="rv4-watch">${escapeHtml(watchT)}</div>` : ''}${_rv4Para(watchB)}</div>` : ''}
     ${again ? `<div class="rv4-block"><div class="rv4-block-t">다시 볼 날</div><div class="rv4-dates">${again.split('\n').filter(l => l.trim()).map(l => { const t = l.replace(/^\s*[-*•]\s+/, ''); const d = dates.find(x => t.startsWith(x.text.slice(0, 12))); return `<div class="rv4-date"><span class="rv4-date-d">${d ? escapeHtml(d.date.slice(5).replace('-', '/')) : '📅'}</span><span>${aqMdInline(t)}</span></div>`; }).join('')}</div></div>` : ''}
+    ${restHtml}
   </div>`;
 }
 function renderReportContentV4(p, tk) {
