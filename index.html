@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.20';   // v5.20: 시트 닫기 제스처는 상단 그립에서만
+window.AQ_PWA_VERSION = '5.21';   // v5.21: KJP400→KJP500 표기, 폐기 섹터 제외, 섹터 시트는 섹터 탭 종목 우선
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -13197,6 +13197,14 @@ async function tryLoadFromBundle(forceFresh) {
         _state.sectorsByMarket[mkt][name].sort((a, b) => a.Date.localeCompare(b.Date));
       });
     });
+    // v5.21: 유니버스(마스터 시트)에 없는 섹터 탭(폐기·이름 변경된 옛 섹터)은 제외
+    try {
+      const _norm = (x) => String(x || '').replace(/[^\p{L}\p{N}]/gu, '').toLowerCase();
+      ['US', 'KR'].forEach(mkt => {
+        const live = new Set(Object.values((_state.tickerSectorMaps || {})[mkt] || {}).map(_norm).filter(Boolean)); if (live.size < 5) return;
+        Object.keys(_state.sectorsByMarket[mkt] || {}).forEach(name => { if (/매크로|macro/i.test(name)) return; if (!live.has(_norm(name))) { delete _state.sectorsByMarket[mkt][name]; } });
+      });
+    } catch (e) {}
 
     splashUpdate(85);
 
@@ -16253,7 +16261,7 @@ function getBenchmarkSeries(daysBack) {
   if (getCurrentMarket() === 'KR') {
     return { series: getKospiIndexSeries(daysBack), label: 'KOSPI 동일원금 가상수익' };
   }
-  return { series: getKJP400IndexSeries(daysBack), label: 'KJP400 동일원금 가상수익' };
+  return { series: getKJP400IndexSeries(daysBack), label: 'KJP500 동일원금 가상수익' };
 }
 
 // 캘린더 기반 KPI flow + history (Item 8 정공법)
@@ -18071,8 +18079,8 @@ function renderMacro() {
       // v1.19: 날짜 포맷 26.05.22 (사용자 요청)
       const dateShort = kjp.date ? kjp.date.slice(2).replace(/-/g, '.') : '-';
       const subText = `${kjp.validCount}/${kjp.totalCount} · ${escapeHtml(dateShort)}`;
-      kjpHtml = `<div class="macro-cell ${dir} kjp400-cell" onclick="openMacroChart('KJP400')" title="KJP400 ${kjp.validCount}개 티커의 최근일 일간 등락률 균일평균 (탭하여 차트)">
-        <div class="name"><span class="emoji">📊</span><span>KJP400</span></div>
+      kjpHtml = `<div class="macro-cell ${dir} kjp400-cell" onclick="openMacroChart('KJP400')" title="KJP500 ${kjp.validCount}개 티커의 최근일 일간 등락률 균일평균 (탭하여 차트)">
+        <div class="name"><span class="emoji">📊</span><span>KJP500</span></div>
         <div class="val ${dir}">${kjp.avg >= 0 ? '+' : ''}${kjp.avg.toFixed(2)}%</div>
         <div class="chg ${dir}">${subText}</div>
       </div>`;
@@ -20854,12 +20862,12 @@ async function openMacroChart(macroName) {
   let displayName = macroName;
   let isKJP = false;
 
-  if (macroName === 'KJP400') {
+  if (macroName === 'KJP400' || macroName === 'KJP500') {
     isKJP = true;
     // 1Y는 더 많이 가져오기 (computeKJP400Series가 N일 인자 받음)
     const days = tf === '3M' ? 90 : tf === '6M' ? 180 : 365;
     const s = computeKJP400Series(days);
-    if (!s || s.length < 5) { alert('KJP400 데이터가 부족합니다.'); return; }
+    if (!s || s.length < 5) { alert('KJP500 데이터가 부족합니다.'); return; }
     // sampleTimeframe과 같은 step 적용 (KJP400은 series 형식이 다름)
     const step = tf === '3M' ? 1 : tf === '6M' ? 2 : 4;
     if (step > 1) {
@@ -20869,7 +20877,7 @@ async function openMacroChart(macroName) {
     } else {
       series = s;
     }
-    displayName = '📊 KJP400 균일평균 지수';
+    displayName = '📊 KJP500 균일평균 지수';
   } else {
     // 일반 매크로 — sampleTimeframe 적용
     const rows = _state.macro
@@ -21100,7 +21108,7 @@ function renderMacroCorrelationList(macroName) {
   const existing = document.getElementById('macroCorrWrap');
   if (existing) existing.remove();
 
-  if (getCurrentMarket() !== 'US' || macroName === 'KJP400') return;
+  if (getCurrentMarket() !== 'US' || macroName === 'KJP400' || macroName === 'KJP500') return;
 
   const correlations = computeMacroCorrelations();
   const data = correlations[macroName];
@@ -21962,7 +21970,7 @@ function _aqRenderSearchResults(query) {
   const all = _aqGetAllSearchables();
   console.log('[SEARCH] query="' + q + '", universe size=' + all.length);
   if (all.length === 0) {
-    resultsEl.innerHTML = '<div class="search-modal-empty">KJP400 유니버스 데이터가 아직 로드되지 않았습니다. 잠시 후 다시 시도하세요.</div>';
+    resultsEl.innerHTML = '<div class="search-modal-empty">KJP500 유니버스 데이터가 아직 로드되지 않았습니다. 잠시 후 다시 시도하세요.</div>';
     _aqSearchLastResults = [];
     return;
   }
@@ -22761,7 +22769,7 @@ function _aqRenderMarquee() {
   try {
     if (typeof computeKJP400Avg === 'function') {
       const kjp = computeKJP400Avg();
-      if (kjp && typeof kjp.avg === 'number') items.push({ ticker: 'KJP400', chg: kjp.avg, isKjp: true });
+      if (kjp && typeof kjp.avg === 'number') items.push({ ticker: 'KJP500', chg: kjp.avg, isKjp: true });
     }
   } catch (e) {}
 
@@ -25742,7 +25750,9 @@ window.addEventListener('aq:synced', () => { try { aqStatsRender(); } catch (e) 
 function aqOpenSectorSheet(sectorKey) {
   const key = String(sectorKey || ''); const strip = (x) => (typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(x) : x).trim();
   const map = _state.tickerSectorMap || {}; const want = strip(key);
-  const tks = Object.keys(map).filter(tk => map[tk] === key || strip(map[tk]) === want);
+  const _norm = (x) => String(x || '').replace(/[^\p{L}\p{N}]/gu, '').toLowerCase();
+  const tabTks = [...new Set(((_state.sectors || {})[key] || []).map(r => String(r.Ticker || '').toUpperCase()).filter(Boolean))];   // v5.21: 섹터 탭에 실제로 있는 종목 우선
+  const tks = tabTks.length ? tabTks : Object.keys(map).filter(tk => map[tk] === key || strip(map[tk]) === want || _norm(map[tk]) === _norm(key));
   const arc = (_state.archive || []); const lastSig = {}; arc.forEach(r => { const tk = String(r.Ticker || '').toUpperCase(); if (!lastSig[tk] || r.Date > lastSig[tk].Date) lastSig[tk] = r; });
   const items = tks.map(tk => { const rows = _stSeries(tk); if (!rows || rows.length < 2) return { tk, d1: null, m1: null }; const c = Number(rows[rows.length - 1].Close), p = Number(rows[rows.length - 2].Close), m = Number(rows[Math.max(0, rows.length - 22)].Close); return { tk, d1: (c / p - 1) * 100, m1: (c / m - 1) * 100 }; }).sort((a, b) => (b.d1 ?? -999) - (a.d1 ?? -999));
   const avg = items.filter(x => x.d1 != null); const a1 = avg.length ? avg.reduce((s, x) => s + x.d1, 0) / avg.length : null;
