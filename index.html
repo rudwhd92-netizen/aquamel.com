@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.38';   // v5.38: AI 탭(분석 보고서/자동매수), 탐색 종목 리스트 복원
+window.AQ_PWA_VERSION = '5.39';   // v5.39: AI 탭 — 분석 보고서 카드를 전환 바 바로 아래로
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8227,28 +8227,7 @@ table.combo-eval tbody td .nodata {
     </div>
   </section>
 
-  <section class="card" id="analysisCard" data-mtab="auto" data-atab="report">
-    <div class="card-header">
-      <h2>분석 보고서</h2>
-      <div class="stock-list-sort">
-        <button class="sort-toggle" id="anSortToggleBtn" onclick="event.stopPropagation(); toggleAnalysisSortMenu();">
-          <span id="anSortToggleLabel">최신순</span>
-          <span class="sort-arrow">↕</span>
-        </button>
-        <div class="sort-menu" id="anSortMenu" style="display:none;">
-          <button onclick="event.stopPropagation(); setAnalysisSort('date');" data-mode="date" class="active">최신순</button>
-          <button onclick="event.stopPropagation(); setAnalysisSort('action');" data-mode="action">추천순</button>
-          <button onclick="event.stopPropagation(); setAnalysisSort('sector');" data-mode="sector">섹터 약한순</button>
-        </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <p class="subtitle">정량 보고서가 등록된 종목입니다. 클릭하면 보고서 일자 목록이 열립니다.</p>
-      <div id="analysisGridArea">
-        <div class="analysis-empty">보고서를 불러오는 중...</div>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- v2.66: TO-DO 칸반 보드 — 보고서에서 체크된 todo 항목을 시점별 4개 컬럼으로 정리 -->
   <section class="card" id="todoBoardCard" data-mtab="retired" style="display:none !important">
@@ -8389,6 +8368,28 @@ table.combo-eval tbody td .nodata {
         <button class="xtab-btn" data-atab="auto" onclick="setAiSubtab('auto')">자동매수</button>
       </div>
     </section>
+    <section class="card" id="analysisCard" data-mtab="auto" data-atab="report">
+    <div class="card-header">
+      <h2>분석 보고서</h2>
+      <div class="stock-list-sort">
+        <button class="sort-toggle" id="anSortToggleBtn" onclick="event.stopPropagation(); toggleAnalysisSortMenu();">
+          <span id="anSortToggleLabel">최신순</span>
+          <span class="sort-arrow">↕</span>
+        </button>
+        <div class="sort-menu" id="anSortMenu" style="display:none;">
+          <button onclick="event.stopPropagation(); setAnalysisSort('date');" data-mode="date" class="active">최신순</button>
+          <button onclick="event.stopPropagation(); setAnalysisSort('action');" data-mode="action">추천순</button>
+          <button onclick="event.stopPropagation(); setAnalysisSort('sector');" data-mode="sector">섹터 약한순</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="subtitle">정량 보고서가 등록된 종목입니다. 클릭하면 보고서 일자 목록이 열립니다.</p>
+      <div id="analysisGridArea">
+        <div class="analysis-empty">보고서를 불러오는 중...</div>
+      </div>
+    </div>
+  </section>
     <section class="card" id="autoSignalCard" data-mtab="auto" data-atab="auto">
       <div class="card-header eng-head"><h2>자동매매 엔진</h2>
         <button class="eng-gear" onclick="aqAutoCfgOpen()" aria-label="설정"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
