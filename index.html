@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.45';   // v5.45: 장전 브리핑은 다음 브리핑이 올라올 때까지 직전 것을 유지
+window.AQ_PWA_VERSION = '5.46';   // v5.46: 브리핑 문서의 \&·\$ 같은 이스케이프 제거, 시각 없는 일정 줄 정렬, 하단 문구 정리
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -9266,7 +9266,7 @@ table.combo-eval tbody td .nodata {
   </div>
 
   <footer>
-    <span class="accent">AQUAMEL</span> · V-Shape Scanner · Apps Script backend · LocalStorage 개인 데이터
+    <span class="accent">AQUAMEL</span> · V-Shape Scanner · AQUAMEL 서버 · 토스증권 연동
   </footer>
 </div>
 
@@ -26596,7 +26596,7 @@ Object.assign(window, { aqBriefRender, aqBriefDismiss, aqBriefMaybeLand, aqBrief
 // ============================================================================
 const _BF_TITLES = ['한 줄 요약', '지수·섹터', '주요 뉴스', '오늘 밤 일정', '밤사이 시장 흐름', '체크 포인트'];
 function aqBriefParse(md) {
-  const t = (typeof aqReportNormalize === 'function' ? aqReportNormalize(md) : String(md || '')).replace(/\r/g, '');
+  const t = (typeof aqReportNormalize === 'function' ? aqReportNormalize(md) : String(md || '')).replace(/\r/g, '').replace(/\\([!-\/:-@\[-`{-~])/g, '$1');   // 구글 내보내기 이스케이프(\& \$ 등) 제거
   const out = { title: '', sections: {} }; let cur = null;
   t.split('\n').forEach(raw => {
     const ln = raw.trim(); if (!ln) return;
@@ -26622,7 +26622,7 @@ async function aqBriefMorningGroup(day) {
   const row = (x, dot) => { const n = _bfSrc(x); return `<div class="bf-r nod"><span class="bf-dot" style="background:${dot || 'rgba(255,255,255,.25)'}"></span><div class="bf-t"><div class="bf-tt n">${escapeHtml(n.t)}</div>${n.s ? `<div class="bf-s">${escapeHtml(n.s)}</div>` : ''}</div></div>`; };
   const full = [['지수·섹터', (p.sections['지수·섹터'] || []).map(x => `<div class="bf-r nod"><span class="bf-dot" style="background:${_bfSignDot(x)}"></span><div class="bf-t"><div class="bf-tt n">${escapeHtml(x)}</div></div></div>`).join('')],
     ['주요 뉴스 (계속)', news.slice(3).map(x => row(x)).join('')],
-    ['오늘 밤 일정', (p.sections['오늘 밤 일정'] || []).map(x => { const m = x.match(/^(\d{1,2}:\d{2}|장 전|장 마감 후)\s+(.*)$/); return `<div class="bf-r nod"><span class="bf-tm">${escapeHtml(m ? m[1] : '')}</span><div class="bf-t"><div class="bf-tt n">${escapeHtml(m ? m[2] : x)}</div></div></div>`; }).join('')]]
+    ['오늘 밤 일정', (p.sections['오늘 밤 일정'] || []).map(x => { const m = x.match(/^(\d{1,2}:\d{2}|장 전|장 마감 후)\s+(.*)$/); return `<div class="bf-r nod">${m ? `<span class="bf-tm">${escapeHtml(m[1])}</span>` : ''}<div class="bf-t"><div class="bf-tt n">${escapeHtml(m ? m[2] : x)}</div></div></div>`; }).join('')]]
     .filter(([, h]) => h).map(([t, h]) => `<div class="bf-sub">${t}</div>${h}`).join('');
   return head + `<div class="bf-grp">${sum ? `<div class="bf-sum">${escapeHtml(sum)}</div>` : ''}${news.slice(0, 3).map(x => row(x)).join('')}
     ${full ? `<details class="bf-more"><summary>전체 보기</summary>${full}</details>` : ''}</div>`;
@@ -26642,7 +26642,7 @@ async function aqPreRender() {
   const grp = (t, rows) => rows ? `<div class="bf-gt">${t}</div><div class="bf-grp">${rows}</div>` : '';
   const flow = (p.sections['밤사이 시장 흐름'] || []).map(x => `<div class="bf-r nod"><span class="bf-dot" style="background:${_bfSignDot(x)}"></span><div class="bf-t"><div class="bf-tt n">${escapeHtml(x)}</div></div></div>`).join('');
   const sc = sched.filter(x => !/정규장\s*개장/.test(x)).map(x => { const m = x.match(/^(\d{1,2}:\d{2}|장 전|장 마감 후)\s+(.*?)(?:\s*\(([^()]*)\))?\s*$/);
-    return `<div class="bf-r nod"><span class="bf-tm">${escapeHtml(m ? m[1] : '')}</span><div class="bf-t"><div class="bf-tt n">${escapeHtml(m ? m[2] : x)}</div>${m && m[3] ? `<div class="bf-s">${escapeHtml(m[3])}</div>` : ''}</div></div>`; }).join('');
+    return `<div class="bf-r nod">${m ? `<span class="bf-tm">${escapeHtml(m[1])}</span>` : ''}<div class="bf-t"><div class="bf-tt n">${escapeHtml(m ? m[2] : x)}</div>${m && m[3] ? `<div class="bf-s">${escapeHtml(m[3])}</div>` : ''}</div></div>`; }).join('');
   const news = (p.sections['주요 뉴스'] || []).map(x => { const n = _bfSrc(x); return `<div class="bf-r nod"><span class="bf-dot" style="background:rgba(255,255,255,.25)"></span><div class="bf-t"><div class="bf-tt n">${escapeHtml(n.t)}</div>${n.s ? `<div class="bf-s">${escapeHtml(n.s)}</div>` : ''}</div></div>`; }).join('');
   const ck = (p.sections['체크 포인트'] || []).map((x, i) => `<div class="bf-r nod"><span class="bf-num">${i + 1}</span><div class="bf-t"><div class="bf-tt n">${escapeHtml(x)}</div></div></div>`).join('');
   box.innerHTML = `<div class="bf-hero">${escapeHtml((p.sections['한 줄 요약'] || []).join(' '))}</div>` + grp('밤사이 시장 흐름 <span class="bf-ai">AI</span>', flow) + grp('오늘 밤 일정', sc) + grp('주요 뉴스', news) + grp('체크 포인트', ck);
