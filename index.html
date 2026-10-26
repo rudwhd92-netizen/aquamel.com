@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.31';   // v5.31: 메뉴 정리(룩백·To-Do 삭제), 하단 탭 6개(자동 추가), 관심 순서, 모의매수 X 삭제
+window.AQ_PWA_VERSION = '5.32';   // v5.32: 설정 페이지 재구성 (프로필·계정·데이터·관리자 묶음 목록, 비밀번호 변경 시트)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3002,8 +3002,6 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   /* v2.68: hero는 항상 상단에 노출 — hide 룰 제거 */
   body[data-pc-page="settings"] .container > section.card { display: none !important; }
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
-  body[data-pc-page="settings"][data-role="admin"] #aqAdminCard { display: block !important; }
-  body[data-pc-page="settings"] #aqStampCard { display: block !important; }
   body[data-pc-page="auto"] #autoBlacklistCard { display: block !important; }
   body[data-pc-page="board"] #aqAccountCard { display: block !important; }
   body[data-pc-page="board"][data-broker="linked"] #boardLookbackCard, body[data-pc-page="board"][data-broker="linked"] #aqStatsCard { display: block !important; }
@@ -3874,6 +3872,37 @@ body:not([data-broker="linked"]) .aq-toss-band { display: block; }
 /* v5.31: 하단 탭 6개 (자동은 관리자만) */
 body:not([data-role="admin"]) .mtab-btn[data-role-admin-tab] { display: none !important; }
 #mobileTabBar .mtab-btn { min-width: 0; flex: 1 1 0; }
+/* ===== v5.32: 설정 ===== */
+.set-card { background: transparent !important; border: none !important; box-shadow: none !important; }
+.set-card .card-body { padding: 4px 2px 24px; max-width: 600px; margin: 0 auto; }
+.set-profile { display: flex; align-items: center; gap: 14px; padding: 18px 16px; border-radius: 16px; background: rgba(255,255,255,.04); border: 1px solid var(--line); margin-bottom: 22px; }
+.sp-av { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #63e6be, #4dabf7); color: #0b1a16; font-weight: 900; font-size: 20px; display: flex; align-items: center; justify-content: center; flex: none; }
+.sp-av.sm { width: 36px; height: 36px; font-size: 15px; }
+.sp-name { font-size: 17px; font-weight: 800; color: var(--text-hi); display: flex; align-items: center; gap: 6px; }
+.sp-role { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(99,230,190,.14); color: #63e6be; } .sp-role.off { background: rgba(255,107,107,.14); color: #ff8787; }
+.sp-sub { font-size: 12px; color: var(--text-mute); margin-top: 3px; }
+.set-grp-t { font-size: 11.5px; font-weight: 800; color: var(--text-mute); letter-spacing: .5px; margin: 0 4px 8px; }
+.set-grp { border-radius: 14px; background: rgba(255,255,255,.04); border: 1px solid var(--line); overflow: hidden; margin-bottom: 22px; }
+.set-row { display: flex; align-items: center; gap: 10px; padding: 15px 16px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.set-row + .set-row { border-top: 1px solid var(--line); }
+.set-row:not(.nohover):active, .set-row:not(.nohover):hover { background: rgba(255,255,255,.04); }
+.sr-l { flex: 1; font-size: 15px; color: var(--text-hi); font-weight: 600; }
+.sr-val { font-size: 13px; color: var(--text-mute); } .sr-val.ok { color: #63e6be; } .sr-val.warn { color: #ffa94d; }
+.sr-chev { color: var(--text-mute); font-size: 20px; line-height: 1; margin-left: 2px; }
+.danger-txt { color: #ff8787 !important; }
+body:not([data-role="admin"]) [data-role-admin-tab] { display: none !important; }
+.set-acts { display: flex; gap: 8px; flex-wrap: wrap; padding: 14px 0 6px; } .set-acts .btn { flex: 1; min-width: 120px; }
+.set-form { display: flex; flex-direction: column; gap: 10px; padding: 6px 0 4px; }
+.set-form input, .set-inv input, .set-inv select { padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,.06); color: var(--text-hi); font-size: 15px !important; }
+.set-err { color: #ff8787; font-size: 12px; min-height: 16px; }
+.ss-row { display: flex; align-items: center; gap: 10px; padding: 11px 2px; border-bottom: 1px solid var(--line); }
+.ss-l { flex: 1; font-size: 13.5px; color: var(--text-hi); font-weight: 600; } .ss-r { text-align: right; font-size: 12px; } .ss-r span { font-weight: 800; color: var(--text-mute); } .ss-r span.ok { color: #63e6be; } .ss-r span.warn { color: #ffa94d; }
+.ss-r small { display: block; font-size: 10.5px; color: var(--text-mute); margin-top: 2px; }
+.set-adm { padding: 14px 16px 30px !important; }
+.set-inv { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; } .set-inv input { flex: 1; min-width: 140px; } .set-inv select { flex: none; }
+.adm-u { display: flex; align-items: center; gap: 12px; padding: 12px 2px; border-bottom: 1px solid var(--line); } .adm-u.off { opacity: .55; }
+.adm-i { flex: 1; min-width: 0; } .adm-n { font-size: 14.5px; font-weight: 800; color: var(--text-hi); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; } .adm-n code { font-size: 13px; }
+.adm-s { font-size: 11.5px; color: var(--text-mute); margin-top: 2px; } .adm-me { font-size: 11px; color: var(--text-mute); }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8182,7 +8211,7 @@ table.combo-eval tbody td .nodata {
   
 
   <!-- v2.58: 데이터 관리 카드 — v2.59: 설정 페이지로 이동 -->
-  <section class="card" id="dataManagementCard" data-mtab="settings">
+  <section class="card" id="dataManagementCard" data-mtab="retired" style="display:none !important">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>데이터 관리</h2>
       <span class="toggle-icon">▼</span>
@@ -8344,7 +8373,7 @@ table.combo-eval tbody td .nodata {
     </div>
 
     <!-- v5.06: 데이터 시점표 (서버 갱신 vs 앱 캐시) -->
-    <section class="card" id="aqStampCard" data-mtab="settings">
+    <section class="card" id="aqStampCard" data-mtab="retired" style="display:none !important">
       <div class="card-header" onclick="toggleCard(this)"><h2>데이터 시점</h2><span class="toggle-icon">▼</span></div>
       <div class="card-body">
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
@@ -8374,6 +8403,52 @@ table.combo-eval tbody td .nodata {
     <div class="aq-archfull" id="aqArchFull">
       <div class="aq-archfull-h"><button class="aq-archfull-x" onclick="aqCloseArchiveFull()" aria-label="닫기">←</button><div class="aq-archfull-t">누적 시그널</div></div>
       <div class="aq-archfull-b" id="aqArchFullBody"></div>
+    </div>
+
+    <!-- v5.32: 설정 (묶음 목록형) -->
+    <section class="card set-card" id="aqSettingsCard" data-mtab="settings">
+      <div class="card-body">
+        <div class="set-profile" id="setProfile"></div>
+        <div class="set-grp-t">계정</div>
+        <div class="set-grp">
+          <div class="set-row" onclick="aqSetTossOpen()"><span class="sr-l">토스 연동</span><span class="sr-val" id="setTossVal">—</span><span class="sr-chev">›</span></div>
+          <div class="set-row" onclick="aqSetPwOpen()"><span class="sr-l">비밀번호 변경</span><span class="sr-chev">›</span></div>
+          <div class="set-row" onclick="aqAuthLogout()"><span class="sr-l danger-txt">로그아웃</span></div>
+        </div>
+        <div class="set-grp-t">데이터</div>
+        <div class="set-grp">
+          <div class="set-row" onclick="aqSetStampSummary(); aqSetSheet('setStampSheet', true)"><span class="sr-l">데이터 상태</span><span class="sr-val" id="setStampVal">확인 중…</span><span class="sr-chev">›</span></div>
+          <div class="set-row" onclick="aqSetRefresh()"><span class="sr-l">새로고침</span></div>
+          <div class="set-row" onclick="if (confirm('캐시를 지우고 데이터를 처음부터 다시 받을까요?')) aqClearAllCachesAndReload()"><span class="sr-l">캐시 지우고 다시 받기</span></div>
+          <div class="set-row nohover"><span class="sr-l">앱 버전</span><span class="sr-val" id="setVerVal">—</span></div>
+        </div>
+        <div class="set-grp-t" data-role-admin-tab>관리자</div>
+        <div class="set-grp" data-role-admin-tab>
+          <div class="set-row" onclick="aqSetAdmOpen()"><span class="sr-l">계정 관리</span><span class="sr-val" id="setAdmVal">—</span><span class="sr-chev">›</span></div>
+        </div>
+      </div>
+    </section>
+    <div class="ops-sheet-bg" id="setTossSheetBg" onclick="aqSetSheet('setTossSheet', false)"></div>
+    <div class="ops-sheet aq-sec-sheet" id="setTossSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">토스 연동</div><div class="ar-list" id="setTossBody"></div></div>
+    <div class="ops-sheet-bg" id="setPwSheetBg" onclick="aqSetSheet('setPwSheet', false)"></div>
+    <div class="ops-sheet aq-sec-sheet" id="setPwSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">비밀번호 변경</div>
+      <div class="set-form">
+        <input type="password" id="setPwCur" placeholder="현재 비밀번호" autocomplete="current-password">
+        <input type="password" id="setPwNew" placeholder="새 비밀번호 (8자 이상)" autocomplete="new-password">
+        <input type="password" id="setPwNew2" placeholder="새 비밀번호 확인" autocomplete="new-password" onkeydown="if(event.key==='Enter')aqSetPwSave()">
+        <div class="set-err" id="setPwErr"></div>
+        <button class="btn" onclick="aqSetPwSave()">변경</button>
+      </div></div>
+    <div class="ops-sheet-bg" id="setStampSheetBg" onclick="aqSetSheet('setStampSheet', false)"></div>
+    <div class="ops-sheet aq-sec-sheet" id="setStampSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">데이터 상태</div>
+      <div class="auto-sheet-scroll"><div id="setStampList"></div></div>
+      <div class="set-acts"><button class="btn" onclick="aqSetStampForce()">전부 새로 받기</button></div></div>
+    <div class="aq-archfull" id="setAdmFull">
+      <div class="aq-archfull-h"><button class="aq-archfull-x" onclick="aqSetAdmClose()" aria-label="닫기">←</button><div class="aq-archfull-t">계정 관리</div></div>
+      <div class="aq-archfull-b set-adm">
+        <div class="set-inv"><select id="setInvRole"><option value="member">일반</option><option value="admin">관리자</option></select><input type="text" id="setInvMemo" placeholder="메모 (예: 홍길동)"><button class="btn sm" onclick="aqSetInvite()">초대코드 발급</button></div>
+        <div id="setAdmList"></div>
+      </div>
     </div>
 
     <!-- v5.04: 계정 카드 (보드 맨 아래, 압축형) -->
@@ -8467,7 +8542,7 @@ table.combo-eval tbody td .nodata {
 
 
     <!-- v4.96: 계정 관리 (관리자) -->
-    <section class="card" id="aqAdminCard" data-mtab="settings" style="display:none">
+    <section class="card" id="aqAdminCard" data-mtab="retired" style="display:none !important">
       <div class="card-header" onclick="toggleCard(this)">
         <h2>계정 관리</h2>
         <span class="toggle-icon">▼</span>
@@ -23316,6 +23391,7 @@ function switchMobileTab(tab) {
   document.body.setAttribute('data-mtab', tab);
   if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
   if (tab === 'auto') { try { aqAutoEnter(); } catch (e) {} }
+  if (tab === 'settings') { try { aqSettingsRender(); } catch (e) {} }
   document.querySelectorAll('.mtab-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mtab === tab);
   });
@@ -23464,6 +23540,7 @@ function setPCTab(tab) {
     setPCPage(tab);
     if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
     if (tab === 'auto') { try { aqAutoEnter(); } catch (e) {} }
+  if (tab === 'settings') { try { aqSettingsRender(); } catch (e) {} }
     // v2.59: 설정 페이지 진입 시 데이터 시점 표시 갱신 (v2.58에서 마이 페이지였던 것)
     if (tab === 'settings') {
       try { if (typeof _aqUpdateDataMetaUI === 'function') _aqUpdateDataMetaUI(); } catch (e) {}
@@ -25986,6 +26063,99 @@ async function buildBuybackList(more, targetId) {
 }
 Object.assign(window, { fetchBuyback, buildBuybackList, aqBuybackAvg });
 document.addEventListener('DOMContentLoaded', () => { setTimeout(() => { try { if (getCurrentMarket() === 'US') fetchBuyback(); } catch (e) {} }, 8000); });   // 차트 평단선용 미리 로드
+
+// ============================================================================
+// v5.32: 설정 — 묶음 목록형 (프로필 · 계정 · 데이터 · 관리자)
+// ============================================================================
+function _setSheet(id, open) { const sh = document.getElementById(id), bg = document.getElementById(id + 'Bg'); if (sh) sh.classList.toggle('open', open); if (bg) bg.classList.toggle('open', open); }
+function aqSettingsRender() {
+  const u = _aqAuth.user, br = _aqAuth.broker; const linked = br && br.status === 'linked';
+  const pf = document.getElementById('setProfile');
+  if (pf) pf.innerHTML = u ? `<div class="sp-av">${escapeHtml(u.username.slice(0, 1).toUpperCase())}</div>
+      <div class="sp-info"><div class="sp-name">${escapeHtml(u.username)} <span class="sp-role">${u.role === 'admin' ? '관리자' : '일반'}</span></div>
+      <div class="sp-sub">${linked ? `토스 연결됨${br.last_sync ? ' · 마지막 동기화 ' + _opsFmtTimeSafe(br.last_sync) : ''}` : '토스 연결 안 됨'}</div></div>` : '<div class="sp-info"><div class="sp-name">로그인 필요</div></div>';
+  const tv = document.getElementById('setTossVal'); if (tv) { tv.textContent = linked ? '연결됨' : br && br.status === 'pending' ? '키 저장됨' : '연결 안 됨'; tv.className = 'sr-val ' + (linked ? 'ok' : 'warn'); }
+  const vv = document.getElementById('setVerVal'); if (vv) vv.textContent = 'v' + (window.AQ_PWA_VERSION || '');
+  aqSetStampSummary();
+  if (u && u.role === 'admin') apiCall('userList', {}).then(r => { const el = document.getElementById('setAdmVal'); if (el && r && r.ok) el.textContent = `${r.users.length}명`; }).catch(() => {});
+}
+// 데이터 상태
+async function aqSetStampSummary() {
+  const el = document.getElementById('setStampVal'); const st = await aqLoadServerStamps(); if (!st) { if (el) { el.textContent = '확인 불가'; el.className = 'sr-val warn'; } return; }
+  let old = 0; const rows = [];
+  for (const [label, key, cacheKey] of _AQ_STAMP_ROWS) {
+    const sv = st[key] || null; let app = null;
+    if (cacheKey) { try { const c = await aqDbGet(cacheKey); app = c && c.fetchedAt ? c.fetchedAt : null; } catch (e) {} } else app = _state._bundleTimestamp || null;
+    const stale = !!(sv && app && new Date(app) < new Date(sv)); if (stale) old++;
+    rows.push({ label, sv, app, stale, none: !sv });
+  }
+  if (el) { el.textContent = old ? `구버전 ${old}개` : '모두 최신 ✓'; el.className = 'sr-val ' + (old ? 'warn' : 'ok'); }
+  const list = document.getElementById('setStampList');
+  if (list) list.innerHTML = rows.map(r => `<div class="ss-row"><div class="ss-l">${escapeHtml(r.label)}</div><div class="ss-r"><span class="${r.stale ? 'warn' : r.none ? '' : 'ok'}">${r.none ? '서버 없음' : r.stale ? '새로 받기 필요' : '최신'}</span><small>서버 ${_aqFmtKST(r.sv)} · 기기 ${_aqFmtKST(r.app)}</small></div></div>`).join('');
+}
+async function aqSetStampForce() { await aqStampForceAll(); aqSetStampSummary(); if (typeof aqToast === 'function') aqToast('전부 새로 받았어요'); }
+function aqSetRefresh() { try { aqForceRefreshAll(); } catch (e) {} if (typeof aqToast === 'function') aqToast('새로고침 중…'); setTimeout(aqSetStampSummary, 4000); }
+// 토스 연동
+function aqSetTossOpen() {
+  const br = _aqAuth.broker; const linked = br && br.status === 'linked';
+  document.getElementById('setTossBody').innerHTML = `
+    <div class="ar-row"><label>상태</label><span class="sr-val ${linked ? 'ok' : 'warn'}">${linked ? (br.account_label || '연결됨') : '연결 안 됨'}</span></div>
+    ${linked ? `<div class="ar-row"><label>마지막 동기화</label><span class="sr-val">${br.last_sync ? _opsFmtTimeSafe(br.last_sync) : '—'}</span></div>` : ''}
+    <div class="set-acts">
+      ${linked ? `<button class="btn" onclick="aqSetSheet('setTossSheet', false); aqHeroTossSync()">지금 동기화</button>` : ''}
+      <button class="btn secondary" onclick="aqSetSheet('setTossSheet', false); aqAuthTossFromMy(); aqGoTossGate()">${linked ? '키 다시 입력' : '연결하기'}</button>
+      ${linked ? `<button class="btn secondary danger-txt" onclick="aqSetTossUnlink()">연결 해제</button>` : ''}
+    </div>`;
+  _setSheet('setTossSheet', true);
+}
+async function aqSetTossUnlink() {
+  if (!confirm('토스 연결을 해제할까요?\n저장된 앱 키가 삭제되고, 보유·매매 데이터는 다시 연결할 때까지 갱신되지 않습니다.')) return;
+  const r = await apiCall('brokerUnlink', {}); if (!r || !r.ok) { alert('실패: ' + ((r && r.error) || '')); return; }
+  const me = await apiCall('me', {}); if (me && me.ok) _aqApplyUser(me.user, me.broker); _setSheet('setTossSheet', false); aqSettingsRender(); if (typeof aqToast === 'function') aqToast('토스 연결 해제됨');
+}
+// 비밀번호 변경
+function aqSetPwOpen() { ['setPwCur', 'setPwNew', 'setPwNew2'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; }); document.getElementById('setPwErr').textContent = ''; _setSheet('setPwSheet', true); setTimeout(() => { const e = document.getElementById('setPwCur'); if (e) e.focus(); }, 250); }
+async function aqSetPwSave() {
+  const cur = document.getElementById('setPwCur').value, nw = document.getElementById('setPwNew').value, nw2 = document.getElementById('setPwNew2').value; const err = document.getElementById('setPwErr');
+  if (!cur || !nw) { err.textContent = '현재 비밀번호와 새 비밀번호를 입력하세요'; return; }
+  if (nw.length < 8) { err.textContent = '새 비밀번호는 8자 이상'; return; }
+  if (nw !== nw2) { err.textContent = '새 비밀번호가 서로 다릅니다'; return; }
+  const r = await apiCall('changePassword', { current: cur, new: nw });
+  if (!r || !r.ok) { err.textContent = (r && r.error) || '변경 실패'; return; }
+  _setSheet('setPwSheet', false); if (typeof aqToast === 'function') aqToast('비밀번호가 바뀌었어요 · 다른 기기는 로그아웃됩니다');
+}
+// 계정 관리 (관리자, 전체 화면)
+async function aqSetAdmOpen() { document.getElementById('setAdmFull').classList.add('open'); await aqSetAdmRender(); }
+function aqSetAdmClose() { document.getElementById('setAdmFull').classList.remove('open'); aqSettingsRender(); }
+async function aqSetAdmRender() {
+  const body = document.getElementById('setAdmList'); if (!body) return;
+  const [inv, usr] = await Promise.all([apiCall('inviteList', {}), apiCall('userList', {})]);
+  const users = (usr && usr.ok) ? usr.users : []; const invites = (inv && inv.ok) ? inv.invites.filter(i => !i.used_by) : [];
+  body.innerHTML = `<div class="eng-sec-h"><span>사용자 ${users.length}명</span></div>` + users.map(u => {
+    const me = _aqAuth.user && u.username === _aqAuth.user.username;
+    return `<div class="adm-u ${u.status === 'active' ? '' : 'off'}"><div class="sp-av sm">${escapeHtml(u.username.slice(0, 1).toUpperCase())}</div>
+      <div class="adm-i"><div class="adm-n">${escapeHtml(u.username)} <span class="sp-role">${u.role === 'admin' ? '관리자' : '일반'}</span>${u.status === 'active' ? '' : ' <span class="sp-role off">비활성</span>'}</div>
+      <div class="adm-s">토스 ${u.broker_status === 'linked' ? '연결됨' : u.broker_status === 'pending' ? '키 저장됨' : '연결 안 됨'} · 마지막 로그인 ${u.last_login ? _opsFmtTimeSafe(u.last_login) : '—'}</div></div>
+      ${me ? '<span class="adm-me">나</span>' : `<button class="btn sm secondary" onclick="aqAdminToggle(${u.user_id},'${u.status === 'active' ? 'disabled' : 'active'}').then(aqSetAdmRender)">${u.status === 'active' ? '비활성화' : '활성화'}</button>`}</div>`;
+  }).join('') + `<div class="eng-sec-h" style="margin-top:20px"><span>사용 전 초대코드 ${invites.length}개</span></div>` + (invites.length ? invites.map(i => `<div class="adm-u"><div class="adm-i"><div class="adm-n"><code>${escapeHtml(i.code)}</code> <span class="sp-role">${i.role === 'admin' ? '관리자' : '일반'}</span></div><div class="adm-s">${escapeHtml(i.memo || '메모 없음')} · ${String(i.expires_at).slice(5, 10)}까지</div></div><button class="btn sm secondary" onclick="navigator.clipboard && navigator.clipboard.writeText('${escapeAttr(i.code)}'); aqToast && aqToast('복사됨')">복사</button></div>`).join('') : '<div class="auto-empty">없음</div>');
+}
+async function aqSetInvite() {
+  const role = document.getElementById('setInvRole').value; const memo = (document.getElementById('setInvMemo').value || '').trim();
+  const r = await apiCall('inviteCreate', { role, memo }); if (!r || !r.ok) { alert('발급 실패: ' + ((r && r.error) || '')); return; }
+  try { await navigator.clipboard.writeText(r.code); } catch (e) {}
+  if (typeof aqToast === 'function') aqToast(`초대코드 ${r.code} 복사됨 (${r.expires_days}일 유효)`); document.getElementById('setInvMemo').value = ''; aqSetAdmRender();
+}
+function aqSetSheet(id, open) { _setSheet(id, open); }
+Object.assign(window, { aqSettingsRender, aqSetStampForce, aqSetRefresh, aqSetTossOpen, aqSetTossUnlink, aqSetPwOpen, aqSetPwSave, aqSetAdmOpen, aqSetAdmClose, aqSetInvite, aqSetSheet });
+try {
+  AQ_SHEETS.push(
+    { id: 'setTossSheet', root: () => document.getElementById('setTossSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => _setSheet('setTossSheet', false), full: true },
+    { id: 'setPwSheet', root: () => document.getElementById('setPwSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => _setSheet('setPwSheet', false), full: true },
+    { id: 'setStampSheet', root: () => document.getElementById('setStampSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => _setSheet('setStampSheet', false), full: true },
+    { id: 'setAdmFull', root: () => document.getElementById('setAdmFull'), panel: null, isOpen: r => r.classList.contains('open'), close: aqSetAdmClose, full: false });
+} catch (e) {}
+window.addEventListener('aq:login', () => { try { aqSettingsRender(); } catch (e) {} });
+window.addEventListener('aq:synced', () => { try { aqSettingsRender(); } catch (e) {} });
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
