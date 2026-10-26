@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.29';   // v5.29: 자사주 평단선 대각선 버그 수정, 라벨을 헥사곤 반대편으로
+window.AQ_PWA_VERSION = '5.30';   // v5.30: 자동 탭 단순화, 최소 주가·3개월 위치(5분위)·기대수익률 우선순위
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3755,7 +3755,7 @@ body[data-broker="linked"] #aqTossGateCard { display: none !important; }
 .auto-ret { font-size: 17px; font-weight: 900; font-variant-numeric: tabular-nums; min-width: 70px; text-align: right; cursor: pointer; }
 .auto-ret.up { color: #51cf66; } .auto-ret.down { color: #ff6b6b; }
 .auto-row.thin .auto-ret, .auto-row.thin .auto-bar { opacity: .45; }
-.auto-row.off .auto-name { color: var(--text-mute); text-decoration: line-through; } .auto-row.off .auto-ret { opacity: .5; }
+.auto-row.off .auto-mid, .auto-row.off .auto-ret, .auto-row.off .auto-dot { opacity: .42; }
 .auto-note { font-size: 11px; color: var(--text-mute); margin-top: 12px; line-height: 1.6; }
 .auto-empty { font-size: 12px; color: var(--text-mute); padding: 18px 4px; text-align: center; }
 .auto-bl-count { font-size: 13px; color: var(--text-mute); font-weight: 700; }
@@ -3833,8 +3833,8 @@ body.aq-archfull-open { overflow: hidden; }
 .eng-more { margin-top: 10px; } .eng-more > summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-mute); padding: 6px 0; }
 .eng-log { font-size: 11px; line-height: 1.6; max-height: 260px; overflow-y: auto; font-family: ui-monospace, Menlo, monospace; } .eng-log span { color: var(--text-mute); } .eng-log .error { color: #ff8787; } .eng-log .warn { color: #fab005; }
 /* v5.19: 엔진 카드 헤더 */
-.eng-head { display: flex; align-items: center; gap: 10px; } .eng-head h2 { margin-right: auto; }
-.eng-gear { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: rgba(255,255,255,.05); color: var(--text-mute); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+.eng-head { display: flex !important; align-items: center; gap: 4px; justify-content: flex-start !important; } .eng-head h2 { margin: 0 auto 0 0 !important; }
+.eng-gear { width: 34px; height: 34px; border-radius: 50%; border: none; background: none; color: var(--text-mute); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
 .eng-gear svg { width: 18px; height: 18px; }
 .eng-stat { margin: 0 0 6px; } .eng-stat b.eng-on { color: #ff8787; } .eng-dot.idle { background: #868e96; }
 .eng-sec-h { display: flex; align-items: baseline; justify-content: space-between; font-size: 12px; font-weight: 800; color: var(--text-mute); letter-spacing: .4px; margin: 16px 0 4px; }
@@ -3865,6 +3865,12 @@ body:not([data-broker="linked"]) .aq-toss-band { display: block; }
 .rv4-f .rv3-lb { font-size: 10px; padding: 1px 6px; } .rv4-f:not(:has(.rv3-lb)) { grid-template-columns: 92px 1fr; }
 .rv4-ft { color: var(--text); line-height: 1.55; }
 @media (max-width: 520px) { .rv4-f { grid-template-columns: 1fr auto; } .rv4-f .rv4-ft { grid-column: 1 / -1; } .rv4-money { grid-template-columns: 1fr; } }
+/* v5.30: 자동 탭 단순화 */
+.ar-list { margin: 2px 0 14px; } .ar-list .ar-row:last-child { border-bottom: none; }
+.ar-row label small { display: block; font-size: 10.5px; font-weight: 500; color: var(--text-mute); }
+.ar-zone { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-mute); }
+.ar-in .auto-seg-sm button { padding: 6px 9px; min-width: 28px; }
+#autoSheet .ops-sheet-meta { margin-bottom: 6px; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8286,7 +8292,6 @@ table.combo-eval tbody td .nodata {
         <div id="engStatus" class="eng-stat"></div>
         <div id="engActive"></div>
         <div class="eng-sec-h"><span>신호</span><span class="eng-basis" id="autoWinMeta"></span></div>
-        <div class="auto-head"><span>신호</span><span id="autoHeadRet">평균 5일 수익률</span><span>자동매수</span></div>
         <div id="autoSigList"></div>
         <div id="engMore"></div>
       </div>
@@ -8295,13 +8300,11 @@ table.combo-eval tbody td .nodata {
     <div class="ops-sheet aq-sec-sheet" id="autoCfgSheet">
       <div class="ops-sheet-grip"></div>
       <div class="ops-sheet-title">자동매매 설정</div>
-      <div class="ops-sheet-meta">엔진 전체에 적용 · 신호별 금액·매도일은 각 신호를 눌러 설정</div>
-      <div class="auto-sheet-scroll"><div class="ar-box">
-        <div class="ar-row"><label>하루 최대 매수<small>상한가 기준 합계</small></label><div class="ar-in"><span>$</span><input type="number" id="engDailyMax" min="0" step="500" inputmode="decimal"></div></div>
-        <div class="ar-row"><label>성적 기간<small>신호별 평균·후보 종목 계산</small></label><div class="auto-seg auto-seg-sm" id="autoWinSeg"><button data-w="20" onclick="aqAutoSetWin(20)">20일</button><button data-w="40" onclick="aqAutoSetWin(40)">40일</button><button data-w="60" onclick="aqAutoSetWin(60)">60일</button></div></div>
-        <div class="ar-row"><label>보유 기준<small>신호일 종가 → n거래일 뒤 종가</small></label><div class="auto-seg auto-seg-sm" id="autoHoldSeg"><button data-h="1" onclick="aqAutoSetHold(1)">1</button><button data-h="2" onclick="aqAutoSetHold(2)">2</button><button data-h="3" onclick="aqAutoSetHold(3)">3</button><button data-h="4" onclick="aqAutoSetHold(4)">4</button><button data-h="5" onclick="aqAutoSetHold(5)">5</button><button data-h="6" onclick="aqAutoSetHold(6)">6</button><button data-h="7" onclick="aqAutoSetHold(7)">7</button></div></div>
-        <div class="ar-row"><label>시간외 주문<small id="engExtTxt">—</small></label><button class="btn sm secondary" onclick="aqEngineResetExt()">다시 확인</button></div>
-        <div class="ar-act"><button class="btn sm" onclick="aqAutoCfgSave()">저장</button></div>
+      <div class="auto-sheet-scroll"><div class="ar-list">
+        <div class="ar-row"><label>하루 최대 매수</label><div class="ar-in"><span>$</span><input type="number" id="engDailyMax" min="0" step="500" inputmode="decimal" onchange="aqAutoCfgSave()"></div></div>
+        <div class="ar-row"><label>최소 주가</label><div class="ar-in"><span>$</span><input type="number" id="engMinPrice" min="0" step="1" inputmode="decimal" onchange="aqAutoCfgSave()"></div></div>
+        <div class="ar-row"><label>성적 기간</label><div class="auto-seg auto-seg-sm" id="autoWinSeg"><button data-w="20" onclick="aqAutoSetWin(20)">20일</button><button data-w="40" onclick="aqAutoSetWin(40)">40일</button><button data-w="60" onclick="aqAutoSetWin(60)">60일</button></div></div>
+        <div class="ar-row"><label>보유 기준</label><div class="auto-seg auto-seg-sm" id="autoHoldSeg"><button data-h="1" onclick="aqAutoSetHold(1)">1</button><button data-h="2" onclick="aqAutoSetHold(2)">2</button><button data-h="3" onclick="aqAutoSetHold(3)">3</button><button data-h="4" onclick="aqAutoSetHold(4)">4</button><button data-h="5" onclick="aqAutoSetHold(5)">5</button><button data-h="6" onclick="aqAutoSetHold(6)">6</button><button data-h="7" onclick="aqAutoSetHold(7)">7</button></div></div>
       </div></div>
     </div>
     <section class="card" id="autoBlacklistCard" data-mtab="auto">
@@ -8314,7 +8317,7 @@ table.combo-eval tbody td .nodata {
       <div class="ops-sheet-title" id="autoSheetTitle">신호</div>
       <div class="ops-sheet-meta" id="autoSheetMeta"></div>
       <div class="auto-sheet-scroll">
-      <div class="ar-box" id="autoRuleBox"></div>
+      <div class="ar-list" id="autoRuleBox"></div>
       <div class="auto-sheet-sub">수익률이 나빴던 종목 (최대 10)</div>
       <div class="dash-holdings-body" id="autoSheetList"></div>
       </div>
@@ -25131,8 +25134,8 @@ function aqAutoRender() {
       <span class="auto-dot" style="background:${(getSignalColors()[sg.id] || '#868e96')}"></span>
       <div class="auto-mid" onclick="aqAutoOpenSheet('${sg.id}')">
         <div class="auto-name">${sg.id}${nBl ? `<span class="auto-bl-n">제외 ${nBl}</span>` : ''}</div>
-        <div class="auto-sub">${thin ? '표본 부족 · ' : ''}승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건${st.pending ? ` (+${st.pending} 미판정)` : ''}</div>
-        <div class="auto-rule-sum">${(() => { const R = _autoRule(sg.id); return `$${Number(R.budget).toLocaleString()} · +$${Number(R.extra).toLocaleString()} · 상한 +${R.slip}% · ${R.sellAfter}일 뒤 매도${R.buyHeld ? ' · 보유종목도 매수' : ''}`; })()}</div>
+        <div class="auto-sub">${thin ? '표본 부족 · ' : ''}승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건</div>
+
         <div class="auto-bar"><i class="${(st.avg || 0) >= 0 ? 'up' : 'down'}" style="width:${w}%"></i></div>
       </div>
       <div class="auto-ret ${(st.avg || 0) >= 0 ? 'up' : 'down'}" onclick="aqAutoOpenSheet('${sg.id}')">${_autoFmtPct(st.avg)}</div>
@@ -25153,8 +25156,8 @@ function aqAutoRenderBlacklist() {
 }
 function aqAutoOpenSheet(sig) {
   _auto.sheetSig = sig; const W = _autoW(); const st = (W && W.signals[sig]) || {};
-  document.getElementById('autoSheetTitle').textContent = `${sig} · 최근 ${_auto.win}거래일 · ${_auto.hold}일 보유`;
-  document.getElementById('autoSheetMeta').textContent = `평균 ${_autoFmtPct(st.avg)} · 승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건`;
+  document.getElementById('autoSheetTitle').textContent = sig;
+  document.getElementById('autoSheetMeta').textContent = `${_autoFmtPct(st.avg)} · 승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건 · 최근 ${_auto.win}일 · ${_auto.hold}일 보유`;
   aqAutoRenderRule(sig);
   const list = (W && W.worst[sig]) || []; const bl = _auto.blacklist || [];
   document.getElementById('autoSheetList').innerHTML = list.length ? list.map(z => { const inBl = bl.find(b => b.signal === sig && b.ticker === z.ticker);
@@ -25167,31 +25170,34 @@ function aqAutoOpenSheet(sig) {
     </div>`; }).join('') : '<div class="auto-empty">이 기간에 평균 수익률이 마이너스인 종목이 없습니다.</div>';
   document.getElementById('autoSheet').classList.add('open'); document.getElementById('autoSheetBg').classList.add('open');
 }
-function aqAutoRenderRule(sig) {
-  const box = document.getElementById('autoRuleBox'); if (!box) return; const R = _autoRule(sig);
-  box.innerHTML = `<div class="ar-title">자동매매 설정</div>
-    <div class="ar-row"><label>종목당 매수 금액</label><div class="ar-in"><span>$</span><input type="number" id="arBudget" min="1" step="50" value="${R.budget}" inputmode="decimal"></div></div>
-    <div class="ar-row"><label>초과 허용 금액<small>1주가 매수 금액보다 비쌀 때</small></label><div class="ar-in"><span>+$</span><input type="number" id="arExtra" min="0" step="50" value="${R.extra}" inputmode="decimal"></div></div>
-    <div class="ar-row"><label>추가 지불 허용<small>신호일 종가 대비 상한</small></label><div class="ar-in"><span>+</span><input type="number" id="arSlip" min="0" max="20" step="0.5" value="${R.slip}" inputmode="decimal"><span>%</span></div></div>
-    <div class="ar-row"><label>자동 매도<small>체결일부터, 정규장 종가 근처</small></label><div class="auto-seg auto-seg-sm" id="arSell">${[1,2,3,4,5,6,7].map(h => `<button data-h="${h}" class="${h === Number(R.sellAfter) ? 'on' : ''}" onclick="aqAutoRulePick(${h})">${h}</button>`).join('')}</div></div>
-    <div class="ar-row"><label>이미 보유한 종목도 매수<small>켜면 그 매수분은 자동 매도 안 함</small></label><label class="aq-switch"><input type="checkbox" id="arHeld" ${R.buyHeld ? 'checked' : ''} onchange="aqAutoRulePreview()"><span class="sl"></span></label></div>
-    <div class="ar-prev" id="arPrev"></div>
-    <div class="ar-act"><button class="btn sm" onclick="aqAutoRuleSave('${sig}')">저장</button></div>`;
-  aqAutoRulePreview();
+function aqAutoRenderRule(sig) {   // v5.30: 설명·예시 없이, 즉시 저장
+  const box = document.getElementById('autoRuleBox'); if (!box) return; const R = _autoRule(sig); const zones = (R.zones && R.zones.length) ? R.zones.map(Number) : [1, 2, 3, 4, 5];
+  box.dataset.sig = sig;
+  box.innerHTML = `
+    <div class="ar-row"><label>종목당 매수 금액</label><div class="ar-in"><span>$</span><input type="number" id="arBudget" min="1" step="50" value="${R.budget}" inputmode="decimal" onchange="aqAutoRuleSave()"></div></div>
+    <div class="ar-row"><label>1주가 비쌀 때 추가</label><div class="ar-in"><span>+$</span><input type="number" id="arExtra" min="0" step="50" value="${R.extra}" inputmode="decimal" onchange="aqAutoRuleSave()"></div></div>
+    <div class="ar-row"><label>최대 추가 지불</label><div class="ar-in"><span>+</span><input type="number" id="arSlip" min="0" max="20" step="0.5" value="${R.slip}" inputmode="decimal" onchange="aqAutoRuleSave()"><span>%</span></div></div>
+    <div class="ar-row"><label>자동 매도</label><div class="ar-in"><div class="auto-seg auto-seg-sm" id="arSell">${[1,2,3,4,5,6,7].map(h => `<button data-h="${h}" class="${h === Number(R.sellAfter) ? 'on' : ''}" onclick="aqAutoRulePick(${h})">${h}</button>`).join('')}</div><span>일 뒤</span></div></div>
+    <div class="ar-row"><label>매수 허용 위치<small>최근 3개월</small></label><div class="ar-zone"><span>낮음</span><div class="auto-seg auto-seg-sm" id="arZones">${[1,2,3,4,5].map(z => `<button data-z="${z}" class="${zones.includes(z) ? 'on' : ''}" onclick="aqAutoZoneToggle(${z})">${z}</button>`).join('')}</div><span>높음</span></div></div>
+    <div class="ar-row"><label>보유 종목도 매수</label><label class="aq-switch"><input type="checkbox" id="arHeld" ${R.buyHeld ? 'checked' : ''} onchange="aqAutoRuleSave()"><span class="sl"></span></label></div>`;
 }
-function _arRead() { const v = id => Number((document.getElementById(id) || {}).value); const on = document.querySelector('#arSell button.on'); return { budget: Math.max(1, v('arBudget') || 0), extra: Math.max(0, v('arExtra') || 0), slip: Math.min(20, Math.max(0, v('arSlip') || 0)), sellAfter: on ? Number(on.dataset.h) : 5, buyHeld: !!(document.getElementById('arHeld') || {}).checked }; }
-function aqAutoRulePick(h) { document.querySelectorAll('#arSell button').forEach(b => b.classList.toggle('on', Number(b.dataset.h) === h)); aqAutoRulePreview(); }
-function aqAutoRulePreview() {
-  const el = document.getElementById('arPrev'); if (!el) return; const R = _arRead();
-  const ex = [R.budget * 1.2, R.budget * 0.45, R.budget + R.extra + 50].map(p => Math.round(p * 100) / 100);
-  el.innerHTML = '예시 · ' + ex.map(p => { const q = _autoRuleQty(R, p); return q ? `1주 $${p.toLocaleString()} → <b>${q}주</b> ($${(q * p).toLocaleString(undefined, { maximumFractionDigits: 2 })})` : `1주 $${p.toLocaleString()} → <b>건너뜀</b>`; }).join(' · ') + `<br>매수 상한 = 신호일 종가 × ${(1 + R.slip / 100).toFixed(3)} · ${R.sellAfter}거래일째 종가 근처 매도${R.buyHeld ? ' · 보유 종목 매수분은 자동 매도 제외' : ' · 보유 종목은 매수 안 함'}`;
+function _arRead() { const v = id => Number((document.getElementById(id) || {}).value); const on = document.querySelector('#arSell button.on');
+  const zones = [...document.querySelectorAll('#arZones button.on')].map(b => Number(b.dataset.z));
+  return { budget: Math.max(1, v('arBudget') || 0), extra: Math.max(0, v('arExtra') || 0), slip: Math.min(20, Math.max(0, v('arSlip') || 0)), sellAfter: on ? Number(on.dataset.h) : 5, buyHeld: !!(document.getElementById('arHeld') || {}).checked, zones }; }
+function aqAutoRulePick(h) { document.querySelectorAll('#arSell button').forEach(b => b.classList.toggle('on', Number(b.dataset.h) === h)); aqAutoRuleSave(); }
+function aqAutoZoneToggle(z) {   // 고른 분위만 매수 (2만 고르면 2분위만, 1·2를 고르면 1~2분위)
+  const b = document.querySelector(`#arZones button[data-z="${z}"]`); if (!b) return;
+  if (b.classList.contains('on') && document.querySelectorAll('#arZones button.on').length === 1) { if (typeof aqToast === 'function') aqToast('위치를 하나 이상 골라 주세요'); return; }
+  b.classList.toggle('on'); aqAutoRuleSave();
 }
-['arBudget', 'arExtra', 'arSlip'].forEach(id => document.addEventListener('input', e => { if (e.target && e.target.id === id) aqAutoRulePreview(); }));
-async function aqAutoRuleSave(sig) {
-  const rules = Object.assign({}, _auto.rules || {}); rules[sig] = _arRead();
-  const r = await _opsCall('saveConfig', { key: 'autotrade.rules', value: JSON.stringify(rules) });
-  if (!r || !r.ok) { alert('저장 실패: ' + ((r && r.error) || '')); return; }
-  _auto.rules = rules; if (typeof aqToast === 'function') aqToast(`${sig} 자동매매 설정 저장`); aqAutoRender();
+let _arSaveT = null;
+function aqAutoRuleSave() {
+  const sig = (document.getElementById('autoRuleBox') || {}).dataset?.sig || _auto.sheetSig; if (!sig) return;
+  _auto.rules = Object.assign({}, _auto.rules || {}, { [sig]: _arRead() });
+  clearTimeout(_arSaveT); _arSaveT = setTimeout(async () => {
+    const r = await _opsCall('saveConfig', { key: 'autotrade.rules', value: JSON.stringify(_auto.rules) });
+    if (!r || !r.ok) { alert('저장 실패: ' + ((r && r.error) || '')); return; } if (typeof aqToast === 'function') aqToast('저장됨');
+  }, 500);
 }
 function aqAutoCloseSheet() { document.getElementById('autoSheet').classList.remove('open'); document.getElementById('autoSheetBg').classList.remove('open'); }
 function aqAutoBlForm(btn) { const row = btn.closest('.auto-w-item'); row.classList.toggle('form'); const i = row.querySelector('input'); if (i) i.focus(); }
@@ -25239,7 +25245,7 @@ function _engRow(p) {
     : `${p.qty}주 · 상한 $${Number(p.cap || 0).toFixed(2)}${p.cur_px ? `<br><small>현재 지정가 $${Number(p.cur_px).toFixed(2)}</small>` : ''}`;
   return `<div class="insider-archive-item eng-row" onclick="openChart('${escapeAttr(p.ticker)}')">${aqWrapLogo(_autoLogo(p.ticker), p.ticker)}
     <div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(p.ticker) || p.ticker)} <span class="sig-badge ${escapeAttr(p.signal)}" style="font-size:9px;padding:1px 5px">${escapeHtml(p.signal)}</span></div>
-    <div class="ia-company">${String(p.signal_date).slice(5).replace('-', '/')} 신호${p.note ? ' · ' + escapeHtml(p.note) : ''}</div></div>
+    <div class="ia-company">${String(p.signal_date).slice(5).replace('-', '/')} 신호${p.zone ? ` · 위치 ${p.zone}분위` : ''}${p.pred5 != null ? ` · 기대 ${p.pred5 >= 0 ? '+' : ''}${Number(p.pred5).toFixed(1)}%` : ''}${p.note ? ' · ' + escapeHtml(p.note) : ''}</div></div>
     <div class="ia-meta"><span class="rv3-lb rv3-lb-${st[1]}">${st[0]}</span><div class="ia-shares" style="margin-top:4px">${right}</div></div></div>`;
 }
 function aqEngineRender() {
@@ -25248,12 +25254,14 @@ function aqEngineRender() {
   const hbAge = d.heartbeat && d.heartbeat.at ? (Date.now() - new Date(d.heartbeat.at).getTime()) / 1000 : null; const alive = hbAge != null && hbAge < 120;
   const ext = d.ext_supported === false ? '시간외 주문 안 됨 → 정규장 시작 30분 매수' : d.ext_supported === true ? '시간외 주문 가능' : '시간외 주문 미확인';
   const st = document.getElementById('engStatus');
-  if (st) st.innerHTML = `<span class="eng-dot ${alive ? (on ? 'on' : 'idle') : ''}"></span>${!alive ? '엔진 응답 없음 (서비스 확인)' : on ? '<b class="eng-on">켜짐 · 실제 주문</b>' : '꺼짐'} · ${_engFmt(d.heartbeat && d.heartbeat.at)} 확인 · ${ext}`;
+  const _nAct = (d.plans || []).filter(p => ['planned', 'working', 'filled'].includes(p.status)).length;
+  if (st) st.innerHTML = `<span class="eng-dot ${alive ? (on ? 'on' : 'idle') : ''}"></span>${!alive ? '엔진 응답 없음 (서비스 확인)' : on ? '<b class="eng-on">켜짐</b>' : '꺼짐'} · ${_engFmt(d.heartbeat && d.heartbeat.at)} 확인${_nAct ? ` · 진행 중 ${_nAct}건` : ''}`;
   const ex = document.getElementById('engExtTxt'); if (ex) ex.textContent = ext;
   const dm = document.getElementById('engDailyMax'); if (dm && document.activeElement !== dm) dm.value = d.engine.dailyMax;
+  const mp = document.getElementById('engMinPrice'); if (mp && document.activeElement !== mp) mp.value = d.engine.minPrice != null ? d.engine.minPrice : 10;
   const plans = d.plans || []; const active = plans.filter(p => ['planned', 'working', 'filled'].includes(p.status)); const recent = plans.filter(p => !active.includes(p)).slice(0, 15);
   const a = document.getElementById('engActive');
-  if (a) a.innerHTML = `<div class="eng-sec-h"><span>진행 중 (${active.length})</span></div>${active.length ? active.map(_engRow).join('') : '<div class="auto-empty" style="padding:10px 4px">진행 중인 매매가 없습니다.</div>'}`;
+  if (a) a.innerHTML = active.length ? `<div class="eng-sec-h"><span>진행 중</span></div>${active.map(_engRow).join('')}` : '';
   const m = document.getElementById('engMore');
   if (m) m.innerHTML = `${recent.length ? `<details class="eng-more"><summary>최근 3주 기록 ${recent.length}건</summary>${recent.map(_engRow).join('')}</details>` : ''}
     <details class="eng-more"><summary>엔진 로그</summary><div class="eng-log">${(d.log || []).map(l => `<div class="${l.level}"><span>${_engFmt(l.at)}</span> ${escapeHtml(l.msg)}</div>`).join('') || '—'}</div></details>`;
@@ -25270,17 +25278,17 @@ async function aqEngineToggle(el) {
 }
 function aqAutoCfgOpen() { aqAutoRender(); aqEngineRender(); document.getElementById('autoCfgSheet').classList.add('open'); document.getElementById('autoCfgBg').classList.add('open'); }
 function aqAutoCfgClose() { document.getElementById('autoCfgSheet').classList.remove('open'); document.getElementById('autoCfgBg').classList.remove('open'); }
-async function aqAutoCfgSave() {
-  const v = Number(document.getElementById('engDailyMax').value);
-  const r = await _opsCall('engineSet', { dailyMax: v });
+async function aqAutoCfgSave() {   // v5.30: 바꾸는 즉시 저장
+  const v = Number(document.getElementById('engDailyMax').value), mp = Number(document.getElementById('engMinPrice').value);
+  const r = await _opsCall('engineSet', { dailyMax: v, minPrice: mp });
   if (!r || !r.ok) { alert('저장 실패: ' + ((r && r.error) || '')); return; }
-  if (typeof aqToast === 'function') aqToast('자동매매 설정 저장'); aqAutoCfgClose(); aqEngineLoad(); aqAutoRender();
+  if (typeof aqToast === 'function') aqToast('저장됨'); aqEngineLoad();
 }
 async function aqEngineResetExt() { const r = await _opsCall('engineSet', { resetExt: '1' }); if (r && r.ok && typeof aqToast === 'function') aqToast('시간외 주문 가능 여부를 다음 주문에서 다시 확인합니다'); aqEngineLoad(); }
 Object.assign(window, { aqEngineLoad, aqEngineToggle, aqAutoCfgOpen, aqAutoCfgClose, aqAutoCfgSave, aqEngineResetExt });
 
 async function aqAutoEnter() { if (!_auto.entered) { _auto.entered = true; aqAutoRender(); } aqEngineLoad(); await aqAutoLoadSignals(); }
-Object.assign(window, { aqAutoRulePick, aqAutoRulePreview, aqAutoRuleSave, aqAutoSetHold, aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals, aqAutoSetWin, aqAutoToggle, aqAutoOpenSheet, aqAutoCloseSheet, aqAutoBlForm, aqAutoBlAdd, aqAutoBlRemove });
+Object.assign(window, { aqAutoRulePick, aqAutoZoneToggle, aqAutoRuleSave, aqAutoSetHold, aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals, aqAutoSetWin, aqAutoToggle, aqAutoOpenSheet, aqAutoCloseSheet, aqAutoBlForm, aqAutoBlAdd, aqAutoBlRemove });
 
 </script>
 
