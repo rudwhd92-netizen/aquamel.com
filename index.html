@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.21';   // v5.21: KJP400→KJP500 표기, 폐기 섹터 제외, 섹터 시트는 섹터 탭 종목 우선
+window.AQ_PWA_VERSION = '5.22';   // v5.22: 마이=보유/누적/매매 룩백/액션 통계, 하단 '관심' 탭(비교+모의매수), 토스 미연동 안내
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3006,6 +3006,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-pc-page="settings"] #aqStampCard { display: block !important; }
   body[data-pc-page="auto"] #autoBlacklistCard { display: block !important; }
   body[data-pc-page="board"] #aqAccountCard { display: block !important; }
+  body[data-pc-page="board"][data-broker="linked"] #boardLookbackCard, body[data-pc-page="board"][data-broker="linked"] #aqStatsCard { display: block !important; }
   body[data-pc-page="board"] #aqTossGateCard { display: block !important; }
   body[data-pc-page="board"]:not([data-broker="linked"]) .container > section.card:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
   /* v4.76: 운영 / 자동 페이지 (PC) */
@@ -3846,6 +3847,12 @@ body.aq-archfull-open { overflow: hidden; }
 @media (min-width: 1025px) { .ops-sheet-grip, .modal-drag-handle { display: none !important; } }
 /* v5.20: 그립 터치 영역 */
 .ops-sheet-grip, .modal-drag-handle { position: relative; } .ops-sheet-grip::after, .modal-drag-handle::after { content: ""; position: absolute; left: -60px; right: -60px; top: -14px; bottom: -14px; }
+/* v5.22: 토스 미연동 안내 */
+.aq-toss-need { display: none; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(99,230,190,.35); background: rgba(99,230,190,.06); color: var(--text-hi); font-size: 13px; font-weight: 700; margin-bottom: 12px; text-align: center; }
+.aq-toss-need .btn { margin-left: 8px; }
+body:not([data-broker="linked"]) #autoSignalCard .aq-toss-need { display: block; }
+.aq-toss-band { display: none; margin: 8px 0 10px; padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,.04); border: 1px dashed var(--line); color: var(--text-mute); font-size: 12px; cursor: pointer; }
+body:not([data-broker="linked"]) .aq-toss-band { display: block; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -4349,7 +4356,9 @@ body.aq-archfull-open { overflow: hidden; }
   body[data-mtab="board"][data-btab="watch"]       section.card[data-btab~="watch"],
   body[data-mtab="board"][data-btab="holdings"]    section.card[data-btab~="holdings"],
   body[data-mtab="board"][data-btab="performance"] section.card[data-btab~="performance"],
-  body[data-mtab="board"][data-btab="account"]     section.card[data-btab~="account"] { display: block !important; }
+  body[data-mtab="board"][data-btab="account"]     section.card[data-btab~="account"],
+  body[data-mtab="board"][data-btab="lookback"]    section.card[data-btab~="lookback"],
+  body[data-mtab="board"][data-btab="stats"]       section.card[data-btab~="stats"] { display: block !important; }
   body[data-mtab="my"]       section.card[data-mtab~="my"]       { display: block !important; }
   /* v2.01 Phase 2: 분석 탭 — 분석 카드만 표시 */
   body[data-mtab="analysis"] section.card[data-mtab~="analysis"] { display: block !important; }
@@ -7927,17 +7936,20 @@ table.combo-eval tbody td .nodata {
   <!-- v3.39: 보드 서브탭 (탐색 서브탭과 동일 양식) — 보유 종목 / 누적 성과 / 계좌 분석 -->
   <section class="card mobile-only explore-subtabs" id="boardSubtabs" data-mtab="board">
     <div class="xtab-row">
-      <button class="xtab-btn active" data-btab="watch" onclick="setBoardSubtab('watch')">관심 종목</button>
-      <button class="xtab-btn" data-btab="holdings" onclick="setBoardSubtab('holdings')">보유 종목</button>
-      <button class="xtab-btn" data-btab="performance" onclick="setBoardSubtab('performance')">누적 성과</button>
-      <button class="xtab-btn" data-btab="account" onclick="setBoardSubtab('account')">상세 분석</button>
+      <button class="xtab-btn active" data-btab="holdings" onclick="setBoardSubtab('holdings')">보유 종목</button>
+        <button class="xtab-btn" data-btab="performance" onclick="setBoardSubtab('performance')">누적 성과</button>
+        <button class="xtab-btn" data-btab="lookback" onclick="setBoardSubtab('lookback')">매매 룩백</button>
+        <button class="xtab-btn" data-btab="stats" onclick="setBoardSubtab('stats')">액션 통계</button>
     </div>
 
   </section>
   <section class="card mobile-only" id="boardHoldingsCard" data-mtab="board" data-btab="holdings" style="display:none;">
     <div class="card-body"><div class="cmp-placeholder">보유 종목 — 준비 중</div></div>
   </section>
-  <section class="card mobile-only" id="boardAccountCard" data-mtab="board" data-btab="account" style="display:none;">
+  <section class="card" id="boardLookbackCard" data-mtab="board" data-btab="lookback" style="display:none;">
+      <div class="card-body" id="boardLookbackHost"></div>
+    </section>
+    <section class="card mobile-only" id="boardAccountCard" data-mtab="retired" style="display:none !important;">
     <div class="card-body"><div class="cmp-placeholder">상세 분석 — 준비 중</div></div>
   </section>
 
@@ -8072,7 +8084,7 @@ table.combo-eval tbody td .nodata {
 
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
   <!-- v3.32: 종목 비교 분석 (US 유니버스 최대 3개 — 리베이스 차트 + 멀티 헥사곤) -->
-  <section class="card" id="compareCard" data-mtab="board" data-btab="watch" style="display:none;">
+  <section class="card" id="compareCard" data-mtab="sector" style="display:none;">
     <div class="card-header"><h2>종목 비교 분석</h2></div>
     <div class="card-body">
       <div class="cmp-picker">
@@ -8137,7 +8149,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- v2.92: 관심 칸반 보드 — 단기 모니터링 / 매수고려 / 장기 모니터링 / 매수완료. To-Do와 동일 룩앤필. -->
-  <section class="card" id="watchBoardCard" data-mtab="board" data-btab="watch">
+  <section class="card" id="watchBoardCard" data-mtab="sector">
       <div class="card-header"><h2>모의매수</h2><span class="dash-meta" id="aqSimMeta"></span></div>
       <div class="card-body">
         <div class="aq-sim-summary" id="aqSimSummary"></div>
@@ -8257,6 +8269,7 @@ table.combo-eval tbody td .nodata {
         <label class="aq-switch eng-switch"><input type="checkbox" id="engSwitch" onchange="aqEngineToggle(this)"><span class="sl"></span></label>
       </div>
       <div class="card-body">
+        <div class="aq-toss-need" data-need="자동매매를 켜려면">토스를 연결해야 자동매매를 켤 수 있어요 <button class="btn sm" onclick="aqGoTossGate()">연결하러 가기 ›</button></div>
         <div id="engStatus" class="eng-stat"></div>
         <div id="engActive"></div>
         <div class="eng-sec-h"><span>신호</span><span class="eng-basis" id="autoWinMeta"></span></div>
@@ -8324,8 +8337,8 @@ table.combo-eval tbody td .nodata {
     </section>
 
     <!-- v5.14: 통계 탭 (섹터 탭 자리) -->
-    <section class="card" id="aqStatsCard" data-mtab="sector">
-      <div class="card-header st-head"><h2>통계</h2>
+    <section class="card" id="aqStatsCard" data-mtab="board" data-btab="stats">
+      <div class="card-header st-head"><h2>액션 통계</h2>
         <select id="aqStatsPeriod" class="st-period" onchange="aqStatsSetPeriod(this.value)"><option value="12m">최근 12개월</option></select></div>
       <div class="card-body"><div id="aqStatsBody" class="st-body"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
@@ -8679,6 +8692,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <div class="cal-grid" id="calendarGrid"></div>
 
+      <div class="aq-toss-band" onclick="aqGoTossGate()">토스 연결 시 매수·매도·보유 종목 실적이 함께 표시됩니다 ›</div>
       <div class="cal-selected-section" id="calSelectedSection" style="display: none;">
         <div class="cal-selected-head">
           <div class="cal-selected-date-label" id="calSelectedDateLabel"></div>
@@ -8748,11 +8762,9 @@ table.combo-eval tbody td .nodata {
       <span class="mtab-label">탐색</span>
     </button>
     <!-- v3.84: 섹터 — 햄버거에서 하단 탭(탐색↔관심)으로 이동 -->
-    <button class="mtab-btn" data-mtab="sector" onclick="switchMobileTab('sector')" aria-label="통계">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
-      </svg>
-      <span class="mtab-label">통계</span>
+    <button class="mtab-btn" data-mtab="sector" onclick="switchMobileTab('sector')" aria-label="관심">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+      <span class="mtab-label">관심</span>
     </button>
     <!-- v3.85: 관심 탭 삭제 — 관심 종목은 자산 서브탭(좌측)으로 이동 -->
     <!-- v2.92: 4번째 — 일정 -->
@@ -12763,10 +12775,10 @@ function setMarket(mkt) {
   try {
     const _mt = document.body.getAttribute('data-mtab');
     if (_mt === 'board') {
-      if (typeof setBoardSubtab === 'function') setBoardSubtab(document.body.getAttribute('data-btab') || 'watch');
+      if (typeof setBoardSubtab === 'function') setBoardSubtab(document.body.getAttribute('data-btab') || 'holdings');
     } else if (_mt === 'explore') {
       if (typeof setExploreSubtab === 'function') setExploreSubtab(document.body.getAttribute('data-xtab') || 'signals');
-    } else if (_mt === 'sector') { try { aqStatsRender(); } catch (e) {}
+    } else if (_mt === 'sector') { try { buildCompare(); buildWatchKanban(); } catch (e) {}
       if (typeof setSectorSubtab === 'function') setSectorSubtab(document.body.getAttribute('data-stab') || 'trend');
     } else if (_mt && typeof switchMobileTab === 'function') {
       switchMobileTab(_mt);   // my(로그)/schedule 등 — lazy 렌더 재사용
@@ -15109,6 +15121,9 @@ function openPositionPanel(tk) {
   const pos = (computePortfolioFromTrades(trades) || {})[tk] || { qty: 0, totalCost: 0, avg: 0 };
   let cur = 0;
   try { const fnd = findTickerSeries(tk); if (fnd && fnd.rows && fnd.rows.length) cur = Number(fnd.rows[fnd.rows.length - 1].Close) || 0; } catch (e) {}
+  if (document.body.getAttribute('data-broker') !== 'linked') {   // v5.22: 토스 미연동 안내
+    panel.innerHTML = `<div class="aq-toss-need" style="display:block;margin:18px 4px">토스를 연결하면 내 보유·매매가 보여요<br><button class="btn sm" style="margin-top:10px" onclick="try{closeModal()}catch(e){}; aqGoTossGate()">연결하러 가기 ›</button></div>`; return;
+  }
   let qty = pos.qty || 0, avg = pos.avg || 0, principal = pos.totalCost || 0;
   // v5.12: 토스 보유와 다르면(분할·오래된 보유분) 현재 보유는 토스 기준
   let _tossNote = '';
@@ -23230,8 +23245,12 @@ function _lbRender() {
   body.innerHTML = html;
 }
 
-function openLookback() {
+function _aqMountLookback() { const host = document.getElementById('boardLookbackHost'); const b = document.getElementById('lookbackBody'); if (host && b && b.parentElement !== host) host.appendChild(b); }
+window._aqMountLookback = _aqMountLookback;
+function openLookback() {   // v5.22: 마이 → 매매 룩백 탭으로 이동
   try { closeMoDrawer(); } catch (e) {}
+  try { if (typeof isPCViewport === 'function' && isPCViewport()) { setPCTab('board'); _aqMountLookback(); _lbRender(); const c = document.getElementById('boardLookbackCard'); if (c) c.scrollIntoView({ behavior: 'smooth' }); return; } } catch (e) {}
+  setTimeout(() => { try { switchMobileTab('board'); setBoardSubtab('lookback'); } catch (e) {} }, 220); return;
   const m = document.getElementById('lookbackModal'); if (!m) return;
   m.classList.add('active');
   try { _lbRender(); } catch (e) { const b = document.getElementById('lookbackBody'); if (b) b.innerHTML = '<div class="lb-empty">렌더 중 오류가 발생했습니다.</div>'; console.warn('[lookback]', e); }
@@ -23297,14 +23316,15 @@ function switchMobileTab(tab) {
     } catch (e) {}
     try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   } else if (tab === 'sector') {
-    try { aqStatsRender(); } catch (e) {}   // v5.14: 통계
+    try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}   // v5.22: 관심 = 비교 분석 + 모의매수
+    try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {}
     // v3.85: 섹터 서브탭 기본값 = 일간 섹터 동향
     if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'trend');
     try { if (typeof setSectorSubtab === 'function') setSectorSubtab(document.body.getAttribute('data-stab') || 'trend'); } catch (e) {}
   } else if (tab === 'board') {
     // v3.85: 보드 서브탭 기본값 = 관심 종목
     if (!document.body.getAttribute('data-btab')) document.body.setAttribute('data-btab', 'watch');
-    try { if (typeof setBoardSubtab === 'function') setBoardSubtab(document.body.getAttribute('data-btab') || 'watch'); } catch (e) {}
+    try { if (typeof setBoardSubtab === 'function') setBoardSubtab(document.body.getAttribute('data-btab') || 'holdings'); } catch (e) {}
   }
   // 스크롤 맨 위로
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -23436,6 +23456,7 @@ function setPCTab(tab) {
 
 // PC에서는 모바일 전용 카드(buyPoints/archiveMobile/stockList)를 사이드 패널 안으로 DOM 이동
 function setBoardSubtab(x) {
+  if (!x || x === 'watch' || x === 'account') x = 'holdings';   // v5.22: 관심은 하단 탭으로, 상세 분석 → 액션 통계
   document.body.setAttribute('data-btab', x);
   try { aqRefreshAcctStatus(); } catch (e) {}
   document.querySelectorAll('.xtab-btn[data-btab]').forEach(b => b.classList.toggle('active', b.dataset.btab === x));
@@ -23443,6 +23464,10 @@ function setBoardSubtab(x) {
   if (x === 'holdings') {
     // 도넛은 숨김 컨테이너에서 0크기로 그려졌을 수 있어 → 표시 직후 리사이즈
     try { requestAnimationFrame(() => { try { if (typeof _dashCharts !== 'undefined' && _dashCharts.donut) _dashCharts.donut.resize(); } catch (e) {} }); } catch (e) {}
+  } else if (x === 'stats') {
+    try { aqStatsRender(); } catch (e) {}
+  } else if (x === 'lookback') {
+    try { _aqMountLookback(); _lbRender(); } catch (e) { console.warn('[lookback]', e); }
   } else if (x === 'watch') {
     try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {}
     try {
@@ -23482,14 +23507,9 @@ function aqLayoutBoardHoldings() {
     if (pf && pf.parentElement !== hBody) hBody.appendChild(pf);
     if (hd && hd.parentElement !== hBody) hBody.appendChild(hd);
   }
-  // 상세 분석 탭: Decoupling Matrix
-  const aHost = document.getElementById('boardAccountCard');
-  if (aHost) {
-    const aBody = aHost.querySelector('.card-body') || aHost;
-    const ph2 = aBody.querySelector('.cmp-placeholder'); if (ph2) ph2.remove();
-    const mx = document.getElementById('dashMatrixCard');
-    if (mx && mx.parentElement !== aBody) aBody.appendChild(mx);
-  }
+  // v5.22: Decoupling Matrix → 누적 성과 맨 아래
+  const dc = document.getElementById('dashboardCard'); const mx = document.getElementById('dashMatrixCard');
+  if (dc && mx) { const dBody = dc.querySelector('.card-body') || dc; if (dBody.lastElementChild !== mx) dBody.appendChild(mx); }
 }
 window.aqLayoutBoardHoldings = aqLayoutBoardHoldings;
 
@@ -25496,6 +25516,7 @@ async function aqSyncLocalFromServer(silent) {
   try { if (typeof aqRerenderSignalLists === 'function') aqRerenderSignalLists(); } catch (e) {}
   try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
   try { if (typeof _renderSelectedSection === 'function') _renderSelectedSection(); } catch (e) {}
+  try { aqStatsRender(); if (typeof _lbRender === 'function') { _aqMountLookback(); _lbRender(); } } catch (e) {}   // v5.22
   if (!silent && typeof aqToast === 'function') aqToast(`내 매매 데이터 반영 · 체결 ${(tr.trades || []).length} / 보유 ${(hd.holdings || []).length}`);
   return true;
 }
@@ -25844,6 +25865,12 @@ window.addEventListener('popstate', () => {
 document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; const top = _sh.stack[_sh.stack.length - 1]; const def = AQ_SHEETS.find(d => d.id === top); if (def) def.close(); });
 document.addEventListener('DOMContentLoaded', () => { AQ_SHEETS.forEach(d => { if (!_shWatch(d)) setTimeout(() => _shWatch(d), 3000); }); });
 
+// v5.22: 토스 연동 화면으로 이동 (MO 마이 / PC 보드)
+function aqGoTossGate() {
+  try { if (typeof isPCViewport === 'function' && isPCViewport()) setPCTab('board'); else switchMobileTab('board'); } catch (e) {}
+  setTimeout(() => { const g = document.getElementById('aqTossGateCard'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
+}
+window.aqGoTossGate = aqGoTossGate;
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
   _aqSetRole('guest'); _aqSetBroker('none');
