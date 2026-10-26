@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.36';   // v5.36: 옛 신호 필터 블록 완전 숨김, 차트 아래 버튼 줄 전용 띠(겹침 없음)
+window.AQ_PWA_VERSION = '5.37';   // v5.37: 한국주식 정상화 1·2차 — 미국 전용 숨김, 수급 섹션, 비교·룩백 한국 지원, 성공률 필터, 연속 순매수 라벨
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3951,6 +3951,18 @@ body:not([data-role="admin"]) [data-role-admin-tab] { display: none !important; 
 /* v5.36: 차트 그림 아래 버튼 줄 전용 띠 — 가격선·마커와 겹치지 않게 */
 #chartModal .chart-wrap { padding-bottom: 42px !important; box-sizing: content-box; }
 #chartModal .chart-wrap .chart-ctrl-br { bottom: 4px !important; }
+/* v5.37: 한국 선택 시 미국 전용 숨김 */
+html[data-market="KR"] .mtab-btn[data-mtab="auto"], html[data-market="KR"] [data-pc-tab="auto"] { display: none !important; }
+html[data-market="KR"] #insiderModeToggle { display: none !important; }
+/* 수급 섹션 */
+#krFlowArea .kf-row { display: grid; grid-template-columns: 52px repeat(3, minmax(0, 1fr)); gap: 6px; align-items: baseline; padding: 9px 2px; border-bottom: 1px solid var(--line); font-size: 13px; }
+#krFlowArea .kf-h { font-size: 11px; color: var(--text-mute); padding-top: 2px; } #krFlowArea .kf-l { color: var(--text-mute); font-size: 12px; }
+#krFlowArea .kf-c { text-align: right; font-variant-numeric: tabular-nums; } #krFlowArea .kf-c small { display: block; font-size: 10.5px; color: var(--text-mute); }
+#krFlowArea .kf-day { padding: 7px 2px; font-size: 12px; } #krFlowArea .up { color: #ff6b6b; } #krFlowArea .down { color: #4dabf7; }
+#krFlowArea .kf-sub { font-size: 11px; color: var(--text-mute); margin: 14px 2px 2px; } #krFlowArea .kf-streak { font-size: 12px; color: #63e6be; padding: 10px 2px 0; }
+.krf-sum .up, #krFlowWrapSum .up { color: #ff6b6b; } #krFlowWrapSum .down { color: #4dabf7; }
+.cmp-flow .kf-row { display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr)); gap: 6px; padding: 9px 2px; border-bottom: 1px solid var(--line); font-size: 13px; }
+.cmp-flow .kf-h { font-size: 11px; color: var(--text-mute); } .cmp-flow .kf-c { text-align: right; } .cmp-flow .up { color: #ff6b6b; } .cmp-flow .down { color: #4dabf7; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -9146,6 +9158,11 @@ table.combo-eval tbody td .nodata {
           <span class="aq-coll-caret">▼</span>
         </div>
         <div class="aq-coll-body"><div id="insiderHistoryArea"></div></div>
+      </div>
+      <!-- v5.37: 한국 수급 (외국인·기관·개인) -->
+      <div class="ticker-history-wrap aq-coll collapsed" id="krFlowWrap" style="display:none;">
+        <div class="aq-coll-head" onclick="aqToggleColl(this)"><h4 class="ticker-history-title" style="margin:0;">수급</h4><span class="aq-coll-sum" id="krFlowWrapSum"></span><span class="aq-coll-caret">▼</span></div>
+        <div class="aq-coll-body"><div id="krFlowArea"></div></div>
       </div>
       <!-- v4.68: 내부자 매도이력 (US_SELL) — 매수이력과 동일 UX -->
       <div class="ticker-history-wrap insider-history-wrap aq-coll collapsed" id="insiderSellHistoryWrap" style="display:none;">
@@ -16047,7 +16064,7 @@ function buildCompare() {
     ).join('') || '<span class="cmp-chip-empty">선택된 종목 없음</span>';
   }
   const result = document.getElementById('cmpResult'); if (!result) return;
-  if (getCurrentMarket() !== 'US') { result.innerHTML = '<div class="cmp-placeholder">비교 분석은 미국 시장에서만 제공됩니다</div>'; return; }
+  
   if (_cmpTickers.length < 2) { result.innerHTML = '<div class="cmp-placeholder">비교할 종목을 2개 이상 선택하세요 (최대 3개)</div>'; return; }
   result.innerHTML = `
     <div class="cmp-section-label">📈 가격 추이 (시작점 0% 기준 등락률)</div>
@@ -16062,7 +16079,14 @@ function buildCompare() {
     <div class="cmp-hex-legend" id="cmpHexLegend"></div>`;
   result.querySelectorAll('.cmp-tf button').forEach(b => b.classList.toggle('active', b.dataset.tf === _cmpTf));
   drawCompareChart();
-  const items = _cmpTickers.map((tk, i) => ({ tk, scores: (typeof aqHexagonFor === 'function' ? aqHexagonFor(tk) : null), color: CMP_COLORS[i % CMP_COLORS.length] }));
+  if (getCurrentMarket() === 'KR') {   // v5.37: 한국은 헥사곤 대신 수급 비교
+  const lbl = result.querySelectorAll('.cmp-section-label'); if (lbl[1]) lbl[1].textContent = '🔷 수급 비교 (최근 20거래일, 거래량 대비)';
+  const hw = document.getElementById('cmpHexWrap'); const lg = document.getElementById('cmpHexLegend'); if (lg) lg.innerHTML = '';
+  if (hw) hw.innerHTML = `<div class="cmp-flow"><div class="kf-row kf-h"><span></span><span class="kf-c">외국인</span><span class="kf-c">기관</span><span class="kf-c">개인</span></div>` + _cmpTickers.map((tk, i) => { const st = _krFlowStats(tk); const w = st ? st.d20 : null;
+    return `<div class="kf-row"><span style="color:${CMP_COLORS[i % CMP_COLORS.length]};font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(displayName(tk))}</span>${w ? `<span class="kf-c">${_krPct(w.foP)}</span><span class="kf-c">${_krPct(w.inP)}</span><span class="kf-c">${_krPct(w.reP)}</span>` : '<span class="kf-c">—</span><span class="kf-c">—</span><span class="kf-c">—</span>'}</div>`; }).join('') + '</div>';
+  return;
+}
+const items = _cmpTickers.map((tk, i) => ({ tk, scores: (typeof aqHexagonFor === 'function' ? aqHexagonFor(tk) : null), color: CMP_COLORS[i % CMP_COLORS.length] }));
   const hexWrap = document.getElementById('cmpHexWrap');
   if (hexWrap) hexWrap.innerHTML = items.some(it => it.scores) ? aqHexSvgMulti(items) : '<div class="cmp-placeholder" style="padding:20px;">헥사곤 점수 데이터가 아직 없어요</div>';
   const legend = document.getElementById('cmpHexLegend');
@@ -22959,7 +22983,7 @@ function _aqRenderMarquee() {
   try {
     if (typeof computeKJP400Avg === 'function') {
       const kjp = computeKJP400Avg();
-      if (kjp && typeof kjp.avg === 'number') items.push({ ticker: 'KJP500', chg: kjp.avg, isKjp: true });
+      if (kjp && typeof kjp.avg === 'number' && getCurrentMarket() === 'US') items.push({ ticker: 'KJP500', chg: kjp.avg, isKjp: true });
     }
   } catch (e) {}
 
@@ -23263,7 +23287,7 @@ function _lbCloseAtOffset(tk, dStr, n) { const rows = _lbRows(tk); if (!rows) re
 
 // 근거 판정
 function _lbHasSignal(tk, D) { const lo = _lbAddDays(D, -1); return (_state.archive || []).some(r => String(r.Ticker || '').toUpperCase() === tk && r.Date && r.Date >= lo && r.Date <= D); }
-function _lbHasInsider(tk, D) { const lo = _lbAddDays(D, -7), hi = _lbAddDays(D, -1); const arr = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[tk]) ? _aqInsiderTrades[tk] : []; return arr.some(t => t.transDate && isCommonEquityTrade(t.security) && t.transDate >= lo && t.transDate <= hi); }
+function _lbHasInsider(tk, D) { if (getCurrentMarket() !== 'US') return false; const lo = _lbAddDays(D, -7), hi = _lbAddDays(D, -1); const arr = (typeof _aqInsiderTrades !== 'undefined' && _aqInsiderTrades[tk]) ? _aqInsiderTrades[tk] : []; return arr.some(t => t.transDate && isCommonEquityTrade(t.security) && t.transDate >= lo && t.transDate <= hi); }
 function _lbTags(tk, D) { const tags = []; if (_lbHasSignal(tk, D)) tags.push('ML'); if (_lbHasInsider(tk, D)) tags.push('INS'); if (!tags.length) tags.push('SELF'); return tags; }
 
 // 후보 유니버스 (그날 신호 OR 내부자 충족했는데 안 산 종목, 시그널 타입 무관)
@@ -23271,7 +23295,7 @@ function _lbCandidates(D, boughtSet) {
   const lo = _lbAddDays(D, -1), insLo = _lbAddDays(D, -7), insHi = _lbAddDays(D, -1);
   const set = new Set();
   (_state.archive || []).forEach(r => { const tk = String(r.Ticker || '').toUpperCase(); if (tk && r.Date >= lo && r.Date <= D) set.add(tk); });
-  if (typeof _aqInsiderTrades !== 'undefined') {
+  if (typeof _aqInsiderTrades !== 'undefined' && getCurrentMarket() === 'US') {
     Object.keys(_aqInsiderTrades).forEach(tk => { if ((_aqInsiderTrades[tk] || []).some(t => isCommonEquityTrade(t.security) && t.transDate >= insLo && t.transDate <= insHi)) set.add(String(tk).toUpperCase()); });
   }
   boughtSet.forEach(tk => set.delete(tk));
@@ -23356,7 +23380,7 @@ window._lbSetH = _lbSetH; window._lbToggleCf = _lbToggleCf;
 
 function _lbRender() {
   const body = document.getElementById('lookbackBody'); if (!body) return;
-  if (typeof getCurrentMarket === 'function' && getCurrentMarket() !== 'US') { body.innerHTML = '<div class="lb-empty">룩백은 현재 미국 시장 기준으로 제공됩니다.<br>상단에서 US로 전환해 주세요.</div>'; return; }
+
   const cohorts = _lbBuild();
   let html = `<div class="lb-h"><div class="lb-title">룩백 · 매수 복기</div><div class="lb-seg">${LB_HORIZONS.map(h => `<button class="${h === _lbHorizon ? 'active' : ''}" onclick="_lbSetH(${h})">${h}일</button>`).join('')}</div></div>`;
   if (!cohorts.length) { body.innerHTML = html + '<div class="lb-empty">2026년 6월 이후 매수 내역이 없습니다.</div>'; return; }
@@ -24273,10 +24297,10 @@ function aqLoadTickerStats(force) {
   if (!force && Date.now() - _aqTickerStatsAt < 60000) return;
   _aqTickerStatsLoading = true;
   try {
-    Promise.resolve(apiCall('getTickerStats', { market: 'US' })).then(function (r) {
+    var _tsMkt = getCurrentMarket(); Promise.resolve(apiCall('getTickerStats', { market: _tsMkt })).then(function (r) {
       _aqTickerStatsLoading = false; _aqTickerStatsAt = Date.now();
       if (r && r.ok && Array.isArray(r.stats)) {
-        _state.tickerStatsUS = r.stats; _state._overSigCache = null;
+        if (_tsMkt === 'US') _state.tickerStatsUS = r.stats; else _state.tickerStatsKR = r.stats; _state._overSigCache = null;
         try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
         try { if (typeof aqRerenderSignalLists === 'function') aqRerenderSignalLists(); } catch (e) {}
       }
@@ -24299,7 +24323,10 @@ function aqOverSignaledSet() {
     // v4.92: 서버 판정이 아직 없으면 직접 받아오고(1회), 받을 때까지는 아무 종목도 제외하지 않음
     aqLoadTickerStats();
     base = new Set();
-  } else if (_state._overSigCache && _state._overSigCache.key === cacheKey) base = _state._overSigCache.set;
+  } else if (mkt === 'KR' && Array.isArray(_state.tickerStatsKR) && _state.tickerStatsKR.length) {   // v5.37: 한국도 서버 성공률 기준
+base = new Set(_state.tickerStatsKR.filter(function (x) { return x && x.excluded; }).map(function (x) { return x.ticker; }));
+} else if (mkt === 'KR' && !_state._krStatsTried) { _state._krStatsTried = true; aqLoadTickerStats(true); base = new Set();
+} else if (_state._overSigCache && _state._overSigCache.key === cacheKey) base = _state._overSigCache.set;
   else { base = aqComputeOverSignaled(pool); _state._overSigCache = { key: cacheKey, set: base }; }
   // v4.23: 예외 — 최근 30일 내 내부자 매수가 있는 종목은 제외하지 않고 노출
   var excused = aqRecentInsiderBuyTickers(30);
@@ -26140,7 +26167,8 @@ function aqSettingsRender() {
 async function aqSetStampSummary() {
   const el = document.getElementById('setStampVal'); const st = await aqLoadServerStamps(); if (!st) { if (el) { el.textContent = '확인 불가'; el.className = 'sr-val warn'; } return; }
   let old = 0; const rows = [];
-  for (const [label, key, cacheKey] of _AQ_STAMP_ROWS) {
+  const _krKeys = ['V_Shape_Archive_KOR', 'KR_SECTORS', 'REPORTS']; const _isKR = getCurrentMarket() === 'KR';
+  for (const [label, key, cacheKey] of _AQ_STAMP_ROWS.filter(r => _isKR ? _krKeys.includes(r[1]) : !['V_Shape_Archive_KOR', 'KR_SECTORS'].includes(r[1]))) {
     const sv = st[key] || null; let app = null;
     if (cacheKey) { try { const c = await aqDbGet(cacheKey); app = c && c.fetchedAt ? c.fetchedAt : null; } catch (e) {} } else app = _state._bundleTimestamp || null;
     const stale = !!(sv && app && new Date(app) < new Date(sv)); if (stale) old++;
@@ -26232,6 +26260,7 @@ document.addEventListener('click', e => {
   };
 })();
 function aqModalDecorate(tk) {   // v5.35: 필터 알약 표시만 (요약·고정 헤더 등은 걷어냄)
+  try { aqKrFlowSection(tk); } catch (e) {}
   try { const all = getSignalTypes(); const on = all.filter(x => _state.signalFilter.has(x)).length; const el = document.getElementById('modalFilterPillTxt');
     if (el) el.textContent = on === all.length ? '필터' : `필터 ${on}`; document.getElementById('modalFilterPill').classList.toggle('on', on !== all.length); } catch (e) {}
 }
@@ -26276,6 +26305,53 @@ window.buildTickerHistoryTable = buildTickerHistoryTable;
 Object.assign(window, { aqSigSheetOpen, aqSigSheetClose, aqSigToggle, aqSigAllOn });
 try { AQ_SHEETS.push({ id: 'aqSigSheet', root: () => document.getElementById('aqSigSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: aqSigSheetClose, full: true }); } catch (e) {}
 window.aqModalDecorate = aqModalDecorate;
+// ============================================================================
+// v5.37: 한국주식 정상화 — 미국 전용 정리 + 수급 섹션·비교 수급·룩백·성공률 필터·연속 순매수 라벨
+// ============================================================================
+function _krFlowStats(tk) {
+  const f = findTickerSeries(tk); const rows = (f && f.rows) ? f.rows.filter(r => (Number(r.Volume) || 0) > 0 && ((Number(r.Foreign) || 0) !== 0 || (Number(r.Inst) || 0) !== 0 || (Number(r.Retail) || 0) !== 0)) : [];
+  if (!rows.length) return null;
+  const win = n => { const a = rows.slice(-n); const v = a.reduce((s, r) => s + (Number(r.Volume) || 0), 0) || 1; const sum = k => a.reduce((s, r) => s + (Number(r[k]) || 0), 0);
+    return { n: a.length, fo: sum('Foreign'), in: sum('Inst'), re: sum('Retail'), foP: sum('Foreign') / v * 100, inP: sum('Inst') / v * 100, reP: sum('Retail') / v * 100 }; };
+  const streak = k => { let n = 0; for (let i = rows.length - 1; i >= 0; i--) { if ((Number(rows[i][k]) || 0) > 0) n++; else break; } return n; };
+  return { rows, d1: win(1), d5: win(5), d20: win(20), foStreak: streak('Foreign'), inStreak: streak('Inst') };
+}
+function _krNum(v) { const a = Math.abs(v); const s = v >= 0 ? '+' : '−'; return s + (a >= 1e6 ? (a / 1e6).toFixed(1) + '백만' : a >= 1e4 ? Math.round(a / 1e4).toLocaleString() + '만' : Math.round(a).toLocaleString()) + '주'; }
+function _krPct(v) { return `<span class="${v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v >= 0 ? '+' : ''}${v.toFixed(1)}%</span>`; }
+// 종목 페이지 수급 섹션 (한국만, 기본 접힘)
+function aqKrFlowSection(tk) {
+  const wrap = document.getElementById('krFlowWrap'); if (!wrap) return;
+  if (getCurrentMarket() !== 'KR') { wrap.style.display = 'none'; return; }
+  const st = _krFlowStats(tk); if (!st) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  document.getElementById('krFlowWrapSum').innerHTML = `외국인 ${_krPct(st.d20.foP)} · 기관 ${_krPct(st.d20.inP)}`;
+  const line = (lbl, w) => `<div class="kf-row"><span class="kf-l">${lbl}</span><span class="kf-c">${_krPct(w.foP)}<small>${_krNum(w.fo)}</small></span><span class="kf-c">${_krPct(w.inP)}<small>${_krNum(w.in)}</small></span><span class="kf-c">${_krPct(w.reP)}<small>${_krNum(w.re)}</small></span></div>`;
+  const recent = st.rows.slice(-10).reverse().map(r => { const v = Number(r.Volume) || 1; return `<div class="kf-row kf-day"><span class="kf-l">${String(r.Date).slice(5).replace('-', '/')}</span><span class="kf-c">${_krPct((Number(r.Foreign) || 0) / v * 100)}</span><span class="kf-c">${_krPct((Number(r.Inst) || 0) / v * 100)}</span><span class="kf-c">${_krPct((Number(r.Retail) || 0) / v * 100)}</span></div>`; }).join('');
+  document.getElementById('krFlowArea').innerHTML = `<div class="kf-row kf-h"><span class="kf-l"></span><span class="kf-c">외국인</span><span class="kf-c">기관</span><span class="kf-c">개인</span></div>
+    ${line('1일', st.d1)}${line('5일', st.d5)}${line('20일', st.d20)}
+    ${(st.foStreak >= 2 || st.inStreak >= 2) ? `<div class="kf-streak">${st.foStreak >= 2 ? `외국인 ${st.foStreak}일 연속 순매수` : ''}${st.foStreak >= 2 && st.inStreak >= 2 ? ' · ' : ''}${st.inStreak >= 2 ? `기관 ${st.inStreak}일 연속 순매수` : ''}</div>` : ''}
+    <div class="kf-sub">최근 10거래일</div>${recent}<div class="th-note">거래량 대비 순매수 비중</div>`;
+}
+window.aqKrFlowSection = aqKrFlowSection;
+// 발견 카드 라벨: 외국인·기관 3일 이상 연속 순매수 (한국)
+(function () {
+  const _orig = window.aqDiscoverItems; if (typeof _orig !== 'function') return;
+  window.aqDiscoverItems = function (...a) {
+    const items = _orig.apply(this, a);
+    try { if (getCurrentMarket() === 'KR' && Array.isArray(items)) items.forEach(it => { const st = _krFlowStats(it.ticker); if (!st) return; it.types = it.types || [];
+      if (st.foStreak >= 3 && it.types.indexOf('외국인 연속') < 0) it.types.push('외국인 연속'); if (st.inStreak >= 3 && it.types.indexOf('기관 연속') < 0) it.types.push('기관 연속'); }); } catch (e) {}
+    return items;
+  };
+})();
+// 한국 선택 시 자동 탭에 있으면 발견으로
+function aqMarketGuards() {
+  const kr = getCurrentMarket() === 'KR';
+  try { if (kr && document.body.getAttribute('data-mtab') === 'auto') switchMobileTab('discover'); } catch (e) {}
+  try { if (kr && document.body.getAttribute('data-btab') === 'lookback') {} } catch (e) {}
+}
+(function () { const _o = window.setMarket; if (typeof _o !== 'function') return; window.setMarket = function (m) { const r = _o.apply(this, arguments); try { aqMarketGuards(); } catch (e) {} try { aqLoadTickerStats(true); } catch (e) {} return r; }; })();
+Object.assign(window, { aqMarketGuards });
+
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
   _aqSetRole('guest'); _aqSetBroker('none');
