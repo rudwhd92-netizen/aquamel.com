@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.35';   // v5.35: 종목 페이지 v5.33 배치로 원복 + 필터 알약·시트, 시그널 이력 목록, 상단 정돈
+window.AQ_PWA_VERSION = '5.36';   // v5.36: 옛 신호 필터 블록 완전 숨김, 차트 아래 버튼 줄 전용 띠(겹침 없음)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3946,6 +3946,11 @@ body:not([data-role="admin"]) [data-role-admin-tab] { display: none !important; 
 /* 헥사곤: 작게·반투명 (위치는 그대로) */
 #chartModal .chart-wrap .hex-overlay { transform: scale(.78); opacity: .45; transition: opacity .15s; } #chartModal .chart-wrap .hex-overlay.hex-right { transform-origin: top right; } #chartModal .chart-wrap .hex-overlay:not(.hex-right) { transform-origin: top left; }
 #chartModal .chart-wrap .hex-overlay:hover, #chartModal .chart-wrap .hex-overlay:active { opacity: 1; }
+/* v5.36: 옛 신호 필터 블록은 어떤 경우에도 표시 안 함 (필터 알약 → 시트로만) */
+#chartModal .modal-filter-block { display: none !important; }
+/* v5.36: 차트 그림 아래 버튼 줄 전용 띠 — 가격선·마커와 겹치지 않게 */
+#chartModal .chart-wrap { padding-bottom: 42px !important; box-sizing: content-box; }
+#chartModal .chart-wrap .chart-ctrl-br { bottom: 4px !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -9089,7 +9094,7 @@ table.combo-eval tbody td .nodata {
       </div>
       <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
       <div id="positionPanel"></div>
-      <div class="modal-filter-block" style="display:none !important">
+      <div class="modal-filter-block aq-old-filter">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
           <h4 class="ticker-history-title" style="margin:0;">Signal Type 필터</h4>
           <span class="aq-coll-caret">▼</span>
