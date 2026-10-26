@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.39';   // v5.39: AI 탭 — 분석 보고서 카드를 전환 바 바로 아래로
+window.AQ_PWA_VERSION = '5.40';   // v5.40: AI 탭 자동매수 전환이 안 되던 문제 — 관리자는 시장 무관, 카드 표시를 직접 제어
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3970,7 +3970,7 @@ body[data-mtab="auto"][data-atab="report"] section.card[data-atab="report"],
 body[data-mtab="auto"][data-atab="auto"] section.card[data-atab="auto"] { display: block !important; }
 body[data-pc-page="auto"] section.card[data-atab="report"] { display: block !important; }
 body[data-pc-page="auto"]:not([data-role="admin"]) section.card[data-atab="auto"], html[data-market="KR"] body[data-pc-page="auto"] section.card[data-atab="auto"] { display: none !important; }
-body:not([data-role="admin"]) #aiSubtabs, html[data-market="KR"] #aiSubtabs { display: none !important; }
+body:not([data-role="admin"]) #aiSubtabs { display: none !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -26370,13 +26370,18 @@ Object.assign(window, { aqMarketGuards });
 
 // v5.38: AI 탭 — 분석 보고서 / 자동매수(관리자·미국만)
 function setAiSubtab(x) {
-  const canAuto = document.body.getAttribute('data-role') === 'admin' && getCurrentMarket() === 'US';
-  if (x !== 'auto' || !canAuto) x = 'report';
+  const isAdmin = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin');
+  if (x !== 'auto' || !isAdmin) x = 'report';   // v5.40: 관리자는 시장(US/KR)과 무관하게 자동매수 사용
   document.body.setAttribute('data-atab', x);
   document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === x));
+  // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
+  try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
   try { if (x === 'auto') aqAutoEnter(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
+// AI 탭을 떠나면 직접 지정한 표시 상태를 지워 다른 탭에 카드가 남지 않게
+(function () { const _o = window.switchMobileTab; if (typeof _o !== 'function') return;
+  window.switchMobileTab = function (tab) { if (tab !== 'auto') document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.removeProperty('display')); return _o.apply(this, arguments); }; })();
 (function () { const _o = window.setMarket; if (typeof _o !== 'function') return; window.setMarket = function () { const r = _o.apply(this, arguments); try { if (document.body.getAttribute('data-mtab') === 'auto') setAiSubtab(document.body.getAttribute('data-atab')); } catch (e) {} return r; }; })();
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
