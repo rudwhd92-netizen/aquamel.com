@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.30';   // v5.30: 자동 탭 단순화, 최소 주가·3개월 위치(5분위)·기대수익률 우선순위
+window.AQ_PWA_VERSION = '5.31';   // v5.31: 메뉴 정리(룩백·To-Do 삭제), 하단 탭 6개(자동 추가), 관심 순서, 모의매수 X 삭제
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3871,6 +3871,9 @@ body:not([data-broker="linked"]) .aq-toss-band { display: block; }
 .ar-zone { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-mute); }
 .ar-in .auto-seg-sm button { padding: 6px 9px; min-width: 28px; }
 #autoSheet .ops-sheet-meta { margin-bottom: 6px; }
+/* v5.31: 하단 탭 6개 (자동은 관리자만) */
+body:not([data-role="admin"]) .mtab-btn[data-role-admin-tab] { display: none !important; }
+#mobileTabBar .mtab-btn { min-width: 0; flex: 1 1 0; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8103,7 +8106,15 @@ table.combo-eval tbody td .nodata {
 
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
   <!-- v3.32: 종목 비교 분석 (US 유니버스 최대 3개 — 리베이스 차트 + 멀티 헥사곤) -->
-  <section class="card" id="compareCard" data-mtab="sector" style="display:none;">
+  <section class="card" id="watchBoardCard" data-mtab="sector">
+      <div class="card-header"><h2>모의매수</h2><span class="dash-meta" id="aqSimMeta"></span></div>
+      <div class="card-body">
+        <div class="aq-sim-summary" id="aqSimSummary"></div>
+        <div class="dash-holdings-body" id="aqSimList"></div>
+        <button class="watch-add-btn" onclick="openWatchSearch('short')">+ 종목 추가 (1주 모의매수)</button>
+      </div>
+    </section>
+    <section class="card" id="compareCard" data-mtab="sector" style="display:none;">
     <div class="card-header"><h2>종목 비교 분석</h2></div>
     <div class="card-body">
       <div class="cmp-picker">
@@ -8143,7 +8154,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- v2.66: TO-DO 칸반 보드 — 보고서에서 체크된 todo 항목을 시점별 4개 컬럼으로 정리 -->
-  <section class="card" id="todoBoardCard" data-mtab="todo">
+  <section class="card" id="todoBoardCard" data-mtab="retired" style="display:none !important">
     <div class="card-header"><h2>TO-DO 칸반</h2></div>
     <div class="card-body">
       <div class="todo-board">
@@ -8168,14 +8179,7 @@ table.combo-eval tbody td .nodata {
   </section>
 
   <!-- v2.92: 관심 칸반 보드 — 단기 모니터링 / 매수고려 / 장기 모니터링 / 매수완료. To-Do와 동일 룩앤필. -->
-  <section class="card" id="watchBoardCard" data-mtab="sector">
-      <div class="card-header"><h2>모의매수</h2><span class="dash-meta" id="aqSimMeta"></span></div>
-      <div class="card-body">
-        <div class="aq-sim-summary" id="aqSimSummary"></div>
-        <div class="dash-holdings-body" id="aqSimList"></div>
-        <button class="watch-add-btn" onclick="openWatchSearch('short')">+ 종목 추가 (1주 모의매수)</button>
-      </div>
-    </section>
+  
 
   <!-- v2.58: 데이터 관리 카드 — v2.59: 설정 페이지로 이동 -->
   <section class="card" id="dataManagementCard" data-mtab="settings">
@@ -8789,6 +8793,10 @@ table.combo-eval tbody td .nodata {
     </button>
     <!-- v3.85: 관심 탭 삭제 — 관심 종목은 자산 서브탭(좌측)으로 이동 -->
     <!-- v2.92: 4번째 — 일정 -->
+    <button class="mtab-btn" data-mtab="auto" data-role-admin-tab onclick="switchMobileTab('auto')" aria-label="자동">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3l1.6 4.4L16 9l-4.4 1.6L10 15l-1.6-4.4L4 9l4.4-1.6z"/><path d="M18 13l.8 2.2L21 16l-2.2.8L18 19l-.8-2.2L15 16l2.2-.8z"/></svg>
+      <span class="mtab-label">자동</span>
+    </button>
     <button class="mtab-btn" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="5" width="18" height="16" rx="2"/>
@@ -8815,24 +8823,9 @@ table.combo-eval tbody td .nodata {
       <button class="mo-drawer-close" onclick="closeMoDrawer()" aria-label="닫기">×</button>
     </div>
     <nav class="mo-drawer-list">
-      <!-- v4.72: 룩백 (매수 복기) -->
-      <button class="mo-drawer-item" onclick="openLookback()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
-        <span>룩백</span>
-      </button>
-      <!-- v3.84: 섹터는 하단 탭으로 이동 (드로어에서 제거) -->
-      <!-- v2.92: To-Do는 하단 탭에서 햄버거 드로어로 이동 (섹터 다음) -->
-      <button class="mo-drawer-item" onclick="moDrawerNav('todo')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
-        <span>To-Do</span>
-      </button>
       <button class="mo-drawer-item" data-role-admin onclick="moDrawerNav('ops')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
           <span>운영</span>
-        </button>
-        <button class="mo-drawer-item" data-role-admin onclick="moDrawerNav('auto')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="5"/></svg>
-          <span>자동</span>
         </button>
         <!-- v2.59: 분리선 + 설정 -->
       <div class="mo-drawer-divider" aria-hidden="true"></div>
@@ -9122,10 +9115,7 @@ table.combo-eval tbody td .nodata {
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
     <span class="pc-tab-label">분석</span>
   </button>
-  <button class="pc-tab-btn" data-pc-tab="todo" onclick="setPCTab('todo')" aria-label="To-Do">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 4-2-2"/><path d="M9 13l-4 4-2-2"/><path d="M13 7h7"/><path d="M13 14h7"/></svg>
-    <span class="pc-tab-label">To-Do</span>
-  </button>
+  
 
   <!-- v3.99: 로그 — 설정 바로 위 (하단 그룹) -->
   <!-- v2.59: 설정 — 사이드바 맨 아래 (margin-top: auto) -->
@@ -22520,7 +22510,6 @@ function buildWatchKanban() {
         <div class="ia-price">현재 ${fmt(cur)}</div>
         <div class="ia-pnl ${pcls}">${pnlStr} (${roi == null ? '—' : (roi >= 0 ? '+' : '') + roi.toFixed(1) + '%'})</div>
       </div>
-      <button class="todo-card-close" title="모의매수 해제" style="margin-left:6px">✕</button>
     </div>`;
   });
   list.innerHTML = rows.length ? rows.join('') : '<div style="text-align:center;color:var(--text-mute);font-size:11px;padding:30px;">모의매수 종목 없음 — 차트의 ♥ 또는 아래 버튼으로 담기</div>';
