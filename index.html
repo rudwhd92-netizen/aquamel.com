@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.44';   // v5.44: AI 브리핑 문서 연동 — 일일 브리핑 '어제 시장', 장전 브리핑 탭, 하루 기준 07시, 일정 수동 작업 기록 제외
+window.AQ_PWA_VERSION = '5.45';   // v5.45: 장전 브리핑은 다음 브리핑이 올라올 때까지 직전 것을 유지
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -26631,9 +26631,9 @@ async function aqBriefMorningGroup(day) {
 function _kstToday() { return new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10); }
 async function aqPreRender() {
   const box = document.getElementById('preBody'); if (!box) return;
-  const today = _kstToday(); let r = null; try { r = await apiCall('getBrief', { kind: 'evening', upTo: today, maxAgeDays: 0 }); } catch (e) {}
+  const today = _kstToday(); let r = null; try { r = await apiCall('getBrief', { kind: 'evening', upTo: today, maxAgeDays: 4 }); } catch (e) {}   // 다음 브리핑이 올라올 때까지 직전 것 유지 (주말 포함 4일)
   const b = r && r.ok && r.brief; const hd = document.getElementById('preDate');
-  if (!b || !b.content) { if (hd) hd.textContent = ''; box.innerHTML = '<div class="bf-hero">오늘 장전 브리핑은 밤 9시 55분쯤 올라와요.</div>'; return; }
+  if (!b || !b.content) { if (hd) hd.textContent = ''; box.innerHTML = '<div class="bf-hero">장전 브리핑은 매일 밤 9시 55분쯤 올라와요.</div>'; return; }
   try { localStorage.setItem('aq_pre_seen', b.date + '|' + (b.modified_at || '')); } catch (e) {} aqPreDot(false);
   const p = aqBriefParse(b.content); const sched = p.sections['오늘 밤 일정'] || [];
   const openLn = sched.find(x => /정규장\s*개장/.test(x)); const openT = openLn ? (openLn.match(/^(\d{1,2}:\d{2})/) || [])[1] : '';
@@ -26649,7 +26649,7 @@ async function aqPreRender() {
 }
 function aqPreDot(on) { const b = document.querySelector('#aiSubtabs [data-atab="pre"]'); if (b) b.classList.toggle('nd', !!on); }
 async function aqPreCheckNew() {
-  try { const r = await apiCall('getBrief', { kind: 'evening', upTo: _kstToday(), maxAgeDays: 0 }); const b = r && r.ok && r.brief; if (!b) return aqPreDot(false);
+  try { const r = await apiCall('getBrief', { kind: 'evening', upTo: _kstToday(), maxAgeDays: 4 }); const b = r && r.ok && r.brief; if (!b) return aqPreDot(false);
     aqPreDot(localStorage.getItem('aq_pre_seen') !== b.date + '|' + (b.modified_at || '')); } catch (e) {}
 }
 window.addEventListener('aq:login', () => setTimeout(aqPreCheckNew, 2500));
