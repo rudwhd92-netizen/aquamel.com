@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.25';   // v5.25: 보고서 카드 — 3필터 상시 표시·판정 근거·가능성 칩·'돈이 되나요' 상시, 8번 미분류 문단 보존
+window.AQ_PWA_VERSION = '5.26';   // v5.26: 회사 자사주 매입 — 탐색 '자사주' 탭, 차트 회색 자사주 평단선(최근 1년)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4359,6 +4359,7 @@ body:not([data-broker="linked"]) .aq-toss-band { display: block; }
   body[data-mtab="explore"][data-xtab="shorting"] section.card[data-xtab="shorting"],
   body[data-mtab="explore"][data-xtab="report"]   section.card[data-xtab="report"] { display: block !important; }
   body[data-mtab="explore"][data-xtab="trend"] section.card[data-xtab="trend"] { display: block !important; }
+  body[data-mtab="explore"][data-xtab="buyback"] section.card[data-xtab="buyback"] { display: block !important; }
   body[data-mtab="explore"][data-xtab="trend"] #sectorAnalysisCard { margin-left: -10px; margin-right: -10px; }
   /* v3.43: MO 탐색에서 매크로 지표 카드 제거 (마퀴 탭으로 대체). PC 탐색은 유지 */
   body[data-mtab="explore"] #macroCard { display: none !important; }
@@ -7828,6 +7829,7 @@ table.combo-eval tbody td .nodata {
       <button class="xtab-btn" data-xtab="report" onclick="setExploreSubtab('report')">분석 보고서</button>
       <button class="xtab-btn active" data-xtab="trend" onclick="setExploreSubtab('trend')">섹터 동향</button>
       <button class="xtab-btn" data-xtab="insider" onclick="setExploreSubtab('insider')">내부자 매매</button>
+        <button class="xtab-btn" data-xtab="buyback" onclick="setExploreSubtab('buyback')">자사주</button>
       <button class="xtab-btn" data-xtab="shorting" onclick="setExploreSubtab('shorting')">공매도 이력</button>
     </div>
   </section>
@@ -8620,7 +8622,11 @@ table.combo-eval tbody td .nodata {
 
   <!-- ============ v2.86 MOBILE-ONLY: 내부자 누적 리스트 (발견 탭 — 누적 시그널 하단) ============ -->
   <!-- Form 4 모든 일반주(ADR 포함) 거래 이력. 누적 시그널과 동일 UX (10개 + 더보기). PC는 relocateCardsForPC가 사이드 패널로 이동. -->
-  <section class="card mobile-only" id="insiderArchiveCard" data-mtab="explore" data-xtab="insider">
+  <section class="card mobile-only" id="buybackCard" data-mtab="explore" data-xtab="buyback">
+      <div class="card-header"><h2>회사 자사주 매입</h2></div>
+      <div class="card-body"><div class="ia-note" style="font-size:11px;color:var(--text-mute);margin:-4px 0 8px">분기 합계 · SEC 공시 기준 (분기 종료 약 40일 뒤 반영)</div><div class="dash-holdings-body" id="buybackList"></div></div>
+    </section>
+    <section class="card mobile-only" id="insiderArchiveCard" data-mtab="explore" data-xtab="insider">
     <div class="card-header">
       <h2>내부자 누적</h2>
       <div class="short-sort" id="insiderModeToggle">
@@ -21405,6 +21411,12 @@ function drawChart(d, opts) {
       label: { display: true, content: `평단가 ${fmtPrice(d.buyAvg)}`, position: 'start', backgroundColor: 'rgba(30,30,30,0.95)', color: COL.buyAvg, font: { size: 10, weight: 'bold' } } };
   }
 
+  // v5.26: 자사주 평단선 (옅은 회색, 최근 1년)
+  try { const _tkB = (opts && opts.ticker) || _state.openTicker || '';
+    if (getCurrentMarket() === 'US' && _tkB) { if (!_aqBuybackLoaded) fetchBuyback(); const _bb = aqBuybackAvg(_tkB);
+      if (_bb && _bb.avg > 0) annotations.bbAvg = { type: 'line', yMin: _bb.avg, yMax: _bb.avg, borderColor: _bb.quarters <= 2 ? 'rgba(173,181,189,0.28)' : 'rgba(173,181,189,0.6)', borderWidth: 2, yScaleID: 'yPrice',
+        label: { display: true, content: `자사주 평단 ${fmtPrice(_bb.avg)} (최근 1년)`, position: 'end', backgroundColor: 'rgba(30,30,30,0.85)', color: 'rgba(173,181,189,0.9)', font: { size: 10, weight: 'bold' } } }; } } catch (e) {}
+
   // v5.01: 모의매수가 점선
   try { const _tkA = (opts && opts.ticker) || _state.openTicker || ''; const _sim = (window.AqWatchStore && AqWatchStore.get && _tkA) ? AqWatchStore.get(getCurrentMarket(), _tkA) : null;
     if (_sim && Number(_sim.buyPrice) > 0) annotations.simBuy = { type: 'line', yMin: Number(_sim.buyPrice), yMax: Number(_sim.buyPrice), borderColor: '#da77f2', borderWidth: 1.2, borderDash: [4, 3], yScaleID: 'yPrice',
@@ -23554,7 +23566,8 @@ function setExploreSubtab(x) {
   try {
     if (typeof aqApplyExploreMarketUI === 'function') aqApplyExploreMarketUI();
     const _isKR = getCurrentMarket() === 'KR';
-    if (x === 'trend') { if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); try { if (typeof buildSectorStreaks === 'function') buildSectorStreaks(); } catch (e) {} }
+    if (x === 'buyback') { try { buildBuybackList(); } catch (e) {} }
+    else if (x === 'trend') { if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); try { if (typeof buildSectorStreaks === 'function') buildSectorStreaks(); } catch (e) {} }
     else if (x === 'signals' && typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
     else if (x === 'insider') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('foreign'); } else if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); }
     else if (x === 'shorting') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('inst'); } else if (typeof buildShortingList === 'function') buildShortingList(); }
@@ -25923,6 +25936,54 @@ async function aqHeroTossSync() {
   finally { _aqHeroSyncing = false; btns.forEach(b => b.classList.remove('aq-spin')); }
 }
 window.aqHeroTossSync = aqHeroTossSync;
+// ============================================================================
+// v5.26: 회사 자사주 매입 (SEC XBRL 분기) — 탐색 '자사주' 탭 + 차트 회색 평단선(최근 1년)
+// ============================================================================
+const AQ_BB_CACHE_KEY = 'us_buyback_v1'; let _aqBuyback = { rows: [], byTicker: {} }; let _aqBuybackLoaded = false; let _bbShown = 30;
+async function fetchBuyback(forceFresh) {
+  if (getCurrentMarket() !== 'US') return _aqBuyback;
+  if (!forceFresh) { try { const c = await aqDbGet(AQ_BB_CACHE_KEY); if (c && c.fetchedAt && Array.isArray(c.rows) && aqCacheStillValid('US_BUYBACK', c.fetchedAt) && (Date.now() - new Date(c.fetchedAt).getTime()) < 24 * 3600e3) { _aqBuybackIndex(c.rows); return _aqBuyback; } } catch (e) {} }
+  try {
+    const res = await apiCall('getOneSheet', { sheetId: AQ_US_CALENDAR_SHEET, tab: 'US_BUYBACK' });
+    if (res && res.ok && Array.isArray(res.rows)) { _aqBuybackIndex(res.rows); try { await aqDbSet(AQ_BB_CACHE_KEY, { fetchedAt: new Date().toISOString(), rows: res.rows }); } catch (e) {} }
+  } catch (e) {}
+  return _aqBuyback;
+}
+function _aqBuybackIndex(rows) {
+  const uni = _state.tickerSectorMap || {}; const by = {};
+  const list = (rows || []).map(r => ({ tk: String(r.Ticker || '').toUpperCase(), q: r.Quarter, s: r.Period_Start, e: r.Period_End, shares: Number(r.Shares) || null, avg: Number(r.Avg_Price) || null, amt: Number(r.Amount_USD) || 0, chg: r.Shares_Out_Chg_1Y_pct === '' || r.Shares_Out_Chg_1Y_pct == null ? null : Number(r.Shares_Out_Chg_1Y_pct) }))
+    .filter(r => r.tk && r.amt > 0 && (!Object.keys(uni).length || uni[r.tk]));
+  list.forEach(r => (by[r.tk] || (by[r.tk] = [])).push(r));
+  Object.values(by).forEach(a => a.sort((x, y) => String(y.e).localeCompare(String(x.e))));
+  list.sort((a, b) => String(b.e).localeCompare(String(a.e)) || b.amt - a.amt);
+  _aqBuyback = { rows: list, byTicker: by }; _aqBuybackLoaded = true;
+}
+// 최근 1년(4분기) 자사주 평단 = Σ금액 ÷ Σ주식 수 (주식 수 공시된 분기만)
+function aqBuybackAvg(tk) {
+  const a = (_aqBuyback.byTicker || {})[String(tk || '').toUpperCase()]; if (!a || !a.length) return null;
+  const last = a[0].e; const from = new Date(new Date(last).getTime() - 370 * 86400000).toISOString().slice(0, 10);
+  const win = a.filter(r => r.e > from && r.shares > 0);
+  if (!win.length) return null;
+  const amt = win.reduce((s, r) => s + r.amt, 0), sh = win.reduce((s, r) => s + r.shares, 0);
+  return sh > 0 ? { avg: amt / sh, quarters: win.length } : null;
+}
+function _bbMoney(v) { return v >= 1e9 ? '$' + (v / 1e9).toFixed(2) + 'B' : v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : '$' + Math.round(v).toLocaleString(); }
+async function buildBuybackList(more) {
+  const el = document.getElementById('buybackList'); if (!el) return;
+  if (getCurrentMarket() !== 'US') { el.innerHTML = '<div class="auto-empty">미국 종목만 제공됩니다.</div>'; return; }
+  if (!_aqBuybackLoaded) { el.innerHTML = '<div class="auto-empty">불러오는 중…</div>'; await fetchBuyback(); }
+  if (!more) _bbShown = 30; const rows = _aqBuyback.rows || [];
+  if (!rows.length) { el.innerHTML = '<div class="auto-empty">자사주 매입 데이터가 아직 없어요. 운영 탭 실적·내부자 캘린더를 한 번 돌리면 채워집니다.</div>'; return; }
+  el.innerHTML = rows.slice(0, _bbShown).map(r => {
+    const chg = r.chg == null ? '' : (r.chg < -0.05 ? `주식 수 ${Math.abs(r.chg).toFixed(1)}% 줄었어요` : r.chg > 0.05 ? `주식 수 오히려 ${r.chg.toFixed(1)}% 늘었어요` : '주식 수 거의 그대로');
+    return `<div class="insider-archive-item bb-row" onclick="openChart('${escapeAttr(r.tk)}')">${aqWrapLogo(_autoLogo(r.tk), r.tk)}
+      <div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(r.tk) || r.tk)}</div><div class="ia-company">${escapeHtml(r.q)} · ${String(r.s).slice(5).replace('-', '/')}~${String(r.e).slice(5).replace('-', '/')}</div>${chg ? `<div class="ia-sector">${chg}</div>` : ''}</div>
+      <div class="ia-meta"><div class="ia-price">${_bbMoney(r.amt)}</div><div class="ia-shares">${r.shares ? Math.round(r.shares).toLocaleString() + '주' : '주식 수 미공시'}${r.avg ? ' · 평균 $' + r.avg.toFixed(2) : ''}</div></div></div>`;
+  }).join('') + (rows.length > _bbShown ? `<button class="watch-add-btn" onclick="_bbShown += 30; buildBuybackList(true)">더 보기 (${rows.length - _bbShown})</button>` : '');
+}
+Object.assign(window, { fetchBuyback, buildBuybackList, aqBuybackAvg });
+document.addEventListener('DOMContentLoaded', () => { setTimeout(() => { try { if (getCurrentMarket() === 'US') fetchBuyback(); } catch (e) {} }, 8000); });   // 차트 평단선용 미리 로드
+
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
   _aqSetRole('guest'); _aqSetBroker('none');
