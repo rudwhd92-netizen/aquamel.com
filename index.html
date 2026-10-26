@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.22';   // v5.22: 마이=보유/누적/매매 룩백/액션 통계, 하단 '관심' 탭(비교+모의매수), 토스 미연동 안내
+window.AQ_PWA_VERSION = '5.23';   // v5.23: 상단 다운로드 아이콘 = 토스 동기화
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3853,6 +3853,8 @@ body.aq-archfull-open { overflow: hidden; }
 body:not([data-broker="linked"]) #autoSignalCard .aq-toss-need { display: block; }
 .aq-toss-band { display: none; margin: 8px 0 10px; padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,.04); border: 1px dashed var(--line); color: var(--text-mute); font-size: 12px; cursor: pointer; }
 body:not([data-broker="linked"]) .aq-toss-band { display: block; }
+/* v5.23: 동기화 중 아이콘 회전 */
+#heroLoadBtn.aq-spin svg { animation: aq-spin 0.9s linear infinite; } @keyframes aq-spin { to { transform: rotate(360deg); } }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -7751,7 +7753,7 @@ table.combo-eval tbody td .nodata {
           <path d="M21 21l-4.35-4.35"/>
         </svg>
       </button>
-      <button class="hero-search" id="heroLoadBtn" onclick="loadUserDataFromBackend()" title="매매이력 불러오기 — 다른 기기에서 저장한 내역 동기화" aria-label="매매이력 불러오기">
+      <button class="hero-search" id="heroLoadBtn" onclick="aqHeroTossSync()" title="토스 동기화 — 보유·체결 가져오기" aria-label="토스 동기화">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
       </button>
       <button class="hero-refresh" id="heroRefreshBtn" onclick="aqForceRefreshAll()" title="데이터 새로고침" aria-label="데이터 새로고침">
@@ -25871,6 +25873,24 @@ function aqGoTossGate() {
   setTimeout(() => { const g = document.getElementById('aqTossGateCard'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
 }
 window.aqGoTossGate = aqGoTossGate;
+// v5.23: 상단 다운로드 아이콘 → 토스 동기화
+let _aqHeroSyncing = false;
+async function aqHeroTossSync() {
+  if (_aqHeroSyncing) return;
+  if (!_aqAuth.user) { aqAuthShow('login'); return; }
+  if (document.body.getAttribute('data-broker') !== 'linked') { if (typeof aqToast === 'function') aqToast('토스를 먼저 연결해 주세요'); aqGoTossGate(); return; }
+  const btn = document.getElementById('heroLoadBtn'); _aqHeroSyncing = true; if (btn) btn.classList.add('aq-spin');
+  try {
+    const r = await apiCall('brokerSync', {});
+    if (r && r.ok) {
+      await aqSyncLocalFromServer(true);
+      try { const me = await apiCall('me', {}); if (me && me.ok) _aqApplyUser(me.user, me.broker); } catch (e) {}
+      if (typeof aqToast === 'function') aqToast(`토스 동기화 완료 · 보유 ${r.holdings} / 체결 ${r.trades}` + ((r.split_mismatch || []).length ? ` · 분할 확인 필요 ${r.split_mismatch.length}` : ''));
+    } else if (typeof aqToast === 'function') aqToast((r && r.error) || '동기화 실패'); else alert((r && r.error) || '동기화 실패');
+  } catch (e) { if (typeof aqToast === 'function') aqToast('서버 연결 실패'); }
+  finally { _aqHeroSyncing = false; if (btn) btn.classList.remove('aq-spin'); }
+}
+window.aqHeroTossSync = aqHeroTossSync;
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
   _aqSetRole('guest'); _aqSetBroker('none');
