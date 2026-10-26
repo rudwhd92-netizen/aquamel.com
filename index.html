@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.19';   // v5.19: 자동매매 엔진 한 카드(ON/OFF·⚙설정), 모의 삭제, 손잡이 시트 공통 제스처(쓸어 닫기·전체화면·뒤로가기)
+window.AQ_PWA_VERSION = '5.20';   // v5.20: 시트 닫기 제스처는 상단 그립에서만
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3844,6 +3844,8 @@ body.aq-archfull-open { overflow: hidden; }
 .aqval-content.aq-sheet-full { max-height: calc(100dvh - 8px) !important; height: calc(100dvh - 8px); }
 .ops-sheet, .aqval-content, #chartModal .modal-content, #sectorModal .modal-content { touch-action: pan-y; will-change: transform; }
 @media (min-width: 1025px) { .ops-sheet-grip, .modal-drag-handle { display: none !important; } }
+/* v5.20: 그립 터치 영역 */
+.ops-sheet-grip, .modal-drag-handle { position: relative; } .ops-sheet-grip::after, .modal-drag-handle::after { content: ""; position: absolute; left: -60px; right: -60px; top: -14px; bottom: -14px; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -25790,13 +25792,14 @@ function _shBindGesture(def, root, panel) {
   panel.addEventListener('touchstart', e => {
     if (e.touches.length !== 1) return; const t = e.target;
     if (t.closest('input, textarea, select, canvas, .chart-container, .aq-mini-chart, .st-clock')) return;
-    const top = panel.getBoundingClientRect().top; fromHandle = (e.touches[0].clientY - top) < 64 || !!t.closest('.ops-sheet-grip, .modal-drag-handle, .ops-sheet-title');
+    const top = panel.getBoundingClientRect().top; fromHandle = (e.touches[0].clientY - top) < 36 || !!t.closest('.ops-sheet-grip, .modal-drag-handle');   // v5.20: 그립 영역만
     sc = _shScrollParent(t, panel); y0 = e.touches[0].clientY; t0 = Date.now(); dy = 0; active = true; panel.style.transition = 'none';
   }, { passive: true });
   panel.addEventListener('touchmove', e => {
     if (!active) return; dy = e.touches[0].clientY - y0;
     const atTop = !sc || sc.scrollTop <= 0;
-    if (dy > 0 && (fromHandle || atTop)) { e.preventDefault(); panel.style.transform = `translateY(${dy}px)`; }
+    if (!fromHandle) { active = false; return; }   // v5.20: 본문 스크롤은 건드리지 않음
+    if (dy > 0) { e.preventDefault(); panel.style.transform = `translateY(${dy}px)`; }
     else if (dy < 0 && fromHandle && def.full && !panel.classList.contains('aq-sheet-full')) { e.preventDefault(); panel.style.transform = `translateY(${Math.max(dy, -60) / 3}px)`; }
     else { active = dy > 0 ? active : false; if (!active) panel.style.transform = ''; }
   }, { passive: false });
