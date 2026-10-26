@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.16';   // v5.16: 자동 — 보유일 1~7거래일 선택 (평균 수익률·승률·후보 종목)
+window.AQ_PWA_VERSION = '5.18';   // v5.18: 자동매매 엔진 카드 (끔/모의/실전, 하루 최대 매수, 진행 중 매매·기록·로그)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -3005,6 +3005,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-pc-page="settings"][data-role="admin"] #aqAdminCard { display: block !important; }
   body[data-pc-page="settings"] #aqStampCard { display: block !important; }
   body[data-pc-page="auto"] #autoBlacklistCard { display: block !important; }
+  body[data-pc-page="auto"] #autoEngineCard { display: block !important; }
   body[data-pc-page="board"] #aqAccountCard { display: block !important; }
   body[data-pc-page="board"] #aqTossGateCard { display: block !important; }
   body[data-pc-page="board"]:not([data-broker="linked"]) .container > section.card:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
@@ -3810,6 +3811,27 @@ body.aq-archfull-open { overflow: hidden; }
 .auto-ctl { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
 .auto-ctl-g { display: inline-flex; align-items: center; gap: 8px; } .auto-ctl-l, .auto-ctl-u { font-size: 11px; font-weight: 800; color: var(--text-mute); letter-spacing: .4px; }
 .auto-seg-sm button { padding: 7px 11px; min-width: 32px; }
+/* v5.17: 자동매매 설정 */
+.auto-sheet-scroll { overflow-y: auto; max-height: 64vh; }
+.auto-rule-sum { font-size: 11px; color: #63e6be; margin-top: 3px; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.auto-row.off .auto-rule-sum { color: var(--text-mute); }
+.ar-box { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin: 4px 0 14px; background: rgba(255,255,255,.025); }
+.ar-title { font-size: 12px; font-weight: 800; letter-spacing: .5px; color: var(--text-mute); margin-bottom: 6px; }
+.ar-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.ar-row label:first-child { font-size: 13px; font-weight: 700; color: var(--text-hi); } .ar-row small { display: block; font-size: 10.5px; font-weight: 500; color: var(--text-mute); margin-top: 1px; }
+.ar-in { display: inline-flex; align-items: center; gap: 4px; color: var(--text-mute); font-size: 13px; }
+.ar-in input { width: 84px; padding: 7px 9px; border-radius: 9px; border: 1px solid var(--line); background: rgba(255,255,255,.06); color: var(--text-hi); font-size: 14px !important; text-align: right; font-variant-numeric: tabular-nums; }
+.ar-prev { font-size: 11px; color: var(--text-mute); line-height: 1.6; padding: 10px 0 4px; } .ar-prev b { color: var(--text-hi); }
+.ar-act { display: flex; justify-content: flex-end; padding-top: 6px; }
+/* v5.18: 엔진 카드 */
+.eng-stat { font-size: 11.5px; color: var(--text-mute); margin: 12px 0 0; line-height: 1.6; } .eng-stat b.down { color: #ff8787; }
+.eng-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #868e96; margin-right: 6px; vertical-align: 1px; } .eng-dot.on { background: #51cf66; box-shadow: 0 0 0 3px rgba(81,207,102,.2); }
+.eng-live { margin-top: 10px; padding: 9px 12px; border-radius: 10px; background: rgba(255,107,107,.1); border: 1px solid rgba(255,107,107,.4); color: #ff8787; font-size: 12px; font-weight: 800; }
+.eng-dry { margin-top: 10px; padding: 9px 12px; border-radius: 10px; background: rgba(99,230,190,.07); border: 1px solid rgba(99,230,190,.3); color: #63e6be; font-size: 12px; font-weight: 700; }
+#engModeSeg button[data-m="live"].on { background: #ff6b6b; color: #fff; }
+.eng-row .ia-shares small { color: var(--text-mute); } .eng-row .ia-shares small.up { color: #51cf66; } .eng-row .ia-shares small.down { color: #ff6b6b; }
+.eng-more { margin-top: 10px; } .eng-more > summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-mute); padding: 6px 0; }
+.eng-log { font-size: 11px; line-height: 1.6; max-height: 260px; overflow-y: auto; font-family: ui-monospace, Menlo, monospace; } .eng-log span { color: var(--text-mute); } .eng-log .error { color: #ff8787; } .eng-log .warn { color: #fab005; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8215,6 +8237,16 @@ table.combo-eval tbody td .nodata {
     </section>
 
     <!-- v4.76: 자동 페이지 (요건 구체화 예정 — 우선 신호 선택만) -->
+    <section class="card" id="autoEngineCard" data-mtab="auto">
+      <div class="card-header"><h2>자동매매 엔진</h2></div>
+      <div class="card-body">
+        <div class="auto-ctl">
+          <div class="auto-seg" id="engModeSeg"><button data-m="off" onclick="aqEngineSetMode('off')">끔</button><button data-m="dry" onclick="aqEngineSetMode('dry')">모의</button><button data-m="live" onclick="aqEngineSetMode('live')">실전</button></div>
+          <div class="auto-ctl-g"><span class="auto-ctl-l">하루 최대 매수</span><div class="ar-in"><span>$</span><input type="number" id="engDailyMax" min="0" step="500" inputmode="decimal"></div><button class="btn sm secondary" onclick="aqEngineSaveMax()">저장</button></div>
+        </div>
+        <div id="autoEngineBody"><div class="auto-empty">불러오는 중…</div></div>
+      </div>
+    </section>
     <section class="card" id="autoSignalCard" data-mtab="auto">
       <div class="card-header"><h2>자동매수 신호</h2></div>
       <div class="card-body">
@@ -8237,8 +8269,11 @@ table.combo-eval tbody td .nodata {
       <div class="ops-sheet-grip"></div>
       <div class="ops-sheet-title" id="autoSheetTitle">신호</div>
       <div class="ops-sheet-meta" id="autoSheetMeta"></div>
+      <div class="auto-sheet-scroll">
+      <div class="ar-box" id="autoRuleBox"></div>
       <div class="auto-sheet-sub">수익률이 나빴던 종목 (최대 10)</div>
-      <div class="dash-holdings-body auto-sheet-list" id="autoSheetList"></div>
+      <div class="dash-holdings-body" id="autoSheetList"></div>
+      </div>
     </div>
 
     <!-- 운영(MO): 작업별 설정 바텀시트 -->
@@ -24970,6 +25005,9 @@ const AQ_AUTO_SIGNALS = [
 ];
 const AQ_AUTO_LSKEY = 'aq_auto_signals_v1';
 const _auto = { entered: false, win: (localStorage.getItem('aq_auto_win') || '40'), hold: (localStorage.getItem('aq_auto_hold') || '5'), stats: null, on: {}, sheetSig: null, blacklist: [] };
+const AQ_RULE_DEF = { budget: 1000, extra: 300, slip: 1, sellAfter: 5, buyHeld: false };
+function _autoRule(sig) { return Object.assign({}, AQ_RULE_DEF, ((_auto.rules || {})[sig]) || {}); }
+function _autoRuleQty(r, px) { if (!(px > 0)) return 0; const q = Math.floor(r.budget / px); if (q >= 1) return q; return px <= r.budget + r.extra ? 1 : 0; }
 function _autoW() { const W = (_auto.stats && _auto.stats.windows && _auto.stats.windows[_auto.win]) || null; if (!W) return null; const H = (W.byHold && W.byHold[_auto.hold]) || W; return { start: W.start, signals: H.signals || {}, worst: H.worst || {} }; }
 function _autoFmtPct(v) { return v == null ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(1) + '%'; }
 function _autoLogo(tk) {
@@ -24994,6 +25032,7 @@ function aqAutoRender() {
       <div class="auto-mid" onclick="aqAutoOpenSheet('${sg.id}')">
         <div class="auto-name">${sg.id}${nBl ? `<span class="auto-bl-n">제외 ${nBl}</span>` : ''}</div>
         <div class="auto-sub">${thin ? '표본 부족 · ' : ''}승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건${st.pending ? ` (+${st.pending} 미판정)` : ''}</div>
+        <div class="auto-rule-sum">${(() => { const R = _autoRule(sg.id); return `$${Number(R.budget).toLocaleString()} · +$${Number(R.extra).toLocaleString()} · 상한 +${R.slip}% · ${R.sellAfter}일 뒤 매도${R.buyHeld ? ' · 보유종목도 매수' : ''}`; })()}</div>
         <div class="auto-bar"><i class="${(st.avg || 0) >= 0 ? 'up' : 'down'}" style="width:${w}%"></i></div>
       </div>
       <div class="auto-ret ${(st.avg || 0) >= 0 ? 'up' : 'down'}" onclick="aqAutoOpenSheet('${sg.id}')">${_autoFmtPct(st.avg)}</div>
@@ -25016,6 +25055,7 @@ function aqAutoOpenSheet(sig) {
   _auto.sheetSig = sig; const W = _autoW(); const st = (W && W.signals[sig]) || {};
   document.getElementById('autoSheetTitle').textContent = `${sig} · 최근 ${_auto.win}거래일 · ${_auto.hold}일 보유`;
   document.getElementById('autoSheetMeta').textContent = `평균 ${_autoFmtPct(st.avg)} · 승률 ${st.win == null ? '—' : Math.round(st.win * 100) + '%'} · ${st.judged || 0}건`;
+  aqAutoRenderRule(sig);
   const list = (W && W.worst[sig]) || []; const bl = _auto.blacklist || [];
   document.getElementById('autoSheetList').innerHTML = list.length ? list.map(z => { const inBl = bl.find(b => b.signal === sig && b.ticker === z.ticker);
     return `<div class="auto-w-item" data-tk="${escapeAttr(z.ticker)}"><div class="insider-archive-item auto-w-row">
@@ -25026,6 +25066,32 @@ function aqAutoOpenSheet(sig) {
       <div class="auto-bl-form"><span>앞으로</span><input type="number" min="1" max="250" value="10" inputmode="numeric"><span>거래일 동안 자동매수 제외</span><button class="btn sm" onclick="aqAutoBlAdd('${sig}','${z.ticker}', this)">확인</button></div>
     </div>`; }).join('') : '<div class="auto-empty">이 기간에 평균 수익률이 마이너스인 종목이 없습니다.</div>';
   document.getElementById('autoSheet').classList.add('open'); document.getElementById('autoSheetBg').classList.add('open');
+}
+function aqAutoRenderRule(sig) {
+  const box = document.getElementById('autoRuleBox'); if (!box) return; const R = _autoRule(sig);
+  box.innerHTML = `<div class="ar-title">자동매매 설정</div>
+    <div class="ar-row"><label>종목당 매수 금액</label><div class="ar-in"><span>$</span><input type="number" id="arBudget" min="1" step="50" value="${R.budget}" inputmode="decimal"></div></div>
+    <div class="ar-row"><label>초과 허용 금액<small>1주가 매수 금액보다 비쌀 때</small></label><div class="ar-in"><span>+$</span><input type="number" id="arExtra" min="0" step="50" value="${R.extra}" inputmode="decimal"></div></div>
+    <div class="ar-row"><label>추가 지불 허용<small>신호일 종가 대비 상한</small></label><div class="ar-in"><span>+</span><input type="number" id="arSlip" min="0" max="20" step="0.5" value="${R.slip}" inputmode="decimal"><span>%</span></div></div>
+    <div class="ar-row"><label>자동 매도<small>체결일부터, 정규장 종가 근처</small></label><div class="auto-seg auto-seg-sm" id="arSell">${[1,2,3,4,5,6,7].map(h => `<button data-h="${h}" class="${h === Number(R.sellAfter) ? 'on' : ''}" onclick="aqAutoRulePick(${h})">${h}</button>`).join('')}</div></div>
+    <div class="ar-row"><label>이미 보유한 종목도 매수<small>켜면 그 매수분은 자동 매도 안 함</small></label><label class="aq-switch"><input type="checkbox" id="arHeld" ${R.buyHeld ? 'checked' : ''} onchange="aqAutoRulePreview()"><span class="sl"></span></label></div>
+    <div class="ar-prev" id="arPrev"></div>
+    <div class="ar-act"><button class="btn sm" onclick="aqAutoRuleSave('${sig}')">저장</button></div>`;
+  aqAutoRulePreview();
+}
+function _arRead() { const v = id => Number((document.getElementById(id) || {}).value); const on = document.querySelector('#arSell button.on'); return { budget: Math.max(1, v('arBudget') || 0), extra: Math.max(0, v('arExtra') || 0), slip: Math.min(20, Math.max(0, v('arSlip') || 0)), sellAfter: on ? Number(on.dataset.h) : 5, buyHeld: !!(document.getElementById('arHeld') || {}).checked }; }
+function aqAutoRulePick(h) { document.querySelectorAll('#arSell button').forEach(b => b.classList.toggle('on', Number(b.dataset.h) === h)); aqAutoRulePreview(); }
+function aqAutoRulePreview() {
+  const el = document.getElementById('arPrev'); if (!el) return; const R = _arRead();
+  const ex = [R.budget * 1.2, R.budget * 0.45, R.budget + R.extra + 50].map(p => Math.round(p * 100) / 100);
+  el.innerHTML = '예시 · ' + ex.map(p => { const q = _autoRuleQty(R, p); return q ? `1주 $${p.toLocaleString()} → <b>${q}주</b> ($${(q * p).toLocaleString(undefined, { maximumFractionDigits: 2 })})` : `1주 $${p.toLocaleString()} → <b>건너뜀</b>`; }).join(' · ') + `<br>매수 상한 = 신호일 종가 × ${(1 + R.slip / 100).toFixed(3)} · ${R.sellAfter}거래일째 종가 근처 매도${R.buyHeld ? ' · 보유 종목 매수분은 자동 매도 제외' : ' · 보유 종목은 매수 안 함'}`;
+}
+['arBudget', 'arExtra', 'arSlip'].forEach(id => document.addEventListener('input', e => { if (e.target && e.target.id === id) aqAutoRulePreview(); }));
+async function aqAutoRuleSave(sig) {
+  const rules = Object.assign({}, _auto.rules || {}); rules[sig] = _arRead();
+  const r = await _opsCall('saveConfig', { key: 'autotrade.rules', value: JSON.stringify(rules) });
+  if (!r || !r.ok) { alert('저장 실패: ' + ((r && r.error) || '')); return; }
+  _auto.rules = rules; if (typeof aqToast === 'function') aqToast(`${sig} 자동매매 설정 저장`); aqAutoRender();
 }
 function aqAutoCloseSheet() { document.getElementById('autoSheet').classList.remove('open'); document.getElementById('autoSheetBg').classList.remove('open'); }
 function aqAutoBlForm(btn) { const row = btn.closest('.auto-w-item'); row.classList.toggle('form'); const i = row.querySelector('input'); if (i) i.focus(); }
@@ -25051,7 +25117,7 @@ function aqAutoToggle(sig, on) {
 }
 async function aqAutoLoadSignals() {
   const r = await _opsCall('autoSignalStats', {});
-  if (r && r.ok) { _auto.stats = { windows: r.windows, asof: r.asof }; _auto.blacklist = r.blacklist || []; _auto.on = r.signals_on || {}; try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(_auto.on)); } catch (e) {} }
+  if (r && r.ok) { _auto.stats = { windows: r.windows, asof: r.asof }; _auto.blacklist = r.blacklist || []; _auto.on = r.signals_on || {}; _auto.rules = r.rules || {}; try { localStorage.setItem(AQ_AUTO_LSKEY, JSON.stringify(_auto.on)); } catch (e) {} }
   else { try { _auto.on = JSON.parse(localStorage.getItem(AQ_AUTO_LSKEY) || '{}'); } catch (e) {} if (typeof aqToast === 'function') aqToast('신호 성적을 불러오지 못했어요'); }
   aqAutoRender();
 }
@@ -25061,8 +25127,48 @@ async function aqAutoSaveSignals() {
   const r = await _opsCall('saveConfig', { key: 'autotrade.signals', value: JSON.stringify(st) });
   if (r && r.ok) { if (typeof aqToast === 'function') aqToast('신호 설정 저장'); } else alert('저장 실패: ' + ((r && r.error) || ''));
 }
-async function aqAutoEnter() { if (!_auto.entered) { _auto.entered = true; aqAutoRender(); } await aqAutoLoadSignals(); }
-Object.assign(window, { aqAutoSetHold, aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals, aqAutoSetWin, aqAutoToggle, aqAutoOpenSheet, aqAutoCloseSheet, aqAutoBlForm, aqAutoBlAdd, aqAutoBlRemove });
+// v5.18: 자동매매 엔진 카드
+const _eng = { data: null };
+const _ENG_ST = { planned: ['대기', 'mid'], working: ['매수 중', 'mid'], filled: ['보유 중', 'good'], closed: ['매도 완료', 'weak'], expired: ['미체결 만료', 'weak'], skipped: ['건너뜀', 'weak'], error: ['오류', 'bad'] };
+function _engFmt(iso) { return iso ? _aqFmtKST(iso) : '—'; }
+async function aqEngineLoad() {
+  const r = await _opsCall('engineStatus', {}); if (!r || !r.ok) return; _eng.data = r; aqEngineRender();
+}
+function aqEngineRender() {
+  const d = _eng.data; const box = document.getElementById('autoEngineBody'); if (!box || !d) return;
+  const m = d.engine.mode; const hbAge = d.heartbeat && d.heartbeat.at ? (Date.now() - new Date(d.heartbeat.at).getTime()) / 1000 : null;
+  const alive = hbAge != null && hbAge < 120;
+  document.querySelectorAll('#engModeSeg button').forEach(b => b.classList.toggle('on', b.dataset.m === m));
+  const plans = d.plans || []; const active = plans.filter(p => ['planned', 'working', 'filled'].includes(p.status));
+  const recent = plans.filter(p => !active.includes(p)).slice(0, 12);
+  const row = (p) => { const st = _ENG_ST[p.status] || [p.status, 'mid'];
+    const right = p.status === 'filled' ? `${p.filled_qty}주 @ $${Number(p.avg_px || 0).toFixed(2)}<br><small>${p.auto_sell ? (p.sell_status === 'working' ? '종가 매도 주문' : `${String(p.sell_date || '').slice(5).replace('-', '/')} 종가 매도`) : '자동 매도 없음'}</small>`
+      : p.status === 'closed' ? `$${Number(p.avg_px || 0).toFixed(2)} → $${Number(p.sell_px || 0).toFixed(2)}<br><small class="${(p.sell_px || 0) >= (p.avg_px || 0) ? 'up' : 'down'}">${p.avg_px ? (((p.sell_px / p.avg_px) - 1) * 100 >= 0 ? '+' : '') + (((p.sell_px / p.avg_px) - 1) * 100).toFixed(1) + '%' : ''}</small>`
+      : `${p.qty}주 · 상한 $${Number(p.cap || 0).toFixed(2)}${p.cur_px ? `<br><small>현재 지정가 $${Number(p.cur_px).toFixed(2)}</small>` : ''}`;
+    return `<div class="insider-archive-item eng-row" onclick="openChart('${escapeAttr(p.ticker)}')">${aqWrapLogo(_autoLogo(p.ticker), p.ticker)}
+      <div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(p.ticker) || p.ticker)} <span class="sig-badge ${escapeAttr(p.signal)}" style="font-size:9px;padding:1px 5px">${escapeHtml(p.signal)}</span></div>
+      <div class="ia-company">${String(p.signal_date).slice(5).replace('-', '/')} 신호 · ${p.mode === 'live' ? '실전' : '모의'}${p.note ? ' · ' + escapeHtml(p.note) : ''}</div></div>
+      <div class="ia-meta"><span class="rv3-lb rv3-lb-${st[1]}">${st[0]}</span><div class="ia-shares" style="margin-top:4px">${right}</div></div></div>`; };
+  box.innerHTML = `<div class="eng-stat"><span class="eng-dot ${alive ? 'on' : ''}"></span>${alive ? '엔진 동작 중' : '엔진 응답 없음 (서비스 확인)'} · 마지막 확인 ${_engFmt(d.heartbeat && d.heartbeat.at)}
+      · 시간외 주문 ${d.ext_supported === false ? '<b class="down">안 됨 → 정규장 시작 30분 매수</b>' : d.ext_supported === true ? '가능' : '미확인 (첫 주문 때 확인)'}</div>
+    ${m === 'live' ? '<div class="eng-live">⚠ 실전 모드 — 실제 주문이 나갑니다</div>' : m === 'dry' ? '<div class="eng-dry">모의 모드 — 주문 없이 현재가로 체결을 가정해 기록합니다</div>' : ''}
+    <div class="auto-sheet-sub" style="margin-top:12px">진행 중 (${active.length})</div>${active.length ? active.map(row).join('') : '<div class="auto-empty">진행 중인 매매가 없습니다.</div>'}
+    ${recent.length ? `<details class="eng-more"><summary>최근 3주 기록 ${recent.length}건</summary>${recent.map(row).join('')}</details>` : ''}
+    <details class="eng-more"><summary>엔진 로그</summary><div class="eng-log">${(d.log || []).map(l => `<div class="${l.level}"><span>${_engFmt(l.at)}</span> ${escapeHtml(l.msg)}</div>`).join('') || '—'}</div></details>`;
+  const dm = document.getElementById('engDailyMax'); if (dm && document.activeElement !== dm) dm.value = d.engine.dailyMax;
+}
+async function aqEngineSetMode(m) {
+  let confirmTxt = '';
+  if (m === 'live') { confirmTxt = prompt('실전 모드로 바꾸면 실제 주문이 나갑니다.\n계속하려면 "실전" 이라고 입력하세요.'); if (confirmTxt !== '실전') return; }
+  const r = await _opsCall('engineSet', { mode: m, confirm: confirmTxt });
+  if (!r || !r.ok) { alert('실패: ' + ((r && r.error) || '')); return; }
+  if (typeof aqToast === 'function') aqToast({ off: '자동매매 정지', dry: '모의 모드', live: '실전 모드' }[m]); aqEngineLoad();
+}
+async function aqEngineSaveMax() { const v = Number(document.getElementById('engDailyMax').value); const r = await _opsCall('engineSet', { dailyMax: v }); if (r && r.ok && typeof aqToast === 'function') aqToast(`하루 최대 매수 $${v.toLocaleString()}`); aqEngineLoad(); }
+Object.assign(window, { aqEngineLoad, aqEngineSetMode, aqEngineSaveMax });
+
+async function aqAutoEnter() { if (!_auto.entered) { _auto.entered = true; aqAutoRender(); } aqEngineLoad(); await aqAutoLoadSignals(); }
+Object.assign(window, { aqAutoRulePick, aqAutoRulePreview, aqAutoRuleSave, aqAutoSetHold, aqAutoEnter, aqAutoLoadSignals, aqAutoSaveSignals, aqAutoSetWin, aqAutoToggle, aqAutoOpenSheet, aqAutoCloseSheet, aqAutoBlForm, aqAutoBlAdd, aqAutoBlRemove });
 
 </script>
 
