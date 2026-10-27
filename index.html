@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.56';   // v5.56: 브리핑 헤더 한 줄·한국 기준 일시, 한국 탭 복구, 내 계좌 계산 통일, 시장 묶음 소제목
+window.AQ_PWA_VERSION = '5.57';   // v5.57: AI 가이드 탭 (오늘 ±3일 타임라인, 오전·오후 합침, 확인 기록), 감사 보고서 다시 불러오기
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4080,6 +4080,33 @@ html:not([data-theme="light"]) body { background: #161618; }
 #briefCard .bf-head { flex-wrap: nowrap !important; gap: 10px; }
 #briefCard .bf-head .bf-date { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #briefCard .bf-dismiss { flex: none; white-space: nowrap; }
+/* v5.57: AI 가이드 */
+body:not([data-role="admin"]) #aiSubtabs .xtab-btn[data-atab="guide"] { display: none !important; }
+#guideCard { background: transparent !important; border: none !important; box-shadow: none !important; } #guideCard .card-body { padding: 4px 2px 24px; }
+.gd-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin: 2px 0 10px; }
+.gd-d { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 0; cursor: pointer; color: var(--text-hi); }
+.gd-w { font-size: 11.5px; color: var(--text-mute); } .gd-n { font-size: 17px; font-weight: 700; width: 36px; height: 36px; line-height: 36px; border-radius: 50%; text-align: center; }
+.gd-d.today .gd-n { color: #f4877d; } .gd-d.sel .gd-n { background: #f4877d; color: #fff; } .gd-d.fut { opacity: .6; } .gd-d.sel.fut { opacity: 1; }
+.gd-dots { display: flex; gap: 2px; height: 8px; } .gd-dots i { width: 7px; height: 7px; border-radius: 50%; }
+.gd-src { font-size: 11px; color: var(--text-mute); text-align: right; margin: 0 4px 10px; }
+.gd-tl { position: relative; }
+.gd-it { display: grid; grid-template-columns: 44px 52px 1fr 30px; gap: 8px; align-items: start; position: relative; padding-bottom: 18px; }
+.gd-it.off .gd-tt { text-decoration: line-through; color: var(--text-mute); } .gd-it.off .gd-ic { opacity: .45; }
+.gd-tm { font-size: 11.5px; color: var(--text-mute); text-align: right; line-height: 1.35; padding-top: 14px; font-variant-numeric: tabular-nums; } .gd-tm small { display: block; font-size: 10px; color: #f4877d; }
+.gd-rail { position: relative; display: flex; justify-content: center; align-self: stretch; }
+.gd-rail::after { content: ""; position: absolute; top: 48px; bottom: -18px; left: 50%; width: 3px; margin-left: -1.5px; background: rgba(244,135,125,.45); border-radius: 2px; }
+.gd-it.last .gd-rail::after { display: none; }
+.gd-ic { width: 48px; height: 48px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 21px; background: color-mix(in srgb, var(--c) 28%, #1a1a1d); position: relative; z-index: 1; flex: none; }
+.gd-ic.logo { background: #fff; padding: 0; overflow: visible; } .gd-ic .gd-logo { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+.gd-badge { position: absolute; right: -4px; bottom: -4px; width: 22px; height: 22px; border-radius: 50%; background: #1a1a1d; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 400; border: 2px solid var(--c); }
+.gd-body { padding-top: 4px; min-width: 0; cursor: pointer; } .gd-sub { font-size: 12px; color: var(--text-mute); margin-bottom: 3px; line-height: 1.5; } .gd-tk { color: var(--text-dim); font-weight: 700; }
+.gd-tt { font-size: 15px; font-weight: 700; color: var(--text-hi); line-height: 1.4; overflow-wrap: anywhere; }
+.gd-tag { display: inline-block; font-size: 10.5px; padding: 1px 7px; border-radius: 999px; background: rgba(252,196,25,.15); color: #fcc419; margin-left: 5px; font-weight: 700; } .gd-tag.off { background: rgba(255,255,255,.08); color: var(--text-mute); }
+.gd-det { margin-top: 8px; background: rgba(255,255,255,.05); border-radius: 12px; padding: 10px 12px; font-size: 13px; line-height: 1.6; color: var(--text); } .gd-det > div + div { margin-top: 4px; } .gd-det b { color: var(--text-hi); font-weight: 700; margin-right: 4px; }
+.gd-orig { margin-top: 8px; font-size: 12px; color: var(--text-mute); } .gd-orig summary { cursor: pointer; }
+.gd-ck { width: 26px; height: 26px; border-radius: 50%; border: 2.5px solid var(--c); background: none; margin-top: 12px; cursor: pointer; padding: 0; } .gd-ck.done { background: var(--c); }
+.gd-now { display: flex; align-items: center; gap: 8px; margin: -6px 0 14px 52px; font-size: 12px; color: #f4877d; font-weight: 700; } .gd-now::before, .gd-now::after { content: ""; flex: 1; height: 1px; background: rgba(244,135,125,.5); } .gd-now::before { flex: 0 0 10px; }
+.gd-empty { text-align: center; color: var(--text-mute); padding: 40px 12px; font-size: 13px; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8444,7 +8471,8 @@ table.combo-eval tbody td .nodata {
     <section class="card mobile-only explore-subtabs" id="aiSubtabs" data-mtab="auto">
       <div class="xtab-row">
         <button class="xtab-btn active" data-atab="brief" onclick="setAiSubtab('brief')">일일 브리핑</button>
-        <button class="xtab-btn" data-atab="report" onclick="setAiSubtab('report')">AI 보고서</button>
+        <button class="xtab-btn" data-atab="guide" onclick="setAiSubtab('guide')">AI 가이드</button>
+      <button class="xtab-btn" data-atab="report" onclick="setAiSubtab('report')">AI 보고서</button>
         <button class="xtab-btn" data-atab="auto" onclick="setAiSubtab('auto')">자동 매매</button>
       </div>
     </section>
@@ -8459,6 +8487,9 @@ table.combo-eval tbody td .nodata {
     <section class="card" id="briefCard" data-mtab="auto" data-atab="brief">
       <div class="card-header bf-head"><span class="br-toggle" id="briefToggle"></span><span class="bf-date" id="briefDate"></span><button class="bf-dismiss" id="briefDismissBtn" onclick="aqBriefDismiss()">오늘 그만 보기</button></div>
       <div class="card-body"><div id="briefBody"><div class="auto-empty">불러오는 중…</div></div></div>
+    </section>
+    <section class="card" id="guideCard" data-mtab="auto" data-atab="guide">
+      <div class="card-body"><div id="guideBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="analysisCard" data-mtab="auto" data-atab="report">
     <div class="card-header">
@@ -26316,14 +26347,15 @@ function setAiSubtab(x) {
   const isAdmin = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin');
   const _kr = getCurrentMarket() === 'KR';
   if (x === 'pre' || x === 'close') { _brMode(); _br.mode = x === 'pre' ? 'pre' : 'post'; x = 'brief'; }   // v5.55: 장전·장후는 일일 브리핑 안 토글
-  const allowed = _kr ? ['brief', 'report'] : ['brief', 'report', 'auto'];
+  const allowed = _kr ? ['brief', 'guide', 'report'] : ['brief', 'guide', 'report', 'auto'];
   if (!allowed.includes(x)) x = 'brief';
+  if (x === 'guide' && !isAdmin) x = 'brief';   // v5.57: AI 가이드는 관리자 계좌 기준
   if (x === 'auto' && !isAdmin) x = 'brief';   // v5.40: 관리자는 시장 무관 · v5.42: 기본은 일일 브리핑
   document.body.setAttribute('data-atab', x);
   document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === x));
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
   try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
-  try { if (x === 'auto') aqAutoEnter(); else if (x === 'brief') aqDailyBriefRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  try { if (x === 'auto') aqAutoEnter(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'guide') aqGuideRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
 // AI 탭을 떠나면 직접 지정한 표시 상태를 지워 다른 탭에 카드가 남지 않게
@@ -26766,8 +26798,9 @@ function _audSecs(md) {
 }
 function _audLines(a) { return (a || []).map(x => x.replace(/^[-*•]\s+/, '')); }
 function _audCase(lines) { const L = lines || []; const c = L.find(x => /^[-*]?\s*사례:/.test(x)); const name = c ? c.replace(/^[-*]?\s*사례:\s*/, '').trim() : ''; return { name: name === '없음' ? '' : name, body: L.filter(x => x !== c).join(' ') }; }
-async function aqAuditLoad(kind, force) {
-  if (_aud.items[kind] && !force) return _aud.items[kind];
+async function aqAuditLoad(kind, force) {   // v5.57: 비어 있거나 5분 지나면 다시 불러옴
+  if (_aud.items[kind] && _aud.items[kind].length && !force && Date.now() - (_aud.ts && _aud.ts[kind] || 0) < 5 * 60e3) return _aud.items[kind];
+  _aud.ts = _aud.ts || {}; _aud.ts[kind] = Date.now();
   let r = null; try { r = await apiCall('getAudits', { kind }); } catch (e) {}
   _aud.items[kind] = (r && r.ok) ? (r.items || []) : []; return _aud.items[kind];
 }
@@ -26993,6 +27026,86 @@ async function aqDailyBriefRender() {
   box.innerHTML = h;
 }
 Object.assign(window, { aqDailyBriefRender, aqBriefMode });
+
+// ============================================================================
+// v5.57: AI 탭 → AI 가이드 (오늘 ±3일, 시간별 확인·고민 가이드 — 오전·오후 문서를 합쳐 표시)
+// ============================================================================
+const _gd = { sel: null, docs: null, checks: null, open: {} };
+const _GD_SCENE = { '장 시작 관망': ['🛑', '#ff6b6b'], '재료 소멸': ['💰', '#fcc419'], '풍향계 확인': ['🧭', '#4dabf7'], '권리·만기 데드라인': ['⏳', '#ffa94d'], '실적 D-Day': ['📊', '#9775fa'],
+  '자동매매 설정 점검': ['🤖', '#63e6be'], '환율 확인': ['💱', '#20c997'], '어닝콜 후 대응': ['🎙️', '#748ffc'], '평단 근처 심리': ['⚖️', '#f783ac'], '물량 출회': ['🌧️', '#adb5bd'] };
+function _gdScene(name) { const base = String(name || '').split('·')[0].trim(); return _GD_SCENE[base] || ['✦', '#fcc419']; }
+function _gdAdd(d, n) { const x = new Date(d + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); }
+function _gdParse(doc) {   // → { asof, slot, days: { 'YYYY-MM-DD': [items] } }
+  const t = String(doc.content || '').replace(/\r/g, '').replace(/\\([!-\/:-@\[-`{-~])/g, '$1'); const out = { slot: doc.slot, days: {}, at: '' };
+  const y = Number(String(doc.date).slice(0, 4)); let cur = null, it = null;
+  const m0 = t.match(/기준일\s*\d{4}-\d{2}-\d{2}\s*·\s*(오전|오후)\s*·\s*(\d{1,2}:\d{2})/); if (m0) out.at = m0[2];
+  t.split('\n').forEach(raw => { const ln = raw.replace(/\s+$/, ''); if (!ln.trim()) return;
+    let m = ln.match(/^#{2,6}\s*(\d{1,2})\/(\d{1,2})/); if (m) { let yy = y; if (Number(m[1]) === 1 && String(doc.date).slice(5, 7) === '12') yy = y + 1; cur = `${yy}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`; out.days[cur] = out.days[cur] || []; it = null; return; }
+    if (!cur) return;
+    m = ln.match(/^[-*]\s*\[([^\]]+)\]\s*\[([^\]]+)\]\s*\[장면:\s*([^\]]+)\]\s*(.*?)\s*(?:\{(유지|갱신|철회|추가)\})?\s*$/);
+    if (m) { it = { time: m[1].trim(), target: m[2].trim(), scene: m[3].trim(), title: m[4].trim(), status: m[5] || '', f: {} }; out.days[cur].push(it); return; }
+    m = ln.trim().match(/^(상황|확인할 것|행동 후보|갱신 사유|철회 사유)\s*:\s*(.*)$/); if (m && it) { it.f[m[1]] = m[2]; return; }
+  });
+  return out;
+}
+function _gdMin(time) { const nx = /다음 날/.test(time); const m = String(time).match(/(\d{1,2}):(\d{2})/); return m ? Number(m[1]) * 60 + Number(m[2]) + (nx ? 1440 : 0) : 9999; }
+function _gdKey(d, it) { return `${d}|${it.time}|${it.target}|${String(it.scene).split('·')[0].trim()}`; }
+function _gdForDay(day) {   // 그날 문서(오전·오후) 우선, 없으면 가장 최근 문서의 예고
+  const docs = _gd.docs || []; const own = docs.filter(x => x.date === day); let items = [], src = '';
+  const am = own.find(x => x.slot === 'AM'), pm = own.find(x => x.slot === 'PM');
+  if (pm || am) {
+    const P = pm ? _gdParse(pm) : null, A = am ? _gdParse(am) : null; src = pm ? `오후 ${P.at || '20:30'} 갱신` : `오전 ${A.at || '07:15'}`;
+    if (P) { items = (P.days[day] || []).map(x => { if (x.status === '갱신' && A) { const o = (A.days[day] || []).find(a => a.target === x.target && String(a.scene).split('·')[0] === String(x.scene).split('·')[0]); if (o) x.orig = o; } return x; });
+      if (A) (A.days[day] || []).forEach(a => { if (!items.some(x => x.time === a.time && x.target === a.target && String(x.scene).split('·')[0] === String(a.scene).split('·')[0]) && !items.some(x => x.orig === a)) items.push(Object.assign({}, a, { status: '유지' })); }); }
+    else items = A.days[day] || [];
+  } else {
+    const prevs = docs.filter(x => x.date < day).sort((a, b) => (b.date + b.slot).localeCompare(a.date + a.slot));
+    for (const prev of prevs) { const P = _gdParse(prev); if (P.days[day]) { items = P.days[day]; src = `${prev.date.slice(5).replace('-', '/')} ${prev.slot === 'PM' ? '오후' : '오전'} 예고`; break; } }
+  }
+  return { items: items.slice().sort((a, b) => _gdMin(a.time) - _gdMin(b.time)), src };
+}
+async function aqGuideRender() {
+  const box = document.getElementById('guideBody'); if (!box) return;
+  const today = _kstToday(); if (!_gd.sel) _gd.sel = today;
+  if (!_gd.docs || _gd.loadedAt !== today || Date.now() - (_gd.loadedTs || 0) > 5 * 60e3) {
+    let r = null; try { r = await apiCall('getGuides', { from: _gdAdd(today, -6), to: _gdAdd(today, 3) }); } catch (e) {}
+    _gd.docs = (r && r.ok) ? (r.items || []) : []; _gd.loadedAt = today; _gd.loadedTs = Date.now();
+  }
+  if (!_gd.checks) { try { const r = await apiCall('userDataGet', { dataType: 'GUIDE_CHECKS' }); _gd.checks = new Set(r && r.ok && Array.isArray(r.rows) ? r.rows : []); } catch (e) { _gd.checks = new Set(); } }
+  const days = [-3, -2, -1, 0, 1, 2, 3].map(n => _gdAdd(today, n));
+  const strip = days.map(d => { const dd = new Date(d + 'T00:00:00'); const g = _gdForDay(d); const dots = g.items.filter(x => x.status !== '철회').slice(0, 4).map(x => `<i style="background:${_gdScene(x.scene)[1]}"></i>`).join('');
+    return `<button class="gd-d ${d === _gd.sel ? 'sel' : ''} ${d === today ? 'today' : ''} ${d > today ? 'fut' : ''}" onclick="aqGuideSel('${d}')"><span class="gd-w">${'일월화수목금토'[dd.getDay()]}</span><span class="gd-n">${dd.getDate()}</span><span class="gd-dots">${dots}</span></button>`; }).join('');
+  const g = _gdForDay(_gd.sel); const sel = _gd.sel;
+  let tl = '';
+  if (!g.items.length) tl = `<div class="gd-empty">${(_gd.docs || []).length ? '이 날은 확인할 것이 없어요.' : 'AI 가이드는 매일 아침 7시 30분, 저녁 8시 45분쯤 올라와요.'}</div>`;
+  else {
+    const nowMin = (() => { const k = new Date(Date.now() + 9 * 3600e3); return k.getUTCHours() * 60 + k.getUTCMinutes(); })(); let nowDone = sel !== today;
+    g.items.forEach((x, i) => {
+      if (!nowDone && _gdMin(x.time) > nowMin) { nowDone = true; const nxt = _gdMin(x.time) - nowMin; tl += `<div class="gd-now"><span>지금 ${String(Math.floor(nowMin / 60)).padStart(2, '0')}:${String(nowMin % 60).padStart(2, '0')} · 다음 가이드까지 ${Math.floor(nxt / 60) ? Math.floor(nxt / 60) + '시간 ' : ''}${nxt % 60}분</span></div>`; }
+      const key = _gdKey(sel, x); const done = _gd.checks.has(key); const [ic, col] = _gdScene(x.scene);
+      const tm = x.target.match(/^(US|KR)\s+([A-Z0-9.\-]{1,12})$/i); const tk = tm ? tm[2].toUpperCase() : '';
+      const circle = tk ? `<span class="gd-ic logo" style="--c:${col}">${aqLogoHtml(tk, '', 'gd-logo')}<b class="gd-badge">${ic}</b></span>` : `<span class="gd-ic" style="--c:${col}">${ic}</span>`;
+      const tags = [/·\s*변형/.test(x.scene) ? '변형' : '', /·\s*신규/.test(x.scene) ? '신규' : '', x.status === '갱신' ? '저녁 갱신' : '', x.status === '추가' ? '저녁 추가' : '', x.status === '철회' ? '철회' : ''].filter(Boolean).map(t => `<span class="gd-tag ${t === '철회' ? 'off' : ''}">${t}</span>`).join('');
+      const tparts = String(x.time).replace('다음 날', '').trim().split('~');
+      const isOpen = _gd.open[key];
+      const f = x.f || {}; const det = isOpen ? `<div class="gd-det">${['상황', '확인할 것', '행동 후보', '갱신 사유', '철회 사유'].filter(k => f[k]).map(k => `<div><b>${k}</b> ${escapeHtml(f[k])}</div>`).join('')}${x.orig ? `<details class="gd-orig"><summary>오전 원문</summary><div>${escapeHtml(x.orig.title)}</div>${['상황', '확인할 것', '행동 후보'].filter(k => x.orig.f[k]).map(k => `<div><b>${k}</b> ${escapeHtml(x.orig.f[k])}</div>`).join('')}</details>` : ''}</div>` : '';
+      tl += `<div class="gd-it ${x.status === '철회' ? 'off' : ''} ${i === g.items.length - 1 ? 'last' : ''}">
+        <div class="gd-tm">${/다음 날/.test(x.time) ? '<small>다음 날</small>' : ''}${tparts.map(escapeHtml).join('<br>')}</div>
+        <div class="gd-rail">${circle}</div>
+        <div class="gd-body" onclick="aqGuideToggle('${escapeAttr(key)}')"><div class="gd-sub">${tk ? `<span class="gd-tk" onclick="event.stopPropagation(); openChart('${escapeAttr(tk)}')">${escapeHtml(displayName(tk) || tk)}</span> · ` : escapeHtml(x.target) + ' · '}${escapeHtml(String(x.scene).split('·')[0].trim())}${tags}</div><div class="gd-tt">${escapeHtml(x.title)}</div>${det}</div>
+        <button class="gd-ck ${done ? 'done' : ''}" style="--c:${col}" onclick="aqGuideCheck('${escapeAttr(key)}')" aria-label="확인"></button></div>`;
+    });
+  }
+  box.innerHTML = `<div class="gd-strip">${strip}</div>${g.src ? `<div class="gd-src">${escapeHtml(g.src)}</div>` : ''}<div class="gd-tl">${tl}</div>`;
+}
+function aqGuideSel(d) { _gd.sel = d; aqGuideRender(); }
+function aqGuideToggle(k) { _gd.open[k] = !_gd.open[k]; aqGuideRender(); }
+async function aqGuideCheck(k) {
+  if (!_gd.checks) _gd.checks = new Set(); if (_gd.checks.has(k)) _gd.checks.delete(k); else _gd.checks.add(k); aqGuideRender();
+  const lim = _gdAdd(_kstToday(), -21); const keep = [..._gd.checks].filter(x => x.slice(0, 10) >= lim); _gd.checks = new Set(keep);
+  try { await apiCall('userDataSet', { dataType: 'GUIDE_CHECKS', rows: JSON.stringify(keep) }); } catch (e) {}
+}
+Object.assign(window, { aqGuideRender, aqGuideSel, aqGuideToggle, aqGuideCheck });
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
