@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.57';   // v5.57: AI 가이드 탭 (오늘 ±3일 타임라인, 오전·오후 합침, 확인 기록), 감사 보고서 다시 불러오기
+window.AQ_PWA_VERSION = '5.58';   // v5.58: AI 가이드 화면 다듬기 (예고일 꼬리표·같은 시각 묶기·그날 요약·간격·색)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4107,6 +4107,18 @@ body:not([data-role="admin"]) #aiSubtabs .xtab-btn[data-atab="guide"] { display:
 .gd-ck { width: 26px; height: 26px; border-radius: 50%; border: 2.5px solid var(--c); background: none; margin-top: 12px; cursor: pointer; padding: 0; } .gd-ck.done { background: var(--c); }
 .gd-now { display: flex; align-items: center; gap: 8px; margin: -6px 0 14px 52px; font-size: 12px; color: #f4877d; font-weight: 700; } .gd-now::before, .gd-now::after { content: ""; flex: 1; height: 1px; background: rgba(244,135,125,.5); } .gd-now::before { flex: 0 0 10px; }
 .gd-empty { text-align: center; color: var(--text-mute); padding: 40px 12px; font-size: 13px; }
+/* v5.58: AI 가이드 다듬기 */
+.gd-today { font-size: 10px; color: #f4877d; font-weight: 700; margin-top: -2px; }
+.gd-sum { font-size: 13px; color: var(--text); margin: 6px 4px 2px; line-height: 1.5; } .gd-sum b { color: var(--text-hi); }
+.gd-src { text-align: left !important; margin: 0 4px 18px !important; }
+.gd-it { padding-bottom: 34px !important; grid-template-columns: 46px 52px 1fr 26px !important; gap: 10px !important; }
+.gd-rail::after { background: rgba(255,255,255,.14) !important; width: 2px !important; margin-left: -1px !important; bottom: -34px !important; }
+.gd-ic.logo { box-shadow: 0 0 0 3px var(--c); }
+.gd-ck { width: 22px !important; height: 22px !important; border: 2px solid rgba(255,255,255,.28) !important; margin-top: 14px !important; } .gd-ck.done { border-color: var(--c) !important; background: var(--c) !important; }
+.gd-det { margin-top: 10px !important; padding: 12px 14px !important; } .gd-det > div + div { margin-top: 8px !important; }
+.gd-det .gd-rec { color: var(--text-hi); font-weight: 600; } .gd-det .gd-rec b { color: #63e6be; }
+.gd-sub { margin-bottom: 5px !important; } .gd-tt { line-height: 1.45 !important; }
+body[data-mtab="auto"][data-atab="guide"] footer { display: none !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -27040,7 +27052,7 @@ function _gdParse(doc) {   // → { asof, slot, days: { 'YYYY-MM-DD': [items] } 
   const y = Number(String(doc.date).slice(0, 4)); let cur = null, it = null;
   const m0 = t.match(/기준일\s*\d{4}-\d{2}-\d{2}\s*·\s*(오전|오후)\s*·\s*(\d{1,2}:\d{2})/); if (m0) out.at = m0[2];
   // v5.57: 구글 문서 변환에 따라 세 가지 모양 모두 읽음 — 들여 쓴 줄 / '- 상황:' 하위 목록 / 한 문단으로 합쳐진 줄
-  const LBL = /(상황|확인할 것|행동 후보|갱신 사유|철회 사유)\s*:/g; const lines = [];
+  const LBL = /(상황|추천|확인할 것|다시 볼 때|행동 후보|갱신 사유|철회 사유)\s*:/g; const lines = [];
   t.split('\n').forEach(raw => { const ln = raw.replace(/\s+$/, ''); LBL.lastIndex = 0; const hits = [...ln.matchAll(LBL)];
     if (hits.length > 1 || (hits.length && /^\s*[-*•]\s*\[/.test(ln) && hits[0].index > 0)) {
       let pos = 0; hits.forEach((h, k) => { if (h.index > pos) lines.push(ln.slice(pos, h.index)); pos = h.index; if (k === hits.length - 1) lines.push(ln.slice(pos)); });
@@ -27050,25 +27062,27 @@ function _gdParse(doc) {   // → { asof, slot, days: { 'YYYY-MM-DD': [items] } 
     if (!cur) return;
     m = ln.match(/^\s*[-*•]\s*\[([^\]]+)\]\s*\[([^\]]+)\]\s*\[장면:\s*([^\]]+)\]\s*(.*?)\s*$/);
     if (m) { const st = (m[4].match(/\{(유지|갱신|철회|추가)\}/) || [])[1] || ''; it = { time: m[1].trim(), target: m[2].trim(), scene: m[3].trim(), title: m[4].replace(/\{(유지|갱신|철회|추가)\}/, '').trim(), status: st, f: {} }; out.days[cur].push(it); return; }
-    m = ln.trim().match(/^(?:[-*•]\s*)?(상황|확인할 것|행동 후보|갱신 사유|철회 사유)\s*:\s*(.*?)\s*$/); if (m && it) { it.f[m[1]] = m[2]; return; }
+    m = ln.trim().match(/^(?:[-*•]\s*)?(상황|추천|확인할 것|다시 볼 때|행동 후보|갱신 사유|철회 사유)\s*:\s*(.*?)\s*$/); if (m && it) { it.f[m[1]] = m[2]; return; }
   });
   return out;
 }
 function _gdMin(time) { const nx = /다음 날/.test(time); const m = String(time).match(/(\d{1,2}):(\d{2})/); return m ? Number(m[1]) * 60 + Number(m[2]) + (nx ? 1440 : 0) : 9999; }
 function _gdKey(d, it) { return `${d}|${it.time}|${it.target}|${String(it.scene).split('·')[0].trim()}`; }
 function _gdForDay(day) {   // 그날 문서(오전·오후) 우선, 없으면 가장 최근 문서의 예고
-  const docs = _gd.docs || []; const own = docs.filter(x => x.date === day); let items = [], src = '';
+  const docs = _gd.docs || []; const own = docs.filter(x => x.date === day); let items = [], src = '', meta = null;
   const am = own.find(x => x.slot === 'AM'), pm = own.find(x => x.slot === 'PM');
   if (pm || am) {
     const P = pm ? _gdParse(pm) : null, A = am ? _gdParse(am) : null; src = pm ? `오후 ${P.at || '20:30'} 갱신` : `오전 ${A.at || '07:15'}`;
     if (P) { items = (P.days[day] || []).map(x => { if (x.status === '갱신' && A) { const o = (A.days[day] || []).find(a => a.target === x.target && String(a.scene).split('·')[0] === String(x.scene).split('·')[0]); if (o) x.orig = o; } return x; });
       if (A) (A.days[day] || []).forEach(a => { if (!items.some(x => x.time === a.time && x.target === a.target && String(x.scene).split('·')[0] === String(a.scene).split('·')[0]) && !items.some(x => x.orig === a)) items.push(Object.assign({}, a, { status: '유지' })); }); }
     else items = A.days[day] || [];
+    if (P && !A) items = items.map(x => Object.assign({}, x, { status: x.status === '철회' ? '철회' : '' }));   // 오전 문서가 없던 날은 '추가' 표시가 의미 없음
+    meta = { kind: 'own', am: A ? (A.at || '07:15') : '', pm: P ? (P.at || '20:30') : '' };
   } else {
     const prevs = docs.filter(x => x.date < day).sort((a, b) => (b.date + b.slot).localeCompare(a.date + a.slot));
-    for (const prev of prevs) { const P = _gdParse(prev); if (P.days[day]) { items = P.days[day]; src = `${prev.date.slice(5).replace('-', '/')} ${prev.slot === 'PM' ? '오후' : '오전'} 예고`; break; } }
+    for (const prev of prevs) { const P = _gdParse(prev); if (P.days[day]) { items = P.days[day].map(x => Object.assign({}, x, { status: '' })); src = 'pre'; meta = { kind: 'pre', from: `${prev.date.slice(5).replace('-', '/')} ${prev.slot === 'PM' ? '저녁' : '아침'}` }; break; } }
   }
-  return { items: items.slice().sort((a, b) => _gdMin(a.time) - _gdMin(b.time)), src };
+  return { items: items.slice().sort((a, b) => _gdMin(a.time) - _gdMin(b.time)), src, meta };
 }
 async function aqGuideRender() {
   const box = document.getElementById('guideBody'); if (!box) return;
@@ -27080,9 +27094,15 @@ async function aqGuideRender() {
   if (!_gd.checks) { try { const r = await apiCall('userDataGet', { dataType: 'GUIDE_CHECKS' }); _gd.checks = new Set(r && r.ok && Array.isArray(r.rows) ? r.rows : []); } catch (e) { _gd.checks = new Set(); } }
   const days = [-3, -2, -1, 0, 1, 2, 3].map(n => _gdAdd(today, n));
   const strip = days.map(d => { const dd = new Date(d + 'T00:00:00'); const g = _gdForDay(d); const dots = g.items.filter(x => x.status !== '철회').slice(0, 4).map(x => `<i style="background:${_gdScene(x.scene)[1]}"></i>`).join('');
-    return `<button class="gd-d ${d === _gd.sel ? 'sel' : ''} ${d === today ? 'today' : ''} ${d > today ? 'fut' : ''}" onclick="aqGuideSel('${d}')"><span class="gd-w">${'일월화수목금토'[dd.getDay()]}</span><span class="gd-n">${dd.getDate()}</span><span class="gd-dots">${dots}</span></button>`; }).join('');
+    return `<button class="gd-d ${d === _gd.sel ? 'sel' : ''} ${d === today ? 'today' : ''} ${d > today ? 'fut' : ''}" onclick="aqGuideSel('${d}')"><span class="gd-w">${'일월화수목금토'[dd.getDay()]}</span><span class="gd-n">${dd.getDate()}</span><span class="gd-dots">${dots}</span>${d === today ? '<span class="gd-today">오늘</span>' : ''}</button>`; }).join('');
   const g = _gdForDay(_gd.sel); const sel = _gd.sel;
-  let tl = '';
+  // 그날 요약 한 줄 + 문서 출처
+  const sd = new Date(sel + 'T00:00:00'); const live = g.items.filter(x => x.status !== '철회'); const cnt = {};
+  live.forEach(x => { const k = String(x.scene).split('·')[0].trim(); cnt[k] = (cnt[k] || 0) + 1; });
+  const kind = sel === today ? '오늘' : sel < today ? '지난 기록' : '예고';
+  const summ = `<div class="gd-sum"><b>${sd.getMonth() + 1}/${sd.getDate()} (${'일월화수목금토'[sd.getDay()]})</b> · ${kind}${live.length ? ` · 가이드 ${live.length}개 — ${Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(', ')}` : ''}</div>`;
+  const srcTxt = !g.meta ? '' : g.meta.kind === 'pre' ? `${g.meta.from}에 쓴 예고 · 그날 아침에 다시 정리돼요` : [g.meta.am ? `아침 ${g.meta.am} 작성` : '', g.meta.pm ? `저녁 ${g.meta.pm} ${g.meta.am ? '갱신' : '작성'}` : ''].filter(Boolean).join(' · ');
+  let tl = ''; let prevT = '';
   if (!g.items.length) tl = `<div class="gd-empty">${(_gd.docs || []).length ? '이 날은 확인할 것이 없어요.' : 'AI 가이드는 매일 아침 7시 30분, 저녁 8시 45분쯤 올라와요.'}</div>`;
   else {
     const nowMin = (() => { const k = new Date(Date.now() + 9 * 3600e3); return k.getUTCHours() * 60 + k.getUTCMinutes(); })(); let nowDone = sel !== today;
@@ -27090,24 +27110,26 @@ async function aqGuideRender() {
       if (!nowDone && _gdMin(x.time) > nowMin) { nowDone = true; const nxt = _gdMin(x.time) - nowMin; tl += `<div class="gd-now"><span>지금 ${String(Math.floor(nowMin / 60)).padStart(2, '0')}:${String(nowMin % 60).padStart(2, '0')} · 다음 가이드까지 ${Math.floor(nxt / 60) ? Math.floor(nxt / 60) + '시간 ' : ''}${nxt % 60}분</span></div>`; }
       const key = _gdKey(sel, x); const done = _gd.checks.has(key); const [ic, col] = _gdScene(x.scene);
       const tm = x.target.match(/^(US|KR)\s+([A-Z0-9.\-]{1,12})$/i); const tk = tm ? tm[2].toUpperCase() : '';
-      const circle = tk ? `<span class="gd-ic logo" style="--c:${col}">${aqLogoHtml(tk, '', 'gd-logo')}<b class="gd-badge">${ic}</b></span>` : `<span class="gd-ic" style="--c:${col}">${ic}</span>`;
+      const circle = tk ? `<span class="gd-ic logo" style="--c:${col}">${aqLogoHtml(tk, '', 'gd-logo')}</span>` : `<span class="gd-ic" style="--c:${col}">${ic}</span>`;
+      const tKey = String(x.time); const showT = tKey !== prevT; prevT = tKey;
       const tags = [/·\s*변형/.test(x.scene) ? '변형' : '', /·\s*신규/.test(x.scene) ? '신규' : '', x.status === '갱신' ? '저녁 갱신' : '', x.status === '추가' ? '저녁 추가' : '', x.status === '철회' ? '철회' : ''].filter(Boolean).map(t => `<span class="gd-tag ${t === '철회' ? 'off' : ''}">${t}</span>`).join('');
       const tparts = String(x.time).replace('다음 날', '').trim().split('~');
       const isOpen = _gd.open[key];
-      const f = x.f || {}; const det = isOpen ? `<div class="gd-det">${['상황', '확인할 것', '행동 후보', '갱신 사유', '철회 사유'].filter(k => f[k]).map(k => `<div><b>${k}</b> ${escapeHtml(f[k])}</div>`).join('')}${x.orig ? `<details class="gd-orig"><summary>오전 원문</summary><div>${escapeHtml(x.orig.title)}</div>${['상황', '확인할 것', '행동 후보'].filter(k => x.orig.f[k]).map(k => `<div><b>${k}</b> ${escapeHtml(x.orig.f[k])}</div>`).join('')}</details>` : ''}</div>` : '';
+      const f = x.f || {}; const det = isOpen ? `<div class="gd-det">${['상황', '추천', '확인할 것', '다시 볼 때', '행동 후보', '갱신 사유', '철회 사유'].filter(k => f[k]).map(k => `<div class="${k === '추천' ? 'gd-rec' : ''}"><b>${k}</b> ${escapeHtml(f[k])}</div>`).join('')}${x.orig ? `<details class="gd-orig"><summary>오전 원문</summary><div>${escapeHtml(x.orig.title)}</div>${['상황', '확인할 것', '행동 후보'].filter(k => x.orig.f[k]).map(k => `<div><b>${k}</b> ${escapeHtml(x.orig.f[k])}</div>`).join('')}</details>` : ''}</div>` : '';
       tl += `<div class="gd-it ${x.status === '철회' ? 'off' : ''} ${i === g.items.length - 1 ? 'last' : ''}">
-        <div class="gd-tm">${/다음 날/.test(x.time) ? '<small>다음 날</small>' : ''}${tparts.map(escapeHtml).join('<br>')}</div>
+        <div class="gd-tm">${showT ? `${/다음 날/.test(x.time) ? '<small>다음 날</small>' : ''}${tparts.map(escapeHtml).join('<br>')}` : ''}</div>
         <div class="gd-rail">${circle}</div>
         <div class="gd-body" onclick="aqGuideToggle('${escapeAttr(key)}')"><div class="gd-sub">${tk ? `<span class="gd-tk" onclick="event.stopPropagation(); openChart('${escapeAttr(tk)}')">${escapeHtml(displayName(tk) || tk)}</span> · ` : escapeHtml(x.target) + ' · '}${escapeHtml(String(x.scene).split('·')[0].trim())}${tags}</div><div class="gd-tt">${escapeHtml(x.title)}</div>${det}</div>
         <button class="gd-ck ${done ? 'done' : ''}" style="--c:${col}" onclick="aqGuideCheck('${escapeAttr(key)}')" aria-label="확인"></button></div>`;
     });
   }
-  box.innerHTML = `<div class="gd-strip">${strip}</div>${g.src ? `<div class="gd-src">${escapeHtml(g.src)}</div>` : ''}<div class="gd-tl">${tl}</div>`;
+  box.innerHTML = `<div class="gd-strip">${strip}</div>${summ}${srcTxt ? `<div class="gd-src">${escapeHtml(srcTxt)}</div>` : ''}<div class="gd-tl">${tl}</div>`;
 }
 function aqGuideSel(d) { _gd.sel = d; aqGuideRender(); }
 function aqGuideToggle(k) { _gd.open[k] = !_gd.open[k]; aqGuideRender(); }
 async function aqGuideCheck(k) {
-  if (!_gd.checks) _gd.checks = new Set(); if (_gd.checks.has(k)) _gd.checks.delete(k); else _gd.checks.add(k); aqGuideRender();
+  if (!_gd.checks) _gd.checks = new Set(); const on = !_gd.checks.has(k); if (on) _gd.checks.add(k); else _gd.checks.delete(k); aqGuideRender();
+  try { if (on && !localStorage.getItem('aq_gd_ck_hint')) { localStorage.setItem('aq_gd_ck_hint', '1'); if (typeof aqToast === 'function') aqToast('확인했어요 — 모든 기기에 기록돼요'); } } catch (e) {}
   const lim = _gdAdd(_kstToday(), -21); const keep = [..._gd.checks].filter(x => x.slice(0, 10) >= lim); _gd.checks = new Set(keep);
   try { await apiCall('userDataSet', { dataType: 'GUIDE_CHECKS', rows: JSON.stringify(keep) }); } catch (e) {}
 }
