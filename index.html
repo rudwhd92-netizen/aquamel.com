@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.59';   // v5.59: AI 가이드 — 새 장면 2개, 낡은 정보 경고, 지난 시각 흐리게, 지난날 '이후 등락'
+window.AQ_PWA_VERSION = '5.60';   // v5.60: 일일 브리핑 간격·숫자 정렬·더 보기, AI 가이드 하늘색·색 3가지·요약 줄 삭제
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4123,6 +4123,31 @@ body[data-mtab="auto"][data-atab="guide"] footer { display: none !important; }
 .gd-it.past .gd-body, .gd-it.past .gd-tm { opacity: .45; } .gd-it.past .gd-ic { opacity: .55; }
 .gd-after { display: inline-block; font-size: 11.5px; font-weight: 700; margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: rgba(255,255,255,.06); vertical-align: 2px; } .gd-after.up { color: var(--kr-up); } .gd-after.down { color: var(--kr-down); }
 .gd-warn { background: rgba(255,169,77,.12); color: #ffa94d; border-radius: 12px; padding: 10px 12px; font-size: 12.5px; margin: 0 2px 16px; line-height: 1.5; }
+/* v5.60: 일일 브리핑 숨 쉴 공간 */
+#briefCard .bf-hero { font-size: 19px !important; line-height: 1.55 !important; margin: 4px 2px 20px !important; }
+#briefCard .bf-tiles { gap: 8px !important; margin-bottom: 4px !important; } #briefCard .bf-tile { padding: 12px 14px !important; } #briefCard .bf-tv { font-size: 20px !important; }
+#briefCard .br-basis { margin: 8px 2px 26px !important; }
+#briefCard .bf-gt { font-size: 13.5px !important; font-weight: 700 !important; color: var(--text-dim) !important; margin: 0 4px 10px !important; display: flex; align-items: center; gap: 6px; }
+#briefCard .bf-grp { margin-bottom: 28px !important; border-radius: 16px !important; }
+#briefCard .bf-grp .bf-r { padding: 15px 16px !important; } #briefCard .bf-tt { line-height: 1.5; } #briefCard .bf-grp .bf-s { margin-top: 4px !important; white-space: normal !important; }
+#briefCard .bf-sub { padding: 14px 16px 2px !important; font-weight: 600 !important; letter-spacing: 0 !important; }
+.br-vr { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 13px 16px; font-size: 14px; color: var(--text); line-height: 1.5; } .br-vr + .br-vr, .br-more .br-vr:first-child { border-top: 1px solid rgba(255,255,255,.06); }
+.br-vn { flex: 1; min-width: 0; overflow-wrap: anywhere; } .br-vr b { flex: none; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-hi); } .br-vr b.up { color: var(--kr-up); } .br-vr b.down { color: var(--kr-down); }
+.br-more { border-top: 1px solid rgba(255,255,255,.06); } .br-more summary { list-style: none; cursor: pointer; padding: 13px 16px; font-size: 12.5px; color: #4dabf7; } .br-more summary::-webkit-details-marker { display: none; } .br-more[open] summary { color: var(--text-mute); }
+#briefCard .bf-dismiss { font-size: 11.5px !important; color: var(--text-mute) !important; opacity: .8; }
+/* v5.60: AI 가이드 */
+#guideCard .card-body { padding-top: 0 !important; } #guideCard { margin-top: -8px !important; }
+.gd-strip { margin-top: 0 !important; }
+.gd-d.sel .gd-n { background: #4dabf7 !important; color: #0b1a26 !important; } .gd-d.today .gd-n { color: #4dabf7; } .gd-d.sel.today .gd-n { color: #0b1a26; }
+.gd-today { color: #4dabf7 !important; } .gd-dots i { background: #5c5c64 !important; width: 5px !important; height: 5px !important; }
+.gd-src { margin: 8px 4px 14px !important; }
+.gd-lg { display: flex; gap: 12px; font-size: 11px; color: var(--text-mute); margin: 0 4px 18px; } .gd-lg i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: 0; }
+.gd-it { grid-template-columns: 42px 42px 1fr 22px !important; }
+.gd-ic { width: 40px !important; height: 40px !important; font-size: 18px !important; } .gd-ic .gd-logo { width: 40px !important; height: 40px !important; } .gd-ic.logo { box-shadow: 0 0 0 2px var(--c) !important; }
+.gd-rail::after { top: 42px !important; }
+.gd-tm { padding-top: 11px !important; } .gd-ck { margin-top: 10px !important; width: 20px !important; height: 20px !important; }
+.gd-chev { color: var(--text-mute); font-size: 12px; margin-left: 6px; font-weight: 400; }
+.gd-it.done .gd-tt, .gd-it.done .gd-sub { color: var(--text-mute) !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -26569,7 +26594,7 @@ function _bfSchedRow(x) {   // "HH:MM …", "MM/DD HH:MM …", "장중 …", "�
   return `<div class="bf-r nod"><span class="bf-tm">${tm}</span><div class="bf-t"><div class="bf-tt n">${escapeHtml(m[2])}</div>${m[3] ? `<div class="bf-s">${escapeHtml(m[3])}</div>` : ''}</div></div>`;
 }
 function _bfDotRows(lines) { return (lines || []).map(x => `<div class="bf-r nod"><span class="bf-dot" style="background:${_bfSignDot(x)}"></span><div class="bf-t"><div class="bf-tt n">${escapeHtml(x)}</div></div></div>`).join(''); }
-function _bfNewsRows(lines) { return (lines || []).filter(x => x && !/^\(/.test(x)).map(x => { const n = _bfSrc(x); return `<div class="bf-r nod"><span class="bf-dot" style="background:rgba(255,255,255,.25)"></span><div class="bf-t"><div class="bf-tt n">${escapeHtml(n.t)}</div>${n.s ? `<div class="bf-s">${escapeHtml(n.s)}</div>` : ''}</div></div>`; }).join(''); }
+function _bfNewsRows(lines) { return (lines || []).filter(x => x && !/^\(/.test(x)).map(x => { const n = _bfSrc(x); return `<div class="bf-r nod br-news"><div class="bf-t"><div class="bf-tt n">${escapeHtml(n.t)}</div>${n.s ? `<div class="bf-s">${escapeHtml(n.s)}</div>` : ''}</div></div>`; }).join(''); }
 function _bfGrp(t, rows) { return rows ? `<div class="bf-gt">${t}</div><div class="bf-grp">${rows}</div>` : ''; }
 // 한국 장전 브리핑 위에 붙는 '내 데이터' (내 계좌 · KOSPI · KOSDAQ / 오늘 / 새 신호)
 function _krMyBlock() {
@@ -26944,9 +26969,22 @@ function _brTiles(mk, expectMMDD) {
   const dd = _brDataDate(mk); const md = dd ? dd.slice(5).replace('-', '/') : '';
   let cmp = ''; try { const pts = _bfMacroSeries(mk === 'KR' ? /코스피|KOSPI|KS11/i : /S&P|SPY|나스닥|NASDAQ|IXIC/i, mk); if (pts.length >= 2) { const l = new Date(pts[pts.length - 1].d), pv = new Date(pts[pts.length - 2].d); const exp = new Date(l); do { exp.setDate(exp.getDate() - 1); } while (exp.getDay() === 0 || exp.getDay() === 6); if (pv < exp) cmp = ` · ${pts[pts.length - 2].d.slice(5).replace('-', '/')} 대비`; } } catch (e) {}
   const stale = expectMMDD && md && md !== expectMMDD && md < expectMMDD;
-  return `<div class="bf-tiles" style="grid-template-columns:repeat(${tiles.length},minmax(0,1fr))">${tiles.map(([k, v, me]) => `<div class="bf-tile ${me ? 'me' : ''}"><div class="bf-tk">${k}</div><div class="bf-tv ${v == null ? '' : v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%'}</div></div>`).join('')}</div>`
+  return `<div class="bf-tiles" style="grid-template-columns:repeat(2,minmax(0,1fr))">${tiles.map(([k, v, me], i) => `<div class="bf-tile ${me ? 'me' : ''}" ${tiles.length % 2 && i === 0 ? 'style="grid-column:span 2"' : ''}><div class="bf-tk">${k}</div><div class="bf-tv ${v == null ? '' : v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%'}</div></div>`).join('')}</div>`
     + (md ? `<div class="br-basis">${md} 종가 기준${cmp}${stale ? ' · <b>오늘 종가 반영 전</b>' : ''}</div>` : '');
 }
+
+// v5.60: 숫자 줄은 '이름 왼쪽 · 값 오른쪽', 색 점 없이 값만 색
+function _brValRows(lines) {
+  const out = []; const VAL = /\(?\s*([+\-−]\s?[\d,]+(?:\.\d+)?\s*(?:%p|%|원|bp|달러|pt|억|조|만)?)\s*\)?(?!.*[+\-−]\s?[\d,]+(?:\.\d+)?\s*(?:%p|%|원|bp|달러|pt|억|조|만))/;
+  (lines || []).forEach(line => String(line).split(/\s+·\s+/).forEach(part => {
+    const p = part.trim(); if (!p) return; const m = p.match(VAL);
+    if (m && /[%원p달러억조만]/.test(m[1])) { const v = m[1].replace(/\s+/g, '').replace('−', '-'); const nm = (p.slice(0, m.index) + ' ' + p.slice(m.index + m[0].length)).replace(/\s{2,}/g, ' ').replace(/\s+—\s*$/, '').trim();
+      out.push(`<div class="br-vr"><span class="br-vn">${escapeHtml(nm)}</span><b class="${/^-/.test(v) ? 'down' : /^\+/.test(v) ? 'up' : ''}">${escapeHtml(v)}</b></div>`); }
+    else out.push(`<div class="br-vr"><span class="br-vn">${escapeHtml(p)}</span></div>`);
+  }));
+  return out;
+}
+function _brMore(rows, n) { if (rows.length <= n) return rows.join(''); return rows.slice(0, n).join('') + `<details class="br-more"><summary>더 보기 · ${rows.length - n}개</summary>${rows.slice(n).join('')}</details>`; }
 function _brSec(p, names) { for (const n of names) if (p && p.sections[n] && p.sections[n].length) return p.sections[n]; return []; }
 const _brNEXT = ['다음 일정', '오늘 밤 일정', '내일 일정'], _brTODAY = ['오늘 일정', '오늘 밤 일정', '오늘 국내 일정'], _brFLOW = ['장전 흐름', '밤사이 시장 흐름', '밤사이 해외 흐름'];
 function _brPostParts(p) {
@@ -26958,7 +26996,7 @@ function _brPostParts(p) {
 }
 function _brNewsGroup(news, more) {
   if (!news.length) return '';
-  return `<div class="bf-gt bf-gt-ai">주요 뉴스<span class="bf-ai">AI</span></div><div class="bf-grp">${_bfNewsRows(news.slice(0, 3))}${news.length > 3 || more ? `<details class="bf-more"><summary>전체 보기</summary>${_bfNewsRows(news.slice(3))}${more || ''}</details>` : ''}</div>`;
+  return `<div class="bf-gt bf-gt-ai">주요 뉴스<span class="bf-ai">AI</span></div><div class="bf-grp">${_bfNewsRows(news.slice(0, 3))}${news.length > 3 || more ? `<details class="br-more"><summary>더 보기 · ${Math.max(0, news.length - 3)}개</summary>${_bfNewsRows(news.slice(3))}${more || ''}</details>` : ''}</div>`;
 }
 async function _brAuto(day) {
   const out = { rows: [], fills: [], sells: [], sellToday: [], ok: false }; const nm = tk => escapeHtml(displayName(tk) || tk);
@@ -27016,7 +27054,7 @@ async function aqDailyBriefRender() {
     h += `<div class="bf-hero">${hero}</div>` + _brTiles(mk, mk === 'KR' && b ? b.date.slice(5).replace('-', '/') : sess) + aqRecordLine(mk);
     if (parts && !p.holiday) {
       const subs = [['지수', parts.idx], ['수급', parts.flow], ['업종', parts.sec]].filter(([, a]) => a.length);
-      if (subs.length) h += `<div class="bf-gt bf-gt-ai">시장<span class="bf-ai">AI</span>${sess ? `<span class="bf-gt-r">${mk === 'US' ? '미국' : '한국'} ${sess} 장</span>` : ''}</div><div class="bf-grp">${subs.map(([t, a]) => `<div class="bf-sub">${t}</div>${_bfDotRows(a)}`).join('')}</div>`;
+      if (subs.length) h += `<div class="bf-gt bf-gt-ai">시장<span class="bf-ai">AI</span></div><div class="bf-grp br-vgrp">${subs.map(([t, a]) => `<div class="bf-sub">${t}</div>${_brMore(_brValRows(a), 3)}`).join('')}</div>`;
       h += _brNewsGroup(parts.news);
     }
     try { const _dd = _brDataDate(mk); h += aqNumbersBlock(mk, (mk === 'US' ? '숫자로 본 어제' : '숫자로 본 오늘') + (_dd ? ` · ${_dd.slice(5).replace('-', '/')} 종가` : '')); } catch (e) {}
@@ -27029,7 +27067,7 @@ async function aqDailyBriefRender() {
     h += `<div class="bf-hero">${hero}</div>` + _brTiles(mk, '') + aqRecordLine(mk);
     if (p && !p.holiday) {
       const flow = _brSec(p, _brFLOW); const sched = _brSec(p, _brTODAY).filter(x => !/정규장\s*개장/.test(x));
-      if (flow.length) h += `<div class="bf-gt bf-gt-ai">장전 흐름<span class="bf-ai">AI</span></div><div class="bf-grp">${_bfDotRows(flow)}</div>`;
+      if (flow.length) h += `<div class="bf-gt bf-gt-ai">장전 흐름<span class="bf-ai">AI</span></div><div class="bf-grp br-vgrp">${_brMore(_brValRows(flow), 5)}</div>`;
       if (sched.length) h += `<div class="bf-gt bf-gt-ai">오늘 일정<span class="bf-ai">AI</span></div><div class="bf-grp">${sched.map(_bfSchedRow).join('')}</div>`;
     }
     if (mk === 'US') { try { h += await aqPreUsBlocks(); } catch (e) {} }
@@ -27047,9 +27085,10 @@ Object.assign(window, { aqDailyBriefRender, aqBriefMode });
 // v5.57: AI 탭 → AI 가이드 (오늘 ±3일, 시간별 확인·고민 가이드 — 오전·오후 문서를 합쳐 표시)
 // ============================================================================
 const _gd = { sel: null, docs: null, checks: null, open: {} };
-const _GD_SCENE = { '장 시작 관망': ['🛑', '#ff6b6b'], '재료 소멸': ['💰', '#fcc419'], '풍향계 확인': ['🧭', '#4dabf7'], '권리·만기 데드라인': ['⏳', '#ffa94d'], '실적 D-Day': ['📊', '#9775fa'],
-  '자동매매 설정 점검': ['🤖', '#63e6be'], '환율 확인': ['💱', '#20c997'], '어닝콜 후 대응': ['🎙️', '#748ffc'], '평단 근처 심리': ['⚖️', '#f783ac'], '물량 출회': ['🌧️', '#adb5bd'], '업종 쏠림 점검': ['🧲', '#e599f7'], '큰 손실 종목 점검': ['🩹', '#ff8787'] };
-function _gdScene(name) { const base = String(name || '').split('·')[0].trim(); return _GD_SCENE[base] || ['✦', '#fcc419']; }
+const _GD_C = { ev: '#ffa94d', mind: '#f783ac', pf: '#63e6be' };   // v5.60: 색은 3가지 — 일정 / 심리·행동 / 포트폴리오·설정
+const _GD_SCENE = { '장 시작 관망': ['🛑', _GD_C.mind], '재료 소멸': ['💰', _GD_C.mind], '풍향계 확인': ['🧭', _GD_C.ev], '권리·만기 데드라인': ['⏳', _GD_C.ev], '실적 D-Day': ['📊', _GD_C.ev],
+  '자동매매 설정 점검': ['🤖', _GD_C.pf], '환율 확인': ['💱', _GD_C.pf], '어닝콜 후 대응': ['🎙️', _GD_C.ev], '평단 근처 심리': ['⚖️', _GD_C.mind], '물량 출회': ['🌧️', _GD_C.ev], '업종 쏠림 점검': ['🧲', _GD_C.pf], '큰 손실 종목 점검': ['🩹', _GD_C.mind] };
+function _gdScene(name) { const base = String(name || '').split('·')[0].trim(); return _GD_SCENE[base] || ['✦', '#adb5bd']; }
 function _gdAdd(d, n) { const x = new Date(d + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); }
 function _gdParse(doc) {   // → { asof, slot, days: { 'YYYY-MM-DD': [items] } }
   const t = String(doc.content || '').replace(/\r/g, '').replace(/\\([!-\/:-@\[-`{-~])/g, '$1'); const out = { slot: doc.slot, days: {}, at: '' };
@@ -27098,7 +27137,7 @@ async function aqGuideRender() {
   }
   if (!_gd.checks) { try { const r = await apiCall('userDataGet', { dataType: 'GUIDE_CHECKS' }); _gd.checks = new Set(r && r.ok && Array.isArray(r.rows) ? r.rows : []); } catch (e) { _gd.checks = new Set(); } }
   const days = [-3, -2, -1, 0, 1, 2, 3].map(n => _gdAdd(today, n));
-  const strip = days.map(d => { const dd = new Date(d + 'T00:00:00'); const g = _gdForDay(d); const dots = g.items.filter(x => x.status !== '철회').slice(0, 4).map(x => `<i style="background:${_gdScene(x.scene)[1]}"></i>`).join('');
+  const strip = days.map(d => { const dd = new Date(d + 'T00:00:00'); const g = _gdForDay(d); const dots = g.items.filter(x => x.status !== '철회').slice(0, 4).map(() => '<i></i>').join('');
     return `<button class="gd-d ${d === _gd.sel ? 'sel' : ''} ${d === today ? 'today' : ''} ${d > today ? 'fut' : ''}" onclick="aqGuideSel('${d}')"><span class="gd-w">${'일월화수목금토'[dd.getDay()]}</span><span class="gd-n">${dd.getDate()}</span><span class="gd-dots">${dots}</span>${d === today ? '<span class="gd-today">오늘</span>' : ''}</button>`; }).join('');
   const g = _gdForDay(_gd.sel); const sel = _gd.sel;
   // 그날 요약 한 줄 + 문서 출처
@@ -27122,15 +27161,16 @@ async function aqGuideRender() {
       const isOpen = _gd.open[key];
       const f = x.f || {}; const det = isOpen ? `<div class="gd-det">${['상황', '추천', '확인할 것', '다시 볼 때', '행동 후보', '갱신 사유', '철회 사유'].filter(k => f[k]).map(k => `<div class="${k === '추천' ? 'gd-rec' : ''}"><b>${k}</b> ${escapeHtml(f[k])}</div>`).join('')}${x.orig ? `<details class="gd-orig"><summary>오전 원문</summary><div>${escapeHtml(x.orig.title)}</div>${['상황', '확인할 것', '행동 후보'].filter(k => x.orig.f[k]).map(k => `<div><b>${k}</b> ${escapeHtml(x.orig.f[k])}</div>`).join('')}</details>` : ''}</div>` : '';
       let after = ''; if (tk && sel < today) { try { const f2 = findTickerSeries(tk); const rr = f2 && f2.rows; if (rr && rr.length) { const base = rr.filter(r => String(r.Date).slice(0, 10) < sel).pop(); const last = rr[rr.length - 1]; if (base && Number(base.Close) > 0) { const v = (Number(last.Close) / Number(base.Close) - 1) * 100; after = `<span class="gd-after ${v >= 0 ? 'up' : 'down'}">이후 ${v >= 0 ? '+' : ''}${v.toFixed(1)}%</span>`; } } } catch (e) {} }
-      tl += `<div class="gd-it ${x.status === '철회' ? 'off' : ''} ${passed ? 'past' : ''} ${i === g.items.length - 1 ? 'last' : ''}">
+      tl += `<div class="gd-it ${x.status === '철회' ? 'off' : ''} ${passed ? 'past' : ''} ${done ? 'done' : ''} ${i === g.items.length - 1 ? 'last' : ''}">
         <div class="gd-tm">${showT ? `${/다음 날/.test(x.time) ? '<small>다음 날</small>' : ''}${tparts.map(escapeHtml).join('<br>')}` : ''}</div>
         <div class="gd-rail">${circle}</div>
-        <div class="gd-body" onclick="aqGuideToggle('${escapeAttr(key)}')"><div class="gd-sub">${tk ? `<span class="gd-tk" onclick="event.stopPropagation(); openChart('${escapeAttr(tk)}')">${escapeHtml(displayName(tk) || tk)}</span> · ` : escapeHtml(x.target) + ' · '}${escapeHtml(String(x.scene).split('·')[0].trim())}${tags}</div><div class="gd-tt">${escapeHtml(x.title)}${after}</div>${det}</div>
+        <div class="gd-body" onclick="aqGuideToggle('${escapeAttr(key)}')"><div class="gd-sub">${tk ? `<span class="gd-tk" onclick="event.stopPropagation(); openChart('${escapeAttr(tk)}')">${escapeHtml(displayName(tk) || tk)}</span> · ` : escapeHtml(x.target) + ' · '}${escapeHtml(String(x.scene).split('·')[0].trim())}${tags}</div><div class="gd-tt">${escapeHtml(x.title)}${after}<span class="gd-chev">${isOpen ? '▴' : '▾'}</span></div>${det}</div>
         <button class="gd-ck ${done ? 'done' : ''}" style="--c:${col}" onclick="aqGuideCheck('${escapeAttr(key)}')" aria-label="확인"></button></div>`;
     });
   }
   const warn = g.meta && g.meta.warn ? `<div class="gd-warn">⚠️ ${escapeHtml(g.meta.warn)}</div>` : '';
-  box.innerHTML = `<div class="gd-strip">${strip}</div>${summ}${srcTxt ? `<div class="gd-src">${escapeHtml(srcTxt)}</div>` : ''}${warn}<div class="gd-tl">${tl}</div>`;
+  const legend = g.items.length ? `<div class="gd-lg"><span><i style="background:${_GD_C.ev}"></i>일정</span><span><i style="background:${_GD_C.mind}"></i>심리·행동</span><span><i style="background:${_GD_C.pf}"></i>포트폴리오·설정</span></div>` : '';
+  box.innerHTML = `<div class="gd-strip">${strip}</div>${srcTxt ? `<div class="gd-src">${escapeHtml(srcTxt)}</div>` : ''}${warn}${legend}<div class="gd-tl">${tl}</div>`;
 }
 function aqGuideSel(d) { _gd.sel = d; aqGuideRender(); }
 function aqGuideToggle(k) { _gd.open[k] = !_gd.open[k]; aqGuideRender(); }
