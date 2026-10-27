@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.54';   // v5.54: 한국 장 마감 브리핑 16:10 동기화에 맞춤
+window.AQ_PWA_VERSION = '5.55';   // v5.55: 일일 브리핑 통합(장후/장전 토글·미국/한국 같은 구성), 지표 기준일 표시, 지수 계산 수정
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4071,6 +4071,11 @@ html:not([data-theme="light"]) body { background: #161618; }
 .mac-grp { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; } .mac-r { display: flex; align-items: center; gap: 10px; padding: 11px 14px; font-size: 14px; } .mac-r + .mac-r { border-top: 1px solid var(--line); }
 .mac-e { width: 22px; text-align: center; flex: none; } .mac-n { flex: 1; min-width: 0; color: var(--text-hi); font-weight: 600; } .mac-l { color: var(--text-mute); font-size: 12.5px; font-variant-numeric: tabular-nums; }
 .mac-r b { min-width: 64px; text-align: right; font-variant-numeric: tabular-nums; } .mac-r b.up { color: var(--kr-up); } .mac-r b.down { color: var(--kr-down); }
+/* v5.55: 일일 브리핑 통합 */
+.br-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; flex: none; }
+.br-toggle button { background: none; border: none; color: var(--text-mute); font-size: 12.5px; font-weight: 700; padding: 5px 13px; cursor: pointer; } .br-toggle button.on { background: rgba(255,255,255,.09); color: var(--text-hi); }
+.bf-head .bf-date { flex: 1; min-width: 0; text-align: left; }
+.br-basis { font-size: 11px; color: var(--text-mute); margin: -14px 2px 16px; text-align: right; } .br-basis b { color: #ffa94d; font-weight: 700; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8435,22 +8440,20 @@ table.combo-eval tbody td .nodata {
     <section class="card mobile-only explore-subtabs" id="aiSubtabs" data-mtab="auto">
       <div class="xtab-row">
         <button class="xtab-btn active" data-atab="brief" onclick="setAiSubtab('brief')">일일 브리핑</button>
-        <button class="xtab-btn" data-atab="pre" onclick="setAiSubtab('pre')">장전 브리핑</button>
-        <button class="xtab-btn" data-atab="close" onclick="setAiSubtab('close')">장 마감 브리핑</button>
         <button class="xtab-btn" data-atab="report" onclick="setAiSubtab('report')">AI 보고서</button>
         <button class="xtab-btn" data-atab="auto" onclick="setAiSubtab('auto')">자동 매매</button>
       </div>
     </section>
-    <section class="card" id="closeCard" data-mtab="auto" data-atab="close">
+    <section class="card" id="closeCard" data-mtab="retired" style="display:none !important">
       <div class="card-header bf-head"><span class="bf-date" id="closeDate"></span></div>
       <div class="card-body"><div id="closeBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
-    <section class="card" id="preCard" data-mtab="auto" data-atab="pre">
+    <section class="card" id="preCard" data-mtab="retired" style="display:none !important">
       <div class="card-header bf-head"><span class="bf-date" id="preDate"></span></div>
       <div class="card-body"><div id="preBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="briefCard" data-mtab="auto" data-atab="brief">
-      <div class="card-header bf-head"><span class="bf-date" id="briefDate"></span><button class="bf-dismiss" id="briefDismissBtn" onclick="aqBriefDismiss()">오늘 그만 보기</button></div>
+      <div class="card-header bf-head"><span class="br-toggle" id="briefToggle"></span><span class="bf-date" id="briefDate"></span><button class="bf-dismiss" id="briefDismissBtn" onclick="aqBriefDismiss()">오늘 그만 보기</button></div>
       <div class="card-body"><div id="briefBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="analysisCard" data-mtab="auto" data-atab="report">
@@ -26308,14 +26311,15 @@ Object.assign(window, { aqMarketGuards });
 function setAiSubtab(x) {
   const isAdmin = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin');
   const _kr = getCurrentMarket() === 'KR';
-  const allowed = _kr ? ['pre', 'close', 'report'] : ['brief', 'pre', 'report', 'auto'];
-  if (!allowed.includes(x)) x = _kr ? _krDefaultAtab() : 'brief';
+  if (x === 'pre' || x === 'close') { _brMode(); _br.mode = x === 'pre' ? 'pre' : 'post'; x = 'brief'; }   // v5.55: 장전·장후는 일일 브리핑 안 토글
+  const allowed = _kr ? ['brief', 'report'] : ['brief', 'report', 'auto'];
+  if (!allowed.includes(x)) x = 'brief';
   if (x === 'auto' && !isAdmin) x = 'brief';   // v5.40: 관리자는 시장 무관 · v5.42: 기본은 일일 브리핑
   document.body.setAttribute('data-atab', x);
   document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === x));
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
   try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
-  try { if (x === 'auto') aqAutoEnter(); else if (x === 'brief') aqBriefRender(); else if (x === 'pre') { if (getCurrentMarket() === 'KR') aqKrOpenRender(); else aqPreRender(); } else if (x === 'close') aqKrCloseRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  try { if (x === 'auto') aqAutoEnter(); else if (x === 'brief') aqDailyBriefRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
 // AI 탭을 떠나면 직접 지정한 표시 상태를 지워 다른 탭에 카드가 남지 않게
@@ -26337,13 +26341,12 @@ async function aqBriefLoadDismiss() {
 async function aqBriefDismiss() {
   const k = aqBriefDayKey(); _bf.dismissed = k;
   try { await apiCall('userDataSet', { dataType: 'BRIEFING', rows: JSON.stringify([k]) }); } catch (e) {}
-  if (typeof aqToast === 'function') aqToast('오늘은 브리핑을 먼저 띄우지 않아요'); aqBriefRender();
+  if (typeof aqToast === 'function') aqToast('오늘은 브리핑을 먼저 띄우지 않아요'); aqDailyBriefRender();
 }
 function _bfPct(v) { return v == null || isNaN(v) ? '—' : `<b class="${v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v >= 0 ? '+' : ''}${v.toFixed(1)}%</b>`; }
-function _bfMacroChg(re) {
-  const mk = getCurrentMarket(); const rows = ((_state.macroByMarket || {})[mk] || []).concat(mk === 'KR' ? [] : []).filter(r => re.test(String(r.Ticker || '')));
-  if (!rows.length) return null; const by = rows.slice().sort((a, b) => String(a.Date).localeCompare(String(b.Date))); const tk = by[by.length - 1].Ticker; const a = by.filter(r => r.Ticker === tk);
-  const l = a[a.length - 1], p = a[a.length - 2]; return (l && p && Number(p.Close)) ? (Number(l.Close) / Number(p.Close) - 1) * 100 : null;
+function _bfMacroChg(re) {   // v5.55: 한 종목만, 5일 넘게 빈 구간은 계산 안 함
+  const pts = _bfMacroSeries(re); if (pts.length < 2) return null; const l = pts[pts.length - 1], p = pts[pts.length - 2];
+  if ((new Date(l.d) - new Date(p.d)) / 86400000 > 5) return null; return (l.v / p.v - 1) * 100;
 }
 function _bfAccountChg() {
   try { const mk = getCurrentMarket(); const th = JSON.parse(localStorage.getItem('aq_toss_holdings') || '{}'); let cur = 0, prev = 0;
@@ -26434,10 +26437,10 @@ async function aqBriefMaybeLand() {
   if ((location.hash && location.hash.length > 1) || /[?&](t|ticker|tab)=/.test(location.search)) return;
   try { if (document.getElementById('chartModal') && document.getElementById('chartModal').classList.contains('active')) return; } catch (e) {}
   const d = await aqBriefLoadDismiss(); if (d === aqBriefDayKey()) return;
-  try { switchMobileTab('auto'); setAiSubtab(getCurrentMarket() === 'KR' ? _krDefaultAtab() : 'brief'); } catch (e) {}
-  setTimeout(() => { try { const _a = document.body.getAttribute('data-atab'); if (_a === 'brief') aqBriefRender(); else if (_a === 'pre' && getCurrentMarket() === 'KR') aqKrOpenRender(); } catch (e) {} }, 4000);   // 데이터가 늦게 들어와도 다시 그림
+  try { switchMobileTab('auto'); setAiSubtab('brief'); } catch (e) {}
+  setTimeout(() => { try { if (document.body.getAttribute('data-atab') === 'brief') aqDailyBriefRender(); } catch (e) {} }, 4000);   // 데이터가 늦게 들어와도 다시 그림
 }
-window.addEventListener('aq:synced', () => { try { if (document.body.getAttribute('data-mtab') === 'auto' && document.body.getAttribute('data-atab') === 'brief') aqBriefRender(); } catch (e) {} });
+window.addEventListener('aq:synced', () => { try { if (document.body.getAttribute('data-mtab') === 'auto' && document.body.getAttribute('data-atab') === 'brief') aqDailyBriefRender(); } catch (e) {} });
 window.addEventListener('aq:login', () => { setTimeout(aqBriefMaybeLand, 600); });
 Object.assign(window, { aqBriefRender, aqBriefDismiss, aqBriefMaybeLand, aqBriefDayKey });
 
@@ -26627,10 +26630,9 @@ function aqNumSwitch(btn, k) {
 function _recIndexRets(mk) {
   let pts = [];
   if (mk === 'US') { const s = computeKJP400Series(400) || []; pts = s.map(x => ({ d: String(x.date || ''), v: Number(x.value) })); }
-  else { const rows = ((_state.macroByMarket || {}).KR || []).filter(r => /코스피|KOSPI|KS11/i.test(String(r.Ticker || ''))).sort((a, b) => String(a.Date).localeCompare(String(b.Date))); pts = rows.map(r => ({ d: String(r.Date).slice(0, 10), v: Number(r.Close) })); }
-  pts = pts.filter(p => p.d && p.v > 0); const rets = [];
-  for (let i = 1; i < pts.length; i++) rets.push({ d: pts[i].d, r: (pts[i].v / pts[i - 1].v - 1) * 100 });
-  return rets;
+  else pts = _bfMacroSeries(/코스피|KOSPI|KS11/i, 'KR');
+  pts = pts.filter(p => p.d && p.v > 0);
+  return _brRets(pts);   // v5.55: 한 종목만, 데이터 공백 구간 제외
 }
 function _recAccountRets(mk, days) {   // 현재 보유 수량 기준 최근 n거래일 계좌 일간 수익률 (근사)
   let th = {}; try { th = JSON.parse(localStorage.getItem('aq_toss_holdings') || '{}'); } catch (e) {}
@@ -26865,6 +26867,130 @@ function aqMacroListClose() { document.getElementById('macListSheet').classList.
 Object.assign(window, { aqEarnChip, aqMacroListOpen, aqMacroListClose });
 try { AQ_SHEETS.push({ id: 'macListSheet', root: () => document.getElementById('macListSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: aqMacroListClose, full: true }); } catch (e) {}
 document.addEventListener('DOMContentLoaded', () => { const m = document.getElementById('heroMarquee'); if (m) { m.style.cursor = 'pointer'; m.addEventListener('click', ev => { ev.stopPropagation(); ev.preventDefault(); aqMacroListOpen(); }, true); } });
+
+// ============================================================================
+// v5.55: 일일 브리핑 통합 — 장후/장전 토글, 미국·한국 같은 뼈대
+//   요약(AI) → 지표 타일(기준일) → 오늘의 기록 → 시장(AI) → 나 → 다음
+// ============================================================================
+const _br = { mode: null, key: '' };
+function _brDefaultMode(mk) { const k = _bfKST(); const hm = k.getUTCHours() * 60 + k.getUTCMinutes();
+  return mk === 'US' ? ((hm >= 21 * 60 + 55 || hm < 7 * 60) ? 'pre' : 'post') : ((hm >= 7 * 60 && hm < 16 * 60 + 10) ? 'pre' : 'post'); }
+function _brMode() { const mk = getCurrentMarket(); const key = mk + '|' + aqBriefDayKey(); if (_br.key !== key || !_br.mode) { _br.key = key; _br.mode = _brDefaultMode(mk); } return _br.mode; }
+function aqBriefMode(m) { _brMode(); _br.mode = m; aqDailyBriefRender(); }
+// 매크로: 한 종목만 골라 쓰고, 날짜가 5일 넘게 비는 구간은 등락 계산에서 제외
+function _bfMacroSeries(re, mk) {
+  const rows = ((_state.macroByMarket || {})[mk || getCurrentMarket()] || []).filter(r => re.test(String(r.Ticker || '')));
+  if (!rows.length) return [];
+  const by = {}; rows.forEach(r => (by[r.Ticker] = by[r.Ticker] || []).push(r));
+  const tk = Object.keys(by).sort((a, b) => by[b].length - by[a].length)[0];
+  return by[tk].slice().sort((a, b) => String(a.Date).localeCompare(String(b.Date))).map(r => ({ d: String(r.Date).slice(0, 10), v: Number(r.Close) })).filter(p => p.d && p.v > 0);
+}
+function _brRets(pts) { const out = []; for (let i = 1; i < pts.length; i++) { const gap = (new Date(pts[i].d) - new Date(pts[i - 1].d)) / 86400000; if (gap > 5) continue; out.push({ d: pts[i].d, r: (pts[i].v / pts[i - 1].v - 1) * 100 }); } return out; }
+function _brDataDate(mk) { let m = ''; ((_state.macroByMarket || {})[mk] || []).forEach(r => { const d = String(r.Date || '').slice(0, 10); if (d > m) m = d; }); return m; }
+function _brTiles(mk, expectMMDD) {
+  let kjp = null; try { const k = computeKJP400Avg(); if (k && typeof k.avg === 'number') kjp = k.avg; } catch (e) {}
+  const tiles = [['내 계좌', _bfAccountChg(), true]].concat(mk === 'KR' ? [['KOSPI', _bfMacroChg(/코스피|KOSPI|KS11/i)], ['KOSDAQ', _bfMacroChg(/코스닥|KOSDAQ|KQ11/i)]]
+    : [['KJP500', kjp], ['나스닥', _bfMacroChg(/나스닥|NASDAQ|IXIC/i)], ['VIX', _bfMacroChg(/VIX/i)]]);
+  const dd = _brDataDate(mk); const md = dd ? dd.slice(5).replace('-', '/') : '';
+  const stale = expectMMDD && md && md !== expectMMDD && md < expectMMDD;
+  return `<div class="bf-tiles" style="grid-template-columns:repeat(${tiles.length},minmax(0,1fr))">${tiles.map(([k, v, me]) => `<div class="bf-tile ${me ? 'me' : ''}"><div class="bf-tk">${k}</div><div class="bf-tv ${v == null ? '' : v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%'}</div></div>`).join('')}</div>`
+    + (md ? `<div class="br-basis">${md} 종가 기준${stale ? ' · <b>오늘 종가 반영 전</b>' : ''}</div>` : '');
+}
+function _brSec(p, names) { for (const n of names) if (p && p.sections[n] && p.sections[n].length) return p.sections[n]; return []; }
+const _brNEXT = ['다음 일정', '오늘 밤 일정', '내일 일정'], _brTODAY = ['오늘 일정', '오늘 밤 일정', '오늘 국내 일정'], _brFLOW = ['장전 흐름', '밤사이 시장 흐름', '밤사이 해외 흐름'];
+function _brPostParts(p) {
+  const comb = p ? (p.sections['지수·섹터'] || p.sections['지수·수급'] || []) : [];
+  const idx = _brSec(p, ['지수']).length ? _brSec(p, ['지수']) : comb.filter(x => !/^(강했던|약했던)/.test(x) && !/순매수/.test(x));
+  const flow = _brSec(p, ['수급']).length ? _brSec(p, ['수급']) : comb.filter(x => /순매수/.test(x));
+  const sec = _brSec(p, ['업종']).length ? _brSec(p, ['업종']) : comb.filter(x => /^(강했던|약했던)/.test(x));
+  return { idx, flow, sec, news: _brSec(p, ['주요 뉴스']).filter(x => !/^\(/.test(x)), next: _brSec(p, _brNEXT) };
+}
+function _brNewsGroup(news, more) {
+  if (!news.length) return '';
+  return `<div class="bf-gt bf-gt-ai">주요 뉴스<span class="bf-ai">AI</span></div><div class="bf-grp">${_bfNewsRows(news.slice(0, 3))}${news.length > 3 || more ? `<details class="bf-more"><summary>전체 보기</summary>${_bfNewsRows(news.slice(3))}${more || ''}</details>` : ''}</div>`;
+}
+async function _brAuto(day) {
+  const out = { rows: [], fills: [], sells: [], sellToday: [], ok: false }; const nm = tk => escapeHtml(displayName(tk) || tk);
+  if (document.body.getAttribute('data-role') !== 'admin' || getCurrentMarket() !== 'US') return out;
+  let a = null; try { a = await _opsCall('briefingAuto', { since: _bfSince(day) }); } catch (e) {}
+  if (!(a && a.ok && a.admin)) return out; out.ok = true;
+  const alive = a.engine.heartbeat && (Date.now() - new Date(a.engine.heartbeat).getTime()) < 180000;
+  if (a.engine.mode === 'live' && !alive) out.rows.push(_bfD(_BFC.warn, '엔진 응답 없음', '서버의 자동매매 서비스를 확인하세요', '', "setAiSubtab('auto')"));
+  out.fills = a.fills || []; out.sells = a.sells || []; out.sellToday = a.sell_today || [];
+  if (out.fills.length) { const ph = {}; out.fills.forEach(f => { const k = f.phase === 'pre' ? '프리' : f.phase === 'fallback' ? '정규' : '애프터'; ph[k] = (ph[k] || 0) + 1; });
+    out.rows.push(_bfD(_BFC.buy, `${out.fills.slice(0, 2).map(f => nm(f.ticker)).join(' · ')}${out.fills.length > 2 ? ` 외 ${out.fills.length - 2}` : ''} 매수`, out.fills.slice(0, 2).map(f => `${Number(f.filled_qty)}주 $${Number(f.avg_px || 0).toFixed(2)}`).join(' · ') + ' · ' + Object.entries(ph).map(([k, v]) => `${k} ${v}`).join(' · '), '', "setAiSubtab('auto')")); }
+  out.sells.forEach(x => { const r = x.avg_px ? (x.sell_px / x.avg_px - 1) * 100 : null;
+    out.rows.push(_bfD(_BFC.sell, `${nm(x.ticker)} 매도`, `${Number(x.sold_qty || 0)}주 · ${x.sell_after || 5}일 보유 · 장 마감 체결`, r == null ? '' : `<b class="${r >= 0 ? 'up' : 'down'}">${r >= 0 ? '+' : ''}${r.toFixed(1)}%</b>`, "setAiSubtab('auto')")); });
+  if (a.skipped_n) out.rows.push(_bfD(_BFC.skip, `${a.skipped_n}건 건너뜀`, Object.entries(a.skipped).map(([k, v]) => `${k} ${v}`).join(' · '), '', "setAiSubtab('auto')"));
+  return out;
+}
+async function _brToday(mk, day, sellToday) {
+  const today = []; const prevDays = _bfPrevSessionDays(day); const nm = tk => escapeHtml(displayName(tk) || tk);
+  if (sellToday && sellToday.length) today.push(_bfD(_BFC.plan, `${sellToday.map(x => nm(x.ticker)).join(' · ')} 자동매도`, '미국 장 마감 전', '', "setAiSubtab('auto')"));
+  if (mk === 'US') try { if (!_aqCalSheetEvents || !_aqCalSheetEvents.length) { try { await fetchSheetCalendar(); } catch (e) {} }
+    const held = _aqHeldUS(); const ev = (_aqCalSheetEvents || []).filter(e => e.category === 'Earnings' && e.ticker && held.has(String(e.ticker).toUpperCase()));
+    ev.filter(e => e.date === day).slice(0, 4).forEach(e => today.push(_bfD(_BFC.cal, `${nm(e.ticker)} 실적 발표 예정`, e.session === 'BMO' ? '오늘 밤 장 시작 전 · 보유 중' : e.session === 'AMC' ? '내일 새벽 장 마감 후 · 보유 중' : '오늘 밤 · 보유 중', '', `openChart('${escapeAttr(e.ticker)}')`)));
+    ev.filter(e => prevDays.includes(e.date)).slice(0, 4).forEach(e => today.push(_bfD(_BFC.cal, `${nm(e.ticker)} 실적 발표됨`, `미국 ${e.date.slice(5).replace('-', '/')} · 반응 확인`, '', `openChart('${escapeAttr(e.ticker)}')`))); } catch (e) {}
+  try { Object.values(aqRecheckAll()).forEach(r => { const isKR = /^\d{6}$/.test(String(r.ticker)); if ((mk === 'KR') !== isKR) return; (r.items || []).forEach(it => { if (prevDays.includes(it.date)) today.push(_bfD(_BFC.doc, `${nm(r.ticker)} AI 보고서 다시 볼 날`, `${it.date.slice(5).replace('-', '/')} 장 결과 확인 · ${escapeHtml(String(it.text).replace(/^[^:：]*[:：]\s*/, ''))}`, '', `openChart('${escapeAttr(r.ticker)}')`)); }); }); } catch (e) {}
+  return today;
+}
+function _brNewSignal(mk) {
+  try { const arc = _state.archive || []; const last = arc.reduce((m, r) => (r.Date > m ? r.Date : m), ''); const rows = arc.filter(r => r.Date === last); if (!rows.length) return ''; const nm = tk => escapeHtml(displayName(tk) || tk);
+    const on = (typeof _auto !== 'undefined' && _auto.on && Object.keys(_auto.on).length) ? _auto.on : null;
+    const auto = on && mk === 'US' ? rows.filter(r => String(r.Signal_Type || '').split('+').some(x => on[x.trim()])).length : null;
+    const top = rows.slice().sort((a, b) => (Number(b.Pred_5d) || -99) - (Number(a.Pred_5d) || -99)).slice(0, 3);
+    return `<div class="bf-gt">새 신호 · ${last.slice(5).replace('-', '/')}</div><div class="bf-grp">` + _bfD(_BFC.sig, `${mk === 'KR' ? '한국' : '미국'} ${rows.length}건${auto != null ? ` · 자동매수 대상 ${auto}건` : ''}`, '', '', "switchMobileTab('discover')")
+      + `<div class="bf-chips">${top.map(r => `<span class="bf-chip" onclick="openChart('${escapeAttr(r.Ticker)}')">${nm(r.Ticker)}${r.Pred_5d != null && r.Pred_5d !== '' ? ` <b class="${Number(r.Pred_5d) >= 0 ? 'up' : 'down'}">${Number(r.Pred_5d) >= 0 ? '+' : ''}${Number(r.Pred_5d).toFixed(1)}%</b>` : ''}</span>`).join('')}</div></div>`; } catch (e) { return ''; }
+}
+async function aqDailyBriefRender() {
+  const box = document.getElementById('briefBody'); if (!box) return;
+  const mk = getCurrentMarket(); const mode = _brMode(); const day = aqBriefDayKey(); await aqBriefLoadDismiss();
+  const kind = mk === 'US' ? (mode === 'post' ? 'morning' : 'evening') : (mode === 'post' ? 'kr_close' : 'kr_open');
+  const upTo = mk === 'US' && mode === 'post' ? day : _kstToday();
+  let r = null; try { r = await apiCall('getBrief', { kind, upTo, maxAgeDays: mode === 'post' && mk === 'US' ? 3 : 4 }); } catch (e) {}
+  const b = r && r.ok && r.brief; const p = b && b.content ? aqBriefParse(b.content) : null;
+  // 헤더: 토글 · 기준 · 그만 보기
+  const tg = document.getElementById('briefToggle'); if (tg) tg.innerHTML = `<button class="${mode === 'post' ? 'on' : ''}" onclick="aqBriefMode('post')">장후</button><button class="${mode === 'pre' ? 'on' : ''}" onclick="aqBriefMode('pre')">장전</button>`;
+  const sess = p && p.session ? p.session : ''; const tm = p && p.title ? (p.title.match(/(\d{1,2}:\d{2})\)?\s*$/) || [])[1] : '';
+  const openLn = p ? _brSec(p, _brTODAY).find(x => /정규장\s*개장/.test(x)) : null; const openT = openLn ? (openLn.match(/(\d{1,2}:\d{2})/) || [])[1] : '';
+  document.getElementById('briefDate').textContent = sess ? `${mk === 'US' ? '미국' : '한국'} ${sess} 장${mode === 'post' ? ' 마감' : ''}${tm ? ` · ${tm} 기준` : ''}${openT ? ` · 개장 ${openT}` : ''}` : '';
+  const btn = document.getElementById('briefDismissBtn'); if (btn) { const done = _bf.dismissed === day; btn.textContent = done ? '오늘 그만 보기 ✓' : '오늘 그만 보기'; btn.disabled = done; }
+  let h = ''; try { h += await aqAuditTaskLine(); } catch (e) {}
+  const nmx = tk => escapeHtml(displayName(tk) || tk);
+  if (mode === 'post') {
+    const auto = await _brAuto(day); const parts = p ? _brPostParts(p) : null;
+    // 요약: AI 한 줄 → 없으면 내 활동 문장
+    let mine = ''; if (auto.fills.length || auto.sells.length) { const q = []; if (auto.fills.length) q.push(`${auto.fills.length}종목 매수`); if (auto.sells.length) { const avg = auto.sells.reduce((s, x) => s + (x.avg_px ? (x.sell_px / x.avg_px - 1) * 100 : 0), 0) / auto.sells.length; q.push(`${auto.sells.length}종목 매도(평균 ${avg >= 0 ? '+' : ''}${avg.toFixed(1)}%)`); } mine = `밤사이 자동매매 ${q.join(' · ')}`; }
+    const hero = p && !p.holiday ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : (p && p.holiday ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : (mine || `${mk === 'US' ? '미국 장후 브리핑은 매일 아침 7시쯤' : '한국 장 마감 브리핑은 평일 오후 4시 10분쯤'} 올라와요.`));
+    h += `<div class="bf-hero">${hero}</div>` + _brTiles(mk, mk === 'KR' && b ? b.date.slice(5).replace('-', '/') : sess) + aqRecordLine(mk);
+    if (parts && !p.holiday) {
+      const rows = [].concat(parts.idx.map(x => ['지수', x]), parts.flow.map(x => ['수급', x]), parts.sec.map(x => ['업종', x]));
+      if (rows.length) h += `<div class="bf-gt bf-gt-ai">시장<span class="bf-ai">AI</span>${sess ? `<span class="bf-gt-r">${mk === 'US' ? '미국' : '한국'} ${sess} 장</span>` : ''}</div><div class="bf-grp">${rows.map(([t, x]) => `<div class="bf-r nod"><span class="bf-dot" style="background:${_bfSignDot(x)}"></span><div class="bf-t"><div class="bf-tt n">${escapeHtml(x)}</div><div class="bf-s">${t}</div></div></div>`).join('')}</div>`;
+      h += _brNewsGroup(parts.news);
+    }
+    try { const _dd = _brDataDate(mk); h += aqNumbersBlock(mk, (mk === 'US' ? '숫자로 본 어제' : '숫자로 본 오늘') + (_dd ? ` · ${_dd.slice(5).replace('-', '/')} 종가` : '')); } catch (e) {}
+    if (auto.ok) h += `<div class="bf-gt">밤사이 자동매매</div><div class="bf-grp">${auto.rows.length ? auto.rows.join('') : '<div class="bf-empty">체결·매도 없음</div>'}</div>`;
+    const today = await _brToday(mk, day, auto.sellToday); const next = parts ? parts.next.map(_bfSchedRow).join('') : '';
+    if (today.length || next) h += `<div class="bf-gt">다음</div><div class="bf-grp">${today.join('')}${next}</div>`;
+    h += _brNewSignal(mk);
+  } else {
+    const hero = p ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : `${mk === 'US' ? '미국 장전 브리핑은 매일 밤 9시 55분쯤' : '한국 장전 브리핑은 평일 아침 8시쯤'} 올라와요.`;
+    h += `<div class="bf-hero">${hero}</div>` + _brTiles(mk, '') + aqRecordLine(mk);
+    if (p && !p.holiday) {
+      const flow = _brSec(p, _brFLOW); const sched = _brSec(p, _brTODAY).filter(x => !/정규장\s*개장/.test(x));
+      if (flow.length) h += `<div class="bf-gt bf-gt-ai">장전 흐름<span class="bf-ai">AI</span></div><div class="bf-grp">${_bfDotRows(flow)}</div>`;
+      if (sched.length) h += `<div class="bf-gt bf-gt-ai">오늘 일정<span class="bf-ai">AI</span></div><div class="bf-grp">${sched.map(_bfSchedRow).join('')}</div>`;
+    }
+    if (mk === 'US') { try { h += await aqPreUsBlocks(); } catch (e) {} }
+    else { const today = await _brToday('KR', day, []); if (today.length) h += _bfGrp('오늘 내 체크리스트', today.join('')); try { h += aqPreKrBlocks(); } catch (e) {} }
+    if (p && !p.holiday) {
+      h += _brNewsGroup(_brSec(p, ['주요 뉴스']).filter(x => !/^\(/.test(x)));
+      const ck = _brSec(p, ['체크 포인트']); if (ck.length) h += `<div class="bf-gt bf-gt-ai">체크 포인트<span class="bf-ai">AI</span></div><div class="bf-grp">${ck.map((x, i) => `<div class="bf-r nod"><span class="bf-num">${i + 1}</span><div class="bf-t"><div class="bf-tt n">${escapeHtml(x)}</div></div></div>`).join('')}</div>`;
+    }
+  }
+  box.innerHTML = h;
+}
+Object.assign(window, { aqDailyBriefRender, aqBriefMode });
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
