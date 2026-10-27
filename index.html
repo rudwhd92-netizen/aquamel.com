@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.64';   // v5.64: 받아들일 때 항상 확인 창, 진행 중인 가이드 접힘·요약 카드·간격
+window.AQ_PWA_VERSION = '5.65';   // v5.65: 추천 조건·다시 볼 조건 구분, 읽지 못한 실행 꼬리표 경고, 한국 시각 표시
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4201,6 +4201,8 @@ body[data-mtab="auto"][data-atab="guide"] footer { display: none !important; }
 .gda-cardtop { cursor: pointer; } .gda-hd { margin-bottom: 0 !important; }
 .gda-key { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12.5px; color: var(--text); background: rgba(255,255,255,.04); border-radius: 10px; padding: 8px 10px; } .gda-keyt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .gda-keyc { color: var(--text-mute); font-size: 12px; }
 .gda-rows { margin-top: 8px; } .gda-row { padding: 10px 0 !important; }
+/* v5.65 */
+.gda-warn { border: 1px solid rgba(255,107,107,.4); } .gda-warn small { color: #ff8787 !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -27216,7 +27218,11 @@ function _gdOpenSheet(item, pv) {
   const L = (t, rows) => rows && rows.length ? `<div class="gda-blk"><small>${t}</small>${rows.join('<br>')}</div>` : '';
   const acts = (pv.acts || []).map((a, i) => a.risk ? `<label class="gda-risk"><input type="checkbox" data-risk="${i}"> ⚠️ ${escapeHtml(a.text)} <em>위험을 키우는 설정이라 따로 확인</em></label>` : escapeHtml(a.text));
   document.getElementById('gdaBody').innerHTML = `<div class="gda-sub">${escapeHtml(item.title || '')}</div>`
-    + L('지금 바로 바뀌는 것', acts.length ? acts : ['없음 — 자동매매 설정은 그대로예요']) + L('서버가 지켜보는 것', (pv.watches || []).concat(pv.conds || []).map(escapeHtml))
+    + L('지금 바로 바뀌는 것', acts.length ? acts : ['없음 — 자동매매 설정은 그대로예요'])
+    + ((pv.bad_acts || []).length ? `<div class="gda-blk gda-warn"><small>읽지 못한 실행 꼬리표 — 이 설정은 바뀌지 않아요</small>${pv.bad_acts.map(escapeHtml).join('<br>')}</div>` : '')
+    + L('서버가 지켜보는 것', (pv.watches || []).map(escapeHtml))
+    + L('추천대로 행동할 때 (도달하면 알림)', (pv.rec_conds || []).map(escapeHtml))
+    + L('다시 볼 때 (도달하면 알림)', (pv.conds || []).map(escapeHtml))
     + L('Claude가 확인하는 것', (pv.judg || []).length ? pv.judg.map(escapeHtml) : [escapeHtml((item.fields || {})['다시 볼 때'] || (item.fields || {})['확인할 것'] || item.title || '')])
     + L('끝나는 때', (pv.ends || []).map(escapeHtml).concat([`${String(pv.expire).slice(5).replace('-', '/')}${(pv.ends || []).length || (pv.acts || []).some(a => /까지/.test(a.text)) ? ' 만료' : ' (30일 뒤 자동 만료)'} · 그 전에 언제든 그만 따르기`]))
     + ((pv.bad || []).length ? `<div class="gda-note">형식이 맞지 않는 꼬리표 ${pv.bad.length}줄은 Claude가 확인하는 쪽으로 넘겼어요.</div>` : '')
@@ -27242,6 +27248,7 @@ async function _gdDoAccept(item, risk) {
 function aqGuideAccTab(t) { _gd.accTab = t; aqGuideRender(); }
 function aqGuideHistToggle(id) { _gd.histOpen = _gd.histOpen || {}; _gd.histOpen[id] = !_gd.histOpen[id]; aqGuideRender(); }
 async function aqGuideStop(key) { await aqGuideCheck(key); }
+function _gdKst(iso) { if (!iso) return ''; const d = new Date(iso); if (isNaN(d)) return String(iso).slice(5, 16).replace('T', ' '); const k = new Date(d.getTime() + 9 * 3600e3); return `${String(k.getUTCMonth() + 1).padStart(2, '0')}/${String(k.getUTCDate()).padStart(2, '0')} ${String(k.getUTCHours()).padStart(2, '0')}:${String(k.getUTCMinutes()).padStart(2, '0')}`; }
 function _gdSecOpen() { try { const v = JSON.parse(localStorage.getItem('aq_gd_sec') || '{}'); return v.d === _kstToday() ? !!v.o : false; } catch (e) { return false; } }
 function aqGuideSecToggle() { const o = !_gdSecOpen(); try { localStorage.setItem('aq_gd_sec', JSON.stringify({ d: _kstToday(), o })); } catch (e) {} aqGuideRender(); }
 function aqGuideCardToggle(id) { _gd.cardOpen = _gd.cardOpen || {}; _gd.cardOpen[id] = !_gd.cardOpen[id]; aqGuideRender(); }
@@ -27249,8 +27256,8 @@ function _gdKeyLine(x) {   // 카드 요약 한 줄: 도달·처리 소식 → �
   const pa = x.parsed || {}; const ws = x.wstate || {};
   const last = (x.history || []).filter(h => h.kind === 'hit' || h.kind === 'revert').slice(-1)[0];
   if (x.status !== 'active' && last) return ['✅', last.msg.replace(/^[^:]*:\s*/, '')];
-  for (let ci = 0; ci < (pa.conds || []).length; ci++) for (let gi = 0; gi < pa.conds[ci].length; gi++) for (let pi = 0; pi < pa.conds[ci][gi].length; pi++) {
-    const p = pa.conds[ci][gi][pi]; const st = ws[`c${ci}_${gi}_${pi}`] || {};
+  for (const [key, pre] of [['rec_conds', 'r'], ['conds', 'c']]) for (let ci = 0; ci < (pa[key] || []).length; ci++) for (let gi = 0; gi < pa[key][ci].length; gi++) for (let pi = 0; pi < pa[key][ci][gi].length; pi++) {
+    const p = pa[key][ci][gi][pi]; const st = ws[`${pre}${ci}_${gi}_${pi}`] || {};
     if (p.type === 'watch' && p.n) return ['🔁', `${p.target} ${st.shown || '데이터 대기'} · ${p.cmp === '이상' || p.cmp === '돌파' ? '' : ''}${p.value} ${p.cmp} ${st.streak || 0}/${p.n}일`];
   }
   const w0 = (pa.watches || [])[0]; if (w0) { const st = ws.w0 || {}; return ['👀', `${_gdWText(w0)} · 지금 ${st.shown || '데이터 대기'}`]; }
@@ -27273,16 +27280,16 @@ function _gdAccSection() {
       const rows = [];
       (x.applied || []).forEach(a => { if (a.client) return; rows.push(`<div class="gda-row"><span class="i">🔒</span><span class="k">실행</span><span class="v">${escapeHtml(a.text || a.act)}</span><span class="${a.reverted ? 'w' : a.ok ? 'ok' : 'no'}">${a.reverted ? '되돌림' : a.ok ? '적용됨' : (a.skipped ? '건너뜀' : '실패')}</span></div>`); });
       (pa.watches || []).forEach((w, i) => { const st = ws['w' + i] || {}; rows.push(`<div class="gda-row"><span class="i">👀</span><span class="k">확인</span><span class="v">${escapeHtml(_gdWText(w))}</span><span class="${st.status === 'wait' || !st.shown ? 'w' : st.met ? 'ok' : 'no'}">${escapeHtml(st.shown || '데이터 대기')}${st.status === 'ok' ? (st.met ? ' ✓' : ' ✗') : ''}</span></div>`); });
-      (pa.conds || []).forEach((groups, ci) => groups.forEach((grp, gi) => grp.forEach((p, pi) => { const st = ws[`c${ci}_${gi}_${pi}`] || {}; const n = p.n || 0;
+      [['rec_conds', 'r', '추천 조건', '🎯'], ['conds', 'c', '다시 볼 때', '🔁']].forEach(([key, pre, lab, ico]) => (pa[key] || []).forEach((groups, ci) => groups.forEach((grp, gi) => grp.forEach((p, pi) => { const st = ws[`${pre}${ci}_${gi}_${pi}`] || {}; const n = p.n || 0;
         const txt = p.type === 'watch' ? _gdWText(p) : p.type === 'date' ? `${p.date.slice(5).replace('-', '/')} ${p.text || ''} 확인` : p.text;
         const pbar = p.type === 'watch' && n ? `<div class="gda-bar"><i style="width:${Math.min(100, (st.streak || 0) / n * 100)}%"></i></div>` : '';
-        rows.push(`<div class="gda-row"><span class="i">${p.type === 'judg' ? '🧠' : '🔁'}</span><span class="k">${pi ? '' : gi ? '또는' : '다시 볼 때'}</span><span class="v">${escapeHtml(txt)}${pbar}</span><span class="${st.met ? 'ok' : 'w'}">${escapeHtml(p.type === 'watch' && n ? `${st.streak || 0}/${n}일` : (st.shown || '대기'))}</span></div>`); })));
+        rows.push(`<div class="gda-row"><span class="i">${p.type === 'judg' ? '🧠' : p.type === 'date' ? '📅' : ico}</span><span class="k">${pi ? '그리고' : gi ? '또는' : lab}</span><span class="v">${escapeHtml(txt)}${pbar}</span><span class="${st.met ? 'ok' : 'w'}">${escapeHtml(p.type === 'watch' && n ? `${st.streak || 0}/${n}일` : (st.shown || '대기'))}</span></div>`); }))));
       if (!rows.length) rows.push(`<div class="gda-row"><span class="i">🧠</span><span class="k">다시 볼 때</span><span class="v">${escapeHtml(((x.fields || {})['다시 볼 때']) || '—')}</span><span class="w">Claude 확인</span></div>`);
       Object.entries(x.judg || {}).forEach(([k, v]) => rows.push(`<div class="gda-row"><span class="i">🧠</span><span class="k">Claude</span><span class="v">${escapeHtml(k)}</span><span class="${(v && v.result) === '충족' ? 'ok' : 'w'}">${escapeHtml((v && v.result) || v)}</span></div>`));
-      const hist = (_gd.histOpen || {})[x.id] ? `<div class="gda-hist">${(x.history || []).slice().reverse().map(h => `<div><b>${escapeHtml(String(h.at).slice(5, 16).replace('T', ' '))}</b> ${escapeHtml(h.msg)}</div>`).join('')}</div>` : '';
-      body = `<div class="gda-rows">${rows.join('')}</div>${hist}<div class="gda-foot"><span>${x.updated_at ? '마지막 확인 ' + String(x.updated_at).slice(5, 16).replace('T', ' ') : ''}</span><span><a onclick="event.stopPropagation(); aqGuideHistToggle(${x.id})">기록 보기</a>${['active', 'hit'].includes(x.status) ? ` · <a onclick="event.stopPropagation(); aqGuideStop('${escapeAttr(x.key)}')">그만 따르기</a>` : ''}</span></div>`;
+      const hist = (_gd.histOpen || {})[x.id] ? `<div class="gda-hist">${(x.history || []).slice().reverse().map(h => `<div><b>${escapeHtml(_gdKst(h.at))}</b> ${escapeHtml(h.msg)}</div>`).join('')}</div>` : '';
+      body = `<div class="gda-rows">${rows.join('')}</div>${hist}<div class="gda-foot"><span>${x.updated_at ? '마지막 확인 ' + _gdKst(x.updated_at) : ''}</span><span><a onclick="event.stopPropagation(); aqGuideHistToggle(${x.id})">기록 보기</a>${['active', 'hit'].includes(x.status) ? ` · <a onclick="event.stopPropagation(); aqGuideStop('${escapeAttr(x.key)}')">그만 따르기</a>` : ''}</span></div>`;
     }
-    return `<div class="gda-card"><div class="gda-cardtop" onclick="aqGuideCardToggle(${x.id})"><div class="gda-hd"><span class="gda-lg">${tk ? aqLogoHtml(tk, '', 'gd-logo') : '✦'}</span><div class="gda-t"><div class="gda-tt">${escapeHtml(x.title || '')}</div><div class="gda-ts">${escapeHtml(x.gid)} · ${String(x.accepted_at).slice(5, 10).replace('-', '/')} 받아들임${x.expire_on ? ' · ' + String(x.expire_on).slice(5).replace('-', '/') + '까지' : ''}</div></div><span class="gda-st ${stc}">${stt}</span></div>
+    return `<div class="gda-card"><div class="gda-cardtop" onclick="aqGuideCardToggle(${x.id})"><div class="gda-hd"><span class="gda-lg">${tk ? aqLogoHtml(tk, '', 'gd-logo') : '✦'}</span><div class="gda-t"><div class="gda-tt">${escapeHtml(x.title || '')}</div><div class="gda-ts">${escapeHtml(x.gid)} · ${_gdKst(x.accepted_at).slice(0, 5)} 받아들임${x.expire_on ? ' · ' + String(x.expire_on).slice(5).replace('-', '/') + '까지' : ''}</div></div><span class="gda-st ${stc}">${stt}</span></div>
       ${opened ? '' : `<div class="gda-key"><span>${kic}</span><span class="gda-keyt">${escapeHtml(ktx)}</span><span class="gda-keyc">▾</span></div>`}</div>${body}</div>`;
   }).join('') || '<div class="gd-empty" style="padding:20px">해당하는 가이드가 없어요.</div>';
   return `<div class="gda-sec">${bar}<div class="gda-seg2"><span class="gda-seg"><button class="${_gd.accTab === 'live' ? 'on' : ''}" onclick="aqGuideAccTab('live')">진행 중</button><button class="${_gd.accTab === 'hit' ? 'on' : ''}" onclick="aqGuideAccTab('hit')">도달</button><button class="${_gd.accTab === 'past' ? 'on' : ''}" onclick="aqGuideAccTab('past')">지난 것</button></span></div>${cards}</div>`;
