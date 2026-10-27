@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.60';   // v5.60: 일일 브리핑 간격·숫자 정렬·더 보기, AI 가이드 하늘색·색 3가지·요약 줄 삭제
+window.AQ_PWA_VERSION = '5.62';   // v5.62: 종목 검색 전면 개편, MACRO 실적 일정 제외, 섹터 시트 종목 열기 수정
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4148,6 +4148,29 @@ body[data-mtab="auto"][data-atab="guide"] footer { display: none !important; }
 .gd-tm { padding-top: 11px !important; } .gd-ck { margin-top: 10px !important; width: 20px !important; height: 20px !important; }
 .gd-chev { color: var(--text-mute); font-size: 12px; margin-left: 6px; font-weight: 400; }
 .gd-it.done .gd-tt, .gd-it.done .gd-sub { color: var(--text-mute) !important; }
+/* v5.62: 종목 검색 전체 화면 */
+#aqSearchModal.open { align-items: stretch !important; justify-content: stretch !important; padding: 0 !important; }
+#aqSearchModal .search-modal-content { width: 100% !important; max-width: 640px !important; height: 100% !important; max-height: none !important; margin: 0 auto !important; border-radius: 0 !important; display: flex; flex-direction: column; background: var(--bg) !important; padding-top: env(safe-area-inset-top, 0px); }
+#aqSearchModal .search-modal-head { margin: 12px 14px 6px !important; background: rgba(255,255,255,.06); border: 1px solid #4dabf7; border-radius: 12px; padding: 4px 6px 4px 12px !important; gap: 8px; }
+#aqSearchModal .sr-close { width: auto !important; height: auto !important; border-radius: 8px !important; font-size: 14px !important; padding: 6px 8px !important; color: var(--text-mute); }
+#aqSearchModal .search-modal-results { flex: 1; overflow-y: auto; max-height: none !important; padding: 8px 14px 40px !important; }
+.sr-gt { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; color: var(--text-mute); font-weight: 600; margin: 16px 2px 10px; } .sr-gt-r { font-weight: 400; font-size: 11.5px; }
+.sr-clear { background: none; border: none; color: var(--text-mute); font-size: 11.5px; cursor: pointer; }
+.sr-rec { display: flex; align-items: center; gap: 10px; padding: 9px 2px; font-size: 14px; color: var(--text); cursor: pointer; } .sr-rec-ic { font-size: 13px; opacity: .6; } .sr-rec-tk { font-size: 11.5px; color: var(--text-mute); } .sr-rec-x { margin-left: auto; background: none; border: none; color: var(--text-mute); font-size: 13px; cursor: pointer; padding: 4px 6px; }
+.sr-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.sr-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.06); border: none; border-radius: 999px; padding: 5px 12px 5px 5px; font-size: 13px; color: var(--text-hi); cursor: pointer; font-family: inherit; } .sr-chip.sr-more { padding: 5px 12px; color: var(--text-mute); }
+.sr-chip-lg { width: 24px; height: 24px; border-radius: 50%; overflow: hidden; background: #fff; display: inline-flex; flex: none; } .sr-chip-lg img { width: 24px; height: 24px; object-fit: cover; }
+.sr-grp { background: rgba(255,255,255,.04); border-radius: 14px; overflow: hidden; }
+.sr-row { display: flex !important; align-items: center; gap: 12px; padding: 12px 14px !important; border-radius: 0 !important; } .sr-row + .sr-row { border-top: 1px solid rgba(255,255,255,.06); } .sr-row.active { background: rgba(77,171,247,.08) !important; }
+.sr-lg { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; background: #fff; flex: none; display: inline-flex; } .sr-lg img { width: 36px; height: 36px; object-fit: cover; }
+.sr-mid { flex: 1; min-width: 0; } .sr-nm { font-size: 14.5px; font-weight: 700; color: var(--text-hi); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; } .sr-nm mark, .sr-sub mark { background: none; color: #4dabf7; }
+.sr-sub { font-size: 11.5px; color: var(--text-mute); margin-top: 2px; }
+.sr-flag { font-size: 10px; padding: 1px 5px; border-radius: 4px; background: rgba(255,255,255,.08); color: var(--text-dim); font-weight: 600; }
+.sr-tag { font-size: 10.5px; padding: 1px 6px; border-radius: 999px; font-weight: 700; } .sr-tag.own { background: rgba(99,230,190,.14); color: #63e6be; } .sr-tag.watch { background: rgba(247,131,172,.14); color: #f783ac; } .sr-tag.sig { background: rgba(177,151,252,.14); color: #b197fc; }
+.sr-rt { text-align: right; flex: none; } .sr-px { font-size: 13.5px; color: var(--text-hi); font-variant-numeric: tabular-nums; } .sr-ch { font-size: 12px; margin-top: 2px; font-weight: 600; } .sr-ch.up { color: var(--kr-up); } .sr-ch.down { color: var(--kr-down); }
+.sr-heart { flex: none; }
+.sr-hint { text-align: center; font-size: 11.5px; color: var(--text-mute); margin-top: 14px; }
+.sec-nodata { opacity: .5; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -9179,8 +9202,8 @@ table.combo-eval tbody td .nodata {
           <circle cx="11" cy="11" r="7"/>
           <path d="M21 21l-4.35-4.35"/>
         </svg>
-        <input type="text" id="aqSearchInput" placeholder="티커명 또는 회사명 입력 (예: PLAB, 삼성전자)" autocomplete="off" spellcheck="false">
-        <button class="search-modal-close" onclick="closeSearchModal()" aria-label="닫기">×</button>
+        <input type="text" id="aqSearchInput" placeholder="종목명, 티커, 초성 (예: ㅅㅅㅈㅈ)" autocomplete="off" spellcheck="false">
+        <button class="search-modal-close sr-close" onclick="closeSearchModal()" aria-label="닫기">닫기</button>
       </div>
       <div class="search-modal-results" id="aqSearchResults">
         <div class="search-modal-empty">티커명 또는 회사명을 입력하세요</div>
@@ -22256,18 +22279,12 @@ window._aqRouteTodoCard = _aqRouteTodoCard;
 let _aqSearchActiveIdx = 0;     // 키보드 네비용 현재 선택 인덱스
 let _aqSearchLastResults = [];  // 마지막 렌더된 후보 (Enter 선택용)
 
-function _aqGetAllSearchables() {
-  // v2.72: KJP400 유니버스 — _state.tickerSectorMap 사용 (보드에 보이는 sectors가 아닌 정의된 전체 마스터)
-  const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
-  const sectorMap = (_state && _state.tickerSectorMaps && _state.tickerSectorMaps[mkt])
-                 || (_state && _state.tickerSectorMap)
-                 || {};
-  const companyMap = (_state && _state.tickerCompanyMaps && _state.tickerCompanyMaps[mkt])
-                  || (_state && _state.tickerCompanyMap)
-                  || {};
+function _aqGetAllSearchables() {   // v5.62: 미국·한국 함께 검색
   const out = [];
-  Object.keys(sectorMap).forEach(tk => {
-    out.push({ ticker: tk, company: companyMap[tk] || '', sector: sectorMap[tk] || '' });
+  ['US', 'KR'].forEach(mk => {
+    const sm = (_state && _state.tickerSectorMaps && _state.tickerSectorMaps[mk]) || {};
+    const cm = (_state && _state.tickerCompanyMaps && _state.tickerCompanyMaps[mk]) || {};
+    Object.keys(sm).forEach(tk => out.push({ ticker: tk, market: mk, company: cm[tk] || '', sector: sm[tk] || '' }));
   });
   return out;
 }
@@ -22310,151 +22327,102 @@ function _aqRecentSearchClear(mkt) {
   _aqRecentSearchSave(_aqRecentSearchGet().filter(r => (r.market || 'US') !== mkt));
 }
 // 입력이 비어있을 때: 최근 검색 목록(현재 시장) 표시, 없으면 안내 문구
-function _aqRenderRecentSearches(resultsEl, all) {
-  const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
-  const recent = _aqRecentSearchGet().filter(r => (r.market || 'US') === mkt);
-  const hint = '<div class="search-modal-empty">티커명 또는 회사명을 입력하세요 (' + ((all && all.length) || 0).toLocaleString() + '개 종목 대상)</div>';
-  if (!recent.length) { resultsEl.innerHTML = hint; return; }
-  const logoFn = (typeof tickerFileName === 'function') ? tickerFileName : (t) => t;
-  const rows = recent.map((it) => {
-    const logoFile = logoFn(it.ticker);
-    const logoHtml = `<img class="search-modal-result-logo" src="./logos/tickers/${encodeURIComponent(logoFile)}.png" onerror="this.style.display='none'" alt=""/>`;
-    return `
-      <div class="search-modal-result" data-ticker="${escapeAttr(it.ticker)}">
-        ${aqWrapLogo(logoHtml, it.ticker)}
-        <div class="search-modal-result-text">
-          <div class="search-modal-result-main">
-            ${it.company ? `<span>${escapeHtml(it.company)}</span>` : ''}
-            <span class="search-modal-result-ticker">${escapeHtml(it.ticker)}</span>
-          </div>
-          ${it.sector ? `<div class="search-modal-result-sector">${escapeHtml(it.sector)}</div>` : ''}
-        </div>
-        <button class="aq-recent-del" data-ticker="${escapeAttr(it.ticker)}" title="기록 삭제" aria-label="기록 삭제">&times;</button>
-      </div>`;
-  }).join('');
-  resultsEl.innerHTML = '<div class="aq-recent-head"><span>최근 검색</span><button type="button" class="aq-recent-clear">전체 삭제</button></div>' + rows;
-  resultsEl.querySelectorAll('.search-modal-result').forEach(el => {
-    el.onclick = () => {
-      const tk = el.dataset.ticker; if (!tk) return;
-      const item = _aqRecentSearchGet().find(r => r.ticker === tk && (r.market || 'US') === mkt) || { ticker: tk, market: mkt };
-      _aqRecentSearchAdd(item);
-      closeSearchModal();
-      if (typeof openChart === 'function') openChart(tk);
-    };
-  });
-  resultsEl.querySelectorAll('.aq-recent-del').forEach(el => {
-    el.onclick = (e) => {
-      e.stopPropagation();
-      _aqRecentSearchRemove(el.dataset.ticker, mkt);
-      _aqRenderRecentSearches(resultsEl, all);
-    };
-  });
-  const clr = resultsEl.querySelector('.aq-recent-clear');
-  if (clr) clr.onclick = () => { _aqRecentSearchClear(mkt); _aqRenderRecentSearches(resultsEl, all); };
+// ---- v5.62: 검색 보조 (초성·시세·보유·관심·신호) ----
+const _SR_CHO = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+function _srCho(str) { return String(str || '').split('').map(ch => { const c = ch.charCodeAt(0) - 0xAC00; return (c >= 0 && c <= 11171) ? _SR_CHO[Math.floor(c / 588)] : ch; }).join(''); }
+function _srIsCho(q) { return /^[ㄱ-ㅎ]+$/.test(q); }
+let _srCtx = null;
+function _srBuildCtx() {
+  const px = {};
+  ['US', 'KR'].forEach(mk => { const secs = (_state.sectorsByMarket && _state.sectorsByMarket[mk]) || {}; Object.values(secs).forEach(rows => { (rows || []).forEach(r => { const tk = String(r.Ticker || ''); if (!tk) return; const k = mk + ':' + tk; const d = String(r.Date || ''); const o = px[k] || (px[k] = { d: '', c: null, pd: '', p: null }); if (d > o.d) { o.pd = o.d; o.p = o.c; o.d = d; o.c = Number(r.Close); } else if (d > o.pd && d < o.d) { o.pd = d; o.p = Number(r.Close); } }); }); });
+  let th = {}; try { th = JSON.parse(localStorage.getItem('aq_toss_holdings') || '{}'); } catch (e) {}
+  const val = {}; let tot = 0; Object.entries(th).forEach(([k, h]) => { if (!(h && h.qty > 0)) return; const o = px[k]; const last = (o && o.c) || Number(h.last || h.avg || 0); const v = h.qty * last / (k.startsWith('KR:') ? 1400 : 1); val[k] = v; tot += v; });
+  const held = {}; Object.entries(val).forEach(([k, v]) => { held[k] = tot ? v / tot * 100 : 0; });
+  const watch = {}; try { Object.values((window.AqWatchStore && AqWatchStore.getAll()) || {}).forEach(w => { if (w && w.ticker) watch[(w.market || 'US') + ':' + w.ticker] = 1; }); } catch (e) {}
+  const sig = {}; ['US', 'KR'].forEach(mk => { const arc = (_state.archives && _state.archives[mk]) || []; const last = arc.reduce((m, r) => (r.Date > m ? r.Date : m), ''); arc.filter(r => r.Date === last).forEach(r => { sig[mk + ':' + String(r.Ticker).toUpperCase()] = { type: String(r.Signal_Type || '').split('+')[0].trim(), pred: Number(r.Pred_5d), date: last }; }); });
+  _srCtx = { px, held, watch, sig };
+  return _srCtx;
 }
-
-function _aqRenderSearchResults(query) {
-  const resultsEl = document.getElementById('aqSearchResults');
-  if (!resultsEl) { console.warn('[SEARCH] aqSearchResults element not found'); return; }
-  const q = String(query || '').trim();
-  const all = _aqGetAllSearchables();
-  console.log('[SEARCH] query="' + q + '", universe size=' + all.length);
-  if (all.length === 0) {
-    resultsEl.innerHTML = '<div class="search-modal-empty">KJP500 유니버스 데이터가 아직 로드되지 않았습니다. 잠시 후 다시 시도하세요.</div>';
-    _aqSearchLastResults = [];
-    return;
-  }
-  if (!q) {
-    _aqSearchLastResults = [];
-    _aqSearchActiveIdx = 0;
-    _aqRenderRecentSearches(resultsEl, all);   // v4.56: 최근 검색 히스토리 표시
-    return;
-  }
-  const mkt = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
-  let qUpper = q.toUpperCase();
-  let qNorm = qUpper;
-  if (mkt === 'KR' && /^\d{1,6}$/.test(qNorm) && qNorm.length < 6) {
-    qNorm = qNorm.padStart(6, '0');
-  }
-  const matches = [];
+function _srName(it) { return it.company || ((_state.tickerCompanyMaps && _state.tickerCompanyMaps[it.market]) || {})[it.ticker] || it.ticker; }
+function _srPx(it) { const o = _srCtx && _srCtx.px[it.market + ':' + it.ticker]; if (!o || !(o.c > 0)) return ''; const ch = o.p > 0 ? (o.c / o.p - 1) * 100 : null; const p = it.market === 'KR' ? Math.round(o.c).toLocaleString() + '원' : '$' + o.c.toFixed(2); return `<div class="sr-rt"><div class="sr-px">${p}</div>${ch == null ? '' : `<div class="sr-ch ${ch >= 0 ? 'up' : 'down'}">${ch >= 0 ? '+' : ''}${ch.toFixed(1)}%</div>`}</div>`; }
+function _srLogo(it, cls) { return (typeof aqLogoHtml === 'function') ? aqLogoHtml(it.ticker, it.sector, cls) : ''; }
+function _srRow(it, idx, q) {
+  const k = it.market + ':' + it.ticker; const nm = _srName(it); const h = _srCtx.held[k]; const w = _srCtx.watch[k]; const sg = _srCtx.sig[k];
+  const tags = (h != null ? `<span class="sr-tag own">보유 ${h.toFixed(0)}%</span>` : '') + (w ? '<span class="sr-tag watch">관심</span>' : '') + (sg ? '<span class="sr-tag sig">신호</span>' : '');
+  const hlName = q && !_srIsCho(q) ? _aqHighlight(nm, q) : escapeHtml(nm);
+  return `<div class="search-modal-result sr-row${idx === 0 ? ' active' : ''}" data-sr="${idx}">
+    <span class="sr-lg">${_srLogo(it, 'sr-logo')}</span>
+    <div class="sr-mid"><div class="sr-nm">${hlName}<span class="sr-flag">${it.market}</span>${tags}</div><div class="sr-sub">${q ? _aqHighlight(it.ticker, q) : escapeHtml(it.ticker)}${it.sector ? ' · ' + escapeHtml(typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(it.sector) : it.sector) : ''}</div></div>
+    ${_srPx(it)}
+    <button class="search-result-heart sr-heart${w ? ' watched' : ''}" data-sr-heart="${idx}" aria-label="관심 추가/해제"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+  </div>`;
+}
+function _srOpen(it) {
+  if (!it || !it.ticker) return;
+  try { _aqRecentSearchAdd(it); } catch (e) {}
+  closeSearchModal();
+  const go = () => { if (typeof openChart === 'function') openChart(it.ticker); };
+  if (it.market && it.market !== getCurrentMarket() && typeof setMarket === 'function') { setMarket(it.market); setTimeout(go, 400); } else setTimeout(go, 60);
+}
+function _srBind(resultsEl, list) {
+  _aqSearchLastResults = list; _aqSearchActiveIdx = 0;
+  resultsEl.querySelectorAll('[data-sr]').forEach(el => {
+    el.onclick = (e) => { if (e.target.closest('[data-sr-heart]')) return; _srOpen(list[Number(el.dataset.sr)]); };
+    el.onmouseenter = () => { _aqSearchActiveIdx = Number(el.dataset.sr); resultsEl.querySelectorAll('[data-sr]').forEach(x => x.classList.toggle('active', Number(x.dataset.sr) === _aqSearchActiveIdx)); };
+  });
+  resultsEl.querySelectorAll('[data-sr-heart]').forEach(b => {
+    b.onclick = (e) => { e.stopPropagation(); const it = list[Number(b.dataset.srHeart)]; if (!it || !window.AqWatchStore) return;
+      if (AqWatchStore.has(it.market, it.ticker)) { AqWatchStore.remove(it.market, it.ticker); b.classList.remove('watched'); }
+      else { if (!AqWatchStore.toggle(it.market, it.ticker)) return; b.classList.add('watched'); }
+      _srBuildCtx(); };
+  });
+}
+function _aqRenderRecentSearches(resultsEl, all) {   // v5.62: 입력 전 화면 — 최근 검색 · 내 보유 · 관심 · 오늘 신호
+  _srBuildCtx(); const by = {}; (all || []).forEach(it => { by[it.market + ':' + it.ticker] = it; });
+  const item = (k) => by[k] || { ticker: k.split(':')[1], market: k.split(':')[0], company: '', sector: '' };
+  const list = []; const chip = (k, extra) => { const it = item(k); list.push(it); return `<button class="sr-chip" data-sr="${list.length - 1}"><span class="sr-chip-lg">${_srLogo(it, 'sr-logo')}</span>${escapeHtml(_srName(it))}${extra || ''}</button>`; };
+  let h = '';
+  const recent = _aqRecentSearchGet().slice(0, 5);
+  if (recent.length) h += `<div class="sr-gt">최근 검색<button class="sr-clear" data-sr-clear="all">전체 지우기</button></div>` + recent.map(r => { const k = (r.market || 'US') + ':' + r.ticker; const it = Object.assign({}, item(k), r, { market: r.market || 'US' }); list.push(it); return `<div class="sr-rec" data-sr="${list.length - 1}"><span class="sr-rec-ic">🕘</span>${escapeHtml(_srName(it))}<span class="sr-rec-tk">${escapeHtml(r.ticker)}</span><button class="sr-rec-x" data-sr-del="${escapeAttr(k)}" aria-label="지우기">✕</button></div>`; }).join('');
+  const held = Object.entries(_srCtx.held).sort((a, b) => b[1] - a[1]);
+  if (held.length) { const show = held.slice(0, 8), more = held.slice(8); h += `<div class="sr-gt">내 보유</div><div class="sr-chips">${show.map(([k]) => chip(k)).join('')}${more.length ? `<button class="sr-chip sr-more" data-sr-more="1">+${more.length}</button><span class="sr-more-box" hidden>${more.map(([k]) => chip(k)).join('')}</span>` : ''}</div>`; }
+  const watch = Object.keys(_srCtx.watch);
+  if (watch.length) h += `<div class="sr-gt">관심</div><div class="sr-chips">${watch.map(k => chip(k)).join('')}</div>`;
+  const sig = Object.entries(_srCtx.sig).sort((a, b) => (b[1].pred || -99) - (a[1].pred || -99)).slice(0, 6);
+  if (sig.length) h += `<div class="sr-gt">오늘 신호<span class="sr-gt-r">${sig[0][1].date.slice(5).replace('-', '/')}</span></div><div class="sr-chips">${sig.map(([k, v]) => chip(k, `<span class="sr-tag sig">${escapeHtml(v.type)}</span>`)).join('')}</div>`;
+  if (!h) h = `<div class="search-modal-empty">종목명, 티커, 초성으로 찾아보세요 (${((all && all.length) || 0).toLocaleString()}개 종목)</div>`;
+  resultsEl.innerHTML = h;
+  resultsEl.querySelectorAll('[data-sr]').forEach(el => { el.onclick = (e) => { if (e.target.closest('[data-sr-del]')) return; _srOpen(list[Number(el.dataset.sr)]); }; });
+  resultsEl.querySelectorAll('[data-sr-del]').forEach(b => { b.onclick = (e) => { e.stopPropagation(); const [m, t] = b.dataset.srDel.split(':'); _aqRecentSearchRemove(t, m); _aqRenderRecentSearches(resultsEl, all); }; });
+  const clr = resultsEl.querySelector('[data-sr-clear]'); if (clr) clr.onclick = () => { _aqRecentSearchClear(); _aqRenderRecentSearches(resultsEl, all); };
+  const mb = resultsEl.querySelector('[data-sr-more]'); if (mb) mb.onclick = () => { const box = resultsEl.querySelector('.sr-more-box'); if (box) { box.hidden = false; box.style.display = 'contents'; } mb.remove(); };
+  _aqSearchLastResults = []; _aqSearchActiveIdx = 0;
+}
+function _aqRenderSearchResults(query) {   // v5.62: 미국·한국 함께, 초성·오타 허용, 보유 → 관심 → 전체
+  const resultsEl = document.getElementById('aqSearchResults'); if (!resultsEl) return;
+  const q = String(query || '').trim(); const all = _aqGetAllSearchables();
+  if (!all.length) { resultsEl.innerHTML = '<div class="search-modal-empty">종목 데이터를 불러오는 중이에요. 잠시 후 다시 시도해 주세요.</div>'; _aqSearchLastResults = []; return; }
+  if (!q) { _aqRenderRecentSearches(resultsEl, all); return; }
+  if (!_srCtx) _srBuildCtx();
+  const qU = q.toUpperCase(); const qNum = /^\d{1,6}$/.test(q) ? q.padStart(6, '0') : null; const cho = _srIsCho(q);
+  const sub = (s, p) => { let i = 0; for (const ch of s) { if (ch === p[i]) i++; if (i === p.length) return true; } return false; };
+  let hits = [];
   all.forEach(it => {
-    const tickerU = it.ticker;
-    const companyU = (it.company || '').toUpperCase();
-    let score = -1;
-    if (tickerU === qNorm) score = 100;
-    else if (tickerU === qUpper) score = 95;
-    else if (tickerU.startsWith(qNorm) || tickerU.startsWith(qUpper)) score = 90;
-    else if (tickerU.includes(qNorm) || tickerU.includes(qUpper)) score = 70;
-    else if (companyU.includes(qUpper) || (it.company || '').includes(q)) score = 50;
-    if (score >= 0) matches.push({ ...it, score });
+    const tk = it.ticker.toUpperCase(); const nm = _srName(it); const nmU = nm.toUpperCase(); let sc = -1;
+    if (tk === qU || tk === qNum) sc = 100; else if (tk.startsWith(qU)) sc = 90; else if (nmU.startsWith(qU)) sc = 85;
+    else if (tk.includes(qU)) sc = 70; else if (nmU.includes(qU)) sc = 65;
+    else if (cho && _srCho(nm).includes(q)) sc = _srCho(nm).startsWith(q) ? 62 : 55;
+    if (sc >= 0) hits.push(Object.assign({}, it, { sc }));
   });
-  matches.sort((a, b) => b.score - a.score || a.ticker.localeCompare(b.ticker));
-  const top = matches.slice(0, 50);
-  _aqSearchLastResults = top;
-  _aqSearchActiveIdx = 0;
-  console.log('[SEARCH] matches found:', top.length);
-  if (top.length === 0) {
-    resultsEl.innerHTML = `<div class="search-modal-empty">"${escapeHtml(q)}"에 해당하는 종목이 없습니다 (검색 대상: KJP400 ${all.length}개)</div>`;
-    return;
-  }
-  const logoFn = (typeof tickerFileName === 'function') ? tickerFileName : (t) => t;
-  const _watchHas = (tk) => !!(window.AqWatchStore && AqWatchStore.has(getCurrentMarket(), tk));
-  resultsEl.innerHTML = top.map((it, idx) => {
-    const logoFile = logoFn(it.ticker);
-    const logoHtml = `<img class="search-modal-result-logo" src="./logos/tickers/${encodeURIComponent(logoFile)}.png" onerror="this.style.display='none'" alt=""/>`;
-    const tickerHl = _aqHighlight(it.ticker, q);
-    const companyHl = it.company ? _aqHighlight(it.company, q) : '';
-    const watched = _watchHas(it.ticker);
-    return `
-      <div class="search-modal-result${idx === 0 ? ' active' : ''}" data-ticker="${escapeAttr(it.ticker)}" data-idx="${idx}">
-        ${aqWrapLogo(logoHtml, it.ticker)}
-        <div class="search-modal-result-text">
-          <div class="search-modal-result-main">
-            ${companyHl ? `<span>${companyHl}</span>` : ''}
-            <span class="search-modal-result-ticker">${tickerHl}</span>
-          </div>
-          ${it.sector ? `<div class="search-modal-result-sector">${escapeHtml(it.sector)}</div>` : ''}
-        </div>
-        <button class="search-result-heart${watched ? ' watched' : ''}" data-ticker="${escapeAttr(it.ticker)}" title="관심 추가/해제" aria-pressed="${watched ? 'true' : 'false'}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </button>
-      </div>
-    `;
-  }).join('');
-  // v2.94: 하트 클릭 → 현재 컨텍스트 컬럼(또는 단기)으로 관심 토글
-  resultsEl.querySelectorAll('.search-result-heart').forEach(el => {
-    el.onclick = (e) => {
-      e.stopPropagation();
-      const tk = el.dataset.ticker;
-      if (!tk || !window.AqWatchStore) return;
-      const mkt = getCurrentMarket();
-      if (AqWatchStore.has(mkt, tk)) {
-        AqWatchStore.remove(mkt, tk);
-        el.classList.remove('watched'); el.setAttribute('aria-pressed', 'false');
-      } else {
-        if (!AqWatchStore.toggle(mkt, tk)) return;   // v5.01: 모의매수가 입력 (취소 시 담지 않음)
-        el.classList.add('watched'); el.setAttribute('aria-pressed', 'true');
-      }
-    };
-  });
-  resultsEl.querySelectorAll('.search-modal-result').forEach(el => {
-    el.onclick = () => {
-      const tk = el.dataset.ticker;
-      if (!tk) return;
-      try { _aqRecentSearchAdd((_aqSearchLastResults || []).find(x => x.ticker === tk) || { ticker: tk }); } catch (e) {}  // v4.56
-      closeSearchModal();
-      if (typeof openChart === 'function') openChart(tk);
-    };
-    el.onmouseenter = () => {
-      const i = parseInt(el.dataset.idx, 10);
-      if (!isNaN(i)) {
-        _aqSearchActiveIdx = i;
-        resultsEl.querySelectorAll('.search-modal-result').forEach((e2, ii) => {
-          e2.classList.toggle('active', ii === _aqSearchActiveIdx);
-        });
-      }
-    };
-  });
+  if (!hits.length && q.length >= 2) all.forEach(it => { const nmU = _srName(it).toUpperCase().replace(/\s/g, ''); if (sub(it.ticker.toUpperCase(), qU) || sub(nmU, qU.replace(/\s/g, ''))) hits.push(Object.assign({}, it, { sc: 20 })); });
+  hits.sort((a, b) => b.sc - a.sc || a.ticker.localeCompare(b.ticker)); hits = hits.slice(0, 60);
+  if (!hits.length) { resultsEl.innerHTML = `<div class="search-modal-empty">"${escapeHtml(q)}"은(는) 유니버스에 없는 종목이에요.</div>`; _aqSearchLastResults = []; return; }
+  const grp = { own: [], watch: [], rest: [] };
+  hits.forEach(it => { const k = it.market + ':' + it.ticker; (k in _srCtx.held ? grp.own : _srCtx.watch[k] ? grp.watch : grp.rest).push(it); });
+  const list = []; let h = '';
+  [['own', '내 보유'], ['watch', '관심'], ['rest', '전체']].forEach(([g, t]) => { if (!grp[g].length) return; h += `<div class="sr-gt">${t} · ${grp[g].length}</div><div class="sr-grp">${grp[g].map(it => { list.push(it); return _srRow(it, list.length - 1, q); }).join('')}</div>`; });
+  h += '<div class="sr-hint">엔터를 누르면 맨 위 종목으로 바로 이동</div>';
+  resultsEl.innerHTML = h; _srBind(resultsEl, list);
 }
 
 function _aqBindSearchModalEvents() {
@@ -22467,7 +22435,7 @@ function _aqBindSearchModalEvents() {
     _aqRenderSearchResults(e.target.value);
   });
   input.addEventListener('keydown', (e) => {
-    const results = document.querySelectorAll('#aqSearchResults .search-modal-result');
+    const results = document.querySelectorAll('#aqSearchResults [data-sr].sr-row');
     if (e.key === 'Escape') { closeSearchModal(); return; }
     if (!results.length) return;
     if (e.key === 'ArrowDown') {
@@ -22479,10 +22447,7 @@ function _aqBindSearchModalEvents() {
     } else if (e.key === 'Enter') {
       e.preventDefault();
       const item = _aqSearchLastResults[_aqSearchActiveIdx];
-      if (item && item.ticker) {
-        closeSearchModal();
-        if (typeof openChart === 'function') openChart(item.ticker);
-      }
+      if (item && item.ticker) _srOpen(item);   // v5.62: 다른 시장 종목이면 시장 전환 후 열기
       return;
     } else {
       return;
@@ -22506,7 +22471,7 @@ function openSearchModal(watchCol) {
   // v2.73: openSearchModal 호출 시점에 event binding 보장 (DOMContentLoaded timing 무관)
   _aqBindSearchModalEvents();
   modal.classList.add('open');
-  input.value = '';
+  input.value = ''; _srCtx = null;
   _aqRenderSearchResults('');
   setTimeout(() => input.focus(), 100);
 }
@@ -23114,7 +23079,7 @@ function _aqMarqueeEventChips() {
     const dLabel = (n) => n === 0 ? 'D-DAY' : ('D-' + n);
     const list = _aqCalSheetEvents
       .map(e => Object.assign({}, e, { _dn: _aqCalDaysUntil(e.date) }))
-      .filter(e => typeof e._dn === 'number' && e._dn >= 0 && e._dn <= 2)   // 2일 이내 (D-DAY 포함)
+      .filter(e => typeof e._dn === 'number' && e._dn >= 0 && e._dn <= 2 && e.category !== 'Earnings')   // 2일 이내 (D-DAY 포함) · v5.62: 실적 일정은 MACRO에서 제외 (경제 일정만)
       .sort((a, b) => {
         if (a._dn !== b._dn) return a._dn - b._dn;
         const ord = { FOMC: 0, '13F': 1, Earnings: 2 };
@@ -26023,11 +25988,17 @@ function aqOpenSectorSheet(sectorKey) {
   document.getElementById('aqSectorTitle').textContent = strip(key) || key;
   document.getElementById('aqSectorMeta').textContent = `${tks.length}종목${a1 != null ? ` · 오늘 평균 ${a1 >= 0 ? '+' : ''}${a1.toFixed(2)}%` : ''}`;
   document.getElementById('aqSectorList').innerHTML = items.length ? items.map(x => { const s = lastSig[x.tk]; const sig = s && s.Date >= cutoff ? String(s.Signal_Type || '').split('+').slice(0, 2).map(z => `<span class="sig-badge ${escapeAttr(z.trim())}" style="font-size:9px;padding:1px 5px">${escapeHtml(z.trim())}</span>`).join(' ') : '';
-    return `<div class="insider-archive-item" onclick="aqCloseSectorSheet(); openChart('${escapeAttr(x.tk)}')">${aqWrapLogo(_autoLogo(x.tk), x.tk)}
+    const _has = !!(typeof findTickerSeries === 'function' && findTickerSeries(x.tk));
+    return `<div class="insider-archive-item${_has ? '' : ' sec-nodata'}" onclick="aqSectorOpenStock('${escapeAttr(x.tk)}', ${_has ? 1 : 0})">${aqWrapLogo(_autoLogo(x.tk), x.tk)}
       <div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(x.tk) || x.tk)}</div><div class="ia-company">${escapeHtml(displaySub(x.tk) || '')}</div><div class="ia-sector">${sig}</div></div>
       <div class="ia-meta"><div class="ia-pnl ${(x.d1 || 0) >= 0 ? 'up' : 'down'}">${x.d1 == null ? '—' : (x.d1 >= 0 ? '+' : '') + x.d1.toFixed(2) + '%'}</div><div class="ia-shares">1개월 ${x.m1 == null ? '—' : (x.m1 >= 0 ? '+' : '') + x.m1.toFixed(1) + '%'}</div></div></div>`; }).join('') : '<div class="auto-empty">이 섹터에 속한 종목이 유니버스 시트에 없어요.</div>';
   document.getElementById('aqSectorSheet').classList.add('open'); document.getElementById('aqSectorBg').classList.add('open');
 }
+function aqSectorOpenStock(tk, has) {   // v5.62: 시트를 닫은 뒤(뒤로가기 기록 정리 후) 종목 페이지 — 같은 탭에서 바로 열면 기록이 꼬여 안 열리던 문제
+  if (!has) { if (typeof aqToast === 'function') aqToast('이 종목은 아직 가격 데이터가 없어요. 다음 수집 후 열려요'); return; }
+  aqCloseSectorSheet(); setTimeout(() => { try { openChart(tk); } catch (e) {} }, 260);
+}
+window.aqSectorOpenStock = aqSectorOpenStock;
 function aqCloseSectorSheet() { document.getElementById('aqSectorSheet').classList.remove('open'); document.getElementById('aqSectorBg').classList.remove('open'); }
 // v5.14: 누적 시그널 전체 화면 (금주의 발견 → 전체보기)
 function aqOpenArchiveFull() {
@@ -26055,6 +26026,7 @@ const AQ_SHEETS = [
   { id: 'aqSectorSheet', root: () => document.getElementById('aqSectorSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => window.aqCloseSectorSheet && aqCloseSectorSheet(), full: true },
   { id: 'autoSheet',   root: () => document.getElementById('autoSheet'),   panel: r => r, isOpen: r => r.classList.contains('open'), close: () => window.aqAutoCloseSheet && aqAutoCloseSheet(), full: true },
   { id: 'autoCfgSheet', root: () => document.getElementById('autoCfgSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => window.aqAutoCfgClose && aqAutoCfgClose(), full: true },
+  { id: 'aqSearchModal', root: () => document.getElementById('aqSearchModal'), panel: null, isOpen: r => r.classList.contains('open'), close: () => window.closeSearchModal && closeSearchModal(), full: false },
   { id: 'aqArchFull',  root: () => document.getElementById('aqArchFull'),  panel: null, isOpen: r => r.classList.contains('open'), close: () => window.aqCloseArchiveFull && aqCloseArchiveFull(), full: false },
 ];
 const _sh = { stack: [], ignorePop: 0, byPop: false };
@@ -27091,7 +27063,7 @@ const _GD_SCENE = { '장 시작 관망': ['🛑', _GD_C.mind], '재료 소멸': 
 function _gdScene(name) { const base = String(name || '').split('·')[0].trim(); return _GD_SCENE[base] || ['✦', '#adb5bd']; }
 function _gdAdd(d, n) { const x = new Date(d + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); }
 function _gdParse(doc) {   // → { asof, slot, days: { 'YYYY-MM-DD': [items] } }
-  const t = String(doc.content || '').replace(/\r/g, '').replace(/\\([!-\/:-@\[-`{-~])/g, '$1'); const out = { slot: doc.slot, days: {}, at: '' };
+  const t = String(doc.content || '').replace(/\r/g, '').replace(/\\([!-\/:-@\[-`{-~])/g, '$1').replace(/~~/g, '~'); const out = { slot: doc.slot, days: {}, at: '' };   // v5.61: '~' 두 개가 구글 문서에서 취소선(~~)으로 바뀐 것 되돌림
   const y = Number(String(doc.date).slice(0, 4)); let cur = null, it = null;
   const m0 = t.match(/기준일\s*\d{4}-\d{2}-\d{2}\s*·\s*(오전|오후)\s*·\s*(\d{1,2}:\d{2})/); if (m0) out.at = m0[2];
   const mw = t.match(/^[-*>\s]*주의\s*:\s*(.+)$/m); if (mw) out.warn = mw[1].trim();
