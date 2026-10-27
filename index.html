@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.55';   // v5.55: 일일 브리핑 통합(장후/장전 토글·미국/한국 같은 구성), 지표 기준일 표시, 지수 계산 수정
+window.AQ_PWA_VERSION = '5.56';   // v5.56: 브리핑 헤더 한 줄·한국 기준 일시, 한국 탭 복구, 내 계좌 계산 통일, 시장 묶음 소제목
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4016,7 +4016,7 @@ body:not([data-role="admin"]) #aiSubtabs [data-atab="auto"] { display: none !imp
 /* v5.47: AI 탭 시장별 서브탭 */
 #aiSubtabs .xtab-btn[data-atab="close"] { display: none; }
 html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="close"] { display: block; }
-html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="brief"], html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="auto"] { display: none !important; }
+html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="auto"] { display: none !important; }
 #closeCard { background: transparent !important; border: none !important; box-shadow: none !important; } #closeCard .card-body { padding-top: 0; }
 .bf-tm small { display: block; font-size: 10.5px; color: var(--text-mute); font-weight: 600; }
 /* v5.48: 숫자로 본 어제 */
@@ -4076,6 +4076,10 @@ html:not([data-theme="light"]) body { background: #161618; }
 .br-toggle button { background: none; border: none; color: var(--text-mute); font-size: 12.5px; font-weight: 700; padding: 5px 13px; cursor: pointer; } .br-toggle button.on { background: rgba(255,255,255,.09); color: var(--text-hi); }
 .bf-head .bf-date { flex: 1; min-width: 0; text-align: left; }
 .br-basis { font-size: 11px; color: var(--text-mute); margin: -14px 2px 16px; text-align: right; } .br-basis b { color: #ffa94d; font-weight: 700; }
+/* v5.56: 브리핑 헤더 한 줄 */
+#briefCard .bf-head { flex-wrap: nowrap !important; gap: 10px; }
+#briefCard .bf-head .bf-date { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#briefCard .bf-dismiss { flex: none; white-space: nowrap; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -26348,11 +26352,8 @@ function _bfMacroChg(re) {   // v5.55: 한 종목만, 5일 넘게 빈 구간은 
   const pts = _bfMacroSeries(re); if (pts.length < 2) return null; const l = pts[pts.length - 1], p = pts[pts.length - 2];
   if ((new Date(l.d) - new Date(p.d)) / 86400000 > 5) return null; return (l.v / p.v - 1) * 100;
 }
-function _bfAccountChg() {
-  try { const mk = getCurrentMarket(); const th = JSON.parse(localStorage.getItem('aq_toss_holdings') || '{}'); let cur = 0, prev = 0;
-    Object.entries(th).forEach(([k, h]) => { const [m, tk] = k.split(':'); if (m !== mk || !(h.qty > 0)) return; const f = findTickerSeries(tk); const r = f && f.rows; if (!r || r.length < 2) return;
-      cur += h.qty * Number(r[r.length - 1].Close); prev += h.qty * Number(r[r.length - 2].Close); });
-    return prev > 0 ? (cur / prev - 1) * 100 : null; } catch (e) { return null; }
+function _bfAccountChg() {   // v5.56: 오늘의 기록과 같은 계산 (날짜를 맞춘 보유 종목 기준)
+  try { const a = _recAccountRets(getCurrentMarket(), 3); return a.length ? a[a.length - 1].r : null; } catch (e) { return null; }
 }
 function _bfRow(icon, title, sub, right, onclick) {
   return `<div class="bf-r" ${onclick ? `onclick="${onclick}"` : ''}><span class="bf-ic">${icon}</span><div class="bf-t">${title}${sub ? `<div class="bf-s">${sub}</div>` : ''}</div>${right ? `<span class="bf-v">${right}</span>` : ''}${onclick ? '<span class="bf-chev">›</span>' : ''}</div>`;
@@ -26459,7 +26460,7 @@ function aqBriefParse(md) {
     if (!out.title && /브리핑\s*\(기준/.test(plain)) { out.title = plain; return; }
     if (cur) out.sections[cur].push(ln.replace(/^[-*•]\s+/, '').replace(/\*\*/g, ''));
   });
-  const tm = out.title.match(/미국\s*(\d{2})\/(\d{2})\s*장(?:\s*·\s*한국\s*(\d{1,2}:\d{2}))?/); out.session = tm ? `${tm[1]}/${tm[2]}` : ''; out.asof = tm && tm[3] ? tm[3] : '';
+  const tm = out.title.match(/(미국|한국)\s*(\d{2})\/(\d{2})\s*장(?:\s*·\s*(?:한국\s*)?(\d{1,2}:\d{2}))?/); out.session = tm ? `${tm[2]}/${tm[3]}` : ''; out.asof = tm && tm[4] ? tm[4] : '';
   out.holiday = /휴장(했어요|해요)/.test((out.sections['한 줄 요약'] || []).join(' '));
   return out;
 }
@@ -26892,9 +26893,10 @@ function _brTiles(mk, expectMMDD) {
   const tiles = [['내 계좌', _bfAccountChg(), true]].concat(mk === 'KR' ? [['KOSPI', _bfMacroChg(/코스피|KOSPI|KS11/i)], ['KOSDAQ', _bfMacroChg(/코스닥|KOSDAQ|KQ11/i)]]
     : [['KJP500', kjp], ['나스닥', _bfMacroChg(/나스닥|NASDAQ|IXIC/i)], ['VIX', _bfMacroChg(/VIX/i)]]);
   const dd = _brDataDate(mk); const md = dd ? dd.slice(5).replace('-', '/') : '';
+  let cmp = ''; try { const pts = _bfMacroSeries(mk === 'KR' ? /코스피|KOSPI|KS11/i : /S&P|SPY|나스닥|NASDAQ|IXIC/i, mk); if (pts.length >= 2) { const l = new Date(pts[pts.length - 1].d), pv = new Date(pts[pts.length - 2].d); const exp = new Date(l); do { exp.setDate(exp.getDate() - 1); } while (exp.getDay() === 0 || exp.getDay() === 6); if (pv < exp) cmp = ` · ${pts[pts.length - 2].d.slice(5).replace('-', '/')} 대비`; } } catch (e) {}
   const stale = expectMMDD && md && md !== expectMMDD && md < expectMMDD;
   return `<div class="bf-tiles" style="grid-template-columns:repeat(${tiles.length},minmax(0,1fr))">${tiles.map(([k, v, me]) => `<div class="bf-tile ${me ? 'me' : ''}"><div class="bf-tk">${k}</div><div class="bf-tv ${v == null ? '' : v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%'}</div></div>`).join('')}</div>`
-    + (md ? `<div class="br-basis">${md} 종가 기준${stale ? ' · <b>오늘 종가 반영 전</b>' : ''}</div>` : '');
+    + (md ? `<div class="br-basis">${md} 종가 기준${cmp}${stale ? ' · <b>오늘 종가 반영 전</b>' : ''}</div>` : '');
 }
 function _brSec(p, names) { for (const n of names) if (p && p.sections[n] && p.sections[n].length) return p.sections[n]; return []; }
 const _brNEXT = ['다음 일정', '오늘 밤 일정', '내일 일정'], _brTODAY = ['오늘 일정', '오늘 밤 일정', '오늘 국내 일정'], _brFLOW = ['장전 흐름', '밤사이 시장 흐름', '밤사이 해외 흐름'];
@@ -26951,9 +26953,9 @@ async function aqDailyBriefRender() {
   const b = r && r.ok && r.brief; const p = b && b.content ? aqBriefParse(b.content) : null;
   // 헤더: 토글 · 기준 · 그만 보기
   const tg = document.getElementById('briefToggle'); if (tg) tg.innerHTML = `<button class="${mode === 'post' ? 'on' : ''}" onclick="aqBriefMode('post')">장후</button><button class="${mode === 'pre' ? 'on' : ''}" onclick="aqBriefMode('pre')">장전</button>`;
-  const sess = p && p.session ? p.session : ''; const tm = p && p.title ? (p.title.match(/(\d{1,2}:\d{2})\)?\s*$/) || [])[1] : '';
-  const openLn = p ? _brSec(p, _brTODAY).find(x => /정규장\s*개장/.test(x)) : null; const openT = openLn ? (openLn.match(/(\d{1,2}:\d{2})/) || [])[1] : '';
-  document.getElementById('briefDate').textContent = sess ? `${mk === 'US' ? '미국' : '한국'} ${sess} 장${mode === 'post' ? ' 마감' : ''}${tm ? ` · ${tm} 기준` : ''}${openT ? ` · 개장 ${openT}` : ''}` : '';
+  const sess = p && p.session ? p.session : '';
+  let tm = p && p.asof ? p.asof : ''; if (!tm && b && b.modified_at) { const k = new Date(new Date(b.modified_at).getTime() + 9 * 3600e3); tm = `${String(k.getUTCHours()).padStart(2, '0')}:${String(k.getUTCMinutes()).padStart(2, '0')}`; }
+  document.getElementById('briefDate').textContent = sess ? `${mk === 'US' ? '미국' : '한국'} ${sess} 장${mode === 'post' ? ' 마감' : ''}${tm ? ` · ${tm} 기준` : ''}` : '';
   const btn = document.getElementById('briefDismissBtn'); if (btn) { const done = _bf.dismissed === day; btn.textContent = done ? '오늘 그만 보기 ✓' : '오늘 그만 보기'; btn.disabled = done; }
   let h = ''; try { h += await aqAuditTaskLine(); } catch (e) {}
   const nmx = tk => escapeHtml(displayName(tk) || tk);
@@ -26964,8 +26966,8 @@ async function aqDailyBriefRender() {
     const hero = p && !p.holiday ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : (p && p.holiday ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : (mine || `${mk === 'US' ? '미국 장후 브리핑은 매일 아침 7시쯤' : '한국 장 마감 브리핑은 평일 오후 4시 10분쯤'} 올라와요.`));
     h += `<div class="bf-hero">${hero}</div>` + _brTiles(mk, mk === 'KR' && b ? b.date.slice(5).replace('-', '/') : sess) + aqRecordLine(mk);
     if (parts && !p.holiday) {
-      const rows = [].concat(parts.idx.map(x => ['지수', x]), parts.flow.map(x => ['수급', x]), parts.sec.map(x => ['업종', x]));
-      if (rows.length) h += `<div class="bf-gt bf-gt-ai">시장<span class="bf-ai">AI</span>${sess ? `<span class="bf-gt-r">${mk === 'US' ? '미국' : '한국'} ${sess} 장</span>` : ''}</div><div class="bf-grp">${rows.map(([t, x]) => `<div class="bf-r nod"><span class="bf-dot" style="background:${_bfSignDot(x)}"></span><div class="bf-t"><div class="bf-tt n">${escapeHtml(x)}</div><div class="bf-s">${t}</div></div></div>`).join('')}</div>`;
+      const subs = [['지수', parts.idx], ['수급', parts.flow], ['업종', parts.sec]].filter(([, a]) => a.length);
+      if (subs.length) h += `<div class="bf-gt bf-gt-ai">시장<span class="bf-ai">AI</span>${sess ? `<span class="bf-gt-r">${mk === 'US' ? '미국' : '한국'} ${sess} 장</span>` : ''}</div><div class="bf-grp">${subs.map(([t, a]) => `<div class="bf-sub">${t}</div>${_bfDotRows(a)}`).join('')}</div>`;
       h += _brNewsGroup(parts.news);
     }
     try { const _dd = _brDataDate(mk); h += aqNumbersBlock(mk, (mk === 'US' ? '숫자로 본 어제' : '숫자로 본 오늘') + (_dd ? ` · ${_dd.slice(5).replace('-', '/')} 종가` : '')); } catch (e) {}
