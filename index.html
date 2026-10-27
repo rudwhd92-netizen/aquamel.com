@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.47';   // v5.47: 한국 브리핑 — AI 탭(KR) 장전·장 마감·분석 보고서, 날짜 붙은 일정 줄
+window.AQ_PWA_VERSION = '5.48';   // v5.48: 숫자로 본 어제/오늘(등락·내 계좌·신호·관심), 오늘의 기록 한 줄, KR 탭 정렬 수정
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4015,10 +4015,20 @@ body:not([data-role="admin"]) #aiSubtabs [data-atab="auto"] { display: none !imp
 #aiSubtabs .xtab-btn.nd { position: relative; } #aiSubtabs .xtab-btn.nd::after { content: ""; position: absolute; top: 6px; right: 2px; width: 6px; height: 6px; border-radius: 50%; background: #ff6b6b; }
 /* v5.47: AI 탭 시장별 서브탭 */
 #aiSubtabs .xtab-btn[data-atab="close"] { display: none; }
-html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="close"] { display: inline-flex; }
+html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="close"] { display: block; }
 html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="brief"], html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="auto"] { display: none !important; }
 #closeCard { background: transparent !important; border: none !important; box-shadow: none !important; } #closeCard .card-body { padding-top: 0; }
 .bf-tm small { display: block; font-size: 10.5px; color: var(--text-mute); font-weight: 600; }
+/* v5.48: 숫자로 본 어제 */
+.num-chips { display: flex; gap: 6px; padding: 12px 14px 4px; overflow-x: auto; } .num-chip { border: 1px solid var(--line); background: none; color: var(--text-mute); font-size: 12.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.num-chip.on { background: rgba(99,230,190,.14); border-color: rgba(99,230,190,.45); color: #63e6be; }
+.num-body .bf-r { padding: 10px 14px; } .num-body .bf-r .ia-logo, .num-body .bf-r img { width: 30px; height: 30px; }
+.num-body .aq-logo-wrap { width: 30px; height: 30px; flex: none; }
+.num-sub { font-size: 11.5px; color: var(--text-mute); font-weight: 700; padding: 12px 14px 2px; }
+.num-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 10px 14px 4px; } .num-kpis > div { background: rgba(255,255,255,.04); border-radius: 10px; padding: 8px 10px; }
+.num-kpis span { display: block; font-size: 10.5px; color: var(--text-mute); } .num-kpis b { font-size: 15px; font-weight: 800; color: var(--text-hi); }
+.num-body .up, .bf-record .up { color: #ff6b6b !important; } .num-body .down { color: #4dabf7 !important; }
+.bf-record { font-size: 13px; color: var(--text-hi); background: rgba(255,255,255,.04); border-radius: 12px; padding: 10px 12px; margin: -8px 0 18px; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -26589,7 +26599,8 @@ async function aqBriefRender() {
   } else if (today.length) hero = `오늘 챙길 일이 <b>${today.length}건</b> 있어요.`;
   else hero = `조용한 밤이었어요.${sigLine ? ` ${sigLine}이 있어요.` : ''}`;
   let mg = ''; try { mg = await aqBriefMorningGroup(day); } catch (e) {}
-  box.innerHTML = `<div class="bf-hero">${hero}</div>${tileHtml}${mg}` + groups.map(([t, h]) => `<div class="bf-gt">${t}</div><div class="bf-grp">${h}</div>`).join('');
+  let nb = ''; try { nb = aqNumbersBlock(mk, '숫자로 본 어제'); } catch (e) {}
+  box.innerHTML = `<div class="bf-hero">${hero}</div>${tileHtml}${aqRecordLine(mk)}${mg}${nb}` + groups.map(([t, h]) => `<div class="bf-gt">${t}</div><div class="bf-grp">${h}</div>`).join('');
 }
 // 앱을 열 때: 오늘 브리핑을 안 닫았으면 AI → 일일 브리핑이 첫 화면 (링크로 특정 화면을 열고 들어온 경우 제외)
 async function aqBriefMaybeLand() {
@@ -26713,16 +26724,97 @@ async function aqKrCloseRender() {
   const box = document.getElementById('closeBody'); const hd = document.getElementById('closeDate'); if (!box) return;
   let r = null; try { r = await apiCall('getBrief', { kind: 'kr_close', upTo: _kstToday(), maxAgeDays: 4 }); } catch (e) {}
   const b = r && r.ok && r.brief;
-  if (!b || !b.content) { if (hd) hd.textContent = ''; box.innerHTML = '<div class="bf-hero">한국 장 마감 브리핑은 평일 오후 5시쯤 올라와요.</div>'; return; }
+  let nb = ''; try { nb = aqRecordLine('KR') + aqNumbersBlock('KR', '숫자로 본 오늘'); } catch (e) {}
+  if (!b || !b.content) { if (hd) hd.textContent = ''; box.innerHTML = '<div class="bf-hero">한국 장 마감 브리핑은 평일 오후 5시쯤 올라와요.</div>' + nb; return; }
   const p = aqBriefParse(b.content); const tm = p.title.match(/한국\s*(\d{2})\/(\d{2})\s*장/);
   if (hd) hd.textContent = `한국 ${tm ? tm[1] + '/' + tm[2] : b.date.slice(5).replace('-', '/')} 장 마감`;
   const hero = `<div class="bf-hero">${escapeHtml((p.sections['한 줄 요약'] || []).join(' '))}</div>`;
   if (p.holiday) { box.innerHTML = hero; return; }
-  box.innerHTML = hero + _bfGrp('지수·수급 <span class="bf-ai">AI</span>', _bfDotRows(p.sections['지수·수급'])) + _bfGrp('업종', _bfDotRows(p.sections['업종']))
+  box.innerHTML = hero + nb + _bfGrp('지수·수급 <span class="bf-ai">AI</span>', _bfDotRows(p.sections['지수·수급'])) + _bfGrp('업종', _bfDotRows(p.sections['업종']))
     + _bfGrp('주요 뉴스', _bfNewsRows(p.sections['주요 뉴스'])) + _bfGrp('내일 일정', (p.sections['내일 일정'] || []).map(_bfSchedRow).join(''));
 }
 function _krDefaultAtab() { const k = new Date(Date.now() + 9 * 3600e3); const hm = k.getUTCHours() * 60 + k.getUTCMinutes(); return hm >= 16 * 60 + 55 || hm < 7 * 60 ? 'close' : 'pre'; }
 Object.assign(window, { aqKrOpenRender, aqKrCloseRender });
+
+// ============================================================================
+// v5.48: 숫자로 본 어제/오늘 — 등락 랭킹 · 내 계좌 · 신호 성적 · 관심 종목, 오늘의 기록 한 줄
+// ============================================================================
+function _numLast2(tk) { const f = findTickerSeries(tk); const r = f && f.rows; if (!r || r.length < 2) return null; const l = Number(r[r.length - 1].Close), p = Number(r[r.length - 2].Close); return (l > 0 && p > 0) ? { last: l, prev: p, ret: (l / p - 1) * 100, date: r[r.length - 1].Date } : null; }
+function _numPct(v, d) { return v == null || isNaN(v) ? '—' : `<b class="${v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v >= 0 ? '+' : ''}${v.toFixed(d == null ? 1 : d)}%</b>`; }
+function _numRow(tk, sub, val) { return `<div class="bf-r" onclick="openChart('${escapeAttr(tk)}')">${aqWrapLogo(_autoLogo(tk), tk)}<div class="bf-t"><div class="bf-tt">${escapeHtml(displayName(tk) || tk)}</div>${sub ? `<div class="bf-s">${sub}</div>` : ''}</div><span class="bf-v">${val}</span></div>`; }
+function _numMovers() {
+  const map = _state.tickerSectorMap || {}; const arr = [];
+  Object.keys(map).forEach(tk => { const x = _numLast2(tk); if (x) arr.push({ tk, ret: x.ret, sec: map[tk] }); });
+  if (!arr.length) return '<div class="bf-empty">시세 데이터를 불러오는 중이에요.</div>';
+  arr.sort((a, b) => b.ret - a.ret); const sec = s => escapeHtml(typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(s || '') : (s || ''));
+  return `<div class="num-sub">가장 많이 오른 종목</div>${arr.slice(0, 5).map(x => _numRow(x.tk, sec(x.sec), _numPct(x.ret))).join('')}<div class="num-sub">가장 많이 내린 종목</div>${arr.slice(-5).reverse().map(x => _numRow(x.tk, sec(x.sec), _numPct(x.ret))).join('')}`;
+}
+function _numBenchRet(mk) {
+  if (mk === 'US') { try { const k = computeKJP400Avg(); return k && typeof k.avg === 'number' ? { n: 'KJP500', v: k.avg } : null; } catch (e) { return null; } }
+  const v = _bfMacroChg(/코스피|KOSPI|KS11/i); return v == null ? null : { n: 'KOSPI', v };
+}
+function _numAccount(mk) {
+  let th = {}; try { th = JSON.parse(localStorage.getItem('aq_toss_holdings') || '{}'); } catch (e) {}
+  const items = []; let cur = 0, prev = 0;
+  Object.entries(th).forEach(([k, h]) => { const [m, tk] = k.split(':'); if (m !== mk || !(h.qty > 0)) return; const x = _numLast2(tk); if (!x) return;
+    const pnl = h.qty * (x.last - x.prev); cur += h.qty * x.last; prev += h.qty * x.prev; items.push({ tk, pnl, ret: x.ret }); });
+  if (!items.length) return '<div class="bf-empty">토스 보유 종목이 없어요.</div>';
+  const tot = prev > 0 ? (cur / prev - 1) * 100 : null; const b = _numBenchRet(mk); const ex = (tot != null && b) ? tot - b.v : null;
+  const money = v => mk === 'KR' ? `${v >= 0 ? '+' : '−'}${Math.round(Math.abs(v)).toLocaleString()}원` : `${v >= 0 ? '+' : '−'}$${Math.abs(v).toFixed(0)}`;
+  items.sort((a, c) => c.pnl - a.pnl); const up = items.filter(x => x.pnl > 0).slice(0, 2), dn = items.filter(x => x.pnl < 0).slice(-2).reverse();
+  return `<div class="num-kpis"><div><span>내 계좌</span>${_numPct(tot)}</div><div><span>${b ? b.n : '시장'}</span>${_numPct(b ? b.v : null)}</div><div><span>시장 대비</span>${ex == null ? '—' : `<b class="${ex >= 0 ? 'up' : 'down'}">${ex >= 0 ? '+' : ''}${ex.toFixed(1)}%p</b>`}</div></div>`
+    + (up.length ? `<div class="num-sub">가장 많이 벌어 준 종목</div>${up.map(x => _numRow(x.tk, _numPct(x.ret), `<b class="up">${money(x.pnl)}</b>`)).join('')}` : '')
+    + (dn.length ? `<div class="num-sub">가장 많이 깎아 먹은 종목</div>${dn.map(x => _numRow(x.tk, _numPct(x.ret), `<b class="down">${money(x.pnl)}</b>`)).join('')}` : '');
+}
+function _numSignals() {
+  const arc = _state.archive || []; const dates = [...new Set(arc.map(r => String(r.Date).slice(0, 10)))].sort().slice(-5);
+  if (!dates.length) return '<div class="bf-empty">최근 신호가 없어요.</div>';
+  const seen = {}; arc.filter(r => dates.includes(String(r.Date).slice(0, 10))).forEach(r => { const tk = String(r.Ticker || '').toUpperCase(); if (!seen[tk] || r.Date > seen[tk].Date) seen[tk] = r; });
+  const rows = Object.values(seen).map(r => { const tk = String(r.Ticker).toUpperCase(); const x = _numLast2(tk); const c0 = Number(r.Close_Price); return x ? { tk, d: String(r.Date).slice(5, 10).replace('-', '/'), sig: String(r.Signal_Type || '').split('+')[0], ret: x.ret, since: c0 > 0 ? (x.last / c0 - 1) * 100 : null } : null; }).filter(Boolean);
+  if (!rows.length) return '<div class="bf-empty">최근 신호 종목의 시세가 아직 없어요.</div>';
+  const avg = rows.reduce((s, x) => s + x.ret, 0) / rows.length; const up = rows.filter(x => x.ret > 0).length;
+  rows.sort((a, b) => b.ret - a.ret);
+  const line = x => _numRow(x.tk, `${x.d} ${escapeHtml(x.sig)} · 신호 후 ${x.since == null ? '—' : (x.since >= 0 ? '+' : '') + x.since.toFixed(1) + '%'}`, _numPct(x.ret));
+  return `<div class="num-kpis"><div><span>최근 5일 신호</span><b>${rows.length}종목</b></div><div><span>어제 평균</span>${_numPct(avg)}</div><div><span>오른 종목</span><b>${up}/${rows.length}</b></div></div>`
+    + `<div class="num-sub">어제 가장 잘한 신호</div>${rows.slice(0, 3).map(line).join('')}<div class="num-sub">어제 가장 부진한 신호</div>${rows.slice(-3).reverse().map(line).join('')}`;
+}
+function _numWatch(mk) {
+  let list = []; try { list = (window.AqWatchStore && AqWatchStore.getAll) ? AqWatchStore.getAll().filter(w => String(w.market || 'US') === mk) : []; } catch (e) {}
+  if (!list || !list.length) return '<div class="bf-empty">관심(모의매수) 종목이 없어요.</div>';
+  const rows = list.map(w => { const tk = String(w.ticker || w.tk || '').toUpperCase(); const x = _numLast2(tk); const bp = Number(w.buyPrice); return x ? { tk, ret: x.ret, since: bp > 0 ? (x.last / bp - 1) * 100 : null } : null; }).filter(Boolean);
+  if (!rows.length) return '<div class="bf-empty">관심 종목 시세가 아직 없어요.</div>';
+  const avg = rows.reduce((s, x) => s + x.ret, 0) / rows.length; const sv = rows.filter(x => x.since != null); const sAvg = sv.length ? sv.reduce((s, x) => s + x.since, 0) / sv.length : null;
+  rows.sort((a, b) => b.ret - a.ret);
+  const line = x => _numRow(x.tk, `모의매수 후 ${x.since == null ? '—' : (x.since >= 0 ? '+' : '') + x.since.toFixed(1) + '%'}`, _numPct(x.ret));
+  return `<div class="num-kpis"><div><span>관심 종목</span><b>${rows.length}개</b></div><div><span>어제 평균</span>${_numPct(avg)}</div><div><span>모의 평균</span>${_numPct(sAvg)}</div></div>`
+    + `<div class="num-sub">어제 가장 많이 오른 관심 종목</div>${rows.slice(0, 2).map(line).join('')}` + (rows.length > 2 ? `<div class="num-sub">가장 많이 내린 관심 종목</div>${rows.slice(-2).reverse().map(line).join('')}` : '');
+}
+function aqNumbersBlock(mk, title) {
+  const tabs = [['mov', '등락'], ['acct', '내 계좌'], ['sig', '신호'], ['watch', '관심']];
+  const body = { mov: () => _numMovers(), acct: () => _numAccount(mk), sig: () => _numSignals(), watch: () => _numWatch(mk) };
+  window._numBody = body; const sel = localStorage.getItem('aq_num_tab') || 'mov';
+  return `<div class="bf-gt">${title}</div><div class="bf-grp num-grp"><div class="num-chips">${tabs.map(([k, n]) => `<button class="num-chip ${k === sel ? 'on' : ''}" onclick="aqNumSwitch(this,'${k}')">${n}</button>`).join('')}</div><div class="num-body">${(body[sel] || body.mov)()}</div></div>`;
+}
+function aqNumSwitch(btn, k) {
+  const g = btn.closest('.num-grp'); g.querySelectorAll('.num-chip').forEach(b => b.classList.toggle('on', b === btn));
+  try { localStorage.setItem('aq_num_tab', k); } catch (e) {} g.querySelector('.num-body').innerHTML = window._numBody && window._numBody[k] ? window._numBody[k]() : '';
+}
+// 오늘의 기록 한 줄: 지수의 직전 거래일 움직임이 올해 몇 번째로 큰가 (10위 안일 때만)
+function aqRecordLine(mk) {
+  try {
+    let pts = [];
+    if (mk === 'US') { const s = computeKJP400Series(400) || []; pts = s.map(x => ({ d: String(x.date || x.Date || ''), v: Number(x.value != null ? x.value : (x.avg != null ? x.avg : x.close)) })); }
+    else { const rows = ((_state.macroByMarket || {}).KR || []).filter(r => /코스피|KOSPI|KS11/i.test(String(r.Ticker || ''))).sort((a, b) => String(a.Date).localeCompare(String(b.Date))); pts = rows.map(r => ({ d: String(r.Date).slice(0, 10), v: Number(r.Close) })); }
+    pts = pts.filter(p => p.d && p.v > 0); if (pts.length < 30) return '';
+    const rets = []; for (let i = 1; i < pts.length; i++) rets.push({ d: pts[i].d, r: (pts[i].v / pts[i - 1].v - 1) * 100 });
+    const last = rets[rets.length - 1]; const yr = last.d.slice(0, 4); const ys = rets.filter(x => x.d.startsWith(yr));
+    const same = ys.filter(x => (last.r >= 0 ? x.r > 0 : x.r < 0)).sort((a, b) => Math.abs(b.r) - Math.abs(a.r));
+    const rank = same.findIndex(x => x.d === last.d) + 1; const nm = mk === 'US' ? 'KJP500' : 'KOSPI';
+    if (rank < 1 || rank > 10) return '';
+    return `<div class="bf-record">📌 ${nm} ${last.r >= 0 ? '+' : ''}${last.r.toFixed(1)}% — 올해 ${rank === 1 ? '가장' : `${rank}번째로`} 크게 ${last.r >= 0 ? '오른' : '내린'} 날이에요.</div>`;
+  } catch (e) { return ''; }
+}
+Object.assign(window, { aqNumbersBlock, aqNumSwitch, aqRecordLine });
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
