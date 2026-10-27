@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.48';   // v5.48: 숫자로 본 어제/오늘(등락·내 계좌·신호·관심), 오늘의 기록 한 줄, KR 탭 정렬 수정
+window.AQ_PWA_VERSION = '5.49';   // v5.49: 오늘의 기록 매일 표시(대체 기록), 브리핑 종목 로고 동그라미
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4029,6 +4029,9 @@ html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="brief"], html[data-market
 .num-kpis span { display: block; font-size: 10.5px; color: var(--text-mute); } .num-kpis b { font-size: 15px; font-weight: 800; color: var(--text-hi); }
 .num-body .up, .bf-record .up { color: #ff6b6b !important; } .num-body .down { color: #4dabf7 !important; }
 .bf-record { font-size: 13px; color: var(--text-hi); background: rgba(255,255,255,.04); border-radius: 12px; padding: 10px 12px; margin: -8px 0 18px; }
+/* v5.49: 브리핑 종목 로고 동그라미 */
+.bf-grp .aq-logo-wrap, .bf-grp .ia-logo, .bf-grp img.ia-logo, .num-body .aq-logo-wrap, .num-body img { border-radius: 50% !important; overflow: hidden; }
+.bf-grp .aq-logo-wrap img { border-radius: 50% !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -26799,19 +26802,48 @@ function aqNumSwitch(btn, k) {
   const g = btn.closest('.num-grp'); g.querySelectorAll('.num-chip').forEach(b => b.classList.toggle('on', b === btn));
   try { localStorage.setItem('aq_num_tab', k); } catch (e) {} g.querySelector('.num-body').innerHTML = window._numBody && window._numBody[k] ? window._numBody[k]() : '';
 }
-// 오늘의 기록 한 줄: 지수의 직전 거래일 움직임이 올해 몇 번째로 큰가 (10위 안일 때만)
+// 오늘의 기록 한 줄 — 매일 하나: ① 지수 올해 10위 안 → ② 내 계좌 이번 달 최고·최악 / 시장보다 n일 연속 → ③ 지수 n일 연속 → ④ 평소보다 조용/큰 하루
+function _recIndexRets(mk) {
+  let pts = [];
+  if (mk === 'US') { const s = computeKJP400Series(400) || []; pts = s.map(x => ({ d: String(x.date || ''), v: Number(x.value) })); }
+  else { const rows = ((_state.macroByMarket || {}).KR || []).filter(r => /코스피|KOSPI|KS11/i.test(String(r.Ticker || ''))).sort((a, b) => String(a.Date).localeCompare(String(b.Date))); pts = rows.map(r => ({ d: String(r.Date).slice(0, 10), v: Number(r.Close) })); }
+  pts = pts.filter(p => p.d && p.v > 0); const rets = [];
+  for (let i = 1; i < pts.length; i++) rets.push({ d: pts[i].d, r: (pts[i].v / pts[i - 1].v - 1) * 100 });
+  return rets;
+}
+function _recAccountRets(mk, days) {   // 현재 보유 수량 기준 최근 n거래일 계좌 일간 수익률 (근사)
+  let th = {}; try { th = JSON.parse(localStorage.getItem('aq_toss_holdings') || '{}'); } catch (e) {}
+  const byDate = {};
+  Object.entries(th).forEach(([k, h]) => { const [m, tk] = k.split(':'); if (m !== mk || !(h.qty > 0)) return; const f = findTickerSeries(tk); const r = f && f.rows; if (!r || r.length < 2) return;
+    r.slice(-(days + 1)).forEach((row, i, a) => { if (!i) return; const p = Number(a[i - 1].Close), c = Number(row.Close); if (!(p > 0 && c > 0)) return; const d = String(row.Date).slice(0, 10); const o = byDate[d] || (byDate[d] = { cur: 0, prev: 0 }); o.cur += h.qty * c; o.prev += h.qty * p; }); });
+  return Object.keys(byDate).sort().map(d => ({ d, r: (byDate[d].cur / byDate[d].prev - 1) * 100 }));
+}
 function aqRecordLine(mk) {
   try {
-    let pts = [];
-    if (mk === 'US') { const s = computeKJP400Series(400) || []; pts = s.map(x => ({ d: String(x.date || x.Date || ''), v: Number(x.value != null ? x.value : (x.avg != null ? x.avg : x.close)) })); }
-    else { const rows = ((_state.macroByMarket || {}).KR || []).filter(r => /코스피|KOSPI|KS11/i.test(String(r.Ticker || ''))).sort((a, b) => String(a.Date).localeCompare(String(b.Date))); pts = rows.map(r => ({ d: String(r.Date).slice(0, 10), v: Number(r.Close) })); }
-    pts = pts.filter(p => p.d && p.v > 0); if (pts.length < 30) return '';
-    const rets = []; for (let i = 1; i < pts.length; i++) rets.push({ d: pts[i].d, r: (pts[i].v / pts[i - 1].v - 1) * 100 });
-    const last = rets[rets.length - 1]; const yr = last.d.slice(0, 4); const ys = rets.filter(x => x.d.startsWith(yr));
-    const same = ys.filter(x => (last.r >= 0 ? x.r > 0 : x.r < 0)).sort((a, b) => Math.abs(b.r) - Math.abs(a.r));
-    const rank = same.findIndex(x => x.d === last.d) + 1; const nm = mk === 'US' ? 'KJP500' : 'KOSPI';
-    if (rank < 1 || rank > 10) return '';
-    return `<div class="bf-record">📌 ${nm} ${last.r >= 0 ? '+' : ''}${last.r.toFixed(1)}% — 올해 ${rank === 1 ? '가장' : `${rank}번째로`} 크게 ${last.r >= 0 ? '오른' : '내린'} 날이에요.</div>`;
+    const nm = mk === 'US' ? 'KJP500' : 'KOSPI'; const rets = _recIndexRets(mk); if (rets.length < 5) return '';
+    const last = rets[rets.length - 1]; const sg = v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+    const line = t => `<div class="bf-record">📌 ${t}</div>`;
+    // ① 지수 올해 10위 안
+    const ys = rets.filter(x => x.d.slice(0, 4) === last.d.slice(0, 4));
+    const same = ys.filter(x => (last.r >= 0 ? x.r > 0 : x.r < 0)).sort((a, b) => Math.abs(b.r) - Math.abs(a.r)); const rank = same.findIndex(x => x.d === last.d) + 1;
+    if (ys.length >= 20 && rank >= 1 && rank <= 10) return line(`${nm} ${sg(last.r)} — 올해 ${rank === 1 ? '가장' : `${rank}번째로`} 크게 ${last.r >= 0 ? '오른' : '내린'} 날이에요.`);
+    // ② 내 계좌
+    const acc = _recAccountRets(mk, 25);
+    if (acc.length >= 5 && acc[acc.length - 1].d === last.d) {
+      const a = acc[acc.length - 1]; const mon = acc.filter(x => x.d.slice(0, 7) === a.d.slice(0, 7));
+      if (mon.length >= 3 && a.r > 0 && a.r === Math.max(...mon.map(x => x.r))) return line(`내 계좌 ${sg(a.r)} — 이번 달 최고의 날이에요.`);
+      if (mon.length >= 3 && a.r < 0 && a.r === Math.min(...mon.map(x => x.r))) return line(`내 계좌 ${sg(a.r)} — 이번 달 가장 아픈 날이었어요.`);
+      const idx = {}; rets.forEach(x => { idx[x.d] = x.r; }); let st = 0, sl = 0;
+      for (let i = acc.length - 1; i >= 0; i--) { const b = idx[acc[i].d]; if (b == null) break; if (acc[i].r > b) { if (sl) break; st++; } else if (acc[i].r < b) { if (st) break; sl++; } else break; }
+      if (st >= 3) return line(`내 계좌가 ${st}일 연속 ${nm}보다 잘했어요.`);
+    }
+    // ③ 지수 연속
+    let n = 0; for (let i = rets.length - 1; i >= 0; i--) { if ((last.r >= 0) === (rets[i].r >= 0) && rets[i].r !== 0) n++; else break; }
+    if (n >= 3) return line(`${nm} ${n}일 연속 ${last.r >= 0 ? '상승' : '하락'}이에요.`);
+    // ④ 평소 대비
+    const absAvg = ys.length ? ys.reduce((s, x) => s + Math.abs(x.r), 0) / ys.length : null;
+    if (absAvg != null) return line(Math.abs(last.r) < absAvg ? `${nm} ${sg(last.r)} — 올해 평균(${absAvg.toFixed(1)}%)보다 조용한 하루였어요.` : `${nm} ${sg(last.r)} — 올해 평균(${absAvg.toFixed(1)}%)보다 크게 움직인 하루였어요.`);
+    return '';
   } catch (e) { return ''; }
 }
 Object.assign(window, { aqNumbersBlock, aqNumSwitch, aqRecordLine });
