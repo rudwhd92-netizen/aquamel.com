@@ -17,7 +17,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
 <!-- ============ PWA META (v1.19) ============ -->
-<meta name="theme-color" content="#1e1e1e">
+<meta name="theme-color" content="#161618">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AQUAMEL">
@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.52';   // v5.52: 마이 → 감사 보고서(매매 룩백 삭제), 브리핑 이번 주 과제 고정, '분석 보고서' → 'AI 보고서'
+window.AQ_PWA_VERSION = '5.53';   // v5.53: AI 탭 노란 별, 배경 한 단계 어둡게, 섹터 동향 여백, 종목 실적 딱지, MACRO 목록 시트
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4060,6 +4060,17 @@ body:not([data-role="admin"]) .xtab-btn[data-btab="audit"] { display: none !impo
 .mtab-btn.aud-new, .xtab-btn.aud-new { position: relative; } .mtab-btn.aud-new::before { content: ""; position: absolute; top: 8px; right: 30%; width: 6px; height: 6px; border-radius: 50%; background: #ff6b6b; }
 .xtab-btn.aud-new::before { content: ""; position: absolute; top: 6px; right: 4px; width: 6px; height: 6px; border-radius: 50%; background: #ff6b6b; }
 .bf-task { display: flex; align-items: baseline; gap: 10px; border: 1px solid rgba(99,230,190,.4); border-radius: 12px; padding: 10px 12px; margin: 2px 0 14px; font-size: 13.5px; font-weight: 700; color: var(--text-hi); cursor: pointer; } .bf-task span { font-size: 11.5px; color: #63e6be; flex: none; }
+/* v5.53 */
+:root:not([data-theme="light"]) { --bg: #161618; --tab-bar-bg: #0e0e10; }
+html:not([data-theme="light"]) body { background: #161618; }
+.mtab-btn[data-mtab="auto"] .mtab-icon { color: #fcc419; }
+.mtab-btn[data-mtab="auto"].active .mtab-icon { color: #ffd43b; } .mtab-btn[data-mtab="auto"].active .mtab-icon path { fill: #ffd43b; fill-opacity: .9; }
+.pc-tab-btn[data-pc-tab="auto"] svg { color: #fcc419; }
+#modalSubtitle .ms-earn.pre { color: #ffa94d; border-color: rgba(255,169,77,.45); } #modalSubtitle .ms-earn.day { color: #0b0b0d; background: #fcc419; border-color: #fcc419; font-weight: 800; } #modalSubtitle .ms-earn.post { color: var(--text-mute); }
+.mac-asof { font-size: 11.5px; color: var(--text-mute); margin: -2px 2px 10px; } .mac-gt { font-size: 12px; font-weight: 600; color: var(--text-mute); margin: 12px 4px 6px; }
+.mac-grp { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; } .mac-r { display: flex; align-items: center; gap: 10px; padding: 11px 14px; font-size: 14px; } .mac-r + .mac-r { border-top: 1px solid var(--line); }
+.mac-e { width: 22px; text-align: center; flex: none; } .mac-n { flex: 1; min-width: 0; color: var(--text-hi); font-weight: 600; } .mac-l { color: var(--text-mute); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.mac-r b { min-width: 64px; text-align: right; font-variant-numeric: tabular-nums; } .mac-r b.up { color: var(--kr-up); } .mac-r b.down { color: var(--kr-down); }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -4555,7 +4566,7 @@ body:not([data-role="admin"]) .xtab-btn[data-btab="audit"] { display: none !impo
   body[data-mtab="explore"][data-xtab="report"]   section.card[data-xtab="report"] { display: block !important; }
   body[data-mtab="explore"][data-xtab="trend"] section.card[data-xtab="trend"] { display: block !important; }
   body[data-mtab="explore"][data-xtab="buyback"] section.card[data-xtab="buyback"] { display: block !important; }
-  body[data-mtab="explore"][data-xtab="trend"] #sectorAnalysisCard { margin-left: -10px; margin-right: -10px; }
+  body[data-mtab="explore"][data-xtab="trend"] #sectorAnalysisCard { margin-left: 0; margin-right: 0; }   /* v5.53: 다른 탐색 탭과 왼쪽 시작 맞춤 */
   /* v3.43: MO 탐색에서 매크로 지표 카드 제거 (마퀴 탭으로 대체). PC 탐색은 유지 */
   body[data-mtab="explore"] #macroCard { display: none !important; }
   body[data-mtab="board"]    section.card[data-mtab~="board"]    { display: block !important; }
@@ -8607,6 +8618,9 @@ table.combo-eval tbody td .nodata {
 
     <div class="ops-sheet-bg" id="engHoldSheetBg" onclick="aqEngHoldClose()"></div>
     <div class="ops-sheet aq-sec-sheet" id="engHoldSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title" id="engHoldTitle">종목</div><div class="set-grp" id="engHoldBody" style="margin:8px 0 6px"></div></div>
+
+    <div class="ops-sheet-bg" id="macListSheetBg" onclick="aqMacroListClose()" style="z-index:1100"></div>
+    <div class="ops-sheet aq-sec-sheet" id="macListSheet" style="z-index:1101"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">매크로 지표</div><div class="auto-sheet-scroll" id="macListBody"></div></div>
 
     <!-- v5.04: 계정 카드 (보드 맨 아래, 압축형) -->
     <section class="card" id="aqAccountCard" data-mtab="board">
@@ -23052,7 +23066,8 @@ function _aqRenderMarquee() {
       const last = arr[arr.length - 1], prev = arr[arr.length - 2];
       if (!last || isNaN(last.Close)) return;
       const chg = (prev && !isNaN(prev.Close) && prev.Close !== 0) ? (last.Close / prev.Close - 1) * 100 : 0;
-      byTk[tk] = { ticker: tk, chg };
+      byTk[tk] = { ticker: tk, chg, last: Number(last.Close) };
+      if (!window._aqMarqueeAsof || String(last.Date) > String(window._aqMarqueeAsof)) window._aqMarqueeAsof = String(last.Date);
     });
   };
   const mbm = _state.macroByMarket || {};
@@ -23081,6 +23096,7 @@ function _aqRenderMarquee() {
 
   // 등락률 절댓값 큰 순 (큰 변동 먼저)
   items.sort((a, b) => Math.abs(b.chg) - Math.abs(a.chg));
+  window._aqMarqueeItems = items.slice();   // v5.53: MACRO 목록 시트용
 
   const macroInner = items.map(it => {
     const up = it.chg >= 0;
@@ -23102,9 +23118,7 @@ function _aqRenderMarquee() {
   track.querySelectorAll('.macro-chip').forEach(el => {
     el.onclick = () => {
       // v3.43: MO — 마퀴 탭 시 '매크로 지표' 개요 먼저 → 거기서 하나 골라 상세 / PC는 기존대로 바로 상세
-      if (typeof isMobileViewport === 'function' && isMobileViewport()) {
-        if (typeof openMacroOverview === 'function') { openMacroOverview(); return; }
-      }
+      if (typeof aqMacroListOpen === 'function') { aqMacroListOpen(); return; }   // v5.53
       const tk = el.dataset.macro;
       if (tk && typeof openMacroChart === 'function') openMacroChart(tk);
     };
@@ -26198,6 +26212,7 @@ document.addEventListener('click', e => {
   };
 })();
 function aqModalDecorate(tk) {   // v5.35: 필터 알약 표시만 (요약·고정 헤더 등은 걷어냄)
+  try { aqEarnChip(tk); } catch (e) {}
   try { aqKrFlowSection(tk); } catch (e) {}
   try { const all = getSignalTypes(); const on = all.filter(x => _state.signalFilter.has(x)).length; const el = document.getElementById('modalFilterPillTxt');
     if (el) el.textContent = on === all.length ? '필터' : `필터 ${on}`; document.getElementById('modalFilterPill').classList.toggle('on', on !== all.length); } catch (e) {}
@@ -26811,6 +26826,45 @@ async function aqAuditTaskLine() {
 }
 window.addEventListener('aq:login', () => setTimeout(() => { try { aqAuditDot(); } catch (e) {} }, 3000));
 Object.assign(window, { aqAuditRender, aqAuditKind, aqAuditMove, aqAuditTaskLine });
+
+// ============================================================================
+// v5.53: 종목 페이지 실적 딱지 · MACRO 목록 시트
+// ============================================================================
+function _etToday() { const d = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+async function aqEarnChip(tk) {
+  const sub = document.getElementById('modalSubtitle'); if (!sub) return; const old = sub.querySelector('.ms-earn'); if (old) old.remove();
+  if (getCurrentMarket() !== 'US' || !tk) return;
+  try { if (!_aqCalSheetEvents || !_aqCalSheetEvents.length) await fetchSheetCalendar(); } catch (e) {}
+  if (_state.openTicker && String(_state.openTicker).toUpperCase() !== String(tk).toUpperCase()) return;
+  const t0 = _etToday(); let best = null;
+  (_aqCalSheetEvents || []).forEach(e => { if (e.category !== 'Earnings' || String(e.ticker || '').toUpperCase() !== String(tk).toUpperCase()) return;
+    const d = new Date(e.date + 'T00:00:00'); const diff = Math.round((d - t0) / 86400000); if (Math.abs(diff) > 5) return;
+    if (!best || Math.abs(diff) < Math.abs(best.diff) || (Math.abs(diff) === Math.abs(best.diff) && diff > best.diff)) best = { diff, e }; });
+  if (!best) return;
+  const lbl = best.diff === 0 ? '실적 D-Day' : best.diff > 0 ? `실적 D-${best.diff}` : `실적 D+${-best.diff}`;
+  const cls = best.diff === 0 ? 'day' : best.diff > 0 ? 'pre' : 'post';
+  const sess = best.e.session === 'BMO' ? '장 시작 전' : best.e.session === 'AMC' ? '장 마감 후' : '';
+  sub.insertAdjacentHTML('beforeend', `<span class="ms-chip ms-earn ${cls}" title="${escapeAttr(best.e.date + (sess ? ' · ' + sess : ''))}">${lbl}</span>`);
+}
+// MACRO 띠 → 지금 흐르는 지표 목록
+const _MAC_GROUPS = [['지수', /KJP|S&P|SPY|나스닥|NASDAQ|QQQ|다우|러셀|코스피|코스닥|KOSPI|KOSDAQ|KS11|KQ11|니케이|항셍|상하이|DAX|유로/i],
+  ['금리·환율', /국채|금리|TNX|10Y|2Y|달러|DXY|환율|원\/달러|엔|유로화|USD|KRW/i],
+  ['원자재', /금|은$|구리|알루미늄|유가|WTI|브렌트|천연가스|원유|니켈|아연|리튬|우라늄|옥수수|밀|대두|GC=|CL=|HG=/i],
+  ['변동성', /VIX|변동성/i]];
+function aqMacroListOpen() {
+  const items = (window._aqMarqueeItems || []).slice(); const box = document.getElementById('macListBody'); if (!box) return;
+  const groups = {}; items.forEach(it => { const g = (_MAC_GROUPS.find(([, re]) => re.test(it.ticker)) || ['기타'])[0]; (groups[g] = groups[g] || []).push(it); });
+  const order = ['지수', '금리·환율', '원자재', '변동성', '기타'];
+  const asof = window._aqMarqueeAsof ? `${String(window._aqMarqueeAsof).slice(5, 10).replace('-', '/')} 종가 기준` : '';
+  box.innerHTML = (asof ? `<div class="mac-asof">${asof}</div>` : '') + (items.length ? order.filter(g => groups[g]).map(g => `<div class="mac-gt">${g}</div><div class="mac-grp">${groups[g].map(it => {
+      const up = it.chg >= 0; const emoji = (typeof MACRO_EMOJI !== 'undefined' && MACRO_EMOJI[it.ticker]) ? MACRO_EMOJI[it.ticker] : '📊';
+      return `<div class="mac-r"><span class="mac-e">${emoji}</span><span class="mac-n">${escapeHtml(it.ticker)}</span>${it.last != null ? `<span class="mac-l">${Number(it.last).toLocaleString(undefined, { maximumFractionDigits: it.last < 100 ? 2 : 0 })}</span>` : ''}<b class="${up ? 'up' : 'down'}">${up ? '+' : ''}${Number(it.chg).toFixed(2)}%</b></div>`; }).join('')}</div>`).join('') : '<div class="auto-empty">매크로 데이터를 불러오는 중이에요.</div>');
+  document.getElementById('macListSheet').classList.add('open'); document.getElementById('macListSheetBg').classList.add('open');
+}
+function aqMacroListClose() { document.getElementById('macListSheet').classList.remove('open'); document.getElementById('macListSheetBg').classList.remove('open'); }
+Object.assign(window, { aqEarnChip, aqMacroListOpen, aqMacroListClose });
+try { AQ_SHEETS.push({ id: 'macListSheet', root: () => document.getElementById('macListSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: aqMacroListClose, full: true }); } catch (e) {}
+document.addEventListener('DOMContentLoaded', () => { const m = document.getElementById('heroMarquee'); if (m) { m.style.cursor = 'pointer'; m.addEventListener('click', ev => { ev.stopPropagation(); ev.preventDefault(); aqMacroListOpen(); }, true); } });
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
