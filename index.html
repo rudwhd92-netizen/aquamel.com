@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.80';   // v5.80: 누적 성과 표시 오류 수정, 보안 시트 쓸어내리기/스크롤, 아는 통신사·기기
+window.AQ_PWA_VERSION = '5.81';   // v5.81: 한국 수급 확정 상태 (설정 · 종목 페이지)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4332,6 +4332,7 @@ body[data-mtab="sector"]:not([data-wsub="cmp"]) #compareCard { display: none !im
 /* v5.80: 보안 시트 스크롤·크기 */
 #setSecSheet { max-height: 88vh; } #setSecSheet.aq-sheet-full { max-height: 96vh; height: 96vh; }
 #setSecBody { max-height: calc(88vh - 76px) !important; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding-bottom: 12px; } #setSecSheet.aq-sheet-full #setSecBody { max-height: calc(96vh - 76px) !important; }
+/* v5.81 */ .kf-note { font-size: 11px; color: var(--text-mute); margin-top: 8px; } .kf-note.warn { color: #ffa94d; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8839,6 +8840,7 @@ table.combo-eval tbody td .nodata {
         <div class="set-grp-t">데이터</div>
         <div class="set-grp">
           <div class="set-row" onclick="aqSetStampSummary(); aqSetSheet('setStampSheet', true)"><span class="sr-l">데이터 상태</span><span class="sr-val" id="setStampVal">확인 중…</span><span class="sr-chev">›</span></div>
+          <div class="set-row" onclick="aqKrFlowShow()"><span class="sr-l">한국 수급</span><span class="sr-val" id="setKrFlowVal">확인 중…</span><span class="sr-chev">›</span></div>
           <div class="set-row" onclick="aqSetRefresh()"><span class="sr-l">새로고침</span></div>
           <div class="set-row" onclick="if (confirm('캐시를 지우고 데이터를 처음부터 다시 받을까요?')) aqClearAllCachesAndReload()"><span class="sr-l">캐시 지우고 다시 받기</span></div>
           <div class="set-row nohover"><span class="sr-l">앱 버전</span><span class="sr-val" id="setVerVal">—</span></div>
@@ -26368,7 +26370,8 @@ function aqSettingsRender() {
   const vv = document.getElementById('setVerVal'); if (vv) vv.textContent = 'v' + (window.AQ_PWA_VERSION || '');
   aqSetStampSummary();
     if (u && u.role === 'admin') apiCall('userList', {}).then(r => { const el = document.getElementById('setAdmVal'); if (el && r && r.ok) el.textContent = `${r.users.length}명`; }).catch(() => {});
-  if (u && u.role === 'admin') { try { aqSecLoad(); } catch (e) {} }   // v5.79: 보안 상태 요약
+    if (u && u.role === 'admin') { try { aqSecLoad(); } catch (e) {} }   // v5.79: 보안 상태 요약
+  try { aqKrFlowLoad(true); } catch (e) {}   // v5.81: 한국 수급
 }
 // 데이터 상태
 async function aqSetStampSummary() {
@@ -26539,7 +26542,7 @@ function aqKrFlowSection(tk) {
   document.getElementById('krFlowArea').innerHTML = `<div class="kf-row kf-h"><span class="kf-l"></span><span class="kf-c">외국인</span><span class="kf-c">기관</span><span class="kf-c">개인</span></div>
     ${line('1일', st.d1)}${line('5일', st.d5)}${line('20일', st.d20)}
     ${(st.foStreak >= 2 || st.inStreak >= 2) ? `<div class="kf-streak">${st.foStreak >= 2 ? `외국인 ${st.foStreak}일 연속 순매수` : ''}${st.foStreak >= 2 && st.inStreak >= 2 ? ' · ' : ''}${st.inStreak >= 2 ? `기관 ${st.inStreak}일 연속 순매수` : ''}</div>` : ''}
-    <div class="kf-sub">최근 10거래일</div>${recent}<div class="th-note">거래량 대비 순매수 비중</div>`;
+    <div class="kf-sub">최근 10거래일</div>${recent}<div class="th-note">거래량 대비 순매수 비중</div>${(typeof aqKrFlowNote === 'function') ? aqKrFlowNote(tk) : ''}`;
 }
 window.aqKrFlowSection = aqKrFlowSection;
 // 발견 카드 라벨: 외국인·기관 3일 이상 연속 순매수 (한국)
@@ -28107,6 +28110,31 @@ async function aqSecEventsUser(uid) { try { const r = await apiCall('secEvents',
 Object.assign(window, { aqSecOpen, aqSecTab, aqSecAck, aqSecEmergency, aqSecLab, aqSecDeploy, aqSecTg, aqSecEvents, aqSecEventsUser, aqSecLoad });
 // v5.80: 쓸어내려 닫기 · 위로 끌어 크게 · 뒤로가기 (다른 설정 시트와 같은 방식)
 try { AQ_SHEETS.push({ id: 'setSecSheet', root: () => document.getElementById('setSecSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => aqSetSheet('setSecSheet', false), full: true }); } catch (e) {}
+
+
+// v5.81: 한국 수급 확정 상태 — 마지막 거래일 기준 확정 / 누락 / 전날과 동일
+const _krf = { st: null, ts: 0 };
+async function aqKrFlowLoad(force) {
+  if (!force && _krf.st && Date.now() - _krf.ts < 10 * 60e3) return _krf.st;
+  try { const r = await apiCall('getKrFlowStatus', {}); if (r && r.ok) { _krf.st = r; _krf.ts = Date.now(); } } catch (e) {}
+  const el = document.getElementById('setKrFlowVal'); const st = _krf.st;
+  if (el) { if (!st) { el.textContent = '확인 불가'; el.className = 'sr-val warn'; } else { const md = st.date.slice(5).replace('-', '/'); el.textContent = `${md} 확정 ${st.ok}/${st.total}${st.confirmed ? '' : ' · 정정 전'}`; el.className = 'sr-val ' + (st.ratio >= 0.95 ? 'ok' : 'warn'); } }
+  return _krf.st;
+}
+function aqKrFlowShow() {
+  const st = _krf.st; if (!st) { aqKrFlowLoad(true); return; }
+  const nm = a => (a || []).map(t => aqTkLabel(t)).join(', ');
+  alert(`한국 수급 · ${st.date}\n\n확정 ${st.ok}/${st.total} (${Math.round(st.ratio * 100)}%)${st.confirmed ? ' · 아침 정정 완료' : ' · 다음 날 07:20 정정 예정'}\n\n누락 ${st.missing.length}개${st.missing.length ? ': ' + nm(st.missing.slice(0, 20)) : ''}\n전날과 동일 ${st.same.length}개${st.same.length ? ': ' + nm(st.same.slice(0, 20)) : ''}\n\n저녁 19:30에 누락 종목을 다시 받고, 다음 날 07:20에 최근 5거래일을 확정치로 덮어써요.`);
+}
+function aqKrFlowNote(tk) {   // 종목 페이지 수급 섹션 아래 한 줄
+  const st = _krf.st; if (!st) return '';
+  const md = st.date.slice(5).replace('-', '/'); const t = String(tk || '');
+  if ((st.missing || []).includes(t)) return `<div class="kf-note warn">${md} 수급 아직 안 들어옴 — 연속 일수는 그 전날까지 기준</div>`;
+  if ((st.same || []).includes(t)) return `<div class="kf-note warn">${md} 수급이 전날과 같아요 — 늦게 들어온 값일 수 있어 다시 확인 중</div>`;
+  return `<div class="kf-note">수급 기준 ${md} · ${st.confirmed ? '확정' : '잠정 (다음 날 아침 확정)'}</div>`;
+}
+Object.assign(window, { aqKrFlowLoad, aqKrFlowShow, aqKrFlowNote });
+setTimeout(() => { try { aqKrFlowLoad(); } catch (e) {} }, 2500);
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
