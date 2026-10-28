@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.65';   // v5.65: 추천 조건·다시 볼 조건 구분, 읽지 못한 실행 꼬리표 경고, 한국 시각 표시
+window.AQ_PWA_VERSION = '5.66';   // v5.66: 내부자 거래 액면분할 조정 가격으로 표시
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4203,6 +4203,7 @@ body[data-mtab="auto"][data-atab="guide"] footer { display: none !important; }
 .gda-rows { margin-top: 8px; } .gda-row { padding: 10px 0 !important; }
 /* v5.65 */
 .gda-warn { border: 1px solid rgba(255,107,107,.4); } .gda-warn small { color: #ff8787 !important; }
+.ih-raw { font-size: 10px; color: var(--text-mute); font-weight: 400; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -11296,7 +11297,7 @@ async function fetchInsiderTrades(forceFresh) {
       const tk = String(r.Ticker || '').toUpperCase();
       if (!tk) return;
       const transDate = r.TransDate_ET ? String(r.TransDate_ET).slice(0, 10) : '';
-      const price = Number(r.Price) || 0;
+      const price = Number(r.Price_Adj) || Number(r.Price) || 0;   // v5.66: 액면분할 조정 가격 (서버가 계산, 없으면 원래 가격)
       if (!transDate || price <= 0) return;
       if (!byTicker[tk]) byTicker[tk] = [];
       byTicker[tk].push({
@@ -11307,10 +11308,10 @@ async function fetchInsiderTrades(forceFresh) {
         relationship: String(r.Relationship || ''),
         security: String(r.Security || ''),
         transCode: String(r.TransCode || 'P'),
-        shares: Number(r.Shares) || 0,
+        shares: Number(r.Shares_Adj) || Number(r.Shares) || 0, priceRaw: Number(r.Price) || 0, splitF: Number(r.Split_Factor) || 1,
         price,
         valueUsd: Number(r.Value_USD) || 0,
-        sharesAfter: Number(r.Shares_After) || 0,
+        sharesAfter: Number(r.Shares_After_Adj) || Number(r.Shares_After) || 0,
         filedDate: r.Filed_Date_KST ? String(r.Filed_Date_KST).slice(0, 10) : '',
         formUrl: String(r.Form_URL || ''),
       });
@@ -11358,13 +11359,13 @@ async function fetchInsiderSells(forceFresh) {
     res.rows.forEach(r => {
       const tk = String(r.Ticker || '').toUpperCase(); if (!tk) return;
       const transDate = r.TransDate_ET ? String(r.TransDate_ET).slice(0, 10) : '';
-      const price = Number(r.Price) || 0;
+      const price = Number(r.Price_Adj) || Number(r.Price) || 0;   // v5.66: 액면분할 조정 가격 (서버가 계산, 없으면 원래 가격)
       if (!transDate || price <= 0) return;
       if (!byTicker[tk]) byTicker[tk] = [];
       byTicker[tk].push({
         transDate, ticker: tk, ownerName: String(r.Owner_Name || ''), ownerType: String(r.Owner_Type || ''),
         relationship: String(r.Relationship || ''), security: String(r.Security || ''), transCode: String(r.TransCode || 'S'),
-        shares: Number(r.Shares) || 0, price, valueUsd: Number(r.Value_USD) || 0, sharesAfter: Number(r.Shares_After) || 0,
+        shares: Number(r.Shares_Adj) || Number(r.Shares) || 0, priceRaw: Number(r.Price) || 0, splitF: Number(r.Split_Factor) || 1, price, valueUsd: Number(r.Value_USD) || 0, sharesAfter: Number(r.Shares_After_Adj) || Number(r.Shares_After) || 0,
         filedDate: r.Filed_Date_KST ? String(r.Filed_Date_KST).slice(0, 10) : '', formUrl: String(r.Form_URL || ''),
       });
     });
@@ -20736,9 +20737,10 @@ async function openChart(ticker) {
     .filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
     .filter(t => isCommonEquityTrade(t.security))
     .filter(t => {
-      // 가격 plausibility — 차트 close 가격과 비교
-      const idx = dates.indexOf(t.transDate);
-      if (idx < 0) return true;  // 차트 윈도우 안인데 indexOf 실패 — buildSparse에서 어차피 dropped
+      // 가격 plausibility — 차트 close 가격과 비교 (v5.66: 날짜가 딱 맞지 않으면 그 전 가장 가까운 거래일)
+      let idx = dates.indexOf(t.transDate);
+      if (idx < 0) { for (let k = dates.length - 1; k >= 0; k--) { if (dates[k] <= t.transDate) { idx = k; break; } } }
+      if (idx < 0) return true;
       const chartClose = closes[idx];
       if (!chartClose || chartClose <= 0) return true;
       const ratio = t.price / chartClose;
@@ -20757,7 +20759,7 @@ async function openChart(ticker) {
   const filteredInsiderSells = _allInsiderSells
     .filter(t => t.transDate && t.transDate >= cutoffStr && t.price > 0)
     .filter(t => isCommonEquityTrade(t.security))
-    .filter(t => { const idx = dates.indexOf(t.transDate); if (idx < 0) return true; const cc = closes[idx]; if (!cc || cc <= 0) return true; const ra = t.price / cc; return ra > 0.5 && ra < 2; });
+    .filter(t => { let idx = dates.indexOf(t.transDate); if (idx < 0) { for (let k = dates.length - 1; k >= 0; k--) { if (dates[k] <= t.transDate) { idx = k; break; } } } if (idx < 0) return true; const cc = closes[idx]; if (!cc || cc <= 0) return true; const ra = t.price / cc; return ra > 0.5 && ra < 2; });
   const insiderSellMarkers = filteredInsiderSells.map(t => ({ x: t.transDate, y: t.price, shares: t.shares, sharesAfter: t.sharesAfter, ownerName: t.ownerName, relationship: t.relationship }));
 
   // Signal markers from archive — respect global signal filter
@@ -22146,7 +22148,7 @@ function renderInsiderHistory(ticker, filteredTrades) {
       <td class="col-rel ih-rel">${escapeHtml(t.relationship || '—')}</td>
       <td class="col-sec ih-sec">${escapeHtml(t.security || '—')}</td>
       <td class="ih-num">${(t.shares || 0).toLocaleString()}</td>
-      <td class="ih-num">${fmtPrice(t.price || 0)}</td>
+      <td class="ih-num">${fmtPrice(t.price || 0)}${t.splitF > 1 ? `<div class="ih-raw">분할 전 ${fmtPrice(t.priceRaw || 0)}</div>` : ''}</td>
       <td class="${pctCls}">${fmtPct(pct)}</td>
     </tr>`;
   }).join('');
@@ -22194,7 +22196,7 @@ function renderInsiderSellHistory(ticker, filteredTrades) {
       <td class="col-rel ih-rel">${escapeHtml(t.relationship || '—')}</td>
       <td class="col-sec ih-sec">${escapeHtml(t.security || '—')}</td>
       <td class="ih-num">${(t.shares || 0).toLocaleString()}</td>
-      <td class="ih-num">${fmtPrice(t.price || 0)}</td>
+      <td class="ih-num">${fmtPrice(t.price || 0)}${t.splitF > 1 ? `<div class="ih-raw">분할 전 ${fmtPrice(t.priceRaw || 0)}</div>` : ''}</td>
       <td class="${pctCls}">${fmtPct(pct)}</td>
     </tr>`;
   }).join('');
