@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.83';   // v5.83: 운영 = 매뉴얼 운영 | 자동 일정표 하위 탭
+window.AQ_PWA_VERSION = '5.84';   // v5.84: 자동 일정표 브리핑 반영 표시 수정
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -28204,7 +28204,7 @@ function aqTlRender() {
   (d.claude || []).forEach(c => {
     if (c.off) return; if (c.monthday ? d.day !== c.monthday : !(c.dow || []).includes(d.dow)) return;
     const after = syncTimes.filter(t => _tlMin(t) > _tlMin(c.time)); const s1 = after[0], s2 = after[1];
-    const got = d.docs && d.docs[c.doc]; let st;
+    const got = d.docs && d.docs[String(c.doc || '').toLowerCase()]; let st;   // 서버가 소문자로 통일해서 보냄
     if (got) st = `<span class="tl-st ok">반영됨 ${got}</span>`;
     else if (s2 && now > _tlMin(s2) + 5) st = '<span class="tl-st late">아직 안 들어옴</span>';
     else if (s1 && now > _tlMin(s1) + 5) st = `<span class="tl-st late">늦어짐 · 다음 확인 ${s2 || '내일'}</span>`;
