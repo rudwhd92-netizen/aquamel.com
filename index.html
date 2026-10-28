@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.84';   // v5.84: 자동 일정표 브리핑 반영 표시 수정
+window.AQ_PWA_VERSION = '5.86';   // v5.86: 새로고침에 미국 시트 동기화 포함(관리자), 모의 매수 초록/빨강
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -142,7 +142,7 @@ if ('serviceWorker' in navigator) {
   --t-kjp-wide: #0288d1;
   --t-claude-sharp: #ad1457;
   --t-claude-wide: #ab47bc;
-  --sig-a: #fcc419;
+  --sig-a: #fcc419; --sig-rsi: #94d82d;
 
   /* Korean stock convention: up=red, down=blue */
   --kr-up: #fa5252;
@@ -903,6 +903,7 @@ section.card.collapsed > .card-header { border-radius: 0; margin-bottom: 0; }
 /* v4.85: A 신호 */
 .sig-btn[data-sig="A"].on { border-color: var(--sig-a); }
 .sig-btn[data-sig="A"] .dot { background: var(--sig-a); }
+    /* v5.85: RSI_Panic */ .sig-btn[data-sig="RSI_Panic"].on { border-color: var(--sig-rsi); } .sig-btn[data-sig="RSI_Panic"] .dot { background: var(--sig-rsi); }
 
 .filter-controls {
   display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
@@ -1257,6 +1258,7 @@ table.archive .mfi-high { color: var(--danger); font-weight: 600; }
 .sig-badge.T_Claude_Sharp { color: #f48fb1;               border-color: var(--t-claude-sharp); background: rgba(173,20,87,0.15); }
 .sig-badge.T_Claude_Wide  { color: #ce93d8;               border-color: var(--t-claude-wide);  background: rgba(171,71,188,0.12); }
 .sig-badge.A              { color: #ffe066;               border-color: var(--sig-a);         background: rgba(252,196,25,0.14); font-weight: 900; }
+  .sig-badge.RSI_Panic { color: #c0eb75; border-color: var(--sig-rsi); background: rgba(148,216,45,0.14); font-weight: 800; }
 
 /* ============ SPREADSHEET (Portfolio / Trade history) ============ */
 .tabs-row { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
@@ -3571,6 +3573,7 @@ body:not([data-role="admin"]) [data-pc-tab="ops"], body:not([data-role="admin"])
 .aq-sim-summary { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-mute); padding: 4px 2px 10px; }
 .aq-sim-summary b { color: var(--text-hi); }
 .aq-sim-summary .up, #aqSimList .ia-pnl.up { color: #40c057; } .aq-sim-summary .down, #aqSimList .ia-pnl.down { color: #ff6b6b; }
+  /* v5.86: 종목별 손익·수익률도 초록/빨강 (미국·한국 모두) */ #aqSimList .sim-roi b.up { color: #40c057 !important; } #aqSimList .sim-roi b.down { color: #ff6b6b !important; }
 #aqSimList .insider-archive-item { cursor: pointer; }
 /* v5.02: 섹터 지정 시트 */
 .aq-sec-sheet { max-height: 80vh; display: none; flex-direction: column; }
@@ -9729,7 +9732,7 @@ const SIGNAL_GROUPS = [
 // v2.35: V1 시그널 체계 (옛 V_Shape_Archive 시트 호환)
 //   US 시장 + vshapeVersion='V1' 일 때 사용. T_*가 4개로 세분화 (KJP/Claude × Sharp/Wide)
 // ============================================================================
-const SIGNAL_TYPES_V1 = ['V_Main','V_Panic','V_Vol','T_KJP_Sharp','T_KJP_Wide','T_Claude_Sharp','T_Claude_Wide','A'];   // v4.85: A 추가
+const SIGNAL_TYPES_V1 = ['V_Main','V_Panic','V_Vol','T_KJP_Sharp','T_KJP_Wide','T_Claude_Sharp','T_Claude_Wide','A','RSI_Panic'];   // v4.85: A 추가
 const SIGNAL_COLORS_V1 = {
   'V_Main':         '#fa5252',
   'V_Panic':        '#b71c1c',
@@ -9739,6 +9742,7 @@ const SIGNAL_COLORS_V1 = {
   'T_Claude_Sharp': '#ad1457',
   'T_Claude_Wide':  '#ab47bc',
   'A':              '#fcc419',   // v4.85
+  'RSI_Panic': '#94d82d', // v5.85: 연두
 };
 const SIGNAL_SHAPE_V1 = {
   'V_Main':         'circle',
@@ -9749,6 +9753,7 @@ const SIGNAL_SHAPE_V1 = {
   'T_Claude_Sharp': 'star',
   'T_Claude_Wide':  'crossRot',
   'A':              'rectRounded',   // v4.85
+  'RSI_Panic': 'circle', // v5.85
 };
 const SIGNAL_GROUPS_V1 = [
   { key: 'V', label: 'V 알고리즘',
@@ -9756,6 +9761,7 @@ const SIGNAL_GROUPS_V1 = [
   { key: 'T', label: 'Tree 알고리즘',
     core: ['T_KJP_Sharp', 'T_Claude_Sharp'], sub: ['T_KJP_Wide', 'T_Claude_Wide'] },
   { key: 'A', label: 'A 신호', core: ['A'], sub: [] },   // v4.85
+  { key: 'R', label: 'RSI 투매 반등', core: ['RSI_Panic'], sub: [] }, // v5.85
 ];
 
 // ============================================================================
@@ -20957,9 +20963,9 @@ async function openChart(ticker) {
   if (tf !== '1Y') {
     // v2.35: V1 모드면 4개 T_*, 그 외 T 하나
     const priority = _isAllMode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A']
+      ? ['RSI_Panic', 'V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A']
       : _isV1Mode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'A']
+      ? ['RSI_Panic', 'V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'A']
       : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === ticker).forEach(r => {
       const dateStr = normalizeDate(r.Date);
@@ -24093,7 +24099,7 @@ function aqDiscoverItems() {
       .then(function () { try { if (typeof aqRerenderSignalLists === 'function') aqRerenderSignalLists(); } catch (e) {} });
   }
 
-  const TYPE_ORDER = { 'V_Main': 0, 'V_Panic': 0, 'V_Vol': 0, 'A': 0, 'T_KJP_Sharp': 1, 'T_KJP_Wide': 1, 'T_Claude_Sharp': 1, 'T_Claude_Wide': 1, 'V-Shape': 0, '신호': 1, 'T': 1, '내부자': 2, '보고서': 3 };
+  const TYPE_ORDER = { 'V_Main': 0, 'V_Panic': 0, 'V_Vol': 0, 'A': 0, 'T_KJP_Sharp': 1, 'T_KJP_Wide': 1, 'T_Claude_Sharp': 1, 'T_Claude_Wide': 1, 'RSI_Panic': 0, 'V-Shape': 0, '신호': 1, 'T': 1, '내부자': 2, '보고서': 3 };
   Object.values(merged).forEach(it => it.types.sort((a, b) => (TYPE_ORDER[a] != null ? TYPE_ORDER[a] : 9) - (TYPE_ORDER[b] != null ? TYPE_ORDER[b] : 9)));
   const items = Object.values(merged);
   // 보고서 링은 표시용으로만 유지 (정렬 1순위에서는 제외 — v4.74)
@@ -24264,9 +24270,9 @@ function aqBuildFeedChartData(tk, tf) {
   getSignalTypes().forEach(sx => sigMarkersByType[sx] = []);
   if (tf !== '1Y') {
     const priority = _isAllMode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A']
+      ? ['RSI_Panic', 'V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A']
       : _isV1Mode()
-      ? ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'A']
+      ? ['RSI_Panic', 'V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'A']
       : ['V_Panic', 'V_Vol', 'V_Main', 'T'];
     _state.archive.filter(r => r.Ticker === tk).forEach(r => {
       const dateStr = normalizeDate(r.Date);
@@ -25436,6 +25442,7 @@ const AQ_AUTO_SIGNALS = [
   { id: 'T_Claude_Sharp', def: false, desc: 'Claude Tree (Sharp)' },
   { id: 'T_Claude_Wide',  def: false, desc: 'Claude Tree (Wide)' },
   { id: 'A',              def: true,  desc: 'V + 신규 Tree' },
+  { id: 'RSI_Panic', def: false, desc: 'RSI 투매 반등 — RSI<28 고점수 + 그날 고점수 3개 이상' },
 ];
 const AQ_AUTO_LSKEY = 'aq_auto_signals_v1';
 const _auto = { entered: false, win: (localStorage.getItem('aq_auto_win') || '40'), hold: (localStorage.getItem('aq_auto_hold') || '5'), stats: null, on: {}, sheetSig: null, blacklist: [] };
@@ -26527,7 +26534,7 @@ function buildTickerHistoryTable(ticker, more) {
   if (wrap) wrap.style.display = rows.length ? '' : 'none'; if (cnt) cnt.textContent = rows.length ? String(rows.length) : '';
   const ser = (typeof findTickerSeries === 'function') ? findTickerSeries(ticker) : null; const sr = (ser && ser.rows) || []; const idx = {}; sr.forEach((r, i) => { idx[String(r.Date).slice(0, 10)] = i; });
   const last = sr.length ? Number(sr[sr.length - 1].Close) : null; const yNow = String(new Date().getFullYear());
-  const prio = ['V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A'];
+  const prio = ['RSI_Panic', 'V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A'];
   const pc = v => v == null ? '' : (v > 0 ? 'up' : v < 0 ? 'down' : '');
   const pf = v => v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
   area.innerHTML = rows.slice(0, _thShown).map(r => {
@@ -27884,17 +27891,34 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && Da
 Object.assign(window, { aqNotiToggle, aqNotiOpen, aqNotiClose, aqNotiReadAll, aqNotiLoad });
 // v5.74: 새로고침 = 토스 맞춤(최대 8초) + 캐시 지우고 다시 시작
 async function aqHardRestart() {
-  try { if (typeof aqToast === 'function') aqToast('토스 맞추고 새로 불러오는 중…'); } catch (e) {}
-  try {
-    const r = await Promise.race([apiCall('brokerSync', {}), new Promise(res => setTimeout(() => res({ timeout: true }), 8000))]);
-    if (r && !r.timeout && r.ok === false && !/잠시 후|연결되지 않/.test(String(r.error || ''))) sessionStorage.setItem('aq_sync_fail', String(r.error || '토스 동기화 실패').slice(0, 80));
-  } catch (e) {}
+  const isAdmin = !!(typeof _aqAuth !== 'undefined' && _aqAuth && _aqAuth.user && _aqAuth.user.role === 'admin');
+  try { if (typeof aqToast === 'function') aqToast(isAdmin ? '토스 맞추고 미국 시트 가져오는 중… (최대 1분)' : '토스 맞추고 새로 불러오는 중…'); } catch (e) {}
+  const toss = (async () => {
+    try {
+      const r = await Promise.race([apiCall('brokerSync', {}), new Promise(res => setTimeout(() => res({ timeout: true }), 8000))]);
+      if (r && !r.timeout && r.ok === false && !/잠시 후|연결되지 않/.test(String(r.error || ''))) sessionStorage.setItem('aq_sync_fail', String(r.error || '토스 동기화 실패').slice(0, 80));
+    } catch (e) {}
+  })();
+  // v5.86: 관리자는 미국 시트 동기화(us_sheets)만 단독 실행하고 끝날 때까지(최대 60초) 기다림. 손으로 돌린 작업은 뒤 작업(수집·신호)을 이어 실행하지 않음. 이미 도는 중이면 그걸 기다림
+  const sheet = !isAdmin ? Promise.resolve() : (async () => {
+    try {
+      const r = await _opsCall('runJob', { job: 'us_sheets' }); if (!r || !r.ok || !r.run_id) return;
+      const t0 = Date.now();
+      while (Date.now() - t0 < 60000) {
+        await new Promise(res => setTimeout(res, 2500));
+        const st = await _opsCall('jobStatus', { run_id: r.run_id });
+        if (st && st.ok && !['queued', 'running'].includes(st.status)) { if (st.status !== 'success' && st.status !== 'warn') sessionStorage.setItem('aq_sheet_note', '미국 시트 동기화가 실패했어요 — 운영 탭에서 확인'); return; }
+      }
+      sessionStorage.setItem('aq_sheet_note', '미국 시트 동기화가 아직 진행 중이에요 — 끝나면 다음 새로고침에 반영돼요');
+    } catch (e) {}
+  })();
+  await Promise.all([toss, sheet]);
   try { await aqClearAllCaches(); } catch (e) {}
   try { sessionStorage.setItem('aq_sw_reload_done', '1'); } catch (e) {}   // v5.77: 다시 시작한 뒤 자동 새로고침이 한 번 더 일어나지 않게
   setTimeout(() => window.location.reload(), 200);
 }
 window.aqHardRestart = aqHardRestart;
-setTimeout(() => { try { const m = sessionStorage.getItem('aq_sync_fail'); if (m) { sessionStorage.removeItem('aq_sync_fail'); if (typeof aqToast === 'function') aqToast('토스 동기화가 안 됐어요 — ' + m); } } catch (e) {} }, 2500);
+setTimeout(() => { try { const m = sessionStorage.getItem('aq_sync_fail'); if (m) { sessionStorage.removeItem('aq_sync_fail'); if (typeof aqToast === 'function') aqToast('토스 동기화가 안 됐어요 — ' + m); } const n = sessionStorage.getItem('aq_sheet_note'); if (n) { sessionStorage.removeItem('aq_sheet_note'); setTimeout(() => { if (typeof aqToast === 'function') aqToast(n); }, m ? 3500 : 0); } } catch (e) {} }, 2500);
 
 // ============================================================================
 // v5.78: 마이 › 누적 성과 개편 — 요약 · 기간별 손익(3칸+히스토리) · 평가수익금 추이(기존) · 시장 대비 누적 수익률 · 낙폭 · 손익 기여도 · 섹터별 평가수익금 · 확정 매매 성적표 · Decoupling Matrix(기존)
@@ -28143,7 +28167,7 @@ try { AQ_SHEETS.push({ id: 'setSecSheet', root: () => document.getElementById('s
 const _krf = { st: null, ts: 0 };
 async function aqKrFlowLoad(force) {
   if (!force && _krf.st && Date.now() - _krf.ts < 10 * 60e3) return _krf.st;
-  try { const r = await apiCall('getKrFlowStatus', {}); if (r && r.ok) { _krf.st = r; _krf.ts = Date.now(); } } catch (e) {}
+  try { const r = await apiCall('getKrFlowStatus', {}); if (r && r.ok && r.date) { _krf.st = r; _krf.ts = Date.now(); } } catch (e) {}   // 날짜 없는 응답은 무시
   const el = document.getElementById('setKrFlowVal'); const st = _krf.st;
   if (el) { if (!st) { el.textContent = '확인 불가'; el.className = 'sr-val warn'; } else { const md = st.date.slice(5).replace('-', '/'); el.textContent = `${md} 확정 ${st.ok}/${st.total}${st.confirmed ? '' : ' · 정정 전'}`; el.className = 'sr-val ' + (st.ratio >= 0.95 ? 'ok' : 'warn'); } }
   return _krf.st;
