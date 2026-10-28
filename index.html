@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.71';   // v5.71: 업적 도감 (운영 통계·종목 페이지·일일 브리핑), 액션 통계 → 운영 통계, 기간 전체/12개월/직접 지정
+window.AQ_PWA_VERSION = '5.73';   // v5.73: 지독한 악연 조건 문구를 실제 판정(세 번째 시즌도 손실)에 맞춤
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4227,7 +4227,7 @@ body[data-mtab="sector"]:not([data-wsub="cmp"]) #compareCard { display: none !im
 .bdg-sum { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 6px; margin-bottom: 14px; } .bdg-sum div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 9px 10px; } .bdg-sum span { display: block; font-size: 11px; color: var(--text-mute); } .bdg-sum b { font-size: 17px; font-weight: 800; } .bdg-sum .g { color: #d9b648; } .bdg-sum .r { color: #d0706b; } .bdg-sum .z { color: var(--text-mute); } .bdg-sum .v { color: #9d8fe0; }
 .bdg-grp { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-mute); margin: 6px 4px 8px; cursor: pointer; }
 .bdg-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px 4px; background: rgba(255,255,255,.03); border-radius: 14px; padding: 16px 6px 10px; margin-bottom: 12px; }
-.bdg-b { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; } .bdg-nm { font-size: 10.5px; color: var(--text); text-align: center; line-height: 1.3; min-height: 27px; } .bdg-nm small { display: block; font-size: 9.5px; color: var(--text-mute); } .bdg-n { font-size: 10px; color: var(--text-mute); margin-top: -4px; min-height: 12px; }
+.bdg-b { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; } .bdg-nm { font-size: 10.5px; color: var(--text); text-align: center; line-height: 1.3; min-height: 27px; } .bdg-nm small { display: block; font-size: 9.5px; color: var(--text-mute); } .bdg-n { font-size: 10px; color: var(--text-mute); margin-top: -4px; min-height: 12px; text-align: center; line-height: 1.35; } .bdg-live { display: block; font-style: normal; color: #4dabf7; } .bdg-grid.c3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .bdg-b.dim .bdg-nm { color: #5c5c64; } .bdg-b.dim .bdg-nm small { color: #4a4a52; }
 .bdg-e { width: 44px; height: 44px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 19px; background: #232328; flex: none; }
 .bdg-e.m { box-shadow: inset 0 0 0 1.5px #c9a227; } .bdg-e.s { box-shadow: inset 0 0 0 1.5px #b5544f; } .bdg-e.xs { box-shadow: inset 0 0 0 1px #8274c9; } .bdg-e.xf { box-shadow: inset 0 0 0 2.5px #8274c9; } .bdg-e.lt { box-shadow: inset 0 0 0 1px #4a4a52; background: transparent; }
@@ -27555,9 +27555,9 @@ const AQ_BDG = {
   ATM_A: { e: '🍯', n: '단골 맛집 재방문', c: '(과거 2회 연속 수익 마감한 종목에 3번째 시즌 진입)', q: '만날 때마다 지갑을 채워주던 고마운 종목. 이번에도 달콤한 수익을 안겨줄까요?', t: 'x', side: '출발', next: 'ATM_B' },
   ATM_B: { e: '🏧', n: '나의 현금인출기', sub: 'ATM', c: '(3개 시즌 연속 또는 5회 이상 분할 익절 무패 달성)', q: '비밀번호만 누르면 수익이 나오는 우리 집 최고의 효자 종목입니다.', t: 'x', side: '훈장', start: 'ATM_A', fin: 1 },
   TOXIC_A: { e: '🚩', n: '위험한 재결합', c: '(과거 2회 연속 손절 마감한 종목에 3번째 시즌 진입)', q: '두 번이나 데이고도 잊지 못해 또 매수 버튼을 눌렀습니다. 이번엔 진짜 다를까요?', t: 'x', side: '출발', next: 'TOXIC_B' },
-  TOXIC_B: { e: '💔', n: '지독한 악연', sub: 'Toxic Ex', c: '(2연패 종목 3번째 재진입 시 즉시 점등 / 또 손절 시 영구 박제)', q: '이 종목에 벌써 3번째 속고 계십니다. 사랑이 아니라 집착입니다!', t: 'x', side: '상처', start: 'TOXIC_A', fin: 1 },
+  TOXIC_B: { e: '💔', n: '지독한 악연', sub: 'Toxic Ex', c: '(2연패 종목에 3번째로 다시 들어가 또 손절 마감 시)', q: '이 종목에 벌써 3번째 속고 계십니다. 사랑이 아니라 집착입니다!', t: 'x', side: '상처', start: 'TOXIC_A', fin: 1 },
 };
-const AQ_BDG_EVO = ['FEAR_H', 'FEAR_S', 'HIGH_H', 'HIGH_S', 'SNIPE_H', 'SNIPE_S', 'DIVE_H', 'DIVE_S', 'LONG_H', 'LONG_S', 'AVGD_H', 'AVGD_S', 'PYR_H', 'PYR_S', 'EXIT_H', 'EXIT_S', 'EVEN_H', 'EVEN_S'];
+const AQ_BDG_EVO = ['FEAR_L', 'FEAR_H', 'FEAR_S', 'HIGH_L', 'HIGH_H', 'HIGH_S', 'SNIPE_L', 'SNIPE_H', 'SNIPE_S', 'DIVE_L', 'DIVE_H', 'DIVE_S', 'LONG_L', 'LONG_H', 'LONG_S', 'AVGD_L', 'AVGD_H', 'AVGD_S', 'PYR_L', 'PYR_H', 'PYR_S', 'EXIT_L', 'EXIT_H', 'EXIT_S', 'EVEN_L', 'EVEN_H', 'EVEN_S'];   // v5.72: 출발 | 훈장 | 상처
 const AQ_BDG_SP = ['SCOUT_A', 'SCOUT_B', 'RYAN_A', 'RYAN_B', 'ALCH_A', 'ALCH_B', 'TOPH_A', 'TOPH_B', 'RESC_A', 'RESC_B', 'REVG_A', 'REVG_B', 'ATM_A', 'ATM_B', 'TOXIC_A', 'TOXIC_B'];
 const _bdg = { items: null, ts: 0, loading: null };
 function aqBadgesLoad(force) {
@@ -27590,25 +27590,31 @@ function aqBadgeMore() { _bdg.more = !_bdg.more; try { aqStatsRender(); } catch 
 function aqBadgeBoardHtml() {
   const items = _bdg.items;
   if (!items) { aqBadgesLoad().then(() => { try { aqStatsRender(); } catch (e) {} }); return `<div class="st-card bdg-card"><div class="bdg-h">업적 도감</div><div class="auto-empty">불러오는 중…</div></div>`; }
-  const done = items.filter(x => x.kind !== 'latent' && _bdgInPeriod(x.date));
+  const done = items.filter(x => x.kind !== 'latent' && x.kind !== 'start' && _bdgInPeriod(x.date));
   const cnt = {}; done.forEach(x => cnt[x.code] = (cnt[x.code] || 0) + 1);
+  items.filter(x => x.kind === 'start' && _bdgInPeriod(x.date)).forEach(x => cnt[x.code] = (cnt[x.code] || 0) + 1);   // v5.72: 진화형 출발은 판의 칸에만
+  const live = {}; items.filter(x => x.kind === 'latent').forEach(x => live[x.code] = (live[x.code] || 0) + 1);
   const nH = done.filter(x => (AQ_BDG[x.code] || {}).t === 'm').length, nS = done.filter(x => (AQ_BDG[x.code] || {}).t === 's').length;
   const nL = items.filter(x => x.kind === 'latent').length, nX = done.filter(x => (AQ_BDG[x.code] || {}).t === 'x').length;
-  const cell = c => { const b = AQ_BDG[c]; const n = cnt[c] || 0; return `<div class="bdg-b${n ? '' : ' dim'}" onclick="aqBadgeSheet('${c}')">${_bdgEmb(c, '', !n)}<div class="bdg-nm">${escapeHtml(b.n)}${b.sub ? `<small>${escapeHtml(b.sub)}</small>` : ''}</div><div class="bdg-n">${n ? n + '회' : ''}</div></div>`; };
-  const grp = (k, title, right, codes) => `<div class="bdg-grp" onclick="aqBadgeFold('${k}')"><span>${title}</span><span>${right} ${_bdgFold(k) ? '▾' : '▴'}</span></div>${_bdgFold(k) ? '' : `<div class="bdg-grid">${codes.map(cell).join('')}</div>`}`;
+  const cell = c => { const b = AQ_BDG[c]; const n = cnt[c] || 0; const lv = live[c] || 0; return `<div class="bdg-b${n || lv ? '' : ' dim'}" onclick="aqBadgeSheet('${c}')">${_bdgEmb(c, '', !(n || lv))}<div class="bdg-nm">${escapeHtml(b.n)}${b.sub ? `<small>${escapeHtml(b.sub)}</small>` : ''}</div><div class="bdg-n">${n ? n + '회' : ''}${lv ? `<em class="bdg-live">진행 중 ${lv}</em>` : ''}</div></div>`; };
+  const grp = (k, title, right, codes, cols) => `<div class="bdg-grp" onclick="aqBadgeFold('${k}')"><span>${title}</span><span>${right} ${_bdgFold(k) ? '▾' : '▴'}</span></div>${_bdgFold(k) ? '' : `<div class="bdg-grid${cols === 3 ? ' c3' : ''}">${codes.map(cell).join('')}</div>`}`;
   const recent = done.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const shown = recent.slice(0, _bdg.more ? 20 : 5);
   return `<div class="st-card bdg-card"><div class="bdg-h">업적 도감</div>
     <div class="bdg-sum"><div><span>훈장</span><b class="g">${nH}</b></div><div><span>상처</span><b class="r">${nS}</b></div><div><span>잠복</span><b class="z">${nL}</b></div><div><span>업적</span><b class="v">${nX}</b></div></div>
-    ${grp('evo', '진화형 · 18', '훈장 → 상처', AQ_BDG_EVO)}
+    ${grp('evo', '진화형 · 27', '출발 → 훈장 · 상처', AQ_BDG_EVO, 3)}
     ${grp('sp', '특수 · 서사 · 16', '출발 → 최종', AQ_BDG_SP)}
-    <div class="bdg-leg"><span><i class="bdg-e m"></i>훈장</span><span><i class="bdg-e s"></i>상처</span><span><i class="bdg-e xs"></i>특수·서사 출발</span><span><i class="bdg-e xf"></i>특수·서사 최종</span></div>
+    <div class="bdg-leg"><span><i class="bdg-e lt"></i>진화형 출발</span><span><i class="bdg-e m"></i>훈장</span><span><i class="bdg-e s"></i>상처</span><span><i class="bdg-e xs"></i>특수·서사 출발</span><span><i class="bdg-e xf"></i>특수·서사 최종</span></div>
     ${recent.length ? `<div class="bdg-h2">최근 업적</div><div class="bdg-tl">${shown.map(x => _bdgRow(x)).join('')}</div>${recent.length > 5 ? `<button class="bdg-more" onclick="aqBadgeMore()">${_bdg.more ? '접기' : `더 보기 · ${Math.min(20, recent.length) - 5}개`}</button>` : ''}` : '<div class="auto-empty" style="margin-top:10px">이 기간에 받은 업적이 아직 없어요.</div>'}
   </div>`;
 }
 function aqBadgeSheet(code) {
   const b = AQ_BDG[code]; if (!b) return;
-  const items = (_bdg.items || []).filter(x => x.code === code).sort((a, c) => String(c.date).localeCompare(String(a.date)));
+  let items = (_bdg.items || []).filter(x => x.code === code).sort((a, c) => String(c.date).localeCompare(String(a.date)));
+  if (b.t === 'l') {   // v5.72: 진화형 출발 — 출발 기록 전체, 진행 중인 건 현황 줄로
+    const lv = {}; items.filter(x => x.kind === 'latent').forEach(x => lv[x.bid] = x);
+    items = items.filter(x => x.kind === 'start').map(x => { const l = lv[String(x.bid).replace(/:st$/, '')]; return l ? Object.assign({}, x, { kind: 'latent', text: l.text }) : x; });
+  }
   const link = b.next ? `<div class="bdg-link">→ ${_bdgEmoji(b.next)} ${escapeHtml(AQ_BDG[b.next].n)}(으)로 이어짐</div>` : b.start && AQ_BDG[b.start] ? `<div class="bdg-link">출발: ${_bdgEmoji(b.start)} ${escapeHtml(AQ_BDG[b.start].n)}</div>` : '';
   document.getElementById('bdgSheetBody').innerHTML = `<div class="bdg-hero">${_bdgEmb(code, 'lg')}<div><div class="bdg-hn">${escapeHtml(b.n)}${b.sub ? ` <span class="bdg-sub">(${escapeHtml(b.sub)})</span>` : ''}</div><div class="bdg-hs">${escapeHtml(b.side || (b.t === 'l' ? '잠복' : ''))} · ${escapeHtml(b.c || '')}</div></div></div>${link}
     <div class="bdg-quote">"${escapeHtml(b.q || '')}"</div>
@@ -27624,7 +27630,7 @@ function aqBadgeJump(tk) {   // 그 종목 페이지로 → 업적 도감 섹션
 }
 async function aqBadgeTickerRender(tk) {   // 종목 페이지 하단 '업적 도감' 섹션
   const wrap = document.getElementById('badgeHistoryWrap'); const area = document.getElementById('badgeHistoryArea'); if (!wrap || !area) return;
-  tk = String(tk || '').toUpperCase(); const items = (await aqBadgesLoad()).filter(x => String(x.ticker || '').toUpperCase() === tk);
+  tk = String(tk || '').toUpperCase(); const items = (await aqBadgesLoad()).filter(x => String(x.ticker || '').toUpperCase() === tk && x.kind !== 'start');
   if (!items.length) { wrap.style.display = 'none'; return; }
   const lat = items.filter(x => x.kind === 'latent'), done = items.filter(x => x.kind !== 'latent').sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const sum = document.getElementById('badgeHistoryWrapSum'); if (sum) sum.textContent = `${done.length}개${lat.length ? ` · 잠복 ${lat.length}` : ''}`;
@@ -27632,7 +27638,7 @@ async function aqBadgeTickerRender(tk) {   // 종목 페이지 하단 '업적 �
   wrap.style.display = '';
 }
 async function aqBadgeBriefSection() {   // 일일 브리핑 맨 아래 '새 업적' (새로 생긴 것만, 본 뒤 사라짐)
-  const items = (await aqBadgesLoad(true)).filter(x => x.kind !== 'latent' && !x.notified);
+  const items = (await aqBadgesLoad(true)).filter(x => x.kind !== 'latent' && x.kind !== 'start' && !x.notified);
   if (!items.length) return '';
   setTimeout(() => { apiCall('badgesSeen', {}).then(() => { (_bdg.items || []).forEach(x => x.notified = true); }).catch(() => {}); }, 4000);
   return `<div class="bf-gt">새 업적</div><div class="bdg-tl bf-bdg">${items.slice(0, 5).map(x => _bdgRow(x)).join('')}</div>`;
