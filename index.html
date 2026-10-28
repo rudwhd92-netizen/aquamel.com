@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.73';   // v5.73: 지독한 악연 조건 문구를 실제 판정(세 번째 시즌도 손실)에 맞춤
+window.AQ_PWA_VERSION = '5.74';   // v5.74: 알림(종 아이콘·말풍선·밀어서 지우기·모두 읽음), 새로고침 = 토스 맞춤 + 캐시 초기화, 장후 손익 칸 간격
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4246,6 +4246,29 @@ body[data-mtab="sector"]:not([data-wsub="cmp"]) #compareCard { display: none !im
 .bdg-hero { display: flex; gap: 14px; align-items: center; margin: 4px 2px 10px; } .bdg-hn { font-size: 16px; font-weight: 800; color: var(--text-hi); } .bdg-hs { font-size: 12px; color: var(--text-mute); margin-top: 4px; line-height: 1.5; }
 .bdg-link { font-size: 12px; color: #9d8fe0; margin: 0 2px 10px; } .bdg-quote { font-size: 13px; color: var(--text-hi); background: rgba(255,255,255,.05); border-radius: 12px; padding: 10px 12px; margin-bottom: 16px; line-height: 1.55; }
 .bf-bdg { margin-bottom: 20px; }
+/* v5.74: 알림 */
+.noti-bell { position: relative; } .noti-bell.on { background: rgba(255,255,255,.08); border-radius: 50%; }
+.noti-badge { position: absolute; top: -2px; right: -4px; min-width: 17px; height: 17px; border-radius: 9px; background: #ff3b30; color: #fff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; box-shadow: 0 0 0 2px var(--bg); line-height: 1; }
+.noti-pop { position: fixed; right: 10px; left: 10px; z-index: 1200; display: none; } .noti-pop.open { display: block; }
+@media (min-width: 640px) { .noti-pop { left: auto; width: 380px; } }
+.noti-tip { position: absolute; top: -7px; width: 14px; height: 14px; background: var(--bg-2, #1e1e22); border-left: 1px solid rgba(255,255,255,.08); border-top: 1px solid rgba(255,255,255,.08); transform: rotate(45deg); z-index: 2; }
+.noti-card { position: relative; background: var(--bg-2, #1e1e22); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; box-shadow: 0 12px 32px rgba(0,0,0,.55); overflow: hidden; }
+.noti-h { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px; } .noti-h b { font-size: 16px; color: var(--text-hi); } .noti-h button { background: none; border: none; color: #4dabf7; font-size: 12.5px; cursor: pointer; }
+.noti-list { max-height: 70vh; overflow-y: auto; overscroll-behavior: contain; padding-bottom: 6px; }
+.noti-day { font-size: 11.5px; color: var(--text-mute); padding: 10px 16px 4px; }
+.noti-sw { position: relative; overflow: hidden; max-height: 200px; } .noti-sw + .noti-sw .noti-row { border-top: 1px solid rgba(255,255,255,.06); }
+.noti-del { position: absolute; inset: 0; background: #e03131; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: flex-end; padding: 0 20px; opacity: 0; } .noti-sw.show-del .noti-del { opacity: 1; }
+.noti-row { position: relative; display: flex; align-items: center; gap: 12px; padding: 11px 8px 11px 16px; background: var(--bg-2, #1e1e22); cursor: pointer; touch-action: pan-y; }
+.noti-dot { position: absolute; left: 6px; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: #4dabf7; transform: translateY(-50%); }
+.noti-ico { width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; flex: none; background: rgba(255,255,255,.06); overflow: hidden; } .noti-ico.lg { background: #fff; } .noti-ico img { width: 36px; height: 36px; object-fit: cover; }
+.noti-mid { flex: 1; min-width: 0; } .noti-t1 { font-size: 14px; font-weight: 700; color: var(--text-hi); display: flex; align-items: center; gap: 6px; }
+.noti-chip { font-size: 10px; padding: 1px 6px; border-radius: 999px; background: rgba(255,255,255,.08); color: var(--text-dim); font-weight: 700; }
+.noti-t2 { font-size: 12px; color: var(--text); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .noti-t3 { font-size: 11px; color: var(--text-mute); margin-top: 3px; }
+.noti-x { width: 28px; height: 28px; flex: none; background: none; border: none; color: var(--text-mute); font-size: 13px; cursor: pointer; }
+.noti-row.read .noti-t1, .noti-row.read .noti-t2 { color: var(--text-mute); } .noti-row.read .noti-ico { opacity: .45; } .noti-row.read .noti-chip { color: var(--text-mute); }
+.noti-empty { padding: 28px 16px; text-align: center; font-size: 13px; color: var(--text-mute); }
+/* v5.74: 장후 내 계좌 — 손익 2칸을 등락률 3칸에 붙임 */
+.num-kpis2 { margin-top: 0 !important; padding-top: 2px !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8083,9 +8106,7 @@ table.combo-eval tbody td .nodata {
         <path d="M21 21l-4.35-4.35"/>
       </svg>
     </button>
-    <button class="mobile-topbar-btn" id="mobileLoadBtn" onclick="aqHeroTossSync()" aria-label="토스 동기화" data-x="1" title="토스 동기화 — 보유·체결 가져오기" data-old-title="매매이력 불러오기 — 다른 기기에서 저장한 내역 동기화">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-    </button>
+    <button class="mobile-topbar-btn noti-bell" id="mobileNotiBtn" onclick="aqNotiToggle()" aria-label="알림"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="noti-badge" id="aqNotiBadge" style="display:none">0</span></button>
     <button class="mobile-topbar-btn" id="mobileRefreshBtn" onclick="aqHardRestart()" aria-label="데이터 새로고침">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 12a9 9 0 1 1-3-6.7L21 8"/>
@@ -8803,6 +8824,7 @@ table.combo-eval tbody td .nodata {
 
         <div class="ops-sheet-bg" id="bdgSheetBg" onclick="aqBadgeSheetClose()" style="z-index:1100"></div>
     <div class="ops-sheet aq-sec-sheet" id="bdgSheet" style="z-index:1101"><div class="ops-sheet-grip"></div><div class="auto-sheet-scroll" id="bdgSheetBody"></div></div>
+    <div class="noti-pop" id="aqNotiPop"><span class="noti-tip"></span><div class="noti-card"><div class="noti-h"><b>알림</b><button onclick="aqNotiReadAll()">모두 읽음</button></div><div class="noti-list" id="aqNotiList"></div></div></div>
     <!-- v5.04: 계정 카드 (보드 맨 아래, 압축형) -->
     <section class="card" id="aqAccountCard" data-mtab="board">
       <div class="card-body">
@@ -27499,14 +27521,7 @@ function aqWatchSub(t) {
 function aqWatchSubClick(t) { if (aqWatchSub(t) === 'cmp') { try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {} } }
 window.aqWatchSub = aqWatchSub; window.aqWatchSubClick = aqWatchSubClick;
 setTimeout(() => { try { aqWatchSub(localStorage.getItem('aq_watch_sub') || 'sim'); } catch (e) {} }, 300);
-// v5.69: 우상단 새로고침 = 캐시 지우고 다시 시작 (확인 없이, 로그인·화면 설정은 그대로)
-async function aqHardRestart() {
-  try { if (typeof aqToast === 'function') aqToast('새로 불러오는 중…'); } catch (e) {}
-  try { await aqClearAllCaches(); } catch (e) {}
-  try { sessionStorage.removeItem('aq_sw_reload_done'); } catch (e) {}
-  setTimeout(() => window.location.reload(), 250);
-}
-window.aqHardRestart = aqHardRestart;
+// (v5.74에서 새로고침 = 토스 맞춤 + 캐시 초기화로 교체 — 아래 알림 모듈 끝)
 
 // ============================================================================
 // v5.71: 업적 도감 — 이름·조건·한 마디는 'AQUAMEL_Complete_Badges_Catalog_Tables' 원문 그대로 (서버는 코드·현황 숫자만)
@@ -27647,6 +27662,109 @@ Object.assign(window, { aqBadgeSheet, aqBadgeSheetClose, aqBadgeJump, aqBadgeFol
 try { AQ_SHEETS.push({ id: 'bdgSheet', root: () => document.getElementById('bdgSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: aqBadgeSheetClose, full: true }); } catch (e) {}
 // 종목 페이지가 열릴 때 업적 도감 섹션 채우기
 (function () { try { const _oc = openChart; openChart = async function (tk) { const r = await _oc.apply(this, arguments); try { aqBadgeTickerRender(tk); } catch (e) {} return r; }; window.openChart = openChart; } catch (e) {} })();
+
+// ============================================================================
+// v5.74: 알림 (일일 브리핑 · AI 가이드 · AI 보고서) — 종 아이콘 아래 말풍선, 읽음·지우기는 서버 저장
+// ============================================================================
+const _noti = { items: [], ts: 0, open: false };
+function _notiBadge() {
+  const n = _noti.items.filter(x => !x.read).length; const b = document.getElementById('aqNotiBadge');
+  if (b) { b.textContent = n > 9 ? '9+' : String(n); b.style.display = n ? '' : 'none'; }
+}
+async function aqNotiLoad() {
+  try { if (!localStorage.getItem('aq_session_token')) return; } catch (e) { return; }
+  try { const r = await apiCall('getFeed', {}); if (r && r.ok) { _noti.items = r.items || []; _noti.ts = Date.now(); } } catch (e) {}
+  _notiBadge(); if (_noti.open) _notiRender();
+}
+function _notiTime(iso) { const d = new Date(iso); if (isNaN(d)) return ''; const k = new Date(d.getTime() + 9 * 3600e3); return `${String(k.getUTCHours()).padStart(2, '0')}:${String(k.getUTCMinutes()).padStart(2, '0')}`; }
+function _notiDay(iso) {
+  const d = new Date(new Date(iso).getTime() + 9 * 3600e3).toISOString().slice(0, 10); const t = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+  const y = new Date(Date.now() - 15 * 3600e3).toISOString().slice(0, 10); const md = d.slice(5).replace('-', '/');
+  return d === t ? `오늘 · ${md}` : d === y ? `어제 · ${md}` : `${md} (${'일월화수목금토'[new Date(d + 'T00:00:00').getDay()]})`;
+}
+function _notiRender() {
+  const box = document.getElementById('aqNotiList'); if (!box) return;
+  if (!_noti.items.length) { box.innerHTML = '<div class="noti-empty">새 알림이 없어요.</div>'; return; }
+  let h = '', last = '';
+  _noti.items.forEach((x, i) => {
+    const day = _notiDay(x.at); if (day !== last) { h += `<div class="noti-day">${day}</div>`; last = day; }
+    const ico = x.type === 'report' ? `<span class="noti-ico lg">${(typeof aqLogoHtml === 'function') ? aqLogoHtml(x.ticker, '', 'noti-logo') : escapeHtml(String(x.ticker).slice(0, 2))}</span>` : `<span class="noti-ico">${x.type === 'guide' ? '🧭' : '📰'}</span>`;
+    const name = x.type === 'brief' ? '일일 브리핑' : x.type === 'guide' ? 'AI 가이드' : 'AI 보고서';
+    const line = x.type === 'report' ? [((_state.tickerCompanyMaps || {})[x.market] || {})[x.ticker] || '', x.line].filter(Boolean).join(' · ') : x.line;
+    h += `<div class="noti-sw" data-i="${i}"><div class="noti-del">지우기</div><div class="noti-row${x.read ? ' read' : ''}" data-i="${i}">${x.read ? '' : '<span class="noti-dot"></span>'}${ico}<div class="noti-mid"><div class="noti-t1">${name}<span class="noti-chip">${escapeHtml(x.chip || '')}</span></div><div class="noti-t2">${escapeHtml(line || '')}</div><div class="noti-t3">${_notiTime(x.at)}${x.read ? ' · 읽음' : ''}</div></div><button class="noti-x" data-x="${i}" aria-label="지우기">✕</button></div></div>`;
+  });
+  box.innerHTML = h;
+  box.querySelectorAll('.noti-x').forEach(b => b.onclick = (e) => { e.stopPropagation(); _notiRemove(Number(b.dataset.x)); });
+  box.querySelectorAll('.noti-row').forEach(r => { r.onclick = () => { if (r.dataset.swiped) return; _notiGo(Number(r.dataset.i)); }; _notiSwipe(r); });
+}
+function _notiRemove(i, slid) {
+  const x = _noti.items[i]; if (!x) return;
+  const sw = document.querySelector(`#aqNotiList .noti-sw[data-i="${i}"]`);
+  const done = () => { _noti.items = _noti.items.filter(y => y !== x); _notiBadge(); _notiRender(); };
+  apiCall('feedMark', { nid: x.nid, op: 'delete' }).catch(() => {});
+  if (sw && !slid) { sw.style.transition = 'opacity .18s, max-height .22s'; sw.style.opacity = '0'; sw.style.maxHeight = '0'; setTimeout(done, 220); } else done();
+}
+function _notiSwipe(row) {   // 좌우로 밀어 지우기 — 위아래 스크롤과 구분
+  let sx = 0, sy = 0, dx = 0, lock = null, w = 0;
+  const start = (x, y) => { sx = x; sy = y; dx = 0; lock = null; w = row.offsetWidth; row.style.transition = 'none'; delete row.dataset.swiped; };
+  const move = (x, y, e) => {
+    const mx = x - sx, my = y - sy;
+    if (lock === null && (Math.abs(mx) > 8 || Math.abs(my) > 8)) lock = Math.abs(mx) > Math.abs(my) ? 'x' : 'y';
+    if (lock !== 'x') return; if (e && e.cancelable) e.preventDefault();
+    dx = mx; row.style.transform = `translateX(${dx}px)`; row.parentElement.classList.toggle('show-del', Math.abs(dx) > 10);
+  };
+  const end = () => {
+    if (lock !== 'x') return; row.dataset.swiped = '1'; setTimeout(() => { delete row.dataset.swiped; }, 50);
+    row.style.transition = 'transform .2s ease';
+    if (Math.abs(dx) > w / 3) { row.style.transform = `translateX(${dx > 0 ? w : -w}px)`; setTimeout(() => { const sw = row.parentElement; sw.style.transition = 'max-height .2s, opacity .2s'; sw.style.maxHeight = '0'; sw.style.opacity = '0'; setTimeout(() => _notiRemove(Number(row.dataset.i), true), 200); }, 180); }
+    else { row.style.transform = 'translateX(0)'; row.parentElement.classList.remove('show-del'); }
+  };
+  row.addEventListener('touchstart', e => start(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+  row.addEventListener('touchmove', e => move(e.touches[0].clientX, e.touches[0].clientY, e), { passive: false });
+  row.addEventListener('touchend', end);
+  row.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; start(e.clientX, e.clientY); const mm = ev => move(ev.clientX, ev.clientY, ev); const mu = () => { end(); window.removeEventListener('pointermove', mm); window.removeEventListener('pointerup', mu); }; window.addEventListener('pointermove', mm); window.addEventListener('pointerup', mu); });
+}
+function _notiGo(i) {
+  const x = _noti.items[i]; if (!x) return;
+  if (!x.read) { x.read = true; apiCall('feedMark', { nid: x.nid, op: 'read' }).catch(() => {}); _notiBadge(); }
+  aqNotiClose();
+  const toMk = (mk, fn) => { if (mk && mk !== getCurrentMarket() && typeof setMarket === 'function') { setMarket(mk); setTimeout(fn, 450); } else setTimeout(fn, 80); };
+  if (x.type === 'brief') toMk(x.market, () => { switchMobileTab('auto'); setAiSubtab('brief'); setTimeout(() => { try { aqBriefMode(x.mode); } catch (e) {} }, 150); });
+  else if (x.type === 'guide') { switchMobileTab('auto'); setAiSubtab('guide'); setTimeout(() => { try { aqGuideSel(x.date); } catch (e) {} }, 300); }
+  else if (x.type === 'report') toMk(x.market, async () => { try { await openChart(x.ticker); setTimeout(() => { try { openReportPanel(); } catch (e) {} }, 250); } catch (e) {} });
+}
+function aqNotiToggle() { _noti.open ? aqNotiClose() : aqNotiOpen(); }
+function aqNotiOpen() {
+  const pop = document.getElementById('aqNotiPop'); const bell = document.getElementById('mobileNotiBtn'); if (!pop || !bell) return;
+  const r = bell.getBoundingClientRect(); pop.style.top = (r.bottom + 10) + 'px';
+  const tip = pop.querySelector('.noti-tip'); if (tip) tip.style.left = Math.max(16, r.left + r.width / 2 - 7 - pop.getBoundingClientRect().left) + 'px';
+  pop.classList.add('open'); bell.classList.add('on'); _noti.open = true;
+  requestAnimationFrame(() => { const t2 = pop.querySelector('.noti-tip'); if (t2) t2.style.left = Math.max(16, r.left + r.width / 2 - 7 - pop.getBoundingClientRect().left) + 'px'; });
+  _notiRender(); if (Date.now() - _noti.ts > 60e3) aqNotiLoad();
+}
+function aqNotiClose() { const pop = document.getElementById('aqNotiPop'); if (pop) pop.classList.remove('open'); const bell = document.getElementById('mobileNotiBtn'); if (bell) bell.classList.remove('on'); _noti.open = false; }
+async function aqNotiReadAll() {
+  _noti.items.forEach(x => x.read = true); _notiBadge(); _notiRender();
+  try { await apiCall('feedReadAll', {}); } catch (e) {}
+}
+document.addEventListener('click', e => { if (!_noti.open) return; if (e.target.closest('#aqNotiPop') || e.target.closest('#mobileNotiBtn')) return; aqNotiClose(); }, true);
+try { AQ_SHEETS.push({ id: 'aqNotiPop', root: () => document.getElementById('aqNotiPop'), panel: r => r, isOpen: r => r.classList.contains('open'), close: aqNotiClose, full: false }); } catch (e) {}
+setTimeout(() => aqNotiLoad(), 3000); setInterval(() => { if (!document.hidden) aqNotiLoad(); }, 5 * 60e3);
+document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - _noti.ts > 60e3) aqNotiLoad(); });
+Object.assign(window, { aqNotiToggle, aqNotiOpen, aqNotiClose, aqNotiReadAll, aqNotiLoad });
+// v5.74: 새로고침 = 토스 맞춤(최대 8초) + 캐시 지우고 다시 시작
+async function aqHardRestart() {
+  try { if (typeof aqToast === 'function') aqToast('토스 맞추고 새로 불러오는 중…'); } catch (e) {}
+  try {
+    const r = await Promise.race([apiCall('brokerSync', {}), new Promise(res => setTimeout(() => res({ timeout: true }), 8000))]);
+    if (r && !r.timeout && r.ok === false && !/잠시 후|연결되지 않/.test(String(r.error || ''))) sessionStorage.setItem('aq_sync_fail', String(r.error || '토스 동기화 실패').slice(0, 80));
+  } catch (e) {}
+  try { await aqClearAllCaches(); } catch (e) {}
+  try { sessionStorage.removeItem('aq_sw_reload_done'); } catch (e) {}
+  setTimeout(() => window.location.reload(), 200);
+}
+window.aqHardRestart = aqHardRestart;
+setTimeout(() => { try { const m = sessionStorage.getItem('aq_sync_fail'); if (m) { sessionStorage.removeItem('aq_sync_fail'); if (typeof aqToast === 'function') aqToast('토스 동기화가 안 됐어요 — ' + m); } } catch (e) {} }, 2500);
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
