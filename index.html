@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.69';   // v5.69: 숫자 콤마, 관심=모의 매수|비교 분석 탭, 모의 매수 단순화, 장전 지표·내 종목 영향, 새로고침=캐시 지우고 다시 시작
+window.AQ_PWA_VERSION = '5.70';   // v5.70: 관심 상단 하위 탭(모의 매수 | 비교 분석), 제목 삭제, 모의 매수 현재가 + 변동액(변동률), v5.69 탭 무한 반복 수정
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4216,9 +4216,11 @@ body[data-mtab="auto"][data-atab="guide"] footer { display: none !important; }
 /* v5.69 */
 .pre-tiles .bf-tile .pre-v { font-size: 11.5px; color: var(--text-mute); margin-top: 2px; font-variant-numeric: tabular-nums; }
 .pre-kind { font-size: 10px; padding: 1px 6px; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--text-mute); font-weight: 700; } .pre-nm { font-size: 11px; color: var(--text-mute); }
-.wtab-bar { display: flex; gap: 6px; margin: 0 0 12px; } .wtab-bar button { background: rgba(255,255,255,.05); border: none; border-radius: 999px; padding: 7px 16px; font-size: 13px; font-weight: 700; color: var(--text-mute); cursor: pointer; } .wtab-bar button.on { background: rgba(77,171,247,.16); color: #74c0fc; }
-body[data-wtab="cmp"] #watchBoardCard > .card-header, body[data-wtab="cmp"] #watchBoardCard > .card-body { display: none; }
-.sim-roi b { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; } .sim-roi b.up { color: var(--kr-up); } .sim-roi b.down { color: var(--kr-down); } .sim-roi b.zero { color: var(--text-mute); }
+.sim-roi { text-align: right; } .sim-px { font-size: 14px; font-weight: 700; color: var(--text-hi); font-variant-numeric: tabular-nums; } .sim-roi b { display: block; margin-top: 2px; font-size: 12.5px; font-weight: 800; font-variant-numeric: tabular-nums; } .sim-roi b.up { color: var(--kr-up); } .sim-roi b.down { color: var(--kr-down); } .sim-roi b.zero { color: var(--text-mute); }
+/* v5.70: 관심 하위 탭 · 제목 없음 */
+body[data-mtab="sector"][data-wsub="cmp"] #watchBoardCard { display: none !important; }
+body[data-mtab="sector"]:not([data-wsub="cmp"]) #compareCard { display: none !important; }
+#watchBoardCard > .card-header, #compareCard > .card-header { display: none !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8421,7 +8423,8 @@ table.combo-eval tbody td .nodata {
 
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
   <!-- v3.32: 종목 비교 분석 (US 유니버스 최대 3개 — 리베이스 차트 + 멀티 헥사곤) -->
-  <section class="card" id="watchBoardCard" data-mtab="sector"><div class="wtab-bar" id="watchTabBar"><button data-wtab="sim" onclick="aqWatchTab('sim')">모의 매수</button><button data-wtab="cmp" onclick="aqWatchTab('cmp')">비교 분석</button></div> <div class="card-header"><h2>모의 매수</h2><span class="dash-meta" id="aqSimMeta"></span></div>
+  <section class="card mobile-only explore-subtabs" id="watchSubtabs" data-mtab="sector"><div class="xtab-row"><button class="xtab-btn" data-wsub="sim" onclick="aqWatchSubClick('sim')">모의 매수</button><button class="xtab-btn" data-wsub="cmp" onclick="aqWatchSubClick('cmp')">비교 분석</button></div></section>
+  <section class="card" id="watchBoardCard" data-mtab="sector"><div class="card-header"><h2>모의 매수</h2><span class="dash-meta" id="aqSimMeta"></span></div>
       <div class="card-body">
         <div class="aq-sim-summary" id="aqSimSummary"></div>
         <div class="dash-holdings-body" id="aqSimList"></div>
@@ -12984,7 +12987,7 @@ function applyMarketState(mkt) {
   console.log(`[applyMarketState/${mkt}] archive=${_state.archive.length}, sectors=${Object.keys(_state.sectors).length}, kjpSectorMap=${Object.keys(_state.kjpSectorMap).length}, tickerSectorMap=${Object.keys(_state.tickerSectorMap).length}`);
   // v2.03 Phase 2: 분석 패널이 열려있으면 현재 시장 기준으로 그리드 재빌드
   try { if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
-  try { aqWatchTab(localStorage.getItem('aq_watch_tab') || 'sim'); } catch (e) {} try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
+  try { aqWatchSub(localStorage.getItem('aq_watch_sub') || 'sim'); } catch (e) {} try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   // v3.35: 탐색 서브탭 라벨/내용 시장별 갱신 (KR=외국인/기관 매수, US=내부자/공매도)
   try {
     if (typeof aqApplyExploreMarketUI === 'function') aqApplyExploreMarketUI();
@@ -22853,7 +22856,7 @@ function buildWatchKanban() {
         <div class="ia-ticker">${escapeHtml(tk)}</div>
         <div class="ia-company">${escapeHtml(((_state.tickerCompanyMap || {})[tk]) || displaySub(tk) || '')}</div>
       </div>
-      <div class="ia-meta sim-roi"><b class="${pcls}">${roi == null ? '—' : (roi >= 0 ? '+' : '') + roi.toFixed(1) + '%'}</b></div>
+      <div class="ia-meta sim-roi"><div class="sim-px">${fmt(cur)}</div><b class="${pcls}">${pnlStr} (${roi == null ? '—' : (roi >= 0 ? '+' : '') + roi.toFixed(1) + '%'})</b></div>
     </div>`;
   });
   list.innerHTML = rows.length ? rows.join('') : '<div style="text-align:center;color:var(--text-mute);font-size:11px;padding:30px;">모의매수 종목 없음 — 차트의 ♥ 또는 아래 버튼으로 담기</div>';
@@ -23517,9 +23520,9 @@ function switchMobileTab(tab) {
       const _cc = document.getElementById('compareCard');
       if (_wc && _cc && _wc.parentElement && _cc.previousElementSibling !== _wc) _wc.parentElement.insertBefore(_cc, _wc.nextSibling);
     } catch (e) {}
-    try { aqWatchTab(localStorage.getItem('aq_watch_tab') || 'sim'); } catch (e) {} try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
+    try { aqWatchSub(localStorage.getItem('aq_watch_sub') || 'sim'); } catch (e) {} try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   } else if (tab === 'sector') {
-    try { aqWatchTab(localStorage.getItem('aq_watch_tab') || 'sim'); } catch (e) {} try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}   // v5.22: 관심 = 비교 분석 + 모의매수
+    try { aqWatchSub(localStorage.getItem('aq_watch_sub') || 'sim'); } catch (e) {} try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}   // v5.22: 관심 = 비교 분석 + 모의매수
     try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {}
     // v3.85: 섹터 서브탭 기본값 = 일간 섹터 동향
     if (!document.body.getAttribute('data-stab')) document.body.setAttribute('data-stab', 'trend');
@@ -23679,7 +23682,7 @@ function setBoardSubtab(x) {
       const _cc = document.getElementById('compareCard');
       if (_wc && _cc && _wc.parentElement && _cc.previousElementSibling !== _wc) _wc.parentElement.insertBefore(_cc, _wc.nextSibling);
     } catch (e) {}
-    try { aqWatchTab(localStorage.getItem('aq_watch_tab') || 'sim'); } catch (e) {} try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
+    try { aqWatchSub(localStorage.getItem('aq_watch_sub') || 'sim'); } catch (e) {} try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {}
   }
   try { if (typeof rerunCardAnimations === 'function') rerunCardAnimations(); } catch (e) {}
 }
@@ -27449,16 +27452,17 @@ Object.assign(window, { aqLoadSectorDefs, aqSaSetMode, aqSaToggleMega, aqOpenMeg
 setTimeout(() => { try { aqLoadSectorDefs(); } catch (e) {} }, 1500);
 
 
-// v5.69: 관심 = 모의 매수 | 비교 분석 탭
-function aqWatchTab(t) {
-  t = t === 'cmp' ? 'cmp' : 'sim'; try { localStorage.setItem('aq_watch_tab', t); } catch (e) {}
-  document.body.setAttribute('data-wtab', t);
-  document.querySelectorAll('#watchTabBar [data-wtab]').forEach(b => b.classList.toggle('on', b.dataset.wtab === t));
-  const cc = document.getElementById('compareCard'); if (cc) cc.style.display = t === 'cmp' ? '' : 'none';
-  if (t === 'cmp') { try { aqWatchTab(localStorage.getItem('aq_watch_tab') || 'sim'); } catch (e) {} try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {} }
+// v5.70: 관심 = 상단 하위 탭 (모의 매수 | 비교 분석). 표시만 바꾸고 다른 함수를 부르지 않음 (v5.69 무한 반복 원인 제거)
+function aqWatchSub(t) {
+  t = t === 'cmp' ? 'cmp' : 'sim';
+  try { localStorage.setItem('aq_watch_sub', t); } catch (e) {}
+  document.body.setAttribute('data-wsub', t);
+  document.querySelectorAll('#watchSubtabs [data-wsub]').forEach(b => b.classList.toggle('active', b.dataset.wsub === t));
+  return t;
 }
-window.aqWatchTab = aqWatchTab;
-setTimeout(() => { try { aqWatchTab(localStorage.getItem('aq_watch_tab') || 'sim'); } catch (e) {} }, 800);
+function aqWatchSubClick(t) { if (aqWatchSub(t) === 'cmp') { try { if (typeof buildCompare === 'function') buildCompare(); } catch (e) {} } }
+window.aqWatchSub = aqWatchSub; window.aqWatchSubClick = aqWatchSubClick;
+setTimeout(() => { try { aqWatchSub(localStorage.getItem('aq_watch_sub') || 'sim'); } catch (e) {} }, 300);
 // v5.69: 우상단 새로고침 = 캐시 지우고 다시 시작 (확인 없이, 로그인·화면 설정은 그대로)
 async function aqHardRestart() {
   try { if (typeof aqToast === 'function') aqToast('새로 불러오는 중…'); } catch (e) {}
