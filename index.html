@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.82';   // v5.82: 한국 수급 도착·확정 알림, 거래 없는 종목(상장폐지 의심) 분리
+window.AQ_PWA_VERSION = '5.83';   // v5.83: 운영 = 매뉴얼 운영 | 자동 일정표 하위 탭
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4333,6 +4333,29 @@ body[data-mtab="sector"]:not([data-wsub="cmp"]) #compareCard { display: none !im
 #setSecSheet { max-height: 88vh; } #setSecSheet.aq-sheet-full { max-height: 96vh; height: 96vh; }
 #setSecBody { max-height: calc(88vh - 76px) !important; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding-bottom: 12px; } #setSecSheet.aq-sheet-full #setSecBody { max-height: calc(96vh - 76px) !important; }
 /* v5.81 */ .kf-note { font-size: 11px; color: var(--text-mute); margin-top: 8px; } .kf-note.warn { color: #ffa94d; }
+/* v5.83: 운영 하위 탭 + 자동 일정표 */
+#opsSubtabs { display: none; } body[data-mtab="ops"] #opsSubtabs { display: block !important; }
+body[data-mtab="ops"]:not([data-otab="auto"]) #opsTimelineCard { display: none !important; }
+body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab="manual"] { display: none !important; }
+#opsTimelineCard { display: none; } body[data-mtab="ops"][data-otab="auto"] #opsTimelineCard { display: block !important; }
+.tl-hd { display: flex; justify-content: space-between; align-items: center; margin: 2px 2px 10px; gap: 8px; }
+.tl-leg { display: flex; gap: 12px; font-size: 11px; color: var(--text-mute); } .tl-leg i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+.tl-leg i.c, .tl-dot.c { background: #b197fc; } .tl-leg i.d, .tl-dot.d { background: #63e6be; }
+.tl-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; } .tl-seg button { background: none; border: none; color: var(--text-mute); font-size: 11px; font-weight: 700; padding: 4px 10px; cursor: pointer; } .tl-seg button.on { background: rgba(255,255,255,.09); color: var(--text-hi); }
+.tl-list { background: rgba(255,255,255,.035); border-radius: 16px; padding: 4px 12px; }
+.tl-r { display: grid; grid-template-columns: 42px 12px minmax(0,1fr) auto; gap: 8px; align-items: center; padding: 9px 0; font-size: 13px; } .tl-r + .tl-r { border-top: 1px solid rgba(255,255,255,.05); }
+.tl-r.past { opacity: .6; } .tl-t { font-size: 12px; color: var(--text-mute); font-variant-numeric: tabular-nums; } .tl-dot { width: 8px; height: 8px; border-radius: 50%; justify-self: center; }
+.tl-w { min-width: 0; } .tl-w b { font-weight: 700; color: var(--text-hi); } .tl-w small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; } .tl-pair { color: #b197fc; }
+.tl-st { font-size: 11px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.tl-st.ok { background: rgba(99,230,190,.14); color: #63e6be; } .tl-st.wait { background: rgba(255,255,255,.06); color: var(--text-mute); } .tl-st.fail { background: rgba(255,107,107,.15); color: #ff8787; } .tl-st.late { background: rgba(255,169,77,.15); color: #ffa94d; } .tl-st.run { background: rgba(77,171,247,.15); color: #74c0fc; }
+.tl-now { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #ff6b6b; margin: 2px 0; } .tl-now::before, .tl-now::after { content: ""; flex: 1; height: 1px; background: #ff6b6b; opacity: .6; }
+.tl-grp { font-size: 11.5px; color: var(--text-mute); margin: 16px 4px 6px; }
+.tl-edit-t { display: block; width: 100%; background: none; border: none; color: #4dabf7; font-size: 12.5px; margin-top: 14px; padding: 6px 0; cursor: pointer; }
+.tl-edit { background: rgba(255,255,255,.035); border-radius: 16px; padding: 10px 12px; } .tl-note { font-size: 11.5px; color: var(--text-mute); margin-bottom: 8px; line-height: 1.5; }
+.tl-er { display: flex; align-items: center; gap: 8px; padding: 7px 0; flex-wrap: wrap; } .tl-er + .tl-er { border-top: 1px solid rgba(255,255,255,.05); }
+.tl-en { flex: 1; min-width: 110px; font-size: 13px; color: var(--text-hi); } .tl-er input[type="time"] { background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 8px; color: var(--text-hi); padding: 4px 6px; font-size: 13px; }
+.tl-dows { display: flex; gap: 3px; } .tl-dows button { width: 24px; height: 24px; border-radius: 50%; border: none; background: rgba(255,255,255,.06); color: var(--text-mute); font-size: 11px; cursor: pointer; padding: 0; } .tl-dows button.on { background: rgba(177,151,252,.25); color: #d0bfff; }
+.tl-md { font-size: 11.5px; color: var(--text-mute); } .tl-save { width: 100%; margin-top: 10px; padding: 9px; border-radius: 12px; border: none; background: rgba(77,171,247,.18); color: #74c0fc; font-weight: 700; cursor: pointer; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8634,7 +8657,9 @@ table.combo-eval tbody td .nodata {
   </section>
 
     <!-- ============ v4.76: 운영 페이지 — 미국 / 한국 작업 ============ -->
-    <section class="card" id="opsUsCard" data-mtab="ops">
+    <section class="card mobile-only explore-subtabs" id="opsSubtabs" data-mtab="ops"><div class="xtab-row"><button class="xtab-btn active" data-otab="manual" onclick="aqOpsTab('manual')">매뉴얼 운영</button><button class="xtab-btn" data-otab="auto" onclick="aqOpsTab('auto')">자동 일정표</button></div></section>
+  <section class="card" id="opsTimelineCard" data-mtab="ops" data-otab="auto"><div class="card-body" id="opsTlBody"><div class="auto-empty">불러오는 중…</div></div></section>
+  <section class="card" id="opsUsCard" data-mtab="ops" data-otab="manual">
       <div class="card-header" onclick="toggleCard(this)">
         <h2>🇺🇸 미국주식 작업</h2>
         <div class="ops-hdr" onclick="event.stopPropagation()">
@@ -8663,7 +8688,7 @@ table.combo-eval tbody td .nodata {
       </div>
     </section>
 
-    <section class="card" id="opsKrCard" data-mtab="ops">
+    <section class="card" id="opsKrCard" data-mtab="ops" data-otab="manual">
       <div class="card-header" onclick="toggleCard(this)">
         <h2>🇰🇷 한국주식 작업</h2>
         <div class="ops-hdr" onclick="event.stopPropagation()">
@@ -25394,6 +25419,7 @@ async function aqOpsShowLog(id) {
 function aqOpsCloseLog() { document.getElementById('opsLogModal').classList.remove('active'); }
 async function aqOpsEnter() {
   if (!_ops.entered) { _ops.entered = true; _ops.cfg.us = _opsDefaultCfg('us'); _ops.cfg.kr = _opsDefaultCfg('kr'); aqOpsRenderTable('us'); aqOpsRenderTable('kr'); }
+  try { aqOpsTab(localStorage.getItem('aq_ops_tab') || 'manual'); } catch (e) {}   // v5.83: 하위 탭
   await aqOpsLoadCfg(); aqOpsRenderTable('us'); aqOpsRenderTable('kr');
   await aqOpsRefresh();
 }
@@ -28136,6 +28162,104 @@ function aqKrFlowNote(tk) {   // 종목 페이지 수급 섹션 아래 한 줄
 }
 Object.assign(window, { aqKrFlowLoad, aqKrFlowShow, aqKrFlowNote });
 setTimeout(() => { try { aqKrFlowLoad(); } catch (e) {} }, 2500);
+
+// ============================================================================
+// v5.83: 운영 = 하위 탭 (매뉴얼 운영 | 자동 일정표). 자동 일정표: 오늘 하루를 한국 시각 한 줄 타임라인으로
+// ============================================================================
+const AQ_TL_NAMES = { myport: 'MyPort (AI 가이드 재료)', guide_watch: '받아들인 가이드 감시', macro_quick: '장전 지표 빠른 수집', badges: '업적 도감 계산', names_sync: '종목명 갱신',
+  secmon: '보안 검사', kr_flows: '한국 수급 재확인·확정', kr_brief: '브리핑·가이드·감리 가져오기' };
+const AQ_TL_KEY = new Set(['us_sheets', 'kr_sheets', 'us_calendar', 'myport', 'kr_flows', 'kr_broker', 'us_broker', 'kr_quick']);   // '핵심만'에 보이는 서버 작업
+const _tl = { data: null, mode: localStorage.getItem('aq_tl_mode') || 'key', timer: null, edit: false };
+function _tlName(id) { try { const d = _opsJobDef(id); if (d && d.name) return d.name; } catch (e) {} return AQ_TL_NAMES[id] || id; }
+function aqOpsTab(t) {
+  t = t === 'auto' ? 'auto' : 'manual'; try { localStorage.setItem('aq_ops_tab', t); } catch (e) {}
+  document.body.setAttribute('data-otab', t);
+  document.querySelectorAll('#opsSubtabs [data-otab]').forEach(b => b.classList.toggle('active', b.dataset.otab === t));
+  clearInterval(_tl.timer); _tl.timer = null;
+  if (t === 'auto') { aqTlLoad(); _tl.timer = setInterval(() => { if (document.body.getAttribute('data-mtab') === 'ops' && document.body.getAttribute('data-otab') === 'auto' && !document.hidden) aqTlLoad(); }, 60e3); }
+}
+async function aqTlLoad() { const r = await _opsCall('opsTimeline', {}); if (r && r.ok) _tl.data = r; else if (!_tl.data) _tl.data = { error: (r && r.error) || '불러오지 못했어요' }; aqTlRender(); }
+function aqTlMode(m) { _tl.mode = m; try { localStorage.setItem('aq_tl_mode', m); } catch (e) {} aqTlRender(); }
+const _tlMin = t => { const [h, m] = String(t).split(':').map(Number); return h * 60 + m; };
+function _tlRunAt(d, job, kst, until) {   // 그 시각 이후 ~ 다음 예약 시각 전 사이의 첫 실행 기록 (다음 회차 기록을 빌려 오지 않게)
+  const t0 = _tlMin(kst), t1 = until ? _tlMin(until) : 24 * 60;
+  return (d.runs_all || []).filter(r => r.job === job && r.t && _tlMin(r.t) >= t0 - 1 && _tlMin(r.t) < t1 - 1).sort((a, b) => _tlMin(a.t) - _tlMin(b.t))[0] || null;
+}
+function _tlNext(d, job, kst) { const x = (d.events || []).filter(e => e.job === job && _tlMin(e.kst) > _tlMin(kst)).map(e => e.kst).sort((a, b) => _tlMin(a) - _tlMin(b)); return x[0] || null; }
+function _tlStatus(r, past) {
+  if (!r) return past ? '<span class="tl-st late">기록 없음</span>' : '<span class="tl-st wait">대기</span>';
+  if (r.status === 'success' || r.status === 'warn') return `<span class="tl-st ok">${r.status === 'warn' ? '주의' : '성공'} ${r.end || r.t}</span>`;
+  if (r.status === 'failed' || r.status === 'error') return `<span class="tl-st fail">실패 ${r.end || r.t}</span>`;
+  if (r.status === 'running') return '<span class="tl-st run">실행 중</span>';
+  if (r.status === 'queued') return '<span class="tl-st wait">대기열</span>';
+  return `<span class="tl-st wait">${escapeHtml(r.status)}</span>`;
+}
+function aqTlRender() {
+  const box = document.getElementById('opsTlBody'); if (!box) return; const d = _tl.data;
+  if (!d) { box.innerHTML = '<div class="auto-empty">불러오는 중…</div>'; return; }
+  if (d.error) { box.innerHTML = `<div class="auto-empty">${escapeHtml(d.error)}</div>`; return; }
+  const now = _tlMin(d.now); const rows = []; const repeat = [];
+  const syncTimes = (d.events || []).filter(e => e.job === 'kr_brief').map(e => e.kst);
+  // Claude 작업 (작성 → 앱 반영)
+  (d.claude || []).forEach(c => {
+    if (c.off) return; if (c.monthday ? d.day !== c.monthday : !(c.dow || []).includes(d.dow)) return;
+    const after = syncTimes.filter(t => _tlMin(t) > _tlMin(c.time)); const s1 = after[0], s2 = after[1];
+    const got = d.docs && d.docs[c.doc]; let st;
+    if (got) st = `<span class="tl-st ok">반영됨 ${got}</span>`;
+    else if (s2 && now > _tlMin(s2) + 5) st = '<span class="tl-st late">아직 안 들어옴</span>';
+    else if (s1 && now > _tlMin(s1) + 5) st = `<span class="tl-st late">늦어짐 · 다음 확인 ${s2 || '내일'}</span>`;
+    else if (now >= _tlMin(c.time)) st = '<span class="tl-st wait">작성 중</span>'; else st = '<span class="tl-st wait">대기</span>';
+    rows.push({ t: c.time, kind: 'c', key: true, html: `<b>${escapeHtml(c.name)} 작성</b><small>${c.monthday ? '매월 ' + c.monthday + '일 · ' : ''}<span class="tl-pair">→ ${s1 ? s1 + ' 앱 반영' : '다음 동기화 때 반영'}${s2 ? ` (늦으면 ${s2})` : ''}</span></small>`, st });
+  });
+  // 서버 작업
+  const seen = {};
+  (d.events || []).forEach(e => {
+    if (e.job === 'kr_brief' || e.n_times >= 12) { if (!seen[e.job]) { seen[e.job] = 1; repeat.push(e); } return; }
+    const past = _tlMin(e.kst) <= now; const nxt = _tlNext(d, e.job, e.kst); const head = _tlRunAt(d, e.job, e.kst, nxt);
+    let st = past ? _tlStatus(head, _tlMin(e.kst) + 10 < now) : _tlStatus(null, false);
+    let sub = e.tz === 'America/New_York' ? `뉴욕 ${e.local}` : '';
+    if (e.chain && e.chain.length) {
+      sub = (sub ? sub + ' · ' : '') + '이어서 ' + e.chain.map(_tlName).join(' → ');
+      const tail = past ? _tlRunAt(d, e.chain[e.chain.length - 1], e.kst, nxt) : null; const fail = past && e.chain.map(j => _tlRunAt(d, j, e.kst, nxt)).some(r => r && (r.status === 'failed' || r.status === 'error'));
+      if (fail) st = '<span class="tl-st fail">이어서 하던 중 실패</span>'; else if (tail && (tail.status === 'success' || tail.status === 'warn')) st = `<span class="tl-st ok">끝까지 완료 ${tail.end || ''}</span>`;
+      else if (head && head.status === 'success') st = '<span class="tl-st run">이어서 진행 중</span>';
+    }
+    rows.push({ t: e.kst, kind: 'd', key: AQ_TL_KEY.has(e.job), html: `<b>${escapeHtml(_tlName(e.job))}</b>${sub ? `<small>${escapeHtml(sub)}</small>` : ''}`, st });
+  });
+  rows.sort((a, b) => _tlMin(a.t) - _tlMin(b.t) || (a.kind === 'c' ? -1 : 1));
+  const shown = _tl.mode === 'key' ? rows.filter(r => r.key) : rows;
+  let h = `<div class="tl-hd"><span class="tl-leg"><span><i class="c"></i>Claude 작성</span><span><i class="d"></i>서버 작업</span></span><span class="tl-seg"><button class="${_tl.mode === 'key' ? 'on' : ''}" onclick="aqTlMode('key')">핵심만</button><button class="${_tl.mode === 'all' ? 'on' : ''}" onclick="aqTlMode('all')">전체</button></span></div><div class="tl-list">`;
+  let nowDone = false;
+  shown.forEach(r => {
+    if (!nowDone && _tlMin(r.t) > now) { h += `<div class="tl-now">지금 ${d.now}</div>`; nowDone = true; }
+    h += `<div class="tl-r${_tlMin(r.t) <= now ? ' past' : ''}"><span class="tl-t">${r.t}</span><span class="tl-dot ${r.kind}"></span><span class="tl-w">${r.html}</span>${r.st}</div>`;
+  });
+  if (!nowDone) h += `<div class="tl-now">지금 ${d.now}</div>`;
+  h += '</div>';
+  if (repeat.length) {
+    h += '<div class="tl-grp">하루 여러 번</div><div class="tl-list">' + repeat.map(e => {
+      const runs = (d.runs_all || []).filter(r => r.job === e.job); const last = runs[runs.length - 1]; const fails = runs.filter(r => r.status === 'failed' || r.status === 'error').length;
+      const times = (d.events || []).filter(x => x.job === e.job).map(x => x.kst);
+      const when = e.n_times >= 12 ? `${Math.round(24 * 60 / e.n_times)}분마다` : times.join(' · ');
+      return `<div class="tl-r"><span class="tl-t">${e.n_times >= 12 ? '반복' : times.length + '회'}</span><span class="tl-dot d"></span><span class="tl-w"><b>${escapeHtml(_tlName(e.job))}</b><small>${escapeHtml(when)}${last ? ` · 마지막 ${last.end || last.t}` : ''}${fails ? ` · 오늘 실패 ${fails}회` : ''}</small></span>${last ? _tlStatus(last, true) : '<span class="tl-st wait">오늘 아직</span>'}</div>`;
+    }).join('') + '</div>';
+  }
+  // Claude 작업 시각 고치기 (가)
+  h += `<button class="tl-edit-t" onclick="_tl.edit=!_tl.edit; aqTlRender()">Claude 작업 시각 ${_tl.edit ? '접기 ▴' : '고치기 ▾'}</button>`;
+  if (_tl.edit) {
+    const W = ['일', '월', '화', '수', '목', '금', '토'];
+    h += `<div class="tl-edit"><div class="tl-note">Claude 쪽 예약 시각을 바꿨을 때 여기도 같이 바꿔 주세요. 일정표 표시에만 쓰여요.</div>` + (d.claude || []).map((c, i) => `<div class="tl-er" data-i="${i}"><label class="tl-on"><input type="checkbox" ${c.off ? '' : 'checked'} data-k="on"></label><span class="tl-en">${escapeHtml(c.name)}</span><input type="time" value="${c.time}" data-k="time">${c.monthday ? `<span class="tl-md">매월 ${c.monthday}일</span>` : `<span class="tl-dows">${W.map((w, k) => `<button class="${(c.dow || []).includes(k) ? 'on' : ''}" data-k="dow" data-d="${k}" onclick="this.classList.toggle('on')">${w}</button>`).join('')}</span>`}</div>`).join('') + `<button class="tl-save" onclick="aqTlSave()">저장</button></div>`;
+  }
+  box.innerHTML = h;
+}
+async function aqTlSave() {
+  const rows = [...document.querySelectorAll('#opsTlBody .tl-er')]; const base = (_tl.data && _tl.data.claude) || [];
+  const tasks = rows.map(el => { const c = base[Number(el.dataset.i)]; return { id: c.id, time: el.querySelector('[data-k="time"]').value, off: !el.querySelector('[data-k="on"]').checked, dow: c.monthday ? undefined : [...el.querySelectorAll('[data-k="dow"].on')].map(b => Number(b.dataset.d)) }; });
+  const r = await _opsCall('claudeTasksSet', { tasks: JSON.stringify(tasks) });
+  if (typeof aqToast === 'function') aqToast(r && r.ok ? 'Claude 작업 시각을 저장했어요' : '저장 실패: ' + ((r && r.error) || ''));
+  _tl.edit = false; aqTlLoad();
+}
+Object.assign(window, { aqOpsTab, aqTlLoad, aqTlMode, aqTlSave });
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
