@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.67';   // v5.67: 장후 내 계좌에 오늘 평가손익·실현손익, 벌어/깎은 종목 3개, 신호 평가는 전날 이전 신호만
+window.AQ_PWA_VERSION = '5.68';   // v5.68: 섹터 정의·메가 (섹터 페이지 정의, 섹터 동향 섹터/메가 토글, 종목 페이지 메가 딱지) — 미국만
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4205,6 +4205,14 @@ body[data-mtab="auto"][data-atab="guide"] footer { display: none !important; }
 .gda-warn { border: 1px solid rgba(255,107,107,.4); } .gda-warn small { color: #ff8787 !important; }
 .ih-raw { font-size: 10px; color: var(--text-mute); font-weight: 400; }
 .num-kpis2 { grid-template-columns: repeat(2, minmax(0,1fr)) !important; margin-top: 8px; } .num-kpis2 em { display: block; font-style: normal; font-size: 11px; color: var(--text-mute); margin-top: 2px; } .num-kpis2 .num-zero { color: var(--text-mute); font-weight: 600; }
+/* v5.68: 섹터 정의·메가 */
+.sd-mega-row { margin: 2px 0 10px; } .sd-mega, .ms-chip.ms-mega { background: rgba(77,171,247,.14) !important; color: #74c0fc !important; border: none; border-radius: 999px; font-size: 11.5px; font-weight: 700; padding: 3px 10px; cursor: pointer; }
+.sd-def { background: rgba(255,255,255,.04); border-radius: 14px; padding: 12px 14px; font-size: 13px; line-height: 1.6; color: var(--text); margin-bottom: 10px; } .sd-def small { display: block; font-size: 11px; color: var(--text-mute); margin-bottom: 4px; }
+.sd-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 14px; } .sd-stats div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 10px 12px; } .sd-stats span { display: block; font-size: 11px; color: var(--text-mute); } .sd-stats b { font-size: 15px; color: var(--text-hi); } .sd-stats b.up { color: var(--kr-up); } .sd-stats b.down { color: var(--kr-down); }
+.sa-mode { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; margin: 0 0 10px; } .sa-mode button { background: none; border: none; color: var(--text-mute); font-size: 12px; font-weight: 700; padding: 5px 14px; cursor: pointer; } .sa-mode button.on { background: rgba(255,255,255,.09); color: var(--text-hi); }
+[data-mega] { cursor: pointer; } [data-mega] .sa-bar-label { width: 140px; } .sa-mega-nm { font-weight: 800; } .sa-mega-nm em { font-style: normal; color: var(--text-mute); font-size: 10px; } .sa-mega-sub { display: block; font-size: 10px; color: var(--text-mute); font-weight: 500; }
+.sa-bar-row.sa-sub { padding-left: 18px !important; opacity: .9; } .sa-bar-row.sa-sub .sa-bar-label { width: 122px; }
+.sa-mega-other { font-size: 11px; color: var(--text-mute); margin: 8px 4px 0; line-height: 1.5; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8692,7 +8700,7 @@ table.combo-eval tbody td .nodata {
     <div class="ops-sheet aq-sec-sheet" id="aqSectorSheet">
       <div class="ops-sheet-grip"></div>
       <div class="ops-sheet-title" id="aqSectorTitle">섹터</div>
-      <div class="ops-sheet-meta" id="aqSectorMeta"></div>
+      <div class="ops-sheet-meta" id="aqSectorMeta"></div><div id="aqSectorDef"></div>
       <div class="dash-holdings-body auto-sheet-list" id="aqSectorList"></div>
     </div>
     <!-- v5.14: 누적 시그널 전체 화면 -->
@@ -19092,7 +19100,7 @@ function renderSectorAnalysis() {
       </div>
     </div>`;
   }).join('');
-  $('saBarList').innerHTML = barHtml;
+  $('saBarList').innerHTML = aqSaToggleHtml() + ((aqSaToggleHtml() && _saMode() === 'mega') ? aqMegaBars(sortedByChange) : barHtml);   // v5.68: 섹터 / 메가 보기 (미국만)
 
   // ============ RIGHT: 30일 σ 히트맵 ============
   // v1.19: 정렬 상태 (기본: Avg desc)
@@ -20817,7 +20825,8 @@ async function openChart(ticker) {
   // 2줄: 최근 종가 + 전일 대비
   $('modalPrice').innerHTML = `<span class="mp-v">${fmtPrice(lastPrice)}</span>${chgHtml}<div class="mp-date">${escapeHtml(String(dates[dates.length-1]).slice(5).replace('-', '/'))} 종가</div>`;   // v5.35
   // 3줄: 섹터 · 고점 대비 (알약 두 개)
-  $('modalSubtitle').innerHTML = `<span class="ms-chip">${escapeHtml(sec)}</span><span class="ms-chip"><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span></span>`;
+  const _md = (typeof aqSectorDef === 'function') ? aqSectorDef(sec) : null;   // v5.68: 메가 딱지 (미국만, 섹터 딱지 왼쪽)
+  $('modalSubtitle').innerHTML = `${_md && _md.mega ? `<span class="ms-chip ms-mega" onclick="aqOpenMega('${escapeAttr(_md.mega)}')">${escapeHtml(_md.mega)}</span>` : ''}<span class="ms-chip">${escapeHtml(sec)}</span><span class="ms-chip"><span class="${recentHigh > lastPrice ? 'neg' : 'pos'}">${escapeHtml(decline)}</span></span>`;
   // 4줄: 상세설명 (있으면 표시)
   $('modalDesc').textContent = desc;
   // v3.22: 밸류에이션 (PER / Forward PER / PEG) — US_VALUATION, US 전용
@@ -26027,6 +26036,7 @@ function aqOpenSectorSheet(sectorKey) {
   const cutoff = (() => { const d = new Date(); d.setDate(d.getDate() - 14); return d.toISOString().slice(0, 10); })();
   document.getElementById('aqSectorTitle').textContent = strip(key) || key;
   document.getElementById('aqSectorMeta').textContent = `${tks.length}종목${a1 != null ? ` · 오늘 평균 ${a1 >= 0 ? '+' : ''}${a1.toFixed(2)}%` : ''}`;
+  try { const _sd = document.getElementById('aqSectorDef'); if (_sd) { _sd.innerHTML = aqSectorDefHtml(key); if (!_secDef.byKey && getCurrentMarket() !== 'KR') aqLoadSectorDefs().then(() => { _sd.innerHTML = aqSectorDefHtml(key); }); } } catch (e) {}   // v5.68: 섹터 정의 (미국만)
   document.getElementById('aqSectorList').innerHTML = items.length ? items.map(x => { const s = lastSig[x.tk]; const sig = s && s.Date >= cutoff ? String(s.Signal_Type || '').split('+').slice(0, 2).map(z => `<span class="sig-badge ${escapeAttr(z.trim())}" style="font-size:9px;padding:1px 5px">${escapeHtml(z.trim())}</span>`).join(' ') : '';
     const _has = !!(typeof findTickerSeries === 'function' && findTickerSeries(x.tk));
     return `<div class="insider-archive-item${_has ? '' : ' sec-nodata'}" onclick="aqSectorOpenStock('${escapeAttr(x.tk)}', ${_has ? 1 : 0})">${aqWrapLogo(_autoLogo(x.tk), x.tk)}
@@ -27337,6 +27347,71 @@ async function aqGuideAlertCard() {
 async function aqGuideAlertOpen(ids) { try { await apiCall('guideRead', { ids }); } catch (e) {} switchMobileTab('auto'); setAiSubtab('guide'); _gd.accTab = 'hit'; try { localStorage.setItem('aq_gd_sec', JSON.stringify({ d: _kstToday(), o: true })); } catch (e) {} await aqGuideLoadAcc(true); aqGuideRender(); setTimeout(() => { const el = document.querySelector('.gda-sec'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300); }
 Object.assign(window, { aqGuideCheck, aqGuideSheetClose, aqGuideAccTab, aqGuideHistToggle, aqGuideStop, aqGuideAlertOpen, aqGuideLoadAcc, aqGuideSecToggle, aqGuideCardToggle });
 try { AQ_SHEETS.push({ id: 'gdaSheet', root: () => document.getElementById('gdaSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: aqGuideSheetClose, full: true }); } catch (e) {}
+
+// ============================================================================
+// v5.68: 섹터 정의·메가 (구글 시트 '섹터 정의' 탭 → 서버 DB, 미국만)
+// ============================================================================
+const _secDef = { byKey: null, megas: [], loading: null };
+function _sdNorm(x) { return String(x || '').replace(/[^\p{L}\p{N}]/gu, '').toLowerCase(); }
+function aqLoadSectorDefs() {
+  if (_secDef.byKey) return Promise.resolve(_secDef);
+  if (_secDef.loading) return _secDef.loading;
+  _secDef.loading = apiCall('getOneSheet', { sheetId: BACKEND.ARCHIVE_SHEET_ID, tab: '섹터 정의' }).then(r => {
+    const by = {}, megas = [];
+    ((r && r.ok && r.rows) || []).forEach(x => {
+      const name = String(x['섹터명'] || '').trim(); const mega = String(x['메가'] || '').trim(); if (!name) return;
+      by[_sdNorm(name)] = { code: String(x['코드'] || ''), mega, name, n: Number(String(x['종목수'] || '').replace(/[^\d.]/g, '')) || 0, def: String(x['정의'] || '').trim(), rho: String(x['동조화ρ'] || '').trim(), atr: String(x['ATR%'] || '').trim(), y1: String(x['1Y(%)'] || '').trim() };
+      if (mega && !megas.includes(mega)) megas.push(mega);
+    });
+    _secDef.byKey = by; _secDef.megas = megas; _secDef.loading = null;
+    try { if (Object.keys(by).length && typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); } catch (e) {}
+    return _secDef;
+  }).catch(() => { _secDef.loading = null; return _secDef; });
+  return _secDef.loading;
+}
+function aqSectorDef(key) { if (getCurrentMarket() === 'KR' || !_secDef.byKey) return null; return _secDef.byKey[_sdNorm(key)] || _secDef.byKey[_sdNorm(typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(key) : key)] || null; }
+function _sdPct(v) { const n = parseFloat(String(v).replace('%', '')); return isNaN(n) ? '—' : `<b class="${n >= 0 ? 'up' : 'down'}">${n >= 0 ? '+' : ''}${n.toFixed(1)}%</b>`; }
+function aqSectorDefHtml(key) {
+  const d = aqSectorDef(key); if (!d) return '';
+  return `<div class="sd-mega-row"><button class="sd-mega" onclick="aqOpenMega('${escapeAttr(d.mega)}')">${escapeHtml(d.mega)}</button></div>`
+    + (d.def ? `<div class="sd-def"><small>이 섹터는</small>${escapeHtml(d.def)}</div>` : '')
+    + `<div class="sd-stats"><div><span>함께 움직이는 정도</span><b>${escapeHtml(d.rho || '—')}</b></div><div><span>하루 변동폭</span><b>${escapeHtml(d.atr || '—')}</b></div><div><span>1년 수익</span>${_sdPct(d.y1)}</div></div>`;
+}
+// 섹터 동향 — 섹터 / 메가 보기
+function _saMode() { try { return localStorage.getItem('aq_sa_mode') === 'mega' ? 'mega' : 'sector'; } catch (e) { return 'sector'; } }
+function aqSaSetMode(m) { try { localStorage.setItem('aq_sa_mode', m); } catch (e) {} if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); }
+function aqSaToggleMega(m) { _state.megaOpen = _state.megaOpen || {}; _state.megaOpen[m] = !_state.megaOpen[m]; if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); }
+function aqOpenMega(m) {   // 종목·섹터 페이지의 메가 딱지 → 섹터 동향을 메가 보기로, 그 메가를 펼쳐서
+  try { localStorage.setItem('aq_sa_mode', 'mega'); } catch (e) {} _state.megaOpen = Object.assign({}, _state.megaOpen || {}, { [m]: true });
+  try { if (typeof closeModal === 'function') closeModal(); } catch (e) {} try { aqCloseSectorSheet(); } catch (e) {}
+  try { switchMobileTab('explore'); } catch (e) {} try { if (typeof setExploreSubtab === 'function') setExploreSubtab('trend'); } catch (e) {}
+  setTimeout(() => { try { renderSectorAnalysis(); } catch (e) {} const el = document.querySelector(`[data-mega="${CSS.escape(m)}"]`) || document.getElementById('sectorAnalysisCard'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 350);
+}
+function _saBarRow(label, val, sub, extra, attrs) {
+  const maxAbs = _saBarRow._max || 1; const width = (Math.abs(val) / maxAbs) * 48; const left = val >= 0 ? '50%' : `calc(50% - ${width}%)`;
+  return `<div class="sa-bar-row${sub ? ' sa-sub' : ''}" ${attrs || ''}><div class="sa-bar-label" ${sub ? `data-sector-key="${escapeAttr(sub)}"` : ''}>${label}</div><div class="sa-bar-track"><div class="sa-bar-center-line"></div><div class="sa-bar-fill ${val >= 0 ? 'pos' : 'neg'}" style="width:${width}%;left:${left};"></div></div><div class="sa-bar-val"><span class="${val >= 0 ? 'pos-pct' : 'neg-pct'}">${val >= 0 ? '+' : ''}${val.toFixed(1)}%</span>${extra || ''}</div></div>`;
+}
+function aqMegaBars(sectors) {   // sectors: [{key, change, sigma}] — 메가 등락 = 하위 섹터 등락을 종목 수로 가중 평균 (구성 종목 동일가중과 같음)
+  const groups = {}; const other = [];
+  sectors.forEach(s => { const d = aqSectorDef(s.key); if (!d || !d.mega) { other.push(s); return; } (groups[d.mega] = groups[d.mega] || []).push(Object.assign({ n: d.n || 1 }, s)); });
+  const megas = Object.entries(groups).map(([m, arr]) => { const n = arr.reduce((a, x) => a + x.n, 0); return { m, arr: arr.sort((a, b) => b.change - a.change), n, change: arr.reduce((a, x) => a + x.change * x.n, 0) / (n || 1) }; }).sort((a, b) => b.change - a.change);
+  _saBarRow._max = Math.max(...megas.map(x => Math.abs(x.change)), ...sectors.map(x => Math.abs(x.change)), 0.1);
+  let h = '';
+  megas.forEach(g => {
+    const open = (_state.megaOpen || {})[g.m];
+    h += _saBarRow(`<span class="sa-mega-nm">${escapeHtml(g.m)} <em>${open ? '▴' : '▾'}</em></span><small class="sa-mega-sub">${g.arr.length}개 섹터 · ${g.n}종목</small>`, g.change, null, '', `data-mega="${escapeAttr(g.m)}" onclick="aqSaToggleMega('${escapeAttr(g.m)}')"`);
+    if (open) g.arr.forEach(s => { h += _saBarRow(escapeHtml(s.key), s.change, s.key, `<span class="${Math.abs(s.sigma) >= 2 ? 'sigma-hot' : 'sigma-norm'}">(${Math.abs(s.sigma).toFixed(1)}σ)</span>`); });
+  });
+  if (other.length) h += `<div class="sa-mega-other">메가 정의에 없는 섹터 ${other.length}개: ${other.map(s => escapeHtml(s.key)).join(', ')}</div>`;
+  return h;
+}
+function aqSaToggleHtml() {
+  if (getCurrentMarket() === 'KR' || !_secDef.byKey || !Object.keys(_secDef.byKey).length) return '';
+  const m = _saMode();
+  return `<div class="sa-mode"><button class="${m === 'sector' ? 'on' : ''}" onclick="aqSaSetMode('sector')">섹터</button><button class="${m === 'mega' ? 'on' : ''}" onclick="aqSaSetMode('mega')">메가</button></div>`;
+}
+Object.assign(window, { aqLoadSectorDefs, aqSaSetMode, aqSaToggleMega, aqOpenMega });
+setTimeout(() => { try { aqLoadSectorDefs(); } catch (e) {} }, 1500);
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
