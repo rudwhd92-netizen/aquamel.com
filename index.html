@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.86';   // v5.86: 새로고침에 미국 시트 동기화 포함(관리자), 모의 매수 초록/빨강
+window.AQ_PWA_VERSION = '5.87';   // v5.87: 작업 실패 알림(운영) · 재시도 상태 표시
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -27822,8 +27822,8 @@ function _notiRender() {
   let h = '', last = '';
   _noti.items.forEach((x, i) => {
     const day = _notiDay(x.at); if (day !== last) { h += `<div class="noti-day">${day}</div>`; last = day; }
-        const ico = x.type === 'data' ? `<span class="noti-ico">📊</span>` : x.type === 'security' ? `<span class="noti-ico">${x.sev === 'red' ? '🔴' : '🛡️'}</span>` : x.type === 'report' ? `<span class="noti-ico lg">${(typeof aqLogoHtml === 'function') ? aqLogoHtml(x.ticker, '', 'noti-logo') : escapeHtml(String(x.ticker).slice(0, 2))}</span>` : `<span class="noti-ico">${x.type === 'guide' ? '🧭' : '📰'}</span>`;
-        const name = x.type === 'brief' ? '일일 브리핑' : x.type === 'guide' ? 'AI 가이드' : x.type === 'security' ? '보안' : x.type === 'data' ? '데이터' : 'AI 보고서';
+        const ico = x.type === 'ops' ? `<span class="noti-ico">${x.sev === 'red' ? '🛠️' : '⚙️'}</span>` : x.type === 'data' ? `<span class="noti-ico">📊</span>` : x.type === 'security' ? `<span class="noti-ico">${x.sev === 'red' ? '🔴' : '🛡️'}</span>` : x.type === 'report' ? `<span class="noti-ico lg">${(typeof aqLogoHtml === 'function') ? aqLogoHtml(x.ticker, '', 'noti-logo') : escapeHtml(String(x.ticker).slice(0, 2))}</span>` : `<span class="noti-ico">${x.type === 'guide' ? '🧭' : '📰'}</span>`;
+        const name = x.type === 'brief' ? '일일 브리핑' : x.type === 'guide' ? 'AI 가이드' : x.type === 'security' ? '보안' : x.type === 'data' ? '데이터' : x.type === 'ops' ? '운영' : 'AI 보고서';
     const line = x.type === 'report' ? [aqIsKR(x.ticker) ? '' : (((_state.tickerCompanyMaps || {})[x.market] || {})[x.ticker] || ''), x.line].filter(Boolean).join(' · ') : x.line;
     const chip = x.type === 'report' ? aqTkLabel(x.ticker) : (x.chip || '');
     h += `<div class="noti-sw" data-i="${i}"><div class="noti-del">지우기</div><div class="noti-row${x.read ? ' read' : ''}" data-i="${i}">${x.read ? '' : '<span class="noti-dot"></span>'}${ico}<div class="noti-mid"><div class="noti-t1">${name}<span class="noti-chip">${escapeHtml(chip)}</span></div><div class="noti-t2">${escapeHtml(line || '')}</div><div class="noti-t3">${_notiTime(x.at)}${x.read ? ' · 읽음' : ''}</div></div><button class="noti-x" data-x="${i}" aria-label="지우기">✕</button></div></div>`;
@@ -27866,7 +27866,8 @@ function _notiGo(i) {
   const toMk = (mk, fn) => { if (mk && mk !== getCurrentMarket() && typeof setMarket === 'function') { setMarket(mk); setTimeout(fn, 450); } else setTimeout(fn, 80); };
   if (x.type === 'brief') toMk(x.market, () => { switchMobileTab('auto'); setAiSubtab('brief'); setTimeout(() => { try { aqBriefMode(x.mode); } catch (e) {} }, 150); });
   else if (x.type === 'guide') { switchMobileTab('auto'); setAiSubtab('guide'); setTimeout(() => { try { aqGuideSel(x.date); } catch (e) {} }, 300); }
-    else if (x.type === 'data') { try { switchMobileTab('settings'); } catch (e) {} setTimeout(() => { aqKrFlowLoad(true).then(() => aqKrFlowShow()); }, 300); }
+    else if (x.type === 'ops') { try { switchMobileTab('ops'); } catch (e) {} setTimeout(() => { try { aqOpsTab('auto'); } catch (e) {} }, 300); }
+  else if (x.type === 'data') { try { switchMobileTab('settings'); } catch (e) {} setTimeout(() => { aqKrFlowLoad(true).then(() => aqKrFlowShow()); }, 300); }
   else if (x.type === 'security') { try { switchMobileTab('settings'); } catch (e) {} setTimeout(() => aqSecOpen(), 250); }
   else if (x.type === 'report') toMk(x.market, async () => { try { await openChart(x.ticker); setTimeout(() => { try { openReportPanel(); } catch (e) {} }, 250); } catch (e) {} });
 }
@@ -28213,7 +28214,7 @@ function _tlNext(d, job, kst) { const x = (d.events || []).filter(e => e.job ===
 function _tlStatus(r, past) {
   if (!r) return past ? '<span class="tl-st late">기록 없음</span>' : '<span class="tl-st wait">대기</span>';
   if (r.status === 'success' || r.status === 'warn') return `<span class="tl-st ok">${r.status === 'warn' ? '주의' : '성공'} ${r.end || r.t}</span>`;
-  if (r.status === 'failed' || r.status === 'error') return `<span class="tl-st fail">실패 ${r.end || r.t}</span>`;
+  if (r.status === 'failed' || r.status === 'error') return /다시 시도/.test(r.summary || '') ? `<span class="tl-st late">재시도 대기</span>` : `<span class="tl-st fail">${/코드 문제/.test(r.summary || '') ? '코드 문제로 실패' : '실패'} ${r.end || r.t}</span>`;
   if (r.status === 'running') return '<span class="tl-st run">실행 중</span>';
   if (r.status === 'queued') return '<span class="tl-st wait">대기열</span>';
   return `<span class="tl-st wait">${escapeHtml(r.status)}</span>`;
