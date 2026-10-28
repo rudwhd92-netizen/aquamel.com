@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.81';   // v5.81: 한국 수급 확정 상태 (설정 · 종목 페이지)
+window.AQ_PWA_VERSION = '5.82';   // v5.82: 한국 수급 도착·확정 알림, 거래 없는 종목(상장폐지 의심) 분리
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -27789,8 +27789,8 @@ function _notiRender() {
   let h = '', last = '';
   _noti.items.forEach((x, i) => {
     const day = _notiDay(x.at); if (day !== last) { h += `<div class="noti-day">${day}</div>`; last = day; }
-        const ico = x.type === 'security' ? `<span class="noti-ico">${x.sev === 'red' ? '🔴' : '🛡️'}</span>` : x.type === 'report' ? `<span class="noti-ico lg">${(typeof aqLogoHtml === 'function') ? aqLogoHtml(x.ticker, '', 'noti-logo') : escapeHtml(String(x.ticker).slice(0, 2))}</span>` : `<span class="noti-ico">${x.type === 'guide' ? '🧭' : '📰'}</span>`;
-        const name = x.type === 'brief' ? '일일 브리핑' : x.type === 'guide' ? 'AI 가이드' : x.type === 'security' ? '보안' : 'AI 보고서';
+        const ico = x.type === 'data' ? `<span class="noti-ico">📊</span>` : x.type === 'security' ? `<span class="noti-ico">${x.sev === 'red' ? '🔴' : '🛡️'}</span>` : x.type === 'report' ? `<span class="noti-ico lg">${(typeof aqLogoHtml === 'function') ? aqLogoHtml(x.ticker, '', 'noti-logo') : escapeHtml(String(x.ticker).slice(0, 2))}</span>` : `<span class="noti-ico">${x.type === 'guide' ? '🧭' : '📰'}</span>`;
+        const name = x.type === 'brief' ? '일일 브리핑' : x.type === 'guide' ? 'AI 가이드' : x.type === 'security' ? '보안' : x.type === 'data' ? '데이터' : 'AI 보고서';
     const line = x.type === 'report' ? [aqIsKR(x.ticker) ? '' : (((_state.tickerCompanyMaps || {})[x.market] || {})[x.ticker] || ''), x.line].filter(Boolean).join(' · ') : x.line;
     const chip = x.type === 'report' ? aqTkLabel(x.ticker) : (x.chip || '');
     h += `<div class="noti-sw" data-i="${i}"><div class="noti-del">지우기</div><div class="noti-row${x.read ? ' read' : ''}" data-i="${i}">${x.read ? '' : '<span class="noti-dot"></span>'}${ico}<div class="noti-mid"><div class="noti-t1">${name}<span class="noti-chip">${escapeHtml(chip)}</span></div><div class="noti-t2">${escapeHtml(line || '')}</div><div class="noti-t3">${_notiTime(x.at)}${x.read ? ' · 읽음' : ''}</div></div><button class="noti-x" data-x="${i}" aria-label="지우기">✕</button></div></div>`;
@@ -27833,7 +27833,8 @@ function _notiGo(i) {
   const toMk = (mk, fn) => { if (mk && mk !== getCurrentMarket() && typeof setMarket === 'function') { setMarket(mk); setTimeout(fn, 450); } else setTimeout(fn, 80); };
   if (x.type === 'brief') toMk(x.market, () => { switchMobileTab('auto'); setAiSubtab('brief'); setTimeout(() => { try { aqBriefMode(x.mode); } catch (e) {} }, 150); });
   else if (x.type === 'guide') { switchMobileTab('auto'); setAiSubtab('guide'); setTimeout(() => { try { aqGuideSel(x.date); } catch (e) {} }, 300); }
-    else if (x.type === 'security') { try { switchMobileTab('settings'); } catch (e) {} setTimeout(() => aqSecOpen(), 250); }
+    else if (x.type === 'data') { try { switchMobileTab('settings'); } catch (e) {} setTimeout(() => { aqKrFlowLoad(true).then(() => aqKrFlowShow()); }, 300); }
+  else if (x.type === 'security') { try { switchMobileTab('settings'); } catch (e) {} setTimeout(() => aqSecOpen(), 250); }
   else if (x.type === 'report') toMk(x.market, async () => { try { await openChart(x.ticker); setTimeout(() => { try { openReportPanel(); } catch (e) {} }, 250); } catch (e) {} });
 }
 function aqNotiToggle() { _noti.open ? aqNotiClose() : aqNotiOpen(); }
@@ -28124,7 +28125,7 @@ async function aqKrFlowLoad(force) {
 function aqKrFlowShow() {
   const st = _krf.st; if (!st) { aqKrFlowLoad(true); return; }
   const nm = a => (a || []).map(t => aqTkLabel(t)).join(', ');
-  alert(`한국 수급 · ${st.date}\n\n확정 ${st.ok}/${st.total} (${Math.round(st.ratio * 100)}%)${st.confirmed ? ' · 아침 정정 완료' : ' · 다음 날 07:20 정정 예정'}\n\n누락 ${st.missing.length}개${st.missing.length ? ': ' + nm(st.missing.slice(0, 20)) : ''}\n전날과 동일 ${st.same.length}개${st.same.length ? ': ' + nm(st.same.slice(0, 20)) : ''}\n\n저녁 19:30에 누락 종목을 다시 받고, 다음 날 07:20에 최근 5거래일을 확정치로 덮어써요.`);
+  alert(`한국 수급 · ${st.date}\n\n확정 ${st.ok}/${st.total} (${Math.round(st.ratio * 100)}%)${st.confirmed ? ' · 아침 정정 완료' : ' · 다음 날 07:20 정정 예정'}\n\n누락 ${st.missing.length}개${st.missing.length ? ': ' + nm(st.missing.slice(0, 20)) : ''}\n전날과 동일 ${st.same.length}개${st.same.length ? ': ' + nm(st.same.slice(0, 20)) : ''}${(st.stale || []).length ? `\n거래 없음 ${st.stale.length}개 (상장폐지·정지 의심, 비율에서 제외): ${nm(st.stale)} — KR 마스터 시트에서 정리하세요` : ''}\n\n저녁 19:30에 누락 종목을 다시 받고, 다음 날 07:20에 최근 5거래일을 확정치로 덮어써요.`);
 }
 function aqKrFlowNote(tk) {   // 종목 페이지 수급 섹션 아래 한 줄
   const st = _krf.st; if (!st) return '';
