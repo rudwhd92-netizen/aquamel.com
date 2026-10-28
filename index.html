@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.74';   // v5.74: 알림(종 아이콘·말풍선·밀어서 지우기·모두 읽음), 새로고침 = 토스 맞춤 + 캐시 초기화, 장후 손익 칸 간격
+window.AQ_PWA_VERSION = '5.75';   // v5.75: 알림 목록 등 내부 스크롤에서 위로 못 올리던 문제 수정 (당겨서 새로고침 막기 예외)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -14493,15 +14493,18 @@ window.setChartTimeframe = setChartTimeframe;
 //   - 최상단에서 손가락 down swipe만 preventDefault → pull-to-refresh 차단
 (function setupPullToRefreshBlocker() {
   if (!('ontouchstart' in window)) return;  // 터치 없는 환경(PC) 스킵
-  let startY = 0;
+  let startY = 0, innerSc = null;
+  const scParent = (el) => { while (el && el !== document.body && el !== document.documentElement) { const cs = getComputedStyle(el); if (/(auto|scroll)/.test(cs.overflowY) && el.scrollHeight > el.clientHeight + 2) return el; el = el.parentElement; } return null; };
   window.addEventListener('touchstart', (e) => {
     if (e.touches.length !== 1) return;
-    startY = e.touches[0].clientY;
+    startY = e.touches[0].clientY; innerSc = scParent(e.target);   // v5.75: 손가락이 놓인 곳의 스크롤 목록
   }, { passive: true });
   window.addEventListener('touchmove', (e) => {
     if (e.touches.length !== 1) return;
     // v2.13: 모달 열린 상태에선 blocker 비활성 (모달 안 스크롤이 막히던 버그 — 보고서 위로 스크롤 안 됨)
     if (document.querySelector('.modal-overlay.active')) return;
+    // v5.75: 알림 창·아래 시트처럼 자체 스크롤 목록 안에서는 막지 않음 (목록 맨 아래에서 위로 못 올리던 문제)
+    if (innerSc) return;
     const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
     if (scrollTop > 0) return;  // 최상단 아니면 무시 — 일반 스크롤 정상 작동
     const dy = e.touches[0].clientY - startY;
