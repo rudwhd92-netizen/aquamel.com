@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.78';   // v5.78: 마이 › 누적 성과 개편 (기간별 손익·시장 대비·낙폭·기여도·섹터 줄·성적표)
+window.AQ_PWA_VERSION = '5.79';   // v5.79: 설정 › 보안 모니터링 (경고·비상 버튼·주피터·텔레그램), 알림에 보안 항목
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4307,6 +4307,28 @@ body[data-mtab="sector"]:not([data-wsub="cmp"]) #compareCard { display: none !im
 .pf-sr { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 12.5px; cursor: pointer; } .pf-sr + .pf-sr { border-top: 1px solid rgba(255,255,255,.05); }
 .pf-sr .n { width: 104px; flex: none; color: var(--text-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .pf-spark { flex: 1; height: 22px; min-width: 40px; } .pf-sr .v { width: 84px; text-align: right; flex: none; font-weight: 700; font-variant-numeric: tabular-nums; } .pf-sr .v small { display: block; font-size: 10.5px; font-weight: 600; }
 .pf-g3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; } .pf-g3 > div { background: rgba(255,255,255,.05); border-radius: 12px; padding: 9px 10px; } .pf-g3 span { display: block; font-size: 10.5px; color: var(--text-mute); } .pf-g3 b { font-size: 15px; font-weight: 800; color: var(--text-hi); } .pf-g3 small { display: block; font-size: 10.5px; color: var(--text-mute); margin-top: 2px; }
+/* v5.79: 보안 모니터링 */
+.sec-sheet { max-height: 92vh; }
+.sec-st { border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; margin: 4px 2px 10px; background: rgba(99,230,190,.08); border: 1px solid rgba(99,230,190,.3); }
+.sec-st.red { background: rgba(255,107,107,.1); border-color: rgba(255,107,107,.35); } .sec-st.org { background: rgba(255,169,77,.1); border-color: rgba(255,169,77,.35); }
+.sec-st b { font-size: 15px; color: var(--text-hi); } .sec-st span:not(.sec-dot) { display: block; font-size: 11.5px; color: var(--text-mute); margin-top: 2px; }
+.sec-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: #63e6be; } .sec-st.red .sec-dot { background: #ff6b6b; } .sec-st.org .sec-dot { background: #ffa94d; }
+.sec-em { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; margin: 0 2px 14px; } .sec-em button { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 12px; color: var(--text-hi); font-size: 11.5px; padding: 10px 6px; line-height: 1.4; cursor: pointer; } .sec-em i { display: block; font-style: normal; font-size: 16px; margin-bottom: 3px; }
+.sec-tabs { display: flex; gap: 16px; border-bottom: 1px solid var(--line); padding: 0 4px; margin-bottom: 12px; } .sec-tabs button { background: none; border: none; color: var(--text-mute); font-size: 13.5px; font-weight: 700; padding: 6px 0 9px; cursor: pointer; } .sec-tabs button.on { color: var(--text-hi); box-shadow: 0 2px 0 #4dabf7; }
+.sec-al { background: rgba(255,255,255,.04); border-radius: 14px; padding: 12px 14px; margin: 0 2px 8px; } .sec-al.done { opacity: .55; }
+.sec-al .t { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 700; color: var(--text-hi); } .sec-al .t small { margin-left: auto; font-size: 11px; color: var(--text-mute); font-weight: 500; }
+.sev { font-size: 10.5px; padding: 1px 7px; border-radius: 999px; font-weight: 700; flex: none; } .sev.r { background: rgba(255,107,107,.18); color: #ff8787; } .sev.o { background: rgba(255,169,77,.18); color: #ffa94d; }
+.sec-al .d { font-size: 12px; color: var(--text-dim); margin-top: 6px; line-height: 1.55; word-break: break-all; } .sec-al .dn { font-size: 11.5px; color: var(--text-mute); margin-top: 8px; }
+.sec-al .a { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; } .sec-al .a button { font-size: 12px; padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--text); border: none; cursor: pointer; } .sec-al .a button.p { background: rgba(77,171,247,.16); color: #74c0fc; }
+.sec-ur { display: flex; align-items: center; gap: 10px; padding: 11px 4px; font-size: 13px; cursor: pointer; } .sec-ur + .sec-ur { border-top: 1px solid rgba(255,255,255,.06); } .sec-ur .n { flex: 1; color: var(--text-hi); font-weight: 600; } .sec-ur small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; font-weight: 500; } .sec-ur .v { text-align: right; font-size: 12px; color: var(--text); }
+.w { color: #ffa94d !important; font-style: normal; } .g { color: #63e6be !important; }
+.sec-lab { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.04); border-radius: 14px; padding: 12px 14px; margin: 0 2px 10px; } .sec-lab > div { flex: 1; } .sec-lab b { font-size: 14px; color: var(--text-hi); } .sec-lab span { display: block; font-size: 11.5px; color: var(--text-mute); margin-top: 2px; }
+.sec-lab button { font-size: 12px; padding: 6px 11px; border-radius: 999px; border: none; background: rgba(255,255,255,.07); color: var(--text); cursor: pointer; } .sec-lab button.on { background: rgba(77,171,247,.18); color: #74c0fc; } .sec-lab button.off { background: rgba(255,107,107,.15); color: #ff8787; }
+.sec-sv { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px; margin: 0 2px; } .sec-sv > div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 10px 12px; min-width: 0; } .sec-sv span { display: block; font-size: 11px; color: var(--text-mute); } .sec-sv b { font-size: 13px; color: var(--text-hi); word-break: break-all; }
+.sec-btns { display: flex; gap: 8px; margin: 12px 2px 4px; flex-wrap: wrap; } .sec-btns button { flex: 1; font-size: 12px; padding: 9px 10px; border-radius: 12px; border: 1px solid var(--line); background: none; color: #74c0fc; cursor: pointer; }
+.sec-kinds { display: flex; gap: 6px; overflow-x: auto; padding: 0 2px 10px; } .sec-kinds button { flex: none; font-size: 11.5px; padding: 4px 10px; border-radius: 999px; border: none; background: rgba(255,255,255,.06); color: var(--text-mute); cursor: pointer; } .sec-kinds button.on { background: rgba(77,171,247,.16); color: #74c0fc; }
+.sec-ev { display: flex; gap: 10px; padding: 9px 4px; font-size: 12.5px; } .sec-ev + .sec-ev { border-top: 1px solid rgba(255,255,255,.05); } .sec-ev .tm { width: 72px; flex: none; color: var(--text-mute); font-size: 11.5px; } .sec-ev b { font-weight: 600; color: var(--text-hi); } .sec-ev small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; word-break: break-all; }
+.sec-brief { background: rgba(255,107,107,.1); border: 1px solid rgba(255,107,107,.35); color: #ff8787; border-radius: 12px; padding: 10px 12px; font-size: 13px; font-weight: 700; margin: 0 0 14px; cursor: pointer; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8821,10 +8843,13 @@ table.combo-eval tbody td .nodata {
         <div class="set-grp-t" data-role-admin-tab>관리자</div>
         <div class="set-grp" data-role-admin-tab>
           <div class="set-row" onclick="aqSetAdmOpen()"><span class="sr-l">계정 관리</span><span class="sr-val" id="setAdmVal">—</span><span class="sr-chev">›</span></div>
+        <div class="set-row" onclick="aqSecOpen()"><span class="sr-l">보안 모니터링</span><span class="sr-val" id="setSecVal">—</span><span class="sr-chev">›</span></div>
         </div>
       </div>
     </section>
-    <div class="ops-sheet-bg" id="setTossSheetBg" onclick="aqSetSheet('setTossSheet', false)"></div>
+    <div class="ops-sheet-bg" id="setSecSheetBg" onclick="aqSetSheet('setSecSheet', false)"></div>
+  <div class="ops-sheet aq-sec-sheet sec-sheet" id="setSecSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">보안 모니터링</div><div class="auto-sheet-scroll" id="setSecBody"></div></div>
+  <div class="ops-sheet-bg" id="setTossSheetBg" onclick="aqSetSheet('setTossSheet', false)"></div>
     <div class="ops-sheet aq-sec-sheet" id="setTossSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">토스 연동</div><div class="ar-list" id="setTossBody"></div></div>
     <div class="ops-sheet-bg" id="setPwSheetBg" onclick="aqSetSheet('setPwSheet', false)"></div>
     <div class="ops-sheet aq-sec-sheet" id="setPwSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">비밀번호 변경</div>
@@ -26337,7 +26362,8 @@ function aqSettingsRender() {
   const tv = document.getElementById('setTossVal'); if (tv) { tv.textContent = linked ? '연결됨' : br && br.status === 'pending' ? '키 저장됨' : '연결 안 됨'; tv.className = 'sr-val ' + (linked ? 'ok' : 'warn'); }
   const vv = document.getElementById('setVerVal'); if (vv) vv.textContent = 'v' + (window.AQ_PWA_VERSION || '');
   aqSetStampSummary();
-  if (u && u.role === 'admin') apiCall('userList', {}).then(r => { const el = document.getElementById('setAdmVal'); if (el && r && r.ok) el.textContent = `${r.users.length}명`; }).catch(() => {});
+    if (u && u.role === 'admin') apiCall('userList', {}).then(r => { const el = document.getElementById('setAdmVal'); if (el && r && r.ok) el.textContent = `${r.users.length}명`; }).catch(() => {});
+  if (u && u.role === 'admin') { try { aqSecLoad(); } catch (e) {} }   // v5.79: 보안 상태 요약
 }
 // 데이터 상태
 async function aqSetStampSummary() {
@@ -27286,7 +27312,8 @@ async function aqDailyBriefRender() {
       const ck = _brSec(p, ['체크 포인트']); if (ck.length) h += `<div class="bf-gt bf-gt-ai">체크 포인트<span class="bf-ai">AI</span></div><div class="bf-grp">${ck.map((x, i) => `<div class="bf-r nod"><span class="bf-num">${i + 1}</span><div class="bf-t"><div class="bf-tt n">${escapeHtml(x)}</div></div></div>`).join('')}</div>`;
     }
   }
-    try { h += await aqBadgeBriefSection(mk); } catch (e) {}   // v5.71: 새 업적 (맨 아래, 새로 생긴 것만) · v5.76: 그 시장 것만
+      try { const _rs = ((typeof _noti !== 'undefined' && _noti.items) || []).filter(x => x.type === 'security' && x.sev === 'red' && !x.read); if (_rs.length) h = `<div class="sec-brief" onclick="switchMobileTab('settings'); setTimeout(() => aqSecOpen(), 250)">🔴 보안 위험 ${_rs.length}건 — ${escapeHtml(_rs[0].line.split(' · ')[0])}${_rs.length > 1 ? ' 외' : ''} · 확인하기</div>` + h; } catch (e) {}   // v5.79
+  try { h += await aqBadgeBriefSection(mk); } catch (e) {}   // v5.71: 새 업적 (맨 아래, 새로 생긴 것만) · v5.76: 그 시장 것만
   box.innerHTML = h;
 }
 Object.assign(window, { aqDailyBriefRender, aqBriefMode });
@@ -27754,8 +27781,8 @@ function _notiRender() {
   let h = '', last = '';
   _noti.items.forEach((x, i) => {
     const day = _notiDay(x.at); if (day !== last) { h += `<div class="noti-day">${day}</div>`; last = day; }
-    const ico = x.type === 'report' ? `<span class="noti-ico lg">${(typeof aqLogoHtml === 'function') ? aqLogoHtml(x.ticker, '', 'noti-logo') : escapeHtml(String(x.ticker).slice(0, 2))}</span>` : `<span class="noti-ico">${x.type === 'guide' ? '🧭' : '📰'}</span>`;
-    const name = x.type === 'brief' ? '일일 브리핑' : x.type === 'guide' ? 'AI 가이드' : 'AI 보고서';
+        const ico = x.type === 'security' ? `<span class="noti-ico">${x.sev === 'red' ? '🔴' : '🛡️'}</span>` : x.type === 'report' ? `<span class="noti-ico lg">${(typeof aqLogoHtml === 'function') ? aqLogoHtml(x.ticker, '', 'noti-logo') : escapeHtml(String(x.ticker).slice(0, 2))}</span>` : `<span class="noti-ico">${x.type === 'guide' ? '🧭' : '📰'}</span>`;
+        const name = x.type === 'brief' ? '일일 브리핑' : x.type === 'guide' ? 'AI 가이드' : x.type === 'security' ? '보안' : 'AI 보고서';
     const line = x.type === 'report' ? [aqIsKR(x.ticker) ? '' : (((_state.tickerCompanyMaps || {})[x.market] || {})[x.ticker] || ''), x.line].filter(Boolean).join(' · ') : x.line;
     const chip = x.type === 'report' ? aqTkLabel(x.ticker) : (x.chip || '');
     h += `<div class="noti-sw" data-i="${i}"><div class="noti-del">지우기</div><div class="noti-row${x.read ? ' read' : ''}" data-i="${i}">${x.read ? '' : '<span class="noti-dot"></span>'}${ico}<div class="noti-mid"><div class="noti-t1">${name}<span class="noti-chip">${escapeHtml(chip)}</span></div><div class="noti-t2">${escapeHtml(line || '')}</div><div class="noti-t3">${_notiTime(x.at)}${x.read ? ' · 읽음' : ''}</div></div><button class="noti-x" data-x="${i}" aria-label="지우기">✕</button></div></div>`;
@@ -27798,6 +27825,7 @@ function _notiGo(i) {
   const toMk = (mk, fn) => { if (mk && mk !== getCurrentMarket() && typeof setMarket === 'function') { setMarket(mk); setTimeout(fn, 450); } else setTimeout(fn, 80); };
   if (x.type === 'brief') toMk(x.market, () => { switchMobileTab('auto'); setAiSubtab('brief'); setTimeout(() => { try { aqBriefMode(x.mode); } catch (e) {} }, 150); });
   else if (x.type === 'guide') { switchMobileTab('auto'); setAiSubtab('guide'); setTimeout(() => { try { aqGuideSel(x.date); } catch (e) {} }, 300); }
+    else if (x.type === 'security') { try { switchMobileTab('settings'); } catch (e) {} setTimeout(() => aqSecOpen(), 250); }
   else if (x.type === 'report') toMk(x.market, async () => { try { await openChart(x.ticker); setTimeout(() => { try { openReportPanel(); } catch (e) {} }, 250); } catch (e) {} });
 }
 function aqNotiToggle() { _noti.open ? aqNotiClose() : aqNotiOpen(); }
@@ -27980,6 +28008,82 @@ function aqPfCtb(v) { _pf.ctb = v; try { localStorage.setItem('aq_pf_ctb', v); }
 function aqPfSec(v) { _pf.secMode = v; try { localStorage.setItem('aq_pf_sec', v); } catch (e) {} aqPerfRender(); }
 function aqPfSecMore() { _pf.secMore = !_pf.secMore; aqPerfRender(); }
 Object.assign(window, { aqPerfRender, aqPfHist, aqPfSel, aqPfList, aqPfCmp, aqPfCtb, aqPfSec, aqPfSecMore });
+
+// ============================================================================
+// v5.79: 설정 › 보안 모니터링 (관리자) — 상태 · 비상 버튼 · 경고/사용자별/서버/기록 · 주피터 · 텔레그램
+// ============================================================================
+const _sec = { tab: 'alerts', data: null, events: null, evKind: '', loading: false };
+function _secT(iso) { if (!iso) return '—'; const d = new Date(iso); if (isNaN(d)) return String(iso); const k = new Date(d.getTime() + 9 * 3600e3); return `${String(k.getUTCMonth() + 1).padStart(2, '0')}/${String(k.getUTCDate()).padStart(2, '0')} ${String(k.getUTCHours()).padStart(2, '0')}:${String(k.getUTCMinutes()).padStart(2, '0')}`; }
+async function aqSecLoad() {
+  _sec.loading = true;
+  try { const r = await apiCall('secStatus', {}); if (r && r.ok) _sec.data = r; } catch (e) {}
+  _sec.loading = false; aqSecRender(); _secRow();
+}
+function _secOpenCnt() { const a = (_sec.data && _sec.data.alerts) || []; return { red: a.filter(x => x.status === 'open' && x.sev === 'red').length, org: a.filter(x => x.status === 'open' && x.sev !== 'red').length }; }
+function _secRow() { const el = document.getElementById('setSecVal'); if (!el || !_sec.data) return; const c = _secOpenCnt(); el.textContent = c.red || c.org ? `확인 필요 ${c.red + c.org}` : '이상 없음'; el.className = 'sr-val ' + (c.red ? 'warn' : c.org ? 'warn' : 'ok'); }
+function aqSecOpen() { aqSetSheet('setSecSheet', true); aqSecRender(); aqSecLoad(); }
+function aqSecTab(t) { _sec.tab = t; if (t === 'log' && !_sec.events) aqSecEvents(); aqSecRender(); }
+async function aqSecEvents(kind) {
+  if (kind !== undefined) _sec.evKind = kind;
+  try { const r = await apiCall('secEvents', { days: 14, kind: _sec.evKind || '' }); if (r && r.ok) _sec.events = r.events; } catch (e) {}
+  aqSecRender();
+}
+async function aqSecAck(id, learn) { try { await apiCall('secAck', { id, learn: learn ? 1 : 0 }); } catch (e) {} aqSecLoad(); try { aqNotiLoad(); } catch (e) {} }
+async function aqSecEmergency(op) {
+  const msg = { logoutAll: '모든 사용자를 로그아웃할까요?\n본부장님도 다시 로그인해야 해요.', pauseAuto: '자동매매를 즉시 멈출까요?\n엔진이 꺼지고 1분 안에 걸린 주문이 취소돼요.', unlinkToss: '모든 사용자의 토스 연결을 끊을까요?\n서버가 토스를 부를 수 없게 돼요(키는 보관).', relinkToss: '끊었던 토스 연결을 다시 켤까요?' }[op];
+  if (!confirm(msg)) return;
+  try { const r = await apiCall('secEmergency', { op }); if (typeof aqToast === 'function') aqToast(r && r.ok ? r.msg : '실패: ' + ((r && r.error) || '')); } catch (e) {}
+  if (op === 'logoutAll') { setTimeout(() => location.reload(), 800); return; }
+  aqSecLoad();
+}
+async function aqSecLab(op) {
+  try { const r = await apiCall(op === 'stop' ? 'labStop' : 'labStart', { hours: 1 }); if (r && r.ok === false && typeof aqToast === 'function') aqToast('주피터 ' + (op === 'stop' ? '끄기' : '켜기') + ' 실패: ' + (r.error || '')); } catch (e) {}
+  aqSecLoad();
+}
+async function aqSecDeploy() { if (!confirm('지금 서버 파일 상태를 정상 기준으로 등록할까요?\n(방금 받은 파일을 올린 뒤 누르세요)')) return; try { await apiCall('deployAck', {}); if (typeof aqToast === 'function') aqToast('새 기준으로 등록했어요'); } catch (e) {} aqSecLoad(); }
+async function aqSecTg() { try { const r = await apiCall('tgTest', {}); if (typeof aqToast === 'function') aqToast(r && r.ok ? '텔레그램으로 확인 메시지를 보냈어요' : (r && !r.chat ? '봇에게 텔레그램 메시지를 먼저 한 번 보내 주세요' : '텔레그램 전송 실패 — 토큰 확인')); } catch (e) {} aqSecLoad(); }
+function aqSecRender() {
+  const box = document.getElementById('setSecBody'); if (!box) return;
+  const d = _sec.data;
+  if (!d) { box.innerHTML = '<div class="auto-empty">불러오는 중…</div>'; return; }
+  const c = _secOpenCnt(); const srv = d.server || {}; const lab = d.lab || {};
+  const tossOff = (d.users || []).some(u => u.toss === 'disabled');
+  let h = `<div class="sec-st ${c.red ? 'red' : c.org ? 'org' : 'ok'}"><span class="sec-dot"></span><div><b>${c.red || c.org ? `확인 필요 · 위험 ${c.red} · 주의 ${c.org}` : '이상 없음'}</b><span>마지막 검사 ${_secT(d.checked_at)} · 10분마다${d.telegram ? (d.telegram_chat ? ' · 텔레그램 연결됨' : ' · 텔레그램 대화방 대기') : ' · 텔레그램 미설정'}</span></div></div>
+    <div class="sec-em"><button onclick="aqSecEmergency('logoutAll')"><i>🚪</i>모든 세션<br>로그아웃</button><button onclick="aqSecEmergency('pauseAuto')"><i>⏸️</i>자동매매<br>즉시 정지</button>${tossOff ? `<button onclick="aqSecEmergency('relinkToss')"><i>🔁</i>토스 연결<br>다시 켜기</button>` : `<button onclick="aqSecEmergency('unlinkToss')"><i>🔌</i>토스 연결<br>끊기</button>`}</div>
+    <div class="sec-tabs">${[['alerts', `경고${c.red + c.org ? ' ' + (c.red + c.org) : ''}`], ['users', '사용자별'], ['server', '서버'], ['log', '기록']].map(([k, t]) => `<button class="${_sec.tab === k ? 'on' : ''}" onclick="aqSecTab('${k}')">${t}</button>`).join('')}</div>`;
+  if (_sec.tab === 'alerts') {
+    const al = d.alerts || [];
+    h += al.length ? al.map(a => { const learn = /^(newip|ssh|lablogin)$/.test(a.code); return `<div class="sec-al${a.status === 'ack' ? ' done' : ''}"><div class="t"><span class="sev ${a.sev === 'red' ? 'r' : 'o'}">${a.sev === 'red' ? '위험' : '주의'}</span>${escapeHtml(a.title)}<small>${_secT(a.at)}</small></div><div class="d">${escapeHtml(a.detail || '')}</div>
+      ${a.status === 'open' ? `<div class="a">${learn ? `<button class="p" onclick="aqSecAck(${a.id}, true)">정상 — 아는 IP로 등록</button>` : a.code === 'filehash' ? `<button class="p" onclick="aqSecAck(${a.id})">배포함으로 처리</button>` : `<button class="p" onclick="aqSecAck(${a.id})">확인함</button>`}${a.code === 'newip' ? `<button onclick="aqSecEmergency('logoutAll')">세션 끊기</button>` : ''}</div>` : '<div class="dn">처리됨</div>'}</div>`; }).join('') : '<div class="auto-empty">최근 14일 경고가 없어요.</div>';
+  } else if (_sec.tab === 'users') {
+    h += (d.users || []).map(u => `<div class="sec-ur" onclick="_sec.tab='log'; aqSecEventsUser(${u.user_id})"><div class="n">${escapeHtml(u.username)}${u.role === 'admin' ? ' (관리자)' : ''}<small>${u.last_ip ? `마지막 접속 ${escapeHtml(u.last_ip_label)}${u.new_ip ? ' · <b class="w">처음 본 IP</b>' : ''} · ${_secT(u.last_at)}` : '접속 기록 없음'}</small></div><div class="v">${u.toss === 'disabled' ? '<b class="w">토스 끊김</b>' : `토스 호출 ${u.toss_today || 0}`}<small>오늘</small></div></div>`).join('');
+  } else if (_sec.tab === 'server') {
+    const ok = (v, good) => `<b class="${good ? 'g' : 'w'}">${v}</b>`;
+    const ports = (srv.ports || []).map(p => String(p).split(':').pop()).filter((v, i, a) => a.indexOf(v) === i).join(' · ');
+    h += `<div class="sec-lab"><div><b>주피터</b><span>${lab.active ? `켜짐${lab.until ? ' · ' + _secT(lab.until) + '까지' : ''}` : '꺼짐 — 필요할 때만 켜요'}</span></div>${lab.active ? `<button onclick="aqSecLab('start')">1시간 연장</button><button class="off" onclick="aqSecLab('stop')">지금 끄기</button>` : `<button class="on" onclick="aqSecLab('start')">1시간 켜기</button>`}</div>
+      <div class="sec-sv">
+        <div><span>나가는 IP</span>${ok((srv.egress || '—') + (srv.egress === srv.expected ? ' ✓' : ''), srv.egress === srv.expected)}</div>
+        <div><span>SSH 접속 (24시간)</span><b>성공 ${(srv.ssh24 || {}).ok || 0} · 실패 ${(srv.ssh24 || {}).fail || 0}</b></div>
+        <div><span>밖에서 열린 포트</span><b>${ports || '—'}</b></div>
+        <div><span>핵심 파일 지문</span>${ok(srv.files_changed ? `${srv.files_changed}개 변경` : '변경 없음', !srv.files_changed)}</div>
+        <div><span>인증서 만료</span>${ok(srv.cert_days != null ? srv.cert_days + '일 남음' : '—', (srv.cert_days || 0) >= 14)}</div>
+        <div><span>보안 업데이트</span>${ok(srv.patches != null ? `대기 ${srv.patches}개` : '—', (srv.patches || 0) < 10)}</div>
+        <div><span>도메인</span>${ok((srv.dns || '—') + (srv.dns === srv.expected ? ' ✓' : ''), srv.dns === srv.expected)}</div>
+        <div><span>앱 화면 = 저장소</span>${ok((srv.github || {}).pages_same === false ? '다름' : (srv.github || {}).pages_same ? '일치 ✓' : '—', (srv.github || {}).pages_same !== false)}</div>
+        <div><span>비밀값 파일 권한</span>${ok(srv.perms_ok === false ? '너무 열림' : '정상', srv.perms_ok !== false)}</div>
+        <div><span>서버 부하 (5분)</span><b>${srv.load != null ? srv.load : '—'}</b></div>
+      </div>
+      <div class="sec-btns"><button onclick="aqSecDeploy()">배포함 — 지금 파일을 기준으로</button><button onclick="aqSecTg()">텔레그램 시험 메시지</button></div>`;
+  } else {
+    const ev = _sec.events;
+    const kinds = [['', '전체'], ['login', '로그인'], ['account', '계정'], ['broker', '토스 연결'], ['toss_order', '주문'], ['admin', '관리 동작'], ['denied', '거절'], ['ssh', 'SSH'], ['lab', '주피터'], ['emergency', '비상']];
+    h += `<div class="sec-kinds">${kinds.map(([k, t]) => `<button class="${_sec.evKind === k ? 'on' : ''}" onclick="aqSecEvents('${k}')">${t}</button>`).join('')}</div>`;
+    h += !ev ? '<div class="auto-empty">불러오는 중…</div>' : ev.length ? ev.map(e => `<div class="sec-ev"><span class="tm">${_secT(e.at)}</span><div><b>${escapeHtml(({ login: '로그인', api: '접속', account: '계정', broker: '토스 연결', toss: '토스 호출', toss_order: '주문', admin: '관리 동작', denied: '거절됨', unknown: '잘못된 요청', ssh: 'SSH', lab: '주피터', lab_login: '주피터 로그인', emergency: '비상 조치', sec: '보안' })[e.kind] || e.kind)} · ${escapeHtml(e.action || '')}${e.ok === false ? ' <i class="w">실패</i>' : ''}</b><small>${escapeHtml([e.username, e.ip_label, (e.ua || '').slice(0, 40)].filter(Boolean).join(' · '))}</small></div></div>`).join('') : '<div class="auto-empty">기록이 없어요.</div>';
+  }
+  box.innerHTML = h;
+}
+async function aqSecEventsUser(uid) { try { const r = await apiCall('secEvents', { days: 14, user: uid }); if (r && r.ok) _sec.events = r.events; } catch (e) {} _sec.evKind = ''; aqSecRender(); }
+Object.assign(window, { aqSecOpen, aqSecTab, aqSecAck, aqSecEmergency, aqSecLab, aqSecDeploy, aqSecTg, aqSecEvents, aqSecEventsUser, aqSecLoad });
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
