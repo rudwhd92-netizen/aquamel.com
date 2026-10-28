@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.76';   // v5.76: 한국 종목은 앱 전체 종목명 표시(서버 종목명 표), 업적 도감 미국/한국 분리
+window.AQ_PWA_VERSION = '5.78';   // v5.78: 마이 › 누적 성과 개편 (기간별 손익·시장 대비·낙폭·기여도·섹터 줄·성적표)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -79,6 +79,8 @@ if ('serviceWorker' in navigator) {
   // 새 SW가 activate되면서 보내는 broadcast → 1회 자동 reload (옛 SW로 본 페이지를 새 SW 기반으로 강제 갱신)
   navigator.serviceWorker.addEventListener('message', (e) => {
     if (e.data && e.data.type === 'AQ_SW_ACTIVATED') {
+      // v5.77: 지금 화면이 이미 그 버전이면 다시 불러올 필요 없음 (화면은 항상 서버에서 새로 받으므로)
+      if (String(e.data.cache || '') === 'aquamel-v' + window.AQ_PWA_VERSION) return;
       if (sessionStorage.getItem('aq_sw_reload_done') === '1') return;
       sessionStorage.setItem('aq_sw_reload_done', '1');
       console.log('[SW] 새 워커 active — 페이지 새로고침');
@@ -105,6 +107,7 @@ if ('serviceWorker' in navigator) {
       let _reloaded = sessionStorage.getItem('aq_sw_reload_done') === '1';
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (_reloaded) return;
+        try { const su = (navigator.serviceWorker.controller && navigator.serviceWorker.controller.scriptURL) || ''; if (su.indexOf('v=' + window.AQ_PWA_VERSION) >= 0) return; } catch (e) {}   // v5.77: 이미 같은 버전 화면
         _reloaded = true;
         sessionStorage.setItem('aq_sw_reload_done', '1');
         window.location.reload();
@@ -4269,6 +4272,41 @@ body[data-mtab="sector"]:not([data-wsub="cmp"]) #compareCard { display: none !im
 .noti-empty { padding: 28px 16px; text-align: center; font-size: 13px; color: var(--text-mute); }
 /* v5.74: 장후 내 계좌 — 손익 2칸을 등락률 3칸에 붙임 */
 .num-kpis2 { margin-top: 0 !important; padding-top: 2px !important; }
+/* v5.78: 누적 성과 개편 */
+#dashboardCard > .card-header, #dashSubtitle, #dashboardCard .dash-top-left, #dashboardCard .pf-hide { display: none !important; }
+#perfTrendHost .dash-chart-card { background: none !important; border: none !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; } #perfTrendHost .dash-card-title { display: none !important; }
+.perf-x { margin-bottom: 16px; }
+.pf-top { display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 11.5px; color: var(--text-mute); margin: 0 2px 10px; }
+.pf-i { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: none; color: var(--text-mute); font-size: 10.5px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+.pf-info { display: none; font-size: 12px; color: var(--text-dim); background: rgba(255,255,255,.04); border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; line-height: 1.55; } .pf-info.open { display: block; }
+.pf-sec { font-size: 13.5px; font-weight: 700; color: var(--text-dim); margin: 24px 2px 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; } .pf-sec small { font-size: 11.5px; color: var(--text-mute); font-weight: 500; }
+.pf-card { background: rgba(255,255,255,.035); border-radius: 16px; padding: 14px; }
+.pf-hero > span { font-size: 11.5px; color: var(--text-mute); } .pf-hero > b { display: block; font-size: 26px; font-weight: 800; margin-top: 2px; font-variant-numeric: tabular-nums; } .pf-hero > b em { font-style: normal; font-size: 15px; margin-left: 6px; }
+.pf-k3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; } .pf-hero .pf-k3 { margin-top: 12px; }
+.pf-k3 > div { background: rgba(255,255,255,.05); border-radius: 12px; padding: 9px 10px; min-width: 0; } .pf-k3 span { display: block; font-size: 10.5px; color: var(--text-mute); } .pf-k3 b { font-size: 14px; font-weight: 800; color: var(--text-hi); font-variant-numeric: tabular-nums; } .pf-k3 small { display: block; font-size: 10.5px; color: var(--text-mute); margin-top: 2px; }
+.pf-k3s { margin-top: 10px; }
+.pf-mbar { display: flex; height: 5px; border-radius: 3px; overflow: hidden; margin-top: 6px; background: rgba(255,255,255,.06); } .pf-mbar i { display: block; }
+.perf-x .up { color: var(--kr-up) !important; } .perf-x .down { color: var(--kr-down) !important; }
+.pf-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; flex: none; } .pf-seg button { background: none; border: none; color: var(--text-mute); font-size: 11px; font-weight: 700; padding: 4px 9px; cursor: pointer; } .pf-seg button.on { background: rgba(255,255,255,.09); color: var(--text-hi); }
+.pf-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 8px; } .pf-mute { font-size: 12px; color: var(--text-mute); } .pf-mute b { font-weight: 800; }
+.pf-bars { display: flex; align-items: stretch; gap: 5px; height: 92px; margin-top: 10px; }
+.pf-bar { flex: 1; display: flex; flex-direction: column; background: none; border: none; padding: 0; cursor: pointer; border-radius: 4px; } .pf-bar.sel { background: rgba(255,255,255,.06); }
+.pf-bar-up, .pf-bar-dn { flex: 1; display: flex; } .pf-bar-up { align-items: flex-end; border-bottom: 1px solid rgba(255,255,255,.12); } .pf-bar-dn { align-items: flex-start; }
+.pf-bar i { display: block; width: 100%; border-radius: 3px; } .pf-bar i.up { background: #ff6b6b; } .pf-bar i.down { background: #4dabf7; }
+.pf-bl { display: flex; gap: 5px; margin-top: 4px; } .pf-bl span { flex: 1; text-align: center; font-size: 9px; color: var(--text-mute); white-space: nowrap; overflow: hidden; }
+.pf-list { margin-top: 8px; } .pf-list > div { display: flex; justify-content: space-between; font-size: 12.5px; padding: 7px 2px; } .pf-list > div + div { border-top: 1px solid rgba(255,255,255,.05); } .pf-list b { font-weight: 700; font-variant-numeric: tabular-nums; }
+.pf-lnk { display: block; width: 100%; background: none; border: none; color: #4dabf7; font-size: 12px; margin-top: 10px; cursor: pointer; }
+.pf-cal-h { font-size: 12px; color: var(--text-mute); margin: 10px 2px 6px; } .pf-cal { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 3px; }
+.pf-cal-w { font-size: 10px; color: var(--text-mute); text-align: center; } .pf-cal-d { min-height: 38px; border-radius: 6px; background: rgba(255,255,255,.03); padding: 3px; display: flex; flex-direction: column; } .pf-cal-d b { font-size: 10px; color: var(--text-dim); font-weight: 600; } .pf-cal-d small { font-size: 8.5px; color: var(--text-hi); margin-top: auto; white-space: nowrap; overflow: hidden; }
+.pf-svg { width: 100%; display: block; }
+.pf-leg { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-mute); margin-top: 8px; } .pf-leg i { display: inline-block; width: 10px; height: 3px; border-radius: 2px; margin-right: 4px; vertical-align: 3px; } .pf-leg b { font-weight: 800; }
+.pf-cb { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 5px 0; cursor: pointer; } .pf-cb .n { width: 86px; flex: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-hi); }
+.pf-cb .t { flex: 1; position: relative; height: 12px; } .pf-cb .t::before { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: rgba(255,255,255,.15); }
+.pf-cb .t i { position: absolute; top: 0; bottom: 0; border-radius: 3px; } .pf-cb .t i.up { background: #ff6b6b; } .pf-cb .t i.down { background: #4dabf7; } .pf-cb .v { width: 76px; text-align: right; flex: none; font-variant-numeric: tabular-nums; font-weight: 700; }
+.pf-note { font-size: 11px; color: var(--text-mute); margin-top: 8px; line-height: 1.5; } .pf-empty { font-size: 12px; color: var(--text-mute); text-align: center; padding: 16px 0; }
+.pf-sr { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 12.5px; cursor: pointer; } .pf-sr + .pf-sr { border-top: 1px solid rgba(255,255,255,.05); }
+.pf-sr .n { width: 104px; flex: none; color: var(--text-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .pf-spark { flex: 1; height: 22px; min-width: 40px; } .pf-sr .v { width: 84px; text-align: right; flex: none; font-weight: 700; font-variant-numeric: tabular-nums; } .pf-sr .v small { display: block; font-size: 10.5px; font-weight: 600; }
+.pf-g3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; } .pf-g3 > div { background: rgba(255,255,255,.05); border-radius: 12px; padding: 9px 10px; } .pf-g3 span { display: block; font-size: 10.5px; color: var(--text-mute); } .pf-g3 b { font-size: 15px; font-weight: 800; color: var(--text-hi); } .pf-g3 small { display: block; font-size: 10.5px; color: var(--text-mute); margin-top: 2px; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -8345,6 +8383,7 @@ table.combo-eval tbody td .nodata {
       <span class="toggle-icon">▼</span>
     </div>
     <div class="card-body">
+      <div id="perfX" class="perf-x"></div>
       <p class="subtitle" id="dashSubtitle">포트폴리오를 베이스로 매매이력을 쌓아올린 실시간 P&L 대시보드. 우클릭(모바일은 길게 누르기)으로 종목 숨기기 가능.</p>
 
       <!-- TOP SECTION: KPI (2/3) + Donut (1/3) -->
@@ -16620,6 +16659,7 @@ function simulatePortfolioDaily() {
       const profit = gross - t.fee - t.tax;
       acc.total += profit;
       acc.byTicker[tk] = (acc.byTicker[tk] || 0) + profit;
+      if (acc.sales) acc.sales.push({ date: t.date, ticker: tk, profit, pct: avgAtSell > 0 ? (t.price / avgAtSell - 1) * 100 : null });   // v5.78: 확정 매매 성적표
       // v1.94: 진단 로그 — gross / net 분리 표시 (사용자가 명확히 확인 가능)
       console.log(`[매도/${tk}] ${t.date} ${t.qty}주 @ ${t.price.toLocaleString()} (평단 ${avgAtSell.toFixed(0)}) · gross=${gross.toFixed(0)} − 매도수수료 ${t.fee} − 세금 ${t.tax} = 확정수익 ${profit.toFixed(0)} (누적 ${acc.total.toFixed(0)})`);
       state[tk].qty -= t.qty;
@@ -16629,7 +16669,7 @@ function simulatePortfolioDaily() {
   }
 
   // 6) Forward simulation
-  const acc = { total: 0, byTicker: {} };
+  const acc = { total: 0, byTicker: {}, sales: [] };
   const snapshots = [];
 
   allDates.forEach(date => {
@@ -16640,7 +16680,7 @@ function simulatePortfolioDaily() {
     }
     // (b) 그 날 종료 시점 평가
     let totalEval = 0, totalCost = 0;
-    const bySector = {};
+    const bySector = {}; const byTk = {};   // v5.78: 종목별 평가손익 (손익 기여도)
     Object.entries(state).forEach(([tk, s]) => {
       if (s.qty <= 1e-9) return;
       const price = getPriceOnOrBefore(tk, date);
@@ -16650,14 +16690,14 @@ function simulatePortfolioDaily() {
         totalEval += evalVal;
         totalCost += s.cost;
         const sec = s.sector || '미분류';
-        bySector[sec] = (bySector[sec] || 0) + (evalVal - s.cost);
+        bySector[sec] = (bySector[sec] || 0) + (evalVal - s.cost); byTk[tk] = evalVal - s.cost;
         return;
       }
       const evalVal = s.qty * price;
       totalEval += evalVal;
       totalCost += s.cost;
       const sec = s.sector || '미분류';
-      bySector[sec] = (bySector[sec] || 0) + (evalVal - s.cost);
+      bySector[sec] = (bySector[sec] || 0) + (evalVal - s.cost); byTk[tk] = evalVal - s.cost;
     });
     snapshots.push({
       date,
@@ -16665,7 +16705,7 @@ function simulatePortfolioDaily() {
       totalRealized: acc.total,
       unrealized: totalEval - totalCost,
       totalProfit: acc.total + (totalEval - totalCost),
-      bySector,
+      bySector, byTk, realTk: Object.assign({}, acc.byTicker),
     });
   });
 
@@ -16694,6 +16734,7 @@ function simulatePortfolioDaily() {
     holdings,
     totalRealized: acc.total,
     realizedByTicker: acc.byTicker,
+    sales: acc.sales,
   };
   return _dashSimCache;
 }
@@ -17178,6 +17219,7 @@ async function renderDashboard() {
   renderDashHoldingsList(holdings, hiddenHoldings);
   renderDashMatrix(holdings);
 
+  try { aqPerfRender({ d: { totalProfit, totalROI, principal, unrealized, unrealROI, realized, totalAsset, pureRatio, reinvRatio, flows }, sim: simulatePortfolioDaily() }); const sc = document.getElementById('dashSectorTrendCanvas'); const scc = sc && sc.closest('.dash-chart-card'); if (scc) scc.classList.add('pf-hide'); } catch (e) { console.warn('[누적 성과]', e); }   // v5.78
   const lastDate = recentSnaps.length ? recentSnaps[recentSnaps.length - 1].date : '-';
   const asofEl = document.getElementById('dashAsof');
   if (asofEl) asofEl.textContent = `기준: ${lastDate}`;
@@ -27785,11 +27827,159 @@ async function aqHardRestart() {
     if (r && !r.timeout && r.ok === false && !/잠시 후|연결되지 않/.test(String(r.error || ''))) sessionStorage.setItem('aq_sync_fail', String(r.error || '토스 동기화 실패').slice(0, 80));
   } catch (e) {}
   try { await aqClearAllCaches(); } catch (e) {}
-  try { sessionStorage.removeItem('aq_sw_reload_done'); } catch (e) {}
+  try { sessionStorage.setItem('aq_sw_reload_done', '1'); } catch (e) {}   // v5.77: 다시 시작한 뒤 자동 새로고침이 한 번 더 일어나지 않게
   setTimeout(() => window.location.reload(), 200);
 }
 window.aqHardRestart = aqHardRestart;
 setTimeout(() => { try { const m = sessionStorage.getItem('aq_sync_fail'); if (m) { sessionStorage.removeItem('aq_sync_fail'); if (typeof aqToast === 'function') aqToast('토스 동기화가 안 됐어요 — ' + m); } } catch (e) {} }, 2500);
+
+// ============================================================================
+// v5.78: 마이 › 누적 성과 개편 — 요약 · 기간별 손익(3칸+히스토리) · 평가수익금 추이(기존) · 시장 대비 누적 수익률 · 낙폭 · 손익 기여도 · 섹터별 평가수익금 · 확정 매매 성적표 · Decoupling Matrix(기존)
+// ============================================================================
+const _pf = { hist: localStorage.getItem('aq_pf_hist') || 'day', histList: false, cmp: localStorage.getItem('aq_pf_cmp') || '3m', ctb: localStorage.getItem('aq_pf_ctb') || 'month', secMode: localStorage.getItem('aq_pf_sec') || 'sector', secMore: false, sel: null, last: null };
+function _pfC(v) { return v > 0 ? 'up' : v < 0 ? 'down' : ''; }
+function _pfPct(v, d = 1) { return v == null || !isFinite(v) ? '—' : `${v >= 0 ? '+' : ''}${v.toFixed(d)}%`; }
+function _pfSeg(key, opts, cur, fn) { return `<span class="pf-seg">${opts.map(([v, t]) => `<button class="${v === cur ? 'on' : ''}" onclick="${fn}('${v}')">${t}</button>`).join('')}</span>`; }
+function _pfMD(d) { return `${parseInt(d.slice(5, 7))}/${parseInt(d.slice(8, 10))}`; }
+// ---- 히스토리 계산 (전체 스냅샷 기준)
+function _pfHistory(snaps, mode) {
+  if (!snaps || snaps.length < 2) return [];
+  const out = [];
+  if (mode === 'day' || mode === 'cal') {
+    for (let i = 1; i < snaps.length; i++) out.push({ k: snaps[i].date, label: _pfMD(snaps[i].date), v: snaps[i].totalProfit - snaps[i - 1].totalProfit });
+    return mode === 'day' ? out.slice(-10) : out;
+  }
+  const keyOf = (d) => { if (mode === 'month') return d.slice(0, 7); const x = new Date(d + 'T00:00:00'); const dow = (x.getDay() + 6) % 7; x.setDate(x.getDate() - dow); return x.toISOString().slice(0, 10); };
+  const lastByKey = []; snaps.forEach(s => { const k = keyOf(s.date); if (lastByKey.length && lastByKey[lastByKey.length - 1].k === k) lastByKey[lastByKey.length - 1].s = s; else lastByKey.push({ k, s }); });
+  for (let i = 1; i < lastByKey.length; i++) out.push({ k: lastByKey[i].k, label: mode === 'month' ? `${parseInt(lastByKey[i].k.slice(5, 7))}월` : `~${_pfMD(lastByKey[i].s.date)}`, v: lastByKey[i].s.totalProfit - lastByKey[i - 1].s.totalProfit });
+  return out.slice(mode === 'month' ? -6 : -8);
+}
+function _pfBars(items, selIdx) {
+  if (!items.length) return '<div class="pf-empty">기록이 아직 부족해요.</div>';
+  const mx = Math.max(...items.map(x => Math.abs(x.v)), 1);
+  return `<div class="pf-bars">${items.map((x, i) => `<button class="pf-bar${i === selIdx ? ' sel' : ''}" onclick="aqPfSel(${i})"><span class="pf-bar-up">${x.v > 0 ? `<i class="up" style="height:${Math.max(3, x.v / mx * 100)}%"></i>` : ''}</span><span class="pf-bar-dn">${x.v < 0 ? `<i class="down" style="height:${Math.max(3, -x.v / mx * 100)}%"></i>` : ''}</span></button>`).join('')}</div>
+    <div class="pf-bl">${items.map((x, i) => `<span>${i === items.length - 1 && _pf.hist === 'day' ? '오늘' : x.label}</span>`).join('')}</div>`;
+}
+function _pfCalendar(items) {
+  const last = items.length ? items[items.length - 1].k : new Date().toISOString().slice(0, 10); const ym = last.slice(0, 7);
+  const by = {}; items.forEach(x => { if (x.k.startsWith(ym)) by[x.k] = x.v; });
+  const first = new Date(ym + '-01T00:00:00'); const lead = (first.getDay() + 6) % 7; const days = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+  const mx = Math.max(...Object.values(by).map(Math.abs), 1);
+  let h = `<div class="pf-cal-h">${parseInt(ym.slice(5))}월</div><div class="pf-cal">${['월', '화', '수', '목', '금', '토', '일'].map(d => `<span class="pf-cal-w">${d}</span>`).join('')}`;
+  for (let i = 0; i < lead; i++) h += '<span></span>';
+  for (let d = 1; d <= days; d++) { const k = `${ym}-${String(d).padStart(2, '0')}`; const v = by[k]; const a = v == null ? 0 : 0.15 + 0.6 * Math.abs(v) / mx;
+    h += `<span class="pf-cal-d" style="${v == null ? '' : `background:${v >= 0 ? `rgba(255,107,107,${a})` : `rgba(77,171,247,${a})`}`}"><b>${d}</b>${v == null ? '' : `<small>${fmtUSDPlus(Math.round(v))}</small>`}</span>`; }
+  return h + '</div>';
+}
+// ---- 시간가중 수익률 지수 (입출금 영향 제외): 일간 r = Δ종합손익 / 전날 평가금
+function _pfIndex(snaps) { const idx = [{ d: snaps[0].date, v: 1 }]; for (let i = 1; i < snaps.length; i++) { const base = snaps[i - 1].totalEval; const r = base > 0 ? (snaps[i].totalProfit - snaps[i - 1].totalProfit) / base : 0; idx.push({ d: snaps[i].date, v: idx[i - 1].v * (1 + Math.max(-0.5, Math.min(0.5, r))) }); } return idx; }
+function _pfMacroSeries(re) { const rows = (_state.macro || []).filter(r => re.test(String(r.Ticker || '')) && r.Date && isFinite(Number(r.Close))); if (rows.length < 2) return null; const tk = rows[0].Ticker; return rows.filter(r => r.Ticker === tk).sort((a, b) => String(a.Date).localeCompare(String(b.Date))).map(r => ({ date: String(r.Date).slice(0, 10), value: Number(r.Close) })); }
+function _pfAlign(series, dates) { if (!series || series.length < 2) return null; const by = {}; series.forEach(x => by[x.date] = x.value); let last = null; const out = dates.map(d => { if (by[d] != null) last = by[d]; else if (last == null) { const prev = series.filter(x => x.date <= d).slice(-1)[0]; last = prev ? prev.value : null; } return last; }); const b0 = out.find(v => v != null); return b0 ? out.map(v => v == null ? 0 : (v / b0 - 1) * 100) : null; }
+function _pfLines(lines, h = 110) {
+  const all = lines.flatMap(l => l.ys.filter(v => v != null)); if (!all.length) return '';
+  let mn = Math.min(0, ...all), mx = Math.max(0, ...all); if (mx - mn < 1) { mx += 0.5; mn -= 0.5; }
+  const n = lines[0].ys.length; const X = i => (i / Math.max(1, n - 1)) * 320; const Y = v => h - 6 - ((v - mn) / (mx - mn)) * (h - 12);
+  return `<svg class="pf-svg" viewBox="0 0 320 ${h}" preserveAspectRatio="none" style="height:${h}px"><line x1="0" y1="${Y(0)}" x2="320" y2="${Y(0)}" stroke="rgba(255,255,255,.12)"/>${lines.map(l => `<polyline fill="none" stroke="${l.c}" stroke-width="${l.w || 1.6}" ${l.dash ? 'stroke-dasharray="4 3"' : ''} vector-effect="non-scaling-stroke" points="${l.ys.map((v, i) => `${X(i).toFixed(1)},${Y(v == null ? 0 : v).toFixed(1)}`).join(' ')}"/>`).join('')}</svg>`;
+}
+function _pfSpark(ys, up) { if (!ys.length) return ''; const mn = Math.min(...ys), mx = Math.max(...ys); const r = mx - mn || 1; return `<svg class="pf-spark" viewBox="0 0 100 22" preserveAspectRatio="none"><polyline fill="none" stroke="${up ? '#ff6b6b' : '#4dabf7'}" stroke-width="1.6" vector-effect="non-scaling-stroke" points="${ys.map((v, i) => `${(i / Math.max(1, ys.length - 1) * 100).toFixed(1)},${(20 - (v - mn) / r * 18).toFixed(1)}`).join(' ')}"/></svg>`; }
+// ---- 본체
+function aqPerfRender(ctx) {
+  if (ctx) _pf.last = ctx; ctx = _pf.last; const host = document.getElementById('perfX'); if (!host || !ctx) return;
+  const { d, sim } = ctx; const snaps = (sim && sim.snapshots) || []; const mk = getCurrentMarket();
+  let h = `<div class="pf-top"><span>기준 ${snaps.length ? _pfMD(snaps[snaps.length - 1].date) : '—'}</span><button class="pf-i" onclick="document.getElementById('perfInfo').classList.toggle('open')">i</button></div>
+    <div class="pf-info" id="perfInfo">포트폴리오를 베이스로 매매이력을 쌓아올린 실시간 손익 대시보드예요. 보유 종목 탭에서 종목을 길게 누르면 숨길 수 있어요.</div>`;
+  // 1) 요약
+  h += `<div class="pf-card pf-hero"><span>종합 수익금 · 원금 ${fmtUSD(d.principal)}</span><b class="${_pfC(d.totalProfit)}">${fmtUSDPlus(d.totalProfit)}<em>${_pfPct(d.totalROI, 2)}</em></b>
+    <div class="pf-k3"><div><span>평가 수익금</span><b class="${_pfC(d.unrealized)}">${fmtUSDPlus(d.unrealized)}</b><small class="${_pfC(d.unrealROI)}">${_pfPct(d.unrealROI, 2)}</small></div>
+    <div><span>확정 수익금</span><b class="${_pfC(d.realized)}">${fmtUSDPlus(d.realized)}</b><small>&nbsp;</small></div>
+    <div><span>운용 원금</span><b>${fmtUSD(d.principal)}</b><small>총자산 ${fmtUSD(d.totalAsset)}</small><div class="pf-mbar"><i style="width:${d.pureRatio.toFixed(0)}%;background:#4dabf7"></i><i style="width:${d.reinvRatio.toFixed(0)}%;background:#63e6be"></i></div><small>순수 ${d.pureRatio.toFixed(0)}% · 재투자 ${d.reinvRatio.toFixed(0)}%</small></div></div></div>`;
+  // 2) 기간별 손익
+  const f = d.flows || {}; const t3 = (lab, v, df) => `<div><span>${lab}</span><b class="${_pfC(v)}">${fmtUSDPlus(v || 0)}</b><small class="${_pfC(df)}">${(df || 0) >= 0 ? '▲' : '▼'} ${fmtUSDPlus(df || 0)}</small></div>`;
+  const hist = _pfHistory(snaps, _pf.hist); const sel = _pf.sel != null && _pf.sel < hist.length ? _pf.sel : hist.length - 1;
+  h += `<div class="pf-sec">기간별 손익</div><div class="pf-card"><div class="pf-k3">${t3('오늘', f.today, f.todayDiff)}${t3('이번주', f.week, f.weekDiff)}${t3('이번달', f.month, f.monthDiff)}</div>
+    <div class="pf-row"><span class="pf-mute">히스토리${hist[sel] && _pf.hist !== 'cal' ? ` · ${_pf.hist === 'day' && sel === hist.length - 1 ? '오늘' : hist[sel].label} <b class="${_pfC(hist[sel].v)}">${fmtUSDPlus(hist[sel].v)}</b>` : ''}</span>${_pfSeg('hist', [['day', '일간'], ['week', '주간'], ['month', '월간'], ['cal', '달력']], _pf.hist, 'aqPfHist')}</div>
+    ${_pf.hist === 'cal' ? _pfCalendar(hist) : (_pf.histList ? `<div class="pf-list">${hist.slice().reverse().map(x => `<div><span>${x.label}</span><b class="${_pfC(x.v)}">${fmtUSDPlus(x.v)}</b></div>`).join('')}</div>` : _pfBars(hist, sel))}
+    ${_pf.hist === 'cal' ? '' : `<button class="pf-lnk" onclick="aqPfList()">${_pf.histList ? '그래프로 보기' : '목록으로 보기'}</button>`}</div>`;
+  // 3) 평가수익금 추이 (기존 차트 — 고점·저점·현재점, 벤치마크선)
+  h += `<div class="pf-sec">평가수익금 추이<small>최근 30일</small></div><div class="pf-card" id="perfTrendHost"></div>`;
+  // 4) 시장 대비 누적 수익률
+  const nDays = { '1m': 22, '3m': 66, '6m': 132, all: 99999 }[_pf.cmp] || 66;
+  const win = snaps.slice(-Math.min(snaps.length, nDays + 1));
+  if (win.length >= 3) {
+    const idx = _pfIndex(win); const me = idx.map(x => (x.v - 1) * 100); const dates = win.map(s => s.date);
+    const b1 = mk === 'KR' ? _pfAlign(getKospiIndexSeries(400), dates) : _pfAlign((getKJP400IndexSeries(400) || []).map(x => ({ date: x.date, value: x.value })), dates);
+    const b2 = mk === 'KR' ? _pfAlign(_pfMacroSeries(/KOSDAQ|KQ11/i), dates) : _pfAlign(_pfMacroSeries(/S&P|GSPC|SPX|SPY/i), dates);
+    const n1 = mk === 'KR' ? 'KOSPI' : 'KJP500', n2 = mk === 'KR' ? 'KOSDAQ' : 'S&P 500';
+    const lines = [{ ys: me, c: '#ff6b6b', w: 2.2 }]; if (b1) lines.push({ ys: b1, c: '#9b968c' }); if (b2) lines.push({ ys: b2, c: '#74c0fc' });
+    const last = a => a ? a[a.length - 1] : null; const ex = b1 ? last(me) - last(b1) : null;
+    h += `<div class="pf-sec">시장 대비 누적 수익률${_pfSeg('cmp', [['1m', '1개월'], ['3m', '3개월'], ['6m', '6개월'], ['all', '전체']], _pf.cmp, 'aqPfCmp')}</div><div class="pf-card">${_pfLines(lines)}
+      <div class="pf-k3 pf-k3s"><div><span>내 계좌</span><b class="${_pfC(last(me))}">${_pfPct(last(me))}</b></div><div><span>${n1}</span><b class="${_pfC(last(b1))}">${_pfPct(last(b1))}</b></div><div><span>${n2}</span><b class="${_pfC(last(b2))}">${_pfPct(last(b2))}</b></div></div>
+      <div class="pf-leg"><span><i style="background:#ff6b6b"></i>내 계좌</span><span><i style="background:#9b968c"></i>${n1}</span><span><i style="background:#74c0fc"></i>${n2}</span>${ex != null ? `<span>초과 수익 <b class="${_pfC(ex)}">${ex >= 0 ? '+' : ''}${ex.toFixed(1)}%p</b></span>` : ''}</div></div>`;
+  }
+  // 5) 낙폭 (시간가중 지수 기준, 전체 기간)
+  if (snaps.length >= 3) {
+    const idx = _pfIndex(snaps); let peak = idx[0].v, peakTP = snaps[0].totalProfit, mdd = 0, mddD = snaps[0].date; const dd = idx.map((x, i) => { if (x.v > peak) { peak = x.v; } if (snaps[i].totalProfit > peakTP) peakTP = snaps[i].totalProfit; const v = (x.v / peak - 1) * 100; if (v < mdd) { mdd = v; mddD = x.d; } return v; });
+    const ddShow = dd.slice(-90); const cur = dd[dd.length - 1]; const need = Math.max(0, peakTP - snaps[snaps.length - 1].totalProfit);
+    const mn = Math.min(-1, ...ddShow); const X = i => (i / Math.max(1, ddShow.length - 1)) * 320; const Y = v => 4 + (v / mn) * 72;
+    h += `<div class="pf-sec">낙폭<small>고점 대비 · 최근 90거래일</small></div><div class="pf-card"><svg class="pf-svg" viewBox="0 0 320 80" preserveAspectRatio="none" style="height:80px"><path d="M0,4 ${ddShow.map((v, i) => `L${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')} L320,4 Z" fill="rgba(77,171,247,.22)" stroke="#4dabf7" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
+      <div class="pf-k3 pf-k3s"><div><span>지금</span><b class="${cur < -0.05 ? 'down' : ''}">${cur.toFixed(1)}%</b></div><div><span>최대 낙폭</span><b class="down">${mdd.toFixed(1)}%</b><small>${_pfMD(mddD)}</small></div><div><span>고점 회복까지</span><b>${need > 0 ? fmtUSD(need) : '고점'}</b></div></div></div>`;
+  }
+  // 6) 손익 기여도
+  if (snaps.length >= 2 && snaps[snaps.length - 1].byTk) {
+    const end = snaps[snaps.length - 1]; const lastD = new Date(end.date + 'T00:00:00'); let start;
+    if (_pf.ctb === 'week') { const x = new Date(lastD); x.setDate(x.getDate() - ((x.getDay() + 6) % 7) - 1); start = x.toISOString().slice(0, 10); }
+    else if (_pf.ctb === 'month') start = new Date(lastD.getFullYear(), lastD.getMonth(), 0).toISOString().slice(0, 10);
+    else { const x = new Date(lastD); x.setMonth(x.getMonth() - 3); start = x.toISOString().slice(0, 10); }
+    const s0 = snaps.filter(s => s.date <= start).slice(-1)[0] || snaps[0];
+    const tks = new Set([...Object.keys(end.byTk || {}), ...Object.keys(end.realTk || {}), ...Object.keys(s0.byTk || {})]);
+    const rows = [...tks].map(tk => ({ tk, v: ((end.byTk || {})[tk] || 0) + ((end.realTk || {})[tk] || 0) - ((s0.byTk || {})[tk] || 0) - ((s0.realTk || {})[tk] || 0) })).filter(x => Math.abs(x.v) > 0.5);
+    const ups = rows.filter(x => x.v > 0).sort((a, b) => b.v - a.v).slice(0, 5), dns = rows.filter(x => x.v < 0).sort((a, b) => a.v - b.v).slice(0, 5);
+    const mx = Math.max(1, ...rows.map(x => Math.abs(x.v)));
+    const bar = x => `<div class="pf-cb" onclick="openChart('${escapeAttr(x.tk)}')"><span class="n">${escapeHtml(displayName(x.tk) || x.tk)}</span><span class="t">${x.v > 0 ? `<i class="up" style="left:50%;width:${x.v / mx * 50}%"></i>` : `<i class="down" style="left:${50 - (-x.v / mx * 50)}%;width:${-x.v / mx * 50}%"></i>`}</span><span class="v ${_pfC(x.v)}">${fmtUSDPlus(Math.round(x.v))}</span></div>`;
+    h += `<div class="pf-sec">손익 기여도${_pfSeg('ctb', [['week', '이번주'], ['month', '이번달'], ['3m', '3개월']], _pf.ctb, 'aqPfCtb')}</div><div class="pf-card">${ups.concat(dns.slice().reverse()).map(bar).join('') || '<div class="pf-empty">이 기간에는 움직임이 없어요.</div>'}<div class="pf-note">벌어 준 상위 5 · 깎아 먹은 상위 5 (평가 + 확정 합산)</div></div>`;
+  }
+  // 7) 섹터별 평가수익금 — 한 줄에 한 섹터
+  const s30 = snaps.slice(-30);
+  if (s30.length >= 2) {
+    const useMega = mk === 'US' && _pf.secMode === 'mega' && typeof aqSectorDef === 'function';
+    const keyOf = sec => { if (!useMega) return sec; const dd = aqSectorDef(sec); return dd && dd.mega ? dd.mega : sec; };
+    const keys = new Set(); s30.forEach(s => Object.keys(s.bySector || {}).forEach(k => keys.add(keyOf(k))));
+    const series = {}; keys.forEach(k => series[k] = s30.map(s => Object.entries(s.bySector || {}).reduce((a, [sec, v]) => a + (keyOf(sec) === k ? v : 0), 0)));
+    const rows = [...keys].map(k => ({ k, ys: series[k], cur: series[k][series[k].length - 1], chg: series[k][series[k].length - 1] - series[k][0] })).filter(x => x.ys.some(v => Math.abs(v) > 0.5)).sort((a, b) => b.cur - a.cur);
+    const shown = _pf.secMore ? rows : rows.slice(0, 8);
+    const secName = k => useMega ? escapeHtml(k) : escapeHtml(k);
+    h += `<div class="pf-sec">섹터별 평가수익금${mk === 'US' && typeof aqSectorDef === 'function' && _secDef && _secDef.byKey ? _pfSeg('sec', [['sector', '섹터'], ['mega', '메가']], _pf.secMode, 'aqPfSec') : ''}</div><div class="pf-card">${shown.map(x => `<div class="pf-sr" ${useMega ? '' : `onclick="aqOpenSectorSheet('${escapeAttr(x.k)}')"`}><span class="n">${secName(x.k)}</span>${_pfSpark(x.ys, x.cur >= 0)}<span class="v ${_pfC(x.cur)}">${fmtUSDPlus(Math.round(x.cur))}<small class="${_pfC(x.chg)}">30일 ${fmtUSDPlus(Math.round(x.chg))}</small></span></div>`).join('') || '<div class="pf-empty">섹터 기록이 아직 없어요.</div>'}
+      ${rows.length > 8 ? `<button class="pf-lnk" onclick="aqPfSecMore()">${_pf.secMore ? '접기' : `더 보기 · ${rows.length - 8}개`}</button>` : ''}</div>`;
+  }
+  // 8) 확정 매매 성적표
+  const sales = (sim && sim.sales) || [];
+  if (sales.length) {
+    const wins = sales.filter(x => x.profit > 0), loss = sales.filter(x => x.profit < 0);
+    const avg = (a, k) => a.length ? a.reduce((s, x) => s + (x[k] || 0), 0) / a.length : null;
+    const aw = avg(wins, 'pct'), al = avg(loss, 'pct');
+    let best = { n: 0 }, worst = { n: 0 }, cur = { n: 0, w: null };
+    sales.forEach(x => { const w = x.profit > 0; if (x.profit === 0) return; if (cur.w === w) { cur.n++; cur.e = x.date; } else cur = { n: 1, w, s: x.date, e: x.date }; if (w && cur.n > best.n) best = { ...cur }; if (!w && cur.n > worst.n) worst = { ...cur }; });
+    const rng = c => c.n ? `${_pfMD(c.s)}–${_pfMD(c.e)}` : '';
+    h += `<div class="pf-sec">확정 매매 성적표<small>매도 1건 = 1판</small></div><div class="pf-card pf-g3">
+      <div><span>승률</span><b>${Math.round(wins.length / Math.max(1, wins.length + loss.length) * 100)}%</b><small>${wins.length}승 ${loss.length}패</small></div>
+      <div><span>평균 익절</span><b class="up">${_pfPct(aw)}</b><small>${wins.length ? fmtUSDPlus(Math.round(avg(wins, 'profit'))) : ''}</small></div>
+      <div><span>평균 손절</span><b class="down">${_pfPct(al)}</b><small>${loss.length ? fmtUSDPlus(Math.round(avg(loss, 'profit'))) : ''}</small></div>
+      <div><span>손익비</span><b>${aw != null && al ? (aw / Math.abs(al)).toFixed(2) : '—'}</b><small>평균 익절 ÷ 평균 손절</small></div>
+      <div><span>최대 연속 승</span><b>${best.n}</b><small>${rng(best)}</small></div>
+      <div><span>최대 연속 패</span><b>${worst.n}</b><small>${rng(worst)}</small></div></div>`;
+  }
+  host.innerHTML = h;
+  // 기존 평가수익금 추이 차트를 이 자리로 (고점·저점·현재점 표시와 벤치마크선 그대로)
+  try { const tc = document.getElementById('dashTrendCanvas'); const card = tc && tc.closest('.dash-chart-card'); const th = document.getElementById('perfTrendHost'); if (card && th) { th.appendChild(card); if (_dashCharts && _dashCharts.trend) requestAnimationFrame(() => { try { _dashCharts.trend.resize(); } catch (e) {} }); } } catch (e) {}
+}
+function aqPfHist(v) { _pf.hist = v; _pf.sel = null; _pf.histList = false; try { localStorage.setItem('aq_pf_hist', v); } catch (e) {} aqPerfRender(); }
+function aqPfSel(i) { _pf.sel = i; aqPerfRender(); }
+function aqPfList() { _pf.histList = !_pf.histList; aqPerfRender(); }
+function aqPfCmp(v) { _pf.cmp = v; try { localStorage.setItem('aq_pf_cmp', v); } catch (e) {} aqPerfRender(); }
+function aqPfCtb(v) { _pf.ctb = v; try { localStorage.setItem('aq_pf_ctb', v); } catch (e) {} aqPerfRender(); }
+function aqPfSec(v) { _pf.secMode = v; try { localStorage.setItem('aq_pf_sec', v); } catch (e) {} aqPerfRender(); }
+function aqPfSecMore() { _pf.secMore = !_pf.secMore; aqPerfRender(); }
+Object.assign(window, { aqPerfRender, aqPfHist, aqPfSel, aqPfList, aqPfCmp, aqPfCtb, aqPfSec, aqPfSecMore });
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
