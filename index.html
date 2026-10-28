@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.79';   // v5.79: 설정 › 보안 모니터링 (경고·비상 버튼·주피터·텔레그램), 알림에 보안 항목
+window.AQ_PWA_VERSION = '5.80';   // v5.80: 누적 성과 표시 오류 수정, 보안 시트 쓸어내리기/스크롤, 아는 통신사·기기
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4329,6 +4329,9 @@ body[data-mtab="sector"]:not([data-wsub="cmp"]) #compareCard { display: none !im
 .sec-kinds { display: flex; gap: 6px; overflow-x: auto; padding: 0 2px 10px; } .sec-kinds button { flex: none; font-size: 11.5px; padding: 4px 10px; border-radius: 999px; border: none; background: rgba(255,255,255,.06); color: var(--text-mute); cursor: pointer; } .sec-kinds button.on { background: rgba(77,171,247,.16); color: #74c0fc; }
 .sec-ev { display: flex; gap: 10px; padding: 9px 4px; font-size: 12.5px; } .sec-ev + .sec-ev { border-top: 1px solid rgba(255,255,255,.05); } .sec-ev .tm { width: 72px; flex: none; color: var(--text-mute); font-size: 11.5px; } .sec-ev b { font-weight: 600; color: var(--text-hi); } .sec-ev small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; word-break: break-all; }
 .sec-brief { background: rgba(255,107,107,.1); border: 1px solid rgba(255,107,107,.35); color: #ff8787; border-radius: 12px; padding: 10px 12px; font-size: 13px; font-weight: 700; margin: 0 0 14px; cursor: pointer; }
+/* v5.80: 보안 시트 스크롤·크기 */
+#setSecSheet { max-height: 88vh; } #setSecSheet.aq-sheet-full { max-height: 96vh; height: 96vh; }
+#setSecBody { max-height: calc(88vh - 76px) !important; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding-bottom: 12px; } #setSecSheet.aq-sheet-full #setSecBody { max-height: calc(96vh - 76px) !important; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -16684,7 +16687,7 @@ function simulatePortfolioDaily() {
       const profit = gross - t.fee - t.tax;
       acc.total += profit;
       acc.byTicker[tk] = (acc.byTicker[tk] || 0) + profit;
-      if (acc.sales) acc.sales.push({ date: t.date, ticker: tk, profit, pct: avgAtSell > 0 ? (t.price / avgAtSell - 1) * 100 : null });   // v5.78: 확정 매매 성적표
+      if (acc.sales) acc.sales.push({ date: t.date || acc.date, ticker: tk, profit, pct: avgAtSell > 0 ? (t.price / avgAtSell - 1) * 100 : null });   // v5.78: 확정 매매 성적표
       // v1.94: 진단 로그 — gross / net 분리 표시 (사용자가 명확히 확인 가능)
       console.log(`[매도/${tk}] ${t.date} ${t.qty}주 @ ${t.price.toLocaleString()} (평단 ${avgAtSell.toFixed(0)}) · gross=${gross.toFixed(0)} − 매도수수료 ${t.fee} − 세금 ${t.tax} = 확정수익 ${profit.toFixed(0)} (누적 ${acc.total.toFixed(0)})`);
       state[tk].qty -= t.qty;
@@ -16701,6 +16704,7 @@ function simulatePortfolioDaily() {
     // (a) 그 날의 trades 적용 (reorder 후)
     if (tradesByDate[date]) {
       const orderedTrades = reorderSameDayTrades(tradesByDate[date], state);
+      acc.date = date;   // v5.80: 매도 기록의 날짜 (거래 객체에 날짜가 없음)
       orderedTrades.forEach(t => applyTrade(state, t, acc));
     }
     // (b) 그 날 종료 시점 평가
@@ -17244,7 +17248,8 @@ async function renderDashboard() {
   renderDashHoldingsList(holdings, hiddenHoldings);
   renderDashMatrix(holdings);
 
-  try { aqPerfRender({ d: { totalProfit, totalROI, principal, unrealized, unrealROI, realized, totalAsset, pureRatio, reinvRatio, flows }, sim: simulatePortfolioDaily() }); const sc = document.getElementById('dashSectorTrendCanvas'); const scc = sc && sc.closest('.dash-chart-card'); if (scc) scc.classList.add('pf-hide'); } catch (e) { console.warn('[누적 성과]', e); }   // v5.78
+  try { aqPerfRender({ d: { totalProfit, totalROI, principal, unrealized, unrealROI, realized, totalAsset, pureRatio, reinvRatio, flows }, sim: simulatePortfolioDaily() }); } catch (e) { console.warn('[누적 성과]', e); }   // v5.78
+  try { const sc = document.getElementById('dashSectorTrendCanvas'); const scc = sc && sc.closest('.dash-chart-card'); if (scc) scc.classList.add('pf-hide'); } catch (e) {}
   const lastDate = recentSnaps.length ? recentSnaps[recentSnaps.length - 1].date : '-';
   const asofEl = document.getElementById('dashAsof');
   if (asofEl) asofEl.textContent = `기준: ${lastDate}`;
@@ -27868,7 +27873,7 @@ const _pf = { hist: localStorage.getItem('aq_pf_hist') || 'day', histList: false
 function _pfC(v) { return v > 0 ? 'up' : v < 0 ? 'down' : ''; }
 function _pfPct(v, d = 1) { return v == null || !isFinite(v) ? '—' : `${v >= 0 ? '+' : ''}${v.toFixed(d)}%`; }
 function _pfSeg(key, opts, cur, fn) { return `<span class="pf-seg">${opts.map(([v, t]) => `<button class="${v === cur ? 'on' : ''}" onclick="${fn}('${v}')">${t}</button>`).join('')}</span>`; }
-function _pfMD(d) { return `${parseInt(d.slice(5, 7))}/${parseInt(d.slice(8, 10))}`; }
+function _pfMD(d) { d = String(d || ''); return d.length >= 10 ? `${parseInt(d.slice(5, 7))}/${parseInt(d.slice(8, 10))}` : ''; }
 // ---- 히스토리 계산 (전체 스냅샷 기준)
 function _pfHistory(snaps, mode) {
   if (!snaps || snaps.length < 2) return [];
@@ -27916,11 +27921,14 @@ function aqPerfRender(ctx) {
   const { d, sim } = ctx; const snaps = (sim && sim.snapshots) || []; const mk = getCurrentMarket();
   let h = `<div class="pf-top"><span>기준 ${snaps.length ? _pfMD(snaps[snaps.length - 1].date) : '—'}</span><button class="pf-i" onclick="document.getElementById('perfInfo').classList.toggle('open')">i</button></div>
     <div class="pf-info" id="perfInfo">포트폴리오를 베이스로 매매이력을 쌓아올린 실시간 손익 대시보드예요. 보유 종목 탭에서 종목을 길게 누르면 숨길 수 있어요.</div>`;
+  try {
   // 1) 요약
   h += `<div class="pf-card pf-hero"><span>종합 수익금 · 원금 ${fmtUSD(d.principal)}</span><b class="${_pfC(d.totalProfit)}">${fmtUSDPlus(d.totalProfit)}<em>${_pfPct(d.totalROI, 2)}</em></b>
     <div class="pf-k3"><div><span>평가 수익금</span><b class="${_pfC(d.unrealized)}">${fmtUSDPlus(d.unrealized)}</b><small class="${_pfC(d.unrealROI)}">${_pfPct(d.unrealROI, 2)}</small></div>
     <div><span>확정 수익금</span><b class="${_pfC(d.realized)}">${fmtUSDPlus(d.realized)}</b><small>&nbsp;</small></div>
     <div><span>운용 원금</span><b>${fmtUSD(d.principal)}</b><small>총자산 ${fmtUSD(d.totalAsset)}</small><div class="pf-mbar"><i style="width:${d.pureRatio.toFixed(0)}%;background:#4dabf7"></i><i style="width:${d.reinvRatio.toFixed(0)}%;background:#63e6be"></i></div><small>순수 ${d.pureRatio.toFixed(0)}% · 재투자 ${d.reinvRatio.toFixed(0)}%</small></div></div></div>`;
+  } catch (e) { console.warn('[누적 성과] 1) 요약', e); }
+  try {
   // 2) 기간별 손익
   const f = d.flows || {}; const t3 = (lab, v, df) => `<div><span>${lab}</span><b class="${_pfC(v)}">${fmtUSDPlus(v || 0)}</b><small class="${_pfC(df)}">${(df || 0) >= 0 ? '▲' : '▼'} ${fmtUSDPlus(df || 0)}</small></div>`;
   const hist = _pfHistory(snaps, _pf.hist); const sel = _pf.sel != null && _pf.sel < hist.length ? _pf.sel : hist.length - 1;
@@ -27928,8 +27936,12 @@ function aqPerfRender(ctx) {
     <div class="pf-row"><span class="pf-mute">히스토리${hist[sel] && _pf.hist !== 'cal' ? ` · ${_pf.hist === 'day' && sel === hist.length - 1 ? '오늘' : hist[sel].label} <b class="${_pfC(hist[sel].v)}">${fmtUSDPlus(hist[sel].v)}</b>` : ''}</span>${_pfSeg('hist', [['day', '일간'], ['week', '주간'], ['month', '월간'], ['cal', '달력']], _pf.hist, 'aqPfHist')}</div>
     ${_pf.hist === 'cal' ? _pfCalendar(hist) : (_pf.histList ? `<div class="pf-list">${hist.slice().reverse().map(x => `<div><span>${x.label}</span><b class="${_pfC(x.v)}">${fmtUSDPlus(x.v)}</b></div>`).join('')}</div>` : _pfBars(hist, sel))}
     ${_pf.hist === 'cal' ? '' : `<button class="pf-lnk" onclick="aqPfList()">${_pf.histList ? '그래프로 보기' : '목록으로 보기'}</button>`}</div>`;
+  } catch (e) { console.warn('[누적 성과] 2) 기간별 손익', e); }
+  try {
   // 3) 평가수익금 추이 (기존 차트 — 고점·저점·현재점, 벤치마크선)
   h += `<div class="pf-sec">평가수익금 추이<small>최근 30일</small></div><div class="pf-card" id="perfTrendHost"></div>`;
+  } catch (e) { console.warn('[누적 성과] 3) 평가수익금 추이', e); }
+  try {
   // 4) 시장 대비 누적 수익률
   const nDays = { '1m': 22, '3m': 66, '6m': 132, all: 99999 }[_pf.cmp] || 66;
   const win = snaps.slice(-Math.min(snaps.length, nDays + 1));
@@ -27944,6 +27956,8 @@ function aqPerfRender(ctx) {
       <div class="pf-k3 pf-k3s"><div><span>내 계좌</span><b class="${_pfC(last(me))}">${_pfPct(last(me))}</b></div><div><span>${n1}</span><b class="${_pfC(last(b1))}">${_pfPct(last(b1))}</b></div><div><span>${n2}</span><b class="${_pfC(last(b2))}">${_pfPct(last(b2))}</b></div></div>
       <div class="pf-leg"><span><i style="background:#ff6b6b"></i>내 계좌</span><span><i style="background:#9b968c"></i>${n1}</span><span><i style="background:#74c0fc"></i>${n2}</span>${ex != null ? `<span>초과 수익 <b class="${_pfC(ex)}">${ex >= 0 ? '+' : ''}${ex.toFixed(1)}%p</b></span>` : ''}</div></div>`;
   }
+  } catch (e) { console.warn('[누적 성과] 4) 시장 대비 누적 수익률', e); }
+  try {
   // 5) 낙폭 (시간가중 지수 기준, 전체 기간)
   if (snaps.length >= 3) {
     const idx = _pfIndex(snaps); let peak = idx[0].v, peakTP = snaps[0].totalProfit, mdd = 0, mddD = snaps[0].date; const dd = idx.map((x, i) => { if (x.v > peak) { peak = x.v; } if (snaps[i].totalProfit > peakTP) peakTP = snaps[i].totalProfit; const v = (x.v / peak - 1) * 100; if (v < mdd) { mdd = v; mddD = x.d; } return v; });
@@ -27952,6 +27966,8 @@ function aqPerfRender(ctx) {
     h += `<div class="pf-sec">낙폭<small>고점 대비 · 최근 90거래일</small></div><div class="pf-card"><svg class="pf-svg" viewBox="0 0 320 80" preserveAspectRatio="none" style="height:80px"><path d="M0,4 ${ddShow.map((v, i) => `L${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')} L320,4 Z" fill="rgba(77,171,247,.22)" stroke="#4dabf7" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
       <div class="pf-k3 pf-k3s"><div><span>지금</span><b class="${cur < -0.05 ? 'down' : ''}">${cur.toFixed(1)}%</b></div><div><span>최대 낙폭</span><b class="down">${mdd.toFixed(1)}%</b><small>${_pfMD(mddD)}</small></div><div><span>고점 회복까지</span><b>${need > 0 ? fmtUSD(need) : '고점'}</b></div></div></div>`;
   }
+  } catch (e) { console.warn('[누적 성과] 5) 낙폭', e); }
+  try {
   // 6) 손익 기여도
   if (snaps.length >= 2 && snaps[snaps.length - 1].byTk) {
     const end = snaps[snaps.length - 1]; const lastD = new Date(end.date + 'T00:00:00'); let start;
@@ -27966,6 +27982,8 @@ function aqPerfRender(ctx) {
     const bar = x => `<div class="pf-cb" onclick="openChart('${escapeAttr(x.tk)}')"><span class="n">${escapeHtml(displayName(x.tk) || x.tk)}</span><span class="t">${x.v > 0 ? `<i class="up" style="left:50%;width:${x.v / mx * 50}%"></i>` : `<i class="down" style="left:${50 - (-x.v / mx * 50)}%;width:${-x.v / mx * 50}%"></i>`}</span><span class="v ${_pfC(x.v)}">${fmtUSDPlus(Math.round(x.v))}</span></div>`;
     h += `<div class="pf-sec">손익 기여도${_pfSeg('ctb', [['week', '이번주'], ['month', '이번달'], ['3m', '3개월']], _pf.ctb, 'aqPfCtb')}</div><div class="pf-card">${ups.concat(dns.slice().reverse()).map(bar).join('') || '<div class="pf-empty">이 기간에는 움직임이 없어요.</div>'}<div class="pf-note">벌어 준 상위 5 · 깎아 먹은 상위 5 (평가 + 확정 합산)</div></div>`;
   }
+  } catch (e) { console.warn('[누적 성과] 6) 손익 기여도', e); }
+  try {
   // 7) 섹터별 평가수익금 — 한 줄에 한 섹터
   const s30 = snaps.slice(-30);
   if (s30.length >= 2) {
@@ -27979,6 +27997,8 @@ function aqPerfRender(ctx) {
     h += `<div class="pf-sec">섹터별 평가수익금${mk === 'US' && typeof aqSectorDef === 'function' && _secDef && _secDef.byKey ? _pfSeg('sec', [['sector', '섹터'], ['mega', '메가']], _pf.secMode, 'aqPfSec') : ''}</div><div class="pf-card">${shown.map(x => `<div class="pf-sr" ${useMega ? '' : `onclick="aqOpenSectorSheet('${escapeAttr(x.k)}')"`}><span class="n">${secName(x.k)}</span>${_pfSpark(x.ys, x.cur >= 0)}<span class="v ${_pfC(x.cur)}">${fmtUSDPlus(Math.round(x.cur))}<small class="${_pfC(x.chg)}">30일 ${fmtUSDPlus(Math.round(x.chg))}</small></span></div>`).join('') || '<div class="pf-empty">섹터 기록이 아직 없어요.</div>'}
       ${rows.length > 8 ? `<button class="pf-lnk" onclick="aqPfSecMore()">${_pf.secMore ? '접기' : `더 보기 · ${rows.length - 8}개`}</button>` : ''}</div>`;
   }
+  } catch (e) { console.warn('[누적 성과] 7) 섹터별 평가수익금', e); }
+  try {
   // 8) 확정 매매 성적표
   const sales = (sim && sim.sales) || [];
   if (sales.length) {
@@ -27987,7 +28007,7 @@ function aqPerfRender(ctx) {
     const aw = avg(wins, 'pct'), al = avg(loss, 'pct');
     let best = { n: 0 }, worst = { n: 0 }, cur = { n: 0, w: null };
     sales.forEach(x => { const w = x.profit > 0; if (x.profit === 0) return; if (cur.w === w) { cur.n++; cur.e = x.date; } else cur = { n: 1, w, s: x.date, e: x.date }; if (w && cur.n > best.n) best = { ...cur }; if (!w && cur.n > worst.n) worst = { ...cur }; });
-    const rng = c => c.n ? `${_pfMD(c.s)}–${_pfMD(c.e)}` : '';
+    const rng = c => c.n && c.s && c.e ? `${_pfMD(c.s)}–${_pfMD(c.e)}` : '';
     h += `<div class="pf-sec">확정 매매 성적표<small>매도 1건 = 1판</small></div><div class="pf-card pf-g3">
       <div><span>승률</span><b>${Math.round(wins.length / Math.max(1, wins.length + loss.length) * 100)}%</b><small>${wins.length}승 ${loss.length}패</small></div>
       <div><span>평균 익절</span><b class="up">${_pfPct(aw)}</b><small>${wins.length ? fmtUSDPlus(Math.round(avg(wins, 'profit'))) : ''}</small></div>
@@ -27996,6 +28016,7 @@ function aqPerfRender(ctx) {
       <div><span>최대 연속 승</span><b>${best.n}</b><small>${rng(best)}</small></div>
       <div><span>최대 연속 패</span><b>${worst.n}</b><small>${rng(worst)}</small></div></div>`;
   }
+  } catch (e) { console.warn('[누적 성과] 8) 확정 매매 성적표', e); }
   host.innerHTML = h;
   // 기존 평가수익금 추이 차트를 이 자리로 (고점·저점·현재점 표시와 벤치마크선 그대로)
   try { const tc = document.getElementById('dashTrendCanvas'); const card = tc && tc.closest('.dash-chart-card'); const th = document.getElementById('perfTrendHost'); if (card && th) { th.appendChild(card); if (_dashCharts && _dashCharts.trend) requestAnimationFrame(() => { try { _dashCharts.trend.resize(); } catch (e) {} }); } } catch (e) {}
@@ -28054,7 +28075,7 @@ function aqSecRender() {
   if (_sec.tab === 'alerts') {
     const al = d.alerts || [];
     h += al.length ? al.map(a => { const learn = /^(newip|ssh|lablogin)$/.test(a.code); return `<div class="sec-al${a.status === 'ack' ? ' done' : ''}"><div class="t"><span class="sev ${a.sev === 'red' ? 'r' : 'o'}">${a.sev === 'red' ? '위험' : '주의'}</span>${escapeHtml(a.title)}<small>${_secT(a.at)}</small></div><div class="d">${escapeHtml(a.detail || '')}</div>
-      ${a.status === 'open' ? `<div class="a">${learn ? `<button class="p" onclick="aqSecAck(${a.id}, true)">정상 — 아는 IP로 등록</button>` : a.code === 'filehash' ? `<button class="p" onclick="aqSecAck(${a.id})">배포함으로 처리</button>` : `<button class="p" onclick="aqSecAck(${a.id})">확인함</button>`}${a.code === 'newip' ? `<button onclick="aqSecEmergency('logoutAll')">세션 끊기</button>` : ''}</div>` : '<div class="dn">처리됨</div>'}</div>`; }).join('') : '<div class="auto-empty">최근 14일 경고가 없어요.</div>';
+      ${a.status === 'open' ? `<div class="a">${learn ? `<button class="p" onclick="aqSecAck(${a.id}, true)">정상 — 내 기기로 등록</button>` : a.code === 'filehash' ? `<button class="p" onclick="aqSecAck(${a.id})">배포함으로 처리</button>` : `<button class="p" onclick="aqSecAck(${a.id})">확인함</button>`}${a.code === 'newip' ? `<button onclick="aqSecEmergency('logoutAll')">세션 끊기</button>` : ''}</div>` : '<div class="dn">처리됨</div>'}</div>`; }).join('') : '<div class="auto-empty">최근 14일 경고가 없어요.</div>';
   } else if (_sec.tab === 'users') {
     h += (d.users || []).map(u => `<div class="sec-ur" onclick="_sec.tab='log'; aqSecEventsUser(${u.user_id})"><div class="n">${escapeHtml(u.username)}${u.role === 'admin' ? ' (관리자)' : ''}<small>${u.last_ip ? `마지막 접속 ${escapeHtml(u.last_ip_label)}${u.new_ip ? ' · <b class="w">처음 본 IP</b>' : ''} · ${_secT(u.last_at)}` : '접속 기록 없음'}</small></div><div class="v">${u.toss === 'disabled' ? '<b class="w">토스 끊김</b>' : `토스 호출 ${u.toss_today || 0}`}<small>오늘</small></div></div>`).join('');
   } else if (_sec.tab === 'server') {
@@ -28084,6 +28105,8 @@ function aqSecRender() {
 }
 async function aqSecEventsUser(uid) { try { const r = await apiCall('secEvents', { days: 14, user: uid }); if (r && r.ok) _sec.events = r.events; } catch (e) {} _sec.evKind = ''; aqSecRender(); }
 Object.assign(window, { aqSecOpen, aqSecTab, aqSecAck, aqSecEmergency, aqSecLab, aqSecDeploy, aqSecTg, aqSecEvents, aqSecEventsUser, aqSecLoad });
+// v5.80: 쓸어내려 닫기 · 위로 끌어 크게 · 뒤로가기 (다른 설정 시트와 같은 방식)
+try { AQ_SHEETS.push({ id: 'setSecSheet', root: () => document.getElementById('setSecSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => aqSetSheet('setSecSheet', false), full: true }); } catch (e) {}
 
 // ---- 시작: 세션 확인 → 없으면 로그인 게이트 ----
 async function aqAuthBoot() {
