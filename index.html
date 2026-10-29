@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.88';   // v5.88: 누적 성과 넓고 높게 (2×2 요약, 만원 단위, 막대 200, 토글 아래로), 추이 빈 칸·낙폭·미분류 수정
+window.AQ_PWA_VERSION = '5.89';   // v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드, 일정 합치기, 만원 단위
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4388,6 +4388,16 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .pf-sr2 .n { color: var(--text-hi); line-height: 1.3; word-break: keep-all; } .pf-sr2 .v { text-align: right; } .pf-sr2 .v b { display: block; font-weight: 800; font-variant-numeric: tabular-nums; } .pf-sr2 .v small { font-size: 11.5px; font-weight: 600; } .pf-sr2 .pf-spark { height: 26px; width: 100%; }
 .pf-g32 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; } .pf-g32 > div { background: rgba(255,255,255,.05); border-radius: 12px; padding: 10px; min-width: 0; } .pf-g32 span { display: block; font-size: 11.5px; color: var(--text-mute); } .pf-g32 b { font-size: 16px; font-weight: 800; color: var(--text-hi); } .pf-g32 b.up { color: var(--kr-up); } .pf-g32 b.down { color: var(--kr-down); } .pf-g32 small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; }
 #dashboardCard #dashMatrixCard { margin-top: 30px !important; }
+/* v5.89: 브리핑 내 계좌 카드 */
+.pf-nopx { color: #ffa94d; margin-right: auto; }
+.ba-card { background: rgba(255,255,255,.035); border-radius: 18px; padding: 16px; margin: 4px 0 22px; cursor: pointer; }
+.ba-h { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--text-mute); } .ba-go { color: #74c0fc; font-size: 12px; }
+.ba-big { display: flex; align-items: baseline; gap: 12px; margin: 6px 0 10px; } .ba-big b { font-size: 30px; font-weight: 800; letter-spacing: -.5px; } .ba-big span { font-size: 16px; font-weight: 700; }
+.ba-big .up, .ba-two .up, .ba-idx .up { color: var(--kr-up); } .ba-big .down, .ba-two .down, .ba-idx .down { color: var(--kr-down); }
+.ba-idx { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--text-mute); margin-bottom: 12px; } .ba-idx b { font-weight: 800; }
+.ba-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; } .ba-two > div { background: rgba(255,255,255,.05); border-radius: 12px; padding: 10px 12px; } .ba-two span { display: block; font-size: 11.5px; color: var(--text-mute); } .ba-two b { font-size: 16px; font-weight: 800; color: var(--text-hi); }
+.ba-card .bf-record { margin: 12px 0 0; } .ba-miss { font-size: 11.5px; color: #ffa94d; margin-top: 10px; }
+.ba-warn { background: rgba(255,169,77,.1); border: 1px solid rgba(255,169,77,.35); color: #ffc078; border-radius: 12px; padding: 10px 12px; font-size: 12.5px; margin: 0 0 14px; line-height: 1.5; cursor: pointer; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -26881,7 +26891,7 @@ Object.assign(window, { aqKrOpenRender, aqKrCloseRender });
 // ============================================================================
 // v5.48: 숫자로 본 어제/오늘 — 등락 랭킹 · 내 계좌 · 신호 성적 · 관심 종목, 오늘의 기록 한 줄
 // ============================================================================
-function _numLast2(tk) { const f = findTickerSeries(tk); const r = f && f.rows; if (!r || r.length < 2) return null; const l = Number(r[r.length - 1].Close), p = Number(r[r.length - 2].Close); return (l > 0 && p > 0) ? { last: l, prev: p, ret: (l / p - 1) * 100, date: r[r.length - 1].Date } : null; }
+/* v5.89: 브리핑 날짜가 있으면 그 날짜로 */ function _numLast2(tk) { if (window._numDate) return _pxAt(tk, window._numDate); const f = findTickerSeries(tk); const r = f && f.rows; if (!r || r.length < 2) return null; const l = Number(r[r.length - 1].Close), p = Number(r[r.length - 2].Close); return (l > 0 && p > 0) ? { last: l, prev: p, ret: (l / p - 1) * 100, date: r[r.length - 1].Date } : null; }
 function _numPct(v, d) { return v == null || isNaN(v) ? '—' : `<b class="${v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v >= 0 ? '+' : ''}${v.toFixed(d == null ? 1 : d)}%</b>`; }
 function _numRow(tk, sub, val) { return `<div class="bf-r" onclick="openChart('${escapeAttr(tk)}')">${aqWrapLogo(_autoLogo(tk), tk)}<div class="bf-t"><div class="bf-tt">${escapeHtml(displayName(tk) || tk)}</div>${sub ? `<div class="bf-s">${sub}</div>` : ''}</div><span class="bf-v">${val}</span></div>`; }
 function _numMovers() {
@@ -26946,7 +26956,7 @@ function _numSignals() {
   const avg = rows.reduce((s, x) => s + x.ret, 0) / rows.length; const up = rows.filter(x => x.ret > 0).length;
   rows.sort((a, b) => b.ret - a.ret);
   const line = x => _numRow(x.tk, `${x.d} ${escapeHtml(x.sig)} · 신호 후 ${x.since == null ? '—' : (x.since >= 0 ? '+' : '') + x.since.toFixed(1) + '%'}`, _numPct(x.ret));
-  return `<div class="num-kpis"><div><span>최근 5일 신호</span><b>${rows.length}종목</b></div><div><span>어제 평균</span>${_numPct(avg)}</div><div><span>오른 종목</span><b>${up}/${rows.length}</b></div></div>`
+  return `<div class="num-kpis"><div><span>최근 5일 신호</span><b>${rows.length}종목</b></div><div><span>${window._numDate ? _brMD(window._numDate) : '어제'} 평균</span>${_numPct(avg)}</div><div><span>오른 종목</span><b>${up}/${rows.length}</b></div></div>`
     + `<div class="num-sub">어제 가장 잘한 신호</div>${rows.slice(0, 3).map(line).join('')}<div class="num-sub">어제 가장 부진한 신호</div>${rows.slice(-3).reverse().map(line).join('')}`;
 }
 function _numWatch(mk) {
@@ -26957,13 +26967,13 @@ function _numWatch(mk) {
   const avg = rows.reduce((s, x) => s + x.ret, 0) / rows.length; const sv = rows.filter(x => x.since != null); const sAvg = sv.length ? sv.reduce((s, x) => s + x.since, 0) / sv.length : null;
   rows.sort((a, b) => b.ret - a.ret);
   const line = x => _numRow(x.tk, `모의매수 후 ${x.since == null ? '—' : (x.since >= 0 ? '+' : '') + x.since.toFixed(1) + '%'}`, _numPct(x.ret));
-  return `<div class="num-kpis"><div><span>관심 종목</span><b>${rows.length}개</b></div><div><span>어제 평균</span>${_numPct(avg)}</div><div><span>모의 평균</span>${_numPct(sAvg)}</div></div>`
-    + `<div class="num-sub">어제 가장 많이 오른 관심 종목</div>${rows.slice(0, 2).map(line).join('')}` + (rows.length > 2 ? `<div class="num-sub">가장 많이 내린 관심 종목</div>${rows.slice(-2).reverse().map(line).join('')}` : '');
+  return `<div class="num-kpis"><div><span>관심 종목</span><b>${rows.length}개</b></div><div><span>${window._numDate ? _brMD(window._numDate) : '어제'} 평균</span>${_numPct(avg)}</div><div><span>모의 평균</span>${_numPct(sAvg)}</div></div>`
+    + `<div class="num-sub">${window._numDate ? _brMD(window._numDate) : '어제'} 가장 많이 오른 관심 종목</div>${rows.slice(0, 2).map(line).join('')}` + (rows.length > 2 ? `<div class="num-sub">가장 많이 내린 관심 종목</div>${rows.slice(-2).reverse().map(line).join('')}` : '');
 }
 function aqNumbersBlock(mk, title) {
-  const tabs = [['mov', '등락'], ['acct', '내 계좌'], ['sig', '신호'], ['watch', '관심']];
+  const tabs = [['mov', '등락'], ['sig', '신호'], ['watch', '관심']];   // v5.89: 내 계좌는 위 카드로
   const body = { mov: () => _numMovers(), acct: () => _numAccount(mk), sig: () => _numSignals(), watch: () => _numWatch(mk) };
-  window._numBody = body; const sel = localStorage.getItem('aq_num_tab') || 'mov';
+  window._numBody = body; let sel = localStorage.getItem('aq_num_tab') || 'mov'; if (!body[sel] || sel === 'acct') sel = 'mov';
   return `<div class="bf-gt">${title}</div><div class="bf-grp num-grp"><div class="num-chips">${tabs.map(([k, n]) => `<button class="num-chip ${k === sel ? 'on' : ''}" onclick="aqNumSwitch(this,'${k}')">${n}</button>`).join('')}</div><div class="num-body">${(body[sel] || body.mov)()}</div></div>`;
 }
 function aqNumSwitch(btn, k) {
@@ -27335,6 +27345,103 @@ function _brNewSignal(mk) {
     return `<div class="bf-gt">새 신호 · ${last.slice(5).replace('-', '/')}</div><div class="bf-grp">` + _bfD(_BFC.sig, `${mk === 'KR' ? '한국' : '미국'} ${rows.length}건${auto != null ? ` · 자동매수 대상 ${auto}건` : ''}`, '', '', "switchMobileTab('discover')")
       + `<div class="bf-chips">${top.map(r => `<span class="bf-chip" onclick="openChart('${escapeAttr(r.Ticker)}')">${nm(r.Ticker)}${r.Pred_5d != null && r.Pred_5d !== '' ? ` <b class="${Number(r.Pred_5d) >= 0 ? 'up' : 'down'}">${Number(r.Pred_5d) >= 0 ? '+' : ''}${Number(r.Pred_5d).toFixed(1)}%</b>` : ''}</span>`).join('')}</div></div>`; } catch (e) { return ''; }
 }
+// ============================================================================
+// v5.89: 브리핑 — 숫자는 '매매 기록 기반 한 가지 계산'으로, 브리핑의 장 날짜에 고정
+// ============================================================================
+function _brYmd(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function _brEtToday() { const p = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date()); const g = t => p.find(x => x.type === t).value; return `${g('year')}-${g('month')}-${g('day')}`; }
+function _brPrevWeekday(ymd) { const d = new Date(ymd + 'T00:00:00'); do { d.setDate(d.getDate() - 1); } while (d.getDay() === 0 || d.getDay() === 6); return _brYmd(d); }
+// 브리핑이 다루는 장의 날짜: 장후 = 문서의 장(없으면 한국은 문서 날짜, 미국은 그 전 평일) · 장전 = 오늘 전 마지막 거래일
+function _brSessDate(mk, mode, b, p) {
+  const snaps = (simulatePortfolioDaily() || {}).snapshots || [];
+  if (mode === 'post' && b && b.date) {
+    const m = String((p && p.session) || '').match(/(\d{1,2})\s*[\/월.]\s*(\d{1,2})/);
+    if (m) return `${b.date.slice(0, 4)}-${String(m[1]).padStart(2, '0')}-${String(m[2]).padStart(2, '0')}`;
+    return mk === 'KR' ? b.date : _brPrevWeekday(b.date);
+  }
+  const today = mk === 'KR' ? _kstToday() : _brEtToday();
+  const prev = snaps.filter(s => s.date < today); return prev.length ? prev[prev.length - 1].date : null;
+}
+// 계좌 하루 결과 — 누적 성과와 같은 계산 (그날 장 마감 기준 보유 수량 × 그날 종가, 매매 기록 기반)
+function aqAcctDay(date) {
+  const sim = simulatePortfolioDaily() || {}; const snaps = sim.snapshots || [];
+  const i = snaps.findIndex(s => s.date === date);
+  if (i < 1) return { pending: true, date, last: snaps.length ? snaps[snaps.length - 1].date : null };
+  const s = snaps[i], p = snaps[i - 1];
+  const pnl = s.totalProfit - p.totalProfit; const realized = (s.totalRealized || 0) - (p.totalRealized || 0);
+  const r = p.totalEval > 0 ? pnl / p.totalEval * 100 : null;
+  const tks = new Set([...Object.keys(s.byTk || {}), ...Object.keys(p.byTk || {}), ...Object.keys(s.realTk || {})]);
+  const movers = [...tks].map(tk => ({ tk, v: ((s.byTk || {})[tk] || 0) + ((s.realTk || {})[tk] || 0) - ((p.byTk || {})[tk] || 0) - ((p.realTk || {})[tk] || 0), ret: (_pxAt(tk, date) || {}).ret }))
+    .filter(x => Math.abs(x.v) >= 1);
+  const missing = ((sim.holdings) || []).filter(h => !_pxAt(h.ticker, date)).map(h => h.ticker);
+  return { date, prevDate: p.date, r, pnl, realized, unreal: pnl - realized, movers, missing };
+}
+function aqAcctSeries() {   // 날짜별 계좌 수익률 (📌 한 줄용)
+  const snaps = (simulatePortfolioDaily() || {}).snapshots || []; const out = [];
+  for (let i = 1; i < snaps.length; i++) if (snaps[i - 1].totalEval > 0) out.push({ d: snaps[i].date, r: (snaps[i].totalProfit - snaps[i - 1].totalProfit) / snaps[i - 1].totalEval * 100 });
+  return out;
+}
+function _pxAt(tk, date) {   // 그날 종가와 전 거래일 종가 (날짜가 정확히 맞을 때만)
+  const f = findTickerSeries(tk); const r = f && f.rows; if (!r || r.length < 2) return null;
+  const i = r.findIndex(x => String(x.Date).slice(0, 10) === date); if (i < 1) return null;
+  const l = Number(r[i].Close), p = Number(r[i - 1].Close); return l > 0 && p > 0 ? { last: l, prev: p, ret: (l / p - 1) * 100, date } : null;
+}
+function _idxSeries(mk, which) {   // [{d, v}] — 지수 하나 (KJP500은 지수 계열 하나로 통일)
+  if (which === 'KJP500') return (computeKJP400Series(400) || []).map(x => ({ d: String(x.date || '').slice(0, 10), v: Number(x.value) })).filter(x => x.d && x.v > 0);
+  const re = { KOSPI: /코스피|KOSPI|KS11/i, KOSDAQ: /코스닥|KOSDAQ|KQ11/i, '나스닥': /나스닥|NASDAQ|IXIC/i, VIX: /VIX/i }[which];
+  return re ? _bfMacroSeries(re, mk) : [];
+}
+function _idxAt(mk, which, date) { const pts = _idxSeries(mk, which); const i = pts.findIndex(x => x.d === date); if (i < 1) return null; const gap = (new Date(pts[i].d) - new Date(pts[i - 1].d)) / 86400000; return gap > 5 ? null : (pts[i].v / pts[i - 1].v - 1) * 100; }
+const _brMD = d => d ? `${parseInt(d.slice(5, 7))}/${parseInt(d.slice(8, 10))}` : '';
+const _brPc = v => v == null || !isFinite(v) ? '—' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
+const _brCls = v => v > 0 ? 'up' : v < 0 ? 'down' : '';
+// 📌 한 줄 — 같은 계산(계좌·지수 모두 그 날짜 기준)
+function aqRecordLine2(mk, date) {
+  try {
+    const nm = mk === 'US' ? 'KJP500' : 'KOSPI'; const pts = _idxSeries(mk, nm); const idx = _brRets(pts); const li = idx.findIndex(x => x.d === date); if (li < 0) return '';
+    const last = idx[li]; const line = t => `<div class="bf-record">📌 ${t}</div>`;
+    const ys = idx.slice(0, li + 1).filter(x => x.d.slice(0, 4) === date.slice(0, 4));
+    const same = ys.filter(x => (last.r >= 0 ? x.r > 0 : x.r < 0)).sort((a, b) => Math.abs(b.r) - Math.abs(a.r)); const rank = same.findIndex(x => x.d === date) + 1;
+    if (ys.length >= 20 && rank >= 1 && rank <= 10) return line(`${nm} ${_brPc(last.r)} — 올해 ${rank === 1 ? '가장' : `${rank}번째로`} 크게 ${last.r >= 0 ? '오른' : '내린'} 날이에요.`);
+    const acc = aqAcctSeries().filter(x => x.d <= date); const a = acc[acc.length - 1];
+    if (a && a.d === date) {
+      const mon = acc.filter(x => x.d.slice(0, 7) === date.slice(0, 7));
+      if (mon.length >= 3 && a.r > 0 && a.r === Math.max(...mon.map(x => x.r))) return line(`내 계좌 ${_brPc(a.r)} — 이번 달 최고의 날이에요.`);
+      if (mon.length >= 3 && a.r < 0 && a.r === Math.min(...mon.map(x => x.r))) return line(`내 계좌 ${_brPc(a.r)} — 이번 달 가장 아픈 날이었어요.`);
+      const im = {}; idx.forEach(x => { im[x.d] = x.r; }); let st = 0, dir = 0;
+      for (let k = acc.length - 1; k >= 0; k--) { const d = acc[k].d; if (im[d] == null) break; const better = acc[k].r > im[d]; const s = better ? 1 : -1; if (!dir) dir = s; if (s !== dir) break; st++; }
+      if (st >= 3) return line(`내 계좌가 ${st}일 연속 ${nm}보다 ${dir > 0 ? '잘했어요' : '부진했어요'}.`);
+    }
+    const avg = ys.length >= 20 ? ys.reduce((s, x) => s + Math.abs(x.r), 0) / ys.length : null;
+    if (avg) return line(`${nm} ${_brPc(last.r)} — 올해 평균(${avg.toFixed(1)}%)보다 ${Math.abs(last.r) > avg ? '크게 움직인' : '조용한'} 하루였어요.`);
+  } catch (e) {}
+  return '';
+}
+// 내 계좌 카드 (장후): 큰 숫자 · 지수 비교 · 평가/실현 · 벌어 준/깎아 먹은 종목 · 📌 — 누르면 누적 성과
+function _brAcctCard(mk, date) {
+  const A = aqAcctDay(date); const md = _brMD(date);
+  if (A.pending) return `<div class="ba-card"><div class="ba-h"><span>내 계좌 · ${md} 장</span></div><div class="bf-empty">${md} 종가가 아직 다 들어오지 않아 집계 중이에요.${A.last ? ` (지금 데이터는 ${_brMD(A.last)}까지)` : ''}</div></div>`;
+  const idxN = mk === 'KR' ? ['KOSPI', 'KOSDAQ'] : ['KJP500', '나스닥', 'VIX'];
+  const iv = idxN.map(n => [n, _idxAt(mk, n, date)]); const b0 = iv[0][1]; const ex = A.r != null && b0 != null ? A.r - b0 : null;
+  const row = x => `<div class="bf-r" onclick="event.stopPropagation(); openChart('${escapeAttr(x.tk)}')">${aqWrapLogo(_autoLogo(x.tk), x.tk)}<div class="bf-t"><div class="bf-tt">${escapeHtml(displayName(x.tk) || x.tk)}</div><div class="bf-s ${_brCls(x.ret)}">${x.ret == null ? '' : _brPc(x.ret)}</div></div><span class="bf-v"><b class="${_brCls(x.v)}">${_pfM(x.v)}</b></span></div>`;
+  const ups = A.movers.filter(x => x.v > 0).sort((a, b) => b.v - a.v).slice(0, 3), dns = A.movers.filter(x => x.v < 0).sort((a, b) => a.v - b.v).slice(0, 3);
+  return `<div class="ba-card" onclick="switchMobileTab('board'); setTimeout(() => { try { setBoardSubtab('performance'); } catch (e) {} }, 200)">
+    <div class="ba-h"><span>내 계좌 · ${md} 장</span><span class="ba-go">누적 성과 ›</span></div>
+    <div class="ba-big"><b class="${_brCls(A.r)}">${_brPc(A.r)}</b><span class="${_brCls(A.pnl)}">${_pfM(A.pnl)}</span></div>
+    <div class="ba-idx">${iv.map(([n, v]) => `<span>${n} <b class="${_brCls(v)}">${_brPc(v)}</b></span>`).join('')}${ex != null ? `<span>시장 대비 <b class="${_brCls(ex)}">${ex >= 0 ? '+' : ''}${ex.toFixed(1)}%p</b></span>` : ''}</div>
+    <div class="ba-two"><div><span>평가손익</span><b class="${_brCls(A.unreal)}">${_pfM(A.unreal)}</b></div><div><span>실현손익</span><b class="${_brCls(A.realized)}">${Math.abs(A.realized) >= 1 ? _pfM(A.realized) : '없음'}</b></div></div>
+    ${ups.length ? `<div class="num-sub">가장 많이 벌어 준 종목</div>${ups.map(row).join('')}` : ''}${dns.length ? `<div class="num-sub">가장 많이 깎아 먹은 종목</div>${dns.map(row).join('')}` : ''}
+    ${aqRecordLine2(mk, date)}
+    ${A.missing.length ? `<div class="ba-miss">시세 없는 보유 ${A.missing.length}종목(${escapeHtml(A.missing.slice(0, 3).map(t => displayName(t) || t).join(', '))}${A.missing.length > 3 ? ' 외' : ''})은 산 값으로 계산돼요</div>` : ''}</div>`;
+}
+function _brDataBanner(acctPending) {   // 데이터가 덜 들어왔거나 오늘 작업이 실패했을 때
+  let ops = []; try { ops = ((typeof _noti !== 'undefined' && _noti.items) || []).filter(x => x.type === 'ops' && x.sev === 'red' && !x.read && x.date === _kstToday()); } catch (e) {}
+  if (!acctPending && !ops.length) return '';
+  const why = ops.length ? `${escapeHtml(ops[0].line.split(' · ')[0])}${ops.length > 1 ? ` 외 ${ops.length - 1}건` : ''}` : '종가가 아직 다 들어오지 않았어요';
+  return `<div class="ba-warn" ${ops.length ? `onclick="switchMobileTab('ops'); setTimeout(() => { try { aqOpsTab('auto'); } catch (e) {} }, 250)"` : ''}>⚠️ 오늘 데이터가 다 준비되지 않았어요 — ${why}. 일부 숫자는 집계 중이에요.</div>`;
+}
+Object.assign(window, { aqAcctDay, aqAcctSeries, aqRecordLine2 });
+
 async function aqDailyBriefRender() {
   const box = document.getElementById('briefBody'); if (!box) return;
   const mk = getCurrentMarket(); const mode = _brMode(); const day = aqBriefDayKey(); await aqBriefLoadDismiss();
@@ -27346,7 +27453,11 @@ async function aqDailyBriefRender() {
   const tg = document.getElementById('briefToggle'); if (tg) tg.innerHTML = `<button class="${mode === 'post' ? 'on' : ''}" onclick="aqBriefMode('post')">장후</button><button class="${mode === 'pre' ? 'on' : ''}" onclick="aqBriefMode('pre')">장전</button>`;
   const sess = p && p.session ? p.session : '';
   let tm = p && p.asof ? p.asof : ''; if (!tm && b && b.modified_at) { const k = new Date(new Date(b.modified_at).getTime() + 9 * 3600e3); tm = `${String(k.getUTCHours()).padStart(2, '0')}:${String(k.getUTCMinutes()).padStart(2, '0')}`; }
-  document.getElementById('briefDate').textContent = sess ? `${mk === 'US' ? '미국' : '한국'} ${sess} 장${mode === 'post' ? ' 마감' : ''}${tm ? ` · ${tm} 기준` : ''}` : '';
+  const sd = _brSessDate(mk, mode, b, p); window._numDate = sd;   // v5.89: 숫자로 본 시장도 이 날짜로
+  const MKN = mk === 'US' ? '미국' : '한국';
+  document.getElementById('briefDate').textContent = mode === 'post'
+    ? (sd ? `${MKN} ${_brMD(sd)} 장 마감 기준${tm ? ` · 브리핑 ${tm}` : ''}` : '')
+    : `오늘 ${MKN} 장 앞${tm ? ` · 장전 지표 ${tm}` : ''}${sd ? ` · 계좌·종가 ${_brMD(sd)} 기준` : ''}`;
   const btn = document.getElementById('briefDismissBtn'); if (btn) { const done = _bf.dismissed === day; btn.textContent = done ? '오늘 그만 보기 ✓' : '오늘 그만 보기'; btn.disabled = done; }
   let h = ''; try { h += await aqAuditTaskLine(); } catch (e) {}
   try { h += await aqGuideAlertCard(); } catch (e) {}   // v5.63: 받아들인 가이드 알림
@@ -27356,27 +27467,32 @@ async function aqDailyBriefRender() {
     // 요약: AI 한 줄 → 없으면 내 활동 문장
     let mine = ''; if (auto.fills.length || auto.sells.length) { const q = []; if (auto.fills.length) q.push(`${auto.fills.length}종목 매수`); if (auto.sells.length) { const avg = auto.sells.reduce((s, x) => s + (x.avg_px ? (x.sell_px / x.avg_px - 1) * 100 : 0), 0) / auto.sells.length; q.push(`${auto.sells.length}종목 매도(평균 ${avg >= 0 ? '+' : ''}${avg.toFixed(1)}%)`); } mine = `밤사이 자동매매 ${q.join(' · ')}`; }
     const hero = p && !p.holiday ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : (p && p.holiday ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : (mine || `${mk === 'US' ? '미국 장후 브리핑은 매일 아침 7시쯤' : '한국 장 마감 브리핑은 평일 오후 4시 10분쯤'} 올라와요.`));
-    h += `<div class="bf-hero">${hero}</div>` + _brTiles(mk, mk === 'KR' && b ? b.date.slice(5).replace('-', '/') : sess) + aqRecordLine(mk);
+    // v5.89 장후 순서: 한 줄 요약 → 내 계좌 카드 → 다음 일정 → 시장·뉴스(AI) → 숫자로 본 시장 → 자동매매 → 새 신호
+    const acctPending = !sd || aqAcctDay(sd).pending;
+    h = _brDataBanner(acctPending) + h;
+    h += `<div class="bf-hero">${hero}</div>` + (sd ? _brAcctCard(mk, sd) : '');
+    const today = await _brToday(mk, day, auto.sellToday); const next = parts ? parts.next.map(_bfSchedRow).join('') : '';
+    if (today.length || next) h += `<div class="bf-gt">다음 일정</div><div class="bf-grp">${today.join('')}${next}</div>`;
     if (parts && !p.holiday) {
       const subs = [['지수', parts.idx], ['수급', parts.flow], ['업종', parts.sec]].filter(([, a]) => a.length);
       if (subs.length) h += `<div class="bf-gt bf-gt-ai">시장<span class="bf-ai">AI</span></div><div class="bf-grp br-vgrp">${subs.map(([t, a]) => `<div class="bf-sub">${t}</div>${_brMore(_brValRows(a), 3)}`).join('')}</div>`;
       h += _brNewsGroup(parts.news);
     }
-    try { const _dd = _brDataDate(mk); h += aqNumbersBlock(mk, (mk === 'US' ? '숫자로 본 어제' : '숫자로 본 오늘') + (_dd ? ` · ${_dd.slice(5).replace('-', '/')} 종가` : '')); } catch (e) {}
+    try { h += aqNumbersBlock(mk, `숫자로 본 시장${sd ? ` · ${_brMD(sd)} 장` : ''}`); } catch (e) {}
     if (auto.ok) h += `<div class="bf-gt">밤사이 자동매매</div><div class="bf-grp">${auto.rows.length ? auto.rows.join('') : '<div class="bf-empty">체결·매도 없음</div>'}</div>`;
-    const today = await _brToday(mk, day, auto.sellToday); const next = parts ? parts.next.map(_bfSchedRow).join('') : '';
-    if (today.length || next) h += `<div class="bf-gt">다음</div><div class="bf-grp">${today.join('')}${next}</div>`;
+    
     h += _brNewSignal(mk);
   } else {
     const hero = p ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : `${mk === 'US' ? '미국 장전 브리핑은 매일 밤 9시 55분쯤' : '한국 장전 브리핑은 평일 아침 8시쯤'} 올라와요.`;
-    h += `<div class="bf-hero">${hero}</div>` + (await _brPreTiles(mk)) + aqRecordLine(mk) + (await _brPreImpact(mk));   // v5.69: 장전은 내 수익률 대신 바깥 지표 · 내 종목 영향
-    if (p && !p.holiday) {
-      const flow = _brSec(p, _brFLOW); const sched = _brSec(p, _brTODAY).filter(x => !/정규장\s*개장/.test(x));
-      if (flow.length) h += `<div class="bf-gt bf-gt-ai">장전 흐름<span class="bf-ai">AI</span></div><div class="bf-grp br-vgrp">${_brMore(_brValRows(flow), 5)}</div>`;
-      if (sched.length) h += `<div class="bf-gt bf-gt-ai">오늘 일정<span class="bf-ai">AI</span></div><div class="bf-grp">${sched.map(_bfSchedRow).join('')}</div>`;
-    }
+    // v5.89 장전: 바깥 지표(실시간) → 내 종목 영향 → 오늘 일정(내 체크리스트 + AI 일정 하나로) → 장전 흐름 → 신호. 📌 한 줄은 장후에서만
+    h = _brDataBanner(false) + h;
+    h += `<div class="bf-hero">${hero}</div>` + (await _brPreTiles(mk)) + (await _brPreImpact(mk));
+    const sched = p && !p.holiday ? _brSec(p, _brTODAY).filter(x => !/정규장\s*개장/.test(x)) : [];
+    const mine = mk === 'KR' ? await _brToday('KR', day, []) : [];
+    if (mine.length || sched.length) h += `<div class="bf-gt">오늘 일정</div><div class="bf-grp">${mine.join('')}${sched.map(_bfSchedRow).join('')}</div>`;
+    if (p && !p.holiday) { const flow = _brSec(p, _brFLOW); if (flow.length) h += `<div class="bf-gt bf-gt-ai">장전 흐름<span class="bf-ai">AI</span></div><div class="bf-grp br-vgrp">${_brMore(_brValRows(flow), 5)}</div>`; }
     if (mk === 'US') { try { h += await aqPreUsBlocks(); } catch (e) {} }
-    else { const today = await _brToday('KR', day, []); if (today.length) h += _bfGrp('오늘 내 체크리스트', today.join('')); try { h += aqPreKrBlocks(); } catch (e) {} }
+    else { try { h += aqPreKrBlocks(); } catch (e) {} }
     if (p && !p.holiday) {
       h += _brNewsGroup(_brSec(p, ['주요 뉴스']).filter(x => !/^\(/.test(x)));
       const ck = _brSec(p, ['체크 포인트']); if (ck.length) h += `<div class="bf-gt bf-gt-ai">체크 포인트<span class="bf-ai">AI</span></div><div class="bf-grp">${ck.map((x, i) => `<div class="bf-r nod"><span class="bf-num">${i + 1}</span><div class="bf-t"><div class="bf-tt n">${escapeHtml(x)}</div></div></div>`).join('')}</div>`;
@@ -28027,7 +28143,8 @@ function _pfSpark(ys, up) { if (!ys.length) return ''; const mn = Math.min(...ys
 function aqPerfRender(ctx) {
   if (ctx) _pf.last = ctx; ctx = _pf.last; const host = document.getElementById('perfX'); if (!host || !ctx) return;
   const { d, sim } = ctx; const snaps = (sim && sim.snapshots) || []; const mk = getCurrentMarket();
-  let h = `<div class="pf-top"><span>기준 ${snaps.length ? _pfMD(snaps[snaps.length - 1].date) : '—'}</span><button class="pf-i" onclick="document.getElementById('perfInfo').classList.toggle('open')">i</button></div>
+  const _noPx = ((sim && sim.holdings) || []).filter(x => { const f = findTickerSeries(x.ticker); return !(f && f.rows && f.rows.length); }).map(x => displayName(x.ticker) || x.ticker);   // v5.89
+  let h = `<div class="pf-top">${_noPx.length ? `<span class="pf-nopx" title="${escapeAttr(_noPx.join(', '))}">시세 없는 보유 ${_noPx.length}종목</span>` : ''}<span>기준 ${snaps.length ? _pfMD(snaps[snaps.length - 1].date) : '—'}</span><button class="pf-i" onclick="document.getElementById('perfInfo').classList.toggle('open')">i</button></div>
     <div class="pf-info" id="perfInfo">포트폴리오를 베이스로 매매이력을 쌓아올린 실시간 손익 대시보드예요. 금액을 누르면 전체 숫자가 보여요. 보유 종목 탭에서 종목을 길게 누르면 숨길 수 있어요.</div>`;
   try {   // 1) 요약 — 큰 숫자 + 2×2
     h += `<div class="pf-hero2"><div class="l">종합 수익금</div><div class="v">${_pfV(d.totalProfit, _pfC(d.totalProfit))}</div>
