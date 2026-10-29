@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.89';   // v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드, 일정 합치기, 만원 단위
+window.AQ_PWA_VERSION = '5.91';   // v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4396,8 +4396,50 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .ba-big .up, .ba-two .up, .ba-idx .up { color: var(--kr-up); } .ba-big .down, .ba-two .down, .ba-idx .down { color: var(--kr-down); }
 .ba-idx { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--text-mute); margin-bottom: 12px; } .ba-idx b { font-weight: 800; }
 .ba-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; } .ba-two > div { background: rgba(255,255,255,.05); border-radius: 12px; padding: 10px 12px; } .ba-two span { display: block; font-size: 11.5px; color: var(--text-mute); } .ba-two b { font-size: 16px; font-weight: 800; color: var(--text-hi); }
+.ba-card .bf-r { display: flex; align-items: center; gap: 12px; padding: 12px 0; cursor: pointer; } .ba-card .bf-r + .bf-r { border-top: 1px solid var(--line); }
+.ba-card .aq-logo-wrap, .ba-card .ia-logo, .ba-card img.ia-logo { width: 40px !important; height: 40px !important; min-width: 40px; max-width: 40px; flex: none; border-radius: 50% !important; overflow: hidden; object-fit: cover; display: inline-flex; }
+.ba-card .aq-logo-wrap img { width: 100% !important; height: 100% !important; object-fit: cover; }
+.ba-card .bf-t { flex: 1; min-width: 0; } .ba-card .bf-v { margin-left: auto; text-align: right; } .ba-card .num-sub { margin: 14px 0 2px; }
 .ba-card .bf-record { margin: 12px 0 0; } .ba-miss { font-size: 11.5px; color: #ffa94d; margin-top: 10px; }
 .ba-warn { background: rgba(255,169,77,.1); border: 1px solid rgba(255,169,77,.35); color: #ffc078; border-radius: 12px; padding: 10px 12px; font-size: 12.5px; margin: 0 0 14px; line-height: 1.5; cursor: pointer; }
+/* v5.91: AI 매수심사 */
+.br-acts button { flex: 1; padding: 13px 6px; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; border: 1px solid transparent; }
+.br-acts .br-slot { flex: 1; display: flex; } .br-acts .br-slot button { width: 100%; }
+.br-sell { background: #26262b; color: #8a8a92; border-color: #33333a !important; } .br-buy { background: #1d2b3a; color: #74c0fc; border-color: #2f4f6f !important; }
+.br-busy { background: #1d2b3a; color: #74c0fc; border-color: #2f4f6f !important; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.br-done { background: #2b2a14; color: #ffd43b; border-color: #5c5320 !important; } .br-off { background: #1e1e22; color: #5c5c64; border-color: #29292e !important; }
+.br-cap { font-size: 11px; color: var(--text-mute); text-align: right; margin-top: 6px; min-height: 14px; }
+.br-spin { position: relative; width: 16px; height: 16px; display: inline-block; } .br-spin i { position: absolute; left: 50%; top: 50%; width: 3.5px; height: 3.5px; margin: -1.75px; border-radius: 50%; background: #74c0fc; animation: brorb 1s linear infinite; }
+.br-spin i:nth-child(2) { animation-delay: -.125s; opacity: .85; } .br-spin i:nth-child(3) { animation-delay: -.25s; opacity: .7; } .br-spin i:nth-child(4) { animation-delay: -.375s; opacity: .55; } .br-spin i:nth-child(5) { animation-delay: -.5s; opacity: .4; } .br-spin i:nth-child(6) { animation-delay: -.625s; opacity: .3; }
+@keyframes brorb { from { transform: rotate(0deg) translateX(6px); } to { transform: rotate(360deg) translateX(6px); } }
+.br-sheet { position: fixed; inset: 0; z-index: 100001; background: var(--bg, #121214); overflow-y: auto; -webkit-overflow-scrolling: touch; padding-top: env(safe-area-inset-top, 0px); }
+.br-bar { position: sticky; top: 0; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--bg, #121214); z-index: 2; border-bottom: 1px solid var(--line); font-weight: 700; } .br-bar button { background: none; border: none; color: var(--text-hi); font-size: 18px; cursor: pointer; }
+.br-body { padding: 14px 16px 60px; max-width: 560px; margin: 0 auto; }
+.br-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; } .br-head b { font-size: 17px; } .br-head small { margin-left: auto; color: var(--text-mute); font-size: 11.5px; }
+.br-verdict { background: rgba(255,255,255,.035); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+.br-tl { display: flex; justify-content: center; gap: 14px; background: #0f0f11; border: 1px solid #2a2a30; border-radius: 999px; padding: 10px 16px; width: fit-content; margin: 0 auto 6px; }
+.br-lamp { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1c1c20; opacity: .28; } .br-lamp svg { width: 38px; height: 38px; } .br-lamp.on { opacity: 1; }
+.br-lamp.g.on { background: #2b8a3e; box-shadow: 0 0 18px rgba(64,192,87,.55); } .br-lamp.y.on { background: #e8a20c; box-shadow: 0 0 18px rgba(250,176,5,.5); } .br-lamp.r.on { background: #c92a2a; box-shadow: 0 0 18px rgba(250,82,82,.55); }
+.br-tll { display: flex; justify-content: center; gap: 14px; margin-bottom: 8px; } .br-tll span { width: 50px; text-align: center; font-size: 11.5px; color: var(--text-mute); } .br-tll span.on { color: var(--text-hi); font-weight: 700; }
+.br-word { text-align: center; font-size: 20px; font-weight: 800; color: var(--text-dim); } .br-word.g { color: #69db7c; } .br-word.y { color: #ffd43b; } .br-word.r { color: #ff8787; }
+.br-wsub { text-align: center; font-size: 11.5px; color: var(--text-mute); margin: 4px 0 8px; } .br-why { font-size: 13px; line-height: 1.6; color: var(--text); background: rgba(255,255,255,.05); border-radius: 12px; padding: 10px 12px; }
+.br-plan { background: rgba(255,255,255,.05); border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; } .br-ph { font-size: 12.5px; color: var(--text-mute); margin-bottom: 6px; line-height: 1.5; } .br-ph small { font-size: 11px; } .br-draft { color: #ffa94d; }
+.br-step { display: grid; grid-template-columns: 40px 1fr auto; gap: 8px; align-items: center; padding: 9px 0; font-size: 13.5px; } .br-step + .br-step { border-top: 1px solid var(--line); } .br-step .k { font-size: 11.5px; color: var(--text-mute); } .br-step small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+.br-step .g, .br-q .g { color: #69db7c; } .br-step .y { color: #ffd43b; } .br-q .r { color: #ff8787; }
+.br-kv { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; padding: 7px 0; border-top: 1px solid var(--line); } .br-kv span { color: var(--text-mute); } .br-kv b { text-align: right; font-weight: 700; } .br-kv .down, .br-cmp .down { color: var(--kr-down); }
+.br-note { font-size: 11px; color: var(--text-mute); margin-top: 8px; }
+.br-sec { font-size: 14px; font-weight: 800; color: var(--text-hi); margin: 22px 2px 8px; display: flex; align-items: center; gap: 8px; } .br-sec em { font-style: normal; font-size: 10.5px; padding: 1px 8px; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--text-dim); font-weight: 600; }
+.br-card { background: rgba(255,255,255,.035); border-radius: 14px; padding: 12px 14px; }
+.br-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; } .br-cmp > div { background: rgba(255,255,255,.05); border-radius: 10px; padding: 9px 10px; } .br-cmp span { display: block; font-size: 10.5px; color: var(--text-mute); } .br-cmp b { font-size: 15px; font-weight: 800; } .br-cmp b.up { color: var(--kr-up); } .br-cmp small { display: block; font-size: 10.5px; color: var(--text-mute); }
+.br-seg { border-top: 1px solid var(--line); padding: 9px 0; font-size: 12.5px; } .br-seg .top { display: flex; justify-content: space-between; align-items: center; } .br-seg .top b.up { color: var(--kr-up); } .br-seg .top b.down { color: var(--kr-down); }
+.br-seg .sim { font-size: 11px; color: var(--text-mute); margin-top: 3px; line-height: 1.5; }
+.br-tag { font-size: 10.5px; padding: 1px 7px; border-radius: 999px; margin-right: 6px; } .br-tag.own { background: rgba(77,171,247,.15); color: #74c0fc; } .br-tag.peer { background: rgba(177,151,252,.15); color: #b197fc; }
+.br-more { text-align: center; color: #74c0fc; font-size: 12px; padding-top: 8px; cursor: pointer; }
+.br-q { display: grid; grid-template-columns: 82px 1fr; gap: 8px; padding: 9px 0; font-size: 12.5px; } .br-q + .br-q { border-top: 1px solid var(--line); } .br-q > span { color: var(--text-mute); } .br-q b { font-weight: 700; color: var(--text-hi); } .br-q small { display: block; color: var(--text-dim); font-size: 11.5px; margin-top: 2px; line-height: 1.45; font-weight: 500; }
+.br-ai { font-size: 13px; line-height: 1.7; color: var(--text); } .br-wait { color: var(--text-mute); font-size: 12.5px; }
+.br-wrong { border: 1px solid rgba(255,107,107,.3); background: rgba(255,107,107,.06); }
+.br-again { display: block; width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px; border: none; background: #1d2b3a; color: #74c0fc; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
+.br-lim { font-size: 11px; color: var(--text-mute); text-align: center; margin-top: 10px; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -15796,12 +15838,12 @@ function openPositionPanel(tk) {
     <div class="pos-row"><div class="pos-label">보유 수량 ${_tossNote}</div><div class="pos-val"><span class="pos-main">${qty.toLocaleString()}주</span></div></div>
     <div class="pos-row"><div class="pos-label">총 금액</div><div class="pos-val"><span class="pos-main">${fmtMoney(mktVal)}</span><div class="pos-pnl ${pnlCls}">${pnl >= 0 ? '+' : ''}${fmtMoney(pnl)} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%)</div></div></div>
     <div class="pos-row"><div class="pos-label">투자 원금</div><div class="pos-val"><span class="pos-main">${fmtMoney(principal)}</span></div></div>
-    <div class="pos-actions"><button type="button" class="pos-sell" onclick="aqOpenTradeForm('매도')">매도</button><button type="button" class="pos-buy" onclick="aqOpenTradeForm('매수')">매수</button></div>
+    ${aqBrActionsHtml(tk)}
     <div class="pos-orders aq-coll">
       <div class="aq-coll-head" onclick="aqToggleColl(this)"><span class="pos-orders-title">매매 내역</span><span class="aq-coll-caret">▼</span></div>
       <div class="aq-coll-body">${ordersHtml}</div>
     </div>
-  `;
+  `; try { aqBrRefresh(tk); } catch (e) {}   // v5.91: AI 매수심사 버튼 상태
   if (!panel._lpBound) {
     let lpTimer = null, lpId = null, lpRow = null;
     const lpStart = (e) => {
@@ -27441,6 +27483,122 @@ function _brDataBanner(acctPending) {   // 데이터가 덜 들어왔거나 오�
   return `<div class="ba-warn" ${ops.length ? `onclick="switchMobileTab('ops'); setTimeout(() => { try { aqOpsTab('auto'); } catch (e) {} }, 250)"` : ''}>⚠️ 오늘 데이터가 다 준비되지 않았어요 — ${why}. 일부 숫자는 집계 중이에요.</div>`;
 }
 Object.assign(window, { aqAcctDay, aqAcctSeries, aqRecordLine2 });
+
+// ============================================================================
+// v5.91: AI 매수심사 — 내 주식 버튼(요청·생성 중·리포트·30분 제한) + 리포트 화면
+// ============================================================================
+const _brv = { st: {}, poll: null, tk: null, more: false, cur: null };
+const _brHM = iso => { if (!iso) return ''; const k = new Date(new Date(iso).getTime() + 9 * 3600e3); return `${k.getUTCMonth() + 1}/${k.getUTCDate()} ${String(k.getUTCHours()).padStart(2, '0')}:${String(k.getUTCMinutes()).padStart(2, '0')}`; };
+const _brT = iso => { const k = new Date(new Date(iso).getTime() + 9 * 3600e3); return `${String(k.getUTCHours()).padStart(2, '0')}:${String(k.getUTCMinutes()).padStart(2, '0')}`; };
+function aqBrActionsHtml(tk) {
+  return `<div class="pos-actions br-acts"><button type="button" class="br-sell" onclick="aqToast('AI 매도심사는 아직 개발 중이에요')">AI 매도심사 요청</button><span id="brBuySlot" class="br-slot"><button type="button" class="br-buy" disabled>확인 중…</button></span></div><div class="br-cap" id="brCap"></div>`;
+}
+function _brSlot(tk) {
+  const r = _brv.st[tk] || {}; const rv = r.review; const cool = r.cooldown_until; const slot = document.getElementById('brBuySlot'), cap = document.getElementById('brCap'); if (!slot) return;
+  let b = '', c = '';
+  if (rv && rv.status === 'running') { b = `<button type="button" class="br-busy" onclick="aqToast('매수심사를 만드는 중이에요. 끝나면 알려 드릴게요')"><span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>매수심사 생성 중</button>`; c = '보통 1~2분 · 끝나면 알림'; }
+  else if (rv && rv.status === 'done') { b = `<button type="button" class="br-done" onclick="aqBrOpen(${rv.id})">AI 매수심사 리포트</button>`; c = `${_brHM(rv.finished_at || rv.requested_at)} 심사${cool ? ` · ${_brT(cool)}부터 다시 심사 가능` : ' · 다시 심사 가능'}`; }
+  else if (cool) { b = `<button type="button" class="br-off" onclick="aqToast('30분에 한 번만 요청할 수 있어요 — ${_brT(cool)}부터 가능')">AI 매수심사 요청</button>`; c = `30분 제한 · ${_brT(cool)}부터 요청 가능`; }
+  else { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}')">AI 매수심사 요청</button>`; c = rv && rv.status === 'failed' ? `지난 요청 실패 — ${escapeHtml(String(rv.error || '').slice(0, 40))}` : ''; }
+  slot.innerHTML = b; if (cap) cap.textContent = c;
+}
+async function aqBrRefresh(tk) {
+  _brv.tk = tk; let r = null; try { r = await apiCall('buyReviewStatus', { ticker: tk }); } catch (e) {}
+  if (!r || !r.ok) { const slot = document.getElementById('brBuySlot'); if (slot) slot.innerHTML = `<button type="button" class="br-off" onclick="aqToast('관리자 계정에서만 쓸 수 있어요')">AI 매수심사 요청</button>`; return; }
+  const was = (_brv.st[tk] || {}).review; _brv.st[tk] = r; _brSlot(tk);
+  if (was && was.status === 'running' && r.review && r.review.status === 'done') aqToast(`${displayName(tk) || tk} 매수심사가 준비됐어요`);
+  clearTimeout(_brv.poll);
+  if (r.review && r.review.status === 'running') _brv.poll = setTimeout(() => { if (_brv.tk === tk && document.getElementById('brBuySlot')) aqBrRefresh(tk); }, 8000);
+}
+async function aqBrRequest(tk) {
+  let r = null; try { r = await apiCall('buyReviewRequest', { ticker: tk }); } catch (e) {}
+  if (!r || !r.ok) { aqToast((r && r.error) ? `${r.error}${r.cooldown_until ? ` — ${_brT(r.cooldown_until)}부터` : ''}` : '요청하지 못했어요'); }
+  try { document.getElementById('brSheet')?.remove(); } catch (e) {}
+  aqBrRefresh(tk);
+}
+// ---------------- 리포트 화면 ----------------
+const _brPx = (mk, v) => v == null || !isFinite(v) ? '—' : mk === 'KR' ? `${Math.round(v).toLocaleString()}원` : `$${aqNum(v, 2)}`;
+const _brP = (v, d = 1) => v == null || !isFinite(v) ? '—' : `${v >= 0 ? '+' : ''}${(v).toFixed(d)}%`;
+const _brPf = v => v == null ? '—' : _brP(v * 100);
+const _brC = v => v > 0 ? 'up' : v < 0 ? 'down' : '';
+function _brLights(op) {
+  const L = [['매수', 'g', '<path d="M12 23 Q20 31 28 23"/>'], ['관망', 'y', '<path d="M13 26 L27 26"/>'], ['금지', 'r', '<path d="M12 29 Q20 21 28 29"/>']];
+  return `<div class="br-tl">${L.map(([n, c, m]) => `<span class="br-lamp ${c}${op === n ? ' on' : ''}"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><circle cx="20" cy="20" r="17"/><circle cx="14" cy="16" r="1.6" fill="#fff"/><circle cx="26" cy="16" r="1.6" fill="#fff"/>${m}</svg></span>`).join('')}</div><div class="br-tll">${L.map(([n]) => `<span class="${op === n ? 'on' : ''}">${n}</span>`).join('')}</div>`;
+}
+function _brReport(rv) {
+  const D = rv.data || {}; const mk = D.market || rv.market; const tk = rv.ticker; const nm = escapeHtml(displayName(tk) || tk); const ai = rv.ai || null; const op = rv.opinion || null;
+  const S = D.similar || {}, Q = D.quant || {}, P = D.plan || {}, pos = D.position, rel = D.relation, now = (D.price_now || {});
+  const mult = (ai && ai.mult) || (P.double_ok ? 2 : 1); const X = P[`x${mult}`] || P.x1 || {};
+  const opClr = { '매수': 'g', '관망': 'y', '금지': 'r' }[op] || '';
+  let h = `<div class="br-head"><b>${nm} · AI 매수심사</b><small>${D.asof ? _brMD(D.asof) + ' 종가 기준 · ' : ''}${_brHM(rv.requested_at)}</small></div>`;
+  h += `<div class="br-verdict">${_brLights(op)}<div class="br-word ${opClr}">${op || 'AI 의견 작성 중'}</div><div class="br-wsub">${op ? 'AI 의견 · 지금 이 자리 기준' : '숫자 분석은 아래에 먼저 보여 드려요'}</div>${ai && ai.summary ? `<div class="br-why">${escapeHtml(ai.summary)}</div>` : ''}</div>`;
+  // 주문 계획
+  if (X.step1) {
+    const s1 = X.step1, s2 = X.step2, av = X.avg_after || {};
+    h += `<div class="br-plan"><div class="br-ph">주문 계획 · 선발대 ${_pfM(P.unit, false)}${mult === 2 ? ' × 2' : ''}${op ? '' : ' · <span class="br-draft">AI 확정 전 초안</span>'}<br><small>${escapeHtml(P.double_why || '')}${now.price ? ` · 지금 가격 ${_brPx(mk, now.price)} (${escapeHtml(now.source || '')})` : ''}</small></div>
+      <div class="br-step"><span class="k">1차</span><span><b>${_brPx(mk, s1.zone[0])} ~ ${_brPx(mk, s1.zone[1])} · ${s1.qty}주</b><small>약 ${_pfM(s1.amount, false)}</small></span><b class="g">${escapeHtml(s1.when)}</b></div>
+      ${s2 && s2.qty ? `<div class="br-step"><span class="k">2차</span><span><b>${_brPx(mk, s2.zone[0])} ~ ${_brPx(mk, s2.zone[1])} · ${s2.qty}주</b><small>약 ${_pfM(s2.amount, false)} · 지지 가격대</small></span><b class="y">${escapeHtml(s2.when)}</b></div>` : ''}
+      <div class="br-kv"><span>다 사면 평단</span><b>${av.from ? `${_brPx(mk, av.from)} → ` : ''}${_brPx(mk, av.to)} (${av.qty_to}주)</b></div>
+      <div class="br-kv"><span>손절선 (진입가 -10%)</span><b class="down">1차 ${_brPx(mk, s1.stop)}${s2 && s2.qty ? ` · 2차 ${_brPx(mk, s2.stop)}` : ''}</b></div>
+      <div class="br-kv"><span>손절 시 손실</span><b class="down">약 ${_pfM(-X.loss_at_stops)}</b></div>
+      ${X.tp_ref ? `<div class="br-kv"><span>1차 익절 참고</span><b>${_brPx(mk, X.tp_ref.price)} (+10%)${X.tp_ref.reach_20d != null ? ` · 비슷했던 구간 20일 안 도달 ${Math.round(X.tp_ref.reach_20d * 100)}%` : ''}</b></div>` : ''}
+      <div class="br-note">현금 여력 ${P.cash != null ? _pfM(P.cash, false) : '확인 못 함'} 안에서 · 수량은 서버 규칙으로 계산, AI는 줄이거나 관망으로 낮출 수만 있어요</div></div>`;
+  }
+  // ① 비슷했던 구간
+  const sm = S.summary, bs = S.base;
+  if (sm && bs) {
+    const lab = S.labels || {}; const nowp = S.now || {};
+    const per = (S.periods || []); const shown = _brv.more ? per : per.slice(0, 4);
+    h += `<div class="br-sec">① 비슷했던 구간의 20일 뒤 <em>정량</em></div><div class="br-card"><div class="br-cmp">
+      <div><span>구간 ${sm.n}개 (본인 ${sm.own} · 피어 ${sm.peer}) · 20일 뒤 중앙값</span><b class="${_brC(sm.median)}">${_brPf(sm.median)}</b><small>평소 ${_brPf(bs.median)}</small></div>
+      <div><span>20일 뒤 +10% 이상 마감</span><b>${Math.round(sm.up10 * 100)}%</b><small>평소 ${Math.round(bs.up10 * 100)}%</small></div>
+      <div><span>20일 뒤 -10% 이하 마감</span><b>${Math.round(sm.dn10 * 100)}%</b><small>평소 ${Math.round(bs.dn10 * 100)}%</small></div>
+      <div><span>20일 안 최대 하락 (중앙값 · 최악)</span><b class="down">${_brPf(sm.mae_median)} · ${_brPf(sm.mae_worst)}</b><small>평소 ${_brPf(bs.mae_median)}</small></div></div>
+      ${shown.map(p => `<div class="br-seg"><div class="top"><span><span class="br-tag ${p.own ? 'own' : 'peer'}">${p.own ? '본인' : '피어'}</span>${escapeHtml(displayName(p.ticker) || p.ticker)} ${p.date}</span><b class="${_brC(p.fwd20)}">${_brPf(p.fwd20)}</b></div>
+        <div class="sim">모양 ${p.shape} · 고점 대비 ${p.pos.dd60}% (지금 ${(nowp.dd60 || 0).toFixed(0)}%) · RSI ${Math.round(p.pos.rsi)} (지금 ${Math.round(nowp.rsi || 0)}) · ${p.mkt_down ? '시장도 같이 빠짐' : '시장은 안 빠짐'}${p.peer_corr ? ` · 상관 ${p.peer_corr}` : ''}</div></div>`).join('')}
+      ${per.length > 4 ? `<div class="br-more" onclick="_brv.more=!_brv.more; aqBrRender()">${_brv.more ? '접기 ▴' : `나머지 ${per.length - 4}개 보기 ▾`}</div>` : ''}</div>`;
+  }
+  // ② 그때와 지금 (AI)
+  h += `<div class="br-sec">② 그때와 지금 <em>정성 · Claude 조사</em></div><div class="br-card br-ai">${ai && ai.compare ? escapeHtml(ai.compare).replace(/\n/g, '<br>') : '<span class="br-wait">AI 분석 작성 중이에요</span>'}</div>`;
+  // ③ 지금 자리
+  if (Q.close) {
+    const T = Q.trend || {}, Po = Q.position || {}, M = Q.momentum || {}, V = Q.volatility || {}, Vo = Q.volume || {}, Lv = Q.levels || {}, R = Q.relative || {};
+    const ab = T.above || {}; const trend = `${ab['20'] ? '20일선 위' : '20일선 아래'} · ${ab['60'] ? '60일선 위' : '60일선 아래'} · ${ab['120'] ? '120일선 위' : '120일선 아래'}`;
+    const tdesc = ab['120'] && !ab['60'] ? '중기 조정, 장기 상승 추세는 유지' : ab['60'] && ab['120'] ? '상승 추세' : !ab['120'] && !ab['60'] ? '중장기 하락 추세' : '추세 전환 구간';
+    const volx = V.atr_pct_6m_avg ? V.atr_pct / V.atr_pct_6m_avg : null;
+    const zone = z => z && z.length ? z.map(x => `${_brPx(mk, x[0])}~${_brPx(mk, x[1])}`).join(' · ') : '—';
+    const row = (k, b, s) => `<div class="br-q"><span>${k}</span><b>${b}${s ? `<small>${s}</small>` : ''}</b></div>`;
+    h += `<div class="br-sec">③ 지금 자리 <em>최근 6개월</em></div><div class="br-card">`
+      + row('추세', trend, `${tdesc}${T.slope60_10d != null ? ` · 60일선 10일 기울기 ${_brP(T.slope60_10d)}` : ''}`)
+      + row('위치', `6개월 범위 하단에서 ${Math.round((Po.range_pos || 0) * 100)}% · 고점 대비 ${_brP(Po.dd_from_hi6m)}`, (Po.range_pos || 0) < 0.25 ? '6개월 중 싼 쪽' : (Po.range_pos || 0) > 0.75 ? '6개월 중 비싼 쪽' : '6개월 범위 가운데')
+      + row('모멘텀', `RSI ${Math.round(M.rsi14 || 0)} · 20일 ${_brP(M.ret20)}`, (M.rsi14 || 50) < 30 ? '과매도' : (M.rsi14 || 50) > 70 ? '과열' : '')
+      + row('변동성', `하루 변동폭 ${(V.atr_pct || 0).toFixed(1)}% (평소 ${(V.atr_pct_6m_avg || 0).toFixed(1)}%)`, volx && volx > 1.3 ? `평소의 ${volx.toFixed(1)}배 — 나눠 사기` : '')
+      + row('거래량', `최근 5일 평소의 ${(Vo.v5_vs_6m || 0).toFixed(1)}배`, Vo.upday_vs_downday_20d ? (Vo.upday_vs_downday_20d > 1.2 ? '오르는 날 거래가 더 많음 — 사는 힘' : Vo.upday_vs_downday_20d < 0.8 ? '내리는 날 거래가 더 많음 — 파는 힘' : '오르는 날·내리는 날 비슷') : '')
+      + row('지지·저항', `지지 ${zone(Lv.support)}`, `저항 ${zone(Lv.resistance)}`)
+      + row('상대 강도', `시장 대비 6개월 ${R.vs_market_6m_pp != null ? (R.vs_market_6m_pp >= 0 ? '+' : '') + R.vs_market_6m_pp.toFixed(1) + '%p' : '—'}${R.vs_sector_20d_pp != null ? ` · 섹터 대비 20일 ${(R.vs_sector_20d_pp >= 0 ? '+' : '') + R.vs_sector_20d_pp.toFixed(1)}%p` : ''}`, '')
+      + (Q.earnings ? row('이벤트', `실적 발표 ${Q.earnings.date} (${Q.earnings.tdays}거래일 뒤)`, '') : '')
+      + (Q.flows ? row('수급', `외국인 ${Q.flows.foreign_streak}일 · 기관 ${Q.flows.inst_streak}일 연속 순매수`, `20일 합계 외국인 ${Math.round(Q.flows.foreign_20d).toLocaleString()}${Q.flows.unit || ''} · 기관 ${Math.round(Q.flows.inst_20d).toLocaleString()}${Q.flows.unit || ''}`) : '')
+      + row('내 포지션', pos ? `${pos.qty}주 · 평단 ${_brPx(mk, pos.avg)} · ${_brP(pos.ret)}` : '보유 없음', pos && pos.weight != null ? `계좌의 ${pos.weight.toFixed(0)}%${D.trade_history && D.trade_history.buys_90d ? ` · 최근 90일 ${D.trade_history.buys_90d}번 매수${D.trade_history.pattern ? ` (${D.trade_history.pattern})` : ''}` : ''}` : '')
+      + (rel ? row('포트폴리오와 관계', `<span class="${rel.kind === '보완형' ? 'g' : rel.kind === '더 크게 움직임' ? 'r' : ''}">${rel.kind}</span>`, `내 포트폴리오가 많이 빠진 날 평균 ${_brP(rel.down_days.port)} → 이 종목 ${_brP(rel.down_days.me)} · 많이 오른 날 ${_brP(rel.up_days.port)} → ${_brP(rel.up_days.me)}`) : '')
+      + `</div>`;
+  }
+  // ④ AI 최종 판단 · 틀린 조건
+  h += `<div class="br-sec">④ AI 최종 판단</div><div class="br-card br-ai">${ai && ai.final ? escapeHtml(ai.final).replace(/\n/g, '<br>') : '<span class="br-wait">AI 분석 작성 중이에요</span>'}</div>`;
+  const sup = (Q.levels || {}).support || [];
+  h += `<div class="br-sec">이렇게 되면 이 판단은 틀린 것</div><div class="br-card br-wrong">${ai && ai.invalid ? escapeHtml(ai.invalid).replace(/\n/g, '<br>') : sup.length ? `<div class="br-kv"><span>주가</span><b class="down">${_brPx(mk, sup[0][0])} 지지가 깨짐</b></div>` : ''}</div>`;
+  h += `<button class="br-again" onclick="aqBrRequest('${escapeAttr(tk)}')">다시 심사</button><div class="br-lim">과거 비슷했던 구간의 기록과 AI 의견이에요 — 확률 예측이 아니에요 · 현재 유니버스 기준</div>`;
+  return h;
+}
+function aqBrRender() { const el = document.getElementById('brSheetBody'); if (el && _brv.cur) el.innerHTML = _brReport(_brv.cur); }
+async function aqBrOpen(id) {
+  let r = null; try { r = await apiCall('buyReviewGet', { id }); } catch (e) {}
+  if (!r || !r.ok || !r.review) { aqToast('리포트를 불러오지 못했어요'); return; }
+  _brv.cur = r.review; _brv.more = false; document.getElementById('brSheet')?.remove();
+  const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
+  d.innerHTML = `<div class="br-bar"><button onclick="document.getElementById('brSheet').remove()">✕</button><span>AI 매수심사 리포트</span></div><div class="br-body" id="brSheetBody"></div>`;
+  document.body.appendChild(d); aqBrRender();
+}
+Object.assign(window, { aqBrActionsHtml, aqBrRefresh, aqBrRequest, aqBrOpen, aqBrRender });
 
 async function aqDailyBriefRender() {
   const box = document.getElementById('briefBody'); if (!box) return;
