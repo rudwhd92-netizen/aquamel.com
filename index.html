@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.93';   // v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '5.94';   // v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4440,6 +4440,28 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .br-wrong { border: 1px solid rgba(255,107,107,.3); background: rgba(255,107,107,.06); }
 .br-again { display: block; width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px; border: none; background: #1d2b3a; color: #74c0fc; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
 .br-lim { font-size: 11px; color: var(--text-mute); text-align: center; margin-top: 10px; }
+/* v5.94: 매수심사 리포트 정리 */
+.br-vc { background: rgba(255,255,255,.035); border-radius: 18px; padding: 14px 14px 16px; text-align: center; }
+.br-vs { font-size: 13.5px; line-height: 1.6; color: var(--text); text-align: left; margin: 6px 2px 0; }
+.br-key { margin-top: 12px; border-radius: 12px; padding: 10px 12px; font-size: 14.5px; font-weight: 700; text-align: left; } .br-key small { display: block; font-size: 11.5px; font-weight: 500; margin-top: 2px; opacity: .8; }
+.br-key.y { background: rgba(250,176,5,.12); border: 1px solid rgba(250,176,5,.35); color: #ffd43b; } .br-key.g { background: rgba(64,192,87,.1); border: 1px solid rgba(64,192,87,.35); color: #69db7c; } .br-key.r { background: rgba(255,107,107,.1); border: 1px solid rgba(255,107,107,.35); color: #ff8787; }
+.br-st { display: grid; grid-template-columns: 32px 1fr auto; gap: 8px; align-items: center; padding: 9px 0; font-size: 13.5px; } .br-st + .br-st { border-top: 1px solid var(--line); }
+.br-st .k { font-size: 11.5px; color: var(--text-mute); } .br-st b { font-weight: 700; } .br-st small { display: block; font-size: 11.5px; color: var(--text-mute); margin-top: 1px; font-weight: 500; }
+.br-st .g { color: #69db7c; } .br-st .y { color: #ffd43b; } .br-st .mu { color: var(--text-mute); font-weight: 500; }
+.br-ln { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 8px 0; border-top: 1px solid var(--line); } .br-ln span { color: var(--text-mute); } .br-ln b { font-weight: 700; text-align: right; } .br-ln .down { color: var(--kr-down); }
+.br-d { background: rgba(255,255,255,.035); border-radius: 16px; margin-top: 8px; }
+.br-d > summary, .br-in > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; } .br-d > summary::-webkit-details-marker, .br-in > summary::-webkit-details-marker { display: none; }
+.br-d > summary { padding: 12px 14px; font-size: 13.5px; } .br-d .t { font-weight: 700; color: var(--text-hi); } .br-d .s { color: var(--text-mute); font-size: 12px; margin-left: auto; text-align: right; }
+.br-d .c, .br-in .c { color: var(--text-mute); font-size: 11px; transition: transform .2s; } .br-d[open] > summary .c, .br-in[open] > summary .c { transform: rotate(180deg); }
+.br-db { padding: 0 14px 12px; font-size: 12.5px; color: var(--text); line-height: 1.6; }
+.br-in > summary { padding: 8px 0 0; font-size: 12px; color: var(--text-mute); }
+.br-rs { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; font-size: 13.5px; line-height: 1.5; cursor: pointer; } .br-rs + .br-rs { border-top: 1px solid var(--line); }
+.br-rs i { font-style: normal; width: 20px; flex: none; } .br-rs span { flex: 1; } .br-rs em { font-style: normal; color: var(--text-mute); } .br-rs b.up { color: var(--kr-up); } .br-rs b.down { color: var(--kr-down); }
+.br-wr { background: rgba(255,107,107,.06); border: 1px solid rgba(255,107,107,.3); border-radius: 16px; padding: 8px 14px; } .br-wr div { font-size: 13px; padding: 5px 0; color: #e0b4b4; }
+.br-pr { border-top: 1px solid var(--line); padding: 8px 0; } .br-pr .top { display: flex; justify-content: space-between; } .br-pr .top b { font-weight: 700; } .br-pr .top b.up { color: var(--kr-up); } .br-pr .top b.down { color: var(--kr-down); } .br-pr small { display: block; color: var(--text-mute); font-size: 11.5px; }
+.br-paths { width: 100%; height: 90px; display: block; margin-top: 4px; } .br-pl { font-size: 11px; color: var(--text-mute); margin-bottom: 4px; }
+.br-srcs { margin-top: 10px; } .br-srcl { display: block; font-size: 11.5px; color: #74c0fc; text-decoration: none; padding: 3px 0; }
+.br-again.off { background: #1e1e22; color: #5c5c64; }
 .ops-hdr { display: flex; align-items: center; gap: 6px; margin-left: 10px; margin-right: auto; }
 .ops-ic { width: 26px; height: 26px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex: none; transition: transform .12s, filter .12s; }
 .ops-ic svg { width: 13px; height: 13px; }
@@ -27485,22 +27507,21 @@ function _brDataBanner(acctPending) {   // 데이터가 덜 들어왔거나 오�
 Object.assign(window, { aqAcctDay, aqAcctSeries, aqRecordLine2 });
 
 // ============================================================================
-// v5.91: AI 매수심사 — 내 주식 버튼(요청·생성 중·리포트·30분 제한) + 리포트 화면
+// v5.94: AI 매수심사 — 한 번에 하나(다른 종목 진행 중이면 대기) · 리포트는 결론→할 일→이유→틀린 조건→자세히(접힘)
 // ============================================================================
-const _brv = { st: {}, poll: null, tk: null, more: false, cur: null };
+const _brv = { st: {}, poll: null, tk: null, more: false, cur: null, active: null };
 const _brHM = iso => { if (!iso) return ''; const k = new Date(new Date(iso).getTime() + 9 * 3600e3); return `${k.getUTCMonth() + 1}/${k.getUTCDate()} ${String(k.getUTCHours()).padStart(2, '0')}:${String(k.getUTCMinutes()).padStart(2, '0')}`; };
-const _brT = iso => { const k = new Date(new Date(iso).getTime() + 9 * 3600e3); return `${String(k.getUTCHours()).padStart(2, '0')}:${String(k.getUTCMinutes()).padStart(2, '0')}`; };
 function aqBrActionsHtml(tk) {
   return `<div class="pos-actions br-acts"><button type="button" class="br-sell" onclick="aqToast('AI 매도심사는 아직 개발 중이에요')">AI 매도심사 요청</button><span id="brBuySlot" class="br-slot"><button type="button" class="br-buy" disabled>확인 중…</button></span></div><div class="br-cap" id="brCap"></div>`;
 }
 function _brSlot(tk) {
-  const r = _brv.st[tk] || {}; const rv = r.review; const cool = r.cooldown_until; const slot = document.getElementById('brBuySlot'), cap = document.getElementById('brCap'); if (!slot) return;
+  const r = _brv.st[tk] || {}; const rv = r.review; const act = r.active; const slot = document.getElementById('brBuySlot'), cap = document.getElementById('brCap'); if (!slot) return;
+  const spin = '<span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
   let b = '', c = '';
-  if (rv && rv.status === 'running') { b = `<button type="button" class="br-busy" onclick="aqToast('매수심사를 만드는 중이에요. 끝나면 알려 드릴게요')"><span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>매수심사 생성 중</button>`; c = '보통 1~2분 · 끝나면 알림'; }
-  else if (rv && rv.status === 'done' && rv.ai_status === 'requested') { b = `<button type="button" class="br-busy" onclick="aqToast('숫자 분석은 끝났고, AI가 조사하며 쓰는 중이에요. 끝나면 알려 드릴게요')"><span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>매수심사 생성 중</button>`; c = 'AI 분석 작성 중 · 보통 5~15분 · 끝나면 알림'; }
+  if (rv && (rv.status === 'running' || rv.ai_status === 'requested')) { b = `<button type="button" class="br-busy" onclick="aqBrCancelAsk(${rv.id}, '${escapeAttr(tk)}')">${spin}매수심사 생성 중</button>`; c = '보통 3~10분 · 끝나면 알림 · 누르면 취소'; }
+  else if (act) { const an = escapeHtml(displayName(act.ticker) || act.ticker); b = `<button type="button" class="br-off" onclick="aqToast('${an} 심사가 끝나면 요청할 수 있어요')">AI 매수심사 요청</button>`; c = `${an} 심사 중 · 끝나면 요청 가능`; }
   else if (rv && rv.status === 'done') { const icon = { '매수': '😊 ', '관망': '😐 ', '금지': '😢 ' }[rv.opinion] || ''; b = `<button type="button" class="br-done" onclick="aqBrOpen(${rv.id})">${icon}AI 매수심사 리포트</button>`;
-    c = rv.ai_status === 'requested' ? 'AI 분석 작성 중 · 보통 5~15분' : rv.ai_status === 'failed' || rv.ai_status === 'timeout' ? `AI 분석 실패 — ${escapeHtml(String(rv.ai_error || '').slice(0, 30))}` : `${_brHM(rv.finished_at || rv.requested_at)} 심사${cool ? ` · ${_brT(cool)}부터 다시 심사 가능` : ' · 다시 심사 가능'}`; }
-  else if (cool) { b = `<button type="button" class="br-off" onclick="aqToast('30분에 한 번만 요청할 수 있어요 — ${_brT(cool)}부터 가능')">AI 매수심사 요청</button>`; c = `30분 제한 · ${_brT(cool)}부터 요청 가능`; }
+    c = rv.ai_status === 'done' ? `${_brHM(rv.finished_at || rv.requested_at)} 심사` : `AI 분석을 받지 못했어요 — ${escapeHtml(String(rv.ai_error || '').slice(0, 30))}`; }
   else { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}')">AI 매수심사 요청</button>`; c = rv && rv.status === 'failed' ? `지난 요청 실패 — ${escapeHtml(String(rv.error || '').slice(0, 40))}` : ''; }
   slot.innerHTML = b; if (cap) cap.textContent = c;
 }
@@ -27508,111 +27529,162 @@ async function aqBrRefresh(tk) {
   _brv.tk = tk; let r = null; try { r = await apiCall('buyReviewStatus', { ticker: tk }); } catch (e) {}
   if (!r || !r.ok) { const slot = document.getElementById('brBuySlot'); if (slot) slot.innerHTML = `<button type="button" class="br-off" onclick="aqToast('관리자 계정에서만 쓸 수 있어요')">AI 매수심사 요청</button>`; return; }
   const was = (_brv.st[tk] || {}).review; _brv.st[tk] = r; _brSlot(tk);
-  if (was && was.status === 'running' && r.review && r.review.status === 'done') aqToast(`${displayName(tk) || tk} 매수심사가 준비됐어요`);
+  const busy = x => x && (x.status === 'running' || x.ai_status === 'requested');
+  if (busy(was) && r.review && !busy(r.review)) aqToast(r.review.opinion ? `${displayName(tk) || tk} AI 의견이 나왔어요 — ${r.review.opinion}` : `${displayName(tk) || tk} 매수심사가 끝났어요`);
   clearTimeout(_brv.poll);
-  if (was && was.ai_status === 'requested' && r.review && r.review.ai_status === 'done') aqToast(`${displayName(tk) || tk} AI 의견이 나왔어요 — ${r.review.opinion}`);
-  const wait = r.review && r.review.status === 'running' ? 8000 : r.review && r.review.ai_status === 'requested' ? 30000 : 0;
+  const wait = busy(r.review) ? (r.review.status === 'running' ? 8000 : 20000) : r.active ? 30000 : 0;   // 다른 종목이 끝나는 것도 기다림
   if (wait) _brv.poll = setTimeout(() => { if (_brv.tk === tk && document.getElementById('brBuySlot')) aqBrRefresh(tk); }, wait);
 }
 async function aqBrRequest(tk) {
   let r = null; try { r = await apiCall('buyReviewRequest', { ticker: tk }); } catch (e) {}
-  if (!r || !r.ok) { aqToast((r && r.error) ? `${r.error}${r.cooldown_until ? ` — ${_brT(r.cooldown_until)}부터` : ''}` : '요청하지 못했어요'); }
+  if (!r || !r.ok) aqToast((r && r.error) || '요청하지 못했어요');
   try { document.getElementById('brSheet')?.remove(); } catch (e) {}
   aqBrRefresh(tk);
 }
-// ---------------- 리포트 화면 ----------------
+async function aqBrCancelAsk(id, tk) {
+  if (!confirm('진행 중인 매수심사를 취소할까요?\n취소하면 다른 종목을 바로 요청할 수 있어요.')) return;
+  try { await apiCall('buyReviewCancel', { id }); } catch (e) {}
+  aqToast('취소했어요'); aqBrRefresh(tk);
+}
+// ---------------- 리포트 ----------------
 const _brPx = (mk, v) => v == null || !isFinite(v) ? '—' : mk === 'KR' ? `${Math.round(v).toLocaleString()}원` : `$${aqNum(v, 2)}`;
-const _brP = (v, d = 1) => v == null || !isFinite(v) ? '—' : `${v >= 0 ? '+' : ''}${(v).toFixed(d)}%`;
+const _brPxS = (mk, v) => v == null || !isFinite(v) ? '—' : mk === 'KR' ? `${Math.round(v).toLocaleString()}` : v < 100 ? `$${v.toFixed(2)}` : `$${Math.round(v).toLocaleString()}`;   // 가격대 짧게 ($100 미만은 센트까지)
+const _brP = (v, d = 1) => v == null || !isFinite(v) ? '—' : `${v >= 0 ? '+' : ''}${v.toFixed(d)}%`;
 const _brPf = v => v == null ? '—' : _brP(v * 100);
 const _brC = v => v > 0 ? 'up' : v < 0 ? 'down' : '';
-function _brLights(op) {
-  const L = [['매수', 'g', '<path d="M12 23 Q20 31 28 23"/>'], ['관망', 'y', '<path d="M13 26 L27 26"/>'], ['금지', 'r', '<path d="M12 29 Q20 21 28 29"/>']];
-  return `<div class="br-tl">${L.map(([n, c, m]) => `<span class="br-lamp ${c}${op === n ? ' on' : ''}"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><circle cx="20" cy="20" r="17"/><circle cx="14" cy="16" r="1.6" fill="#fff"/><circle cx="26" cy="16" r="1.6" fill="#fff"/>${m}</svg></span>`).join('')}</div><div class="br-tll">${L.map(([n]) => `<span class="${op === n ? 'on' : ''}">${n}</span>`).join('')}</div>`;
-}
-function _brReport(rv) {
-  const D = rv.data || {}; const mk = D.market || rv.market; const tk = rv.ticker; const nm = escapeHtml(displayName(tk) || tk); const ai = rv.ai || null; const op = rv.opinion || null;
-  const S = D.similar || {}, Q = D.quant || {}, P = D.plan || {}, pos = D.position, rel = D.relation, now = (D.price_now || {});
-  const mult = ai && ai.mult ? ai.mult : (P.double_ok ? 2 : 1);
-  const X = JSON.parse(JSON.stringify(P[`x${mult}`] || P.x1 || {}));   // AI가 줄인 수량은 화면에도 반영 (늘리지는 못함)
-  if (ai && X.step1 && ai.q1 != null) X.step1.qty = Math.min(X.step1.qty, ai.q1);
-  if (ai && X.step2 && ai.q2 != null) X.step2.qty = Math.min(X.step2.qty, ai.q2);
-  if (ai && X.step2 && ai.cond2) X.step2.when = ai.cond2;
-  const opClr = { '매수': 'g', '관망': 'y', '금지': 'r' }[op] || '';
-  let h = `<div class="br-head"><b>${nm} · AI 매수심사</b><small>${D.asof ? _brMD(D.asof) + ' 종가 기준 · ' : ''}${_brHM(rv.requested_at)}</small></div>`;
-  h += `<div class="br-verdict">${_brLights(op)}<div class="br-word ${opClr}">${op || 'AI 의견 작성 중'}</div><div class="br-wsub">${op ? `AI 의견 · 지금 이 자리 기준${ai && ai.recheck ? ` · ${_brMD(ai.recheck)}에 다시 보기` : ''}` : rv.ai_status === 'failed' || rv.ai_status === 'timeout' ? `AI 분석을 받지 못했어요 — ${escapeHtml(rv.ai_error || '')}` : '숫자 분석은 아래에 먼저 보여 드려요'}</div>${ai && ai.summary ? `<div class="br-why">${escapeHtml(ai.summary)}</div>` : ''}</div>`;
-  // 주문 계획
-  if (X.step1) {
-    const s1 = X.step1, s2 = X.step2, av = X.avg_after || {};
-    h += `<div class="br-plan"><div class="br-ph">주문 계획 · 선발대 ${_pfM(P.unit, false)}${mult === 2 ? ' × 2' : ''}${op ? '' : ' · <span class="br-draft">AI 확정 전 초안</span>'}<br><small>${escapeHtml(P.double_why || '')}${now.price ? ` · 지금 가격 ${_brPx(mk, now.price)} (${escapeHtml(now.source || '')})` : ''}</small></div>
-      <div class="br-step"><span class="k">1차</span><span><b>${_brPx(mk, s1.zone[0])} ~ ${_brPx(mk, s1.zone[1])} · ${s1.qty}주</b><small>약 ${_pfM(s1.amount, false)}</small></span><b class="g">${escapeHtml(s1.when)}</b></div>
-      ${s2 && s2.qty ? `<div class="br-step"><span class="k">2차</span><span><b>${_brPx(mk, s2.zone[0])} ~ ${_brPx(mk, s2.zone[1])} · ${s2.qty}주</b><small>약 ${_pfM(s2.amount, false)} · 지지 가격대</small></span><b class="y">${escapeHtml(s2.when)}</b></div>` : ''}
-      <div class="br-kv"><span>다 사면 평단</span><b>${av.from ? `${_brPx(mk, av.from)} → ` : ''}${_brPx(mk, av.to)} (${av.qty_to}주)</b></div>
-      <div class="br-kv"><span>손절선 (진입가 -10%)</span><b class="down">1차 ${_brPx(mk, s1.stop)}${s2 && s2.qty ? ` · 2차 ${_brPx(mk, s2.stop)}` : ''}</b></div>
-      <div class="br-kv"><span>손절 시 손실</span><b class="down">약 ${_pfM(-X.loss_at_stops)}</b></div>
-      ${X.tp_ref ? `<div class="br-kv"><span>1차 익절 참고</span><b>${_brPx(mk, X.tp_ref.price)} (+10%)${X.tp_ref.reach_20d != null ? ` · 비슷했던 구간 20일 안 도달 ${Math.round(X.tp_ref.reach_20d * 100)}%` : ''}</b></div>` : ''}
-      <div class="br-note">현금 여력 ${P.cash != null ? _pfM(P.cash, false) : '확인 못 함'} 안에서 · 수량은 서버 규칙으로 계산, AI는 줄이거나 관망으로 낮출 수만 있어요</div></div>`;
-  }
-  // ① 비슷했던 구간
-  const sm = S.summary, bs = S.base;
-  if (sm && bs) {
-    const lab = S.labels || {}; const nowp = S.now || {};
-    const per = (S.periods || []); const shown = _brv.more ? per : per.slice(0, 4);
-    h += `<div class="br-sec">① 비슷했던 구간의 20일 뒤 <em>정량</em></div><div class="br-card"><div class="br-cmp">
-      <div><span>구간 ${sm.n}개 (본인 ${sm.own} · 피어 ${sm.peer}) · 20일 뒤 중앙값</span><b class="${_brC(sm.median)}">${_brPf(sm.median)}</b><small>평소 ${_brPf(bs.median)}</small></div>
-      <div><span>20일 뒤 +10% 이상 마감</span><b>${Math.round(sm.up10 * 100)}%</b><small>평소 ${Math.round(bs.up10 * 100)}%</small></div>
-      <div><span>20일 뒤 -10% 이하 마감</span><b>${Math.round(sm.dn10 * 100)}%</b><small>평소 ${Math.round(bs.dn10 * 100)}%</small></div>
-      <div><span>20일 안 최대 하락 (중앙값 · 최악)</span><b class="down">${_brPf(sm.mae_median)} · ${_brPf(sm.mae_worst)}</b><small>평소 ${_brPf(bs.mae_median)}</small></div></div>
-      ${shown.map(p => `<div class="br-seg"><div class="top"><span><span class="br-tag ${p.own ? 'own' : 'peer'}">${p.own ? '본인' : '피어'}</span>${escapeHtml(displayName(p.ticker) || p.ticker)} ${p.date}</span><b class="${_brC(p.fwd20)}">${_brPf(p.fwd20)}</b></div>
-        <div class="sim">모양 ${p.shape} · 고점 대비 ${p.pos.dd60}% (지금 ${(nowp.dd60 || 0).toFixed(0)}%) · RSI ${Math.round(p.pos.rsi)} (지금 ${Math.round(nowp.rsi || 0)}) · ${p.mkt_down ? '시장도 같이 빠짐' : '시장은 안 빠짐'}${p.peer_corr ? ` · 상관 ${p.peer_corr}` : ''}</div></div>`).join('')}
-      ${per.length > 4 ? `<div class="br-more" onclick="_brv.more=!_brv.more; aqBrRender()">${_brv.more ? '접기 ▴' : `나머지 ${per.length - 4}개 보기 ▾`}</div>` : ''}</div>`;
-  }
-  // ② 그때와 지금 (AI)
-  h += `<div class="br-sec">② 그때와 지금 <em>정성 · Claude 조사</em></div><div class="br-card br-ai">${ai && ai.compare ? _brAiText(ai.compare) : '<span class="br-wait">AI 분석 작성 중이에요</span>'}</div>`;
-  // ③ 지금 자리
-  if (Q.close) {
-    const T = Q.trend || {}, Po = Q.position || {}, M = Q.momentum || {}, V = Q.volatility || {}, Vo = Q.volume || {}, Lv = Q.levels || {}, R = Q.relative || {};
-    const ab = T.above || {}; const trend = `${ab['20'] ? '20일선 위' : '20일선 아래'} · ${ab['60'] ? '60일선 위' : '60일선 아래'} · ${ab['120'] ? '120일선 위' : '120일선 아래'}`;
-    const tdesc = ab['120'] && !ab['60'] ? '중기 조정, 장기 상승 추세는 유지' : ab['60'] && ab['120'] ? '상승 추세' : !ab['120'] && !ab['60'] ? '중장기 하락 추세' : '추세 전환 구간';
-    const volx = V.atr_pct_6m_avg ? V.atr_pct / V.atr_pct_6m_avg : null;
-    const zone = z => z && z.length ? z.map(x => `${_brPx(mk, x[0])}~${_brPx(mk, x[1])}`).join(' · ') : '—';
-    const row = (k, b, s) => `<div class="br-q"><span>${k}</span><b>${b}${s ? `<small>${s}</small>` : ''}</b></div>`;
-    h += `<div class="br-sec">③ 지금 자리 <em>최근 6개월</em></div><div class="br-card">`
-      + row('추세', trend, `${tdesc}${T.slope60_10d != null ? ` · 60일선 10일 기울기 ${_brP(T.slope60_10d)}` : ''}`)
-      + row('위치', `6개월 범위 하단에서 ${Math.round((Po.range_pos || 0) * 100)}% · 고점 대비 ${_brP(Po.dd_from_hi6m)}`, (Po.range_pos || 0) < 0.25 ? '6개월 중 싼 쪽' : (Po.range_pos || 0) > 0.75 ? '6개월 중 비싼 쪽' : '6개월 범위 가운데')
-      + row('모멘텀', `RSI ${Math.round(M.rsi14 || 0)} · 20일 ${_brP(M.ret20)}`, (M.rsi14 || 50) < 30 ? '과매도' : (M.rsi14 || 50) > 70 ? '과열' : '')
-      + row('변동성', `하루 변동폭 ${(V.atr_pct || 0).toFixed(1)}% (평소 ${(V.atr_pct_6m_avg || 0).toFixed(1)}%)`, volx && volx > 1.3 ? `평소의 ${volx.toFixed(1)}배 — 나눠 사기` : '')
-      + row('거래량', `최근 5일 평소의 ${(Vo.v5_vs_6m || 0).toFixed(1)}배`, Vo.upday_vs_downday_20d ? (Vo.upday_vs_downday_20d > 1.2 ? '오르는 날 거래가 더 많음 — 사는 힘' : Vo.upday_vs_downday_20d < 0.8 ? '내리는 날 거래가 더 많음 — 파는 힘' : '오르는 날·내리는 날 비슷') : '')
-      + row('지지·저항', `지지 ${zone(Lv.support)}`, `저항 ${zone(Lv.resistance)}`)
-      + row('상대 강도', `시장 대비 6개월 ${R.vs_market_6m_pp != null ? (R.vs_market_6m_pp >= 0 ? '+' : '') + R.vs_market_6m_pp.toFixed(1) + '%p' : '—'}${R.vs_sector_20d_pp != null ? ` · 섹터 대비 20일 ${(R.vs_sector_20d_pp >= 0 ? '+' : '') + R.vs_sector_20d_pp.toFixed(1)}%p` : ''}`, '')
-      + (Q.earnings ? row('이벤트', `실적 발표 ${Q.earnings.date} (${Q.earnings.tdays}거래일 뒤)`, '') : '')
-      + (Q.flows ? row('수급', `외국인 ${Q.flows.foreign_streak}일 · 기관 ${Q.flows.inst_streak}일 연속 순매수`, `20일 합계 외국인 ${Math.round(Q.flows.foreign_20d).toLocaleString()}${Q.flows.unit || ''} · 기관 ${Math.round(Q.flows.inst_20d).toLocaleString()}${Q.flows.unit || ''}`) : '')
-      + row('내 포지션', pos ? `${pos.qty}주 · 평단 ${_brPx(mk, pos.avg)} · ${_brP(pos.ret)}` : '보유 없음', pos && pos.weight != null ? `계좌의 ${pos.weight.toFixed(0)}%${D.trade_history && D.trade_history.buys_90d ? ` · 최근 90일 ${D.trade_history.buys_90d}번 매수${D.trade_history.pattern ? ` (${D.trade_history.pattern})` : ''}` : ''}` : '')
-      + (rel ? row('포트폴리오와 관계', `<span class="${rel.kind === '보완형' ? 'g' : rel.kind === '더 크게 움직임' ? 'r' : ''}">${rel.kind}</span>`, `내 포트폴리오가 많이 빠진 날 평균 ${_brP(rel.down_days.port)} → 이 종목 ${_brP(rel.down_days.me)} · 많이 오른 날 ${_brP(rel.up_days.port)} → ${_brP(rel.up_days.me)}`) : '')
-      + `</div>`;
-  }
-  // ④ AI 최종 판단 · 틀린 조건
-  h += `<div class="br-sec">④ AI 최종 판단</div><div class="br-card br-ai">${ai && ai.final ? _brAiText(ai.final) + (ai.sources ? `<div class="br-src">출처<br>${_brAiText(ai.sources)}</div>` : '') : '<span class="br-wait">AI 분석 작성 중이에요</span>'}</div>`;
-  const sup = (Q.levels || {}).support || [];
-  h += `<div class="br-sec">이렇게 되면 이 판단은 틀린 것</div><div class="br-card br-wrong">${ai && ai.invalid ? _brAiText(ai.invalid) : sup.length ? `<div class="br-kv"><span>주가</span><b class="down">${_brPx(mk, sup[0][0])} 지지가 깨짐</b></div>` : ''}</div>`;
-  h += `<button class="br-again" onclick="aqBrRequest('${escapeAttr(tk)}')">다시 심사</button><div class="br-lim">과거 비슷했던 구간의 기록과 AI 의견이에요 — 확률 예측이 아니에요 · 현재 유니버스 기준</div>`;
-  return h;
-}
-function _brAiText(t) {   // AI 글: 소제목 줄은 굵게, '같은 점/다른 점'은 색
+const _brDow = d => { const x = new Date(d + 'T00:00:00'); return `${x.getMonth() + 1}/${x.getDate()}(${'일월화수목금토'[x.getDay()]})`; };
+function _brWhen(w) { return String(w || '').replace(/실적 발표\((\d{4})-(\d{2})-(\d{2})\) 뒤/, (_, y, m, d) => `실적(${parseInt(m)}/${parseInt(d)}) 뒤`).replace('지지 가격대에 오면', '지지선 오면'); }
+function _brAiText(t) {
   const SH = ['좋았던 구간의 공통점', '나빴던 구간의 공통점', '지금은', '판단 과정', '확신이 낮은 부분', '지난 심사 노트에서', '계획을 줄인 이유'];
   return String(t || '').split('\n').map(l => { const b = l.replace(/^#+\s*/, '').trim(); if (!b) return '';
     if (SH.includes(b)) return `<b class="br-sh">${escapeHtml(b)}</b>`;
     return escapeHtml(b).replace(/^(같은 점)[:：]/, '<span class="g">$1</span>:').replace(/^(다른 점)[:：]/, '<span class="y">$1</span>:'); }).filter(Boolean).join('<br>');
 }
+function _brSrc(t) {   // 출처 줄마다 누르면 검색
+  return String(t || '').split('\n').map(l => l.replace(/^[-•·\s]+/, '').trim()).filter(Boolean).map(l => `<a class="br-srcl" href="https://www.google.com/search?q=${encodeURIComponent(l)}" target="_blank" rel="noopener">${escapeHtml(l)} ›</a>`).join('');
+}
+function _brAiLine(ai) {   // 이유 3줄의 '그때와 지금' 한 문장
+  const lines = String((ai && ai.compare) || '').split('\n').map(x => x.replace(/^#+\s*/, '').trim()).filter(Boolean);
+  const d = lines.find(x => /^다른 점[:：]/.test(x)); if (d) return '지금은 ' + d.replace(/^다른 점[:：]\s*/, '');
+  return lines.find(x => !['좋았던 구간의 공통점', '나빴던 구간의 공통점', '지금은'].includes(x)) || '';
+}
+function _brMyPos(tk) {   // 종목 페이지와 같은 기준 (앱 매매 기록 + 마지막 종가)
+  try { const pos = (computePortfolioFromTrades(lsGet(lsKeyTrades(), []) || []) || {})[tk]; if (!pos || !(pos.qty > 0)) return null;
+    const f = findTickerSeries(tk); const cur = f && f.rows && f.rows.length ? Number(f.rows[f.rows.length - 1].Close) : 0;
+    const principal = Number(pos.totalCost) || 0; return { qty: pos.qty, avg: pos.avg, pct: principal > 0 && cur > 0 ? (pos.qty * cur / principal - 1) * 100 : null }; } catch (e) { return null; }
+}
+function _brSimilar(p, now) {   // 가장 닮은 점 두 개를 말로
+  const L = { dd60: ['고점 대비', 5], d20: ['20일선 거리', 3], d60: ['60일선 거리', 5], rsi: ['RSI', 6], vol20: ['흔들림', 1] };
+  const xs = Object.keys(L).filter(k => p.pos[k] != null && now[k] != null).map(k => [k, Math.abs(p.pos[k] - now[k]) / L[k][1]]).sort((a, b) => a[1] - b[1]);
+  const two = xs.slice(0, 2).filter(x => x[1] < 1).map(x => L[x[0]][0]);
+  return two.length ? `${two.join('·')} 거의 같음` : '';
+}
+function _brPathSvg(per) {   // 비슷했던 구간들의 20일 흐름을 겹쳐서 — 노란 선이 보통(중앙값)
+  const ps = per.map(p => p.path || []).filter(a => a.length >= 10); if (ps.length < 3) return '';
+  const n = Math.max(...ps.map(a => a.length)); const med = []; for (let i = 0; i < n; i++) { const v = ps.map(a => a[i]).filter(x => x != null).sort((a, b) => a - b); med.push(v.length ? v[Math.floor(v.length / 2)] : 0); }
+  const all = ps.flat().concat(med); const mx = Math.max(0.05, ...all.map(Math.abs)); const X = i => i / (n - 1) * 320; const Y = v => 45 - v / mx * 40;
+  const line = (a, c, w) => `<polyline fill="none" stroke="${c}" stroke-width="${w}" vector-effect="non-scaling-stroke" points="0,45 ${a.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}"/>`;
+  return `<svg class="br-paths" viewBox="0 0 320 90" preserveAspectRatio="none"><line x1="0" y1="45" x2="320" y2="45" stroke="rgba(255,255,255,.15)"/>${ps.map(a => line(a, 'rgba(255,255,255,.18)', 1)).join('')}${line(med, '#ffd43b', 2.4)}</svg><div class="br-pl">20일 동안 흐름 · 노란 선이 보통 · 끝 ${_brPf(med[med.length - 1])}</div>`;
+}
+function aqBrGo(id) { const d = document.getElementById(id); if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
+function _brReport(rv) {
+  const D = rv.data || {}; const mk = D.market || rv.market; const tk = rv.ticker; const nm = escapeHtml(displayName(tk) || tk); const ai = rv.ai || null; const op = rv.opinion || null;
+  const S = D.similar || {}, Q = D.quant || {}, P = D.plan || {}, rel = D.relation, nowPx = (D.price_now || {}).price || Q.close;
+  const mult = ai && ai.mult ? ai.mult : (P.double_ok ? 2 : 1);
+  const X = JSON.parse(JSON.stringify(P[`x${mult}`] || P.x1 || {}));
+  if (ai && X.step1 && ai.q1 != null) X.step1.qty = Math.min(X.step1.qty, ai.q1);
+  if (ai && X.step2 && ai.q2 != null) X.step2.qty = Math.min(X.step2.qty, ai.q2);
+  if (ai && X.step2 && ai.cond2) X.step2.when = ai.cond2;
+  const lamp = (n, c, f) => `<span class="br-lamp ${c}${op === n ? ' on' : ''}"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><circle cx="20" cy="20" r="17"/><circle cx="14" cy="16" r="1.6" fill="#fff"/><circle cx="26" cy="16" r="1.6" fill="#fff"/>${f}</svg></span>`;
+  const cls = { '매수': 'g', '관망': 'y', '금지': 'r' }[op] || '';
+  // ① 머리 · ② 결론
+  let h = `<div class="br-head"><b>${nm} · AI 매수심사</b><small>${D.asof ? _brMD(D.asof) + ' 종가 기준 · ' : ''}${_brHM(rv.requested_at)} 요청</small></div>`;
+  let key = '';
+  if (op === '관망') key = `<div class="br-key y">${ai && ai.recheck ? `${_brDow(ai.recheck)}에 다시 보기` : '며칠 더 지켜보기'}<small>그날 다시 심사를 권해요</small></div>`;
+  else if (op === '매수') key = `<div class="br-key g">선발대 ${_pfM(P.unit * mult, false)} · 두 번에 나눠 사기<small>${escapeHtml(P.double_why || '')}</small></div>`;
+  else if (op === '금지') key = `<div class="br-key r">지금은 사지 않기${ai && ai.recheck ? `<small>${_brDow(ai.recheck)}에 다시 보기</small>` : ''}</div>`;
+  h += `<div class="br-vc"><div class="br-tl">${lamp('매수', 'g', '<path d="M12 23 Q20 31 28 23"/>')}${lamp('관망', 'y', '<path d="M13 26 L27 26"/>')}${lamp('금지', 'r', '<path d="M12 29 Q20 21 28 29"/>')}</div>
+    <div class="br-word ${cls}">${op || 'AI 의견 없음'}</div><p class="br-vs">${op ? escapeHtml((ai && ai.summary) || '') : `AI 분석을 받지 못했어요 — ${escapeHtml(rv.ai_error || '')}. 숫자 분석만 보여 드려요.`}</p>${key}</div>`;
+  // ③ 할 일 (매수) / 매수로 바뀌면 (관망·금지, 접힘)
+  if (X.step1) {
+    const s1 = X.step1, s2 = X.step2 || {}, av = X.avg_after || {}; const mine = _brMyPos(tk);
+    const steps = (live) => `<div class="br-st"><span class="k">1차</span><span><b>${_brPxS(mk, s1.zone[0])}~${_brPxS(mk, s1.zone[1])} · ${s1.qty}주</b><small>지금 가격 근처</small></span><b class="${live ? 'g' : 'mu'}">${live ? '지금' : '대기'}</b></div>`
+      + (s2.qty ? `<div class="br-st"><span class="k">2차</span><span><b>${_brPxS(mk, s2.zone[0])}~${_brPxS(mk, s2.zone[1])} · ${s2.qty}주</b><small>지지선 · 지금보다 ${_brP(((s2.zone[0] + s2.zone[1]) / 2 / nowPx - 1) * 100, 0)}</small></span><b class="${live ? 'y' : 'mu'}">${escapeHtml(_brWhen(s2.when))}</b></div>` : '')
+      + `<div class="br-ln"><span>다 사면 평단</span><b>${av.from ? `${_brPx(mk, av.from)} → ` : ''}${_brPx(mk, av.to)}</b></div>`
+      + (mine && mine.avg > nowPx ? `<div class="br-ln"><span>평단까지</span><b>${_brP((mine.avg / nowPx - 1) * 100, 0)} 남음</b></div>` : '');
+    if (op === '매수') {
+      h += `<div class="br-sec">할 일</div><div class="br-card">${steps(true)}<div class="br-ln"><span>이번 매수분 손절</span><b class="down">각 진입가 -10% · 최대 ${_pfM(-X.loss_at_stops)}</b></div>
+        <details class="br-in"><summary>계획 자세히 (익절 참고 · 손절 가격 · 현금) <span class="c">▾</span></summary>
+          ${X.tp_ref ? `<div class="br-ln"><span>1차 익절 참고</span><b>${_brPx(mk, X.tp_ref.price)} (+10%)${X.tp_ref.reach_20d != null ? ` · 과거 20일 안 도달 ${Math.round(X.tp_ref.reach_20d * 100)}%` : ''}</b></div>` : ''}
+          <div class="br-ln"><span>손절 가격</span><b>1차 ${_brPx(mk, s1.stop)}${s2.qty ? ` · 2차 ${_brPx(mk, s2.stop)}` : ''}</b></div>
+          <div class="br-ln"><span>현금 여력</span><b>${P.cash != null ? _pfM(P.cash, false) : '확인 못 함'}</b></div></details></div>`;
+    } else h += `<details class="br-d"><summary><span class="t">매수로 바뀌면 이렇게</span><span class="s">선발대 ${_pfM(P.unit, false)}</span><span class="c">▾</span></summary><div class="br-db">${steps(false)}</div></details>`;
+  }
+  // ④ 이유 3줄 (누르면 자세히)
+  const sm = S.summary, bs = S.base; const Po = Q.position || {}, Lv = Q.levels || {};
+  const rp = Po.range_pos == null ? '' : Po.range_pos < 0.25 ? '6개월 중 싼 쪽' : Po.range_pos > 0.75 ? '6개월 중 비싼 쪽' : '6개월 중 가운데쯤';
+  const near = (() => { const s = (Lv.support || [])[0], r = (Lv.resistance || [])[0]; const ds = s ? nowPx / s[1] - 1 : 9, dr = r ? r[0] / nowPx - 1 : 9;
+    return dr < ds && r ? `바로 위가 저항선 ${_brPxS(mk, r[0])}~${_brPxS(mk, r[1])}` : s ? `바로 아래 지지선 ${_brPxS(mk, s[0])}~${_brPxS(mk, s[1])}` : ''; })();
+  const reasons = [];
+  if (sm && bs) reasons.push(['📊', `비슷했던 ${sm.n}번은 20일 뒤 보통 <b class="${_brC(sm.median)}">${_brPf(sm.median)}</b> (평소 ${_brPf(bs.median)})`, 'brD1']);
+  if (rp) reasons.push(['📍', `${rp}${near ? `, ${near}` : ''}`, 'brD3']);
+  const al = _brAiLine(ai); if (al) reasons.push(['🔍', escapeHtml(al), 'brD2']);
+  if (reasons.length) h += `<div class="br-sec">이유</div><div class="br-card">${reasons.map(([i, t, id]) => `<div class="br-rs" onclick="aqBrGo('${id}')"><i>${i}</i><span>${t}</span><em>›</em></div>`).join('')}</div>`;
+  // ⑤ 틀린 조건
+  const inv = ai && ai.invalid ? String(ai.invalid).split('\n').map(x => x.replace(/^[-•·\s]+/, '').trim()).filter(Boolean) : ((Lv.support || [])[0] ? [`${_brPxS(mk, Lv.support[0][0])} 지지가 깨짐`] : []);
+  if (inv.length) h += `<div class="br-sec">이렇게 되면 이 판단은 틀린 것</div><div class="br-wr">${inv.map(x => `<div>· ${escapeHtml(x)}</div>`).join('')}</div>`;
+  // ⑥ 자세히 보기 (접힘)
+  h += `<div class="br-sec">자세히 보기</div>`;
+  if (sm && bs) {
+    const per = S.periods || []; const shown = _brv.more ? per : per.slice(0, 4); const now = S.now || {};
+    h += `<details class="br-d" id="brD1"><summary><span class="t">📊 비슷했던 구간</span><span class="s">${sm.n}번 · 보통 ${_brPf(sm.median)}</span><span class="c">▾</span></summary><div class="br-db">
+      <div class="br-cmp"><div><span>20일 뒤 보통</span><b class="${_brC(sm.median)}">${_brPf(sm.median)}</b><small>평소 ${_brPf(bs.median)}</small></div><div><span>+10% 넘게 오름</span><b>${Math.round(sm.up10 * 100)}%</b><small>평소 ${Math.round(bs.up10 * 100)}%</small></div>
+        <div><span>-10% 넘게 빠짐</span><b>${Math.round(sm.dn10 * 100)}%</b><small>평소 ${Math.round(bs.dn10 * 100)}%</small></div><div><span>중간에 빠진 폭(보통)</span><b class="down">${_brPf(sm.mae_median)}</b><small>평소 ${_brPf(bs.mae_median)}</small></div></div>
+      ${_brPathSvg(per)}
+      ${shown.map(p => `<div class="br-pr"><div class="top"><span>${escapeHtml(displayName(p.ticker) || p.ticker)} ${p.date} · ${p.own ? '본인' : '피어'}</span><b class="${_brC(p.fwd20)}">${_brPf(p.fwd20)}</b></div><small>흐름 ${Math.round(p.shape * 100)}% 닮음${_brSimilar(p, now) ? ' · ' + _brSimilar(p, now) : ''}${p.mkt_down ? ' · 시장도 같이 빠짐' : ''}</small></div>`).join('')}
+      ${per.length > 4 ? `<div class="br-more" onclick="_brv.more=!_brv.more; aqBrRender(); aqBrGo('brD1')">${_brv.more ? '접기 ▴' : `나머지 ${per.length - 4}개 ▾`}</div>` : ''}</div></details>`;
+  }
+  if (ai && ai.compare) h += `<details class="br-d" id="brD2"><summary><span class="t">🔍 그때와 지금</span><span class="s">AI 조사</span><span class="c">▾</span></summary><div class="br-db br-ai">${_brAiText(ai.compare)}</div></details>`;
+  if (Q.close) {
+    const T = Q.trend || {}, M = Q.momentum || {}, V = Q.volatility || {}, Vo = Q.volume || {}, R = Q.relative || {}; const ab = T.above || {};
+    const tw = ab['60'] && ab['120'] ? '상승 추세' : !ab['120'] && !ab['60'] ? '하락 추세' : ab['120'] ? '장기 상승 속 조정' : '반등 시도';
+    const zone = (z, sign) => z && z.length ? z.map(x => `${_brPxS(mk, x[0])}~${_brPxS(mk, x[1])} (${_brP(((x[0] + x[1]) / 2 / nowPx - 1) * 100, 0)})`).join(' · ') : '—';
+    const volx = V.atr_pct_6m_avg ? V.atr_pct / V.atr_pct_6m_avg : 1;
+    const relw = R.vs_market_6m_pp == null ? '' : `${R.vs_market_6m_pp < -5 ? '6개월간 시장보다 약했' : R.vs_market_6m_pp > 5 ? '6개월간 시장보다 강했' : '6개월간 시장과 비슷했'}${R.vs_sector_20d_pp != null ? `고, 최근 20일은 섹터보다 ${R.vs_sector_20d_pp >= 2 ? '강함' : R.vs_sector_20d_pp <= -2 ? '약함' : '비슷함'}` : '음'}`;
+    const row = (k, b, s) => `<div class="br-q"><span>${k}</span><b>${b}${s ? `<small>${s}</small>` : ''}</b></div>`;
+    h += `<details class="br-d" id="brD3"><summary><span class="t">📍 지금 자리 (6개월)</span><span class="s">${rp.replace('6개월 중 ', '')} · ${tw}</span><span class="c">▾</span></summary><div class="br-db">`
+      + row('추세', tw, `20일선 ${ab['20'] ? '위' : '아래'} · 60일선 ${ab['60'] ? '위' : '아래'} · 120일선 ${ab['120'] ? '위' : '아래'}`)
+      + row('위치', `${rp} (${Math.round((Po.range_pos || 0) * 100)}%)`, `6개월 고점 대비 ${_brP(Po.dd_from_hi6m)}`)
+      + row('지지·저항', `지지 ${zone(Lv.support)}`, `저항 ${zone(Lv.resistance)}`)
+      + (relw ? row('힘', relw, `시장 대비 6개월 ${R.vs_market_6m_pp >= 0 ? '+' : ''}${(R.vs_market_6m_pp || 0).toFixed(1)}%p${R.vs_sector_20d_pp != null ? ` · 섹터 대비 20일 ${R.vs_sector_20d_pp >= 0 ? '+' : ''}${R.vs_sector_20d_pp.toFixed(1)}%p` : ''}`) : '')
+      + row('흔들림', volx > 1.3 ? `평소보다 크게 흔들림 — 나눠 사기` : volx < 0.85 ? '평소보다 조용함' : '평소와 비슷', `하루 변동 ${(V.atr_pct || 0).toFixed(1)}% (평소 ${(V.atr_pct_6m_avg || 0).toFixed(1)}%)`)
+      + row('모멘텀', (M.rsi14 || 50) < 30 ? '과매도' : (M.rsi14 || 50) > 70 ? '과열' : '보통', `RSI ${Math.round(M.rsi14 || 0)} · 최근 20일 ${_brP(M.ret20)}`)
+      + row('거래', Vo.upday_vs_downday_20d ? (Vo.upday_vs_downday_20d > 1.2 ? '오르는 날 거래가 더 많음' : Vo.upday_vs_downday_20d < 0.8 ? '내리는 날 거래가 더 많음' : '오르는 날·내리는 날 비슷') : '—', `최근 5일 거래는 평소의 ${(Vo.v5_vs_6m || 0).toFixed(1)}배`)
+      + (Q.earnings ? row('일정', `실적 ${_brMD(Q.earnings.date)} (${Q.earnings.tdays}거래일 뒤)`, '') : '')
+      + (Q.flows ? row('수급', `외국인 ${Q.flows.foreign_streak}일 · 기관 ${Q.flows.inst_streak}일 연속 순매수`, '') : '') + `</div></details>`;
+  }
+  const mine = _brMyPos(tk); const pos = D.position;
+  if (mine || pos || rel) h += `<details class="br-d"><summary><span class="t">💼 내 포지션</span><span class="s">${mine ? `${mine.qty}주 · ${_brP(mine.pct)}` : pos ? `${pos.qty}주 · ${_brP(pos.ret)}` : '보유 없음'}${pos && pos.weight != null ? ` · 계좌의 ${Math.round(pos.weight)}%` : ''}</span><span class="c">▾</span></summary><div class="br-db">
+      ${mine ? `<div class="br-q"><span>평단</span><b>${_brPx(mk, mine.avg)}<small>종목 페이지와 같은 기준</small></b></div>` : pos ? `<div class="br-q"><span>평단</span><b>${_brPx(mk, pos.avg)}<small>토스 보유 기준</small></b></div>` : ''}
+      ${D.trade_history && D.trade_history.buys_90d ? `<div class="br-q"><span>최근 매수</span><b>90일 동안 ${D.trade_history.buys_90d}번${D.trade_history.pattern ? ` (${D.trade_history.pattern})` : ''}</b></div>` : ''}
+      ${rel ? `<div class="br-q"><span>포트폴리오</span><b>${rel.kind}<small>내 계좌가 많이 빠진 날 평균 ${_brP(rel.down_days.port)}일 때 이 종목 ${_brP(rel.down_days.me)}</small></b></div>` : ''}</div></details>`;
+  if (ai && (ai.final || ai.sources)) h += `<details class="br-d"><summary><span class="t">🧭 판단 과정</span><span class="s">AI${ai.sources ? ` · 출처 ${String(ai.sources).split('\n').filter(x => x.trim()).length}개` : ''}</span><span class="c">▾</span></summary><div class="br-db br-ai">${_brAiText(ai.final)}${ai.sources ? `<div class="br-srcs">${_brSrc(ai.sources)}</div>` : ''}</div></details>`;
+  // ⑦ 다시 심사
+  const act = _brv.active && _brv.active.ticker !== tk ? _brv.active : null;
+  h += act ? `<button class="br-again off" onclick="aqToast('${escapeAttr(act.ticker)} 심사가 끝나면 다시 심사할 수 있어요')">다시 심사 · ${escapeHtml(displayName(act.ticker) || act.ticker)} 심사 중</button>` : `<button class="br-again" onclick="aqBrRequest('${escapeAttr(tk)}')">다시 심사</button>`;
+  h += `<div class="br-lim">과거 기록과 AI 의견이에요 — 확률 예측이 아니에요</div>`;
+  return h;
+}
 function aqBrRender() { const el = document.getElementById('brSheetBody'); if (el && _brv.cur) el.innerHTML = _brReport(_brv.cur); }
 async function aqBrOpen(id) {
   let r = null; try { r = await apiCall('buyReviewGet', { id }); } catch (e) {}
   if (!r || !r.ok || !r.review) { aqToast('리포트를 불러오지 못했어요'); return; }
-  _brv.cur = r.review; _brv.more = false; document.getElementById('brSheet')?.remove();
+  _brv.cur = r.review; _brv.active = r.active || null; _brv.more = false; document.getElementById('brSheet')?.remove();
   const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
   d.innerHTML = `<div class="br-bar"><button onclick="document.getElementById('brSheet').remove()">✕</button><span>AI 매수심사 리포트</span></div><div class="br-body" id="brSheetBody"></div>`;
   document.body.appendChild(d); aqBrRender();
 }
-Object.assign(window, { aqBrActionsHtml, aqBrRefresh, aqBrRequest, aqBrOpen, aqBrRender });
+Object.assign(window, { aqBrActionsHtml, aqBrRefresh, aqBrRequest, aqBrOpen, aqBrRender, aqBrCancelAsk, aqBrGo });
 
 async function aqDailyBriefRender() {
   const box = document.getElementById('briefBody'); if (!box) return;
