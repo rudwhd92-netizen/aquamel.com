@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.91';   // v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '5.92';   // v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4436,7 +4436,7 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .br-tag { font-size: 10.5px; padding: 1px 7px; border-radius: 999px; margin-right: 6px; } .br-tag.own { background: rgba(77,171,247,.15); color: #74c0fc; } .br-tag.peer { background: rgba(177,151,252,.15); color: #b197fc; }
 .br-more { text-align: center; color: #74c0fc; font-size: 12px; padding-top: 8px; cursor: pointer; }
 .br-q { display: grid; grid-template-columns: 82px 1fr; gap: 8px; padding: 9px 0; font-size: 12.5px; } .br-q + .br-q { border-top: 1px solid var(--line); } .br-q > span { color: var(--text-mute); } .br-q b { font-weight: 700; color: var(--text-hi); } .br-q small { display: block; color: var(--text-dim); font-size: 11.5px; margin-top: 2px; line-height: 1.45; font-weight: 500; }
-.br-ai { font-size: 13px; line-height: 1.7; color: var(--text); } .br-wait { color: var(--text-mute); font-size: 12.5px; }
+.br-ai { font-size: 13px; line-height: 1.7; color: var(--text); } .br-src { margin-top: 10px; font-size: 11px; color: #74c0fc; line-height: 1.6; } .br-wait { color: var(--text-mute); font-size: 12.5px; }
 .br-wrong { border: 1px solid rgba(255,107,107,.3); background: rgba(255,107,107,.06); }
 .br-again { display: block; width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px; border: none; background: #1d2b3a; color: #74c0fc; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
 .br-lim { font-size: 11px; color: var(--text-mute); text-align: center; margin-top: 10px; }
@@ -27497,7 +27497,8 @@ function _brSlot(tk) {
   const r = _brv.st[tk] || {}; const rv = r.review; const cool = r.cooldown_until; const slot = document.getElementById('brBuySlot'), cap = document.getElementById('brCap'); if (!slot) return;
   let b = '', c = '';
   if (rv && rv.status === 'running') { b = `<button type="button" class="br-busy" onclick="aqToast('매수심사를 만드는 중이에요. 끝나면 알려 드릴게요')"><span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>매수심사 생성 중</button>`; c = '보통 1~2분 · 끝나면 알림'; }
-  else if (rv && rv.status === 'done') { b = `<button type="button" class="br-done" onclick="aqBrOpen(${rv.id})">AI 매수심사 리포트</button>`; c = `${_brHM(rv.finished_at || rv.requested_at)} 심사${cool ? ` · ${_brT(cool)}부터 다시 심사 가능` : ' · 다시 심사 가능'}`; }
+  else if (rv && rv.status === 'done') { const icon = { '매수': '😊 ', '관망': '😐 ', '금지': '😢 ' }[rv.opinion] || ''; b = `<button type="button" class="br-done" onclick="aqBrOpen(${rv.id})">${icon}AI 매수심사 리포트</button>`;
+    c = rv.ai_status === 'requested' ? 'AI 분석 작성 중 · 보통 5~15분' : rv.ai_status === 'failed' || rv.ai_status === 'timeout' ? `AI 분석 실패 — ${escapeHtml(String(rv.ai_error || '').slice(0, 30))}` : `${_brHM(rv.finished_at || rv.requested_at)} 심사${cool ? ` · ${_brT(cool)}부터 다시 심사 가능` : ' · 다시 심사 가능'}`; }
   else if (cool) { b = `<button type="button" class="br-off" onclick="aqToast('30분에 한 번만 요청할 수 있어요 — ${_brT(cool)}부터 가능')">AI 매수심사 요청</button>`; c = `30분 제한 · ${_brT(cool)}부터 요청 가능`; }
   else { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}')">AI 매수심사 요청</button>`; c = rv && rv.status === 'failed' ? `지난 요청 실패 — ${escapeHtml(String(rv.error || '').slice(0, 40))}` : ''; }
   slot.innerHTML = b; if (cap) cap.textContent = c;
@@ -27508,7 +27509,9 @@ async function aqBrRefresh(tk) {
   const was = (_brv.st[tk] || {}).review; _brv.st[tk] = r; _brSlot(tk);
   if (was && was.status === 'running' && r.review && r.review.status === 'done') aqToast(`${displayName(tk) || tk} 매수심사가 준비됐어요`);
   clearTimeout(_brv.poll);
-  if (r.review && r.review.status === 'running') _brv.poll = setTimeout(() => { if (_brv.tk === tk && document.getElementById('brBuySlot')) aqBrRefresh(tk); }, 8000);
+  if (was && was.ai_status === 'requested' && r.review && r.review.ai_status === 'done') aqToast(`${displayName(tk) || tk} AI 의견이 나왔어요 — ${r.review.opinion}`);
+  const wait = r.review && r.review.status === 'running' ? 8000 : r.review && r.review.ai_status === 'requested' ? 30000 : 0;
+  if (wait) _brv.poll = setTimeout(() => { if (_brv.tk === tk && document.getElementById('brBuySlot')) aqBrRefresh(tk); }, wait);
 }
 async function aqBrRequest(tk) {
   let r = null; try { r = await apiCall('buyReviewRequest', { ticker: tk }); } catch (e) {}
@@ -27528,10 +27531,14 @@ function _brLights(op) {
 function _brReport(rv) {
   const D = rv.data || {}; const mk = D.market || rv.market; const tk = rv.ticker; const nm = escapeHtml(displayName(tk) || tk); const ai = rv.ai || null; const op = rv.opinion || null;
   const S = D.similar || {}, Q = D.quant || {}, P = D.plan || {}, pos = D.position, rel = D.relation, now = (D.price_now || {});
-  const mult = (ai && ai.mult) || (P.double_ok ? 2 : 1); const X = P[`x${mult}`] || P.x1 || {};
+  const mult = ai && ai.mult ? ai.mult : (P.double_ok ? 2 : 1);
+  const X = JSON.parse(JSON.stringify(P[`x${mult}`] || P.x1 || {}));   // AI가 줄인 수량은 화면에도 반영 (늘리지는 못함)
+  if (ai && X.step1 && ai.q1 != null) X.step1.qty = Math.min(X.step1.qty, ai.q1);
+  if (ai && X.step2 && ai.q2 != null) X.step2.qty = Math.min(X.step2.qty, ai.q2);
+  if (ai && X.step2 && ai.cond2) X.step2.when = ai.cond2;
   const opClr = { '매수': 'g', '관망': 'y', '금지': 'r' }[op] || '';
   let h = `<div class="br-head"><b>${nm} · AI 매수심사</b><small>${D.asof ? _brMD(D.asof) + ' 종가 기준 · ' : ''}${_brHM(rv.requested_at)}</small></div>`;
-  h += `<div class="br-verdict">${_brLights(op)}<div class="br-word ${opClr}">${op || 'AI 의견 작성 중'}</div><div class="br-wsub">${op ? 'AI 의견 · 지금 이 자리 기준' : '숫자 분석은 아래에 먼저 보여 드려요'}</div>${ai && ai.summary ? `<div class="br-why">${escapeHtml(ai.summary)}</div>` : ''}</div>`;
+  h += `<div class="br-verdict">${_brLights(op)}<div class="br-word ${opClr}">${op || 'AI 의견 작성 중'}</div><div class="br-wsub">${op ? `AI 의견 · 지금 이 자리 기준${ai && ai.recheck ? ` · ${_brMD(ai.recheck)}에 다시 보기` : ''}` : rv.ai_status === 'failed' || rv.ai_status === 'timeout' ? `AI 분석을 받지 못했어요 — ${escapeHtml(rv.ai_error || '')}` : '숫자 분석은 아래에 먼저 보여 드려요'}</div>${ai && ai.summary ? `<div class="br-why">${escapeHtml(ai.summary)}</div>` : ''}</div>`;
   // 주문 계획
   if (X.step1) {
     const s1 = X.step1, s2 = X.step2, av = X.avg_after || {};
@@ -27583,7 +27590,7 @@ function _brReport(rv) {
       + `</div>`;
   }
   // ④ AI 최종 판단 · 틀린 조건
-  h += `<div class="br-sec">④ AI 최종 판단</div><div class="br-card br-ai">${ai && ai.final ? escapeHtml(ai.final).replace(/\n/g, '<br>') : '<span class="br-wait">AI 분석 작성 중이에요</span>'}</div>`;
+  h += `<div class="br-sec">④ AI 최종 판단</div><div class="br-card br-ai">${ai && ai.final ? escapeHtml(ai.final).replace(/\n/g, '<br>') + (ai.sources ? `<div class="br-src">출처<br>${escapeHtml(ai.sources).replace(/\n/g, '<br>')}</div>` : '') : '<span class="br-wait">AI 분석 작성 중이에요</span>'}</div>`;
   const sup = (Q.levels || {}).support || [];
   h += `<div class="br-sec">이렇게 되면 이 판단은 틀린 것</div><div class="br-card br-wrong">${ai && ai.invalid ? escapeHtml(ai.invalid).replace(/\n/g, '<br>') : sup.length ? `<div class="br-kv"><span>주가</span><b class="down">${_brPx(mk, sup[0][0])} 지지가 깨짐</b></div>` : ''}</div>`;
   h += `<button class="br-again" onclick="aqBrRequest('${escapeAttr(tk)}')">다시 심사</button><div class="br-lim">과거 비슷했던 구간의 기록과 AI 의견이에요 — 확률 예측이 아니에요 · 현재 유니버스 기준</div>`;
