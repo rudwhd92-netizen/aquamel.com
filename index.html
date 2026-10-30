@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.02';   // v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.03';   // v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8282,6 +8282,7 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .rv-sum { font-size: 13px; color: var(--text); line-height: 1.55; margin: 10px 0 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .rv-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; } .rv-kv > div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 9px 11px; min-width: 0; } .rv-kv span { display: block; font-size: 11px; color: var(--text-mute); } .rv-kv b { display: block; font-size: 15.5px; font-weight: 800; margin-top: 2px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; } .rv-kv b.up { color: var(--kr-up); } .rv-kv b.down { color: var(--kr-down); } .rv-kv b.rv-nx { font-size: 14px; } .rv-kv small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.rv-again.off { opacity: .5; }
 .rv-again { margin-top: 10px; width: 100%; background: rgba(255,255,255,.06); border: none; border-radius: 10px; padding: 8px; color: var(--text-dim); font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .rv-chips .br-chip { margin-left: 0; }
 /* v6.00: 메인과 같은 어두운 톤 — 전체 화면 페이지는 바탕(#161618), 위에 뜨는 창·시트·메뉴는 한 단계 밝게(#1c1c1f), 안쪽 칸·칩·눌림은 #222226 / #2a2a2e */
@@ -27628,22 +27629,30 @@ const _brHM = iso => { if (!iso) return ''; const k = new Date(new Date(iso).get
 function aqBrActionsHtml(tk) {
   return `<div class="pos-actions br-acts"><button type="button" class="br-sell" onclick="aqToast('AI 매도심사는 아직 개발 중이에요')">AI 매도심사 요청</button><span id="brBuySlot" class="br-slot"><button type="button" class="br-buy" disabled>확인 중…</button></span></div><div class="br-cap" id="brCap"></div>`;
 }
+// v6.03: 진행 중 판단 — 숫자 완료 직후 AI 상태가 아직 비어 있으면(최대 5분) 생성 중으로 봄
+function _brBusy(x) {
+  if (!x) return false;
+  if (x.status === 'running' || x.ai_status === 'requested') return true;
+  return x.status === 'done' && !x.ai_status && x.finished_at && (Date.now() - new Date(x.finished_at).getTime()) < 5 * 60e3;
+}
 function _brSlot(tk) {
   const r = _brv.st[tk] || {}; const rv = r.review; const act = r.active; const slot = document.getElementById('brBuySlot'), cap = document.getElementById('brCap'); if (!slot) return;
   const spin = '<span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
   let b = '', c = '';
-  if (rv && (rv.status === 'running' || rv.ai_status === 'requested')) { b = `<button type="button" class="br-busy" onclick="aqBrCancelAsk(${rv.id}, '${escapeAttr(tk)}')">${spin}매수심사 생성 중</button>`; c = '보통 3~10분 · 끝나면 알림 · 누르면 취소'; }
-  else if (act) { const an = escapeHtml(displayName(act.ticker) || act.ticker); b = `<button type="button" class="br-off" onclick="aqToast('${an} 심사가 끝나면 요청할 수 있어요')">AI 매수심사 요청</button>`; c = `${an} 심사 중 · 끝나면 요청 가능`; }
-  else if (rv && rv.status === 'done') { const icon = { '매수': '😊 ', '관망': '😐 ', '금지': '😢 ' }[rv.opinion] || ''; b = `<button type="button" class="br-done" onclick="aqBrOpen(${rv.id})">${icon}AI 매수심사 리포트</button>`;
-    c = rv.ai_status === 'done' ? `${_brHM(rv.finished_at || rv.requested_at)} 심사` : `AI 분석을 받지 못했어요 — ${escapeHtml(String(rv.ai_error || '').slice(0, 30))}`; }
-  else { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}')">AI 매수심사 요청</button>`; c = rv && rv.status === 'failed' ? `지난 요청 실패 — ${escapeHtml(String(rv.error || '').slice(0, 40))}` : ''; }
+  if (_brBusy(rv)) { b = `<button type="button" class="br-busy" onclick="aqBrCancelAsk(${rv.id}, '${escapeAttr(tk)}')">${spin}매수심사 생성 중</button>`; c = '보통 3~10분 · 끝나면 알림 · 누르면 취소'; }
+  else if (rv && rv.status === 'done') {   // v6.03: 다른 작업 중이어도 완성된 리포트는 열림 (재심사만 리포트 하단에서 막음)
+    const icon = { '매수': '😊 ', '관망': '😐 ', '금지': '😢 ' }[rv.opinion] || ''; b = `<button type="button" class="br-done" onclick="aqBrOpen(${rv.id})">${icon}AI 매수심사 리포트</button>`;
+    c = rv.ai_status === 'done' ? `${_brHM(rv.finished_at || rv.requested_at)} 심사` : `AI 분석을 받지 못했어요 — ${escapeHtml(String(rv.ai_error || '이유 미상').slice(0, 30))}`;
+    if (act) c += ' · 재심사는 다른 작업이 끝난 뒤'; }
+  else if (act) { b = `<button type="button" class="br-off" onclick="aqToast('다른 작업이 끝나면 요청할 수 있어요')">AI 매수심사 요청</button>`; c = '다른 작업 중 · 끝나면 요청 가능'; }
+  else { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}')">AI 매수심사 요청</button>`; c = rv && rv.status === 'failed' ? `지난 요청 실패 — ${escapeHtml(String(rv.error || '이유 미상').slice(0, 40))}` : ''; }
   slot.innerHTML = b; if (cap) cap.textContent = c;
 }
 async function aqBrRefresh(tk) {
   _brv.tk = tk; let r = null; try { r = await apiCall('buyReviewStatus', { ticker: tk }); } catch (e) {}
   if (!r || !r.ok) { const slot = document.getElementById('brBuySlot'); if (slot) slot.innerHTML = `<button type="button" class="br-off" onclick="aqToast('관리자 계정에서만 쓸 수 있어요')">AI 매수심사 요청</button>`; return; }
   const was = (_brv.st[tk] || {}).review; _brv.st[tk] = r; _brSlot(tk);
-  const busy = x => x && (x.status === 'running' || x.ai_status === 'requested');
+  const busy = _brBusy;
   if (busy(was) && r.review && !busy(r.review)) aqToast(r.review.opinion ? `${displayName(tk) || tk} AI 의견이 나왔어요 — ${r.review.opinion}` : `${displayName(tk) || tk} 매수심사가 끝났어요`);
   clearTimeout(_brv.poll);
   const wait = busy(r.review) ? (r.review.status === 'running' ? 8000 : 20000) : r.active ? 30000 : 0;   // 다른 종목이 끝나는 것도 기다림
@@ -27726,7 +27735,7 @@ function _brReport(rv) {
   else if (op === '매수') key = `<div class="br-key g">선발대 ${_pfM(P.unit * mult, false)} · 두 번에 나눠 사기<small>${escapeHtml(P.double_why || '')}</small></div>`;
   else if (op === '금지') key = `<div class="br-key r">지금은 사지 않기${ai && ai.recheck ? `<small>${_brDow(ai.recheck)}에 다시 보기</small>` : ''}</div>`;
   h += `<div class="br-vc"><div class="br-tl">${lamp('매수', 'g', '<path d="M12 23 Q20 31 28 23"/>')}${lamp('관망', 'y', '<path d="M13 26 L27 26"/>')}${lamp('금지', 'r', '<path d="M12 29 Q20 21 28 29"/>')}</div>
-    <div class="br-word ${cls}">${op || 'AI 의견 없음'}</div><p class="br-vs">${op ? escapeHtml((ai && ai.summary) || '') : `AI 분석을 받지 못했어요 — ${escapeHtml(rv.ai_error || '')}. 숫자 분석만 보여 드려요.`}</p>${key}</div>`;
+    <div class="br-word ${cls}">${op || 'AI 의견 없음'}</div><p class="br-vs">${op ? escapeHtml((ai && ai.summary) || '') : `AI 분석을 받지 못했어요 — ${escapeHtml(rv.ai_error || '이유 미상')}. 숫자 분석만 보여 드려요.`}</p>${key}</div>`;
   // ③ 할 일 (매수) / 매수로 바뀌면 (관망·금지, 접힘)
   if (X.step1) {
     const s1 = X.step1, s2 = X.step2 || {}, av = X.avg_after || {}; const mine = _brMyPos(tk);
@@ -27796,7 +27805,7 @@ function _brReport(rv) {
   if (ai && (ai.final || ai.sources)) h += `<details class="br-d"><summary><span class="t">🧭 판단 과정</span><span class="s">AI${ai.sources ? ` · 출처 ${String(ai.sources).split('\n').filter(x => x.trim()).length}개` : ''}</span><span class="c">▾</span></summary><div class="br-db br-ai">${_brAiText(ai.final, '판단 과정')}${ai.sources ? `<div class="br-srcs">${_brSrc(ai.sources)}</div>` : ''}</div></details>`;
   // ⑦ 다시 심사
   const act = _brv.active && _brv.active.ticker !== tk ? _brv.active : null;
-  h += act ? `<button class="br-again off" onclick="aqToast('${escapeAttr(act.ticker)} 심사가 끝나면 다시 심사할 수 있어요')">다시 심사 · ${escapeHtml(displayName(act.ticker) || act.ticker)} 심사 중</button>` : `<button class="br-again" onclick="aqBrRequest('${escapeAttr(tk)}')">다시 심사</button>`;
+  h += act ? `<button class="br-again off" onclick="aqToast('다른 작업이 끝나면 다시 심사할 수 있어요')">다시 심사 · 다른 작업 중</button>` : `<button class="br-again" onclick="aqBrRequest('${escapeAttr(tk)}')">다시 심사</button>`;
   h += `<div class="br-lim">과거 기록과 AI 의견이에요 — 확률 예측이 아니에요</div>`;
   return h;
 }
@@ -27809,6 +27818,7 @@ async function aqBrOpen(id) {
   d.innerHTML = `<div class="br-bar"><button onclick="document.getElementById('brSheet').remove()">✕</button><span>AI 매수심사 리포트</span></div><div class="br-body" id="brSheetBody"></div>`;
   document.body.appendChild(d); aqBrRender();
 }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && _brv.tk && document.getElementById('brBuySlot')) { try { aqBrRefresh(_brv.tk); } catch (e) {} } });   // v6.03: 앱으로 돌아오면 바로 다시 확인
 Object.assign(window, { aqBrActionsHtml, aqBrRefresh, aqBrRequest, aqBrOpen, aqBrRender, aqBrCancelAsk, aqBrGo });
 
 // ============================================================================
@@ -27857,7 +27867,7 @@ function _rvCard(it, mk, held, watch) {
     <div class="rv-kv"><div><span>심사 후 주가</span><b class="${_brC(since)}">${since == null ? '—' : aqSgPct(since, 1)}</b><small>${base ? `${_brPxS(mk, base)} → ${_brPxS(mk, cur)}` : ''}</small></div>
       <div><span>다음 할 일</span><b class="rv-nx">${escapeHtml(nx)}</b><small>${escapeHtml(nxs)}</small></div></div>
     ${chips ? `<div class="rv-chips">${chips}</div>` : ''}
-    ${stale ? `<button class="rv-again" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','${kind}')">7일 넘은 심사 · 다시 심사</button>` : ''}
+    ${stale ? (((_rv.data || {}).active && (_rv.data.active.id !== it.id)) ? `<button class="rv-again off" onclick="event.stopPropagation(); aqToast('다른 작업이 끝나면 다시 심사할 수 있어요')">7일 넘은 심사 · 다시 심사 · 다른 작업 중</button>` : `<button class="rv-again" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','${kind}')">7일 넘은 심사 · 다시 심사</button>`) : ''}
   </div>`;
 }
 async function aqReviewRender(force) {
