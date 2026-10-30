@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.20';   // v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.21';   // v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8377,6 +8377,24 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .rv-rule-warn { margin-top: 8px; font-size: 11.5px; color: #ffa94d; line-height: 1.5; }
 .rv-again { margin-top: 10px; width: 100%; background: rgba(255,255,255,.06); border: none; border-radius: 10px; padding: 8px; color: var(--text-dim); font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .rv-chips .br-chip { margin-left: 0; }
+/* v6.21: AI 매매심사 정리 — 색 칸·딱지를 글로, 카드 여백·간격 넓힘, 강조색은 주황 하나 */
+.rv-sumbar { display: flex; justify-content: space-between; align-items: stretch; gap: 4px; margin: 2px 4px 16px; } .rv-sumbar > div { background: none; padding: 0; text-align: center; border-radius: 0; } .rv-sumbar > i { width: 1px; background: rgba(255,255,255,.1); }
+.rv-sumbar span { display: block; font-size: 12px; color: var(--text-dim); } .rv-sumbar b, .rv-sumbar b.g, .rv-sumbar b.y, .rv-sumbar b.r { display: block; font-size: 18px; font-weight: 800; color: var(--text-hi); margin-top: 2px; } .rv-sumbar b.hot { color: #ffa94d; }
+.rv-active { background: none; color: var(--text-dim); padding: 0 4px; font-size: 13px; margin-bottom: 14px; }
+.rv-score { background: rgba(255,255,255,.04); border-radius: 16px; padding: 14px 16px; margin: 0 0 20px; gap: 0; } .rv-sch { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; } .rv-sch b { font-size: 13.5px; color: var(--text-hi); } .rv-sch span { font-size: 12px; color: var(--text-dim); }
+.rv-scg { display: grid; grid-template-columns: 56px minmax(0, 1fr); row-gap: 6px; font-size: 13px; color: var(--text); } .rv-scg .o { color: var(--text-dim); } .rv-sc-empty { font-size: 13px; color: var(--text-dim); }
+.rv-rules { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.07); } .rv-rules summary { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; color: var(--text); padding: 0; } .rv-rules summary::-webkit-details-marker { display: none; } .rv-rules summary i { font-style: normal; color: var(--text-dim); } .rv-rules[open] summary i { transform: rotate(90deg); }
+.rv-rule small { display: block; } .rv-rule-warn { color: var(--text-dim); }
+.rv-segs { align-items: center; margin: 0 2px 14px; flex-wrap: nowrap; } .rv-tabs { display: flex; gap: 18px; } .rv-tabs button { background: none; border: none; padding: 6px 0; font-family: inherit; font-size: 14px; font-weight: 700; color: var(--text-dim); cursor: pointer; } .rv-tabs button.on { color: var(--text-hi); font-weight: 800; box-shadow: inset 0 -2px 0 var(--text-hi); }
+.rv-sort { background: none; border: none; color: var(--text); font-family: inherit; font-size: 13px; padding: 6px 0; cursor: pointer; color-scheme: dark; }
+.rv-list { gap: 18px; } .rv-card { border-radius: 18px; padding: 20px 18px; } .rv-card.stale { opacity: 1; }
+.rv-nm small { font-size: 12px; font-weight: 500; color: var(--text-dim); } .rv-nm { font-size: 15px; font-weight: 800; } .rv-meta { font-size: 12px; color: var(--text-dim); margin-top: 1px; }
+.rv-op2 { flex: none; font-size: 15px; font-weight: 800; color: var(--text-hi); } .rv-op2.dim { color: var(--text-dim); }
+.rv-st { font-size: 13.5px; color: var(--text); line-height: 1.5; margin-top: 16px; } .rv-st span { color: var(--text-dim); } .rv-st.x { color: #ffa94d; }
+.rv-gr { font-size: 12.5px; color: var(--text-dim); margin-top: 8px; } .rv-gr b { color: var(--text); }
+.rv-card .rv-kv { margin-top: 14px; } .rv-steps { font-size: 12.5px; color: var(--text-dim); margin-top: 14px; line-height: 1.5; }
+.rv-card .rv-again { margin-top: 16px; height: 44px; padding: 0; border-radius: 12px; font-size: 13.5px; background: rgba(255,255,255,.08); color: var(--text); } .rv-card .rv-again.x { background: #ffa94d; color: #1e1e1e; font-weight: 800; }
+
 /* v6.00: 메인과 같은 어두운 톤 — 전체 화면 페이지는 바탕(#161618), 위에 뜨는 창·시트·메뉴는 한 단계 밝게(#1c1c1f), 안쪽 칸·칩·눌림은 #222226 / #2a2a2e */
 :root:not([data-theme="light"]) { --panel: #1c1c1f; --panel-2: #222226; --bg-2: #222226; --bg-3: #2a2a2e; --panel-hi: #2a2a2e; --bg-card: #1c1c1f; }
 html:not([data-theme="light"]) .cal-modal { background: var(--panel); }
@@ -28121,18 +28139,17 @@ function _rvChips(it, mk) {
 }
 // v6.04: 오답노트 2.0 — 채점(시장 대비·종목 평소 폭·매수는 1차 계획 기준) · 규칙(서버가 근거를 다시 셈)
 const _RV_GR = { '정답': 'g', '오답': 'r', '애매': 'y', '미체결': 'n' };
-function _rvScoreHtml(R) {
+function _rvScoreHtml(R) {   // v6.21: 정답·오답을 딱지 대신 글로 · 규칙은 한 줄에서 펼침 (내용 그대로)
   const sc = R.score || {}; const ops = ['매수', '관망', '금지'].filter(k => sc[k]);
-  let h = '<div class="rv-score">';
-  h += ops.length ? ops.map(op => { const x = sc[op]; const n = Object.values(x).reduce((a, b) => a + b, 0);
-      return `<div class="rv-sc-row"><span class="rv-sc-op">${op} ${n}</span>${['정답', '오답', '애매', '미체결'].filter(v => x[v]).map(v => `<span class="rv-sc-v ${_RV_GR[v]}">${v} ${x[v]}</span>`).join('')}</div>`; }).join('')
-    : '<div class="rv-sc-empty">채점은 심사 20거래일 뒤부터 — 아직 채점된 심사가 없어요</div>';
+  let h = '<div class="rv-score"><div class="rv-sch"><b>채점</b><span>심사 20거래일 뒤</span></div>';
+  h += ops.length ? `<div class="rv-scg">${ops.map(op => { const x = sc[op]; const n = Object.values(x).reduce((a, b) => a + b, 0);
+      return `<span class="o">${op} ${n}</span><span>${['정답', '오답', '애매', '미체결'].filter(v => x[v]).map(v => `${v} ${x[v]}`).join(' · ')}</span>`; }).join('')}</div>`
+    : '<div class="rv-sc-empty">아직 채점된 심사가 없어요</div>';
   const rules = R.rules || []; const cf = rules.filter(r => r.status === '확정'), cd = rules.filter(r => r.status === '후보');
   if (rules.length) {
-    const st = { '확정': 'g', '후보': 'y', '폐기': 'n' };
-    h += `<details class="rv-rules"><summary>오답노트 규칙 · 확정 ${cf.length} · 후보 ${cd.length}${(R.note_problems || []).length ? ` · <em>확인 필요 ${R.note_problems.length}</em>` : ''}</summary>`
-      + rules.map(r => { const u = r.used; return `<div class="rv-rule${r.status === '폐기' ? ' off' : ''}"><span class="rv-sc-v ${st[r.status] || ''}">${escapeHtml(r.id)} ${escapeHtml(r.status || '')}</span><p>${escapeHtml(r.text || '')}</p><small>근거 ${r.n ?? 0}건 · 반대 ${r.against ?? 0}건${u ? ` · 적용 ${u.n}건(정답 ${u['정답'] || 0} · 오답 ${u['오답'] || 0})` : ''}</small></div>`; }).join('')
-      + ((R.note_problems || []).length ? `<div class="rv-rule-warn">${R.note_problems.slice(0, 6).map(p => `<div>⚠️ ${escapeHtml(p)}</div>`).join('')}</div>` : '')
+    h += `<details class="rv-rules"><summary><span>오답노트 규칙 · 확정 ${cf.length} · 후보 ${cd.length}${(R.note_problems || []).length ? ` · <em>확인 필요 ${R.note_problems.length}</em>` : ''}</span><i>›</i></summary>`
+      + rules.map(r => { const u = r.used; return `<div class="rv-rule${r.status === '폐기' ? ' off' : ''}"><small>${escapeHtml(r.id)} · ${escapeHtml(r.status || '')}</small><p>${escapeHtml(r.text || '')}</p><small>근거 ${r.n ?? 0}건 · 반대 ${r.against ?? 0}건${u ? ` · 적용 ${u.n}건(정답 ${u['정답'] || 0} · 오답 ${u['오답'] || 0})` : ''}</small></div>`; }).join('')
+      + ((R.note_problems || []).length ? `<div class="rv-rule-warn">${R.note_problems.slice(0, 6).map(p => `<div>${escapeHtml(p)}</div>`).join('')}</div>` : '')
       + '</details>';
   }
   return h + '</div>';
@@ -28160,27 +28177,37 @@ async function _rvLiveTick() {   // 탭이 보이는 동안 1분마다 목록 �
   aqReviewRender();
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && document.body.getAttribute('data-atab') === 'review') { try { _rvLiveKick(); } catch (e) {} } });
-function _rvCard(it, mk, held, watch) {
+function _rvSteps(it, mk) {   // v6.21: 단계 칩 → 한 줄 글
+  return (it.steps || []).slice().sort((a, b) => (a.step || 0) - (b.step || 0)).map(x => {
+    const n = `${x.step || 1}차`;
+    if (x.status === 'filled') return `${n} 완료 ${Number(x.filled_qty || x.qty || 0)}주${x.filled_px ? ` @ ${_brPxS(mk, Number(x.filled_px))}` : ''}`;
+    if (x.status === 'partial') return `${n} 일부 ${Number(x.filled_qty || 0)}/${Number(x.qty || 0)}주`;
+    if (x.status === 'cancelled') return `${n} 취소`;
+    return `${n} 대기${x.qty ? ` ${Number(x.qty)}주` : ''}`;
+  }).join(' · ');
+}
+function _rvCard(it, mk, held, watch) {   // v6.21: 색 딱지·칩을 글로 · 여백 넓힘 (심사 후 주가·다음 할 일 상자는 그대로)
   const tk = String(it.ticker || '').toUpperCase(); const nm = escapeHtml(displayName(tk) || tk); const kind = it.kind === 'sell' ? 'sell' : 'buy';
   const busy = it.status === 'queued' || it.status === 'running' || it.ai_status === 'requested';
   const opTxt = busy ? (it.status === 'queued' ? '대기 중' : '심사 중') : it.status === 'failed' ? '실패' : it.status === 'cancelled' ? '취소' : (it.opinion || 'AI 의견 없음');
-  const opCls = busy ? 'busy' : _RV_OP[it.opinion] || 'n';
-  const lp = (_rv.live || {})[tk]; const L = it._lv;   // v6.07
+  const lp = (_rv.live || {})[tk]; const L = it._lv;
   const cur = lp && lp.price > 0 ? lp.price : _aqLatestClose(tk); const base = Number(it.price_at_review) || null; const since = cur != null && base ? (cur / base - 1) * 100 : null;
   const lpt = lp && lp.at ? (() => { const m = Math.max(0, Math.round((Date.now() - new Date(lp.at).getTime()) / 60000)); return m < 1 ? '방금' : `${m}분 전`; })() : '';
   const [nx, nxs] = busy ? ['결과 기다리는 중', ''] : _rvNext(it, mk, cur);
   const when = it.finished_at || it.requested_at; const stale = !busy && when && (Date.now() - new Date(when).getTime()) > 7 * 86400e3;
-  const tags = (held.has(tk) ? '<span class="rv-tag own">보유</span>' : '') + (watch.has(tk) ? '<span class="rv-tag watch">관심</span>' : '');
-  const chips = kind === 'buy' && (it.opinion === '매수' || (it.steps || []).some(x => x.status && x.status !== 'planned')) ? _rvChips(it, mk) : '';
-  return `<div class="rv-card${stale ? ' stale' : ''}" onclick="aqRvOpen('${escapeAttr(String(it.id))}','${kind}')">
-    <div class="rv-hd">${aqWrapLogo(_autoLogo(tk), tk)}<div class="rv-t"><div class="rv-nm">${nm}${tags}</div><div class="rv-meta">${kind === 'sell' ? 'AI 매도심사' : 'AI 매수심사'} · ${_brMDW(_rvKstDate(it.requested_at))} 심사 · ${_rvAgo(it.requested_at)}</div></div><span class="rv-op ${opCls}"><i></i>${escapeHtml(opTxt)}</span></div>
-    ${L ? `<div class="rv-lvrow"><span class="rv-lv ${L.tone}${L.x ? ' x' : ''}"><i></i>${escapeHtml(_rvShort(L))}</span>${L.stale && !L.x ? '<span class="rv-lv n">오래됨</span>' : ''}</div>` : ''}
-    ${it.summary ? `<div class="rv-sum">${escapeHtml(it.summary)}</div>` : ''}
-    ${it.grade && it.grade.verdict ? `<div class="rv-grade"><b class="${_RV_GR[it.grade.verdict] || ''}">채점 · ${escapeHtml(it.grade.verdict)}</b><span>${escapeHtml(it.grade.why || '')}</span></div>` : ''}
+  const tags = [held.has(tk) ? '보유' : '', watch.has(tk) ? '관심' : ''].filter(Boolean).join(' · ');
+  const steps = kind === 'buy' && (it.opinion === '매수' || (it.steps || []).some(x => x.status && x.status !== 'planned')) ? _rvSteps(it, mk) : '';
+  const st = L ? `${_rvShort(L)}${L.stale && !L.x ? ' · 오래됨' : ''}` : '';
+  const other = (_rv.data || {}).active && (_rv.data.active.id !== it.id);
+  const again = (label, cls) => other ? `<button class="rv-again off" onclick="event.stopPropagation(); aqToast('다른 작업이 끝나면 다시 심사할 수 있어요')">${label} · 다른 작업 중</button>` : `<button class="rv-again ${cls}" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','${kind}')">${label}</button>`;
+  return `<div class="rv-card" onclick="aqRvOpen('${escapeAttr(String(it.id))}','${kind}')">
+    <div class="rv-hd">${aqWrapLogo(_autoLogo(tk), tk)}<div class="rv-t"><div class="rv-nm">${nm}${tags ? `<small>${tags}</small>` : ''}</div><div class="rv-meta">${_brMDW(_rvKstDate(it.requested_at))} ${kind === 'sell' ? 'AI 매도심사' : 'AI 매수심사'} · ${_rvAgo(it.requested_at)}</div></div><span class="rv-op2${busy || !it.opinion ? ' dim' : ''}">${escapeHtml(opTxt)}</span></div>
+    ${st || it.summary ? `<div class="rv-st${L && L.x ? ' x' : ''}">${escapeHtml(st)}${st && it.summary ? '<span> · </span>' : ''}${it.summary ? `<span>${escapeHtml(it.summary)}</span>` : ''}</div>` : ''}
+    ${it.grade && it.grade.verdict ? `<div class="rv-gr">채점 <b>${escapeHtml(it.grade.verdict)}</b>${it.grade.why ? ' · ' + escapeHtml(it.grade.why) : ''}</div>` : ''}
     <div class="rv-kv"><div><span>심사 후 주가</span><b class="${_brC(since)}">${since == null ? '—' : aqSgPct(since, 1)}</b><small>${base ? `${_brPxS(mk, base)} → ${_brPxS(mk, cur)}${lpt ? ` · ${lpt}` : ''}` : ''}</small></div>
       <div><span>다음 할 일</span><b class="rv-nx">${escapeHtml(nx)}</b><small>${escapeHtml(nxs)}</small></div></div>
-    ${chips ? `<div class="rv-chips">${chips}</div>` : ''}
-    ${L && L.x ? (((_rv.data || {}).active && (_rv.data.active.id !== it.id)) ? `<button class="rv-again off" onclick="event.stopPropagation(); aqToast('다른 작업이 끝나면 다시 심사할 수 있어요')">만료 · 다시 심사 · 다른 작업 중</button>` : `<button class="rv-again x" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','${kind}')">만료 · 다시 심사</button>`) : stale ? (((_rv.data || {}).active && (_rv.data.active.id !== it.id)) ? `<button class="rv-again off" onclick="event.stopPropagation(); aqToast('다른 작업이 끝나면 다시 심사할 수 있어요')">7일 넘은 심사 · 다시 심사 · 다른 작업 중</button>` : `<button class="rv-again" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','${kind}')">7일 넘은 심사 · 다시 심사</button>`) : ''}
+    ${steps ? `<div class="rv-steps">${escapeHtml(steps)}</div>` : ''}
+    ${L && L.x ? again('만료 · 다시 심사', 'x') : stale ? again('다시 심사 · 7일 넘은 심사', '') : ''}
   </div>`;
 }
 async function aqReviewRender(force) {
@@ -28202,11 +28229,12 @@ async function aqReviewRender(force) {
   const done = all.filter(x => x.status === 'done' && x.opinion); const cnt = {}; done.forEach(x => { cnt[x.opinion] = (cnt[x.opinion] || 0) + 1; });
   const due = all.filter(x => x.recheck && (_rvDday(x.recheck) ?? 1) <= 0).length;
   const keys = _RV_ORDER.filter(k => cnt[k]).concat(Object.keys(cnt).filter(k => !_RV_ORDER.includes(k)));
-  let h = `<div class="rv-sumbar">${keys.map(k => `<div><span>${escapeHtml(k)}</span><b class="${_RV_OP[k] || ''}">${cnt[k]}</b></div>`).join('')}<div><span>재심사 도래</span><b class="${due ? 'y' : ''}">${due}</b></div><div><span>만료</span><b class="${nExp ? 'r' : ''}">${nExp}</b></div></div>`;
-  const A = R.active; if (A && A.ticker) h += `<div class="rv-active"><span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>${escapeHtml(displayName(A.ticker) || A.ticker)} ${A.kind === 'sell' ? '매도' : '매수'}심사 ${A.status === 'queued' ? '대기 중' : '진행 중'}${A.queued ? ` · 대기 ${A.queued}건` : ''}</div>`;
-  h += _rvScoreHtml(R);   // v6.04
-  h += `<div class="rv-segs"><div class="rv-seg">${[['all', '전체'], ['buy', '매수심사'], ['sell', '매도심사']].map(([v, t]) => `<button class="${_rv.kind === v ? 'on' : ''}" onclick="aqRvKind('${v}')">${t}</button>`).join('')}</div>
-    <div class="rv-seg">${[['new', '최신순'], ['recheck', '재심사 임박순'], ['expired', '만료 먼저']].map(([v, t]) => `<button class="${_rv.sort === v ? 'on' : ''}" onclick="aqRvSort('${v}')">${t}</button>`).join('')}</div></div>`;
+  const hi = (v) => v ? ' hot' : '';   // v6.21: 숫자 칸 → 한 줄 · 색은 주황 하나
+  let h = `<div class="rv-sumbar">${keys.map(k => `<div><span>${escapeHtml(k)}</span><b>${cnt[k]}</b></div>`).join('')}<i></i><div><span>재심사 도래</span><b class="${hi(due)}">${due}</b></div><div><span>만료</span><b class="${hi(nExp)}">${nExp}</b></div></div>`;
+  const A = R.active; if (A && A.ticker) h += `<div class="rv-active">${escapeHtml(displayName(A.ticker) || A.ticker)} ${A.kind === 'sell' ? '매도' : '매수'}심사 ${A.status === 'queued' ? '대기 중' : '진행 중'}${A.queued ? ` · 대기 ${A.queued}건` : ''}</div>`;
+  h += _rvScoreHtml(R);
+  h += `<div class="rv-segs"><div class="rv-tabs">${[['all', '전체'], ['buy', '매수심사'], ['sell', '매도심사']].map(([v, t]) => `<button class="${_rv.kind === v ? 'on' : ''}" onclick="aqRvKind('${v}')">${t}</button>`).join('')}</div>
+    <select class="rv-sort" onchange="aqRvSort(this.value)" aria-label="정렬">${[['new', '최신순'], ['recheck', '재심사 임박순'], ['expired', '만료 먼저']].map(([v, t]) => `<option value="${v}" ${_rv.sort === v ? 'selected' : ''}>${t}</option>`).join('')}</select></div>`;
   let list = all.filter(x => _rv.kind === 'all' || (x.kind || 'buy') === _rv.kind);
   const tms = x => new Date(x.requested_at || 0).getTime() || 0;
   if (_rv.sort === 'expired') list.sort((a, b) => ((b._lv && b._lv.x) ? 1 : 0) - ((a._lv && a._lv.x) ? 1 : 0) || ((b._lv && b._lv.stale) ? 1 : 0) - ((a._lv && a._lv.stale) ? 1 : 0) || tms(b) - tms(a)); else
