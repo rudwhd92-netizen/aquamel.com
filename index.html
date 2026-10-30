@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.99';   // v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.00';   // v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8283,6 +8283,12 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .rv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .rv-again { margin-top: 10px; width: 100%; background: rgba(255,255,255,.06); border: none; border-radius: 10px; padding: 8px; color: var(--text-dim); font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .rv-chips .br-chip { margin-left: 0; }
+/* v6.00: 메인과 같은 어두운 톤 — 전체 화면 페이지는 바탕(#161618), 위에 뜨는 창·시트·메뉴는 한 단계 밝게(#1c1c1f), 안쪽 칸·칩·눌림은 #222226 / #2a2a2e */
+:root:not([data-theme="light"]) { --panel: #1c1c1f; --panel-2: #222226; --bg-2: #222226; --bg-3: #2a2a2e; --panel-hi: #2a2a2e; --bg-card: #1c1c1f; }
+html:not([data-theme="light"]) .cal-modal { background: var(--panel); }
+html:not([data-theme="light"]) .br-off, html:not([data-theme="light"]) .br-again.off { background: #1c1c1f; }
+@media (max-width: 1024px) { html:not([data-theme="light"]) #chartModal .modal-content, html:not([data-theme="light"]) #sectorModal .modal-content { background: var(--bg); } }
+html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-row, html:not([data-theme="light"]) .noti-tip, html:not([data-theme="light"]) .aq-tf-modal { background: var(--panel); }
 </style>
 </head>
 <body>
@@ -10051,8 +10057,8 @@ function getMarketConfig() {
 //   US: $123.45 (소수 2자리, $ 기호)
 //   KR: 123,000 (정수 + 천단위 콤마, 통화 기호 없음 — 사용자 요청 v1.74)
 function aqNum(v, d) { const n = Number(v); if (!isFinite(n)) return '-'; return n.toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }   // v5.69: 천 단위 콤마
-// v5.97: 미국식 등락 기호 — 플러스 ▲ · 마이너스 ▼ (0은 기호 없음). 숫자 본체는 Math.abs로 붙임
-function aqSg(v) { v = Number(v); return !isFinite(v) ? '' : v > 0 ? '▲' : v < 0 ? '▼' : ''; }
+// v5.97: 등락 기호 공통 (0은 기호 없음). 숫자 본체는 Math.abs로 붙임 · v6.00: ▲▼ → +/- 로 되돌림 (색은 초록/빨강 유지)
+function aqSg(v) { v = Number(v); return !isFinite(v) ? '' : v > 0 ? '+' : v < 0 ? '-' : ''; }
 function aqSgPct(v, d = 1, suf = '%') { if (v == null || v === '' || !isFinite(Number(v))) return '—'; const n = Number(v); return aqSg(n) + Math.abs(n).toFixed(d) + suf; }
 function fmtPrice(v) {
   if (v == null || !isFinite(v)) return '-';
@@ -10068,7 +10074,7 @@ function fmtPrice(v) {
 function fmtMoney(v) {
   if (v == null || !isFinite(v)) return '-';
   const cfg = getMarketConfig();
-  const sign = v < 0 ? '▼' : '';   // v5.97: 마이너스 ▼
+  const sign = v < 0 ? '-' : '';
   const abs = Math.abs(v);
   if (cfg.priceDecimals === 0) {
     return sign + cfg.currency + Math.round(abs).toLocaleString(cfg.currencyLocale);
@@ -15373,7 +15379,7 @@ function aqAnnotatePrices(html, cur, isKR) {
   return html.replace(re, (m, num) => {
     const px = Number(String(num).replace(/,/g, '')); if (!(px > 0)) return m;
     const diff = (px / cur - 1) * 100; const cls = Math.abs(diff) <= 2 ? 'now' : (diff < 0 ? 'below' : 'above');
-    const txt = Math.abs(diff) <= 2 ? '지금 근처' : (diff < 0 ? `현재가에서 ▼${Math.abs(diff).toFixed(1)}%` : `현재가보다 ▲${diff.toFixed(1)}%`);
+    const txt = Math.abs(diff) <= 2 ? '지금 근처' : (diff < 0 ? `현재가에서 -${Math.abs(diff).toFixed(1)}%` : `현재가보다 +${diff.toFixed(1)}%`);
     return `${m}<span class="rv3-px rv3-px-${cls}" title="현재가 ${isKR ? Math.round(cur).toLocaleString() + '원' : '$' + aqNum(cur, 2)}">${txt}</span>`;
   });
 }
@@ -15906,7 +15912,7 @@ function openPositionPanel(tk) {
     <div class="pos-back-row"><button class="report-back-btn" onclick="closePositionPanel()">← 차트로 돌아가기</button></div>
     <div class="pos-row"><div><div class="pos-label">1주 평균금액</div><div class="pos-avg-big">${fmtMoney(avg)}</div></div></div>
     <div class="pos-row"><div class="pos-label">보유 수량 ${_tossNote}</div><div class="pos-val"><span class="pos-main">${qty.toLocaleString()}주</span></div></div>
-    <div class="pos-row"><div class="pos-label">총 금액</div><div class="pos-val"><span class="pos-main">${fmtMoney(mktVal)}</span><div class="pos-pnl ${pnlCls}">${pnl > 0 ? '▲' : ''}${fmtMoney(pnl)} (${aqSg(pnlPct)}${Math.abs(pnlPct).toFixed(1)}%)</div></div></div>
+    <div class="pos-row"><div class="pos-label">총 금액</div><div class="pos-val"><span class="pos-main">${fmtMoney(mktVal)}</span><div class="pos-pnl ${pnlCls}">${pnl > 0 ? '+' : ''}${fmtMoney(pnl)} (${aqSg(pnlPct)}${Math.abs(pnlPct).toFixed(1)}%)</div></div></div>
     <div class="pos-row"><div class="pos-label">투자 원금</div><div class="pos-val"><span class="pos-main">${fmtMoney(principal)}</span></div></div>
     ${aqBrActionsHtml(tk)}
     <div class="pos-orders aq-coll">
@@ -17267,7 +17273,7 @@ const fmtUSD = (v) => fmtMoney(v);
 const fmtUSDPlus = (v) => {
   if (v == null || !isFinite(v)) return '-';
   const formatted = fmtMoney(v);
-  return v > 0 ? '▲' + formatted : formatted;  // v5.97: 플러스 ▲ (음수는 fmtMoney가 ▼ 붙임)
+  return v > 0 ? '+' + formatted : formatted;  // 음수는 fmtMoney가 - 붙임
 };
 const cls = (v) => v > 0 ? 'up' : v < 0 ? 'down' : '';
 
@@ -21036,7 +21042,7 @@ async function openChart(ticker) {
   const lastPrice = closes[closes.length-1];
   const recentHigh = Math.max(...highs);
   const recentHighIdx = highs.indexOf(recentHigh);
-  const decline = recentHigh > lastPrice ? `고점 대비 ▼${((recentHigh - lastPrice)/recentHigh*100).toFixed(1)}%` : '고점 돌파 중';
+  const decline = recentHigh > lastPrice ? `고점 대비 -${((recentHigh - lastPrice)/recentHigh*100).toFixed(1)}%` : '고점 돌파 중';
 
   // Support lines
   const supportMA20 = ma20[ma20.length-1] || lastPrice * 0.95;
@@ -21152,7 +21158,7 @@ async function openChart(ticker) {
   const dayChg = lastPrice - prevClose;
   const dayChgPct = prevClose > 0 ? (dayChg / prevClose * 100) : 0;
   const chgCls = dayChg > 0 ? 'up' : dayChg < 0 ? 'down' : '';
-  const chgHtml = `<span class="price-chg ${chgCls}">${dayChg > 0 ? '▲' : dayChg < 0 ? '▼' : ''} ${fmtPrice(Math.abs(dayChg)).replace('$', '')} · ${Math.abs(dayChgPct).toFixed(2)}%</span>`;   // v5.35
+  const chgHtml = `<span class="price-chg ${chgCls}">${dayChg > 0 ? '▲' : dayChg < 0 ? '▼' : ''} ${fmtPrice(Math.abs(dayChg)).replace('$', '')} · ${aqSgPct(dayChgPct, 2)}</span>`;   // v5.35
 
   // 1줄: 로고 + 회사명 + (티커)  — 회사명 없으면 티커만 크게
   if (company) {
@@ -26299,7 +26305,7 @@ function aqStatsRender() {
     ${longest ? kpi('가장 오래 산 종목', Math.max(1, Math.round(longest.d / 86400000)) + '일', nm(longest.tk)) : ''}
     ${shortest ? kpi('가장 짧은 만남', _stFmtDur(shortest.d), nm(shortest.tk)) : ''}
     ${busy ? kpi('제일 바빴던 날', busy[1] + '회', busy[0].replace(/-/g, '.')) : ''}
-    ${regret && regret.up > 0 ? kpi('가장 아까운 이별', '▲' + regret.up.toFixed(0) + '%', nm(regret.tk) + ', 판 뒤 상승폭') : ''}
+    ${regret && regret.up > 0 ? kpi('가장 아까운 이별', '+' + regret.up.toFixed(0) + '%', nm(regret.tk) + ', 판 뒤 상승폭') : ''}
   </div>`));
     // v5.71: 업적 도감 (24시간 매매 시계 위)
   try { html.push(aqBadgeBoardHtml()); } catch (e) {}
@@ -27391,8 +27397,21 @@ async function _brPreTiles(mk) {
 async function _brPreImpact(mk) {
   const d = await _brLiveLoad();
   if (mk === 'US') {
-    const mv = (d.movers || []).slice(0, 5); if (!mv.length) return '';
-    const at = mv[0].At ? mv[0].At.slice(11) : '';
+    // v6.00: 서버 공용 표(movers)는 관리자 계좌 기준 — 관리자가 아니면 본인 보유·관심 종목만 남기고 '보유/관심'도 본인 기준으로.
+    //   서버에 본인 전용 action(premarketMine)이 생기면 그것을 우선 사용
+    const held = _aqHeldUS(); let watch = new Set();
+    try { watch = new Set(((window.AqWatchStore && AqWatchStore.getAll) ? AqWatchStore.getAll() : []).filter(w => (w.market || 'US') === 'US').map(w => String(w.ticker || '').toUpperCase())); } catch (e) {}
+    const kindOf = tk => held.has(tk) ? '보유' : watch.has(tk) ? '관심' : '';
+    const isAdmin = document.body.getAttribute('data-role') === 'admin';
+    let mv = null;
+    if (_brLive.mine === undefined || Date.now() - (_brLive.mineTs || 0) > 5 * 60e3) {
+      let r = null; try { r = await apiCall('premarketMine', {}); } catch (e) {}
+      _brLive.mineTs = Date.now(); _brLive.mine = r && r.ok && Array.isArray(r.rows) ? r.rows.map(x => ({ Ticker: String(x.ticker || '').toUpperCase(), Kind: x.kind || kindOf(String(x.ticker || '').toUpperCase()), Chg: x.chg, At: x.at || r.at || '' })) : null;
+    }
+    if (_brLive.mine) mv = _brLive.mine.slice();
+    else mv = (d.movers || []).map(r => ({ ...r, Ticker: String(r.Ticker || '').toUpperCase() })).filter(r => isAdmin || kindOf(r.Ticker)).map(r => isAdmin ? r : { ...r, Kind: kindOf(r.Ticker) });
+    mv = mv.slice(0, 5); if (!mv.length) return '';
+    const at = mv[0].At ? String(mv[0].At).slice(11) : '';
     return `<div class="bf-gt">프리마켓 내 종목${at ? `<span class="bf-gt-r">${escapeHtml(at)} 기준</span>` : ''}</div><div class="bf-grp br-vgrp">${mv.map(r => { const c = parseFloat(r.Chg); return `<div class="br-vr" data-ticker="${escapeAttr(r.Ticker)}"><span class="br-vn">${escapeHtml(r.Ticker)} <small class="pre-kind">${escapeHtml(r.Kind)}</small> <small class="pre-nm">${escapeHtml(((_state.tickerCompanyMap || {})[r.Ticker]) || '')}</small></span><b class="${c > 0 ? 'up' : c < 0 ? 'down' : ''}">${aqSg(c)}${Math.abs(c).toFixed(1)}%</b></div>`; }).join('')}</div>`;
   }
   const sc = d.sectors || []; if (sc.length < 2) return '';
@@ -28500,7 +28519,7 @@ function _pfPeriods(snaps) {   // computeFlowsCalendar와 같은 기준: 일간=
 // v5.88: 금액 — 한국은 만원 단위(1억 이상은 억+만), 미국은 센트 없이. 누르면 전체 숫자
 function _pfM(v, signed = true) {
   if (v == null || !isFinite(v)) return '—';
-  const sg = signed ? aqSg(v) : (v < 0 ? '▼' : ''); const a = Math.abs(v);
+  const sg = signed ? aqSg(v) : (v < 0 ? '-' : ''); const a = Math.abs(v);
   if (getCurrentMarket() === 'KR') {
     if (a >= 1e8) { const eok = Math.floor(a / 1e8), man = Math.round((a % 1e8) / 1e4); return `${sg}${eok.toLocaleString()}억${man ? ' ' + man.toLocaleString() + '만' : ''}원`; }
     if (a >= 1e4) return `${sg}${Math.round(a / 1e4).toLocaleString()}만원`;
@@ -28515,7 +28534,7 @@ function _pfMs(v) {   // 막대 위 짧은 표시
   return a >= 1000 ? `${sg}$${(a / 1000).toFixed(1)}K` : `${sg}$${Math.round(a)}`;
 }
 function _pfV(v, cls, signed = true) { return `<b class="${cls || ''} pf-tap" onclick="aqPfFull(${Number(v) || 0})">${_pfM(v, signed)}</b>`; }
-function aqPfFull(v) { try { if (typeof aqToast === 'function') aqToast((v > 0 ? '▲' : '') + fmtUSD(v)); } catch (e) {} }
+function aqPfFull(v) { try { if (typeof aqToast === 'function') aqToast((v > 0 ? '+' : '') + fmtUSD(v)); } catch (e) {} }
 function _pfSegRow(opts, cur, fn) { return `<div class="pf-segrow">${opts.map(([v, t]) => `<button class="${v === cur ? 'on' : ''}" onclick="${fn}('${v}')">${t}</button>`).join('')}</div>`; }
 function _pfHead(title, sub) { return `<div class="pf-sec2"><b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</div>`; }
 // ---- 히스토리 (전체 스냅샷 기준)
