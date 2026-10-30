@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.07';   // v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.08';   // v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8310,7 +8310,8 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .rv-sum { font-size: 13px; color: var(--text); line-height: 1.55; margin: 10px 0 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .rv-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; } .rv-kv > div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 9px 11px; min-width: 0; } .rv-kv span { display: block; font-size: 11px; color: var(--text-mute); } .rv-kv b { display: block; font-size: 15.5px; font-weight: 800; margin-top: 2px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; } .rv-kv b.up { color: var(--kr-up); } .rv-kv b.down { color: var(--kr-down); } .rv-kv b.rv-nx { font-size: 14px; } .rv-kv small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.rv-again.off { opacity: .5; } .rv-again.x { background: rgba(255,169,77,.12); color: #ffa94d; }
+.rv-again.off { opacity: .5; }
+.bf-rvb { display: inline-flex; gap: 6px; } .bf-rvb button { font-size: 11.5px; font-weight: 700; padding: 5px 10px; border-radius: 999px; border: none; background: rgba(255,255,255,.07); color: var(--text-dim); font-family: inherit; cursor: pointer; white-space: nowrap; } .bf-rvb button.go { background: #1d2b3a; color: #74c0fc; } .rv-again.x { background: rgba(255,169,77,.12); color: #ffa94d; }
 .rv-lvrow { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; } .rv-lv { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--text-dim); }
 .rv-lv i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; } .rv-lv.g { color: #69db7c; background: rgba(64,192,87,.12); } .rv-lv.b { color: #74c0fc; background: rgba(116,192,252,.12); } .rv-lv.y { color: #ffd43b; background: rgba(250,176,5,.12); }
 .rv-lv.o { color: #ffa94d; background: rgba(255,169,77,.14); } .rv-lv.r { color: #ff8787; background: rgba(255,107,107,.13); } .rv-lv.n { color: var(--text-dim); } .rv-lv.n i { display: none; }
@@ -27600,6 +27601,28 @@ async function _brAuto(day) {
   if (a.skipped_n) out.rows.push(_bfD(_BFC.skip, `${a.skipped_n}건 건너뜀`, Object.entries(a.skipped).map(([k, v]) => `${k} ${v}`).join(' · '), '', "aqGoEngine()"));
   return out;
 }
+// v6.08: 장전 브리핑 '일정' — 매수심사 다시 볼 날이 왔거나 만료된 것 (다시 심사 / 넘기기 — 넘긴 것은 이 기기에서 다시 안 보임)
+function _bfRvSkipGet() { try { return JSON.parse(localStorage.getItem('aq_rv_skip') || '{}') || {}; } catch (e) { return {}; } }
+function aqBfRvSkip(id, el) { const m = _bfRvSkipGet(); m[id] = Date.now(); try { localStorage.setItem('aq_rv_skip', JSON.stringify(m)); } catch (e) {} try { el.closest('.bf-r').remove(); } catch (e) {} aqToast('넘겼어요'); }
+async function _brReviewDue(mk, day) {
+  if (document.body.getAttribute('data-role') !== 'admin') return [];
+  let R = _rv.data && _rv.mk === mk && Date.now() - (_rv.ts || 0) < 5 * 60e3 && Array.isArray(_rv.data.items) ? _rv.data : null;
+  if (!R) { try { const r = await apiCall('reviewList', { market: mk, kind: 'all', history: 0, limit: 100 }); if (r && r.ok && Array.isArray(r.items)) { R = r; _rv.data = r; _rv.mk = mk; _rv.ts = Date.now(); } } catch (e) {} }
+  if (!R) return [];
+  const items = R.items.filter(x => x.status === 'done' && x.opinion && (x.kind || 'buy') === 'buy' && (!x.market || x.market === mk)); if (!items.length) return [];
+  if (!_rv.liveAt || Date.now() - _rv.liveAt > 60e3) { try { const r = await apiCall('buyReviewLiveMany', { tickers: [...new Set(items.map(x => String(x.ticker).toUpperCase()))].join(',') }); if (r && r.ok) { _rv.live = Object.assign(_rv.live || {}, r.prices || {}); _rv.liveAt = Date.now(); } } catch (e) {} }
+  const skip = _bfRvSkipGet(); const nm = tk => escapeHtml(displayName(tk) || tk); const rows = [];
+  items.forEach(x => {
+    if (skip[x.id]) return; const tk = String(x.ticker).toUpperCase(); let L = null; try { L = _rvLv(x, mk); } catch (e) {}
+    const rc = x.recheck ? String(x.recheck).slice(0, 10) : null; const due = !!(rc && rc <= day); const exp = !!(L && L.x);
+    if (!exp && !due) return;
+    const btn = `<span class="bf-rvb"><button class="go" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','buy')">다시 심사</button><button onclick="event.stopPropagation(); aqBfRvSkip(${Number(x.id)}, this)">넘기기</button></span>`;
+    rows.push(_bfD(exp ? '#ffa94d' : _BFC.doc, exp ? `${nm(tk)} 매수심사 만료` : `${nm(tk)} 매수심사 다시 볼 날`,
+      exp ? `${escapeHtml(_rvShort(L).replace('만료 · ', ''))} · ${escapeHtml(x.opinion)} 심사 ${_brMD(_rvKstDate(x.requested_at))}` : `${escapeHtml(x.opinion)} · ${_brMD(rc)}${rc < day ? ' (지남)' : ''}${x.summary ? ' · ' + escapeHtml(String(x.summary).slice(0, 40)) : ''}`,
+      btn, `aqRvOpen('${Number(x.id)}','buy')`));
+  });
+  return rows.slice(0, 6);
+}
 async function _brToday(mk, day, sellToday) {
   const today = []; const prevDays = _bfPrevSessionDays(day); const nm = tk => escapeHtml(displayName(tk) || tk);
   if (sellToday && sellToday.length) today.push(_bfD(_BFC.plan, `${sellToday.map(x => nm(x.ticker)).join(' · ')} 자동매도`, '미국 장 마감 전', '', "aqGoEngine()"));
@@ -28147,7 +28170,7 @@ async function aqRvAgain(tk, kind) {
   if (!confirm(`${displayName(tk) || tk} AI 매수심사를 다시 요청할까요?`)) return;
   await aqBrRequest(tk); setTimeout(() => aqReviewRender(true), 1500);
 }
-Object.assign(window, { aqReviewRender, aqRvKind, aqRvSort, aqRvOpen, aqRvAgain });
+Object.assign(window, { aqReviewRender, aqRvKind, aqRvSort, aqRvOpen, aqRvAgain, aqBfRvSkip });
 
 async function aqDailyBriefRender() {
   const box = document.getElementById('briefBody'); if (!box) return;
@@ -28196,7 +28219,8 @@ async function aqDailyBriefRender() {
     h += `<div class="bf-hero">${hero}</div>` + (await _brPreTiles(mk)) + (await _brPreImpact(mk));
     const sched = p && !p.holiday ? _brSec(p, _brTODAY).filter(x => !/정규장\s*개장/.test(x)) : [];
     const mine = mk === 'KR' ? await _brToday('KR', day, []) : [];
-    if (mine.length || sched.length) h += `<div class="bf-gt">${_brMDW(mk === 'US' ? _brEtToday() : _kstToday())} 일정</div><div class="bf-grp">${mine.join('')}${sched.map(_bfSchedRow).join('')}</div>`;
+    let rvDue = []; try { rvDue = await _brReviewDue(mk, mk === 'US' ? _brEtToday() : _kstToday()); } catch (e) {}   // v6.08
+    if (mine.length || sched.length || rvDue.length) h += `<div class="bf-gt">${_brMDW(mk === 'US' ? _brEtToday() : _kstToday())} 일정</div><div class="bf-grp">${rvDue.join('')}${mine.join('')}${sched.map(_bfSchedRow).join('')}</div>`;
     if (p && !p.holiday) { const flow = _brSec(p, _brFLOW); if (flow.length) h += `<div class="bf-gt bf-gt-ai">장전 흐름<span class="bf-ai">AI</span></div><div class="bf-grp br-vgrp">${_brMore(_brValRows(flow), 5)}</div>`; }
     if (mk === 'US') { try { h += await aqPreUsBlocks(); } catch (e) {} }
     else { try { h += aqPreKrBlocks(); } catch (e) {} }
