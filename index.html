@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.97';   // v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '5.98';   // v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -16838,6 +16838,10 @@ function simulatePortfolioDaily() {
   // 6) Forward simulation
   const acc = { total: 0, byTicker: {}, sales: [] };
   const snapshots = [];
+  // v5.98: 매매기록에 저장된 섹터가 비어 있으면(동기화 당시 섹터 매핑 미로드 · 다른 시장 화면에서 동기화) 현재 섹터 매핑 → 사용자 지정 순으로 보완.
+  //   보유 목록과 일별 기록(섹터별 평가수익금)이 같은 기준을 쓰도록 — 실제로는 다 지정돼 있는데 '섹터 미지정'이 뜨던 문제
+  const _secMap = (_state && _state.tickerSectorMap) || {}, _secUser = (_state && _state.userSectorMap) || {}, _secCache = {};
+  const _secOf = (tk, s) => { const own = String((s && s.sector) || '').trim(); if (own && own !== '-' && own !== '미분류') return own; if (!(tk in _secCache)) _secCache[tk] = _secMap[tk] || _secUser[tk] || ''; return _secCache[tk]; };
 
   allDates.forEach(date => {
     // (a) 그 날의 trades 적용 (reorder 후)
@@ -16857,14 +16861,14 @@ function simulatePortfolioDaily() {
         const evalVal = s.mv_fallback > 0 ? s.mv_fallback : (s.avgpx * s.qty);
         totalEval += evalVal;
         totalCost += s.cost;
-        const sec = s.sector || '미분류';
+        const sec = _secOf(tk, s) || '미분류';
         bySector[sec] = (bySector[sec] || 0) + (evalVal - s.cost); byTk[tk] = evalVal - s.cost;
         return;
       }
       const evalVal = s.qty * price;
       totalEval += evalVal;
       totalCost += s.cost;
-      const sec = s.sector || '미분류';
+      const sec = _secOf(tk, s) || '미분류';
       bySector[sec] = (bySector[sec] || 0) + (evalVal - s.cost); byTk[tk] = evalVal - s.cost;
     });
     snapshots.push({
@@ -16881,7 +16885,7 @@ function simulatePortfolioDaily() {
   const holdings = [];
   Object.entries(state).forEach(([tk, s]) => {
     if (s.qty <= 1e-9) return;
-    const sector = s.sector || (_state.tickerSectorMap || {})[tk] || '';
+    const sector = _secOf(tk, s);   // v5.98: 일별 기록과 같은 보완 규칙
     const found = findTickerSeries(tk);
     let curPrice = null;
     if (found && found.rows && found.rows.length) curPrice = found.rows[found.rows.length - 1].Close;
