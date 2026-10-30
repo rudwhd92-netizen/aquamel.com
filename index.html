@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.09';   // v6.09: AI 가이드 '지금 다시 쓰기' (서버가 MyPort 새로 쓰고 Claude 가이드 작업 실행) · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.10';   // v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -28252,6 +28252,7 @@ function _gdParse(doc) {   // → { asof, slot, days: { 'YYYY-MM-DD': [items] } 
   const t = String(doc.content || '').replace(/\r/g, '').replace(/\\([!-\/:-@\[-`{-~])/g, '$1').replace(/~~/g, '~'); const out = { slot: doc.slot, days: {}, at: '' };   // v5.61: '~' 두 개가 구글 문서에서 취소선(~~)으로 바뀐 것 되돌림
   const y = Number(String(doc.date).slice(0, 4)); let cur = null, it = null;
   const m0 = t.match(/기준일\s*\d{4}-\d{2}-\d{2}\s*·\s*(오전|오후)\s*·\s*(\d{1,2}:\d{2})/); if (m0) out.at = m0[2];
+  const me = t.match(/^[-*>\s]*수정\s*:\s*(\d{1,2}:\d{2})/m); if (me) out.edit = me[1];   // v6.10: '지금 고치기'로 고친 시각
   const mw = t.match(/^[-*>\s]*주의\s*:\s*(.+)$/m); if (mw) out.warn = mw[1].trim();
   // v5.57: 구글 문서 변환에 따라 세 가지 모양 모두 읽음 — 들여 쓴 줄 / '- 상황:' 하위 목록 / 한 문단으로 합쳐진 줄
   const LBL = /(상황|추천|확인할 것|다시 볼 때|행동 후보|갱신 사유|철회 사유|실행|감시|조건|종료)\s*:/g; const lines = [];
@@ -28280,7 +28281,7 @@ function _gdForDay(day) {   // 그날 문서(오전·오후) 우선, 없으면 �
       if (A) (A.days[day] || []).forEach(a => { if (!items.some(x => x.time === a.time && x.target === a.target && String(x.scene).split('·')[0] === String(a.scene).split('·')[0]) && !items.some(x => x.orig === a)) items.push(Object.assign({}, a, { status: '유지' })); }); }
     else items = A.days[day] || [];
     if (P && !A) items = items.map(x => Object.assign({}, x, { status: x.status === '철회' ? '철회' : '' }));   // 오전 문서가 없던 날은 '추가' 표시가 의미 없음
-    meta = { kind: 'own', am: A ? (A.at || '07:15') : '', pm: P ? (P.at || '20:30') : '', warn: (P && P.warn) || (A && A.warn) || '' };
+    meta = { kind: 'own', am: A ? (A.at || '07:15') : '', pm: P ? (P.at || '20:30') : '', amEdit: (A && A.edit) || '', pmEdit: (P && P.edit) || '', warn: (P && P.warn) || (A && A.warn) || '' };
   } else {
     const prevs = docs.filter(x => x.date < day).sort((a, b) => (b.date + b.slot).localeCompare(a.date + a.slot));
     for (const prev of prevs) { const P = _gdParse(prev); if (P.days[day]) { items = P.days[day].map(x => Object.assign({}, x, { status: '' })); src = 'pre'; meta = { kind: 'pre', from: `${prev.date.slice(5).replace('-', '/')} ${prev.slot === 'PM' ? '저녁' : '아침'}` }; break; } }
@@ -28304,7 +28305,7 @@ async function aqGuideRender() {
   live.forEach(x => { const k = String(x.scene).split('·')[0].trim(); cnt[k] = (cnt[k] || 0) + 1; });
   const kind = sel === today ? '오늘' : sel < today ? '지난 기록' : '예고';
   const summ = `<div class="gd-sum"><b>${sd.getMonth() + 1}/${sd.getDate()} (${'일월화수목금토'[sd.getDay()]})</b> · ${kind}${live.length ? ` · 가이드 ${live.length}개 — ${Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(', ')}` : ''}</div>`;
-  const srcTxt = !g.meta ? '' : g.meta.kind === 'pre' ? `${g.meta.from}에 쓴 예고 · 그날 아침에 다시 정리돼요` : [g.meta.am ? `아침 ${g.meta.am} 작성` : '', g.meta.pm ? `저녁 ${g.meta.pm} ${g.meta.am ? '갱신' : '작성'}` : ''].filter(Boolean).join(' · ');
+  const srcTxt = !g.meta ? '' : g.meta.kind === 'pre' ? `${g.meta.from}에 쓴 예고 · 그날 아침에 다시 정리돼요` : [g.meta.am ? `아침 ${g.meta.am} 작성` : '', g.meta.amEdit ? `${g.meta.amEdit} 수정됨` : '', g.meta.pm ? `저녁 ${g.meta.pm} ${g.meta.am ? '갱신' : '작성'}` : '', g.meta.pmEdit ? `${g.meta.pmEdit} 수정됨` : ''].filter(Boolean).join(' · ');
   let tl = ''; let prevT = '';
   if (!g.items.length) tl = `<div class="gd-empty">${(_gd.docs || []).length ? '이 날은 확인할 것이 없어요.' : 'AI 가이드는 매일 아침 7시 30분, 저녁 8시 45분쯤 올라와요.'}</div>`;
   else {
@@ -28334,16 +28335,16 @@ async function aqGuideRender() {
   try { aqGdRunRefresh(); } catch (e) {}   // v6.09
 }
 function aqGuideSel(d) { _gd.sel = d; aqGuideRender(); }
-// v6.09: AI 가이드 수시 업데이트 — 지금 회차(14시 전 오전·후 오후)를 지금 기준으로 다시 씀 · 보통 5~15분 · 하루 10번
+// v6.10: AI 가이드 '지금 고치기' — 오늘 마지막 가이드(저녁 문서가 있으면 저녁)를 지금 기준으로 고침 · 별도 'AI 가이드 수정' 작업 · 보통 5~15분 · 하루 10번
 const _gdr = { st: null, ts: 0, poll: null };
 function _gdrBusy(x) { return !!x && (x.status === 'running' || x.ai_status === 'requested'); }
 function _gdrPaint() {
   const el = document.getElementById('gdRun'); if (!el) return; const r = _gdr.st; if (!r || !r.ok) { el.innerHTML = ''; return; }
   const x = r.run; const spin = '<span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
-  if (_gdrBusy(x)) { el.innerHTML = `<button class="gd-runb busy" onclick="aqGdRunCancel(${Number(x.id)})">${spin}다시 쓰는 중</button>`; el.title = '보통 5~15분 · 누르면 취소'; return; }
+  if (_gdrBusy(x)) { el.innerHTML = `<button class="gd-runb busy" onclick="aqGdRunCancel(${Number(x.id)})">${spin}고치는 중</button>`; el.title = '보통 5~15분 · 누르면 취소'; return; }
   const fail = x && (x.status === 'failed' || ['failed', 'timeout'].includes(x.ai_status)) && (x.error || x.ai_error) !== '취소함';
-  el.innerHTML = `<button class="gd-runb" onclick="aqGdRunGo()" ${r.left === 0 ? 'disabled' : ''}>지금 다시 쓰기</button>${fail ? `<small class="gd-runf">지난 요청 실패 — ${escapeHtml(String(x.ai_error || x.error || '이유 미상').slice(0, 30))}</small>` : ''}`;
-  el.title = r.left === 0 ? '오늘 10번을 다 썼어요' : `오늘 ${r.left}번 남음`;
+  el.innerHTML = `<button class="gd-runb" onclick="aqGdRunGo()" ${r.left === 0 || r.block ? 'disabled' : ''}>지금 고치기</button>${fail ? `<small class="gd-runf">지난 요청 실패 — ${escapeHtml(String(x.ai_error || x.error || '이유 미상').slice(0, 30))}</small>` : ''}`;
+  el.title = r.block ? r.block : r.left === 0 ? '오늘 10번을 다 썼어요' : `오늘 ${r.left}번 남음`;
 }
 async function aqGdRunRefresh(force) {
   if (document.body.getAttribute('data-role') !== 'admin') return;
@@ -28352,19 +28353,19 @@ async function aqGdRunRefresh(force) {
   _gdr.st = r; _gdr.ts = Date.now(); _gdrPaint();
   const now = r && r.run;
   if (_gdrBusy(was) && now && !_gdrBusy(now)) {
-    if (now.ai_status === 'done') { aqToast('AI 가이드를 새로 썼어요'); _gd.docs = null; try { await aqGuideRender(); } catch (e) {} }
-    else if (now.ai_status !== 'cancelled' && (now.error || '') !== '취소함') aqToast('AI 가이드를 다시 쓰지 못했어요');
+    if (now.ai_status === 'done') { aqToast('AI 가이드를 고쳤어요'); _gd.docs = null; try { await aqGuideRender(); } catch (e) {} }
+    else if (now.ai_status !== 'cancelled' && (now.error || '') !== '취소함') aqToast('AI 가이드를 고치지 못했어요');
   }
   clearTimeout(_gdr.poll); if (_gdrBusy(now)) _gdr.poll = setTimeout(() => { if (document.getElementById('gdRun')) aqGdRunRefresh(true); }, 20000);
 }
 async function aqGdRunGo() {
-  const pm = new Date(Date.now() + 9 * 3600e3).getUTCHours() >= 14;
-  if (!confirm(`AI 가이드 ${pm ? '오후' : '오전'} 회차를 지금 기준으로 다시 쓸까요?\n포트폴리오를 새로 읽고 보통 5~15분 걸려요.`)) return;
+  const st = _gdr.st || {}; if (st.block) { aqToast(st.block); return; }
+  if (!confirm(`오늘 ${st.target === 'PM' ? '저녁' : '아침'} 가이드를 지금 기준으로 고칠까요?\n바뀐 것만 고치고 보통 5~15분 걸려요.`)) return;
   let r = null; try { r = await apiCall('guideRunRequest', {}); } catch (e) {}
   if (!r || !r.ok) aqToast((r && r.error) || '요청하지 못했어요');
   aqGdRunRefresh(true);
 }
-async function aqGdRunCancel(id) { if (!confirm('가이드 다시 쓰기를 취소할까요?')) return; try { await apiCall('guideRunCancel', { id }); } catch (e) {} aqToast('취소했어요'); aqGdRunRefresh(true); }
+async function aqGdRunCancel(id) { if (!confirm('가이드 고치기를 취소할까요?')) return; try { await apiCall('guideRunCancel', { id }); } catch (e) {} aqToast('취소했어요'); aqGdRunRefresh(true); }
 function aqGuideToggle(k) { _gd.open[k] = !_gd.open[k]; aqGuideRender(); }
 Object.assign(window, { aqGuideRender, aqGuideSel, aqGuideToggle, aqGdRunGo, aqGdRunCancel, aqGdRunRefresh });
 
