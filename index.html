@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.24';   // v6.24: AI 보고서 5 WHY — 제목 모양이 조금 달라도 단계 화면으로 표시('고른 쟁점:' · '1단계 (…):' · '이 진실이 바뀔 수 있는 조건') · 쟁점 아래 '고른 이유' 문단 표시 · 바뀌는 조건이 5단계 인용 상자에 붙던 문제 · v6.23: 팝업을 모두 '맨 위 손잡이를 쓸어내리면 닫힘'으로 통일 — 매크로 지표 · 운영 로그 · 비밀번호 · 일정 등록 · 밸류에이션 · 종목 검색 · 누적 시그널 · 계정 관리 · AI 매수심사 리포트 · 매매 기록 입력·내역 · 계좌 · 보유 입력 · 로고 선택 · 엑셀 붙여넣기 (모바일에선 가운데 상자도 아래에서 올라오는 시트, ✕ 숨김 · 뒤로가기로도 닫힘) · 뒤로가기로 시트를 닫으면 기록이 한 칸 더 지워지던 문제 · v6.22: 토글·탭을 눌러도 화면 위치 그대로(내용이 짧아져도 스크롤이 당겨지지 않음 · AI 가이드 토글이 화면을 끌어올리던 것 없앰) · AI 가이드 [AI 추천 | 내 지침]과 AI 브리핑 [장후 | 장전]을 폭을 꽉 채운 같은 모양으로 · v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.25';   // v6.25: 내 지침 개편 — 첫 화면 '오늘 정할 것 N개' · 정할 것 · 곧 닿아요(작은 선·달력) · 지키는 중 · 상세: 지금 할 일 · 약속(방패·지킨 날) · 왜 · 기다리는 신호를 종류별 그림으로(가격·지표 선과 기준선, 평단 눈금, 비중 막대, 연속 칸, 거래량 막대, 달력, 판단 질문) · 갈림길 · 켜 둔 설정 기간 막대 · 한 일 체크 · 기록 접기 · '했어요'는 할 일이 있는 지침에만 · v6.24: AI 보고서 5 WHY — 제목 모양이 조금 달라도 단계 화면으로 표시('고른 쟁점:' · '1단계 (…):' · '이 진실이 바뀔 수 있는 조건') · 쟁점 아래 '고른 이유' 문단 표시 · 바뀌는 조건이 5단계 인용 상자에 붙던 문제 · v6.23: 팝업을 모두 '맨 위 손잡이를 쓸어내리면 닫힘'으로 통일 — 매크로 지표 · 운영 로그 · 비밀번호 · 일정 등록 · 밸류에이션 · 종목 검색 · 누적 시그널 · 계정 관리 · AI 매수심사 리포트 · 매매 기록 입력·내역 · 계좌 · 보유 입력 · 로고 선택 · 엑셀 붙여넣기 (모바일에선 가운데 상자도 아래에서 올라오는 시트, ✕ 숨김 · 뒤로가기로도 닫힘) · 뒤로가기로 시트를 닫으면 기록이 한 칸 더 지워지던 문제 · v6.22: 토글·탭을 눌러도 화면 위치 그대로(내용이 짧아져도 스크롤이 당겨지지 않음 · AI 가이드 토글이 화면을 끌어올리던 것 없앰) · AI 가이드 [AI 추천 | 내 지침]과 AI 브리핑 [장후 | 장전]을 폭을 꽉 채운 같은 모양으로 · v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8374,6 +8374,40 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .gm-li { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--text); padding: 4px 0; } .gm-li .tx { flex: 1; min-width: 0; } .gm-li .st { flex: none; font-size: 12.5px; color: var(--text-mute); }
 .gm-hist div { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; padding: 4px 0; } .gm-hist em { font-style: normal; color: var(--text); min-width: 0; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; } .gm-hist span { flex: none; color: var(--text-mute); } .gm-hist a { display: inline-block; margin-top: 6px; font-size: 12.5px; color: var(--text-mute); cursor: pointer; }
 .gm-sbtn { margin-top: 4px; } .gm-sbtn .gm-b { height: 48px; border-radius: 14px; font-size: 14px; }
+/* v6.25: 내 지침 — 첫 화면(오늘 정할 것 · 곧 닿아요 · 지키는 중) · 상세(지금 할 일 · 약속 · 왜 · 신호 그림 · 갈림길) */
+.gm-hero { margin: 2px 2px 24px; } .gm-hero small { display: block; font-size: 12.5px; color: var(--text-mute); } .gm-hero b { display: block; font-size: 23px; font-weight: 800; color: var(--text-hi); margin-top: 2px; letter-spacing: -.3px; } .gm-hero b em { font-style: normal; color: #ffa94d; } .gm-hero span { display: block; font-size: 14px; color: var(--text-mute); margin-top: 4px; }
+.gm-allb { display: inline-flex; align-items: center; gap: 4px; height: 40px; margin: -6px 0 10px -8px; padding: 0 10px 0 4px; border: none; background: none; color: var(--text); font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.gm-lt { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; } .gm-lt.o { background: #ffa94d; } .gm-lt.y { background: #ffd43b; } .gm-lt.g { background: #63e6be; } .gm-h em.g { color: var(--text-mute); }
+.gm-box { background: rgba(255,255,255,.04); border-radius: 16px; padding: 2px 14px; }
+.gm-nr .tx small { display: block; font-size: 12.5px; color: #ffd43b; font-weight: 700; margin-top: 1px; } .gm-nr > svg { flex: none; color: inherit; }
+.gm-row .gm-ic { flex: none; display: inline-flex; color: var(--text-mute); } .gm-row .gm-ic.g, .gm-li .gm-ic.g { color: #63e6be; } .gm-row .gm-ic svg { width: 16px; height: 16px; }
+.gm-lgs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 10px; } .gm-lgs button { border: none; background: none; padding: 0; cursor: pointer; } .gm-lgs .gm-lg { width: 34px; height: 34px; }
+.gm-cal { flex: none; width: 46px; border-radius: 9px; overflow: hidden; text-align: center; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); } .gm-cal i { display: block; font-style: normal; font-size: 10.5px; font-weight: 700; color: #fff; background: #e8590c; padding: 1px 0; } .gm-cal b { display: block; font-size: 18px; color: var(--text-hi); padding: 2px 0 3px; }
+.gm-cal.s { width: 38px; } .gm-cal.s i { font-size: 9.5px; } .gm-cal.s b { font-size: 14px; padding: 1px 0 2px; }
+.gm-sh .hd { align-items: flex-start; } .gm-sh .hd .tt { flex: 1; min-width: 0; } .gm-chip { flex: none; font-size: 12px; font-weight: 700; border-radius: 20px; padding: 3px 10px; color: var(--text-mute); border: 1px solid rgba(255,255,255,.14); } .gm-chip.g { color: #63e6be; border-color: rgba(99,230,190,.4); } .gm-chip.o { color: #ffa94d; border-color: rgba(255,169,77,.5); }
+.gm-now { background: rgba(255,255,255,.06); border-radius: 14px; padding: 13px 14px; font-size: 15.5px; font-weight: 700; color: var(--text-hi); line-height: 1.45; } .gm-now.hot { background: rgba(255,169,77,.12); color: #ffc078; } .gm-now small { display: block; font-size: 12.5px; font-weight: 500; color: var(--text-mute); margin-top: 4px; }
+.gm-why { font-size: 14.5px; color: var(--text); line-height: 1.55; }
+.gm-pl { display: flex; gap: 12px; align-items: center; background: rgba(255,255,255,.05); border-radius: 14px; padding: 11px 14px; margin-bottom: 8px; } .gm-pl .ic { color: #63e6be; display: inline-flex; } .gm-pl .ic svg { width: 22px; height: 22px; } .gm-pl .tt { flex: 1; min-width: 0; } .gm-pl b { display: block; font-size: 14.5px; color: var(--text-hi); } .gm-pl small { display: block; font-size: 12.5px; color: var(--text-mute); margin-top: 1px; } .gm-pl.bad .ic, .gm-pl.bad small { color: #ff8787; }
+.gm-vc { background: rgba(255,255,255,.04); border-radius: 14px; padding: 12px 12px 10px; margin-bottom: 8px; } .gm-vh { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font-size: 14px; color: var(--text-hi); margin-bottom: 8px; } .gm-vh span { min-width: 0; } .gm-vh b { flex: none; font-size: 13px; color: #ffd43b; } .gm-vh b.hit { color: #ffa94d; }
+.gm-svg { display: block; } .gm-vt { font-size: 14px; color: var(--text); padding: 4px 0; }
+.gm-leg { display: flex; gap: 14px; font-size: 11.5px; color: var(--text-mute); margin-top: 4px; } .gm-leg i { display: inline-block; width: 12px; height: 2px; vertical-align: 3px; margin-right: 5px; }
+.gm-ax { position: relative; height: 40px; margin: 6px 6px 0; } .gm-ax .a0 { position: absolute; left: 0; right: 0; top: 22px; height: 2px; background: rgba(255,255,255,.12); } .gm-ax .a1 { position: absolute; left: 50%; top: 14px; width: 2px; height: 18px; background: #868e96; transform: translateX(-1px); } .gm-ax .a2 { position: absolute; left: 50%; top: 0; transform: translateX(-50%); font-size: 10.5px; color: #868e96; }
+.gm-ax .a3 { position: absolute; top: 14px; height: 18px; border-left: 2px dashed #ffd43b; transform: translateX(-1px); } .gm-ax .a4 { position: absolute; top: 33px; transform: translateX(-50%); font-size: 10.5px; color: #ffd43b; white-space: nowrap; } .gm-ax .a5 { position: absolute; top: 16px; width: 14px; height: 14px; border-radius: 50%; background: #e9ecef; transform: translateX(-7px); } .gm-ax .a5.hit { background: #ffa94d; }
+.gm-axs { display: flex; justify-content: space-between; align-items: baseline; font-size: 11.5px; color: var(--text-mute); margin-top: 12px; } .gm-axs b { font-size: 13px; color: var(--text-hi); } .gm-axs b.hit { color: #ffa94d; }
+.gm-bar { position: relative; height: 14px; border-radius: 7px; background: rgba(255,255,255,.08); margin-top: 4px; } .gm-bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 7px; background: #adb5bd; } .gm-bar i.hit { background: #ffa94d; } .gm-bar em { position: absolute; top: -5px; bottom: -5px; width: 2px; background: #ffd43b; transform: translateX(-1px); }
+.gm-bar + .gm-axs { margin-top: 8px; }
+.gm-dots { display: flex; gap: 6px; margin-top: 8px; } .gm-dots div { flex: 1; text-align: center; border: 1px dashed rgba(255,255,255,.2); border-radius: 10px; padding: 6px 0 4px; } .gm-dots div.ok { border: 1px solid transparent; background: rgba(99,230,190,.12); } .gm-dots b { display: block; font-size: 16px; color: var(--text-mute); } .gm-dots .ok b { color: #63e6be; } .gm-dots small { display: block; min-height: 14px; font-size: 10.5px; color: var(--text-mute); }
+.gm-calw { display: flex; gap: 12px; align-items: center; } .gm-calw .tt b { display: block; font-size: 14.5px; color: var(--text-hi); } .gm-calw .tt small { display: block; font-size: 12.5px; color: #ffd43b; font-weight: 700; margin-top: 2px; }
+.gm-q { display: flex; gap: 12px; align-items: flex-start; } .gm-q .ic { flex: none; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #1e1e1e; background: #ffd43b; } .gm-q .ic.hit { background: #ffa94d; } .gm-q .tt { flex: 1; min-width: 0; } .gm-q b { display: block; font-size: 14.5px; color: var(--text-hi); line-height: 1.45; } .gm-q small { display: block; font-size: 12.5px; color: var(--text-mute); margin-top: 3px; line-height: 1.5; } .gm-q small em { font-style: normal; font-weight: 700; color: var(--text); } .gm-q small.hit em { color: #ffa94d; }
+.gm-ed { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 12.5px; color: var(--text-mute); } .gm-ed .gm-step button { width: 36px; height: 36px; } .gm-ed .gm-step span { font-size: 14px; } .gm-ed .gm-sv { margin-left: 0; }
+.gm-then { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--text-mute); margin: 2px 2px 0; } .gm-then b { color: var(--text-hi); } .gm-then .st { margin-left: auto; font-size: 12.5px; } .gm-then .gm-sv { margin-left: auto; }
+.gm-fork { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .gm-fork div { background: rgba(255,255,255,.05); border-radius: 14px; padding: 11px 12px; } .gm-fork small { display: block; font-size: 12px; color: var(--text-mute); } .gm-fork b { display: block; font-size: 14px; color: var(--text-hi); margin-top: 4px; line-height: 1.4; }
+.gm-span { margin-top: 10px; } .gm-span .tr { position: relative; height: 8px; border-radius: 4px; background: rgba(255,255,255,.08); } .gm-span .tr i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: #868e96; } .gm-span .tr em { position: absolute; top: -5px; width: 2px; height: 18px; background: #e9ecef; transform: translateX(-1px); } .gm-span .gm-axs { margin-top: 8px; }
+.gm-li .gm-ic { display: inline-flex; color: var(--text-mute); } .gm-li .gm-ic svg { width: 17px; height: 17px; } .gm-li .st.ok { color: #63e6be; }
+.gm-ck { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.25); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #1e1e1e; } .gm-ck.on { background: #63e6be; border-color: #63e6be; }
+.gm-hh { display: flex; justify-content: space-between; padding: 6px 2px 16px; font-size: 13px; color: var(--text-mute); cursor: pointer; } .gm-hh em { font-style: normal; }
+.gm-b.gm-xs2 { flex: none; width: 74px; }
+.gm-mbar { flex: none; position: relative; width: 70px; height: 8px; border-radius: 4px; background: rgba(255,255,255,.1); } .gm-mbar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: #adb5bd; } .gm-mbar em { position: absolute; top: -4px; bottom: -4px; width: 2px; background: #ffd43b; }
 .gdm-grp { margin-bottom: 8px; } .gdm-gh { display: flex; align-items: center; gap: 8px; padding: 12px 4px 10px; cursor: pointer; } .gdm-gh b { font-size: 14px; color: var(--text-hi); } .gdm-gh span { font-size: 12px; color: var(--text-mute); } .gdm-gh i { margin-left: auto; font-style: normal; color: var(--text-mute); font-size: 12px; }
 .gdm-grp.now .gdm-gh b { color: #ffa94d; } .gdm-card.hot { box-shadow: inset 0 0 0 1px rgba(255,169,77,.45); }
 .gdm-tys { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; } .gdm-ty { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--text-dim); }
@@ -28836,12 +28870,6 @@ function _gmPartM(p, st) {
   if (p.type === 'judg') return st.met ? ['닿음', -1] : ['판단', 700];
   return _gmMetric(p, st);
 }
-function _gmSetM(groups, pre, ws) {   // 또는(그룹) 중 가장 가까운 것, 그룹 안(그리고)은 가장 먼 것
-  let best = null;
-  (groups || []).forEach((g, gi) => { let worst = null; const hasNum = g.some(p => p.type !== 'judg');   // Claude 판단은 숫자·날짜가 없을 때만
-    g.forEach((p, pi) => { if (hasNum && p.type === 'judg') return; const m = _gmPartM(p, ws[`${pre}_${gi}_${pi}`]); if (!worst || m[1] > worst[1]) worst = m; }); if (worst && (!best || worst[1] < best[1])) best = worst; });
-  return best || ['—', 999];
-}
 function _gmSetTx(groups) { return (groups || []).map(g => g.map(_gmPartTx).join(' + ')).join(' 또는 '); }
 function _gmAuto(gs) { return gs.length === 1 && gs[0].length === 1 && gs[0][0].auto; }
 function _gmQNeed() { return (_gd.queue || []).filter(q => _gdVis(_gdTkMkt(q.ticker)) && q.status === 'queued' && q.source !== 'user' && !q.confirmed); }
@@ -28856,7 +28884,7 @@ function _gmDecisions(L, need) {
     else if (x.status === 'hit') {
       const wi = (pa.watches || []).findIndex((w, i) => (ws['w' + i] || {}).met); const st = wi >= 0 ? ws['w' + wi] : null;
       const t = wi >= 0 ? `${tk ? _gmTkName(tk) + ' ' : ''}${_gmW(pa.watches[wi])} 닿았어요` : (msg || '조건에 닿았어요');
-      out.push({ x, t, s: st && st.shown ? `${st.shown} · ${sub}` : sub, b: [['했어요', `aqGdAct('${k}','done')`, 'pri'], ['계속 감시', `aqGdAct('${k}','resume')`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] });
+      out.push({ x, t, s: st && st.shown ? `${st.shown} · ${sub}` : sub, b: _gmTodo(x) ? [['했어요', `aqGdAct('${k}','done')`, 'pri'], ['계속 감시', `aqGdAct('${k}','resume')`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] : [['계속 따르기', `aqGdAct('${k}','resume')`, 'pri'], ['끝내기', `aqGdAct('${k}','done')`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] });
     } else if ((x.applied || []).some(a => a.client && a.act === '관심 추가' && a.client_done === false)) out.push({ x, t: '관심 종목에 넣지 못했어요', s: sub, b: [['다시 시도', `aqGmRetry(${x.id})`, 'pri']] });
     else if (x.unread) out.push({ x, t: msg || sub, s: msg ? sub : '', b: [['확인', `aqGmRead(${x.id})`, 'pri']] });
   });
@@ -28867,23 +28895,6 @@ function _gmDecisions(L, need) {
   return out;
 }
 function _gmDecCount() { return _gmDecisions((_gd.accList || []).filter(x => _gmLive(x) && _gdVis(_gdMktOf(x.target))), _gmQNeed()).length; }
-function _gmRows(L) {
-  const rad = [], on = [];
-  L.forEach(x => {
-    const pa = x.parsed || {}; const ws = x.wstate || {}; const n0 = rad.length + on.length; const hit = x.status === 'hit';
-    if (!hit) {
-      (pa.watches || []).forEach((w, i) => { const m = _gmMetric(w, ws['w' + i]); rad.push({ x, tx: _gmW(w), m: m[0], sc: m[1] }); });
-      (pa.rec_conds || []).forEach((gs, ci) => { const m = _gmSetM(gs, 'r' + ci, ws); rad.push({ x, tx: _gmSetTx(gs) + ' → 추천대로', m: m[0], sc: m[1] }); });
-      (pa.conds || []).forEach((gs, ci) => { if (_gmAuto(gs)) return; const m = _gmSetM(gs, 'c' + ci, ws); rad.push({ x, tx: _gmSetTx(gs), m: m[0], sc: m[1] }); });
-    }
-    (pa.act_on || []).forEach((o, xi) => { const xs = ws['xcond' + xi] || {}; if (xs.ran || xs.need_ok) return; const m = _gmSetM(o.groups, 'x' + xi, ws); rad.push({ x, tx: `${_gmSetTx(o.groups)} → ${_gmAct(o.act)}`, m: m[0], sc: m[1] }); });
-    (x.applied || []).forEach(a => { if (a.ok && !a.reverted && !a.no_revert && !a.client && !a.queue_id) on.push({ x, ic: _gmIc(a.act), tx: aqKrText(a.text || a.act || ''), d: x.expire_on ? '~' + _gmMD(x.expire_on) : '' }); });
-    (pa.pledges || []).forEach(p => on.push({ x, ic: 'shield', tx: aqKrText(`${_gmTkName(String(p.ticker || '').toUpperCase())} ${p.kind}`), d: (p.until || x.expire_on) ? '~' + _gmMD(p.until || x.expire_on) : '' }));
-    if (!hit && rad.length + on.length === n0) rad.push({ x, tx: aqKrText(x.title || ''), m: x.expire_on ? '~' + _gmMD(x.expire_on) : '', sc: 800 });
-  });
-  rad.sort((a, b) => a.sc - b.sc);
-  return { rad, on };
-}
 function _gmLens(f) {   // 종목 줄에서 고른 종목: 이름 · 지금 가격 · AI 보고서 · AI 매수심사
   const mk = /^\d{6}$/.test(f) ? 'KR' : 'US';
   const dates = (((_state.reports || {})[mk]) || {})[f] || []; const rk = mk + '/' + f;
@@ -28897,30 +28908,214 @@ function _gmLens(f) {   // 종목 줄에서 고른 종목: 이름 · 지금 가�
     + `<div class="gm-tile" onclick="openChart('${T}')"><small>AI 보고서${dates[0] ? ' · ' + _gmMD(dates[0]) : ''}</small><b>${dates[0] ? escapeHtml((ra && ra.action) || '보기') : '없음'}</b></div>`
     + `<div class="gm-tile" onclick="${rv ? `aqBrOpen(${Number(rv.id)})` : `openChart('${T}')`}"><small>AI 매수심사${rv && rv.requested_at ? ' · ' + _gmMD(_rvKstDate(rv.requested_at)) : ''}</small><b>${rv ? escapeHtml(rv.opinion || '보기') : '없음'}</b></div></div>`;
 }
+// ---- v6.25: 신호를 종류마다 맞는 그림으로 — 가격·지표는 선(기준선·닿는 쪽 칠), 평단·등락은 눈금, 비중은 막대, 연속은 칸, 날짜는 달력, 판단은 질문, 약속은 방패, 설정은 기간 막대 ----
+const _GMC = { line: '#adb5bd', thr: '#ffd43b', hit: '#ffa94d', ok: '#63e6be', bad: '#ff8787', ma: '#748ffc', grid: 'rgba(255,255,255,.07)', mute: '#868e96', hi: '#e9ecef' };
+const _GM_PL = { '매수 금지': '사지 않기', '물타기 금지': '평단 아래에서 더 사지 않기', '추격 매수 금지': '많이 오른 뒤 사지 않기', '매도 금지': '팔지 않기', '본전 매도 금지': '본전 근처에서 팔지 않기' };
+function _gmSer(p, tk) {   // 최근 종가 [{d, v, vol}] — 지표는 매크로, 나머지는 종목
+  let rows = [];
+  try {
+    if (p && p.kind === '지표') {
+      const nm = String(p.target || '').trim(); const all = [].concat(((_state.macroByMarket || {}).US) || [], ((_state.macroByMarket || {}).KR) || []);
+      const key = all.some(r => r.Ticker === nm) ? nm : ((all.find(r => nm && (String(r.Ticker).includes(nm) || nm.includes(String(r.Ticker)))) || {}).Ticker);
+      rows = key ? all.filter(r => r.Ticker === key) : [];
+    } else { const t = tk || (p && p.ticker) || ''; const f = t ? findTickerSeries(t) : null; rows = (f && f.rows) || []; }
+  } catch (e) { rows = []; }
+  const seen = {}; const out = [];
+  rows.slice().sort((a, b) => String(a.Date).localeCompare(String(b.Date))).forEach(r => { const d = String(r.Date || '').slice(0, 10); const v = Number(r.Close); if (!d || !isFinite(v) || !v || seen[d]) return; seen[d] = 1; out.push({ d, v, vol: Number(r.Volume) || 0 }); });
+  return out;
+}
+function _gmAx(tk) { const kr = /^\d{6}$/.test(tk || ''); return v => { const a = Math.abs(v); const n = Number(v).toLocaleString(undefined, { maximumFractionDigits: a >= 100 ? 0 : a >= 10 ? 1 : 2 }); return tk ? (kr ? n : '$' + n) : n; }; }
+function _gmNum(v) { const a = Math.abs(v); return Number(v).toLocaleString(undefined, { maximumFractionDigits: a >= 1000 ? 0 : a >= 10 ? 1 : 2 }); }
+// 선 그래프 — o: { now, f(값 표시), lines:[{v,label,c}], zone:{from,to,c,label}, ma, h, n }
+function _gmLine(ser, o) {
+  o = o || {}; const f = o.f || _gmNum; const N = o.n || 60;
+  const vals = ser.map(r => r.v); const dates = ser.map(r => r.d);
+  if (o.now != null && isFinite(o.now) && vals.length && Math.abs(o.now / vals[vals.length - 1] - 1) > 1e-4) { vals.push(Number(o.now)); dates.push('지금'); }
+  if (vals.length < 5) return '';
+  let maAll = null;
+  if (o.ma) { const n = Math.round(o.ma); maAll = vals.map((v, i) => i + 1 >= n ? vals.slice(i + 1 - n, i + 1).reduce((a, b) => a + b, 0) / n : null); }
+  const s = vals.slice(-N), ds = dates.slice(-N), ma = maAll ? maAll.slice(-N) : null;
+  const ys = s.concat((o.lines || []).map(l => l.v), ma ? ma.filter(v => v != null) : []); const z = o.zone;
+  if (z) [z.from, z.to].forEach(v => { if (v != null && isFinite(v)) ys.push(v); });
+  let lo = Math.min(...ys), hi = Math.max(...ys); const pad = (hi - lo) * 0.1 || Math.abs(hi) * 0.02 || 1; lo -= pad; hi += pad;
+  const W = 330, H = o.h || 176, L = 50, R = 62, T = 10, B = 22; const fa = o.fa || f; const Y = v => T + (hi - v) / (hi - lo) * (H - T - B); const X = i => L + i / (s.length - 1) * (W - L - R);
+  const g = [];
+  [0.15, 0.5, 0.85].forEach(k => { const v = lo + (hi - lo) * k; g.push(`<line x1="${L}" y1="${Y(v).toFixed(1)}" x2="${W - R}" y2="${Y(v).toFixed(1)}" stroke="${_GMC.grid}"/><text x="${L - 6}" y="${(Y(v) + 3.5).toFixed(1)}" fill="${_GMC.mute}" font-size="10" text-anchor="end">${escapeHtml(fa(v))}</text>`); });
+  if (z) { const a = Y(z.to != null && isFinite(z.to) ? Math.min(z.to, hi) : hi), b = Y(z.from != null && isFinite(z.from) ? Math.max(z.from, lo) : lo); if (b > a) g.push(`<rect x="${L}" y="${a.toFixed(1)}" width="${W - L - R}" height="${(b - a).toFixed(1)}" fill="${z.c || _GMC.thr}" opacity=".1"/>${z.label ? `<text x="${W - R - 6}" text-anchor="end" y="${(z.to != null && isFinite(z.to) && z.to < hi && !(z.from != null && isFinite(z.from)) ? b - 6 : a + 13).toFixed(1)}" fill="${z.c || _GMC.thr}" font-size="10.5">${escapeHtml(z.label)}</text>` : ''}`); }
+  (o.lines || []).forEach(l => { const y = Y(l.v); const ty = y - 5 < T + 8 ? y + 13 : y - 5; g.push(`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="${l.c || _GMC.thr}" stroke-dasharray="${l.solid ? '' : '5 4'}" stroke-width="1.3"/><text x="${L + 6}" y="${ty.toFixed(1)}" fill="${l.c || _GMC.thr}" font-size="10.5" font-weight="700">${escapeHtml(l.label || f(l.v))}</text>`); });
+  if (ma) { const pts = ma.map((v, i) => v == null ? null : `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).filter(Boolean).join(' '); if (pts) g.push(`<polyline fill="none" stroke="${_GMC.ma}" stroke-width="1.5" points="${pts}"/>`); }
+  g.push(`<polyline fill="none" stroke="${_GMC.line}" stroke-width="2" stroke-linejoin="round" points="${s.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}"/>`);
+  const lx = X(s.length - 1), ly = Y(s[s.length - 1]);
+  g.push(`<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="4.5" fill="${o.hit ? _GMC.hit : _GMC.hi}"/>`);
+  g.push(`<text x="${(lx + 8).toFixed(1)}" y="${(ly + 4).toFixed(1)}" fill="${o.hit ? _GMC.hit : _GMC.hi}" font-size="11.5" font-weight="700">${escapeHtml(f(s[s.length - 1]))}</text>`);
+  const md = d => d === '지금' ? '지금' : String(d).slice(5).replace('-', '/');
+  g.push(`<text x="${L}" y="${H - 5}" fill="${_GMC.mute}" font-size="10">${md(ds[0])}</text><text x="${((L + W - R) / 2).toFixed(1)}" y="${H - 5}" fill="${_GMC.mute}" font-size="10" text-anchor="middle">${md(ds[Math.floor(ds.length / 2)])}</text><text x="${W - R}" y="${H - 5}" fill="${_GMC.mute}" font-size="10" text-anchor="end">${md(ds[ds.length - 1])}</text>`);
+  return `<svg class="gm-svg" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="최근 흐름과 기준선">${g.join('')}</svg>`;
+}
+function _gmSpark(ser, thr, hit) {   // 첫 화면 한 줄용 작은 선
+  const s = ser.slice(-30).map(r => r.v); if (s.length < 5) return '';
+  const ys = thr != null ? s.concat([thr]) : s; let lo = Math.min(...ys), hi = Math.max(...ys); const pad = (hi - lo) * 0.1 || 1; lo -= pad; hi += pad;
+  const W = 76, H = 30; const Y = v => 2 + (hi - v) / (hi - lo) * (H - 4); const X = i => 1 + i / (s.length - 1) * (W - 6);
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${thr != null ? `<line x1="0" y1="${Y(thr).toFixed(1)}" x2="${W}" y2="${Y(thr).toFixed(1)}" stroke="${_GMC.thr}" stroke-dasharray="3 3"/>` : ''}<polyline fill="none" stroke="${_GMC.line}" stroke-width="1.6" points="${s.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}"/><circle cx="${X(s.length - 1).toFixed(1)}" cy="${Y(s[s.length - 1]).toFixed(1)}" r="2.6" fill="${hit ? _GMC.hit : _GMC.hi}"/></svg>`;
+}
+function _gmAxis(cur, thr, zero, hit) {   // 평단(또는 전날)을 가운데 둔 눈금 — 수익률·하루 등락
+  const span = Math.ceil(Math.max(5, Math.abs(cur || 0), Math.abs(thr || 0)) * 1.25); const px = v => Math.max(0, Math.min(100, 50 + v / span * 50));
+  return `<div class="gm-ax"><div class="a0"></div><div class="a1"></div><span class="a2">${zero}</span>${thr != null ? `<div class="a3" style="left:${px(thr)}%"></div><span class="a4" style="left:${px(thr)}%">${_gmPct(thr)}</span>` : ''}${cur != null ? `<div class="a5 ${hit ? 'hit' : ''}" style="left:${px(cur)}%"></div>` : ''}</div><div class="gm-axs"><span>−${span}%</span><b class="${hit ? 'hit' : ''}">지금 ${_gmPct(cur)}</b><span>+${span}%</span></div>`;
+}
+function _gmBar(cur, thr, hit) {   // 비중 — 지금 채움 + 기준선
+  const mx = Math.max((thr || 0) * 1.35, (cur || 0) * 1.15, 1); const pc = v => Math.max(0, Math.min(100, v / mx * 100));
+  return `<div class="gm-bar"><i class="${hit ? 'hit' : ''}" style="width:${pc(cur || 0)}%"></i><em style="left:${pc(thr)}%"></em></div><div class="gm-axs"><b class="${hit ? 'hit' : ''}">지금 ${Number(cur || 0).toFixed(1)}%</b><span style="color:${_GMC.thr}">기준 ${Number(thr).toFixed(1)}%</span></div>`;
+}
+function _gmDots(k, n, dates) {   // 연속 조건 — 채운 칸 · 남은 칸
+  if (!n || n > 10) return '';
+  const ds = (dates || []).slice(-k);
+  return `<div class="gm-dots">${Array.from({ length: n }, (_, i) => i < k ? `<div class="ok"><b>✓</b><small>${ds[i] ? escapeHtml(String(ds[i]).slice(5).replace('-', '/')) : ''}</small></div>` : `<div><b>?</b><small>${i === k ? '다음' : ''}</small></div>`).join('')}</div>`;
+}
+function _gmVolBars(ser, mult, hit) {   // 거래량 — 최근 20일 막대 + '평소의 N배' 선
+  const v = ser.map(r => r.vol); if (v.length < 25) return '';
+  const base = v.slice(-21, -1).reduce((a, b) => a + b, 0) / 20; if (!base) return '';
+  const s = v.slice(-20); const thr = base * mult; const hi = Math.max(...s, thr) * 1.1; const W = 330, H = 110, L = 4, R = 64, T = 6, B = 14; const bw = (W - L - R) / s.length;
+  const Y = x => T + (1 - x / hi) * (H - T - B);
+  return `<svg class="gm-svg" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="최근 거래량">${s.map((x, i) => `<rect x="${(L + i * bw + 1).toFixed(1)}" y="${Y(x).toFixed(1)}" width="${(bw - 2).toFixed(1)}" height="${(H - B - Y(x)).toFixed(1)}" fill="${i === s.length - 1 ? (hit ? _GMC.hit : _GMC.hi) : '#495057'}" rx="1.5"/>`).join('')}<line x1="${L}" y1="${Y(thr).toFixed(1)}" x2="${W - R}" y2="${Y(thr).toFixed(1)}" stroke="${_GMC.thr}" stroke-dasharray="5 4"/><text x="${W - R + 6}" y="${(Y(thr) + 3.5).toFixed(1)}" fill="${_GMC.thr}" font-size="10">평소 ${_gmNum(mult)}배</text></svg>`;
+}
+function _gmCal(date, small) {
+  const d = String(date || '').slice(0, 10); const m = +d.slice(5, 7), dd = +d.slice(8, 10);
+  return `<div class="gm-cal ${small ? 's' : ''}"><i>${m || ''}월</i><b>${dd || '?'}</b></div>`;
+}
+function _gmSpan(from, to) {   // 설정 기간 — 시작 · 오늘 · 끝
+  const a = Date.parse(String(from || '').slice(0, 10) + 'T00:00:00Z'), b = Date.parse(String(to || '').slice(0, 10) + 'T00:00:00Z'), t = Date.parse(_kstToday() + 'T00:00:00Z');
+  if (!isFinite(a) || !isFinite(b) || b <= a) return '';
+  const p = Math.max(0, Math.min(100, (t - a) / (b - a) * 100)); const left = Math.max(0, Math.round((b - t) / 864e5));
+  return `<div class="gm-span"><div class="tr"><i style="width:${p}%"></i><em style="left:${p}%"></em></div><div class="gm-axs"><span>${_gmMD(from)} 시작</span><b>${left ? `${left}일 남음` : '오늘 끝'}</b><span>${_gmMD(to)} 끝</span></div></div>`;
+}
+function _gmSplit(x) {   // 제목 → { 한 줄 행동, 이유 } — "…했으니, ○○하기" 꼴이면 나눔
+  const tk = _gmTk(x); let t = aqKrText(x.title || '').trim();
+  [displayName(tk), _gmTkName(tk), tk].filter(Boolean).forEach(n => { if (t.startsWith(n)) t = t.slice(n.length).replace(/^[\s,·:—-]+/, ''); });
+  const m = t.match(/^(.{4,}?(?:으니까|니까|으니|이니|였으니|았으니|었으니|해서|어서|아서|라서|므로))[,\s]\s*(.{4,})$/);
+  return m ? { act: m[2].trim(), why: m[1].trim() } : { act: t, why: '' };
+}
+function _gmWhy(x) { const s = String(((x.fields || {})['상황']) || '').trim(); const one = s ? (s.match(/^[\s\S]*?[.!?。](?=\s|$)/) || [s])[0] : ''; return aqKrText(one && one.length <= 120 ? one : (_gmSplit(x).why || one.slice(0, 120))); }
+function _gmLeft(p, st) {   // 기준까지 남은 거리 (사람 말)
+  if (!st || st.value == null) return '';
+  const n = p.persist && p.persist !== '즉시' && p.persist !== '종가' && p.n > 1 ? p.n : 0;
+  if (p.kind === '수급') { const need = Math.abs(p.value); const cur = (st.value > 0) === (p.value > 0) ? Math.abs(st.value) : 0; return `${cur}/${need}일`; }
+  if (n) return `${Math.min(st.streak || 0, n)}/${n}일`;
+  if ((p.kind === '주가' || p.kind === '지표') && st.value) return `${Math.abs((p.value / st.value - 1) * 100).toFixed(1)}% 남음`;
+  if (['수익률', '비중', '업종비중', '현금비중', '등락'].includes(p.kind)) return `${Math.abs(p.value - st.value).toFixed(1)}%p 남음`;
+  if (p.kind === '이평') return `간격 ${Math.abs(st.value).toFixed(1)}%`;
+  if (p.kind === '거래량') return `지금 ${Number(st.value).toFixed(1)}배`;
+  return st.shown || '';
+}
+function _gmThrLabel(p) { const o = _gmWP(p); const up = p.cmp === '이상' || p.cmp === '돌파'; const n = p.persist && p.persist !== '즉시' && p.persist !== '종가' && p.n > 1 ? ` ${p.n}일` : ''; return `${o.f(p.value)} ${up ? '위' : '아래'}${p.persist === '종가' ? ' 마감' : n}`; }
+function _gmVis(p, st) {   // 감시 조건 하나의 그림
+  st = st || {}; const hit = !!st.met; const up = p.cmp === '이상' || p.cmp === '돌파'; const o = _gmWP(p);
+  const n = p.persist && p.persist !== '즉시' && p.persist !== '종가' && p.n > 1 ? p.n : 0;
+  if (p.kind === '주가' || p.kind === '지표') {
+    const ser = _gmSer(p); const f = p.kind === '주가' ? (v => _gmPv(p.ticker, v)) : _gmNum;
+    const ln = _gmLine(ser, { now: p.kind === '주가' ? st.value : null, f, fa: _gmAx(p.kind === '주가' ? p.ticker : ''), hit, lines: [{ v: Number(p.value), label: _gmThrLabel(p) }], zone: up ? { from: Number(p.value), to: null } : { from: null, to: Number(p.value) } });
+    const dots = n ? _gmDots(Math.min(st.streak || 0, n), n, ser.map(r => r.d)) : '';
+    return (ln || `<div class="gm-vt">지금 ${escapeHtml(st.shown || '데이터 대기')}</div>`) + dots;
+  }
+  if (p.kind === '이평') {
+    const ser = _gmSer(p); const ln = _gmLine(ser, { f: v => _gmPv(p.ticker, v), fa: _gmAx(p.ticker), ma: Number(p.value), hit, n: 70 });
+    return (ln ? ln + `<div class="gm-leg"><span><i style="background:${_GMC.line}"></i>주가</span><span><i style="background:${_GMC.ma}"></i>${_gmNum(p.value)}일선</span></div>` : `<div class="gm-vt">${escapeHtml(st.shown || '데이터 대기')}</div>`);
+  }
+  if (p.kind === '수익률') return _gmAxis(st.value, Number(p.value), '평단', hit);
+  if (p.kind === '등락') return _gmAxis(st.value, Number(p.value), '전날', hit);
+  if (['비중', '업종비중', '현금비중'].includes(p.kind)) return st.value != null ? _gmBar(st.value, Number(p.value), hit) : `<div class="gm-vt">데이터 대기</div>`;
+  if (p.kind === '거래량') return _gmVolBars(_gmSer(p), Number(p.value), hit) || `<div class="gm-vt">${escapeHtml(st.shown || '데이터 대기')}</div>`;
+  if (p.kind === '수급') { const need = Math.abs(p.value); const cur = st.value != null && (st.value > 0) === (p.value > 0) ? Math.abs(st.value) : 0; return _gmDots(Math.min(cur, need), need, []) || `<div class="gm-vt">${escapeHtml(st.shown || '데이터 대기')}</div>`; }
+  return `<div class="gm-vt">${escapeHtml(st.shown || '데이터 대기')}</div>`;
+}
+function _gmPledgeVis(p) {   // 약속 중 가격이 걸린 것 — 추격 매수·물타기·본전 매도
+  const tk = String(p.ticker || '').toUpperCase(); const ser = _gmSer(null, tk); const f = v => _gmPv(tk, v); const fa = _gmAx(tk);
+  if (p.kind === '추격 매수 금지' && p.px0) return _gmLine(ser, { f, fa, lines: [{ v: p.px0, label: '따를 때', c: _GMC.mute }], zone: { from: p.px0 * 1.05, to: null, c: _GMC.bad, label: '여기서 사면 약속 어김' } });
+  if (p.kind === '물타기 금지' && p.avg0) return _gmLine(ser, { f, fa, lines: [{ v: p.avg0, label: '내 평단', c: _GMC.mute }], zone: { from: null, to: p.avg0, c: _GMC.bad, label: '여기서 사면 약속 어김' } });
+  if (p.kind === '본전 매도 금지' && p.avg0) return _gmLine(ser, { f, fa, lines: [{ v: p.avg0, label: '내 평단', c: _GMC.mute }], zone: { from: p.avg0 * 0.97, to: p.avg0 * 1.03, c: _GMC.bad, label: '여기서 팔면 약속 어김' } });
+  return '';
+}
+function _gmDaysSince(iso) { const a = Date.parse(_rvKstDate(iso) + 'T00:00:00Z'), t = Date.parse(_kstToday() + 'T00:00:00Z'); return isFinite(a) ? Math.max(0, Math.round((t - a) / 864e5)) + 1 : null; }
+function _gmSetM(groups, pre, ws) {   // 또는(그룹) 중 가장 가까운 것, 그룹 안(그리고)은 가장 먼 것 → [표시, 점수, 부분, 상태]
+  let best = null;
+  (groups || []).forEach((g, gi) => { let worst = null; const hasNum = g.some(p => p.type !== 'judg');   // Claude 판단은 숫자·날짜가 없을 때만
+    g.forEach((p, pi) => { if (hasNum && p.type === 'judg') return; const st = ws[`${pre}_${gi}_${pi}`]; const m = _gmPartM(p, st); if (!worst || m[1] > worst[1]) worst = [m[0], m[1], p, st || {}]; }); if (worst && (!best || worst[1] < best[1])) best = worst; });
+  return best || ['—', 999, null, {}];
+}
+function _gmNear(p, sc) {
+  if (!p || p.type === 'judg') return false;
+  if (p.type === 'date') return sc <= 10.5;   // 7일 안
+  if (p.kind === '수급' || (p.persist && p.persist !== '즉시' && p.persist !== '종가' && p.n > 1)) return sc <= 3;   // 하루 남음
+  return sc <= 3;   // 3% · 3%p 안
+}
+function _gmBest(x) {   // 이 지침에서 가장 가까운 신호 하나
+  const pa = x.parsed || {}; const ws = x.wstate || {}; let b = null;
+  const take = (m, cons) => { if (m[2] && (!b || m[1] < b.sc)) b = { m: m[0], sc: m[1], p: m[2], st: m[3], cons }; };
+  (pa.watches || []).forEach((w, i) => { const p = Object.assign({ type: 'watch' }, w); const st = ws['w' + i] || {}; const m = _gmPartM(p, st); take([m[0], m[1], p, st], '알림'); });
+  (pa.rec_conds || []).forEach((gs, ci) => take(_gmSetM(gs, 'r' + ci, ws), '추천대로'));
+  (pa.conds || []).forEach((gs, ci) => { if (!_gmAuto(gs)) take(_gmSetM(gs, 'c' + ci, ws), '다시 보기'); });
+  (pa.act_on || []).forEach((o, xi) => { const xs = ws['xcond' + xi] || {}; if (!xs.ran && !xs.need_ok) take(_gmSetM(o.groups, 'x' + xi, ws), _gmAct(o.act)); });
+  return b;
+}
+function _gmNearTx(x, b) {
+  const p = b.p; const nm = _gmTk(x) ? _gmTkName(_gmTk(x)) + ' ' : '';
+  if (p.type === 'date') { const t = aqKrText(p.text || '일정'); return `${nm}${t.length > 18 ? t.slice(0, 17) + '…' : t}`; }
+  const o = _gmWP(p, false);
+  if (p.kind === '주가' || p.kind === '지표') return aqKrText(`${p.kind === '지표' ? (nm + (p.target || '')) : nm.trim()} ${o.f(p.value)}까지`);
+  return aqKrText(`${nm}${_gmW(p)}`);
+}
+function _gmNearVis(b) {
+  const p = b.p, st = b.st || {};
+  if (p.type === 'date') return _gmCal(p.date, 1);
+  if (p.kind === '주가' || p.kind === '지표' || p.kind === '이평') return _gmSpark(_gmSer(p), p.kind === '이평' ? null : Number(p.value), st.met);
+  if (['비중', '업종비중', '현금비중'].includes(p.kind) && st.value != null) { const mx = Math.max(p.value * 1.35, st.value * 1.15, 1); return `<div class="gm-mbar"><i style="width:${Math.min(100, st.value / mx * 100)}%"></i><em style="left:${Math.min(100, p.value / mx * 100)}%"></em></div>`; }
+  return '';
+}
+function _gmCons(x) {   // 신호가 닿으면 일어나는 것 (중복 없이)
+  const pa = x.parsed || {}; const out = [];
+  if ((pa.watches || []).length) out.push('알림');
+  if ((pa.rec_conds || []).length) out.push('추천대로 하기');
+  if ((pa.conds || []).some(gs => !_gmAuto(gs))) out.push('다시 보기');
+  (pa.act_on || []).forEach(o => out.push(_gmAct(o.act)));
+  return [...new Set(out)];
+}
+function _gmTodo(x) { const pa = x.parsed || {}; const todo = (x.applied || []).some(a => a.client && a.act === '할 일 등록' && a.client.date && a.client.date >= _kstToday()); const watchy = (pa.watches || []).length || (pa.rec_conds || []).length || (pa.conds || []).length || (pa.act_on || []).length || (pa.pledges || []).length || (x.applied || []).some(a => a.ok && !a.reverted && !a.no_revert && !a.client && !a.queue_id); return todo || !watchy; }
+function _gmNow(x) {   // '지금 할 일' 한 줄
+  const pa = x.parsed || {}; const ws = x.wstate || {};
+  const nk = (pa.act_on || []).findIndex((o, i) => (ws['xcond' + i] || {}).need_ok && !(ws['xcond' + i] || {}).ran);
+  if (nk >= 0) return { t: `조건이 됐어요 — ${_gmAct(pa.act_on[nk].act)} 실행할지 정하기`, hot: 1 };
+  if (x.status === 'hit') return { t: '신호가 닿았어요 — 어떻게 할지 정하기', hot: 1 };
+  const todo = (x.applied || []).find(a => a.client && a.act === '할 일 등록' && a.client && a.client.date && a.client.date >= _kstToday());
+  if (todo) return { t: `${_gmMD(todo.client.date)} ${aqKrText(todo.client.text || '할 일')}`, todo: 1 };
+  if ((pa.pledges || []).length) return { t: `없음 — ${[...new Set(pa.pledges.map(p => _GM_PL[p.kind] || p.kind))].join(' · ')}만 지키면 돼요` };
+  if (_gmBest(x)) return { t: '없음 — 신호를 기다리면 돼요' };
+  return { t: _gmSplit(x).act, todo: 1 };
+}
+function _gmRow(x, right) { const sp = _gmSplit(x); return `<div class="gm-row" onclick="aqGmOpen(${x.id})">${_gmLogo(x, '', 's')}<span class="tx">${escapeHtml(sp.act)}</span>${right || ''}</div>`; }
 function _gmHome() {
   const all = (_gd.accList || []).filter(x => _gdVis(_gdMktOf(x.target)));
-  let L = all.filter(_gmLive); const past = all.filter(x => !_gmLive(x)); let need = _gmQNeed();
-  const dAll = _gmDecisions(L, need); const dKey = d => d.x ? _gmKey(d.x) : (d.tk || '__etc');
-  const hot = new Set(dAll.map(dKey)); const cnt = {};
-  L.forEach(x => { cnt[_gmKey(x)] = (cnt[_gmKey(x)] || 0) + 1; }); need.forEach(q => { const kk = String(q.ticker || '').toUpperCase() || '__etc'; cnt[kk] = cnt[kk] || 0; });
+  let L = all.filter(_gmLive); const past = all.filter(x => !_gmLive(x)); const need = _gmQNeed();
   const f = _gd.tkFilter || '';
-  const keys = Object.keys(cnt).sort((a, b) => (hot.has(b) - hot.has(a)) || (cnt[b] - cnt[a]) || ((a === '__etc') - (b === '__etc')));
-  if (f && !keys.includes(f)) keys.unshift(f);
-  const tkBtn = kk => { const lg = kk === '__etc' ? '<span class="lg">기타</span>' : `<span class="lg">${aqLogoHtml(kk, '', '')}</span>`;
-    return `<button class="gm-tk ${f === kk ? 'on' : ''}" onclick="aqGmTk('${escapeAttr(kk)}')">${lg}${hot.has(kk) ? '<i></i>' : ''}<span class="nm">${escapeHtml(kk === '__etc' ? '기타' : _gmTkName(kk))}</span></button>`; };
-  const rail = keys.length >= 2 || f ? `<div class="gm-rail ${f ? 'f' : ''}"><button class="gm-tk ${f ? '' : 'on'}" onclick="aqGmTk('')"><span class="lg">전체</span><span class="nm">전체</span></button>${keys.map(tkBtn).join('')}</div>` : '';
-  if (f) { L = L.filter(x => _gmKey(x) === f); }
-  const D = f ? dAll.filter(d => dKey(d) === f) : dAll;
-  const { rad, on } = _gmRows(L);
-  const dc = D.map(d => `<div class="gm-dc"><div class="hd" ${d.x ? `onclick="aqGmOpen(${d.x.id})"` : ''}>${f ? '' : _gmLogo(d.x, d.tk)}<div class="tt"><div class="t">${escapeHtml(d.t)}</div>${d.s ? `<div class="s">${escapeHtml(d.s)}</div>` : ''}</div></div><div class="gm-btns">${d.b.map(b => `<button class="gm-b ${b[2] || ''}" onclick="event.stopPropagation(); ${b[1]}">${b[0]}</button>`).join('')}</div></div>`).join('');
-  const row = r => `<div class="gm-row" onclick="aqGmOpen(${r.x.id})">${f ? '' : _gmLogo(r.x, '', 's')}<span class="tx">${escapeHtml(r.tx)}</span><span class="m">${escapeHtml(r.m || '')}</span></div>`;
-  const orow = r => `<div class="gm-row" onclick="aqGmOpen(${r.x.id})">${_gmSvg(r.ic)}<span class="tx">${escapeHtml(r.tx)}</span><span class="d">${escapeHtml(r.d)}</span></div>`;
-  const sec = (h, body) => `<div class="gm-sec"><div class="gm-h">${h}</div>${body}</div>`;
-  const empty = !D.length && !rad.length && !on.length ? `<div class="gm-empty">${f ? '이 종목에 따르는 지침이 없어요' : '따르는 지침이 없어요<br><small>AI 추천에서 \'따르기\'를 누르면 여기로 와요</small>'}</div>` : '';
-  return rail + (f && f !== '__etc' ? _gmLens(f) : '')
-    + (D.length ? sec(`결정할 것<em>${D.length}</em>`, dc) : '')
-    + (rad.length ? sec('곧 닿을 것', rad.map(row).join('')) : '')
-    + (on.length ? sec('켜져 있는 것', on.map(orow).join('')) : '')
+  if (f) L = L.filter(x => _gmKey(x) === f);
+  const D = _gmDecisions(L, f ? need.filter(q => (String(q.ticker || '').toUpperCase() || '__etc') === f) : need);
+  const dIds = new Set(D.filter(d => d.x).map(d => d.x.id));
+  const near = [], keep = [];
+  L.forEach(x => { if (dIds.has(x.id)) return; const b = _gmBest(x); if (b && _gmNear(b.p, b.sc)) near.push({ x, b }); else keep.push({ x, b }); });
+  near.sort((a, b) => a.b.sc - b.b.sc);
+  const dN = dIds.size; const rest = L.length - dN;
+  const today = _kstToday(); const dow = '일월화수목금토'[new Date(today + 'T00:00:00Z').getUTCDay()];
+  const hero = f ? `<button class="gm-allb" onclick="aqGmTk('')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>전체 지침</button>` + (f !== '__etc' ? _gmLens(f) : '')
+    : `<div class="gm-hero"><small>${_gmMD(today)} ${dow}</small><b>${D.length ? `오늘 정할 것 <em>${D.length}개</em>` : '오늘 정할 것 없음'}</b>${rest > 0 ? `<span>${D.length ? `나머지 ${rest}개는` : `따르는 지침 ${rest}개 모두`} 기다리기만 하면 돼요</span>` : ''}</div>`;
+  const dc = D.map(d => `<div class="gm-dc"><div class="hd" ${d.x ? `onclick="aqGmOpen(${d.x.id})"` : ''}>${_gmLogo(d.x, d.tk)}<div class="tt"><div class="t">${escapeHtml(d.t)}</div>${d.s ? `<div class="s">${escapeHtml(d.s)}</div>` : ''}</div></div><div class="gm-btns">${d.b.map(b => `<button class="gm-b ${b[2] || ''}" onclick="event.stopPropagation(); ${b[1]}">${b[0]}</button>`).join('')}</div></div>`).join('');
+  const nr = near.map(({ x, b }) => `<div class="gm-row gm-nr" onclick="aqGmOpen(${x.id})">${_gmLogo(x, '', 's')}<span class="tx">${escapeHtml(_gmNearTx(x, b))}<small>${escapeHtml(b.p.type === 'date' ? _gmDText(b.p.date) : (b.st && b.st.met ? '닿음' : _gmLeft(b.p, b.st) || b.m))}</small></span>${_gmNearVis(b)}</div>`).join('');
+  const kr = keep.map(({ x }) => { const pl = ((x.parsed || {}).pledges || []).length; const setOn = (x.applied || []).some(a => a.ok && !a.reverted && !a.no_revert && !a.client && !a.queue_id);
+    return _gmRow(x, `${pl ? `<span class="gm-ic g">${_gmSvg('shield')}</span>` : ''}${setOn ? `<span class="gm-ic">${_gmSvg('lock')}</span>` : ''}<span class="d">${escapeHtml(x.expire_on ? _gmDText(x.expire_on) : '')}</span>`); }).join('');
+  const lg = f ? '' : (() => { const ks = [...new Set(keep.map(k => _gmKey(k.x)))]; return ks.length >= 2 ? `<div class="gm-lgs">${ks.map(kk => `<button onclick="aqGmTk('${escapeAttr(kk)}')" aria-label="${escapeAttr(kk === '__etc' ? '기타' : _gmTkName(kk))}만 보기">${kk === '__etc' ? '<span class="gm-lg">기타</span>' : _gmLogo(null, kk)}</button>`).join('')}</div>` : ''; })();
+  const sec = (c, h, body) => `<div class="gm-sec"><div class="gm-h"><i class="gm-lt ${c}"></i>${h}</div>${body}</div>`;
+  const empty = !D.length && !near.length && !keep.length ? `<div class="gm-empty">${f ? '이 종목에 따르는 지침이 없어요' : '따르는 지침이 없어요<br><small>AI 추천에서 \'따르기\'를 누르면 여기로 와요</small>'}</div>` : '';
+  return hero
+    + (D.length ? sec('o', '정할 것', dc) : '')
+    + (near.length ? sec('y', '곧 닿아요', `<div class="gm-box">${nr}</div>`) : '')
+    + (keep.length ? sec('g', `지키는 중<em class="g">${keep.length}</em>`, lg + `<div class="gm-box">${kr}</div>`) : '')
     + empty
     + (f ? '' : `<div class="gm-foot" onclick="aqGmView('record')"><span>끝난 것 ${past.length}</span><b>성적표 ›</b></div>`);
 }
@@ -28977,49 +29172,68 @@ function aqGmStep(path, dir) {
 }
 function aqGmSave(key, path) { const v = _gd.gmEd[path]; if (v == null) return; delete _gd.gmEd[path]; aqGdAct(key, 'edit', { path, value: v }); }
 function aqGmHist() { _gd.gmHist = !_gd.gmHist; _gmSheetRender(); }
+function _gmJudg(st) {   // Claude 판단 결과 → { 한 단어, 근거 짧게 }
+  const r = String((st && st.shown) || '').trim();
+  if (!r || r === 'Claude 확인 대기') return { s: '', d: '' };
+  const i = r.indexOf(' — '); const s = (i > 0 ? r.slice(0, i) : r).trim(); let d = i > 0 ? r.slice(i + 3).trim() : '';
+  if (d.length > 90) d = d.slice(0, 88) + '…';
+  return { s: s.length > 20 ? s.slice(0, 20) + '…' : s, d };
+}
 function _gmSheetRender() {
   const x = (_gd.accList || []).find(y => y.id === _gd.sheetId); const box = document.getElementById('gdaBody'); if (!x || !box) return;
   const pa = x.parsed || {}; const ws = x.wstate || {}; const live = _gmLive(x); const k = escapeAttr(x.key); const ed = _gd.gmEd || {};
-  const sets = [];
-  (pa.watches || []).forEach((w, i) => sets.push({ lab: '', g: [[{ p: Object.assign({ type: 'watch' }, w), path: 'w' + i }]] }));
-  const add = (arr, pre, lab) => (arr || []).forEach((gs, ci) => { if (pre === 'c' && _gmAuto(gs)) return; sets.push({ lab, g: gs.map((g, gi) => g.map((p, pi) => ({ p, path: `${pre}${ci}_${gi}_${pi}` }))) }); });
-  add(pa.rec_conds, 'r', '추천대로 할 때'); add(pa.conds, 'c', '다시 볼 때');
-  (pa.act_on || []).forEach((o, xi) => sets.push({ lab: '조건 실행', g: (o.groups || []).map((g, gi) => g.map((p, pi) => ({ p, path: `x${xi}_${gi}_${pi}` }))) }));
-  const cond = ({ p, path }) => {
-    const st = ws[path] || {};
-    if (p.type === 'date') return `<div class="gm-cd"><div class="gm-cl"><span class="tx">${escapeHtml(_gmPartTx(p))}</span><span class="r">${escapeHtml(_gmDText(p.date))}</span></div></div>`;
-    if (p.type === 'judg') return `<div class="gm-cd"><div class="gm-cl"><span class="tx">${escapeHtml(_gmPartTx(p))}</span></div><div class="gm-cs ${st.met ? 'hit' : ''}">Claude 판단 · ${escapeHtml(st.shown || '대기')}</div></div>`;
-    const o = _gmWP(p, true); const canEd = live && !o.fixed; const v = ed[path] != null ? ed[path] : Number(p.value); const chg = ed[path] != null && ed[path] !== Number(p.value);
-    const mid = canEd ? `<span class="gm-step"><button aria-label="기준 내리기" onclick="aqGmStep('${path}',-1)">−</button><span onclick="aqGdEdit('${k}','${path}',${Number(p.value)})">${escapeHtml(o.f(v))}</span><button aria-label="기준 올리기" onclick="aqGmStep('${path}',1)">+</button></span>` : `<b>${escapeHtml(o.f(v))}</b>`;
-    const m = _gmMetric(p, st); const stx = st.met ? `닿음 · 지금 ${st.shown || ''}` : st.shown ? `지금 ${st.shown}${m[0] && m[0] !== '—' && m[0] !== st.shown ? ' · ' + m[0] : ''}` : '데이터 대기';
-    return `<div class="gm-cd"><div class="gm-cl"><span class="tx">${escapeHtml(aqKrText(o.pre))}</span>${mid}<span>${escapeHtml(aqKrText(o.suf))}</span></div><div class="gm-cs ${st.met ? 'hit' : ''}">${escapeHtml(stx)}${chg ? `<button class="gm-sv" onclick="aqGmSave('${k}','${path}')">바꾸기</button>` : ''}</div></div>`;
-  };
+  const sp = _gmSplit(x); const now = _gmNow(x);
+  const chip = live ? (x.status === 'hit' ? '<span class="gm-chip o">닿음</span>' : '<span class="gm-chip g">지키는 중</span>') : `<span class="gm-chip">${x.status === 'done' ? '했음' : '끝남'}</span>`;
+  const sub = `${_gmMD(x.gdate || _rvKstDate(x.accepted_at))} 가이드` + (live && x.expire_on ? ` · ${_gmMD(x.expire_on)}까지 (${_gmDText(x.expire_on)})` : '');
   const S = [];
-  if (sets.length) S.push(['언제', sets.map(s => (sets.length > 1 && s.lab ? `<div class="gm-sl2">${s.lab}</div>` : '') + s.g.map(g => g.map(cond).join('<div class="gm-or">그리고</div>')).join('<div class="gm-or">또는</div>')).join('<div class="gm-gap"></div>')]);
-  const then = [];
-  if ((pa.watches || []).length || (pa.rec_conds || []).length || (pa.conds || []).some(gs => !_gmAuto(gs))) then.push('<div class="gm-li"><span class="tx">알림</span></div>');
-  (pa.act_on || []).forEach((o, xi) => { const xs = ws['xcond' + xi] || {};
-    then.push(`<div class="gm-li"><span class="tx">${escapeHtml(aqKrText(_gdActHuman(o.act)))}</span>${xs.ran ? '<span class="st">실행함</span>' : xs.need_ok && live ? `<button class="gm-sv" onclick="aqGdRun('${k}',${xi})">실행</button>` : ''}</div>`); });
-  if (then.length) S.push(['그러면', then.join('')]);
+  if (live) { const last = x.status === 'hit' ? (x.history || []).filter(h => h.kind === 'hit').slice(-1)[0] : null;
+    S.push(['지금 할 일', `<div class="gm-now ${now.hot ? 'hot' : ''}">${escapeHtml(now.t)}${last ? `<small>${escapeHtml(aqKrText(String(last.msg || '').replace(/^[^:]{1,20}:\s*/, '')))}</small>` : ''}</div>`]); }
+  const pl = ws.pl || {}; const days = _gmDaysSince(x.accepted_at);
+  if ((pa.pledges || []).length) S.push(['약속', pa.pledges.map(p => { const v = _gmPledgeVis(p); const nm = _gmTkName(String(p.ticker || '').toUpperCase());
+    return `<div class="gm-pl ${pl.viol ? 'bad' : ''}"><span class="ic">${_gmSvg('shield')}</span><div class="tt"><b>${escapeHtml(aqKrText(`${nm} ${_GM_PL[p.kind] || p.kind}`))}</b><small>${pl.viol ? `${pl.viol}번 어김` : live ? `${days ? days + '일째 ' : ''}지키는 중 · 어기면 기록돼요` : '지킴'}</small></div></div>${v ? `<div class="gm-vc">${v}</div>` : ''}`; }).join('')]);
+  const why = _gmWhy(x); if (why) S.push(['왜', `<div class="gm-why">${escapeHtml(why)}</div>`]);
+  const sets = [];
+  (pa.watches || []).forEach((w, i) => sets.push({ cons: '알림', g: [[{ p: Object.assign({ type: 'watch' }, w), path: 'w' + i }]] }));
+  const add = (arr, pre, cons) => (arr || []).forEach((gs, ci) => sets.push({ cons, g: gs.map((g, gi) => g.map((p, pi) => ({ p, path: `${pre}${ci}_${gi}_${pi}` }))) }));
+  add(pa.rec_conds, 'r', '추천대로 하기'); add(pa.conds, 'c', '알림 · 다시 보기');
+  (pa.act_on || []).forEach((o, xi) => sets.push({ cons: _gdActHuman(o.act), xi, xs: ws['xcond' + xi] || {}, g: (o.groups || []).map((g, gi) => g.map((p, pi) => ({ p, path: `x${xi}_${gi}_${pi}` }))) }));
+  const card = ({ p, path }) => {
+    const st = ws[path] || {};
+    if (p.type === 'date') return `<div class="gm-vc"><div class="gm-calw">${_gmCal(p.date)}<div class="tt"><b>${escapeHtml(aqKrText(p.text || '일정'))}</b><small>${escapeHtml(_gmDText(p.date))}</small></div></div></div>`;
+    if (p.type === 'judg') { const j = _gmJudg(st);
+      return `<div class="gm-vc"><div class="gm-q"><span class="ic ${st.met ? 'hit' : ''}">${st.met ? '!' : '?'}</span><div class="tt"><b>${escapeHtml(aqKrText(p.text || ''))}</b><small class="${st.met ? 'hit' : ''}">${j.s ? `<em>${escapeHtml(aqKrText(j.s))}</em>${j.d ? ' · ' + escapeHtml(aqKrText(j.d)) : ''}` : 'AI가 확인해서 알려 줘요'}</small></div></div></div>`; }
+    const o = _gmWP(p, true); const canEd = live && !o.fixed; const v = ed[path] != null ? ed[path] : Number(p.value); const chg = ed[path] != null && ed[path] !== Number(p.value);
+    const left = st.met ? '닿음' : _gmLeft(p, st);
+    const edit = canEd ? `<div class="gm-ed"><span>기준</span><span class="gm-step"><button aria-label="기준 내리기" onclick="aqGmStep('${path}',-1)">−</button><span onclick="aqGdEdit('${k}','${path}',${Number(p.value)})">${escapeHtml(o.f(v))}</span><button aria-label="기준 올리기" onclick="aqGmStep('${path}',1)">+</button></span>${chg ? `<button class="gm-sv" onclick="aqGmSave('${k}','${path}')">바꾸기</button>` : ''}</div>` : '';
+    return `<div class="gm-vc"><div class="gm-vh"><span>${escapeHtml(_gmW(p, true))}</span>${left ? `<b class="${st.met ? 'hit' : ''}">${escapeHtml(left)}</b>` : ''}</div>${_gmVis(p, st)}${edit}</div>`;
+  };
+  const thenL = s => `<div class="gm-then">닿으면 → <b>${escapeHtml(aqKrText(s.cons))}</b>${s.xi != null ? (s.xs.ran ? '<span class="st">실행함</span>' : s.xs.need_ok && live ? `<button class="gm-sv" onclick="aqGdRun('${k}',${s.xi})">실행</button>` : '') : ''}</div>`;
+  if (sets.length) S.push(['기다리는 신호', sets.map(s => s.g.map(g => g.map(card).join('<div class="gm-or">그리고</div>')).join('<div class="gm-or">또는</div>') + thenL(s)).join('<div class="gm-gap"></div>')]);
   const setRows = [], didRows = [];
   (x.applied || []).forEach(a => {
-    if (a.queue_id) { const q = (_gd.queue || []).find(y => y.id === a.queue_id) || {}; didRows.push(`<div class="gm-li"><span class="tx">${escapeHtml(aqKrText(a.text || a.act || ''))}</span><span class="st">${escapeHtml(_gdQState(q, a)[1])}</span></div>`); return; }
-    if (a.client) { const st = a.act === '할 일 등록' ? '일정 탭' : a.client_done ? '반영됨' : a.client_done === false ? '실패' : '반영 중'; didRows.push(`<div class="gm-li"><span class="tx">${escapeHtml(aqKrText(a.text || a.act || ''))}</span><span class="st">${st}</span></div>`); return; }
+    const row = (ic, tx, st, done) => `<div class="gm-li">${ic}<span class="tx">${escapeHtml(aqKrText(tx))}</span>${st ? `<span class="st ${done ? 'ok' : ''}">${escapeHtml(st)}</span>` : ''}</div>`;
+    const chk = done => `<span class="gm-ck ${done ? 'on' : ''}">${done ? '✓' : ''}</span>`;
+    if (a.queue_id) { const q = (_gd.queue || []).find(y => y.id === a.queue_id) || {}; const lb = _gdQState(q, a)[1]; const done = /끝|완료|받음|씀|반영/.test(lb); didRows.push(row(chk(done), a.text || a.act || '', lb, done)); return; }
+    if (a.client) { const lb = a.act === '할 일 등록' ? (a.client && a.client.date ? _gmMD(a.client.date) : '일정 탭') : a.client_done ? '반영됨' : a.client_done === false ? '실패' : '반영 중'; didRows.push(row(chk(!!a.client_done && a.act !== '할 일 등록'), a.text || a.act || '', lb, !!a.client_done)); return; }
     const st = a.reverted ? '되돌림' : a.ok ? (a.no_revert ? '실행함' : '') : a.skipped ? '건너뜀' : '실패';
-    (a.no_revert ? didRows : setRows).push(`<div class="gm-li"><span class="tx">${escapeHtml(aqKrText(a.text || a.act || ''))}</span>${st ? `<span class="st">${st}</span>` : ''}</div>`);
+    if (a.no_revert) didRows.push(row(chk(a.ok), a.text || a.act || '', st, a.ok)); else setRows.push(row(`<span class="gm-ic">${_gmSvg(_gmIc(a.act))}</span>`, a.text || a.act || '', st));
   });
-  if (setRows.length) S.push(['바뀐 설정', setRows.join('')]);
+  if (live && sets.length) {
+    const cons = [...new Set(sets.flatMap(s => s.xi != null ? [_gmAct(pa.act_on[s.xi].act)] : s.cons.split(' · ')))];
+    const endP = (pa.ends || []).find(e => e.trigger === '기한'); const hasSet = setRows.length && (x.applied || []).some(a => a.ok && !a.reverted && !a.no_revert && !a.client && !a.queue_id);
+    const endTx = endP ? (endP.proc === '완료' ? '지침 끝' : '설정 되돌리고 끝') : hasSet ? '설정 되돌리고 끝' : '지침 끝';
+    S.push(['갈림길', `<div class="gm-fork"><div><small>신호가 닿으면</small><b>→ ${escapeHtml(aqKrText(cons.join(' · ')))}</b></div><div><small>${x.expire_on ? _gmMD(x.expire_on) + '까지' : '끝까지'} 그대로면</small><b>→ ${endTx}</b></div></div>`]);
+  }
+  if (setRows.length) S.push(['켜 둔 설정', setRows.join('') + (live && x.expire_on ? _gmSpan(_rvKstDate(x.accepted_at), x.expire_on) : '')]);
   if (didRows.length) S.push(['한 일', didRows.join('')]);
-  const pl = ws.pl || {};
-  if ((pa.pledges || []).length) S.push(['약속', pa.pledges.map(p => `<div class="gm-li"><span class="tx">${escapeHtml(aqKrText(`${_gmTkName(String(p.ticker || '').toUpperCase())} ${p.kind}`))}</span><span class="st">${pl.viol ? `${pl.viol}번 어김` : live ? '지키는 중' : '지킴'}</span></div>`).join('')]);
-  const ends = (pa.ends || []).map(e => aqKrText(e.trigger === '체결' ? `${e.ticker} ${e.side} 체결되면 ${e.proc}` : e.trigger === '기한' ? `${_gmMD(e.date)}에 ${e.proc}` : `다시 볼 조건에 닿으면 ${e.proc}`));
-  if (live) S.push(['기한', `<div class="gm-cl"><span class="tx">${x.expire_on ? `${_gmMD(x.expire_on)} · ${_gmDText(x.expire_on)}` : '없음'}</span><button class="gm-b gm-xs" onclick="aqGdAct('${k}','extend')">+7일</button></div>${ends.length ? `<div class="gm-cs">${escapeHtml(ends.join(' · '))}</div>` : ''}`]);
-  else { const r = _gmRet(x); S.push(['끝남', `<div class="gm-cl"><span class="tx">${escapeHtml(aqKrText(x.end_reason || ''))}${x.ended_at ? ' · ' + _gmMD(_rvKstDate(x.ended_at)) : ''}</span>${r != null ? `<span class="r">따른 뒤 ${_gmPct(r)}</span>` : ''}</div>`]); }
-  const H = (x.history || []).slice().reverse(); const hs = _gd.gmHist ? H : H.slice(0, 4);
-  if (H.length) S.push(['기록', `<div class="gm-hist">${hs.map(h => `<div><em>${escapeHtml(aqKrText(h.msg || ''))}</em><span>${_gdKst(h.at).slice(0, 5)}</span></div>`).join('')}${H.length > 4 ? `<a onclick="aqGmHist()">${_gd.gmHist ? '접기' : `모두 보기 · ${H.length}`}</a>` : ''}</div>`]);
+  if (!live) { const r = _gmRet(x); S.push(['끝남', `<div class="gm-cl"><span class="tx">${escapeHtml(aqKrText(x.end_reason || ''))}${x.ended_at ? ' · ' + _gmMD(_rvKstDate(x.ended_at)) : ''}</span>${r != null ? `<span class="r">따른 뒤 ${_gmPct(r)}</span>` : ''}</div>`]); }
+  const H = (x.history || []).slice().reverse();
+  const hist = H.length ? `<div class="gm-hh" onclick="aqGmHist()"><span>기록 ${H.length}건</span><em>${_gd.gmHist ? '접기 ▴' : '펼치기 ▾'}</em></div>${_gd.gmHist ? `<div class="gm-hist">${H.map(h => `<div><em>${escapeHtml(aqKrText(h.msg || ''))}</em><span>${_gdKst(h.at).slice(0, 5)}</span></div>`).join('')}</div>` : ''}` : '';
+  const todo = _gmTodo(x);
   const btn = (t, js, cls) => `<button class="gm-b ${cls || ''}" onclick="${js}">${t}</button>`;
-  const btns = !live ? '' : `<div class="gm-btns gm-sbtn">${btn('그만 따르기', `aqGdAct('${k}','stop')`)}${x.status === 'hit' ? btn('계속 감시', `aqGdAct('${k}','resume')`) : ''}${btn('했어요', `aqGdAct('${k}','done')`, 'pri')}</div>`;
-  box.innerHTML = `<div class="gm-sh"><div class="hd">${_gmLogo(x)}<div><b>${escapeHtml(aqKrText(x.title || ''))}</b><small>${_gmMD(x.gdate || _rvKstDate(x.accepted_at))} 가이드에서 따름</small></div></div>${S.map(([h, b]) => `<div class="gm-ss"><div class="gm-sl">${h}</div>${b}</div>`).join('')}${btns}</div>`;
+  const btns = !live ? '' : x.status === 'hit' ? `<div class="gm-btns gm-sbtn">${btn('그만', `aqGdAct('${k}','stop')`, 'sm')}${todo ? btn('계속 감시', `aqGdAct('${k}','resume')`) + btn('했어요', `aqGdAct('${k}','done')`, 'pri') : btn('끝내기', `aqGdAct('${k}','done')`) + btn('계속 따르기', `aqGdAct('${k}','resume')`, 'pri')}</div>`
+    : `<div class="gm-btns gm-sbtn">${btn('그만 따르기', `aqGdAct('${k}','stop')`)}${btn('+7일', `aqGdAct('${k}','extend')`, 'gm-xs2')}${todo ? btn('했어요', `aqGdAct('${k}','done')`, 'pri') : ''}</div>`;
+  box.innerHTML = `<div class="gm-sh"><div class="hd">${_gmLogo(x)}<div class="tt"><b>${escapeHtml(sp.act)}</b><small>${escapeHtml(sub)}</small></div>${chip}</div>${S.map(([h, b]) => `<div class="gm-ss"><div class="gm-sl">${h}</div>${b}</div>`).join('')}${hist}${btns}</div>`;
 }
 Object.assign(window, { aqGdQConfirm, aqGdQCancel, aqGdRun, aqGdView, aqGdSeen, aqGdOpenMine, aqGdOpenTk, aqGdTkChip, aqGdAct, aqGdEdit, aqGmView, aqGmTk, aqGmRead, aqGmRetry, aqGmOpen, aqGmStep, aqGmSave, aqGmHist });
 
