@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.06';   // v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.07';   // v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8310,7 +8310,10 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .rv-sum { font-size: 13px; color: var(--text); line-height: 1.55; margin: 10px 0 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .rv-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; } .rv-kv > div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 9px 11px; min-width: 0; } .rv-kv span { display: block; font-size: 11px; color: var(--text-mute); } .rv-kv b { display: block; font-size: 15.5px; font-weight: 800; margin-top: 2px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; } .rv-kv b.up { color: var(--kr-up); } .rv-kv b.down { color: var(--kr-down); } .rv-kv b.rv-nx { font-size: 14px; } .rv-kv small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.rv-again.off { opacity: .5; }
+.rv-again.off { opacity: .5; } .rv-again.x { background: rgba(255,169,77,.12); color: #ffa94d; }
+.rv-lvrow { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; } .rv-lv { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--text-dim); }
+.rv-lv i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; } .rv-lv.g { color: #69db7c; background: rgba(64,192,87,.12); } .rv-lv.b { color: #74c0fc; background: rgba(116,192,252,.12); } .rv-lv.y { color: #ffd43b; background: rgba(250,176,5,.12); }
+.rv-lv.o { color: #ffa94d; background: rgba(255,169,77,.14); } .rv-lv.r { color: #ff8787; background: rgba(255,107,107,.13); } .rv-lv.n { color: var(--text-dim); } .rv-lv.n i { display: none; }
 .rv-grade { display: flex; gap: 8px; align-items: baseline; margin-top: 8px; font-size: 12px; color: var(--text-dim); line-height: 1.45; } .rv-grade b { flex: none; font-weight: 800; color: var(--text); } .rv-grade b.g { color: #69db7c; } .rv-grade b.r { color: #ff8787; } .rv-grade b.y { color: #ffd43b; } .rv-grade b.n { color: var(--text-mute); }
 .rv-score { background: rgba(255,255,255,.04); border-radius: 12px; padding: 10px 12px; margin: 0 0 10px; display: flex; flex-direction: column; gap: 6px; }
 .rv-sc-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12px; } .rv-sc-op { font-weight: 800; color: var(--text); min-width: 58px; } .rv-sc-empty { font-size: 12px; color: var(--text-mute); }
@@ -27829,21 +27832,27 @@ function _brBand(rows) {   // 그 종목 평소 10거래일 움직임 폭 = 최�
   return Math.min(0.15, Math.max(0.05, sd * Math.sqrt(10)));
 }
 function _brLiveState(rv, X) {
-  const op = rv && rv.opinion; if (!op) return null;
-  const D = rv.data || {}, Q = D.quant || {}, mk = D.market || rv.market, tk = rv.ticker; const ai = rv.ai || {};
-  const P0 = Number((D.price_now || {}).price || Q.close); if (!(P0 > 0)) return null;
+  if (!rv || !rv.opinion) return null; const D = rv.data || {}, Q = D.quant || {}; const ai = rv.ai || {}; const tk = rv.ticker;
+  return _aqValidity({ op: rv.opinion, mk: D.market || rv.market, tk, P0: Number((D.price_now || {}).price || Q.close), asof: D.asof, recheck: ai.recheck,
+    earn: Q.earnings && Q.earnings.date, z1: X && X.step1 && X.step1.zone, stop: X && X.step1 && X.step1.stop, z2: X && X.step2 && X.step2.qty && X.step2.zone ? X.step2.zone : null,
+    when2: X && X.step2 && X.step2.when, lv: _brv.live && _brv.live.tk === tk ? _brv.live : null });
+}
+// v6.07: 유효 판정 공통 (리포트 상태 바 · 매매심사 썸네일 칩)
+function _aqValidity(a) {
+  const op = a.op, mk = a.mk, tk = a.tk; if (!op) return null;
+  const P0 = Number(a.P0); if (!(P0 > 0)) return null;
   const ser = (typeof findTickerSeries === 'function' ? findTickerSeries(tk) : null); const rows = (ser && ser.rows) || [];
-  const band = _brBand(rows); const after = rows.filter(r => String(r.Date).slice(0, 10) > String(D.asof || '9999'));
-  const lv = _brv.live && _brv.live.tk === tk ? _brv.live : null;
+  const band = _brBand(rows); const after = rows.filter(r => String(r.Date).slice(0, 10) > String(a.asof || '9999'));
+  const lv = a.lv;
   const px = lv && lv.price > 0 ? lv.price : (rows.length ? Number(rows[rows.length - 1].Close) : P0); const live = !!(lv && lv.price > 0);
   const f = v => _brPx(mk, v), pc = v => _brP(v * 100), bp = Math.round(band * 100);
   const today = mk === 'US' ? (_aqETDate(new Date().toISOString()) || _kstToday()) : _kstToday();
-  const ed = Q.earnings && Q.earnings.date ? String(Q.earnings.date).slice(0, 10) : null; const earnPassed = !!(ed && today > ed);
+  const ed = a.earn ? String(a.earn).slice(0, 10) : null; const earnPassed = !!(ed && today > ed);
   const tdays = after.length; const stale = tdays >= 10;
   const L = { live, at: lv && lv.at, band, bp, px, P0, stale, tdays };
   const earnFoot = ed && !earnPassed ? `실적(${_brMD(ed)})이 지나도 다시 심사 · ` : '';
-  if (op === '매수' && X && X.step1 && X.step1.zone) {
-    const z1 = X.step1.zone, stop = Number(X.step1.stop) || z1[0] * 0.9, up = P0 * (1 + band); const z2 = X.step2 && X.step2.qty && X.step2.zone ? X.step2.zone : null;
+  if (op === '매수' && a.z1 && a.z1[0] > 0) {
+    const z1 = a.z1.map(Number), stop = Number(a.stop) || z1[0] * 0.9, up = P0 * (1 + band); const z2 = a.z2 ? a.z2.map(Number) : null;
     const sh = after.find(r => Number(r.Close) > 0 && Number(r.Close) < stop);
     Object.assign(L, { lo: stop, hi: up, zone: z1, endL: '손절', endR: '다시 심사',
       belowL: sh || px < stop ? '손절선을 넘었어요' : `손절선까지 ${pc(stop / px - 1)}`, belowR: px > up ? '다시 심사 선을 넘었어요' : `다시 심사까지 ${pc(up / px - 1)}` });
@@ -27854,17 +27863,17 @@ function _brLiveState(rv, X) {
     if (px < stop) return Object.assign(L, { tone: 'r', title: '손절선 아래예요 · 종가로 확인해요', line: `지금 <b>${f(px)}</b> · 손절선 ${f(stop)}`, foot: '오늘 종가가 손절선 아래면 이 심사는 만료돼요' });
     if (px >= z1[0] && px <= z1[1]) return Object.assign(L, { tone: 'g', title: '지금 살 수 있는 가격이에요', line: `지금 <b>${f(px)}</b> · 1차 가격대 ${_brPxS(mk, z1[0])}~${_brPxS(mk, z1[1])} 안`, foot });
     if (px > z1[1]) return Object.assign(L, { tone: 'b', title: '1차 가격까지 기다리는 중', line: `지금 <b>${f(px)}</b> · 1차 가격대 ${_brPxS(mk, z1[0])}~${_brPxS(mk, z1[1])}까지 ${pc(z1[1] / px - 1)}`, foot });
-    if (z2 && px >= z2[0] && px <= z2[1]) return Object.assign(L, { tone: 'y', title: '2차 가격대예요', line: `지금 <b>${f(px)}</b> · 2차 ${_brPxS(mk, z2[0])}~${_brPxS(mk, z2[1])}${X.step2.when ? ` · 조건: ${escapeHtml(_brWhen(X.step2.when))}` : ''}`, foot });
+    if (z2 && px >= z2[0] && px <= z2[1]) return Object.assign(L, { tone: 'y', title: '2차 가격대예요', line: `지금 <b>${f(px)}</b> · 2차 ${_brPxS(mk, z2[0])}~${_brPxS(mk, z2[1])}${a.when2 ? ` · 조건: ${escapeHtml(_brWhen(a.when2))}` : ''}`, foot });
     return Object.assign(L, { tone: 'y', title: '1차 가격대 아래예요', line: `지금 <b>${f(px)}</b> · 1차 가격대보다 ${pc(px / z1[0] - 1)}`, foot });
   }
   const lo = P0 * (1 - band), hi = P0 * (1 + band);
   Object.assign(L, { lo, hi, zone: null, mid: true, endL: `-${bp}%`, endR: `+${bp}%`, belowL: px < lo ? `-${bp}% 선을 넘었어요` : `다시 심사까지 ${pc(lo / px - 1)}`, belowR: px > hi ? `+${bp}% 선을 넘었어요` : `다시 심사까지 ${pc(hi / px - 1)}` });
-  const again = op === '관망' ? (ai.recheck ? `다시 볼 날(${_brMD(ai.recheck)}) 전이지만 지금 다시 보는 게 좋아요` : '지금 다시 보는 게 좋아요') : `'금지' 판단을 다시 볼 때예요`;
+  const again = op === '관망' ? (a.recheck ? `다시 볼 날(${_brMD(a.recheck)}) 전이지만 지금 다시 보는 게 좋아요` : '지금 다시 보는 게 좋아요') : `'금지' 판단을 다시 볼 때예요`;
   if (earnPassed) return Object.assign(L, { x: true, tone: 'o', title: '실적 발표가 지났어요 · 다시 심사를 권해요', line: `지금 <b>${f(px)}</b> · ${_brMD(ed)} 실적 발표 뒤`, foot: again });
   if (px < lo) return Object.assign(L, { x: true, tone: 'o', title: '크게 빠졌어요 · 다시 심사를 권해요', line: `지금 <b>${f(px)}</b> · 심사 때보다 <span class="down">${pc(px / P0 - 1)}</span> (기준 ±${bp}%)`, foot: again });
   if (px > hi) return Object.assign(L, { x: true, tone: 'o', title: '크게 올랐어요 · 다시 심사를 권해요', line: `지금 <b>${f(px)}</b> · 심사 때보다 <span class="up">${pc(px / P0 - 1)}</span> (기준 ±${bp}%)`, foot: again });
-  const dd = ai.recheck ? _rvDday(ai.recheck) : null;
-  const title = op === '관망' ? (ai.recheck ? `${_brMD(ai.recheck)}에 다시 보기${dd != null ? (dd > 0 ? ` (D-${dd})` : dd === 0 ? ' (오늘)' : ' (지남)') : ''}` : '지켜보는 중') : '지금은 사지 않기';
+  const dd = a.recheck ? _rvDday(a.recheck) : null;
+  const title = op === '관망' ? (a.recheck ? `${_brMD(a.recheck)}에 다시 보기${dd != null ? (dd > 0 ? ` (D-${dd})` : dd === 0 ? ' (오늘)' : ' (지남)') : ''}` : '지켜보는 중') : '지금은 사지 않기';
   return Object.assign(L, { tone: op === '관망' ? 'y' : 'n', title, line: `지금 <b>${f(px)}</b> · 심사 때보다 <span class="${_brC(px / P0 - 1)}">${pc(px / P0 - 1)}</span>`,
     foot: stale ? `심사 후 ${tdays}거래일이 지났어요 · 다시 심사를 권해요` : `${earnFoot}심사 때 ${f(P0)} 기준 ±${bp}% 안이면 그대로` });
 }
@@ -28051,24 +28060,50 @@ function _rvScoreHtml(R) {
   }
   return h + '</div>';
 }
+function _rvShort(L) {
+  const t = L.title || ''; const M = [['지금 살 수 있는', '살 수 있는 가격'], ['1차 가격까지', '1차까지 대기'], ['2차 가격대', '2차 가격대'], ['1차 가격대 아래', '1차 아래'], ['손절선 아래예요', '손절선 아래 · 장중'],
+    ['너무 올랐어요', '만료 · 너무 오름'], ['손절선 아래로 마감', '만료 · 손절선'], ['실적 발표가 지났어요', '만료 · 실적 지남'], ['크게 빠졌어요', '만료 · 크게 빠짐'], ['크게 올랐어요', '만료 · 크게 오름'], ['지금은 사지 않기', '사지 않기 유지'], ['지켜보는 중', '지켜보는 중']];
+  const m = M.find(([k]) => t.startsWith(k)); if (m) return m[1];
+  const d = t.match(/\((D-\d+|오늘|지남)\)/); return t.includes('다시 보기') ? `다시 보기${d ? ' ' + d[1] : ''}` : t;
+}
+function _rvLv(it, mk) {   // v6.07: 썸네일 유효 상태 (리포트 상태 바와 같은 판정)
+  if (!it || !it.opinion || (it.kind || 'buy') !== 'buy' || it.status !== 'done') return null;
+  const tk = String(it.ticker || '').toUpperCase(); const S = it.steps || []; const s1 = S.find(x => x.step === 1 && x.status !== 'cancelled'), s2 = S.find(x => x.step === 2 && x.status !== 'cancelled');
+  const p = (_rv.live || {})[tk];
+  return _aqValidity({ op: it.opinion, mk, tk, P0: Number(it.price_at_review), asof: it.asof, recheck: it.recheck, earn: it.earn,
+    z1: s1 ? [s1.zone_lo, s1.zone_hi] : null, stop: s1 && s1.stop, z2: s2 && s2.qty ? [s2.zone_lo, s2.zone_hi] : null, when2: s2 && s2.cond, lv: p ? { price: p.price, at: p.at } : null });
+}
+function _rvLiveKick() { clearTimeout(_rv.liveT); const age = _rv.liveAt ? Date.now() - _rv.liveAt : 1e9; _rv.liveT = setTimeout(_rvLiveTick, age >= 60e3 ? 0 : 60e3 - age); }
+async function _rvLiveTick() {   // 탭이 보이는 동안 1분마다 목록 종목 지금 가격 (서버가 토스 한 번 호출)
+  if (document.body.getAttribute('data-atab') !== 'review' || !document.getElementById('reviewBody') || document.visibilityState !== 'visible') return;
+  const mk = getCurrentMarket(); const tks = [...new Set(((_rv.data || {}).items || []).filter(x => x.opinion && (x.kind || 'buy') === 'buy' && (!x.market || x.market === mk)).map(x => String(x.ticker).toUpperCase()))];
+  if (!tks.length) return;
+  let r = null; try { r = await apiCall('buyReviewLiveMany', { tickers: tks.join(',') }); } catch (e) {}
+  _rv.liveAt = Date.now(); if (r && r.ok) _rv.live = Object.assign(_rv.live || {}, r.prices || {});
+  aqReviewRender();
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && document.body.getAttribute('data-atab') === 'review') { try { _rvLiveKick(); } catch (e) {} } });
 function _rvCard(it, mk, held, watch) {
   const tk = String(it.ticker || '').toUpperCase(); const nm = escapeHtml(displayName(tk) || tk); const kind = it.kind === 'sell' ? 'sell' : 'buy';
   const busy = it.status === 'queued' || it.status === 'running' || it.ai_status === 'requested';
   const opTxt = busy ? (it.status === 'queued' ? '대기 중' : '심사 중') : it.status === 'failed' ? '실패' : it.status === 'cancelled' ? '취소' : (it.opinion || 'AI 의견 없음');
   const opCls = busy ? 'busy' : _RV_OP[it.opinion] || 'n';
-  const cur = _aqLatestClose(tk); const base = Number(it.price_at_review) || null; const since = cur != null && base ? (cur / base - 1) * 100 : null;
+  const lp = (_rv.live || {})[tk]; const L = it._lv;   // v6.07
+  const cur = lp && lp.price > 0 ? lp.price : _aqLatestClose(tk); const base = Number(it.price_at_review) || null; const since = cur != null && base ? (cur / base - 1) * 100 : null;
+  const lpt = lp && lp.at ? (() => { const m = Math.max(0, Math.round((Date.now() - new Date(lp.at).getTime()) / 60000)); return m < 1 ? '방금' : `${m}분 전`; })() : '';
   const [nx, nxs] = busy ? ['결과 기다리는 중', ''] : _rvNext(it, mk, cur);
   const when = it.finished_at || it.requested_at; const stale = !busy && when && (Date.now() - new Date(when).getTime()) > 7 * 86400e3;
   const tags = (held.has(tk) ? '<span class="rv-tag own">보유</span>' : '') + (watch.has(tk) ? '<span class="rv-tag watch">관심</span>' : '');
   const chips = kind === 'buy' && (it.opinion === '매수' || (it.steps || []).some(x => x.status && x.status !== 'planned')) ? _rvChips(it, mk) : '';
   return `<div class="rv-card${stale ? ' stale' : ''}" onclick="aqRvOpen('${escapeAttr(String(it.id))}','${kind}')">
     <div class="rv-hd">${aqWrapLogo(_autoLogo(tk), tk)}<div class="rv-t"><div class="rv-nm">${nm}${tags}</div><div class="rv-meta">${kind === 'sell' ? 'AI 매도심사' : 'AI 매수심사'} · ${_brMDW(_rvKstDate(it.requested_at))} 심사 · ${_rvAgo(it.requested_at)}</div></div><span class="rv-op ${opCls}"><i></i>${escapeHtml(opTxt)}</span></div>
+    ${L ? `<div class="rv-lvrow"><span class="rv-lv ${L.tone}${L.x ? ' x' : ''}"><i></i>${escapeHtml(_rvShort(L))}</span>${L.stale && !L.x ? '<span class="rv-lv n">오래됨</span>' : ''}</div>` : ''}
     ${it.summary ? `<div class="rv-sum">${escapeHtml(it.summary)}</div>` : ''}
     ${it.grade && it.grade.verdict ? `<div class="rv-grade"><b class="${_RV_GR[it.grade.verdict] || ''}">채점 · ${escapeHtml(it.grade.verdict)}</b><span>${escapeHtml(it.grade.why || '')}</span></div>` : ''}
-    <div class="rv-kv"><div><span>심사 후 주가</span><b class="${_brC(since)}">${since == null ? '—' : aqSgPct(since, 1)}</b><small>${base ? `${_brPxS(mk, base)} → ${_brPxS(mk, cur)}` : ''}</small></div>
+    <div class="rv-kv"><div><span>심사 후 주가</span><b class="${_brC(since)}">${since == null ? '—' : aqSgPct(since, 1)}</b><small>${base ? `${_brPxS(mk, base)} → ${_brPxS(mk, cur)}${lpt ? ` · ${lpt}` : ''}` : ''}</small></div>
       <div><span>다음 할 일</span><b class="rv-nx">${escapeHtml(nx)}</b><small>${escapeHtml(nxs)}</small></div></div>
     ${chips ? `<div class="rv-chips">${chips}</div>` : ''}
-    ${stale ? (((_rv.data || {}).active && (_rv.data.active.id !== it.id)) ? `<button class="rv-again off" onclick="event.stopPropagation(); aqToast('다른 작업이 끝나면 다시 심사할 수 있어요')">7일 넘은 심사 · 다시 심사 · 다른 작업 중</button>` : `<button class="rv-again" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','${kind}')">7일 넘은 심사 · 다시 심사</button>`) : ''}
+    ${L && L.x ? (((_rv.data || {}).active && (_rv.data.active.id !== it.id)) ? `<button class="rv-again off" onclick="event.stopPropagation(); aqToast('다른 작업이 끝나면 다시 심사할 수 있어요')">만료 · 다시 심사 · 다른 작업 중</button>` : `<button class="rv-again x" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','${kind}')">만료 · 다시 심사</button>`) : stale ? (((_rv.data || {}).active && (_rv.data.active.id !== it.id)) ? `<button class="rv-again off" onclick="event.stopPropagation(); aqToast('다른 작업이 끝나면 다시 심사할 수 있어요')">7일 넘은 심사 · 다시 심사 · 다른 작업 중</button>` : `<button class="rv-again" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','${kind}')">7일 넘은 심사 · 다시 심사</button>`) : ''}
   </div>`;
 }
 async function aqReviewRender(force) {
@@ -28085,20 +28120,23 @@ async function aqReviewRender(force) {
   try { held = new Set(((simulatePortfolioDaily() || {}).holdings || []).map(h => String(h.ticker).toUpperCase())); } catch (e) {}
   try { watch = new Set(((window.AqWatchStore && AqWatchStore.getAll) ? AqWatchStore.getAll() : []).filter(w => (w.market || 'US') === mk).map(w => String(w.ticker).toUpperCase())); } catch (e) {}
   // 요약: 결론별 · 진행 중 · 재심사 도래
+  all.forEach(x => { try { x._lv = _rvLv(x, mk); } catch (e) { x._lv = null; } });   // v6.07
+  const nExp = all.filter(x => x._lv && x._lv.x).length;
   const done = all.filter(x => x.status === 'done' && x.opinion); const cnt = {}; done.forEach(x => { cnt[x.opinion] = (cnt[x.opinion] || 0) + 1; });
   const due = all.filter(x => x.recheck && (_rvDday(x.recheck) ?? 1) <= 0).length;
   const keys = _RV_ORDER.filter(k => cnt[k]).concat(Object.keys(cnt).filter(k => !_RV_ORDER.includes(k)));
-  let h = `<div class="rv-sumbar">${keys.map(k => `<div><span>${escapeHtml(k)}</span><b class="${_RV_OP[k] || ''}">${cnt[k]}</b></div>`).join('')}<div><span>재심사 도래</span><b class="${due ? 'y' : ''}">${due}</b></div></div>`;
+  let h = `<div class="rv-sumbar">${keys.map(k => `<div><span>${escapeHtml(k)}</span><b class="${_RV_OP[k] || ''}">${cnt[k]}</b></div>`).join('')}<div><span>재심사 도래</span><b class="${due ? 'y' : ''}">${due}</b></div><div><span>만료</span><b class="${nExp ? 'r' : ''}">${nExp}</b></div></div>`;
   const A = R.active; if (A && A.ticker) h += `<div class="rv-active"><span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>${escapeHtml(displayName(A.ticker) || A.ticker)} ${A.kind === 'sell' ? '매도' : '매수'}심사 ${A.status === 'queued' ? '대기 중' : '진행 중'}${A.queued ? ` · 대기 ${A.queued}건` : ''}</div>`;
   h += _rvScoreHtml(R);   // v6.04
   h += `<div class="rv-segs"><div class="rv-seg">${[['all', '전체'], ['buy', '매수심사'], ['sell', '매도심사']].map(([v, t]) => `<button class="${_rv.kind === v ? 'on' : ''}" onclick="aqRvKind('${v}')">${t}</button>`).join('')}</div>
-    <div class="rv-seg">${[['new', '최신순'], ['recheck', '재심사 임박순']].map(([v, t]) => `<button class="${_rv.sort === v ? 'on' : ''}" onclick="aqRvSort('${v}')">${t}</button>`).join('')}</div></div>`;
+    <div class="rv-seg">${[['new', '최신순'], ['recheck', '재심사 임박순'], ['expired', '만료 먼저']].map(([v, t]) => `<button class="${_rv.sort === v ? 'on' : ''}" onclick="aqRvSort('${v}')">${t}</button>`).join('')}</div></div>`;
   let list = all.filter(x => _rv.kind === 'all' || (x.kind || 'buy') === _rv.kind);
   const tms = x => new Date(x.requested_at || 0).getTime() || 0;
+  if (_rv.sort === 'expired') list.sort((a, b) => ((b._lv && b._lv.x) ? 1 : 0) - ((a._lv && a._lv.x) ? 1 : 0) || ((b._lv && b._lv.stale) ? 1 : 0) - ((a._lv && a._lv.stale) ? 1 : 0) || tms(b) - tms(a)); else
   list.sort(_rv.sort === 'recheck' ? ((a, b) => (a.recheck ? 0 : 1) - (b.recheck ? 0 : 1) || String(a.recheck || '').localeCompare(String(b.recheck || '')) || tms(b) - tms(a)) : ((a, b) => tms(b) - tms(a)));
   h += list.length ? `<div class="rv-list">${list.map(x => _rvCard(x, mk, held, watch)).join('')}</div>`
     : `<div class="rv-wait">${_rv.kind === 'sell' ? 'AI 매도심사는 아직 준비 중이에요.' : `아직 ${mk === 'KR' ? '한국' : '미국'} 종목 심사가 없어요. 종목 화면에서 'AI 매수심사'를 요청하면 여기에 모여요.`}</div>`;
-  box.innerHTML = h;
+  box.innerHTML = h; _rvLiveKick();   // v6.07: 지금 가격 1분마다
   if (A && A.ticker) _rv.poll = setTimeout(() => { if (document.body.getAttribute('data-atab') === 'review') aqReviewRender(true); }, 20000);   // 진행 중이면 20초마다 새로
 }
 function aqRvKind(v) { _rv.kind = v; try { localStorage.setItem('aq_rv_kind', v); } catch (e) {} aqReviewRender(); }
