@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.03';   // v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.04';   // v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8283,6 +8283,13 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .rv-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; } .rv-kv > div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 9px 11px; min-width: 0; } .rv-kv span { display: block; font-size: 11px; color: var(--text-mute); } .rv-kv b { display: block; font-size: 15.5px; font-weight: 800; margin-top: 2px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; } .rv-kv b.up { color: var(--kr-up); } .rv-kv b.down { color: var(--kr-down); } .rv-kv b.rv-nx { font-size: 14px; } .rv-kv small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .rv-again.off { opacity: .5; }
+.rv-grade { display: flex; gap: 8px; align-items: baseline; margin-top: 8px; font-size: 12px; color: var(--text-dim); line-height: 1.45; } .rv-grade b { flex: none; font-weight: 800; color: var(--text); } .rv-grade b.g { color: #69db7c; } .rv-grade b.r { color: #ff8787; } .rv-grade b.y { color: #ffd43b; } .rv-grade b.n { color: var(--text-mute); }
+.rv-score { background: rgba(255,255,255,.04); border-radius: 12px; padding: 10px 12px; margin: 0 0 10px; display: flex; flex-direction: column; gap: 6px; }
+.rv-sc-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12px; } .rv-sc-op { font-weight: 800; color: var(--text); min-width: 58px; } .rv-sc-empty { font-size: 12px; color: var(--text-mute); }
+.rv-sc-v { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--text-dim); } .rv-sc-v.g { color: #69db7c; background: rgba(105,219,124,.12); } .rv-sc-v.r { color: #ff8787; background: rgba(255,135,135,.12); } .rv-sc-v.y { color: #ffd43b; background: rgba(255,212,59,.12); }
+.rv-rules summary { font-size: 12px; font-weight: 700; color: var(--text-dim); cursor: pointer; list-style: none; padding-top: 4px; } .rv-rules summary em { font-style: normal; color: #ffa94d; }
+.rv-rule { padding: 8px 0 0; } .rv-rule.off { opacity: .5; } .rv-rule p { margin: 4px 0 2px; font-size: 12.5px; color: var(--text); line-height: 1.5; } .rv-rule small { font-size: 11px; color: var(--text-mute); }
+.rv-rule-warn { margin-top: 8px; font-size: 11.5px; color: #ffa94d; line-height: 1.5; }
 .rv-again { margin-top: 10px; width: 100%; background: rgba(255,255,255,.06); border: none; border-radius: 10px; padding: 8px; color: var(--text-dim); font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .rv-chips .br-chip { margin-left: 0; }
 /* v6.00: 메인과 같은 어두운 톤 — 전체 화면 페이지는 바탕(#161618), 위에 뜨는 창·시트·메뉴는 한 단계 밝게(#1c1c1f), 안쪽 칸·칩·눌림은 #222226 / #2a2a2e */
@@ -27851,6 +27858,24 @@ function _rvChips(it, mk) {
     return `<span class="br-chip">${n} 대기${x.qty ? ` ${Number(x.qty)}주` : ''}</span>`;
   }).join('');
 }
+// v6.04: 오답노트 2.0 — 채점(시장 대비·종목 평소 폭·매수는 1차 계획 기준) · 규칙(서버가 근거를 다시 셈)
+const _RV_GR = { '정답': 'g', '오답': 'r', '애매': 'y', '미체결': 'n' };
+function _rvScoreHtml(R) {
+  const sc = R.score || {}; const ops = ['매수', '관망', '금지'].filter(k => sc[k]);
+  let h = '<div class="rv-score">';
+  h += ops.length ? ops.map(op => { const x = sc[op]; const n = Object.values(x).reduce((a, b) => a + b, 0);
+      return `<div class="rv-sc-row"><span class="rv-sc-op">${op} ${n}</span>${['정답', '오답', '애매', '미체결'].filter(v => x[v]).map(v => `<span class="rv-sc-v ${_RV_GR[v]}">${v} ${x[v]}</span>`).join('')}</div>`; }).join('')
+    : '<div class="rv-sc-empty">채점은 심사 20거래일 뒤부터 — 아직 채점된 심사가 없어요</div>';
+  const rules = R.rules || []; const cf = rules.filter(r => r.status === '확정'), cd = rules.filter(r => r.status === '후보');
+  if (rules.length) {
+    const st = { '확정': 'g', '후보': 'y', '폐기': 'n' };
+    h += `<details class="rv-rules"><summary>오답노트 규칙 · 확정 ${cf.length} · 후보 ${cd.length}${(R.note_problems || []).length ? ` · <em>확인 필요 ${R.note_problems.length}</em>` : ''}</summary>`
+      + rules.map(r => { const u = r.used; return `<div class="rv-rule${r.status === '폐기' ? ' off' : ''}"><span class="rv-sc-v ${st[r.status] || ''}">${escapeHtml(r.id)} ${escapeHtml(r.status || '')}</span><p>${escapeHtml(r.text || '')}</p><small>근거 ${r.n ?? 0}건 · 반대 ${r.against ?? 0}건${u ? ` · 적용 ${u.n}건(정답 ${u['정답'] || 0} · 오답 ${u['오답'] || 0})` : ''}</small></div>`; }).join('')
+      + ((R.note_problems || []).length ? `<div class="rv-rule-warn">${R.note_problems.slice(0, 6).map(p => `<div>⚠️ ${escapeHtml(p)}</div>`).join('')}</div>` : '')
+      + '</details>';
+  }
+  return h + '</div>';
+}
 function _rvCard(it, mk, held, watch) {
   const tk = String(it.ticker || '').toUpperCase(); const nm = escapeHtml(displayName(tk) || tk); const kind = it.kind === 'sell' ? 'sell' : 'buy';
   const busy = it.status === 'queued' || it.status === 'running' || it.ai_status === 'requested';
@@ -27864,6 +27889,7 @@ function _rvCard(it, mk, held, watch) {
   return `<div class="rv-card${stale ? ' stale' : ''}" onclick="aqRvOpen('${escapeAttr(String(it.id))}','${kind}')">
     <div class="rv-hd">${aqWrapLogo(_autoLogo(tk), tk)}<div class="rv-t"><div class="rv-nm">${nm}${tags}</div><div class="rv-meta">${kind === 'sell' ? 'AI 매도심사' : 'AI 매수심사'} · ${_brMDW(_rvKstDate(it.requested_at))} 심사 · ${_rvAgo(it.requested_at)}</div></div><span class="rv-op ${opCls}"><i></i>${escapeHtml(opTxt)}</span></div>
     ${it.summary ? `<div class="rv-sum">${escapeHtml(it.summary)}</div>` : ''}
+    ${it.grade && it.grade.verdict ? `<div class="rv-grade"><b class="${_RV_GR[it.grade.verdict] || ''}">채점 · ${escapeHtml(it.grade.verdict)}</b><span>${escapeHtml(it.grade.why || '')}</span></div>` : ''}
     <div class="rv-kv"><div><span>심사 후 주가</span><b class="${_brC(since)}">${since == null ? '—' : aqSgPct(since, 1)}</b><small>${base ? `${_brPxS(mk, base)} → ${_brPxS(mk, cur)}` : ''}</small></div>
       <div><span>다음 할 일</span><b class="rv-nx">${escapeHtml(nx)}</b><small>${escapeHtml(nxs)}</small></div></div>
     ${chips ? `<div class="rv-chips">${chips}</div>` : ''}
@@ -27889,6 +27915,7 @@ async function aqReviewRender(force) {
   const keys = _RV_ORDER.filter(k => cnt[k]).concat(Object.keys(cnt).filter(k => !_RV_ORDER.includes(k)));
   let h = `<div class="rv-sumbar">${keys.map(k => `<div><span>${escapeHtml(k)}</span><b class="${_RV_OP[k] || ''}">${cnt[k]}</b></div>`).join('')}<div><span>재심사 도래</span><b class="${due ? 'y' : ''}">${due}</b></div></div>`;
   const A = R.active; if (A && A.ticker) h += `<div class="rv-active"><span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>${escapeHtml(displayName(A.ticker) || A.ticker)} ${A.kind === 'sell' ? '매도' : '매수'}심사 ${A.status === 'queued' ? '대기 중' : '진행 중'}${A.queued ? ` · 대기 ${A.queued}건` : ''}</div>`;
+  h += _rvScoreHtml(R);   // v6.04
   h += `<div class="rv-segs"><div class="rv-seg">${[['all', '전체'], ['buy', '매수심사'], ['sell', '매도심사']].map(([v, t]) => `<button class="${_rv.kind === v ? 'on' : ''}" onclick="aqRvKind('${v}')">${t}</button>`).join('')}</div>
     <div class="rv-seg">${[['new', '최신순'], ['recheck', '재심사 임박순']].map(([v, t]) => `<button class="${_rv.sort === v ? 'on' : ''}" onclick="aqRvSort('${v}')">${t}</button>`).join('')}</div></div>`;
   let list = all.filter(x => _rv.kind === 'all' || (x.kind || 'buy') === _rv.kind);
