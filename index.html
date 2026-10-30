@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.04';   // v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.05';   // v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4409,6 +4409,7 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .br-sell { background: #26262b; color: #8a8a92; border-color: #33333a !important; } .br-buy { background: #1d2b3a; color: #74c0fc; border-color: #2f4f6f !important; }
 .br-busy { background: #1d2b3a; color: #74c0fc; border-color: #2f4f6f !important; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .br-done { background: #2b2a14; color: #ffd43b; border-color: #5c5320 !important; } .br-off { background: #1e1e22; color: #5c5c64; border-color: #29292e !important; }
+.ar-acts { display: flex; margin: 22px 16px 0; } .ar-list-busy { margin: 0 0 10px; } .ar-cap { margin: 6px 16px 24px; text-align: center; }
 .br-cap { font-size: 11px; color: var(--text-mute); text-align: right; margin-top: 6px; min-height: 14px; }
 .br-spin { position: relative; width: 16px; height: 16px; display: inline-block; } .br-spin i { position: absolute; left: 50%; top: 50%; width: 3.5px; height: 3.5px; margin: -1.75px; border-radius: 50%; background: #74c0fc; animation: brorb 1s linear infinite; }
 .br-spin i:nth-child(2) { animation-delay: -.125s; opacity: .85; } .br-spin i:nth-child(3) { animation-delay: -.25s; opacity: .7; } .br-spin i:nth-child(4) { animation-delay: -.375s; opacity: .55; } .br-spin i:nth-child(5) { animation-delay: -.5s; opacity: .4; } .br-spin i:nth-child(6) { animation-delay: -.625s; opacity: .3; }
@@ -15861,7 +15862,9 @@ async function openReportPanel() {
         <button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button>
       </div>
       <div class="report-empty">등록된 보고서가 없습니다.</div>
+      ${aqArSlotHtml()}
     `;
+    try { aqArRefresh(String(tk).toUpperCase()); } catch (e) {}   // v6.05
     return;
   }
   // dates는 최신 → 옛 순 가정 — 가장 최근 일자 자동 선택
@@ -16364,15 +16367,73 @@ async function openReportDetail(date) {
         ${dateUiHtml}
       </div>
       <div class="report-detail-body" data-report-ticker="${escapeAttr(String(tk).toUpperCase())}" data-report-date="${escapeAttr(date)}">${_v3 ? renderReportContentV4(parsed, String(tk).toUpperCase()) : (_v2 ? renderReportContentV2(parsed, tk, date) : renderReportContent(parsed, tk, date))}</div>
+      ${aqArSlotHtml()}
     `;
     // 스크롤 맨 위로
     const modalContent = $('reportPanel').closest('.modal-content');
     if (modalContent) modalContent.scrollTop = 0;
     try { if (_v3) aqRv4Bind($('reportPanel').querySelector('.rv4')); } catch (e) {}   // v5.08
+    try { aqArRefresh(String(tk).toUpperCase()); } catch (e) {}   // v6.05: 맨 아래 'AI 보고서 리뉴얼'
   } catch (e) {
     $('reportPanel').innerHTML = `<div class="report-error">보고서 로드 실패: ${escapeHtml(e.message)}<br><button class="report-back-btn" onclick="closeReportPanel()">← 차트로 돌아가기</button></div>`;
   }
 }
+
+// ============================================================================
+// v6.05: AI 보고서 생성·리뉴얼 — 서버(jobs/aireport.py)가 data_pack을 만들고 Claude 보고서 작업을 깨움
+//   한 번에 하나(서버 전체) · 관리자 무제한 · 일반 하루 3건 · 보통 15~30분 · 끝나면 텔레그램·알림
+// ============================================================================
+const _ar = { st: {}, poll: null, tk: null };
+function aqArSlotHtml() { return `<div class="ar-acts br-acts"><span id="arSlot" class="br-slot"><button type="button" class="br-off" disabled>확인 중…</button></span></div><div class="br-cap ar-cap" id="arCap"></div>`; }
+function _arBusy(x) { return !!x && (x.status === 'running' || x.ai_status === 'requested'); }
+function _arSlot(tk) {
+  const slot = document.getElementById('arSlot'), cap = document.getElementById('arCap'); if (!slot) return;
+  const r = _ar.st[tk] || {}; const q = r.req; const act = r.active;
+  const has = !!(((_state.reports || {})[getCurrentMarket()] || {})[tk] || []).length;
+  const label = has ? 'AI 보고서 리뉴얼' : 'AI 보고서 생성';
+  const spin = '<span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+  let b = '', c = '';
+  if (!r.ok) { b = `<button type="button" class="br-off" onclick="aqToast('로그인하면 쓸 수 있어요')">${label}</button>`; }
+  else if (_arBusy(q)) { b = `<button type="button" class="br-busy" onclick="aqArCancelAsk(${q.id}, '${escapeAttr(tk)}', ${q.mine || r.admin ? 1 : 0})">${spin}${q.kind === 'renew' ? 'AI 보고서 리뉴얼 중' : 'AI 보고서 생성 중'}</button>`; c = '보통 15~30분 · 끝나면 알림' + (q.mine || r.admin ? ' · 누르면 취소' : ''); }
+  else if (act) { b = `<button type="button" class="br-off" onclick="aqToast('다른 작업이 끝나면 요청할 수 있어요')">${label}</button>`; c = '다른 작업 중 · 끝나면 요청 가능'; }
+  else if (r.quota === 0) { b = `<button type="button" class="br-off" onclick="aqToast('AI 보고서는 하루 3건까지 요청할 수 있어요')">${label}</button>`; c = '오늘 요청 3건을 다 썼어요'; }
+  else {
+    b = `<button type="button" class="br-buy" onclick="aqArRequest('${escapeAttr(tk)}', ${has ? 1 : 0})">${label}</button>`;
+    const fail = q && (q.status === 'failed' || ['failed', 'timeout'].includes(q.ai_status)) && (q.error || q.ai_error) !== '취소함';
+    c = fail ? `지난 요청 실패 — ${String(q.ai_error || q.error || '이유 미상').slice(0, 40)}` : (has ? '지난 보고서와 비교해 새로 써요 · 15~30분' : '보통 15~30분 · 끝나면 알림');
+    if (r.quota != null) c += ` · 오늘 ${r.quota}건 남음`;
+  }
+  slot.innerHTML = b; if (cap) cap.textContent = c;
+}
+async function aqArRefresh(tk) {
+  _ar.tk = tk; let r = null; try { r = await apiCall('reportStatus', { ticker: tk }); } catch (e) {}
+  const was = (_ar.st[tk] || {}).req; _ar.st[tk] = r && r.ok ? r : { ok: false }; _arSlot(tk);
+  const now = (_ar.st[tk] || {}).req;
+  if (_arBusy(was) && now && !_arBusy(now)) {
+    if (now.ai_status === 'done') {
+      aqToast(`${displayName(tk) || tk} AI 보고서가 나왔어요${now.opinion ? ' — ' + now.opinion : ''}`);
+      try { await fetchReportsIndex(); } catch (e) {}
+      if (_state.openTicker && String(_state.openTicker).toUpperCase() === tk && document.body.classList.contains('modal-report-mode')) { try { openReportPanel(); } catch (e) {} }
+    } else if (now.ai_status && now.ai_status !== 'cancelled') aqToast(`${displayName(tk) || tk} AI 보고서를 만들지 못했어요`);
+  }
+  clearTimeout(_ar.poll);
+  const R = _ar.st[tk] || {}; const wait = _arBusy(R.req) ? (R.req.status === 'running' ? 8000 : 30000) : R.active ? 30000 : 0;
+  if (wait) _ar.poll = setTimeout(() => { if (_ar.tk === tk && document.getElementById('arSlot')) aqArRefresh(tk); }, wait);
+}
+async function aqArRequest(tk, renew) {
+  if (!confirm(renew ? `${displayName(tk) || tk} AI 보고서를 리뉴얼할까요?\n지난 보고서와 비교해 새로 써요 (15~30분).` : `${displayName(tk) || tk} AI 보고서를 만들까요?\n보통 15~30분 걸려요.`)) return;
+  let r = null; try { r = await apiCall('reportRequest', { ticker: tk }); } catch (e) {}
+  if (!r || !r.ok) aqToast((r && r.error) || '요청하지 못했어요');
+  aqArRefresh(tk);
+}
+async function aqArCancelAsk(id, tk, can) {
+  if (!can) { aqToast('다른 사용자가 요청한 보고서예요 — 끝나면 같이 볼 수 있어요'); return; }
+  if (!confirm('만들고 있는 AI 보고서를 취소할까요?')) return;
+  try { await apiCall('reportCancel', { id }); } catch (e) {}
+  aqToast('취소했어요'); aqArRefresh(tk);
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && _ar.tk && document.getElementById('arSlot')) { try { aqArRefresh(_ar.tk); } catch (e) {} } });
+Object.assign(window, { aqArRefresh, aqArRequest, aqArCancelAsk });
 
 window.openReportPanel = openReportPanel;
 window.closeReportPanel = closeReportPanel;
@@ -16503,9 +16564,12 @@ async function buildAnalysisGrid() {
     `;
   };
 
-  area.innerHTML = `<div class="analysis-mkt-section">
+  area.innerHTML = `<div class="analysis-mkt-section"><div id="arListBanner"></div>
     <div class="analysis-grid">${list.map(([tk, dates]) => buildCard(tk, dates)).join('')}</div>
   </div>`;
+  // v6.05: 지금 만들고 있는 AI 보고서 (서버 전체 한 번에 하나)
+  apiCall('reportStatus', {}).then(r => { const el = document.getElementById('arListBanner'); const a = r && r.ok && r.active; if (!el || !a) return;
+    el.innerHTML = `<div class="rv-active ar-list-busy"><span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>${escapeHtml(displayName(a.ticker) || a.ticker)} AI 보고서 만드는 중 · 끝나면 알림</div>`; }).catch(() => {});
 
   // 액션 알약 lazy 채우기 (아직 안 받은 것)
   list.forEach(([tk, dates]) => {
