@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.12';   // v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.13';   // v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8315,6 +8315,7 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .gd-folrow { margin-top: 7px; } .gd-fol { font-size: 11.5px; font-weight: 700; padding: 4px 11px; border-radius: 999px; border: 1px solid #2f4f6f; background: #1d2b3a; color: #74c0fc; cursor: pointer; font-family: inherit; } .gd-fol.on { border-color: rgba(99,230,190,.35); background: rgba(99,230,190,.1); color: #63e6be; }
 .gdm-qbox { background: rgba(77,171,247,.06); border: 1px solid rgba(77,171,247,.2); border-radius: 14px; padding: 4px 12px 8px; margin-bottom: 10px; } .gdm-qh { display: flex; align-items: center; gap: 8px; padding: 8px 0 4px; cursor: pointer; } .gdm-qh b { font-size: 13px; color: var(--text-hi); } .gdm-qh span { font-size: 11.5px; color: var(--text-mute); } .gdm-qh i { margin-left: auto; font-style: normal; color: var(--text-mute); font-size: 12px; }
 .gdm-q { display: flex; align-items: center; gap: 8px; font-size: 12.5px; padding: 7px 0; border-top: 1px solid rgba(255,255,255,.05); } .gdm-q .t { flex: 1; min-width: 0; color: var(--text-hi); } .gdm-q .t small { display: block; font-size: 10.5px; color: var(--text-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .gdm-q .ok { color: #63e6be; } .gdm-q .no { color: #ff8787; } .gdm-q .w { color: var(--text-mute); } .gdm-q > span:not(.t) { white-space: nowrap; font-size: 11.5px; } .gdm-q a { color: #4dabf7; font-size: 11px; cursor: pointer; }
+.gdm-gate { display: block; font-size: 10.5px; color: #ffa94d; margin-top: 3px; } .gdm-pk { background: rgba(99,230,190,.05); border-color: rgba(99,230,190,.2); }
 .gdm-qn { display: block; font-size: 10.5px; color: var(--text-mute); } .gdm-xo .v b { color: var(--text-hi); } .gdm-sub { padding-left: 14px !important; border-top: none !important; } .gdm-run { margin: 6px 0 2px; display: flex; }
 .gdm-grp { margin-bottom: 8px; } .gdm-gh { display: flex; align-items: center; gap: 8px; padding: 12px 4px 10px; cursor: pointer; } .gdm-gh b { font-size: 14px; color: var(--text-hi); } .gdm-gh span { font-size: 12px; color: var(--text-mute); } .gdm-gh i { margin-left: auto; font-style: normal; color: var(--text-mute); font-size: 12px; }
 .gdm-grp.now .gdm-gh b { color: #ffa94d; } .gdm-card.hot { box-shadow: inset 0 0 0 1px rgba(255,169,77,.45); }
@@ -28393,7 +28394,7 @@ async function aqGuideLoadAcc(force) {
   let r = null; try { r = await apiCall('guideList', {}); } catch (e) {}
   _gd.acc = {}; _gd.accList = (r && r.ok) ? (r.items || []) : []; _gd.accTs = Date.now();
   _gd.accList.forEach(x => { _gd.acc[x.key] = x; });
-  if (r && r.ok) { _gd.seen = new Set(r.seen || []); _gd.queue = r.queue || []; setTimeout(() => { _gdClientRetry().catch(() => {}); }, 0); }   // v6.11 · v6.12 AI 요청 대기열
+  if (r && r.ok) { _gd.seen = new Set(r.seen || []); _gd.queue = r.queue || []; _gd.picks = r.picks || null; _gd.pledge = r.pledge || null; setTimeout(() => { _gdClientRetry().catch(() => {}); }, 0); }   // v6.11 · v6.12 AI 요청 대기열
   window._gdTodos = []; _gd.accList.forEach(x => (x.applied || []).forEach(a => { if (a.client && a.client.act === '할 일 등록' && a.client.date) window._gdTodos.push({ date: a.client.date, text: a.client.text, gid: x.gid, title: x.title }); }));
   return _gd.acc;
 }
@@ -28414,6 +28415,7 @@ function _gdOpenSheet(item, pv) {   // v6.11: 유형 · 부분 선택 · 기한 
   const wat = (pa.watches || []).map((w, i) => ck('watches', i, `👀 ${escapeHtml(_gdHuman(w))}`, true));
   const rec = (pa.rec_conds || []).map((g, i) => ck('rec_conds', i, `🎯 ${escapeHtml(_gdCondHuman(g))}`, true));
   const aon = (pv.act_on || []).map((o, i) => ck('act_on', i, `🎯 ${escapeHtml(aqKrText(_gdCondHuman((pa.act_on || [])[i] ? pa.act_on[i].groups : [])))} → <b>${escapeHtml(aqKrText(o.act))}</b>${o.risk ? '<em>위험을 키우는 동작이라 조건이 되면 확인을 받고 실행해요</em>' : '<em>조건이 되면 바로 실행해요</em>'}`, true));
+  const plg = (pa.pledges || []).map((p, i) => ck('pledges', i, `🤝 ${escapeHtml(aqKrText(_gdPledgeText(p)))}<em>어기면 기록하고 알려 줘요 · 어긴 매매는 20거래일 뒤 결과를 돌아봐요</em>`, true));
   const cond = (pa.conds || []).map((g, i) => (g.length === 1 && g[0].length === 1 && g[0][0].auto) ? '' : ck('conds', i, `🔁 ${escapeHtml(_gdCondHuman(g))}`, true)).filter(Boolean);
   const blk = (t, rows) => rows.length ? `<div class="gda-blk"><small>${t}</small>${rows.join('')}</div>` : '';
   const judg = (pv.judg || []).length ? pv.judg.map(t => escapeHtml(aqKrText(t))) : [escapeHtml((item.fields || {})['다시 볼 때'] || (item.fields || {})['확인할 것'] || item.title || '')];
@@ -28423,13 +28425,14 @@ function _gdOpenSheet(item, pv) {   // v6.11: 유형 · 부분 선택 · 기한 
     + blk('지금 바로 바뀌는 것', acts)
     + ((pv.bad_acts || []).length ? `<div class="gda-blk gda-warn"><small>읽지 못한 실행 꼬리표 — 이 설정은 바뀌지 않아요</small>${pv.bad_acts.map(t => escapeHtml(aqKrText(t))).join('<br>')}</div>` : '')
     + blk('조건이 되면 실행해요', aon)
+    + blk('스스로 하는 약속', plg)
     + blk('서버가 지켜보고 닿으면 알려 줘요', wat.concat(rec, cond))
     + `<div class="gda-blk"><small>Claude가 다음 가이드에서 확인해요</small>${judg.join('<br>')}</div>`
     + `<div class="gda-blk"><small>끝나는 때</small>${(pv.ends || []).map(t => escapeHtml(aqKrText(t))).join('<br>')}${(pv.ends || []).length ? '<br>' : ''}<label class="gda-exp">이 날까지 <input type="date" id="gdaExp" value="${escapeAttr(String(pv.expire).slice(0, 10))}" min="${today}" max="${maxD}"> · 그 전에 언제든 그만</label></div>`
     + ((pv.bad || []).length ? `<div class="gda-note">형식이 맞지 않는 꼬리표 ${pv.bad.length}줄은 Claude가 확인하는 쪽으로 넘겼어요.</div>` : '')
     + `<div class="gda-btns"><button onclick="aqGuideSheetClose()">취소</button><button class="pri" id="gdaOk">따르기</button></div>`;
   document.getElementById('gdaOk').onclick = async () => {
-    const sel = { acts: [], watches: [], conds: [], rec_conds: [], act_on: [] }; let risk = false;
+    const sel = { acts: [], watches: [], conds: [], rec_conds: [], act_on: [], pledges: [] }; let risk = false;
     document.querySelectorAll('#gdaBody input[data-g]').forEach(el => { if (el.checked) { sel[el.dataset.g].push(Number(el.dataset.i)); if (el.closest('.risk') && el.dataset.g === 'acts') risk = true; } });
     (pa.conds || []).forEach((g, i) => { if (g.length === 1 && g[0].length === 1 && g[0][0].auto) sel.conds.push(i); });   // 다시 볼 때 문장(안전망)은 항상
     const exp = (document.getElementById('gdaExp') || {}).value; const rep = document.getElementById('gdaRep');
@@ -28601,7 +28604,9 @@ function _gdMineCard(x) {
   let key = '';
   const last = (x.history || []).filter(h => h.kind === 'hit' || h.kind === 'revert').slice(-1)[0];
   const _nk = (pa.act_on || []).findIndex((o, i) => ((ws['xcond' + i] || {}).need_ok && !(ws['xcond' + i] || {}).ran));
-  if (live && _nk >= 0) key = ['⚠️', '조건이 됐어요 — 확인하면 실행: ' + aqKrText(_gdActHuman(pa.act_on[_nk].act))];
+  const _lp = (x.history || []).filter(h => h.kind === 'pledge').slice(-1)[0];
+  if (live && _lp && x.unread) key = ['🤝', _lp.msg];
+  else if (live && _nk >= 0) key = ['⚠️', '조건이 됐어요 — 확인하면 실행: ' + aqKrText(_gdActHuman(pa.act_on[_nk].act))];
   else if (x.status === 'hit' && last) key = ['🔔', last.msg.replace(/^[^:]*:\s*/, '')];
   else if (!live) key = ['✅', x.end_reason || stt];
   else {
@@ -28609,6 +28614,7 @@ function _gdMineCard(x) {
     if (rc) key = ['🎯', '추천대로 할 때 — ' + _gdCondHuman(rc)];
     else if (w0) key = ['👀', `${_gdHuman(w0)} · 지금 ${(ws.w0 || {}).shown || '데이터 대기'}`];
     else if ((pa.conds || [])[0]) key = ['🔁', '다시 볼 때 — ' + _gdCondHuman(pa.conds[0])];
+    else if ((pa.pledges || [])[0]) key = ['🤝', aqKrText(_gdPledgeText(pa.pledges[0])) + ((ws.pl || {}).viol ? ` · ${(ws.pl || {}).viol}번 어김` : ' · 지키는 중')];
     else key = ['🧠', 'Claude가 다음 가이드에서 확인해요'];
   }
   let body = '';
@@ -28623,11 +28629,13 @@ function _gdMineCard(x) {
     });
     const edit = (path, v) => live ? ` <a class="gdm-ed" onclick="event.stopPropagation(); aqGdEdit('${k}','${path}',${Number(v)})">고치기</a>` : '';
     (pa.watches || []).forEach((w, i) => { const st = ws['w' + i] || {};
-      rows.push(`<div class="gda-row"><span class="i">👀</span><span class="k">지켜보기</span><span class="v">${escapeHtml(_gdHuman(w))}${edit('w' + i, w.value)}${_gdDist(w, st)}</span><span class="${st.status === 'wait' || !st.shown ? 'w' : st.met ? 'ok' : 'no'}">${escapeHtml(st.shown || '데이터 대기')}</span></div>`); });
+      rows.push(`<div class="gda-row"><span class="i">👀</span><span class="k">지켜보기</span><span class="v">${escapeHtml(_gdHuman(w))}${edit('w' + i, w.value)}${_gdDist(w, st)}${st.gate ? `<small class="gdm-gate">장중 판정 · ${escapeHtml(aqKrText(st.gate))}</small>` : ''}</span><span class="${st.status === 'wait' || !st.shown ? 'w' : st.met ? 'ok' : 'no'}">${escapeHtml(st.shown || '데이터 대기')}</span></div>`); });
     [['rec_conds', 'r', '추천대로', '🎯'], ['conds', 'c', '다시 볼 때', '🔁']].forEach(([kk, pre, lab, ico]) => (pa[kk] || []).forEach((groups, ci) => groups.forEach((grp, gi) => grp.forEach((p, pi) => {
       const path = `${pre}${ci}_${gi}_${pi}`; const st = ws[path] || {}; const n = p.n || 0;
       const pbar = p.type === 'watch' && n ? `<div class="gda-bar"><i style="width:${Math.min(100, (st.streak || 0) / n * 100)}%"></i></div>` : (p.type === 'watch' ? _gdDist(p, st) : '');
       rows.push(`<div class="gda-row"><span class="i">${p.type === 'judg' ? '🧠' : p.type === 'date' ? '📅' : ico}</span><span class="k">${pi ? '그리고' : gi ? '또는' : lab}</span><span class="v">${escapeHtml(_gdPartHuman(p))}${p.type === 'watch' ? edit(path, p.value) : ''}${pbar}</span><span class="${st.met ? 'ok' : 'w'}">${escapeHtml(p.type === 'watch' && n ? `${st.streak || 0}/${n}일` : (st.shown || '대기'))}</span></div>`); }))));
+    const _pl = ws.pl || {};
+    (pa.pledges || []).forEach(p => rows.push(`<div class="gda-row"><span class="i">🤝</span><span class="k">약속</span><span class="v">${escapeHtml(aqKrText(_gdPledgeText(p)))}</span><span class="${_pl.viol ? 'no' : 'ok'}">${_pl.viol ? `${_pl.viol}번 어김` : (live ? '지키는 중' : '지킴')}</span></div>`));
     (pa.act_on || []).forEach((o, xi) => { const xs = ws['xcond' + xi] || {};
       rows.push(`<div class="gda-row gdm-xo"><span class="i">🎯</span><span class="k">조건 실행</span><span class="v">조건이 되면 <b>${escapeHtml(aqKrText(_gdActHuman(o.act)))}</b></span><span class="${xs.ran ? 'ok' : xs.need_ok ? 'no' : 'w'}">${xs.ran ? '실행함' : xs.need_ok ? '확인 필요' : '기다리는 중'}</span></div>`);
       (o.groups || []).forEach((grp, gi) => grp.forEach((p, pi) => { const path = `x${xi}_${gi}_${pi}`; const st = ws[path] || {}; const n = p.n || 0;
@@ -28645,15 +28653,25 @@ function _gdMineCard(x) {
 function _gdMineHtml() {
   let L = _gd.accList || []; const f = _gd.tkFilter;
   if (f) L = L.filter(x => String((x.parsed || {})._tk || '').toUpperCase() === f);
-  if (!L.length) return (f ? '' : _gdQueueHtml()) + `${f ? `<div class="gdm-flt">${escapeHtml(displayName(f) || f)}만 보는 중 <a onclick="_gd.tkFilter='';aqGuideRender()">✕</a></div>` : ''}<div class="gd-empty" style="padding:28px 8px">따르는 지침이 없어요.<br><small>AI 추천에서 '따르기'를 누르면 여기서 관리해요.</small></div>`;
+  if (!L.length) return (f ? '' : _gdQueueHtml() + _gdPicksHtml()) + `${f ? `<div class="gdm-flt">${escapeHtml(displayName(f) || f)}만 보는 중 <a onclick="_gd.tkFilter='';aqGuideRender()">✕</a></div>` : ''}<div class="gd-empty" style="padding:28px 8px">따르는 지침이 없어요.<br><small>AI 추천에서 '따르기'를 누르면 여기서 관리해요.</small></div>`;
   const by = {}; L.forEach(x => { (by[_gdGroupOf(x)] = by[_gdGroupOf(x)] || []).push(x); });
-  const qh = f ? '' : _gdQueueHtml();
+  const qh = f ? '' : _gdQueueHtml() + _gdPicksHtml();
   _gd.grpOpen = _gd.grpOpen || { past: false };
   return (f ? `<div class="gdm-flt">${escapeHtml(displayName(f) || f)}만 보는 중 <a onclick="_gd.tkFilter='';aqGuideRender()">✕</a></div>` : '') + qh + _GD_GRP.map(([g, nm]) => {
     const xs = by[g] || []; if (!xs.length) return '';
     const open = g === 'past' ? !!_gd.grpOpen.past : _gd.grpOpen[g] !== false;
     return `<div class="gdm-grp ${g}"><div class="gdm-gh" onclick="aqGdGrp('${g}')"><b>${nm}</b><span>${xs.length}</span><i>${open ? '▴' : '▾'}</i></div>${open ? xs.map(_gdMineCard).join('') : ''}</div>`;
   }).join('');
+}
+const _GD_PL = { '매수 금지': '그 종목을 사지 않기', '물타기 금지': '손실 중(평단 아래)에 더 사지 않기', '추격 매수 금지': '따를 때보다 5% 넘게 오른 뒤 사지 않기', '매도 금지': '그 종목을 팔지 않기', '본전 매도 금지': '평단 ±3% 안에서 팔지 않기' };
+function _gdPledgeText(p) { const nm = displayName(p.ticker) || p.ticker; return `${nm} ${p.kind} — ${_GD_PL[p.kind] || ''}${p.until ? ' · ' + String(p.until).slice(5).replace('-', '/') + '까지' : ''}`; }
+function _gdPicksHtml() {   // AI 선제 추천(새 기회) 성적 · 행동 약속 결과
+  const P = _gd.picks; const S = _gd.pledge; if (!(P && P.total) && !(S && (S.kept || S.broke))) return '';
+  const a = (P && P.all) || {}; const open = !!_gd.pkOpen; const pc = v => v == null ? '—' : `${v > 0 ? '+' : ''}${Number(v).toFixed(1)}%`;
+  const head = a.n ? `20거래일 지난 ${a.n}개 · 시장보다 나음 ${Math.round(a.hit / a.n * 100)}% · 평균 ${pc(a.avg20)}` : (P && P.total ? `제안 ${P.total}개 · 아직 20거래일 전` : '');
+  const pl = S && (S.kept || S.broke) ? `약속 지킴 ${S.kept} · 어김 ${S.broke}` : '';
+  const rows = open ? ((P && P.recent) || []).map(r => `<div class="gdm-q"><span>${r.followed ? '✅' : '·'}</span><span class="t">${escapeHtml(displayName(r.ticker) || r.ticker)}<small>${String(r.gdate).slice(5).replace('-', '/')} 제안${r.followed ? ' · 따름' : ''}</small></span><span class="${r.x20 == null ? 'w' : r.x20 > 0 ? 'ok' : 'no'}">${r.r20 != null ? `20일 ${pc(r.r20)} · 시장 대비 ${pc(r.x20).replace('%', '%p')}` : r.r5 != null ? `5일 ${pc(r.r5)}` : '진행 중'}</span></div>`).join('') : '';
+  return `<div class="gdm-qbox gdm-pk"><div class="gdm-qh" onclick="_gd.pkOpen=!_gd.pkOpen;aqGuideRender()"><b>📈 AI 선제 추천 성적</b><span>${escapeHtml([head, pl].filter(Boolean).join(' · '))}</span><i>${open ? '▴' : '▾'}</i></div>${rows}</div>`;
 }
 const _GD_QK = { report: 'AI 보고서', review: 'AI 매수심사', guide: '가이드 고치기' };
 function _gdQState(q, a) {
