@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.08';   // v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.09';   // v6.09: AI 가이드 '지금 다시 쓰기' (서버가 MyPort 새로 쓰고 Claude 가이드 작업 실행) · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8311,6 +8311,9 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .rv-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; } .rv-kv > div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 9px 11px; min-width: 0; } .rv-kv span { display: block; font-size: 11px; color: var(--text-mute); } .rv-kv b { display: block; font-size: 15.5px; font-weight: 800; margin-top: 2px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; } .rv-kv b.up { color: var(--kr-up); } .rv-kv b.down { color: var(--kr-down); } .rv-kv b.rv-nx { font-size: 14px; } .rv-kv small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .rv-again.off { opacity: .5; }
+.gd-runrow { display: flex; align-items: center; gap: 8px; } .gd-runrow .gd-src { flex: 1; min-width: 0; } .gd-run { flex: none; display: inline-flex; align-items: center; gap: 6px; }
+.gd-runb { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px; border: 1px solid #2f4f6f; background: #1d2b3a; color: #74c0fc; font-family: inherit; cursor: pointer; white-space: nowrap; }
+.gd-runb:disabled { background: #1e1e22; color: #5c5c64; border-color: #29292e; } .gd-runf { font-size: 11px; color: #ffa94d; }
 .bf-rvb { display: inline-flex; gap: 6px; } .bf-rvb button { font-size: 11.5px; font-weight: 700; padding: 5px 10px; border-radius: 999px; border: none; background: rgba(255,255,255,.07); color: var(--text-dim); font-family: inherit; cursor: pointer; white-space: nowrap; } .bf-rvb button.go { background: #1d2b3a; color: #74c0fc; } .rv-again.x { background: rgba(255,169,77,.12); color: #ffa94d; }
 .rv-lvrow { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; } .rv-lv { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--text-dim); }
 .rv-lv i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; } .rv-lv.g { color: #69db7c; background: rgba(64,192,87,.12); } .rv-lv.b { color: #74c0fc; background: rgba(116,192,252,.12); } .rv-lv.y { color: #ffd43b; background: rgba(250,176,5,.12); }
@@ -28327,11 +28330,43 @@ async function aqGuideRender() {
   }
   const warn = g.meta && g.meta.warn ? `<div class="gd-warn">⚠️ ${escapeHtml(g.meta.warn)}</div>` : '';
   const legend = g.items.length ? `<div class="gd-lg"><span><i style="background:${_GD_C.ev}"></i>일정</span><span><i style="background:${_GD_C.mind}"></i>심리·행동</span><span><i style="background:${_GD_C.pf}"></i>포트폴리오·설정</span></div>` : '';
-  box.innerHTML = `<div class="gd-strip">${strip}</div>${srcTxt ? `<div class="gd-src">${escapeHtml(srcTxt)}</div>` : ''}${warn}${legend}<div class="gd-tl">${tl}</div>${_gdAccSection()}`;
+  box.innerHTML = `<div class="gd-strip">${strip}</div><div class="gd-runrow">${srcTxt ? `<div class="gd-src">${escapeHtml(srcTxt)}</div>` : '<div class="gd-src"></div>'}<span id="gdRun" class="gd-run"></span></div>${warn}${legend}<div class="gd-tl">${tl}</div>${_gdAccSection()}`;
+  try { aqGdRunRefresh(); } catch (e) {}   // v6.09
 }
 function aqGuideSel(d) { _gd.sel = d; aqGuideRender(); }
+// v6.09: AI 가이드 수시 업데이트 — 지금 회차(14시 전 오전·후 오후)를 지금 기준으로 다시 씀 · 보통 5~15분 · 하루 10번
+const _gdr = { st: null, ts: 0, poll: null };
+function _gdrBusy(x) { return !!x && (x.status === 'running' || x.ai_status === 'requested'); }
+function _gdrPaint() {
+  const el = document.getElementById('gdRun'); if (!el) return; const r = _gdr.st; if (!r || !r.ok) { el.innerHTML = ''; return; }
+  const x = r.run; const spin = '<span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+  if (_gdrBusy(x)) { el.innerHTML = `<button class="gd-runb busy" onclick="aqGdRunCancel(${Number(x.id)})">${spin}다시 쓰는 중</button>`; el.title = '보통 5~15분 · 누르면 취소'; return; }
+  const fail = x && (x.status === 'failed' || ['failed', 'timeout'].includes(x.ai_status)) && (x.error || x.ai_error) !== '취소함';
+  el.innerHTML = `<button class="gd-runb" onclick="aqGdRunGo()" ${r.left === 0 ? 'disabled' : ''}>지금 다시 쓰기</button>${fail ? `<small class="gd-runf">지난 요청 실패 — ${escapeHtml(String(x.ai_error || x.error || '이유 미상').slice(0, 30))}</small>` : ''}`;
+  el.title = r.left === 0 ? '오늘 10번을 다 썼어요' : `오늘 ${r.left}번 남음`;
+}
+async function aqGdRunRefresh(force) {
+  if (document.body.getAttribute('data-role') !== 'admin') return;
+  if (!force && _gdr.st && Date.now() - _gdr.ts < 20e3) { _gdrPaint(); return; }
+  const was = _gdr.st && _gdr.st.run; let r = null; try { r = await apiCall('guideRunStatus', {}); } catch (e) {}
+  _gdr.st = r; _gdr.ts = Date.now(); _gdrPaint();
+  const now = r && r.run;
+  if (_gdrBusy(was) && now && !_gdrBusy(now)) {
+    if (now.ai_status === 'done') { aqToast('AI 가이드를 새로 썼어요'); _gd.docs = null; try { await aqGuideRender(); } catch (e) {} }
+    else if (now.ai_status !== 'cancelled' && (now.error || '') !== '취소함') aqToast('AI 가이드를 다시 쓰지 못했어요');
+  }
+  clearTimeout(_gdr.poll); if (_gdrBusy(now)) _gdr.poll = setTimeout(() => { if (document.getElementById('gdRun')) aqGdRunRefresh(true); }, 20000);
+}
+async function aqGdRunGo() {
+  const pm = new Date(Date.now() + 9 * 3600e3).getUTCHours() >= 14;
+  if (!confirm(`AI 가이드 ${pm ? '오후' : '오전'} 회차를 지금 기준으로 다시 쓸까요?\n포트폴리오를 새로 읽고 보통 5~15분 걸려요.`)) return;
+  let r = null; try { r = await apiCall('guideRunRequest', {}); } catch (e) {}
+  if (!r || !r.ok) aqToast((r && r.error) || '요청하지 못했어요');
+  aqGdRunRefresh(true);
+}
+async function aqGdRunCancel(id) { if (!confirm('가이드 다시 쓰기를 취소할까요?')) return; try { await apiCall('guideRunCancel', { id }); } catch (e) {} aqToast('취소했어요'); aqGdRunRefresh(true); }
 function aqGuideToggle(k) { _gd.open[k] = !_gd.open[k]; aqGuideRender(); }
-Object.assign(window, { aqGuideRender, aqGuideSel, aqGuideToggle });
+Object.assign(window, { aqGuideRender, aqGuideSel, aqGuideToggle, aqGdRunGo, aqGdRunCancel, aqGdRunRefresh });
 
 // ============================================================================
 // v5.63: AI 가이드 받아들이기 — 체크 → (실행할 설정이 있으면) 확인 창 → 서버가 실행·감시·되돌리기
