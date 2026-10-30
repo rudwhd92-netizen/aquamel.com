@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.00';   // v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.01';   // v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -13943,6 +13943,8 @@ async function tryLoadFromBundle(forceFresh) {
         _state.sectorsByMarket[mkt][name].sort((a, b) => a.Date.localeCompare(b.Date));
       });
     });
+    // v6.01: 유니버스 밖 보유 종목 시세
+    ['US', 'KR'].forEach(mkt => { try { _aqSetExtras(mkt, (bundle[mkt] && bundle[mkt].extras) || []); } catch (e) {} });
     // v5.21: 유니버스(마스터 시트)에 없는 섹터 탭(폐기·이름 변경된 옛 섹터)은 제외
     try {
       const _norm = (x) => String(x || '').replace(/[^\p{L}\p{N}]/gu, '').toLowerCase();
@@ -14283,6 +14285,10 @@ async function autoLoadData(opts) {
     // v1.80: KR sector 폴더의 시트들도 미국 큐에 함께 추가 — 미국과 동일 방식으로 처리
     //   각 시트에 market 정보 부착하여 분류
     _state.sectorsByMarket = { US: {}, KR: {} };  // reset
+    // v6.01: 유니버스 밖 보유 종목 시세 (번들 없이 탭별로 받는 경로)
+    [['US', 'srv_extras_us'], ['KR', 'srv_extras_kr']].forEach(([mkt, sid]) => {
+      apiCall('getOneSheet', { sheetId: sid }).then(r => { if (r && r.ok) _aqSetExtras(mkt, r.rows || []); }).catch(() => {});
+    });
 
     // active 시장으로 swap (현재 선택된 시장 데이터를 _state.archive 등에 노출)
     applyMarketState(getCurrentMarket());
@@ -16789,6 +16795,8 @@ function simulatePortfolioDaily() {
   Object.values(_state.sectors || {}).forEach(rows => {
     rows.forEach(r => { if (r.Date) dateSet.add(r.Date); });
   });
+  // v6.01: 유니버스 밖 보유 종목도
+  Object.values((_state.extrasByMarket || {})[getCurrentMarket()] || {}).forEach(rows => { rows.forEach(r => { if (r.Date) dateSet.add(r.Date); }); });
   // adhoc fetch한 종목도
   if (typeof _adhocOhlcv === 'object') {
     Object.values(_adhocOhlcv).forEach(rows => {
@@ -20917,12 +20925,31 @@ let _chart = null;
 // 세션 메모리 캐시: ad-hoc fetch한 OHLCV (SOXX 같은 ETF 등)
 const _adhocOhlcv = {};
 
+// v6.01: 유니버스 밖 보유·매매 종목(ETF 등) 시세 — 서버 jobs/extras.py가 매일 받아 번들 extras로 내려줌
+function _aqSetExtras(mkt, raw) {
+  if (!_state.extrasByMarket) _state.extrasByMarket = { US: {}, KR: {} };
+  const by = {};
+  (raw || []).map(r => normalizeOhlcvRow(r, mkt)).filter(r => r.Ticker && r.Date && !isNaN(r.Close) && r.Close > 0)
+    .forEach(r => { (by[r.Ticker] = by[r.Ticker] || []).push(r); });
+  Object.values(by).forEach(a => a.sort((x, y) => x.Date.localeCompare(y.Date)));
+  _state.extrasByMarket[mkt] = by;
+}
+function _aqExtraRows(ticker) {
+  const ex = _state.extrasByMarket; if (!ex) return null;
+  const m = (typeof getCurrentMarket === 'function') ? getCurrentMarket() : 'US';
+  for (const mk of [m, m === 'KR' ? 'US' : 'KR']) { const a = ex[mk] && ex[mk][ticker]; if (a && a.length) return a; }
+  return null;
+}
+
 function findTickerSeries(ticker) {
   // v1.80: 시장 무관 — _state.sectors에서 찾음 (시장 swap 후 active sectors)
   for (const sec of Object.keys(_state.sectors)) {
     const rows = _state.sectors[sec].filter(r => r.Ticker === ticker);
     if (rows.length > 0) return { sector: sec, rows: rows.slice().sort((a,b) => a.Date.localeCompare(b.Date)) };
   }
+  // v6.01: 유니버스 밖 보유 종목
+  const _ex = _aqExtraRows(ticker);
+  if (_ex) return { sector: '📌 유니버스 외', rows: _ex };
   // 세션 캐시 (Yahoo .KS/.KQ 결과)
   if (_adhocOhlcv[ticker]) return { sector: '🔍 외부 조회', rows: _adhocOhlcv[ticker] };
   return null;
