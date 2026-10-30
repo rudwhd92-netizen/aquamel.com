@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '5.98';   // v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '5.99';   // v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -2885,7 +2885,7 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 .pc-sidebar .pc-tab-btn.active .pc-tab-label { font-weight: 700; }
 
 /* v2.59: PC 사이드바 — 설정 버튼은 맨 아래로 밀기 (flex auto) */
-.pc-sidebar .pc-tab-btn[data-pc-tab="ops"] { margin-top: auto; }   /* v4.78: 로그 제거 → 운영부터 하단 그룹 */
+.pc-sidebar .pc-tab-btn[data-pc-tab="engine"] { margin-top: auto; }   /* v5.99: 자동 → 운영 → AI → 설정 (하단 그룹) */   /* v4.78: 로그 제거 → 운영부터 하단 그룹 */
 .pc-sidebar .pc-sidebar-divider.bottom { margin-top: auto; margin-bottom: 6px; }
 
 /* v2.59: MO drawer 분리선 (마이 ↔ 설정 사이) */
@@ -3007,13 +3007,14 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   /* v2.68: hero는 항상 상단에 노출 — hide 룰 제거 */
   body[data-pc-page="settings"] .container > section.card { display: none !important; }
   body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
-  body[data-pc-page="auto"] #autoBlacklistCard { display: block !important; }
   body[data-pc-page="board"] #aqAccountCard { display: block !important; }
   body[data-pc-page="board"][data-broker="linked"] #boardAuditCard, body[data-pc-page="board"][data-broker="linked"] #aqStatsCard { display: block !important; }
   body[data-pc-page="board"] #aqTossGateCard { display: block !important; }
   body[data-pc-page="board"]:not([data-broker="linked"]) .container > section.card:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
   /* v4.76: 운영 / 자동 페이지 (PC) */
-  body[data-pc-page="main"] section.card[data-mtab~="ops"], body[data-pc-page="main"] section.card[data-mtab~="auto"] { display: none !important; }
+  body[data-pc-page="main"] section.card[data-mtab~="ops"], body[data-pc-page="main"] section.card[data-mtab~="auto"], body[data-pc-page="main"] section.card[data-mtab~="engine"] { display: none !important; }
+  body[data-pc-page="engine"] .container > section.card { display: none !important; }
+  body[data-pc-page="engine"] section.card[data-mtab~="engine"] { display: block !important; }
   body[data-pc-page="ops"] .container > section.card { display: none !important; }
   body[data-pc-page="ops"] section.card[data-mtab~="ops"] { display: block !important; }
   body[data-pc-page="auto"] .container > section.card { display: none !important; }
@@ -3568,7 +3569,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .aq-admin-table { width: 100%; border-collapse: collapse; font-size: 12px; } .aq-admin-table th, .aq-admin-table td { padding: 7px 6px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
 .aq-admin-table th { font-size: 10px; color: var(--text-mute); text-transform: uppercase; }
 .aq-admin-table code { font-weight: 800; color: #63e6be; letter-spacing: .5px; }
-body:not([data-role="admin"]) [data-pc-tab="ops"], body:not([data-role="admin"]) .mo-drawer-item[data-role-admin] { display: none !important; }
+body:not([data-role="admin"]) [data-pc-tab="ops"], body:not([data-role="admin"]) [data-pc-tab="engine"], body:not([data-role="admin"]) .mo-drawer-item[data-role-admin] { display: none !important; }
 /* v5.01: 모의매수 */
 .aq-sim-summary { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-mute); padding: 4px 2px 10px; }
 .aq-sim-summary b { color: var(--text-hi); }
@@ -3973,10 +3974,10 @@ html[data-market="KR"] #insiderModeToggle { display: none !important; }
 body[data-mtab="explore"][data-xtab="list"] section.card[data-xtab="list"] { display: block !important; }
 body[data-mtab="auto"] section.card[data-atab] { display: none !important; }
 body[data-mtab="auto"][data-atab="report"] section.card[data-atab="report"],
-body[data-mtab="auto"][data-atab="auto"] section.card[data-atab="auto"] { display: block !important; }
+body[data-mtab="auto"][data-atab="review"] section.card[data-atab="review"] { display: block !important; }
 body[data-pc-page="auto"] section.card[data-atab="report"] { display: block !important; }
-body[data-pc-page="auto"]:not([data-role="admin"]) section.card[data-atab="auto"], html[data-market="KR"] body[data-pc-page="auto"] section.card[data-atab="auto"] { display: none !important; }
-body:not([data-role="admin"]) #aiSubtabs [data-atab="auto"] { display: none !important; }
+body[data-pc-page="auto"]:not([data-role="admin"]) section.card[data-atab="review"] { display: none !important; }
+body:not([data-role="admin"]) #aiSubtabs [data-atab="review"] { display: none !important; }   /* v5.99: AI 매매심사 — 관리자 전용 (일단) */
 /* v5.41: 자동운영 진행 중 */
 .eng-hold-h { margin-top: 22px; }
 .insider-archive-item.eng-hold { grid-template-columns: 42px minmax(0, 1fr) auto 28px; }
@@ -4022,7 +4023,6 @@ body:not([data-role="admin"]) #aiSubtabs [data-atab="auto"] { display: none !imp
 /* v5.47: AI 탭 시장별 서브탭 */
 #aiSubtabs .xtab-btn[data-atab="close"] { display: none; }
 html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="close"] { display: block; }
-html[data-market="KR"] #aiSubtabs .xtab-btn[data-atab="auto"] { display: none !important; }
 #closeCard { background: transparent !important; border: none !important; box-shadow: none !important; } #closeCard .card-body { padding-top: 0; }
 .bf-tm small { display: block; font-size: 10.5px; color: var(--text-mute); font-weight: 600; }
 /* v5.48: 숫자로 본 어제 */
@@ -4979,6 +4979,7 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
   /* v4.76: 운영 / 자동 탭 (MO) */
   body[data-mtab="ops"] section.card[data-mtab~="ops"] { display: block !important; }
   body[data-mtab="auto"] section.card[data-mtab~="auto"] { display: block !important; }
+  body[data-mtab="engine"] section.card[data-mtab~="engine"] { display: block !important; }   /* v5.99: 자동 (햄버거) */
   /* v2.66: MO To-Do 탭 — todoBoardCard만 표시 */
   body[data-mtab="todo"] section.card[data-mtab~="todo"] { display: block !important; }
   /* v2.92: MO 관심 탭 — watchBoardCard만 표시 */
@@ -8250,6 +8251,38 @@ table.combo-eval tbody td .nodata {
   footer { font-size: 8px; }
 }
 
+
+/* v5.99: 자동 페이지 (햄버거·PC) — 관리자 전용 · 미국만 */
+#engineKrNote { display: none !important; }
+html[data-market="KR"] body[data-mtab="engine"] #engineKrNote, html[data-market="KR"] body[data-pc-page="engine"] #engineKrNote { display: block !important; }
+html[data-market="KR"] #autoSignalCard, html[data-market="KR"] #autoBlacklistCard { display: none !important; }
+body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #autoBlacklistCard { display: none !important; }
+.pc-sidebar .pc-tab-btn[data-pc-tab="ops"] { margin-top: 0; }
+/* v5.99: AI 브리핑 장후 상단 — 내 계좌·지수 3칸 + 평가·실현손익 2칸 */
+.ba-row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 10px 0 8px; } .ba-row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 6px; }
+.ba-tl { background: rgba(255,255,255,.06); border-radius: 14px; padding: 11px 10px 12px; min-width: 0; } .ba-tl span { display: block; font-size: 12px; color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ba-tl b { display: block; font-size: 17px; font-weight: 800; margin-top: 4px; letter-spacing: -.4px; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-hi); }
+.ba-tl b.up { color: var(--kr-up); } .ba-tl b.down { color: var(--kr-down); } .ba-tl b.none { color: var(--text-mute); }
+@media (min-width: 430px) { .ba-tl b { font-size: 19px; } } @media (max-width: 360px) { .ba-tl { padding: 10px 8px 11px; } .ba-tl b { font-size: 15.5px; } }
+/* v5.99: AI 매매심사 */
+#reviewCard { background: transparent !important; border: none !important; box-shadow: none !important; } #reviewCard .card-body { padding: 2px 2px 24px; }
+.rv-wait { background: rgba(255,255,255,.04); border-radius: 16px; padding: 22px 18px; text-align: center; color: var(--text-mute); font-size: 13px; line-height: 1.6; } .rv-wait b { display: block; color: var(--text-hi); font-size: 15px; margin-bottom: 6px; } .rv-wait p { margin: 0; } .rv-wait small { display: block; margin-top: 10px; font-size: 11px; opacity: .7; }
+.rv-sumbar { display: grid; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); gap: 6px; margin: 0 0 10px; } .rv-sumbar > div { background: rgba(255,255,255,.05); border-radius: 12px; padding: 9px 10px; text-align: center; } .rv-sumbar span { display: block; font-size: 11px; color: var(--text-mute); white-space: nowrap; } .rv-sumbar b { font-size: 18px; font-weight: 800; color: var(--text-hi); }
+.rv-sumbar b.g, .rv-op.g { color: #69db7c; } .rv-sumbar b.y, .rv-op.y { color: #ffd43b; } .rv-sumbar b.r, .rv-op.r { color: #ff8787; }
+.rv-active { display: flex; align-items: center; gap: 8px; background: rgba(116,192,252,.08); color: #a5d8ff; border-radius: 12px; padding: 9px 12px; font-size: 12.5px; margin-bottom: 10px; }
+.rv-segs { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin: 4px 0 12px; } .rv-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; } .rv-seg button { background: none; border: none; color: var(--text-mute); font-size: 12px; font-weight: 700; padding: 5px 11px; cursor: pointer; font-family: inherit; } .rv-seg button.on { background: rgba(255,255,255,.09); color: var(--text-hi); }
+.rv-list { display: flex; flex-direction: column; gap: 10px; }
+.rv-card { background: rgba(255,255,255,.04); border-radius: 16px; padding: 14px; cursor: pointer; } .rv-card.stale { opacity: .6; } .rv-card:active { background: rgba(255,255,255,.07); }
+.rv-hd { display: flex; align-items: center; gap: 10px; } .rv-hd .aq-logo-wrap, .rv-hd .ia-logo { width: 36px !important; height: 36px !important; min-width: 36px; border-radius: 50% !important; overflow: hidden; flex: none; }
+.rv-t { flex: 1; min-width: 0; } .rv-nm { font-size: 14.5px; font-weight: 700; color: var(--text-hi); display: flex; align-items: center; gap: 5px; flex-wrap: wrap; } .rv-meta { font-size: 11.5px; color: var(--text-mute); margin-top: 2px; }
+.rv-tag { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 999px; } .rv-tag.own { background: rgba(99,230,190,.14); color: #63e6be; } .rv-tag.watch { background: rgba(247,131,172,.14); color: #f783ac; }
+.rv-op { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--text-dim); background: rgba(255,255,255,.06); border-radius: 999px; padding: 4px 10px 4px 8px; } .rv-op i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.rv-op.busy { color: #a5d8ff; } .rv-op.busy i { animation: rvPulse 1.2s ease-in-out infinite; } @keyframes rvPulse { 50% { opacity: .25; } }
+.rv-sum { font-size: 13px; color: var(--text); line-height: 1.55; margin: 10px 0 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rv-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; } .rv-kv > div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 9px 11px; min-width: 0; } .rv-kv span { display: block; font-size: 11px; color: var(--text-mute); } .rv-kv b { display: block; font-size: 15.5px; font-weight: 800; margin-top: 2px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; } .rv-kv b.up { color: var(--kr-up); } .rv-kv b.down { color: var(--kr-down); } .rv-kv b.rv-nx { font-size: 14px; } .rv-kv small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.rv-again { margin-top: 10px; width: 100%; background: rgba(255,255,255,.06); border: none; border-radius: 10px; padding: 8px; color: var(--text-dim); font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.rv-chips .br-chip { margin-left: 0; }
 </style>
 </head>
 <body>
@@ -8826,10 +8859,10 @@ table.combo-eval tbody td .nodata {
     <!-- v4.76: 자동 페이지 (요건 구체화 예정 — 우선 신호 선택만) -->
     <section class="card mobile-only explore-subtabs" id="aiSubtabs" data-mtab="auto">
       <div class="xtab-row">
-        <button class="xtab-btn active" data-atab="brief" onclick="setAiSubtab('brief')">일일 브리핑</button>
+        <button class="xtab-btn active" data-atab="brief" onclick="setAiSubtab('brief')">AI 브리핑</button>
         <button class="xtab-btn" data-atab="guide" onclick="setAiSubtab('guide')">AI 가이드</button>
       <button class="xtab-btn" data-atab="report" onclick="setAiSubtab('report')">AI 보고서</button>
-        <button class="xtab-btn" data-atab="auto" onclick="setAiSubtab('auto')">자동 매매</button>
+        <button class="xtab-btn" data-atab="review" onclick="setAiSubtab('review')">AI 매매심사</button>
       </div>
     </section>
     <section class="card" id="closeCard" data-mtab="retired" style="display:none !important">
@@ -8841,7 +8874,7 @@ table.combo-eval tbody td .nodata {
       <div class="card-body"><div id="preBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="briefCard" data-mtab="auto" data-atab="brief">
-      <div class="card-header bf-head"><span class="br-toggle" id="briefToggle"></span><span class="bf-date" id="briefDate"></span><button class="bf-dismiss" id="briefDismissBtn" onclick="aqBriefDismiss()">오늘 그만 보기</button></div>
+      <div class="card-header bf-head"><span class="br-toggle" id="briefToggle"></span><span class="bf-date" id="briefDate"></span><button class="bf-dismiss" id="briefDismissBtn" onclick="aqBriefDismiss()">그만 보기</button></div>
       <div class="card-body"><div id="briefBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="guideCard" data-mtab="auto" data-atab="guide">
@@ -8869,7 +8902,11 @@ table.combo-eval tbody td .nodata {
       </div>
     </div>
   </section>
-    <section class="card" id="autoSignalCard" data-mtab="auto" data-atab="auto">
+    <section class="card" id="reviewCard" data-mtab="auto" data-atab="review">
+      <div class="card-body"><div id="reviewBody"><div class="auto-empty">불러오는 중…</div></div></div>
+    </section>
+    <section class="card" id="engineKrNote" data-mtab="engine"><div class="card-body"><div class="auto-empty">자동매매는 미국 시장만 지원해요. 위에서 US로 바꾸면 보여요.</div></div></section>
+    <section class="card" id="autoSignalCard" data-mtab="engine">
       <div class="card-header eng-head"><h2>자동매매 엔진</h2>
         <button class="eng-gear" onclick="aqAutoCfgOpen()" aria-label="설정"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         <label class="aq-switch eng-switch"><input type="checkbox" id="engSwitch" onchange="aqEngineToggle(this)"><span class="sl"></span></label>
@@ -8894,7 +8931,7 @@ table.combo-eval tbody td .nodata {
         <div class="ar-row"><label>보유 기준</label><div class="auto-seg auto-seg-sm" id="autoHoldSeg"><button data-h="1" onclick="aqAutoSetHold(1)">1</button><button data-h="2" onclick="aqAutoSetHold(2)">2</button><button data-h="3" onclick="aqAutoSetHold(3)">3</button><button data-h="4" onclick="aqAutoSetHold(4)">4</button><button data-h="5" onclick="aqAutoSetHold(5)">5</button><button data-h="6" onclick="aqAutoSetHold(6)">6</button><button data-h="7" onclick="aqAutoSetHold(7)">7</button></div></div>
       </div></div>
     </div>
-    <section class="card" id="autoBlacklistCard" data-mtab="auto" data-atab="auto">
+    <section class="card" id="autoBlacklistCard" data-mtab="engine">
       <div class="card-header"><h2>자동매수 제외 중 <span id="autoBlCount" class="auto-bl-count"></span></h2></div>
       <div class="card-body"><div class="dash-holdings-body" id="autoBlList"></div></div>
     </section>
@@ -9472,6 +9509,10 @@ table.combo-eval tbody td .nodata {
       <button class="mo-drawer-close" onclick="closeMoDrawer()" aria-label="닫기">×</button>
     </div>
     <nav class="mo-drawer-list">
+      <button class="mo-drawer-item" data-role-admin onclick="moDrawerNav('engine')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><circle cx="12" cy="19.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+          <span>자동</span>
+        </button>
       <button class="mo-drawer-item" data-role-admin onclick="moDrawerNav('ops')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
           <span>운영</span>
@@ -9767,6 +9808,10 @@ table.combo-eval tbody td .nodata {
 
   <!-- v3.99: 로그 — 설정 바로 위 (하단 그룹) -->
   <!-- v2.59: 설정 — 사이드바 맨 아래 (margin-top: auto) -->
+  <button class="pc-tab-btn" data-pc-tab="engine" onclick="setPCTab('engine')" aria-label="자동">
+    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><circle cx="12" cy="19.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+    <span class="pc-tab-label">자동</span>
+  </button>
   <button class="pc-tab-btn" data-pc-tab="ops" onclick="setPCTab('ops')" aria-label="운영">
     <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
     <span class="pc-tab-label">운영</span>
@@ -11938,7 +11983,7 @@ function aqComputeAsymmetryScores() {
     const act = (ar === '매수' || /buy/i.test(ar)) ? '매수' : ((ar === '매도' || /sell/i.test(ar)) ? '매도' : null);
     if (!act) return;
     const qty = parseFloat(t.qty) || 0, price = parseFloat(t.price) || 0; if (qty <= 0 || price <= 0) return;
-    const d = normalizeDate(t.date); if (!d) return;
+    const d = normalizeDate(t.sdate || t.date); if (!d) return;   // v5.99: 미국은 장 날짜
     (tradesByDate[d] || (tradesByDate[d] = [])).push({ ticker: tk, action: act, qty, price });
     if (earliest === null || d < earliest) earliest = d;
   });
@@ -16722,9 +16767,10 @@ function simulatePortfolioDaily() {
       tax: parseFloat(t.tax) || 0,
       sector: t.sector || '',
     };
-    if (!tradesByDate[t.date]) tradesByDate[t.date] = [];
-    tradesByDate[t.date].push(tradeObj);
-    if (!earliestDate || t.date < earliestDate) earliestDate = t.date;
+    const td = t.sdate || t.date;   // v5.99: 미국은 장 날짜(sdate) 기준 — 화면 표시는 한국 시각(date) 그대로
+    if (!tradesByDate[td]) tradesByDate[td] = [];
+    tradesByDate[td].push(tradeObj);
+    if (!earliestDate || td < earliestDate) earliestDate = td;
   });
 
   if (!earliestDate) {
@@ -21013,7 +21059,7 @@ async function openChart(ticker) {
   let tradeMarkers = trades
     .filter(t => (t.ticker || '').toUpperCase() === ticker)
     .map(t => ({
-      x: normalizeDate(t.date) || '',
+      x: normalizeDate(t.sdate || t.date) || '',   // v5.99: 미국은 장 날짜 캔들에
       y: parseFloat(t.price) || 0,
       action: t.action,
       qty: t.qty,
@@ -23760,6 +23806,7 @@ function switchMobileTab(tab) {
   // v2.66: todo 활성화 — 칸반 빌드 (이전엔 'todo' return)
   document.body.setAttribute('data-mtab', tab);
   if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
+  if (tab === 'engine') { try { aqAutoEnter(); } catch (e) {} }   // v5.99: 자동 (햄버거)
   if (tab === 'auto') { try { setAiSubtab(document.body.getAttribute('data-atab') || 'brief'); } catch (e) {} }
   if (tab === 'settings') { try { aqSettingsRender(); } catch (e) {} }
   document.querySelectorAll('.mtab-btn').forEach(b => {
@@ -23906,9 +23953,10 @@ function updatePCSidebarActive() {
 // 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
 function setPCTab(tab) {
   // v2.66/v2.90: To-Do는 사이드 패널로 전환 — 페이지 그룹에서 제외
-  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings' || tab === 'ops' || tab === 'auto') {
+  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings' || tab === 'ops' || tab === 'auto' || tab === 'engine') {
     setPCPage(tab);
     if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
+    if (tab === 'engine') { try { aqAutoEnter(); } catch (e) {} }   // v5.99
     if (tab === 'auto') { try { setAiSubtab(document.body.getAttribute('data-atab') || 'brief'); } catch (e) {} }
   if (tab === 'settings') { try { aqSettingsRender(); } catch (e) {} }
     // v2.59: 설정 페이지 진입 시 데이터 시점 표시 갱신 (v2.58에서 마이 페이지였던 것)
@@ -24358,7 +24406,7 @@ function aqBuildFeedChartData(tk, tf) {
   const pos = computePortfolioFromTrades(trades);
   const buyAvg = (pos[tk] && pos[tk].avg) || 0;
   let tradeMarkers = trades.filter(t => (t.ticker || '').toUpperCase() === tk)
-    .map(t => ({ x: normalizeDate(t.date) || '', y: parseFloat(t.price) || 0, action: t.action, qty: t.qty }))
+    .map(t => ({ x: normalizeDate(t.sdate || t.date) || '', y: parseFloat(t.price) || 0, action: t.action, qty: t.qty }))
     .filter(t => t.x && t.x >= cutoffStr);
   // v4.28: 포트폴리오 보유분도 '매수' 마커로 추가
   try {
@@ -25933,6 +25981,8 @@ const _AQ_TL_JOBNAME = {
   kr_sheets: '시트 동기화 (KR)', kr_collect: '시세·수급 수집 (KR)', kr_sector: '섹터·매크로 갱신 (KR)', kr_signal: 'V-Shape 신호 스캔 (KR)', kr_broker: '토스 매매이력 동기화 (KR)', kr_brief: 'AI 브리핑 동기화', kr_quick: '한국 종가 빠른 수집', audit_mylog: '감사 보고서 기록'
 };
 const _AQ_TL_JOBICON = { us_sheets: 'sheets', kr_sheets: 'sheets', us_collect: 'collect', kr_collect: 'collect', us_signal: 'signal', kr_signal: 'signal', us_sector: 'sector', kr_sector: 'sector', us_calendar: 'calendar', us_daily: 'daily', us_hexagon: 'hexagon', us_broker: 'broker', kr_broker: 'broker', kr_brief: 'sheets', kr_quick: 'collect', audit_mylog: 'sheets' };
+// v5.99: 미국 장 날짜 — 체결 시각을 뉴욕 시간으로 바꾼 날짜 (프리·애프터도 그 날짜). 손익·차트 표시의 기준
+function _aqETDate(iso) { try { const d = new Date(iso); if (isNaN(d)) return null; const p = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(d); const g = k => (p.find(x => x.type === k) || {}).value; return `${g('year')}-${g('month')}-${g('day')}`; } catch (e) { return null; } }
 function _aqKST(iso) { try { const d = new Date(iso); if (isNaN(d)) return null; const p = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(d); const g = k => (p.find(x => x.type === k) || {}).value; return { date: `${g('year')}-${g('month')}-${g('day')}`, time: `${g('hour') === '24' ? '00' : g('hour')}:${g('minute')}` }; } catch (e) { return null; } }
 async function aqTLEnsureJobs(dateStr) {
   const month = String(dateStr || '').slice(0, 7); if (!month || _aqTL.cacheMonth === month || _aqTL.loading) return;
@@ -26036,7 +26086,8 @@ async function aqSyncLocalFromServer(silent) {
     const qty = Number(t.adj_quantity != null ? t.adj_quantity : t.quantity) || 0; const isBuy = String(t.side).toUpperCase() === 'BUY';
     const px = Number(t.adj_price != null ? t.adj_price : t.price) || 0; const sf = Number(t.split_factor) || 1;
     const kst = (typeof _aqKST === 'function') ? _aqKST(t.filled_at || t.ordered_at) : null;
-    byMkt[mk].trades.push({ _id: t.order_id, date: kst ? kst.date : d, time: kst ? kst.time : '', ticker: tk, action: isBuy ? '매수' : '매도', qty, price: px, fee: Number(t.commission) || 0, tax: Number(t.tax) || 0, sector: _aqSectorOf(tk), _src: 'toss',
+    const sdate = mk === 'US' ? (_aqETDate(t.filled_at || t.ordered_at) || d) : null;   // v5.99: 미국 = 미국 장 날짜 (한국 시각 자정 이후 체결이 다음 장으로 잡히던 문제)
+    byMkt[mk].trades.push({ _id: t.order_id, date: kst ? kst.date : d, time: kst ? kst.time : '', ...(sdate ? { sdate } : {}), ticker: tk, action: isBuy ? '매수' : '매도', qty, price: px, fee: Number(t.commission) || 0, tax: Number(t.tax) || 0, sector: _aqSectorOf(tk), _src: 'toss',
       _splitF: sf, _rawQty: Number(t.quantity) || 0, _rawPrice: Number(t.price) || 0, _splitNotes: t.split_notes || [] });
     net[mk + ':' + tk] = (net[mk + ':' + tk] || 0) + (isBuy ? qty : -qty);
   });
@@ -26707,18 +26758,22 @@ Object.assign(window, { aqMarketGuards });
 function setAiSubtab(x) {
   const isAdmin = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin');
   const _kr = getCurrentMarket() === 'KR';
-  if (x === 'pre' || x === 'close') { _brMode(); _br.mode = x === 'pre' ? 'pre' : 'post'; x = 'brief'; }   // v5.55: 장전·장후는 일일 브리핑 안 토글
-  const allowed = _kr ? ['brief', 'guide', 'report'] : ['brief', 'guide', 'report', 'auto'];
+  if (x === 'pre' || x === 'close') { _brMode(); _br.mode = x === 'pre' ? 'pre' : 'post'; x = 'brief'; }   // v5.55: 장전·장후는 AI 브리핑 안 토글
+  if (x === 'auto') { if (isAdmin) { aqGoEngine(); return; } x = 'brief'; }   // v5.99: 자동매매는 햄버거 '자동'으로 이동 (예전 링크 호환)
+  const allowed = ['brief', 'guide', 'report', 'review'];
   if (!allowed.includes(x)) x = 'brief';
   if (x === 'guide' && !isAdmin) x = 'brief';   // v5.57: AI 가이드는 관리자 계좌 기준
-  if (x === 'auto' && !isAdmin) x = 'brief';   // v5.40: 관리자는 시장 무관 · v5.42: 기본은 일일 브리핑
+  if (x === 'review' && !isAdmin) x = 'brief';   // v5.99: AI 매매심사 — 관리자 전용 (일단)
   document.body.setAttribute('data-atab', x);
   document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === x));
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
   try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
-  try { if (x === 'auto') aqAutoEnter(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'guide') aqGuideRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'guide') aqGuideRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
+// v5.99: 자동 페이지로 이동 (모바일 = 햄버거 '자동', PC = 사이드바 '자동')
+function aqGoEngine() { try { if (typeof isPCViewport === 'function' && isPCViewport()) setPCTab('engine'); else switchMobileTab('engine'); } catch (e) {} }
+window.aqGoEngine = aqGoEngine;
 // AI 탭을 떠나면 직접 지정한 표시 상태를 지워 다른 탭에 카드가 남지 않게
 (function () { const _o = window.switchMobileTab; if (typeof _o !== 'function') return;
   window.switchMobileTab = function (tab) { if (tab !== 'auto') document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.removeProperty('display')); return _o.apply(this, arguments); }; })();
@@ -26738,7 +26793,7 @@ async function aqBriefLoadDismiss() {
 async function aqBriefDismiss() {
   const k = aqBriefDayKey(); _bf.dismissed = k;
   try { await apiCall('userDataSet', { dataType: 'BRIEFING', rows: JSON.stringify([k]) }); } catch (e) {}
-  if (typeof aqToast === 'function') aqToast('오늘은 브리핑을 먼저 띄우지 않아요'); aqDailyBriefRender();
+  if (typeof aqToast === 'function') aqToast('이 브리핑은 앱을 열 때 먼저 띄우지 않아요'); aqDailyBriefRender();
 }
 function _bfPct(v) { return v == null || isNaN(v) ? '—' : `<b class="${v > 0 ? 'up' : v < 0 ? 'down' : ''}">${aqSg(v)}${Math.abs(v).toFixed(1)}%</b>`; }
 function _bfMacroChg(re) {   // v5.55: 한 종목만, 5일 넘게 빈 구간은 계산 안 함
@@ -26782,19 +26837,19 @@ async function aqBriefRender() {
     let a = null; try { a = await _opsCall('briefingAuto', { since: _bfSince(day) }); } catch (e) {}
     if (a && a.ok && a.admin) {
       const rows = []; const alive = a.engine.heartbeat && (Date.now() - new Date(a.engine.heartbeat).getTime()) < 180000;
-      if (a.engine.mode === 'live' && !alive) rows.push(_bfD(_BFC.warn, '엔진 응답 없음', '서버의 자동매매 서비스를 확인하세요', '', "setAiSubtab('auto')"));
+      if (a.engine.mode === 'live' && !alive) rows.push(_bfD(_BFC.warn, '엔진 응답 없음', '서버의 자동매매 서비스를 확인하세요', '', "aqGoEngine()"));
       fills = a.fills || []; sells = a.sells || []; sellToday = a.sell_today || [];
       if (fills.length) { const ph = {}; fills.forEach(f => { const k = f.phase === 'pre' ? '프리' : f.phase === 'fallback' ? '정규' : '애프터'; ph[k] = (ph[k] || 0) + 1; });
-        rows.push(_bfD(_BFC.buy, `${fills.slice(0, 2).map(f => nm(f.ticker)).join(' · ')}${fills.length > 2 ? ` 외 ${fills.length - 2}` : ''} 매수`, fills.slice(0, 2).map(f => `${Number(f.filled_qty)}주 $${aqNum(Number(f.avg_px || 0), 2)}`).join(' · ') + ' · ' + Object.entries(ph).map(([k, v]) => `${k} ${v}`).join(' · '), '', "setAiSubtab('auto')")); }
+        rows.push(_bfD(_BFC.buy, `${fills.slice(0, 2).map(f => nm(f.ticker)).join(' · ')}${fills.length > 2 ? ` 외 ${fills.length - 2}` : ''} 매수`, fills.slice(0, 2).map(f => `${Number(f.filled_qty)}주 $${aqNum(Number(f.avg_px || 0), 2)}`).join(' · ') + ' · ' + Object.entries(ph).map(([k, v]) => `${k} ${v}`).join(' · '), '', "aqGoEngine()")); }
       sells.forEach(x => { const r = x.avg_px ? (x.sell_px / x.avg_px - 1) * 100 : null;
-        rows.push(_bfD(_BFC.sell, `${nm(x.ticker)} 매도`, `${Number(x.sold_qty || 0)}주 · ${x.sell_after || 5}일 보유 · 장 마감 체결`, r == null ? '' : `<b class="${r >= 0 ? 'up' : 'down'}">${aqSg(r)}${Math.abs(r).toFixed(1)}%</b>`, "setAiSubtab('auto')")); });
-      if (a.skipped_n) rows.push(_bfD(_BFC.skip, `${a.skipped_n}건 건너뜀`, Object.entries(a.skipped).map(([k, v]) => `${k} ${v}`).join(' · '), '', "setAiSubtab('auto')"));
+        rows.push(_bfD(_BFC.sell, `${nm(x.ticker)} 매도`, `${Number(x.sold_qty || 0)}주 · ${x.sell_after || 5}일 보유 · 장 마감 체결`, r == null ? '' : `<b class="${r >= 0 ? 'up' : 'down'}">${aqSg(r)}${Math.abs(r).toFixed(1)}%</b>`, "aqGoEngine()")); });
+      if (a.skipped_n) rows.push(_bfD(_BFC.skip, `${a.skipped_n}건 건너뜀`, Object.entries(a.skipped).map(([k, v]) => `${k} ${v}`).join(' · '), '', "aqGoEngine()"));
       groups.push(['밤사이 자동매매', rows.length ? rows.join('') : '<div class="bf-empty">체결·매도 없음</div>']);
     }
   }
   // 오늘 (모든 시각은 한국 시간)
   const today = [];
-  if (sellToday.length) today.push(_bfD(_BFC.plan, `${sellToday.map(x => nm(x.ticker)).join(' · ')} 자동매도`, '미국 장 마감 · 내일 새벽 5시 전', '', "setAiSubtab('auto')"));
+  if (sellToday.length) today.push(_bfD(_BFC.plan, `${sellToday.map(x => nm(x.ticker)).join(' · ')} 자동매도`, '미국 장 마감 · 내일 새벽 5시 전', '', "aqGoEngine()"));
   try { if (mk === 'US') { if (!_aqCalSheetEvents || !_aqCalSheetEvents.length) { try { await fetchSheetCalendar(); } catch (e) {} }
       const held = _aqHeldUS(); const ev = (_aqCalSheetEvents || []).filter(e => e.category === 'Earnings' && e.ticker && held.has(String(e.ticker).toUpperCase()));
       ev.filter(e => e.date === day).slice(0, 4).forEach(e => today.push(_bfD(_BFC.cal, `${nm(e.ticker)} 실적 발표 예정`, e.session === 'BMO' ? '오늘 밤 22:30 장 시작 전 · 보유 중' : e.session === 'AMC' ? '내일 새벽 장 마감 후 · 보유 중' : '오늘 밤 · 보유 중', '', `openChart('${escapeAttr(e.ticker)}')`)));
@@ -27112,21 +27167,21 @@ async function aqPreUsBlocks() {
     const plans = (eng && eng.ok && eng.plans) || [];
     plans.filter(p => ['planned', 'working'].includes(p.status)).forEach(p => {
       const ph = p.phase === 'pre' ? '프리마켓' : p.phase === 'fallback' ? '정규장 시작' : '애프터';
-      rows.push(_bfD('#fab005', `${nm(p.ticker)} 자동매수 대기`, `${p.status === 'working' ? `${ph} 지정가 $${aqNum(Number(p.cur_px || 0), 2)}` : '다음 세션 대기'} · 상한 $${aqNum(Number(p.cap || 0), 2)} · ${p.qty}주`, '', "setAiSubtab('auto')")); });
+      rows.push(_bfD('#fab005', `${nm(p.ticker)} 자동매수 대기`, `${p.status === 'working' ? `${ph} 지정가 $${aqNum(Number(p.cur_px || 0), 2)}` : '다음 세션 대기'} · 상한 $${aqNum(Number(p.cap || 0), 2)} · ${p.qty}주`, '', "aqGoEngine()")); });
     const dayAgo = Date.now() - 20 * 3600e3;
     plans.filter(p => p.status === 'filled' && p.filled_at && new Date(p.filled_at).getTime() > dayAgo).forEach(p => {
       const ph = p.phase === 'pre' ? '프리' : p.phase === 'fallback' ? '정규' : '애프터';
-      rows.push(_bfD('#51cf66', `${nm(p.ticker)} 자동매수 체결`, `${ph} · ${Number(p.filled_qty)}주 $${aqNum(Number(p.avg_px || 0), 2)}`, '', "setAiSubtab('auto')")); });
+      rows.push(_bfD('#51cf66', `${nm(p.ticker)} 자동매수 체결`, `${ph} · ${Number(p.filled_qty)}주 $${aqNum(Number(p.avg_px || 0), 2)}`, '', "aqGoEngine()")); });
     let a = null; try { a = await _opsCall('briefingAuto', { since: new Date(Date.now() - 20 * 3600e3).toISOString() }); } catch (e) {}
     ((a && a.sell_today) || []).forEach(x => { const s = findTickerSeries(x.ticker); const last = s && s.rows && s.rows.length ? Number(s.rows[s.rows.length - 1].Close) : null; const r = last && x.avg_px ? (last / x.avg_px - 1) * 100 : null;
-      rows.push(_bfD('#ff6b6b', `${nm(x.ticker)} 장 마감 자동매도`, '내일 새벽 장 마감 전', r == null ? '' : `<b class="${r >= 0 ? 'up' : 'down'}">${aqSg(r)}${Math.abs(r).toFixed(1)}%</b>`, "setAiSubtab('auto')")); });
+      rows.push(_bfD('#ff6b6b', `${nm(x.ticker)} 장 마감 자동매도`, _brUsCloseTxt(_brEtToday()) + ' 전', r == null ? '' : `<b class="${r >= 0 ? 'up' : 'down'}">${aqSg(r)}${Math.abs(r).toFixed(1)}%</b>`, "aqGoEngine()")); });
   }
   try { if (!_aqCalSheetEvents || !_aqCalSheetEvents.length) { try { await fetchSheetCalendar(); } catch (e) {} }
     const held = _aqHeldUS(); (_aqCalSheetEvents || []).filter(e => e.category === 'Earnings' && e.ticker && held.has(String(e.ticker).toUpperCase()) && e.date === sess).forEach(e => {
       const tk = String(e.ticker).toUpperCase(); const mv = _earnPastMove(tk);
-      rows.push(_bfD('#4dabf7', `${nm(tk)} 실적 발표 · 보유`, `${e.session === 'BMO' ? '오늘 밤 장 시작 전' : e.session === 'AMC' ? '내일 새벽 장 마감 후' : '오늘 밤'}${mv != null ? ` · 과거 실적일 평균 변동 ±${mv.toFixed(1)}%` : ''}`, '', `openChart('${escapeAttr(tk)}')`)); }); } catch (e) {}
+      rows.push(_bfD('#4dabf7', `${nm(tk)} 실적 발표 · 보유`, `${_brUsEarnTxt(e)}${mv != null ? ` · 과거 실적일 평균 변동 ±${mv.toFixed(1)}%` : ''}`, '', `openChart('${escapeAttr(tk)}')`)); }); } catch (e) {}
   try { Object.values(aqRecheckAll()).forEach(r => { if (/^\d{6}$/.test(String(r.ticker))) return; (r.items || []).forEach(it => { if (it.date === sess) rows.push(_bfD('#63e6be', `${nm(r.ticker)} AI 보고서 다시 볼 날`, `${it.date.slice(5).replace('-', '/')} 장 결과 확인 · ${escapeHtml(String(it.text).replace(/^[^:：]*[:：]\s*/, ''))}`, '', `openChart('${escapeAttr(r.ticker)}')`)); }); }); } catch (e) {}
-  let h = rows.length ? _bfGrp('오늘 밤 내 체크리스트', rows.join('')) : '';
+  let h = rows.length ? _bfGrp(`미국 ${_brMDW(_brEtToday())} 장 체크리스트`, rows.join('')) : '';
   // 어제 신호 종목 · 엔진 판단 (관리자)
   if (isAdmin) {
     const arc = _state.archive || []; const last = arc.reduce((m, r) => (r.Date > m ? r.Date : m), ''); const sigRows = arc.filter(r => r.Date === last);
@@ -27140,7 +27195,7 @@ async function aqPreUsBlocks() {
         const sig = String(r.Signal_Type || '').split('+')[0]; const pred = r.Pred_5d != null && r.Pred_5d !== '' ? ` · 기대 ${aqSg(Number(r.Pred_5d))}${Math.abs(Number(r.Pred_5d)).toFixed(1)}%` : ''; const zone = p && p.zone ? ` · 위치 ${p.zone}분위` : '';
         return { ord, html: `<div class="bf-r" onclick="openChart('${escapeAttr(tk)}')">${aqWrapLogo(_autoLogo(tk), tk)}<div class="bf-t"><div class="bf-tt">${nm(tk)}</div><div class="bf-s">${escapeHtml(sig)}${pred}${zone}</div></div><span class="bf-v"><span class="pre-tag ${cls}">${escapeHtml(tag)}</span></span></div>` }; })
         .sort((a, b) => a.ord - b.ord);
-      h += `<div class="bf-gt bf-gt-ai">어제 신호 종목 · 엔진 판단<span class="bf-gt-r">${String(last).slice(5, 10).replace('-', '/')} 신호 ${items.length}</span></div><div class="bf-grp num-body">${items.map(x => x.html).join('')}</div>`;
+      h += `<div class="bf-gt bf-gt-ai">신호 종목 · 엔진 판단<span class="bf-gt-r">${String(last).slice(5, 10).replace('-', '/')} 신호 ${items.length}</span></div><div class="bf-grp num-body">${items.map(x => x.html).join('')}</div>`;
     }
   }
   return h;
@@ -27353,7 +27408,7 @@ function _brTiles(mk, expectMMDD) {
   let cmp = ''; try { const pts = _bfMacroSeries(mk === 'KR' ? /코스피|KOSPI|KS11/i : /S&P|SPY|나스닥|NASDAQ|IXIC/i, mk); if (pts.length >= 2) { const l = new Date(pts[pts.length - 1].d), pv = new Date(pts[pts.length - 2].d); const exp = new Date(l); do { exp.setDate(exp.getDate() - 1); } while (exp.getDay() === 0 || exp.getDay() === 6); if (pv < exp) cmp = ` · ${pts[pts.length - 2].d.slice(5).replace('-', '/')} 대비`; } } catch (e) {}
   const stale = expectMMDD && md && md !== expectMMDD && md < expectMMDD;
   return `<div class="bf-tiles" style="grid-template-columns:repeat(2,minmax(0,1fr))">${tiles.map(([k, v, me], i) => `<div class="bf-tile ${me ? 'me' : ''}" ${tiles.length % 2 && i === 0 ? 'style="grid-column:span 2"' : ''}><div class="bf-tk">${k}</div><div class="bf-tv ${v == null ? '' : v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v == null ? '—' : aqSg(v) + Math.abs(v).toFixed(1) + '%'}</div></div>`).join('')}</div>`
-    + (md ? `<div class="br-basis">${md} 종가 기준${cmp}${stale ? ' · <b>오늘 종가 반영 전</b>' : ''}</div>` : '');
+    + (md ? `<div class="br-basis">${md} 종가 기준${cmp}${stale ? ` · <b>${expectMMDD} 종가 반영 전</b>` : ''}</div>` : '');
 }
 
 // v5.60: 숫자 줄은 '이름 왼쪽 · 값 오른쪽', 색 점 없이 값만 색
@@ -27387,21 +27442,21 @@ async function _brAuto(day) {
   let a = null; try { a = await _opsCall('briefingAuto', { since: _bfSince(day) }); } catch (e) {}
   if (!(a && a.ok && a.admin)) return out; out.ok = true;
   const alive = a.engine.heartbeat && (Date.now() - new Date(a.engine.heartbeat).getTime()) < 180000;
-  if (a.engine.mode === 'live' && !alive) out.rows.push(_bfD(_BFC.warn, '엔진 응답 없음', '서버의 자동매매 서비스를 확인하세요', '', "setAiSubtab('auto')"));
+  if (a.engine.mode === 'live' && !alive) out.rows.push(_bfD(_BFC.warn, '엔진 응답 없음', '서버의 자동매매 서비스를 확인하세요', '', "aqGoEngine()"));
   out.fills = a.fills || []; out.sells = a.sells || []; out.sellToday = a.sell_today || [];
   if (out.fills.length) { const ph = {}; out.fills.forEach(f => { const k = f.phase === 'pre' ? '프리' : f.phase === 'fallback' ? '정규' : '애프터'; ph[k] = (ph[k] || 0) + 1; });
-    out.rows.push(_bfD(_BFC.buy, `${out.fills.slice(0, 2).map(f => nm(f.ticker)).join(' · ')}${out.fills.length > 2 ? ` 외 ${out.fills.length - 2}` : ''} 매수`, out.fills.slice(0, 2).map(f => `${Number(f.filled_qty)}주 $${aqNum(Number(f.avg_px || 0), 2)}`).join(' · ') + ' · ' + Object.entries(ph).map(([k, v]) => `${k} ${v}`).join(' · '), '', "setAiSubtab('auto')")); }
+    out.rows.push(_bfD(_BFC.buy, `${out.fills.slice(0, 2).map(f => nm(f.ticker)).join(' · ')}${out.fills.length > 2 ? ` 외 ${out.fills.length - 2}` : ''} 매수`, out.fills.slice(0, 2).map(f => `${Number(f.filled_qty)}주 $${aqNum(Number(f.avg_px || 0), 2)}`).join(' · ') + ' · ' + Object.entries(ph).map(([k, v]) => `${k} ${v}`).join(' · '), '', "aqGoEngine()")); }
   out.sells.forEach(x => { const r = x.avg_px ? (x.sell_px / x.avg_px - 1) * 100 : null;
-    out.rows.push(_bfD(_BFC.sell, `${nm(x.ticker)} 매도`, `${Number(x.sold_qty || 0)}주 · ${x.sell_after || 5}일 보유 · 장 마감 체결`, r == null ? '' : `<b class="${r >= 0 ? 'up' : 'down'}">${aqSg(r)}${Math.abs(r).toFixed(1)}%</b>`, "setAiSubtab('auto')")); });
-  if (a.skipped_n) out.rows.push(_bfD(_BFC.skip, `${a.skipped_n}건 건너뜀`, Object.entries(a.skipped).map(([k, v]) => `${k} ${v}`).join(' · '), '', "setAiSubtab('auto')"));
+    out.rows.push(_bfD(_BFC.sell, `${nm(x.ticker)} 매도`, `${Number(x.sold_qty || 0)}주 · ${x.sell_after || 5}일 보유 · 장 마감 체결`, r == null ? '' : `<b class="${r >= 0 ? 'up' : 'down'}">${aqSg(r)}${Math.abs(r).toFixed(1)}%</b>`, "aqGoEngine()")); });
+  if (a.skipped_n) out.rows.push(_bfD(_BFC.skip, `${a.skipped_n}건 건너뜀`, Object.entries(a.skipped).map(([k, v]) => `${k} ${v}`).join(' · '), '', "aqGoEngine()"));
   return out;
 }
 async function _brToday(mk, day, sellToday) {
   const today = []; const prevDays = _bfPrevSessionDays(day); const nm = tk => escapeHtml(displayName(tk) || tk);
-  if (sellToday && sellToday.length) today.push(_bfD(_BFC.plan, `${sellToday.map(x => nm(x.ticker)).join(' · ')} 자동매도`, '미국 장 마감 전', '', "setAiSubtab('auto')"));
+  if (sellToday && sellToday.length) today.push(_bfD(_BFC.plan, `${sellToday.map(x => nm(x.ticker)).join(' · ')} 자동매도`, '미국 장 마감 전', '', "aqGoEngine()"));
   if (mk === 'US') try { if (!_aqCalSheetEvents || !_aqCalSheetEvents.length) { try { await fetchSheetCalendar(); } catch (e) {} }
     const held = _aqHeldUS(); const ev = (_aqCalSheetEvents || []).filter(e => e.category === 'Earnings' && e.ticker && held.has(String(e.ticker).toUpperCase()));
-    ev.filter(e => e.date === day).slice(0, 4).forEach(e => today.push(_bfD(_BFC.cal, `${nm(e.ticker)} 실적 발표 예정`, e.session === 'BMO' ? '오늘 밤 장 시작 전 · 보유 중' : e.session === 'AMC' ? '내일 새벽 장 마감 후 · 보유 중' : '오늘 밤 · 보유 중', '', `openChart('${escapeAttr(e.ticker)}')`)));
+    ev.filter(e => e.date === day).slice(0, 4).forEach(e => today.push(_bfD(_BFC.cal, `${nm(e.ticker)} 실적 발표 예정`, _brUsEarnTxt(e) + ' · 보유 중', '', `openChart('${escapeAttr(e.ticker)}')`)));
     ev.filter(e => prevDays.includes(e.date)).slice(0, 4).forEach(e => today.push(_bfD(_BFC.cal, `${nm(e.ticker)} 실적 발표됨`, `미국 ${e.date.slice(5).replace('-', '/')} · 반응 확인`, '', `openChart('${escapeAttr(e.ticker)}')`))); } catch (e) {}
   try { Object.values(aqRecheckAll()).forEach(r => { const isKR = /^\d{6}$/.test(String(r.ticker)); if ((mk === 'KR') !== isKR) return; (r.items || []).forEach(it => { if (prevDays.includes(it.date)) today.push(_bfD(_BFC.doc, `${nm(r.ticker)} AI 보고서 다시 볼 날`, `${it.date.slice(5).replace('-', '/')} 장 결과 확인 · ${escapeHtml(String(it.text).replace(/^[^:：]*[:：]\s*/, ''))}`, '', `openChart('${escapeAttr(r.ticker)}')`)); }); }); } catch (e) {}
   return today;
@@ -27419,6 +27474,13 @@ function _brNewSignal(mk) {
 // ============================================================================
 function _brYmd(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 function _brEtToday() { const p = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date()); const g = t => p.find(x => x.type === t).value; return `${g('year')}-${g('month')}-${g('day')}`; }
+// v5.99: 브리핑 날짜 표기 — '오늘·내일·어제' 대신 날짜 (장 날짜는 그 시장 기준, 시각은 한국 시각)
+function _brMDW(d) { if (!d) return ''; const x = new Date(String(d).slice(0, 10) + 'T00:00:00'); return isNaN(x) ? '' : `${x.getMonth() + 1}/${x.getDate()}(${'일월화수목금토'[x.getDay()]})`; }
+function _brAddDay(d, n) { const x = new Date(String(d).slice(0, 10) + 'T00:00:00'); x.setDate(x.getDate() + n); return _brYmd(x); }
+function _brUsDst(d) { try { return /EDT/.test(new Date(String(d).slice(0, 10) + 'T16:00:00Z').toLocaleString('en-US', { timeZone: 'America/New_York', timeZoneName: 'short' })); } catch (e) { return true; } }
+function _brUsOpenTxt(d) { return `${_brMDW(d)} ${_brUsDst(d) ? '22:30' : '23:30'} 장 시작 전`; }   // 미국 장 날짜 d의 개장 = 한국 시각
+function _brUsCloseTxt(d) { return `${_brMDW(_brAddDay(d, 1))} ${_brUsDst(d) ? '05:00' : '06:00'} 장 마감`; }   // 미국 장 날짜 d의 마감 = 한국 시각 다음 날 새벽
+function _brUsEarnTxt(e) { return e.session === 'BMO' ? _brUsOpenTxt(e.date) : e.session === 'AMC' ? _brUsCloseTxt(e.date) + ' 후' : `미국 ${_brMDW(e.date)} 장`; }
 function _brPrevWeekday(ymd) { const d = new Date(ymd + 'T00:00:00'); do { d.setDate(d.getDate() - 1); } while (d.getDay() === 0 || d.getDay() === 6); return _brYmd(d); }
 // 브리핑이 다루는 장의 날짜: 장후 = 문서의 장(없으면 한국은 문서 날짜, 미국은 그 전 평일) · 장전 = 오늘 전 마지막 거래일
 function _brSessDate(mk, mode, b, p) {
@@ -27490,24 +27552,24 @@ function aqRecordLine2(mk, date) {
 function _brAcctCard(mk, date) {
   const A = aqAcctDay(date); const md = _brMD(date);
   if (A.pending) return `<div class="ba-card"><div class="ba-h"><span>내 계좌 · ${md} 장</span></div><div class="bf-empty">${md} 종가가 아직 다 들어오지 않아 집계 중이에요.${A.last ? ` (지금 데이터는 ${_brMD(A.last)}까지)` : ''}</div></div>`;
-  const idxN = mk === 'KR' ? ['KOSPI', 'KOSDAQ'] : ['KJP500', '나스닥', 'VIX'];
-  const iv = idxN.map(n => [n, _idxAt(mk, n, date)]); const b0 = iv[0][1]; const ex = A.r != null && b0 != null ? A.r - b0 : null;
+  const idxN = mk === 'KR' ? [['KOSPI', 'KOSPI'], ['KOSDAQ', 'KOSDAQ']] : [['나스닥', 'NASDAQ'], ['KJP500', 'KJP500']];   // v5.99: 내 계좌 / KOSPI·NASDAQ / KOSDAQ·KJP500 (VIX·시장 대비 제외)
+  const iv = idxN.map(([k, lb]) => [lb, _idxAt(mk, k, date)]);
+  const tl = (lb, v, txt) => `<div class="ba-tl"><span>${lb}</span><b class="${v == null ? 'none' : _brCls(v)}">${txt}</b></div>`;
   const row = x => `<div class="bf-r" onclick="event.stopPropagation(); openChart('${escapeAttr(x.tk)}')">${aqWrapLogo(_autoLogo(x.tk), x.tk)}<div class="bf-t"><div class="bf-tt">${escapeHtml(displayName(x.tk) || x.tk)}</div><div class="bf-s ${_brCls(x.ret)}">${x.ret == null ? '' : _brPc(x.ret)}</div></div><span class="bf-v"><b class="${_brCls(x.v)}">${_pfM(x.v)}</b></span></div>`;
   const ups = A.movers.filter(x => x.v > 0).sort((a, b) => b.v - a.v).slice(0, 3), dns = A.movers.filter(x => x.v < 0).sort((a, b) => a.v - b.v).slice(0, 3);
   return `<div class="ba-card" onclick="switchMobileTab('board'); setTimeout(() => { try { setBoardSubtab('performance'); } catch (e) {} }, 200)">
     <div class="ba-h"><span>내 계좌 · ${md} 장</span><span class="ba-go">누적 성과 ›</span></div>
-    <div class="ba-big"><b class="${_brCls(A.r)}">${_brPc(A.r)}</b><span class="${_brCls(A.pnl)}">${_pfM(A.pnl)}</span></div>
-    <div class="ba-idx">${iv.map(([n, v]) => `<span>${n} <b class="${_brCls(v)}">${_brPc(v)}</b></span>`).join('')}${ex != null ? `<span>시장 대비 <b class="${_brCls(ex)}">${aqSg(ex)}${Math.abs(ex).toFixed(1)}%p</b></span>` : ''}</div>
-    <div class="ba-two"><div><span>평가손익</span><b class="${_brCls(A.unreal)}">${_pfM(A.unreal)}</b></div><div><span>실현손익</span><b class="${_brCls(A.realized)}">${Math.abs(A.realized) >= 1 ? _pfM(A.realized) : '없음'}</b></div></div>
+    <div class="ba-row3">${tl('내 계좌', A.r, _brPc(A.r))}${iv.map(([lb, v]) => tl(lb, v, _brPc(v))).join('')}</div>
+    <div class="ba-row2">${tl(`평가손익 (${md})`, A.unreal, _pfM(A.unreal))}${Math.abs(A.realized) >= 1 ? tl(`실현손익 (${md})`, A.realized, _pfM(A.realized)) : tl(`실현손익 (${md})`, null, '없음')}</div>
     ${ups.length ? `<div class="num-sub">가장 많이 벌어 준 종목</div>${ups.map(row).join('')}` : ''}${dns.length ? `<div class="num-sub">가장 많이 깎아 먹은 종목</div>${dns.map(row).join('')}` : ''}
     ${aqRecordLine2(mk, date)}
     ${A.missing.length ? `<div class="ba-miss">시세 없는 보유 ${A.missing.length}종목(${escapeHtml(A.missing.slice(0, 3).map(t => displayName(t) || t).join(', '))}${A.missing.length > 3 ? ' 외' : ''})은 산 값으로 계산돼요</div>` : ''}</div>`;
 }
-function _brDataBanner(acctPending) {   // 데이터가 덜 들어왔거나 오늘 작업이 실패했을 때
+function _brDataBanner(acctPending, sd) {   // 데이터가 덜 들어왔거나 그날 작업이 실패했을 때 (v5.99: 날짜 표기)
   let ops = []; try { ops = ((typeof _noti !== 'undefined' && _noti.items) || []).filter(x => x.type === 'ops' && x.sev === 'red' && !x.read && x.date === _kstToday()); } catch (e) {}
   if (!acctPending && !ops.length) return '';
   const why = ops.length ? `${escapeHtml(ops[0].line.split(' · ')[0])}${ops.length > 1 ? ` 외 ${ops.length - 1}건` : ''}` : '종가가 아직 다 들어오지 않았어요';
-  return `<div class="ba-warn" ${ops.length ? `onclick="switchMobileTab('ops'); setTimeout(() => { try { aqOpsTab('auto'); } catch (e) {} }, 250)"` : ''}>⚠️ 오늘 데이터가 다 준비되지 않았어요 — ${why}. 일부 숫자는 집계 중이에요.</div>`;
+  return `<div class="ba-warn" ${ops.length ? `onclick="switchMobileTab('ops'); setTimeout(() => { try { aqOpsTab('auto'); } catch (e) {} }, 250)"` : ''}>⚠️ ${sd ? _brMD(sd) + ' 장 ' : ''}데이터가 다 준비되지 않았어요 — ${why}. 일부 숫자는 집계 중이에요.</div>`;
 }
 Object.assign(window, { aqAcctDay, aqAcctSeries, aqRecordLine2 });
 
@@ -27702,6 +27764,94 @@ async function aqBrOpen(id) {
 }
 Object.assign(window, { aqBrActionsHtml, aqBrRefresh, aqBrRequest, aqBrOpen, aqBrRender, aqBrCancelAsk, aqBrGo });
 
+// ============================================================================
+// v5.99: AI 탭 → AI 매매심사 (관리자 전용) — 종목별 최신 매수·매도심사 썸네일. 서버 reviewList 필요 (없으면 준비 중 안내)
+// ============================================================================
+const _rv = { kind: localStorage.getItem('aq_rv_kind') || 'all', sort: localStorage.getItem('aq_rv_sort') || 'new', data: null, ts: 0, mk: '', poll: null };
+const _RV_OP = { '매수': 'g', '보유': 'g', '관망': 'y', '일부 매도': 'y', '금지': 'r', '전량 매도': 'r' };
+const _RV_ORDER = ['매수', '관망', '금지', '보유', '일부 매도', '전량 매도'];
+function _rvAgo(iso) { const t = new Date(iso).getTime(); if (!isFinite(t)) return ''; const h = (Date.now() - t) / 3600e3; return h < 1 ? '방금' : h < 24 ? `${Math.floor(h)}시간 전` : `${Math.floor(h / 24)}일 전`; }
+function _rvKstDate(iso) { const k = (typeof _aqKST === 'function') ? _aqKST(iso) : null; return k ? k.date : String(iso || '').slice(0, 10); }
+function _rvDday(d) { if (!d) return null; const a = new Date(String(d).slice(0, 10) + 'T00:00:00'), b = new Date(_kstToday() + 'T00:00:00'); return Math.round((a - b) / 86400000); }
+function _rvNext(it, mk, cur) {   // → [제목, 보조]
+  const steps = (it.steps || []).slice().sort((a, b) => (a.step || 0) - (b.step || 0));
+  const pend = steps.find(x => !['filled', 'cancelled'].includes(x.status));
+  if ((it.opinion === '매수') && pend && pend.zone_lo != null && pend.zone_hi != null) {
+    const lo = Number(pend.zone_lo), hi = Number(pend.zone_hi);
+    const sub = cur == null ? '' : cur > hi ? `현재가에서 ${aqSgPct((hi / cur - 1) * 100, 1)}` : cur < lo ? '구간 아래' : '지금 구간 안';
+    return [`${pend.step || 1}차 ${_brPxS(mk, lo)}–${_brPxS(mk, hi)}`, sub];
+  }
+  if (it.opinion === '매수' && steps.length && !pend) return ['계획 완료', steps.some(x => x.status === 'filled') ? '체결 반영됨' : ''];
+  if (it.recheck) { const n = _rvDday(it.recheck); return [`재심사 ${_brMDW(it.recheck)}`, n == null ? '' : n > 0 ? `D-${n}` : n === 0 ? 'D-day' : '지남 · 다시 심사 권장']; }
+  return ['—', ''];
+}
+function _rvChips(it, mk) {
+  return (it.steps || []).slice().sort((a, b) => (a.step || 0) - (b.step || 0)).map(x => {
+    const n = `${x.step || 1}차`;
+    if (x.status === 'filled') return `<span class="br-chip ok">${n} 완료 ${Number(x.filled_qty || x.qty || 0)}주${x.filled_px ? ` @ ${_brPxS(mk, Number(x.filled_px))}` : ''}</span>`;
+    if (x.status === 'partial') return `<span class="br-chip mid">${n} 일부 ${Number(x.filled_qty || 0)}/${Number(x.qty || 0)}주</span>`;
+    if (x.status === 'cancelled') return `<span class="br-chip no">${n} 취소</span>`;
+    return `<span class="br-chip">${n} 대기${x.qty ? ` ${Number(x.qty)}주` : ''}</span>`;
+  }).join('');
+}
+function _rvCard(it, mk, held, watch) {
+  const tk = String(it.ticker || '').toUpperCase(); const nm = escapeHtml(displayName(tk) || tk); const kind = it.kind === 'sell' ? 'sell' : 'buy';
+  const busy = it.status === 'queued' || it.status === 'running' || it.ai_status === 'requested';
+  const opTxt = busy ? (it.status === 'queued' ? '대기 중' : '심사 중') : it.status === 'failed' ? '실패' : it.status === 'cancelled' ? '취소' : (it.opinion || 'AI 의견 없음');
+  const opCls = busy ? 'busy' : _RV_OP[it.opinion] || 'n';
+  const cur = _aqLatestClose(tk); const base = Number(it.price_at_review) || null; const since = cur != null && base ? (cur / base - 1) * 100 : null;
+  const [nx, nxs] = busy ? ['결과 기다리는 중', ''] : _rvNext(it, mk, cur);
+  const when = it.finished_at || it.requested_at; const stale = !busy && when && (Date.now() - new Date(when).getTime()) > 7 * 86400e3;
+  const tags = (held.has(tk) ? '<span class="rv-tag own">보유</span>' : '') + (watch.has(tk) ? '<span class="rv-tag watch">관심</span>' : '');
+  const chips = kind === 'buy' && (it.opinion === '매수' || (it.steps || []).some(x => x.status && x.status !== 'planned')) ? _rvChips(it, mk) : '';
+  return `<div class="rv-card${stale ? ' stale' : ''}" onclick="aqRvOpen('${escapeAttr(String(it.id))}','${kind}')">
+    <div class="rv-hd">${aqWrapLogo(_autoLogo(tk), tk)}<div class="rv-t"><div class="rv-nm">${nm}${tags}</div><div class="rv-meta">${kind === 'sell' ? 'AI 매도심사' : 'AI 매수심사'} · ${_brMDW(_rvKstDate(it.requested_at))} 심사 · ${_rvAgo(it.requested_at)}</div></div><span class="rv-op ${opCls}"><i></i>${escapeHtml(opTxt)}</span></div>
+    ${it.summary ? `<div class="rv-sum">${escapeHtml(it.summary)}</div>` : ''}
+    <div class="rv-kv"><div><span>심사 후 주가</span><b class="${_brC(since)}">${since == null ? '—' : aqSgPct(since, 1)}</b><small>${base ? `${_brPxS(mk, base)} → ${_brPxS(mk, cur)}` : ''}</small></div>
+      <div><span>다음 할 일</span><b class="rv-nx">${escapeHtml(nx)}</b><small>${escapeHtml(nxs)}</small></div></div>
+    ${chips ? `<div class="rv-chips">${chips}</div>` : ''}
+    ${stale ? `<button class="rv-again" onclick="event.stopPropagation(); aqRvAgain('${escapeAttr(tk)}','${kind}')">7일 넘은 심사 · 다시 심사</button>` : ''}
+  </div>`;
+}
+async function aqReviewRender(force) {
+  const box = document.getElementById('reviewBody'); if (!box) return; const mk = getCurrentMarket(); clearTimeout(_rv.poll);
+  if (force || !_rv.data || _rv.mk !== mk || Date.now() - _rv.ts > 60e3) {
+    if (!_rv.data || _rv.mk !== mk) box.innerHTML = '<div class="auto-empty">불러오는 중…</div>';
+    let r = null; try { r = await apiCall('reviewList', { market: mk, kind: 'all', history: 0, limit: 100 }); } catch (e) {}
+    _rv.mk = mk; _rv.ts = Date.now(); _rv.data = r && r.ok && Array.isArray(r.items) ? r : { err: (r && r.error) || '' };
+  }
+  const R = _rv.data;
+  if (R.err !== undefined) { box.innerHTML = `<div class="rv-wait"><b>AI 매매심사 목록은 서버 준비 중이에요</b><p>서버에 심사 목록(reviewList)이 추가되면 종목별 매수·매도심사 결과가 이곳에 모여요. 그 전에는 종목 화면의 'AI 매수심사'에서 하나씩 볼 수 있어요.</p>${R.err ? `<small>${escapeHtml(String(R.err))}</small>` : ''}</div>`; return; }
+  const all = (R.items || []).filter(x => !x.market || x.market === mk);
+  let held = new Set(), watch = new Set();
+  try { held = new Set(((simulatePortfolioDaily() || {}).holdings || []).map(h => String(h.ticker).toUpperCase())); } catch (e) {}
+  try { watch = new Set(((window.AqWatchStore && AqWatchStore.getAll) ? AqWatchStore.getAll() : []).filter(w => (w.market || 'US') === mk).map(w => String(w.ticker).toUpperCase())); } catch (e) {}
+  // 요약: 결론별 · 진행 중 · 재심사 도래
+  const done = all.filter(x => x.status === 'done' && x.opinion); const cnt = {}; done.forEach(x => { cnt[x.opinion] = (cnt[x.opinion] || 0) + 1; });
+  const due = all.filter(x => x.recheck && (_rvDday(x.recheck) ?? 1) <= 0).length;
+  const keys = _RV_ORDER.filter(k => cnt[k]).concat(Object.keys(cnt).filter(k => !_RV_ORDER.includes(k)));
+  let h = `<div class="rv-sumbar">${keys.map(k => `<div><span>${escapeHtml(k)}</span><b class="${_RV_OP[k] || ''}">${cnt[k]}</b></div>`).join('')}<div><span>재심사 도래</span><b class="${due ? 'y' : ''}">${due}</b></div></div>`;
+  const A = R.active; if (A && A.ticker) h += `<div class="rv-active"><span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>${escapeHtml(displayName(A.ticker) || A.ticker)} ${A.kind === 'sell' ? '매도' : '매수'}심사 ${A.status === 'queued' ? '대기 중' : '진행 중'}${A.queued ? ` · 대기 ${A.queued}건` : ''}</div>`;
+  h += `<div class="rv-segs"><div class="rv-seg">${[['all', '전체'], ['buy', '매수심사'], ['sell', '매도심사']].map(([v, t]) => `<button class="${_rv.kind === v ? 'on' : ''}" onclick="aqRvKind('${v}')">${t}</button>`).join('')}</div>
+    <div class="rv-seg">${[['new', '최신순'], ['recheck', '재심사 임박순']].map(([v, t]) => `<button class="${_rv.sort === v ? 'on' : ''}" onclick="aqRvSort('${v}')">${t}</button>`).join('')}</div></div>`;
+  let list = all.filter(x => _rv.kind === 'all' || (x.kind || 'buy') === _rv.kind);
+  const tms = x => new Date(x.requested_at || 0).getTime() || 0;
+  list.sort(_rv.sort === 'recheck' ? ((a, b) => (a.recheck ? 0 : 1) - (b.recheck ? 0 : 1) || String(a.recheck || '').localeCompare(String(b.recheck || '')) || tms(b) - tms(a)) : ((a, b) => tms(b) - tms(a)));
+  h += list.length ? `<div class="rv-list">${list.map(x => _rvCard(x, mk, held, watch)).join('')}</div>`
+    : `<div class="rv-wait">${_rv.kind === 'sell' ? 'AI 매도심사는 아직 준비 중이에요.' : `아직 ${mk === 'KR' ? '한국' : '미국'} 종목 심사가 없어요. 종목 화면에서 'AI 매수심사'를 요청하면 여기에 모여요.`}</div>`;
+  box.innerHTML = h;
+  if (A && A.ticker) _rv.poll = setTimeout(() => { if (document.body.getAttribute('data-atab') === 'review') aqReviewRender(true); }, 20000);   // 진행 중이면 20초마다 새로
+}
+function aqRvKind(v) { _rv.kind = v; try { localStorage.setItem('aq_rv_kind', v); } catch (e) {} aqReviewRender(); }
+function aqRvSort(v) { _rv.sort = v; try { localStorage.setItem('aq_rv_sort', v); } catch (e) {} aqReviewRender(); }
+function aqRvOpen(id, kind) { if (kind === 'sell') { aqToast('AI 매도심사 리포트는 아직 준비 중이에요'); return; } aqBrOpen(id); }
+async function aqRvAgain(tk, kind) {
+  if (kind === 'sell') { aqToast('AI 매도심사는 아직 준비 중이에요'); return; }
+  if (!confirm(`${displayName(tk) || tk} AI 매수심사를 다시 요청할까요?`)) return;
+  await aqBrRequest(tk); setTimeout(() => aqReviewRender(true), 1500);
+}
+Object.assign(window, { aqReviewRender, aqRvKind, aqRvSort, aqRvOpen, aqRvAgain });
+
 async function aqDailyBriefRender() {
   const box = document.getElementById('briefBody'); if (!box) return;
   const mk = getCurrentMarket(); const mode = _brMode(); const day = aqBriefDayKey(); await aqBriefLoadDismiss();
@@ -27717,9 +27867,9 @@ async function aqDailyBriefRender() {
   const MKN = mk === 'US' ? '미국' : '한국';
   document.getElementById('briefDate').textContent = mode === 'post'
     ? (sd ? `${MKN} ${_brMD(sd)} 장 마감 기준${tm ? ` · 브리핑 ${tm}` : ''}` : '')
-    : `오늘 ${MKN} 장 앞${tm ? ` · 장전 지표 ${tm}` : ''}${sd ? ` · 계좌·종가 ${_brMD(sd)} 기준` : ''}`;
-  const btn = document.getElementById('briefDismissBtn'); if (btn) { const done = _bf.dismissed === day; btn.textContent = done ? '오늘 그만 보기 ✓' : '오늘 그만 보기'; btn.disabled = done; }
-  let h = ''; try { h += await aqAuditTaskLine(); } catch (e) {}
+    : `${MKN} ${_brMDW(mk === 'US' ? _brEtToday() : _kstToday())} 장 앞${tm ? ` · 장전 지표 ${tm}` : ''}${sd ? ` · 계좌·종가 ${_brMD(sd)} 기준` : ''}`;
+  const btn = document.getElementById('briefDismissBtn'); if (btn) { const done = _bf.dismissed === day; btn.textContent = done ? '그만 보기 ✓' : '그만 보기'; btn.disabled = done; }
+  let h = '';   // v5.99: '이번 주 과제'는 맨 아래로
   try { h += await aqGuideAlertCard(); } catch (e) {}   // v5.63: 받아들인 가이드 알림
   const nmx = tk => escapeHtml(displayName(tk) || tk);
   if (mode === 'post') {
@@ -27729,7 +27879,7 @@ async function aqDailyBriefRender() {
     const hero = p && !p.holiday ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : (p && p.holiday ? escapeHtml((p.sections['한 줄 요약'] || []).join(' ')) : (mine || `${mk === 'US' ? '미국 장후 브리핑은 매일 아침 7시쯤' : '한국 장 마감 브리핑은 평일 오후 4시 10분쯤'} 올라와요.`));
     // v5.89 장후 순서: 한 줄 요약 → 내 계좌 카드 → 다음 일정 → 시장·뉴스(AI) → 숫자로 본 시장 → 자동매매 → 새 신호
     const acctPending = !sd || aqAcctDay(sd).pending;
-    h = _brDataBanner(acctPending) + h;
+    h = _brDataBanner(acctPending, sd) + h;
     h += `<div class="bf-hero">${hero}</div>` + (sd ? _brAcctCard(mk, sd) : '');
     const today = await _brToday(mk, day, auto.sellToday); const next = parts ? parts.next.map(_bfSchedRow).join('') : '';
     if (today.length || next) h += `<div class="bf-gt">다음 일정</div><div class="bf-grp">${today.join('')}${next}</div>`;
@@ -27749,7 +27899,7 @@ async function aqDailyBriefRender() {
     h += `<div class="bf-hero">${hero}</div>` + (await _brPreTiles(mk)) + (await _brPreImpact(mk));
     const sched = p && !p.holiday ? _brSec(p, _brTODAY).filter(x => !/정규장\s*개장/.test(x)) : [];
     const mine = mk === 'KR' ? await _brToday('KR', day, []) : [];
-    if (mine.length || sched.length) h += `<div class="bf-gt">오늘 일정</div><div class="bf-grp">${mine.join('')}${sched.map(_bfSchedRow).join('')}</div>`;
+    if (mine.length || sched.length) h += `<div class="bf-gt">${_brMDW(mk === 'US' ? _brEtToday() : _kstToday())} 일정</div><div class="bf-grp">${mine.join('')}${sched.map(_bfSchedRow).join('')}</div>`;
     if (p && !p.holiday) { const flow = _brSec(p, _brFLOW); if (flow.length) h += `<div class="bf-gt bf-gt-ai">장전 흐름<span class="bf-ai">AI</span></div><div class="bf-grp br-vgrp">${_brMore(_brValRows(flow), 5)}</div>`; }
     if (mk === 'US') { try { h += await aqPreUsBlocks(); } catch (e) {} }
     else { try { h += aqPreKrBlocks(); } catch (e) {} }
@@ -27760,6 +27910,7 @@ async function aqDailyBriefRender() {
   }
       try { const _rs = ((typeof _noti !== 'undefined' && _noti.items) || []).filter(x => x.type === 'security' && x.sev === 'red' && !x.read); if (_rs.length) h = `<div class="sec-brief" onclick="switchMobileTab('settings'); setTimeout(() => aqSecOpen(), 250)">🔴 보안 위험 ${_rs.length}건 — ${escapeHtml(_rs[0].line.split(' · ')[0])}${_rs.length > 1 ? ' 외' : ''} · 확인하기</div>` + h; } catch (e) {}   // v5.79
   try { h += await aqBadgeBriefSection(mk); } catch (e) {}   // v5.71: 새 업적 (맨 아래, 새로 생긴 것만) · v5.76: 그 시장 것만
+  try { h += await aqAuditTaskLine(); } catch (e) {}   // v5.99: 이번 주 과제 — 맨 아래
   box.innerHTML = h;
 }
 Object.assign(window, { aqDailyBriefRender, aqBriefMode });
@@ -28228,7 +28379,7 @@ function _notiRender() {
   _noti.items.forEach((x, i) => {
     const day = _notiDay(x.at); if (day !== last) { h += `<div class="noti-day">${day}</div>`; last = day; }
         const ico = x.type === 'ops' ? `<span class="noti-ico">${x.sev === 'red' ? '🛠️' : '⚙️'}</span>` : x.type === 'data' ? `<span class="noti-ico">📊</span>` : x.type === 'security' ? `<span class="noti-ico">${x.sev === 'red' ? '🔴' : '🛡️'}</span>` : x.type === 'report' ? `<span class="noti-ico lg">${(typeof aqLogoHtml === 'function') ? aqLogoHtml(x.ticker, '', 'noti-logo') : escapeHtml(String(x.ticker).slice(0, 2))}</span>` : `<span class="noti-ico">${x.type === 'guide' ? '🧭' : '📰'}</span>`;
-        const name = x.type === 'brief' ? '일일 브리핑' : x.type === 'guide' ? 'AI 가이드' : x.type === 'security' ? '보안' : x.type === 'data' ? '데이터' : x.type === 'ops' ? '운영' : 'AI 보고서';
+        const name = x.type === 'brief' ? 'AI 브리핑' : x.type === 'guide' ? 'AI 가이드' : x.type === 'security' ? '보안' : x.type === 'data' ? '데이터' : x.type === 'ops' ? '운영' : 'AI 보고서';
     const line = x.type === 'report' ? [aqIsKR(x.ticker) ? '' : (((_state.tickerCompanyMaps || {})[x.market] || {})[x.ticker] || ''), x.line].filter(Boolean).join(' · ') : x.line;
     const chip = x.type === 'report' ? aqTkLabel(x.ticker) : (x.chip || '');
     h += `<div class="noti-sw" data-i="${i}"><div class="noti-del">지우기</div><div class="noti-row${x.read ? ' read' : ''}" data-i="${i}">${x.read ? '' : '<span class="noti-dot"></span>'}${ico}<div class="noti-mid"><div class="noti-t1">${name}<span class="noti-chip">${escapeHtml(chip)}</span></div><div class="noti-t2">${escapeHtml(line || '')}</div><div class="noti-t3">${_notiTime(x.at)}${x.read ? ' · 읽음' : ''}</div></div><button class="noti-x" data-x="${i}" aria-label="지우기">✕</button></div></div>`;
