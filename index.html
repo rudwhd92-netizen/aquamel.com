@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.01';   // v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.02';   // v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -4322,6 +4322,7 @@ body[data-mtab="sector"]:not([data-wsub="cmp"]) #compareCard { display: none !im
 .sec-al .t { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 700; color: var(--text-hi); } .sec-al .t small { margin-left: auto; font-size: 11px; color: var(--text-mute); font-weight: 500; }
 .sev { font-size: 10.5px; padding: 1px 7px; border-radius: 999px; font-weight: 700; flex: none; } .sev.r { background: rgba(255,107,107,.18); color: #ff8787; } .sev.o { background: rgba(255,169,77,.18); color: #ffa94d; }
 .sec-al .d { font-size: 12px; color: var(--text-dim); margin-top: 6px; line-height: 1.55; word-break: break-all; } .sec-al .dn { font-size: 11.5px; color: var(--text-mute); margin-top: 8px; }
+.sec-al-all { margin: 0 2px 10px; } .sec-al-all button { width: 100%; font-size: 12.5px; padding: 9px 12px; border-radius: 12px; background: rgba(255,255,255,.07); color: var(--text); border: none; cursor: pointer; }
 .sec-al .a { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; } .sec-al .a button { font-size: 12px; padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--text); border: none; cursor: pointer; } .sec-al .a button.p { background: rgba(77,171,247,.16); color: #74c0fc; }
 .sec-ur { display: flex; align-items: center; gap: 10px; padding: 11px 4px; font-size: 13px; cursor: pointer; } .sec-ur + .sec-ur { border-top: 1px solid rgba(255,255,255,.06); } .sec-ur .n { flex: 1; color: var(--text-hi); font-weight: 600; } .sec-ur small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; font-weight: 500; } .sec-ur .v { text-align: right; font-size: 12px; color: var(--text); }
 .w { color: #ffa94d !important; font-style: normal; } .g { color: #63e6be !important; }
@@ -28756,6 +28757,13 @@ async function aqSecEvents(kind) {
   aqSecRender();
 }
 async function aqSecAck(id, learn) { try { await apiCall('secAck', { id, learn: learn ? 1 : 0 }); } catch (e) {} aqSecLoad(); try { aqNotiLoad(); } catch (e) {} }
+async function aqSecAckAll() {   // v6.02
+  const ids = ((_sec.data && _sec.data.alerts) || []).filter(a => a.status === 'open' && a.code !== 'filehash').map(a => a.id);
+  if (!ids.length || !confirm(`열린 경고 ${ids.length}건을 모두 확인함으로 처리할까요?\nIP·기기는 등록하지 않아요.`)) return;
+  for (const id of ids) { try { await apiCall('secAck', { id, learn: 0 }); } catch (e) {} }
+  if (typeof aqToast === 'function') aqToast(`${ids.length}건 확인함`);
+  aqSecLoad(); try { aqNotiLoad(); } catch (e) {}
+}
 async function aqSecEmergency(op) {
   const msg = { logoutAll: '모든 사용자를 로그아웃할까요?\n본부장님도 다시 로그인해야 해요.', pauseAuto: '자동매매를 즉시 멈출까요?\n엔진이 꺼지고 1분 안에 걸린 주문이 취소돼요.', unlinkToss: '모든 사용자의 토스 연결을 끊을까요?\n서버가 토스를 부를 수 없게 돼요(키는 보관).', relinkToss: '끊었던 토스 연결을 다시 켤까요?' }[op];
   if (!confirm(msg)) return;
@@ -28780,8 +28788,10 @@ function aqSecRender() {
     <div class="sec-tabs">${[['alerts', `경고${c.red + c.org ? ' ' + (c.red + c.org) : ''}`], ['users', '사용자별'], ['server', '서버'], ['log', '기록']].map(([k, t]) => `<button class="${_sec.tab === k ? 'on' : ''}" onclick="aqSecTab('${k}')">${t}</button>`).join('')}</div>`;
   if (_sec.tab === 'alerts') {
     const al = d.alerts || [];
+    const _open = al.filter(a => a.status === 'open' && a.code !== 'filehash');   // v6.02: 한꺼번에 확인
+    if (_open.length >= 2) h += `<div class="sec-al-all"><button onclick="aqSecAckAll()">열린 경고 ${_open.length}건 모두 확인함 (기기 등록 안 함)</button></div>`;
     h += al.length ? al.map(a => { const learn = /^(newip|ssh|lablogin)$/.test(a.code); return `<div class="sec-al${a.status === 'ack' ? ' done' : ''}"><div class="t"><span class="sev ${a.sev === 'red' ? 'r' : 'o'}">${a.sev === 'red' ? '위험' : '주의'}</span>${escapeHtml(a.title)}<small>${_secT(a.at)}</small></div><div class="d">${escapeHtml(a.detail || '')}</div>
-      ${a.status === 'open' ? `<div class="a">${learn ? `<button class="p" onclick="aqSecAck(${a.id}, true)">정상 — 내 기기로 등록</button>` : a.code === 'filehash' ? `<button class="p" onclick="aqSecAck(${a.id})">배포함으로 처리</button>` : `<button class="p" onclick="aqSecAck(${a.id})">확인함</button>`}${a.code === 'newip' ? `<button onclick="aqSecEmergency('logoutAll')">세션 끊기</button>` : ''}</div>` : '<div class="dn">처리됨</div>'}</div>`; }).join('') : '<div class="auto-empty">최근 14일 경고가 없어요.</div>';
+      ${a.status === 'open' ? `<div class="a">${learn ? `<button class="p" onclick="aqSecAck(${a.id}, true)">정상 — 내 기기로 등록</button><button onclick="aqSecAck(${a.id})">확인함 — 등록 안 함</button>` : a.code === 'filehash' ? `<button class="p" onclick="aqSecAck(${a.id})">배포함으로 처리</button>` : `<button class="p" onclick="aqSecAck(${a.id})">확인함</button>`}${a.code === 'newip' ? `<button onclick="aqSecEmergency('logoutAll')">세션 끊기</button>` : ''}</div>` : '<div class="dn">처리됨</div>'}</div>`; }).join('') : '<div class="auto-empty">최근 14일 경고가 없어요.</div>';
   } else if (_sec.tab === 'users') {
     h += (d.users || []).map(u => `<div class="sec-ur" onclick="_sec.tab='log'; aqSecEventsUser(${u.user_id})"><div class="n">${escapeHtml(u.username)}${u.role === 'admin' ? ' (관리자)' : ''}<small>${u.last_ip ? `마지막 접속 ${escapeHtml(u.last_ip_label)}${u.new_ip ? ' · <b class="w">처음 본 IP</b>' : ''} · ${_secT(u.last_at)}` : '접속 기록 없음'}</small></div><div class="v">${u.toss === 'disabled' ? '<b class="w">토스 끊김</b>' : `토스 호출 ${u.toss_today || 0}`}<small>오늘</small></div></div>`).join('');
   } else if (_sec.tab === 'server') {
