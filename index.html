@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.62';   // v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.63';   // v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -4283,6 +4283,14 @@ body[data-mtab="auto"][data-atab="macro"] footer { display: none !important; }
 .mc-priv .mc-p p { font-size: 14px; line-height: 1.7; }
 .bn-hide { font-size: 12px; color: var(--text-mute); padding: 10px 2px 0; }
 .bn-donebtn { display: block; width: 100%; min-height: 40px; margin-top: 6px; border: none; background: none; color: var(--text-mute); font-family: inherit; font-size: 12.5px; text-align: left; padding: 8px 2px; cursor: pointer; }
+.mc-qwrap { margin: 2px 0 26px; }
+.mc-qb { display: flex; align-items: center; gap: 12px; padding: 16px; margin-bottom: 10px; border-radius: 14px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); }
+.mc-qb .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; } .mc-qb small { font-size: 12px; color: var(--text-mute); display: flex; align-items: center; gap: 7px; }
+.mc-qb small i { width: 7px; height: 7px; border-radius: 50%; background: #9d9d9d; animation: glpulse 1.2s infinite; } .mc-qb b { font-size: 15px; color: var(--text-hi); font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; } .mc-qb span { font-size: 12.5px; color: var(--text-mute); overflow-wrap: anywhere; }
+.mc-qb button { flex: none; min-height: 36px; padding: 0 12px; border: none; border-radius: 10px; background: rgba(255,255,255,.08); color: var(--text); font-family: inherit; font-size: 13px; cursor: pointer; }
+.mc-qb.fail small { color: #ff8787; }
+.mc-reopen { flex: none; align-self: center; min-height: 34px; padding: 0 12px; margin-left: 8px; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; background: none; color: var(--text); font-family: inherit; font-size: 12.5px; cursor: pointer; }
+.mc-toser { display: block; width: 100%; min-height: 48px; margin: 26px 0 0; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; background: none; color: var(--text-hi); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
 .mc-srcl { list-style: none; margin: 0; padding: 0; } .mc-srcl li { font-size: 12.5px; line-height: 1.6; color: var(--text-dim); padding: 4px 0; overflow-wrap: anywhere; } .mc-srcl a { color: #8ec5f0; text-decoration: none; }
 .mc-src { margin-top: 34px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.06); } .mc-src b { display: block; font-size: 12.5px; color: var(--text-dim); margin-bottom: 6px; } .mc-src .mc-p a { color: #8ec5f0; } .mc-src .mc-p p { font-size: 12.5px; line-height: 1.7; color: var(--text-dim); margin-bottom: 4px; }
 /* 시트 */
@@ -27838,15 +27846,16 @@ function _mcCover(it, size) {   // size: hero | thumb | small
   const cv = it && it.cover;
   if (cv && cv.f) { const big = size === 'hero'; const n = big ? cv.f : (cv.t || cv.f);
     return `<img class="mc-img" src="${escapeAttr(_mcMedia(n))}" alt="" loading="lazy" style="object-position:${big ? `${Math.round((cv.fx ?? .5) * 100)}% ${Math.round((cv.fy ?? .5) * 100)}%` : '50% 50%'}">`; }
-  const k = it && it.kind === 'fixed' ? 'fixed' : it && it.series_id ? 'series' : 'once'; const c = _MC_AC[k];
+  const k = it && it.kind === 'fixed' ? 'fixed' : it && it.series_id ? 'series' : 'once'; const c = _MC_AC[k]; const qk = it && it.kind === 'quick';
   const w = String((it && (it.cover_word || it.series_title)) || '거시 분석').slice(0, 12);
-  const sub = k === 'fixed' ? _mcMD(it.week) : k === 'series' ? (it.kind === 'final' ? '마무리' : `연재 ${it.episode || ''}회`) : '1회성';
+  const sub = qk ? '퀵 분석' : k === 'fixed' ? _mcMD(it.week) : k === 'series' ? (it.kind === 'final' ? '마무리' : `연재 ${it.episode || ''}회`) : '1회성';
   return `<div class="mc-auto ${k} ${size}" style="--b:${c[0]};--f:${c[1]};--d:${c[2]}"><span class="dec"></span><small>${escapeHtml(sub)}</small><b>${escapeHtml(w)}</b></div>`;
 }
 function _mcKicker(it) {
   if (it.kind === 'fixed') return [`${it.series_title || '미국 소셜 버즈'} · 매주`, 'buzz'];
   if (it.kind === 'final') return [`${it.series_title || ''} · 마무리 회`, 'ser'];
   if (it.series_id) return [`${it.series_title || ''} · 연재 ${it.episode || ''}회`, 'ser'];
+  if (it.kind === 'quick') return [`퀵 분석 · ${_mcMD(it.week)}`, 'once'];
   return [`1회성${it.req ? ' · 내 요청' : ''}`, 'once'];
 }
 function _mcHypoTx(h) { if (!h) return ''; return h.status === 'right' ? '<b class="g">맞음</b>' : h.status === 'wrong' ? '<b class="r">틀림</b>' : h.status === 'hold' ? '보류' : (h.check_on ? `${_mcMD(h.check_on)} 확인` : '확인 전'); }
@@ -27868,6 +27877,27 @@ function aqMacroRender(noLoad) {
   if (_mc.view === 'article') { box.innerHTML = _mcArtHtml(); return; }
   box.innerHTML = _mcFeedHtml(); if (!noLoad) _mcLoad();
 }
+function _mcQuickHtml(QB, qNew) {   // v6.63: 쓰는 중·실패 카드 + 7일 안 퀵 분석
+  const ago = t => { const m = Math.max(0, Math.round((Date.now() - new Date(t).getTime()) / 60e3)); return m < 1 ? '방금' : m < 60 ? `${m}분 전` : `${Math.round(m / 60)}시간 전`; };
+  const busy = (QB || []).map(q => q.status === 'failed'
+    ? `<div class="mc-qb fail"><div class="tx"><small>퀵 분석 · 실패</small><b>${escapeHtml(q.topic)}</b><span>${escapeHtml(q.err || '쓰지 못했어요')}</span></div><button type="button" onclick="aqMcQuickCancel(${q.id})">닫기</button></div>`
+    : `<div class="mc-qb"><div class="tx"><small><i></i>퀵 분석 · ${q.status === 'open' ? '시작하는 중' : '쓰는 중'} · ${ago(q.fired_at || q.at)}</small><b>${escapeHtml(q.topic)}</b><span>보통 10~20분 · 끝나면 텔레그램으로 알려요</span></div><button type="button" onclick="aqMcQuickCancel(${q.id})">취소</button></div>`).join('');
+  const rows = (qNew || []).map(it => `<div class="mc-row" onclick="aqMcOpen(${it.id})"><div class="mc-row-tx"><div class="mc-kick once">퀵 분석 · ${_mcMD(it.week)}</div><div class="mc-h3">${escapeHtml(it.headline)}</div><div class="mc-meta">${_mcMeta(it, null)}</div></div><div class="mc-thumb">${_mcCover(it, 'thumb')}</div></div>`).join('');
+  return busy || rows ? `<div class="mc-qwrap">${busy}${rows}</div>` : '';
+}
+async function aqMcQuickCancel(id) { let r = null; try { r = await apiCall('topicCancel', { id }); } catch (e) {} if (r && r.ok) { _mc.ts = 0; _mcLoad(true); } else aqToast('처리하지 못했어요'); }
+function aqMcReopen(sid) {   // v6.63: 끝난 연재 다시 열기 — 같은 번호로 다음 회차부터
+  const S = ((_mc.d && _mc.d.ended) || []).find(x => x.id === sid); if (!S) return; const sl = (_mc.d && _mc.d.slots) || { used: 0, max: 3 };
+  _mcSheet(`<div class="mc-sh-t">‘${escapeHtml(S.title)}’ 다시 연재</div><div class="mc-sh-s">${S.episodes}회 다음인 ${S.episodes + 1}회부터 이어 써요.<br>다음 일요일 주간 점검이 마지막 결론과 비교해서 써요.</div>`
+    + `<label class="mc-lb" for="mcRoEnd">언제까지 따라갈까요 <span>(비워 두면 지난 조건 그대로)</span></label><input id="mcRoEnd" class="mc-in" maxlength="200" placeholder="${escapeAttr(S.end || '예: 상장 6개월 뒤')}">`
+    + `<div class="mc-note">연재는 ${sl.max}개까지예요 · 지금 ${sl.used}개${sl.used >= sl.max ? ' · 연재 하나를 끝내면 열 수 있어요' : ''}</div><button class="mc-go" id="mcRoGo" onclick="aqMcReopenSave(${sid})">다시 연재하기</button>`);
+}
+async function aqMcReopenSave(sid) {
+  const e = (document.getElementById('mcRoEnd') || {}).value || ''; const b = document.getElementById('mcRoGo'); if (b) b.disabled = true;
+  let r = null; try { r = await apiCall('seriesReopen', { id: sid, end: e.trim() }); } catch (x) {} if (b) b.disabled = false;
+  if (!r || !r.ok) { aqToast((r && r.error) || '열지 못했어요'); return; }
+  aqMcSheetClose(); aqToast('다시 연재해요 · 다음 일요일에 이어 써요'); _mc.ts = 0; _mcLoad(true);
+}
 function _mcDecLine(S, mid) {
   const d = S.decision;
   return `<div class="mc-decl" onclick="aqMcOpen(${mid}, 'dec')"><span>${d ? `내가 정함 · <b>${d === 'end' ? '이번 회로 끝내기' : '계속'}</b>` : `다음 주도 따라갈까요 · AI 추천 <b class="${S.ai_rec === 'end' ? 'y' : ''}">${S.ai_rec === 'end' ? '끝내기' : '계속'}</b>`}</span><b class="go">${d ? '바꾸기 ›' : '정하기 ›'}</b></div>`;
@@ -27877,7 +27907,13 @@ function _mcFeedHtml() {
   const head = `<div class="mc-head"><b>거시 분석</b>${adm ? `<button class="mc-pill" onclick="aqMcTopic()">${_MC_SVG.plus}주제 넣기</button>` : ''}</div>`;
   if (!D) return head + '<div class="auto-empty">불러오는 중…</div>';
   if (D.err) return head + `<div class="gm-empty">${escapeHtml(D.err === 'login required' ? '로그인하면 볼 수 있어요' : D.err)}</div>`;
-  const items = D.items || []; const SM = {}; (D.series || []).concat(D.ended || []).forEach(s => { SM[s.id] = s; });
+  const all = D.items || []; const SM = {}; (D.series || []).concat(D.ended || []).forEach(s => { SM[s.id] = s; });
+  // v6.63: 퀵 분석(지금 바로) — 주간 묶음과 따로 · 7일 안 것과 쓰는 중 카드는 맨 위
+  const items = all.filter(x => x.kind !== 'quick'); const Q = all.filter(x => x.kind === 'quick');
+  const qCut = (() => { const d = new Date(Date.now() + 9 * 3600e3 - 7 * 86400e3); return d.toISOString().slice(0, 10); })();
+  const qNew = Q.filter(x => x.week >= qCut), qOld = Q.filter(x => x.week < qCut);
+  const qH = _mcQuickHtml(D.quick || [], qNew);
+  if (!items.length && (qH || qOld.length)) return head + qH + `<div class="mc-sub">매주 일요일 17시 발행</div>` + (qOld.length ? `<div class="mc-ph"><b>지난 분석</b></div>${qOld.slice(0, 20).map(it => `<div class="mc-prow" onclick="aqMcOpen(${it.id})"><div class="mc-pthumb">${_mcCover(it, 'small')}</div><div class="mc-row-tx"><div class="mc-h4">${escapeHtml(it.headline)}</div><div class="mc-meta">${_mcMeta(it, null)}</div></div></div>`).join('')}` : '');
   if (!items.length) return head + `<div class="mc-sub">매주 일요일 17시 발행</div><div class="gm-empty">첫 거시 분석은 일요일 17시에 올라와요${adm ? '<br><small>이번 주 다룰 주제를 미리 넣어 둘 수 있어요</small>' : ''}</div>`;
   const wk = items[0].week; const ord = x => x.kind === 'fixed' ? 2 : x.series_id ? 0 : 1;
   const cur = items.filter(x => x.week === wk).sort((a, b) => ord(a) - ord(b) || (a.series_id || 0) - (b.series_id || 0) || b.id - a.id);
@@ -27889,13 +27925,13 @@ function _mcFeedHtml() {
   const dec = adm && hS && hS.kind === 'series' && hS.status === 'active' && hero.kind !== 'final' ? _mcDecLine(hS, hero.id) : '';
   const row = it => { const [k, c] = _mcKicker(it); const S = it.series_id ? SM[it.series_id] : null;
     return `<div class="mc-row" onclick="aqMcOpen(${it.id})"><div class="mc-row-tx"><div class="mc-kick ${c}">${escapeHtml(k)}</div><div class="mc-h3">${escapeHtml(it.headline)}</div><div class="mc-meta">${_mcMeta(it, S)}</div></div><div class="mc-thumb">${_mcCover(it, 'thumb')}</div></div>`; };
-  const past = items.filter(x => x.week !== wk && !x.series_id);
+  const past = items.filter(x => x.week !== wk && !x.series_id).concat(qOld).sort((a, b) => String(b.week).localeCompare(String(a.week)));
   const hs = items.map(x => x.hypo).filter(Boolean); const hr = hs.filter(h => h.status === 'right').length, hw = hs.filter(h => h.status === 'wrong').length, ho = hs.length - hr - hw;
   const prow = it => `<div class="mc-prow" onclick="aqMcOpen(${it.id})"><div class="mc-pthumb">${_mcCover(it, 'small')}</div><div class="mc-row-tx"><div class="mc-h4">${escapeHtml(it.headline)}</div><div class="mc-meta">${_mcMD(it.week)}${it.hypo ? `<i>·</i>가설 ${_mcHypoTx(it.hypo)}` : ''}</div></div></div>`;
   const ended = D.ended || [];
   const endH = ended.length ? `<div class="mc-endh" onclick="aqHoldScroll(); _mc.endedOpen = !_mc.endedOpen; aqMacroRender(true)"><span>끝난 연재 <em>${ended.length}</em></span><span class="${_mc.endedOpen ? 'up' : ''}">${_MC_SVG.down}</span></div>`
-    + (_mc.endedOpen ? ended.map(s => s.latest ? `<div class="mc-prow" onclick="aqMcOpen(${s.latest.id})"><div class="mc-pthumb">${_mcCover(Object.assign({}, s.latest, { cover: s.latest.cover || s.cover }), 'small')}</div><div class="mc-row-tx"><div class="mc-h4">${escapeHtml(s.title)}</div><div class="mc-meta">${s.episodes}회 · ${_mcMD(s.first_week)}~${_mcMD(s.last_week)}</div></div></div>` : '').join('') : '') : '';
-  return head + sub + heroH + dec + (rest.length ? `<div class="mc-div"></div>${rest.map(row).join('')}` : '')
+    + (_mc.endedOpen ? ended.map(s => s.latest ? `<div class="mc-prow" onclick="aqMcOpen(${s.latest.id})"><div class="mc-pthumb">${_mcCover(Object.assign({}, s.latest, { cover: s.latest.cover || s.cover }), 'small')}</div><div class="mc-row-tx"><div class="mc-h4">${escapeHtml(s.title)}</div><div class="mc-meta">${s.episodes}회 · ${_mcMD(s.first_week)}~${_mcMD(s.last_week)}</div></div>${adm ? `<button type="button" class="mc-reopen" onclick="event.stopPropagation(); aqMcReopen(${s.id})">다시 연재</button>` : ''}</div>` : '').join('') : '') : '';
+  return head + qH + sub + heroH + dec + (rest.length ? `<div class="mc-div"></div>${rest.map(row).join('')}` : '')
     + (past.length ? `<div class="mc-ph"><b>지난 분석</b>${hs.length ? `<span>가설 맞음 ${hr} · 틀림 ${hw} · 확인 전 ${ho}</span>` : ''}</div>${past.slice(0, 20).map(prow).join('')}` : '')
     + endH;
 }
@@ -27941,7 +27977,8 @@ function _mcArtHtml() {
   const epH = eps.length ? `<div class="mc-st">${S && S.kind === 'fixed' ? '지난주들' : '지난 회차'}</div>` + eps.slice(0, 12).map(e => `<div class="mc-prow" onclick="aqMcOpen(${e.id})"><div class="mc-pthumb ep">${_mcCover(e, 'small')}</div><div class="mc-row-tx"><div class="mc-h4">${escapeHtml(e.headline)}</div><div class="mc-meta">${S && S.kind === 'fixed' ? '' : `${e.kind === 'final' ? '마무리' : e.episode + '회'}<i>·</i>`}${_mcMD(e.week)}${S && S.kind !== 'fixed' ? `<i>·</i>${(e.episode || 0) > 1 ? (e.changed ? '<b class="y">결론 바뀜</b>' : '결론 유지') : '첫 분석'}` : ''}${e.hypo ? `<i>·</i>가설 ${_mcHypoTx(e.hypo)}` : ''}${e.cover && e.cover.scope === 'episode' ? '<i>·</i>회차 사진' : ''}</div></div></div>`).join('') : '';
   const priv = adm ? ['포트폴리오 영향', '내 보유 종목 버즈'].filter(x => b[x]).map(x => `<div class="mc-priv"><div class="h"><span>${x === '포트폴리오 영향' ? '내 포트폴리오 영향' : '내 보유 종목 버즈'}</span><small>나만 보여요</small></div><div class="mc-p">${_mcPara(b[x])}</div></div>`).join('') : '';
   const src = b['출처'] ? `<div class="mc-src"><b>출처</b>${_mcSrcHtml(b['출처'])}</div>` : '';
-  return `<div class="mc-art">${img}<div class="mc-abody"><div class="mc-kick ${kc}">${escapeHtml(k)}${it.req ? '<span class="mc-req">내 요청</span>' : ''}</div><h1 class="mc-ah1">${escapeHtml(c.headline)}</h1>${c.dek ? `<div class="mc-adek">${escapeHtml(c.dek)}</div>` : ''}${by}${concl}${body}${hy}${dec}${priv}${epH}${src}</div></div>`;
+  const toSer = adm && it.kind === 'quick' ? `<button type="button" class="mc-toser" onclick="aqMcTopic({ topic: ${escapeAttr(JSON.stringify(String(it.topic || c.headline || '')))}, mode: 'series' })">이 주제를 매주 따라가기로 바꾸기</button>` : '';
+  return `<div class="mc-art">${img}<div class="mc-abody"><div class="mc-kick ${kc}">${escapeHtml(k)}${it.req && it.kind !== 'quick' ? '<span class="mc-req">내 요청</span>' : ''}</div><h1 class="mc-ah1">${escapeHtml(c.headline)}</h1>${c.dek ? `<div class="mc-adek">${escapeHtml(c.dek)}</div>` : ''}${by}${concl}${body}${hy}${dec}${toSer}${priv}${epH}${src}</div></div>`;
 }
 function _mcDecCard(S) {
   const d = S.decision; const eff = d || S.ai_rec || 'continue';
@@ -27970,34 +28007,39 @@ function _mcSheet(html) {
   r.innerHTML = `<div class="mc-sheet"><div class="mc-sheet-in">${html}</div></div>`; document.body.appendChild(r); return r;
 }
 function aqMcSheetClose() { const r = document.getElementById('mcSheet'); if (r) r.remove(); _mc.ph = null; }
-function aqMcTopic() { _mc.tp = { mode: 'once' }; _mcSheet(_mcTopicHtml()); _mcTopicList(true); }
+function aqMcTopic(pre) { _mc.tp = { mode: (pre && pre.mode) || 'once' }; _mcSheet(_mcTopicHtml()); if (pre && pre.topic) { const t = document.getElementById('mcTpIn'); if (t) { t.value = String(pre.topic).slice(0, 200); _mcTpCount(); } } _mcTopicList(true); }
 function _mcSlots() { const s = (_mc.topics && _mc.topics.slots) || (_mc.d && _mc.d.slots) || { used: 0, max: 3 }; return s; }
 function _mcTopicHtml() {
-  const s = _mcSlots(); const left = Math.max(0, s.max - s.used); const ser = _mc.tp.mode === 'series';
-  return `<div class="mc-sh-t">이번 주 다룰 주제</div><div class="mc-sh-s">일요일 17시 주간 점검이 먼저 넣은 주제부터 다뤄요.<br>찬반이 갈리는 질문으로 쓰면 결론이 또렷해져요.</div>
+  const s = _mcSlots(); const left = Math.max(0, s.max - s.used); const ser = _mc.tp.mode === 'series'; const qk = _mc.tp.mode === 'quick'; const ql = _mc.d && _mc.d.quick_left != null ? _mc.d.quick_left : 2;
+  return `<div class="mc-sh-t" id="mcTpT">${qk ? '지금 바로 분석할 주제' : '이번 주 다룰 주제'}</div><div class="mc-sh-s" id="mcTpS">${qk ? '이 주제 하나만 최근 7일 자료로 바로 분석해요.' : '일요일 17시 주간 점검이 먼저 넣은 주제부터 다뤄요.'}<br>찬반이 갈리는 질문으로 쓰면 결론이 또렷해져요.</div>
     <label class="mc-lb" for="mcTpIn">주제</label><textarea id="mcTpIn" class="mc-ta" rows="3" maxlength="200" placeholder="예: 엔화 약세가 계속되면 한국 반도체 수출주에 불리할까" oninput="_mcTpCount()"></textarea>
     <div class="mc-cnt"><span>4자 이상 · 200자까지</span><span id="mcTpN">0 / 200</span></div>
     <div class="mc-lb2">이런 식으로</div><div class="mc-chips">${['○○는 이미 주가에 반영됐나', '○○가 내 업종에 득일까 실일까', '시장이 ○○를 과하게 걱정하나'].map(x => `<button onclick="_mcTpEx('${escapeAttr(x)}')">${escapeHtml(x)}</button>`).join('')}</div>
-    <div class="mc-lb">얼마나 볼까요</div><div class="gd-tog mc-tog"><button id="mcTpM1" class="${ser ? '' : 'on'}" onclick="aqMcTpMode('once')">한 번만</button><button id="mcTpM2" class="${ser ? 'on' : ''}" onclick="aqMcTpMode('series')">매주 따라가기</button></div>
-    <div class="mc-note" id="mcTpSlot">연재는 ${s.max}개까지예요 · ${left ? `지금 ${s.used}개라 ${left}개 더 넣을 수 있어요` : `지금 ${s.used}개로 가득 찼어요 · 연재 하나를 끝내면 넣을 수 있어요`}</div>
+    <div class="mc-lb">얼마나 볼까요</div><div class="gd-tog mc-tog"><button id="mcTpM1" class="${ser || qk ? '' : 'on'}" onclick="aqMcTpMode('once')">한 번만</button><button id="mcTpM2" class="${ser ? 'on' : ''}" onclick="aqMcTpMode('series')">매주 따라가기</button><button id="mcTpM3" class="${qk ? 'on' : ''}" onclick="aqMcTpMode('quick')">지금 바로</button></div>
+    <div class="mc-note" id="mcTpQk" style="${qk ? '' : 'display:none'}">지금 바로 분석해서 10~20분 뒤 피드 맨 위에 올려요 · 한 번에 하나 · 오늘 ${ql}건 남음</div>
+    <div class="mc-note" id="mcTpSlot" style="${qk ? 'display:none' : ''}">연재는 ${s.max}개까지예요 · ${left ? `지금 ${s.used}개라 ${left}개 더 넣을 수 있어요` : `지금 ${s.used}개로 가득 찼어요 · 연재 하나를 끝내면 넣을 수 있어요`}</div>
     <div id="mcTpEndW" style="${ser ? '' : 'display:none'}"><label class="mc-lb" for="mcTpEnd">언제까지 따라갈까요 <span>(비워 두면 AI가 첫 회에 정해요)</span></label><input id="mcTpEnd" class="mc-in" maxlength="200" placeholder="예: 일본은행 금리 결정까지"></div>
-    <button class="mc-go" id="mcTpGo" onclick="aqMcTopicSave()">주제 넣기</button>
+    <button class="mc-go" id="mcTpGo" onclick="aqMcTopicSave()">${qk ? '지금 분석하기' : '주제 넣기'}</button>
     <div id="mcTpList"></div>`;
 }
 function _mcTpCount() { const t = document.getElementById('mcTpIn'), n = document.getElementById('mcTpN'); if (t && n) n.textContent = `${t.value.length} / 200`; }
 function _mcTpEx(x) { const t = document.getElementById('mcTpIn'); if (!t) return; t.value = x; t.focus(); const i = x.indexOf('○○'); if (i >= 0) t.setSelectionRange(i, i + 2); _mcTpCount(); }
 function aqMcTpMode(m) {
-  _mc.tp.mode = m; const a = document.getElementById('mcTpM1'), b = document.getElementById('mcTpM2'), w = document.getElementById('mcTpEndW');
-  if (a) a.classList.toggle('on', m === 'once'); if (b) b.classList.toggle('on', m === 'series'); if (w) w.style.display = m === 'series' ? '' : 'none';
+  _mc.tp.mode = m; const a = document.getElementById('mcTpM1'), b = document.getElementById('mcTpM2'), q = document.getElementById('mcTpM3'), w = document.getElementById('mcTpEndW');
+  if (a) a.classList.toggle('on', m === 'once'); if (b) b.classList.toggle('on', m === 'series'); if (q) q.classList.toggle('on', m === 'quick'); if (w) w.style.display = m === 'series' ? '' : 'none';
+  const qn = document.getElementById('mcTpQk'), sn = document.getElementById('mcTpSlot'), g = document.getElementById('mcTpGo');
+  const tt = document.getElementById('mcTpT'), ts = document.getElementById('mcTpS'); if (tt) tt.textContent = m === 'quick' ? '지금 바로 분석할 주제' : '이번 주 다룰 주제';
+  if (ts) ts.innerHTML = (m === 'quick' ? '이 주제 하나만 최근 7일 자료로 바로 분석해요.' : '일요일 17시 주간 점검이 먼저 넣은 주제부터 다뤄요.') + '<br>찬반이 갈리는 질문으로 쓰면 결론이 또렷해져요.';
+  if (qn) qn.style.display = m === 'quick' ? '' : 'none'; if (sn) sn.style.display = m === 'quick' ? 'none' : ''; if (g) g.textContent = m === 'quick' ? '지금 분석하기' : '주제 넣기';
 }
 async function _mcTopicList(load) {
   if (load) { let r = null; try { r = await apiCall('topicList', {}); } catch (e) {} if (r && r.ok) _mc.topics = r; }
   const el = document.getElementById('mcTpList'); if (!el) return; const T = (_mc.topics && _mc.topics.items) || [];
   const s = _mcSlots(); const sl = document.getElementById('mcTpSlot'); const left = Math.max(0, s.max - s.used);
   if (sl) sl.textContent = `연재는 ${s.max}개까지예요 · ${left ? `지금 ${s.used}개라 ${left}개 더 넣을 수 있어요` : `지금 ${s.used}개로 가득 찼어요 · 연재 하나를 끝내면 넣을 수 있어요`}`;
-  const open = T.filter(x => x.status === 'open'), used = T.filter(x => x.status === 'used');
+  const open = T.filter(x => x.status === 'open' && x.mode !== 'quick'), used = T.filter(x => x.status === 'used');
   el.innerHTML = (open.length ? `<div class="mc-lh"><b>기다리는 주제</b><span>${open.length} / 5</span></div>` + open.map((x, i) => `<div class="mc-tq"><span class="n">${i + 1}</span><span class="tx"><span>${escapeHtml(x.topic)}</span><small>${x.mode === 'series' ? `매주 따라가기${x.end ? ' · ' + escapeHtml(x.end) + '까지' : ''}` : '한 번만'} · ${i === 0 ? '이번 일요일에 다뤄요' : '차례를 기다려요'}</small></span><button onclick="aqMcTopicCancel(${x.id})">빼기</button></div>`).join('') : '')
-    + (used.length ? `<div class="mc-lh"><b>다룬 주제</b></div>` + used.slice(0, 10).map(x => `<div class="mc-tq go" onclick="${x.macro_id ? `aqMcSheetClose(); aqMcOpen(${x.macro_id})` : ''}"><span class="tx"><span>${escapeHtml(x.topic)}</span><small>${x.series ? (x.series.status === 'active' ? `연재 중 · ${_mcMD(x.series.first_week)}부터 ${x.series.episodes}회` : `연재 끝 · ${x.series.episodes}회`) : `1회성 · ${_mcMD(x.used_week)}`}</small></span>${x.macro_id ? '<span class="ch">›</span>' : ''}</div>`).join('') : '');
+    + (used.length ? `<div class="mc-lh"><b>다룬 주제</b></div>` + used.slice(0, 10).map(x => `<div class="mc-tq go" onclick="${x.macro_id ? `aqMcSheetClose(); aqMcOpen(${x.macro_id})` : ''}"><span class="tx"><span>${escapeHtml(x.topic)}</span><small>${x.series ? (x.series.status === 'active' ? `연재 중 · ${_mcMD(x.series.first_week)}부터 ${x.series.episodes}회` : `연재 끝 · ${x.series.episodes}회`) : `${x.mode === 'quick' ? '퀵 분석' : '1회성'} · ${_mcMD(x.used_week)}`}</small></span>${x.macro_id ? '<span class="ch">›</span>' : ''}</div>`).join('') : '');
 }
 async function aqMcTopicSave() {
   const t = (document.getElementById('mcTpIn') || {}).value || ''; const end = (document.getElementById('mcTpEnd') || {}).value || '';
@@ -28006,6 +28048,7 @@ async function aqMcTopicSave() {
   let r = null; try { r = await apiCall('topicRequest', { topic: t.trim(), mode: _mc.tp.mode, end: _mc.tp.mode === 'series' ? end.trim() : '' }); } catch (e) {}
   if (btn) btn.disabled = false;
   if (!r || !r.ok) { aqToast((r && r.error) || '넣지 못했어요'); return; }
+  if (_mc.tp.mode === 'quick') { aqMcSheetClose(); aqToast('퀵 분석을 시작했어요 · 10~20분 걸려요'); _mc.ts = 0; _mcLoad(true); return; }
   aqToast(_mc.tp.mode === 'series' ? '매주 따라갈 주제로 넣었어요' : '이번 주 주제로 넣었어요');
   const ta = document.getElementById('mcTpIn'); if (ta) ta.value = ''; const te = document.getElementById('mcTpEnd'); if (te) te.value = ''; _mcTpCount();
   _mcTopicList(true);
