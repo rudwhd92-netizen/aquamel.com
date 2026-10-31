@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.33';   // v6.33: 계단식 평단 다듬기 — 지금 평단 구간만 실선, 그 밖은 점선(처음 진입이면 지금 평단을 왼쪽 끝까지, 재진입이면 전량 매도한 날에서 이전 평단으로 ㄴ자 연결, 이전 평단 계단도 점선) · 평단 숫자는 그래프 밖 차트 바로 위 한 줄('평단 $425.00 · 지금 +1.6%') · v6.32: PC 화면 없앰 — 넓은 화면은 가운데 폭 430px 틀에 모바일 화면(pc.html) · 포트폴리오를 내 기준으로 — 오늘(주말·휴장엔 날짜) = 어제부터 든 수량은 전날 종가, 오늘 산 수량은 매수가, 판 것은 확정손익까지 (누적 성과의 오늘 손익과 같은 값) · 비중 지도 색·오늘 기여·오늘순 정렬도 같은 기준 · 30일 비중은 그날그날 실제 보유 수량 · 묶음 시트 그래프 = 묶음 손익(평가+확정) 30일 변화 (+같은 기간 나스닥/코스피) · 종목 차트·운영 차트의 평단을 계단식으로(매수일에 꺾임, 전량 매도 구간 끊김), 금액은 지금 구간에만 · 차트 평단을 보유 계산과 같은 값으로(토스 시드 포함) · v6.31: 마이 › 보유 종목 → '포트폴리오' 개편 (MO) — 평가금·오늘·총 수익 · [메가 | 섹터 | 종목] 묶어 보기(한국은 섹터·종목) · 차트 [비중 지도 | 오늘 기여 | 30일 비중] · 메가는 고유 색, 섹터·종목은 오늘 오르면 초록·내리면 빨강 · 한 묶음 50% 넘으면 한 줄 알림 · 묶음 목록(접고 펼치기, 비중·오늘·수익률 순) · 묶음 시트(30일 묶음 vs 나스닥/코스피, 섹터 비중, 종목) · 종목 줄 누르면 차트, 길게 누르면 내 평가 · v6.30: 미국 서머타임 해제 대응 — 내 브리핑 '실적 발표 예정(장 시작 전)'의 개장 시각을 서머타임에 따라 22:30/23:30으로 · 실적 캘린더 기본 시각 뉴욕 17:00 · v6.29: 운영 편집 개편 — 처음 정하기는 카드 넘기기(6개월 차트·평단·매매 점, AI 초안 → 맞아요/바꾸기/나중에, 밀어서 넘기기, 끝나면 요약) · 사상 고르기는 '왜 들고 계세요?' 5묶음 → 묶음 안 비교(사는 때·파는 때·AI가 안 하는 것) + 단계(최근 30일 매매로 추천) · 잘 모르겠으면 질문 3개 · 운영 카드(사상·단계·내 평가 칸을 눌러 그것만 고치기, 끝낼 조건 거리, 실적 체크, 기록 접기) · 보유 목록 길게 누르기 = 내 평가 빠른 시트(확신·결과, 다른 메뉴는 안에) · 끝낼 조건은 문장 + 차트 선 끌기 · 사상별 값(추세 이탈선 차트·지난 1년 이탈 통계, 역발상 가격선 눌러 추가, 이벤트 실적일, 목표 비중 막대, 배당 기준, 확인 신호, 다시 볼 날, 정리 계획 차트) · 저장하면 'AI가 이제 하는 것' 안내 · v6.28: 운영 — 종목마다 사상(왜 들고 있나 10개 · 5묶음) × 단계(정찰·모으는 중·보유·줄이는 중) × 내 평가(강한확신·반신반의·판단보류·기획성공·기획실패) · 편집 시트(AI·서버 초안 확정, 한 줄 이유·끝낼 조건·숫자 감시, 사상별 값) · 내 지침 '정할 것'에 운영 점검(사상 정하기·맞지 않는 조합·이벤트 뒤 보유·계획 밖 매수·흔들림 매도 확인·끝낼 조건·추세 이탈·다시 볼 날·기획성공 다음 단계·정리 계획·AI 제안·사상 예산·비중 맞추기·숨은 집중·실적 체크) · 운영 지도(사상·묶음 비중, 기준 고치기, 급락장 플레이북, 운영 성적·오답노트) · 보유 목록·신호표·종목 칩 · 매수심사 전 사상 확인 · 초장기 수집은 AI 평가 제외 · v6.27: 포인트색 정리 — 행동·결정·닿음 자리의 주황을 하늘색(#569cd6, 앱 기본 강조색)으로 (내 지침 버튼·정할 것·닿음·신호등 첫 칸·그래프 닿은 점 · AI 추천 개수 배지·오늘 묶음 · 매매심사 만료 버튼·만료 수) · 주황은 경고·만료·실적 전·위험 표시에만 남김 · v6.26: 내 지침 — 꼬리표 끝 '→ 할 일'을 갈림길·기다리는 신호·정할 것에 표시 (닿으면 [했어요 / 계속 따르기 / 그만]) · v6.25: 내 지침 개편 — 첫 화면 '오늘 정할 것 N개' · 정할 것 · 곧 닿아요(작은 선·달력) · 지키는 중 · 상세: 지금 할 일 · 약속(방패·지킨 날) · 왜 · 기다리는 신호를 종류별 그림으로(가격·지표 선과 기준선, 평단 눈금, 비중 막대, 연속 칸, 거래량 막대, 달력, 판단 질문) · 갈림길 · 켜 둔 설정 기간 막대 · 한 일 체크 · 기록 접기 · '했어요'는 할 일이 있는 지침에만 · v6.24: AI 보고서 5 WHY — 제목 모양이 조금 달라도 단계 화면으로 표시('고른 쟁점:' · '1단계 (…):' · '이 진실이 바뀔 수 있는 조건') · 쟁점 아래 '고른 이유' 문단 표시 · 바뀌는 조건이 5단계 인용 상자에 붙던 문제 · v6.23: 팝업을 모두 '맨 위 손잡이를 쓸어내리면 닫힘'으로 통일 — 매크로 지표 · 운영 로그 · 비밀번호 · 일정 등록 · 밸류에이션 · 종목 검색 · 누적 시그널 · 계정 관리 · AI 매수심사 리포트 · 매매 기록 입력·내역 · 계좌 · 보유 입력 · 로고 선택 · 엑셀 붙여넣기 (모바일에선 가운데 상자도 아래에서 올라오는 시트, ✕ 숨김 · 뒤로가기로도 닫힘) · 뒤로가기로 시트를 닫으면 기록이 한 칸 더 지워지던 문제 · v6.22: 토글·탭을 눌러도 화면 위치 그대로(내용이 짧아져도 스크롤이 당겨지지 않음 · AI 가이드 토글이 화면을 끌어올리던 것 없앰) · AI 가이드 [AI 추천 | 내 지침]과 AI 브리핑 [장후 | 장전]을 폭을 꽉 채운 같은 모양으로 · v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.34';   // v6.34: 반응형 그래프 — 포트폴리오(비중 지도·오늘 기여·30일 비중·묶음 시트), 운영 차트(카드 넘기기·끝낼 조건·사상별 값), 내 지침 신호 그림·거래량 막대를 실제 폭으로 다시 그림(글씨 크기 고정, 높이는 폭 따라 늘되 상한) · 폴드 접기/펴기 때 다시 그림 · 넓은 화면에서 작은 칸에도 이름이 들어감 · 누적 성과 선·낙폭·스파크라인·매수심사 경로의 선 굵기 고정 · v6.33: 계단식 평단 다듬기 — 지금 평단 구간만 실선, 그 밖은 점선(처음 진입이면 지금 평단을 왼쪽 끝까지, 재진입이면 전량 매도한 날에서 이전 평단으로 ㄴ자 연결, 이전 평단 계단도 점선) · 평단 숫자는 그래프 밖 차트 바로 위 한 줄('평단 $425.00 · 지금 +1.6%') · v6.32: PC 화면 없앰 — 넓은 화면은 가운데 폭 430px 틀에 모바일 화면(pc.html) · 포트폴리오를 내 기준으로 — 오늘(주말·휴장엔 날짜) = 어제부터 든 수량은 전날 종가, 오늘 산 수량은 매수가, 판 것은 확정손익까지 (누적 성과의 오늘 손익과 같은 값) · 비중 지도 색·오늘 기여·오늘순 정렬도 같은 기준 · 30일 비중은 그날그날 실제 보유 수량 · 묶음 시트 그래프 = 묶음 손익(평가+확정) 30일 변화 (+같은 기간 나스닥/코스피) · 종목 차트·운영 차트의 평단을 계단식으로(매수일에 꺾임, 전량 매도 구간 끊김), 금액은 지금 구간에만 · 차트 평단을 보유 계산과 같은 값으로(토스 시드 포함) · v6.31: 마이 › 보유 종목 → '포트폴리오' 개편 (MO) — 평가금·오늘·총 수익 · [메가 | 섹터 | 종목] 묶어 보기(한국은 섹터·종목) · 차트 [비중 지도 | 오늘 기여 | 30일 비중] · 메가는 고유 색, 섹터·종목은 오늘 오르면 초록·내리면 빨강 · 한 묶음 50% 넘으면 한 줄 알림 · 묶음 목록(접고 펼치기, 비중·오늘·수익률 순) · 묶음 시트(30일 묶음 vs 나스닥/코스피, 섹터 비중, 종목) · 종목 줄 누르면 차트, 길게 누르면 내 평가 · v6.30: 미국 서머타임 해제 대응 — 내 브리핑 '실적 발표 예정(장 시작 전)'의 개장 시각을 서머타임에 따라 22:30/23:30으로 · 실적 캘린더 기본 시각 뉴욕 17:00 · v6.29: 운영 편집 개편 — 처음 정하기는 카드 넘기기(6개월 차트·평단·매매 점, AI 초안 → 맞아요/바꾸기/나중에, 밀어서 넘기기, 끝나면 요약) · 사상 고르기는 '왜 들고 계세요?' 5묶음 → 묶음 안 비교(사는 때·파는 때·AI가 안 하는 것) + 단계(최근 30일 매매로 추천) · 잘 모르겠으면 질문 3개 · 운영 카드(사상·단계·내 평가 칸을 눌러 그것만 고치기, 끝낼 조건 거리, 실적 체크, 기록 접기) · 보유 목록 길게 누르기 = 내 평가 빠른 시트(확신·결과, 다른 메뉴는 안에) · 끝낼 조건은 문장 + 차트 선 끌기 · 사상별 값(추세 이탈선 차트·지난 1년 이탈 통계, 역발상 가격선 눌러 추가, 이벤트 실적일, 목표 비중 막대, 배당 기준, 확인 신호, 다시 볼 날, 정리 계획 차트) · 저장하면 'AI가 이제 하는 것' 안내 · v6.28: 운영 — 종목마다 사상(왜 들고 있나 10개 · 5묶음) × 단계(정찰·모으는 중·보유·줄이는 중) × 내 평가(강한확신·반신반의·판단보류·기획성공·기획실패) · 편집 시트(AI·서버 초안 확정, 한 줄 이유·끝낼 조건·숫자 감시, 사상별 값) · 내 지침 '정할 것'에 운영 점검(사상 정하기·맞지 않는 조합·이벤트 뒤 보유·계획 밖 매수·흔들림 매도 확인·끝낼 조건·추세 이탈·다시 볼 날·기획성공 다음 단계·정리 계획·AI 제안·사상 예산·비중 맞추기·숨은 집중·실적 체크) · 운영 지도(사상·묶음 비중, 기준 고치기, 급락장 플레이북, 운영 성적·오답노트) · 보유 목록·신호표·종목 칩 · 매수심사 전 사상 확인 · 초장기 수집은 AI 평가 제외 · v6.27: 포인트색 정리 — 행동·결정·닿음 자리의 주황을 하늘색(#569cd6, 앱 기본 강조색)으로 (내 지침 버튼·정할 것·닿음·신호등 첫 칸·그래프 닿은 점 · AI 추천 개수 배지·오늘 묶음 · 매매심사 만료 버튼·만료 수) · 주황은 경고·만료·실적 전·위험 표시에만 남김 · v6.26: 내 지침 — 꼬리표 끝 '→ 할 일'을 갈림길·기다리는 신호·정할 것에 표시 (닿으면 [했어요 / 계속 따르기 / 그만]) · v6.25: 내 지침 개편 — 첫 화면 '오늘 정할 것 N개' · 정할 것 · 곧 닿아요(작은 선·달력) · 지키는 중 · 상세: 지금 할 일 · 약속(방패·지킨 날) · 왜 · 기다리는 신호를 종류별 그림으로(가격·지표 선과 기준선, 평단 눈금, 비중 막대, 연속 칸, 거래량 막대, 달력, 판단 질문) · 갈림길 · 켜 둔 설정 기간 막대 · 한 일 체크 · 기록 접기 · '했어요'는 할 일이 있는 지침에만 · v6.24: AI 보고서 5 WHY — 제목 모양이 조금 달라도 단계 화면으로 표시('고른 쟁점:' · '1단계 (…):' · '이 진실이 바뀔 수 있는 조건') · 쟁점 아래 '고른 이유' 문단 표시 · 바뀌는 조건이 5단계 인용 상자에 붙던 문제 · v6.23: 팝업을 모두 '맨 위 손잡이를 쓸어내리면 닫힘'으로 통일 — 매크로 지표 · 운영 로그 · 비밀번호 · 일정 등록 · 밸류에이션 · 종목 검색 · 누적 시그널 · 계정 관리 · AI 매수심사 리포트 · 매매 기록 입력·내역 · 계좌 · 보유 입력 · 로고 선택 · 엑셀 붙여넣기 (모바일에선 가운데 상자도 아래에서 올라오는 시트, ✕ 숨김 · 뒤로가기로도 닫힘) · 뒤로가기로 시트를 닫으면 기록이 한 칸 더 지워지던 문제 · v6.22: 토글·탭을 눌러도 화면 위치 그대로(내용이 짧아져도 스크롤이 당겨지지 않음 · AI 가이드 토글이 화면을 끌어올리던 것 없앰) · AI 가이드 [AI 추천 | 내 지침]과 AI 브리핑 [장후 | 장전]을 폭을 꽉 채운 같은 모양으로 · v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -28166,9 +28166,9 @@ function _brPathSvg(per) {   // 비슷했던 구간들의 20일 흐름을 겹쳐
   const ps = per.map(p => p.path || []).filter(a => a.length >= 10); if (ps.length < 3) return '';
   const n = Math.max(...ps.map(a => a.length)); const med = []; for (let i = 0; i < n; i++) { const v = ps.map(a => a[i]).filter(x => x != null).sort((a, b) => a - b); med.push(v.length ? v[Math.floor(v.length / 2)] : 0); }
   const all = ps.flat().concat(med); const mx = Math.max(0.05, ...all.map(Math.abs)); const X = i => i / (n - 1) * 320; const Y = v => 45 - v / mx * 40;
-  const line = (a, c, w) => `<polyline fill="none" stroke="${c}" stroke-width="${w}" vector-effect="non-scaling-stroke" points="0,45 ${a.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}"/>`;
-  const dl = n >= 10 ? [4, 9].map(i => `<line x1="${X(i).toFixed(1)}" y1="4" x2="${X(i).toFixed(1)}" y2="86" stroke="rgba(255,255,255,.28)" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`).join('') : '';
-  return `<svg class="br-paths" viewBox="0 0 320 90" preserveAspectRatio="none"><line x1="0" y1="45" x2="320" y2="45" stroke="rgba(255,255,255,.15)"/>${dl}${ps.map(a => line(a, 'rgba(255,255,255,.18)', 1)).join('')}${line(med, '#ffd43b', 2.4)}</svg><div class="br-pl">20일 동안 흐름 · 노란 선이 보통 · 끝 ${_brPf(med[med.length - 1])}${n >= 10 ? ' · 점선은 5일·10일' : ''}</div>`;
+  const line = (a, c, w) => `<polyline vector-effect="non-scaling-stroke" fill="none" stroke="${c}" stroke-width="${w}" vector-effect="non-scaling-stroke" points="0,45 ${a.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}"/>`;
+  const dl = n >= 10 ? [4, 9].map(i => `<line vector-effect="non-scaling-stroke" x1="${X(i).toFixed(1)}" y1="4" x2="${X(i).toFixed(1)}" y2="86" stroke="rgba(255,255,255,.28)" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`).join('') : '';
+  return `<svg class="br-paths" viewBox="0 0 320 90" preserveAspectRatio="none"><line vector-effect="non-scaling-stroke" x1="0" y1="45" x2="320" y2="45" stroke="rgba(255,255,255,.15)"/>${dl}${ps.map(a => line(a, 'rgba(255,255,255,.18)', 1)).join('')}${line(med, '#ffd43b', 2.4)}</svg><div class="br-pl">20일 동안 흐름 · 노란 선이 보통 · 끝 ${_brPf(med[med.length - 1])}${n >= 10 ? ' · 점선은 5일·10일' : ''}</div>`;
 }
 function aqBrGo(id) { const d = document.getElementById(id); if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
 // v6.06: 유효 상태 바 — 심사 결과가 지금도 유효한지 (주가 변동·손절선·실적 기준, 시간은 '오래됨' 표시만)
@@ -29086,6 +29086,19 @@ function _gmSer(p, tk) {   // 최근 종가 [{d, v, vol}] — 지표는 매크�
 function _gmAx(tk) { const kr = /^\d{6}$/.test(tk || ''); return v => { const a = Math.abs(v); const n = Number(v).toLocaleString(undefined, { maximumFractionDigits: a >= 100 ? 0 : a >= 10 ? 1 : 2 }); return tk ? (kr ? n : '$' + n) : n; }; }
 function _gmNum(v) { const a = Math.abs(v); return Number(v).toLocaleString(undefined, { maximumFractionDigits: a >= 1000 ? 0 : a >= 10 ? 1 : 2 }); }
 // 선 그래프 — o: { now, f(값 표시), lines:[{v,label,c}], zone:{from,to,c,label}, ma, h, n }
+// v6.34: 반응형 그래프 — 실제 폭으로 그리고(글씨 px 고정), 높이는 폭에 따라 늘리되 상한 · 폴드 접기/펴기 등 폭이 바뀌면 다시 그림
+function aqCW(id, pad) { let w = 0; try { const el = typeof id === 'string' ? document.getElementById(id) : id; w = el ? el.clientWidth : 0; } catch (e) {} if (!(w > 0)) w = Math.min(window.innerWidth || 390, 1024) - 32; return Math.max(260, Math.round(w - (pad || 0))); }
+function aqCH(w, base, max) { return Math.round(Math.min(max, Math.max(base, base + (w - 330) * 0.3))); }
+(function () {
+  let lw = window.innerWidth, t = null;
+  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => {
+    if (Math.abs(window.innerWidth - lw) < 8) return; lw = window.innerWidth;
+    try { if (typeof _pv !== 'undefined' && _pv.last && document.getElementById('aqPvTop')) aqPvRender(); } catch (e) {}
+    try { if (typeof _pv !== 'undefined' && _pv.sheet && document.getElementById('pvSheet').classList.contains('open')) aqPvSheet(_pv.sheet); } catch (e) {}
+    try { if (typeof _stc !== 'undefined' && _stc.mode && document.getElementById('stSheet').classList.contains('open')) _stR(); } catch (e) {}
+    try { if (typeof _gd !== 'undefined' && _gd.sheetId && document.getElementById('gdaSheet').classList.contains('open')) _gmSheetRender(); } catch (e) {}
+  }, 160); });
+})();
 function _gmLine(ser, o) {
   o = o || {}; const f = o.f || _gmNum; const N = o.n || 60;
   const vals = ser.map(r => r.v); const dates = ser.map(r => r.d);
@@ -29097,7 +29110,7 @@ function _gmLine(ser, o) {
   const ys = s.concat((o.lines || []).map(l => l.v), ma ? ma.filter(v => v != null) : []); const z = o.zone;
   if (z) [z.from, z.to].forEach(v => { if (v != null && isFinite(v)) ys.push(v); });
   let lo = Math.min(...ys), hi = Math.max(...ys); const pad = (hi - lo) * 0.1 || Math.abs(hi) * 0.02 || 1; lo -= pad; hi += pad;
-  const W = 330, H = o.h || 176, L = 50, R = 62, T = 10, B = 22; const fa = o.fa || f; const Y = v => T + (hi - v) / (hi - lo) * (H - T - B); const X = i => L + i / (s.length - 1) * (W - L - R);
+  const W = aqCW('gdaBody'), H = aqCH(W, o.h || 176, (o.h || 176) + 70), L = 50, R = 62, T = 10, B = 22; const fa = o.fa || f; const Y = v => T + (hi - v) / (hi - lo) * (H - T - B); const X = i => L + i / (s.length - 1) * (W - L - R);
   const g = [];
   [0.15, 0.5, 0.85].forEach(k => { const v = lo + (hi - lo) * k; g.push(`<line x1="${L}" y1="${Y(v).toFixed(1)}" x2="${W - R}" y2="${Y(v).toFixed(1)}" stroke="${_GMC.grid}"/><text x="${L - 6}" y="${(Y(v) + 3.5).toFixed(1)}" fill="${_GMC.mute}" font-size="10" text-anchor="end">${escapeHtml(fa(v))}</text>`); });
   if (z) { const a = Y(z.to != null && isFinite(z.to) ? Math.min(z.to, hi) : hi), b = Y(z.from != null && isFinite(z.from) ? Math.max(z.from, lo) : lo); if (b > a) g.push(`<rect x="${L}" y="${a.toFixed(1)}" width="${W - L - R}" height="${(b - a).toFixed(1)}" fill="${z.c || _GMC.thr}" opacity=".1"/>${z.label ? `<text x="${W - R - 6}" text-anchor="end" y="${(z.to != null && isFinite(z.to) && z.to < hi && !(z.from != null && isFinite(z.from)) ? b - 6 : a + 13).toFixed(1)}" fill="${z.c || _GMC.thr}" font-size="10.5">${escapeHtml(z.label)}</text>` : ''}`); }
@@ -29133,7 +29146,7 @@ function _gmDots(k, n, dates) {   // 연속 조건 — 채운 칸 · 남은 칸
 function _gmVolBars(ser, mult, hit) {   // 거래량 — 최근 20일 막대 + '평소의 N배' 선
   const v = ser.map(r => r.vol); if (v.length < 25) return '';
   const base = v.slice(-21, -1).reduce((a, b) => a + b, 0) / 20; if (!base) return '';
-  const s = v.slice(-20); const thr = base * mult; const hi = Math.max(...s, thr) * 1.1; const W = 330, H = 110, L = 4, R = 64, T = 6, B = 14; const bw = (W - L - R) / s.length;
+  const s = v.slice(-20); const thr = base * mult; const hi = Math.max(...s, thr) * 1.1; const W = aqCW('gdaBody'), H = aqCH(W, 110, 160), L = 4, R = 64, T = 6, B = 14; const bw = (W - L - R) / s.length;
   const Y = x => T + (1 - x / hi) * (H - T - B);
   return `<svg class="gm-svg" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="최근 거래량">${s.map((x, i) => `<rect x="${(L + i * bw + 1).toFixed(1)}" y="${Y(x).toFixed(1)}" width="${(bw - 2).toFixed(1)}" height="${(H - B - Y(x)).toFixed(1)}" fill="${i === s.length - 1 ? (hit ? _GMC.hit : _GMC.hi) : '#495057'}" rx="1.5"/>`).join('')}<line x1="${L}" y1="${Y(thr).toFixed(1)}" x2="${W - R}" y2="${Y(thr).toFixed(1)}" stroke="${_GMC.thr}" stroke-dasharray="5 4"/><text x="${W - R + 6}" y="${(Y(thr) + 3.5).toFixed(1)}" fill="${_GMC.thr}" font-size="10">평소 ${_gmNum(mult)}배</text></svg>`;
 }
@@ -29322,9 +29335,9 @@ function aqGmOpen(id) {
   const x = (_gd.accList || []).find(y => y.id === id); if (!x) return;
   _gd.sheetId = id; _gd.gmEd = {}; _gd.gmHist = false;
   if (x.unread) { x.unread = false; apiCall('guideRead', { ids: String(id) }).catch(() => {}); aqGuideRender(); }
-  _gmSheetRender();
   const sh = document.getElementById('gdaSheet'); const tt = sh.querySelector('.ops-sheet-title'); if (tt) tt.style.display = 'none';
-  sh.classList.add('open'); document.getElementById('gdaBg').classList.add('open');
+  sh.classList.add('open'); document.getElementById('gdaBg').classList.add('open');   // v6.34: 먼저 열고 그려야 실제 폭을 잼
+  _gmSheetRender();
 }
 function _gmPartAt(x, path) {
   const pa = x.parsed || {}; let m = /^w(\d+)$/.exec(path); if (m) return (pa.watches || [])[+m[1]];
@@ -29835,9 +29848,9 @@ function _pfLines(lines, h = 150) {
   const all = lines.flatMap(l => l.ys.filter(v => v != null)); if (!all.length) return '';
   let mn = Math.min(0, ...all), mx = Math.max(0, ...all); if (mx - mn < 1) { mx += 0.5; mn -= 0.5; }
   const n = lines[0].ys.length; const X = i => (i / Math.max(1, n - 1)) * 320; const Y = v => h - 8 - ((v - mn) / (mx - mn)) * (h - 16);
-  return `<svg class="pf-svg" viewBox="0 0 320 ${h}" preserveAspectRatio="none" style="height:${h}px"><line x1="0" y1="${Y(0)}" x2="320" y2="${Y(0)}" stroke="rgba(255,255,255,.14)"/>${lines.map(l => `<polyline fill="none" stroke="${l.c}" stroke-width="${l.w || 1.6}" vector-effect="non-scaling-stroke" points="${l.ys.map((v, i) => `${X(i).toFixed(1)},${Y(v == null ? 0 : v).toFixed(1)}`).join(' ')}"/>`).join('')}</svg>`;
+  return `<svg class="pf-svg" viewBox="0 0 320 ${h}" preserveAspectRatio="none" style="height:${h}px"><line vector-effect="non-scaling-stroke" x1="0" y1="${Y(0)}" x2="320" y2="${Y(0)}" stroke="rgba(255,255,255,.14)"/>${lines.map(l => `<polyline vector-effect="non-scaling-stroke" fill="none" stroke="${l.c}" stroke-width="${l.w || 1.6}" vector-effect="non-scaling-stroke" points="${l.ys.map((v, i) => `${X(i).toFixed(1)},${Y(v == null ? 0 : v).toFixed(1)}`).join(' ')}"/>`).join('')}</svg>`;
 }
-function _pfSpark(ys, up) { if (!ys.length) return ''; const mn = Math.min(...ys), mx = Math.max(...ys); const r = mx - mn || 1; return `<svg class="pf-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline fill="none" stroke="${up ? '#40c057' : '#ff6b6b'}" stroke-width="1.8" vector-effect="non-scaling-stroke" points="${ys.map((v, i) => `${(i / Math.max(1, ys.length - 1) * 100).toFixed(1)},${(23 - (v - mn) / r * 20).toFixed(1)}`).join(' ')}"/></svg>`; }
+function _pfSpark(ys, up) { if (!ys.length) return ''; const mn = Math.min(...ys), mx = Math.max(...ys); const r = mx - mn || 1; return `<svg class="pf-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline vector-effect="non-scaling-stroke" fill="none" stroke="${up ? '#40c057' : '#ff6b6b'}" stroke-width="1.8" vector-effect="non-scaling-stroke" points="${ys.map((v, i) => `${(i / Math.max(1, ys.length - 1) * 100).toFixed(1)},${(23 - (v - mn) / r * 20).toFixed(1)}`).join(' ')}"/></svg>`; }
 // ---- 본체
 function aqPerfRender(ctx) {
   if (ctx) _pf.last = ctx; ctx = _pf.last; const host = document.getElementById('perfX'); if (!host || !ctx) return;
@@ -29891,7 +29904,7 @@ function aqPerfRender(ctx) {
       const dd = tp.map((v, i) => { if (v > peak) { peak = v; peakVal = snaps[i].totalCost + v; } const p = peakVal > 0 ? (v - peak) / peakVal * 100 : 0; if (p < mdd) { mdd = p; mddD = snaps[i].date; } return p; });
       const show = dd.slice(-90); const cur = dd[dd.length - 1]; const need = Math.max(0, peak - tp[tp.length - 1]);
       const mn = Math.min(-1, ...show); const X = i => (i / Math.max(1, show.length - 1)) * 320; const Y = v => 6 + (v / mn) * 96;
-      h += _pfHead('낙폭', '수익금이 고점에서 얼마나 줄어 있나 · 최근 90거래일') + `<div class="pf-card"><svg class="pf-svg" viewBox="0 0 320 110" preserveAspectRatio="none" style="height:110px"><path d="M0,6 ${show.map((v, i) => `L${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')} L320,6 Z" fill="rgba(255,107,107,.22)" stroke="#ff6b6b" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>
+      h += _pfHead('낙폭', '수익금이 고점에서 얼마나 줄어 있나 · 최근 90거래일') + `<div class="pf-card"><svg class="pf-svg" viewBox="0 0 320 110" preserveAspectRatio="none" style="height:110px"><path vector-effect="non-scaling-stroke" d="M0,6 ${show.map((v, i) => `L${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')} L320,6 Z" fill="rgba(255,107,107,.22)" stroke="#ff6b6b" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>
         <div class="pf-k3b"><div><span>지금</span><b class="${cur < -0.05 ? 'down' : ''}">${aqSgPct(cur, 1)}</b></div><div><span>최대 낙폭</span><b class="down">${aqSgPct(mdd, 1)}</b><small>${_pfMD(mddD)}</small></div><div><span>고점까지</span><b>${need > 0 ? _pfM(need, false) : '고점'}</b></div></div></div>`;
     }
   } catch (e) { console.warn('[누적 성과] 낙폭', e); }
@@ -30261,7 +30274,7 @@ function _pvCut(s, px, fs) {   // 칸에 맞는 이름 — 전체 → '·' 앞�
 }
 function _pvLabel(g, mode) { return mode === 't' ? (_pvKR() ? displayName(g.k) : g.k) : g.k; }
 function _pvTree(G, mode) {
-  const W = 326, H = 220; const bl = _pvSq(G.filter(g => g.v > 0).sort((a, b) => b.v - a.v).map(g => ({ val: g.v, g })), 0, 0, W, H);
+  const W = aqCW('aqPvTop', 28), H = aqCH(W, 220, 320); const bl = _pvSq(G.filter(g => g.v > 0).sort((a, b) => b.v - a.v).map(g => ({ val: g.v, g })), 0, 0, W, H);
   return `<svg class="pv-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="비중 지도">` + bl.map(b => {
     const g = b.o.g; const mg = mode === 'mega'; const x = b.X + 1.5, y = b.Y + 1.5, w = Math.max(0, b.W - 3), h = Math.max(0, b.H - 3);
     const fill = mg ? (_PV_MC[g.k] || '#6a6a6a') : (g.d >= 0 ? '#51cf66' : '#ff6b6b'); const op = mg ? 0.24 : (Math.abs(g.d) < 1 ? 0.16 : Math.abs(g.d) < 3 ? 0.26 : 0.38);
@@ -30272,10 +30285,10 @@ function _pvTree(G, mode) {
   }).join('') + '</svg>';
 }
 function _pvToday(G, TD, mode, DL) {
-  const gs = G.slice().sort((a, b) => Math.abs(b.dd) - Math.abs(a.dd)).slice(0, 7); const mx = Math.max(...gs.map(g => Math.abs(g.dd)), 1e-9); const W = 326, rh = 32, mid = 190;
+  const gs = G.slice().sort((a, b) => Math.abs(b.dd) - Math.abs(a.dd)).slice(0, 7); const mx = Math.max(...gs.map(g => Math.abs(g.dd)), 1e-9); const W = aqCW('aqPvTop', 28), rh = 32, LW = Math.min(150, Math.round(W * 0.34)), AW = 66, mid = LW + (W - LW - AW) / 2, BM = (W - LW - AW) / 2 - 8;
   return `<div class="pv-cap">${DL} ${_pvS(TD)}은 어디서 났나 · 내 매수가·수량 기준</div><svg class="pv-svg" viewBox="0 0 ${W} ${gs.length * rh}" role="img" aria-label="오늘 손익 기여"><line x1="${mid}" x2="${mid}" y1="0" y2="${gs.length * rh}" stroke="rgba(255,255,255,.14)"></line>` + gs.map((g, i) => {
-    const w = Math.max(2, Math.abs(g.dd) / mx * 60), y = i * rh, up = g.dd >= 0, c = up ? '#51cf66' : '#ff6b6b';
-    return `<g class="pv-blk" data-k="${escapeAttr(g.k)}" onclick="aqPvTap(this.dataset.k)"><text x="0" y="${y + 20}" font-size="12.5" fill="#d4d4d4">${escapeHtml(_pvCut(_pvLabel(g, mode), 120, 12.5))}</text><rect x="${up ? mid : mid - w}" y="${y + 8}" width="${w}" height="16" rx="3" fill="${c}" fill-opacity="0.75"></rect><text x="${W}" y="${y + 20}" text-anchor="end" font-size="12" fill="${c}">${_pvS(g.dd)}</text></g>`;
+    const w = Math.max(2, Math.abs(g.dd) / mx * BM), y = i * rh, up = g.dd >= 0, c = up ? '#51cf66' : '#ff6b6b';
+    return `<g class="pv-blk" data-k="${escapeAttr(g.k)}" onclick="aqPvTap(this.dataset.k)"><text x="0" y="${y + 20}" font-size="12.5" fill="#d4d4d4">${escapeHtml(_pvCut(_pvLabel(g, mode), LW - 8, 12.5))}</text><rect x="${up ? mid : mid - w}" y="${y + 8}" width="${w}" height="16" rx="3" fill="${c}" fill-opacity="0.75"></rect><text x="${W}" y="${y + 20}" text-anchor="end" font-size="12" fill="${c}">${_pvS(g.dd)}</text></g>`;
   }).join('') + '</svg>';
 }
 function _pvArea(G, P, mode) {
@@ -30283,7 +30296,7 @@ function _pvArea(G, P, mode) {
   if (gs.length > 6) { const rest = gs.slice(5); gs = gs.slice(0, 5).concat([{ k: '나머지', mega: '', hist: P.dates.map((_, i) => rest.reduce((a, g) => a + g.hist[i], 0)) }]); }
   const shade = ['#569cd6', '#4a82b2', '#3f6c93', '#365a7a', '#2e4a63', '#5c5f66'];
   const col = (g, i) => g.k === '나머지' ? '#5c5f66' : mode === 'mega' ? (_PV_MC[g.k] || '#6a6a6a') : shade[i];
-  const tot = P.dates.map((_, i) => gs.reduce((a, g) => a + g.hist[i], 0) || 1); const W = 326, H = 198, X = i => i / (n - 1) * W, Y = v => 4 + (1 - v) * 176;
+  const tot = P.dates.map((_, i) => gs.reduce((a, g) => a + g.hist[i], 0) || 1); const W = aqCW('aqPvTop', 28), H = aqCH(W, 198, 280), X = i => i / (n - 1) * W, Y = v => 4 + (1 - v) * (H - 22);
   let base = Array(n).fill(0), s = '';
   gs.slice().reverse().forEach(g => { const i0 = gs.indexOf(g); const top = base.map((b, i) => b + g.hist[i] / tot[i]); s += `<path d="M${top.map((v, i) => X(i).toFixed(1) + ',' + Y(v).toFixed(1)).join('L')}L${base.map((v, i) => X(i).toFixed(1) + ',' + Y(v).toFixed(1)).reverse().join('L')}Z" fill="${col(g, i0)}" fill-opacity="${mode === 'mega' ? 0.5 : 0.75}"></path>`; base = top; });
   const md = d => String(d).slice(5).replace('-', '/');
@@ -30339,12 +30352,13 @@ function aqPvTap(k) { if (_pvMode() === 't') { if (typeof openChart === 'functio
 // ---- 묶음 시트 ----
 function aqPvSheet(k) {
   const g = (_pv.G || []).find(x => x.k === k); if (!g) return; _pv.sheet = k;
+  document.getElementById('pvSheet').classList.add('open'); document.getElementById('pvSheetBg').classList.add('open');
   const P = _pv.P; const mode = _pv.mode; const mg = mode === 'mega'; const c = mg ? (_PV_MC[g.k] || '#569cd6') : '#569cd6'; const cl = mg ? (_PV_ML[g.k] || '#8ec5f0') : '#8ec5f0';
   const n = P.dates.length; let chart = '';
   if (n >= 2) {   // v6.32: 묶음 손익(평가 + 확정) 30일 변화 — 내 매수가·수량 기준
     const a = g.pls.map(v => v - g.pls[0]); const b0 = P.bench.find(v => v != null); const bl = b0 ? P.bench.filter(v => v != null).slice(-1)[0] : null;
     const mn = Math.min(0, ...a), mx = Math.max(0, ...a); const pad = (mx - mn) * 0.12 || 1; const lo = mn - pad, hi = mx + pad;
-    const W = 326, H = 176, X = i => i / (n - 1) * W, Y = v => 6 + (hi - v) / (hi - lo) * 156; const up = a[n - 1] >= 0; const lc = up ? '#51cf66' : '#ff6b6b';
+    const W = aqCW('pvBody', 28), H = aqCH(W, 176, 240), X = i => i / (n - 1) * W, Y = v => 6 + (hi - v) / (hi - lo) * (H - 20); const up = a[n - 1] >= 0; const lc = up ? '#51cf66' : '#ff6b6b';
     const md = d => String(d).slice(5).replace('-', '/'); const bn = _pvKR() ? '코스피' : '나스닥';
     const area = `M${X(0).toFixed(1)},${Y(0).toFixed(1)}L` + a.map((v, i) => X(i).toFixed(1) + ',' + Y(v).toFixed(1)).join('L') + `L${X(n - 1).toFixed(1)},${Y(0).toFixed(1)}Z`;
     chart = `<div class="pv-card"><div class="pv-leg"><span style="color:${lc}"><i style="background:${lc}"></i>30일 손익 ${_pvS(a[n - 1])}</span>${bl != null ? `<span class="mu">같은 기간 ${bn} ${_pvP((bl / b0 - 1) * 100)}</span>` : ''}</div><svg class="pv-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="30일 묶음 손익 변화"><path d="${area}" fill="${lc}" fill-opacity=".10"></path><line x1="0" x2="${W}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="rgba(255,255,255,.14)"></line><polyline fill="none" stroke="${lc}" stroke-width="2.2" stroke-linejoin="round" points="${a.map((v, i) => X(i).toFixed(1) + ',' + Y(v).toFixed(1)).join(' ')}"></polyline><text x="0" y="${H - 2}" font-size="11" fill="#9d9d9d">${md(P.dates[0])}</text><text x="${W}" y="${H - 2}" text-anchor="end" font-size="11" fill="#9d9d9d">${md(P.dates[n - 1])}</text></svg><div class="pv-note">평가손익 + 판 것의 확정손익 · 그날그날 실제 보유 수량</div></div>`;
@@ -30540,7 +30554,7 @@ function _stSvg(tk, o) {
   const avs = o.avg ? aqAvgSteps(tk, S.map(p => p.d), o.avg) : null;   // v6.32: 계단식 평단
   if (avs) avs.forEach(v => v > 0 && Math.abs(v / lastV - 1) <= 0.35 && vals.push(v)); else if (o.avg) vals.push(o.avg); if (o.drag && isFinite(o.drag.v)) vals.push(o.drag.v);
   let mn = Math.min(...vals), mx = Math.max(...vals); const pad = (mx - mn) * 0.08 || mx * 0.05; mn -= pad; mx += pad;
-  const W = 330, H = o.h || 150, T = 14, B = 20; const X = i => 4 + i / Math.max(1, n - 1) * (W - 8); const Y = v => T + (mx - v) / (mx - mn) * (H - T - B);
+  const W = aqCW('stBody', o.inCard ? 28 : 0), H = aqCH(W, o.h || 150, (o.h || 150) + 80), T = 14, B = 20; const X = i => 4 + i / Math.max(1, n - 1) * (W - 8); const Y = v => T + (mx - v) / (mx - mn) * (H - T - B);
   const grid = [0.2, 0.5, 0.8].map(f => `<line x1="0" x2="${W}" y1="${(T + f * (H - T - B)).toFixed(1)}" y2="${(T + f * (H - T - B)).toFixed(1)}" stroke="rgba(255,255,255,.06)"/>`).join('');
   const pts = S.map((p, i) => `${X(i).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
   const maS = mas.map((x, j) => `<polyline fill="none" stroke="${j ? '#5c5f66' : '#748ffc'}" stroke-width="${j ? 1.5 : 2}" ${j ? 'stroke-dasharray="3 3"' : ''} points="${x.s.map((v, i) => v == null ? null : `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).filter(Boolean).join(' ')}"/><text x="${j ? 4 : W - 4}" y="${(j ? Y(x.s.find(v => v != null) || S[0].v) + 14 : Y(x.s[n - 1] || S[n - 1].v) - 8).toFixed(1)}" text-anchor="${j ? 'start' : 'end'}" font-size="10.5" fill="${j ? '#868e96' : '#748ffc'}">${x.m}일선</text>`).join('');
@@ -30557,7 +30571,7 @@ function _stSvg(tk, o) {
   let drag = '';
   if (o.drag && isFinite(o.drag.v)) { const y = Y(o.drag.v); drag = `<rect x="0" y="${o.drag.below ? y.toFixed(1) : T}" width="${W}" height="${(o.drag.below ? H - B - y : y - T).toFixed(1)}" fill="rgba(255,135,135,.08)"/><line id="stDragL" x1="0" x2="${W}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#ff8787" stroke-width="2" stroke-dasharray="5 4"/><g id="stDragH" transform="translate(${W - 30},${y.toFixed(1)})"><circle r="10" fill="#ff8787"/><path d="M-4 -3 L0 -7 L4 -3 M-4 3 L0 7 L4 3" stroke="#0b0b0d" stroke-width="1.8" fill="none"/></g><text id="stDragT" x="4" y="${(y - 6).toFixed(1)}" font-size="11" fill="#ff8787">${escapeHtml(o.drag.label || '')} · 끌어서 바꾸기</text>`; }
   const last = S[n - 1]; const m1 = String(S[0].d).slice(5, 7), m2 = String(last.d).slice(5, 7);
-  return avl + `<svg class="st-svg" id="${o.id || ''}" viewBox="0 0 ${W} ${H}" style="height:${H}px" data-mn="${mn}" data-mx="${mx}" data-t="${T}" data-b="${B}" data-h="${H}">${grid}${drag}${avg}${lines}${maS}<polyline fill="none" stroke="#adb5bd" stroke-width="2" points="${pts}"/>${tr}<circle cx="${X(n - 1).toFixed(1)}" cy="${Y(last.v).toFixed(1)}" r="4" fill="#e9ecef"/><text x="2" y="${H - 4}" font-size="10" fill="#868e96">${+m1}월</text><text x="${W - 2}" y="${H - 4}" text-anchor="end" font-size="10" fill="#868e96">${+m2}월</text></svg>`;
+  return avl + `<svg class="st-svg" id="${o.id || ''}" viewBox="0 0 ${W} ${H}" data-mn="${mn}" data-mx="${mx}" data-t="${T}" data-b="${B}" data-h="${H}" data-w="${W}">${grid}${drag}${avg}${lines}${maS}<polyline fill="none" stroke="#adb5bd" stroke-width="2" points="${pts}"/>${tr}<circle cx="${X(n - 1).toFixed(1)}" cy="${Y(last.v).toFixed(1)}" r="4" fill="#e9ecef"/><text x="2" y="${H - 4}" font-size="10" fill="#868e96">${+m1}월</text><text x="${W - 2}" y="${H - 4}" text-anchor="end" font-size="10" fill="#868e96">${+m2}월</text></svg>`;
 }
 function _stSvgVal(svg, clientY) { const r = svg.getBoundingClientRect(); const H = +svg.dataset.h, T = +svg.dataset.t, B = +svg.dataset.b, mn = +svg.dataset.mn, mx = +svg.dataset.mx; const y = Math.max(T, Math.min(H - B, (clientY - r.top) / r.height * H)); return { y, v: mx - (y - T) / (H - T - B) * (mx - mn) }; }
 function _stRound(tk, v) { if (_stMk(tk) === 'KR') { const u = v >= 100000 ? 500 : v >= 10000 ? 50 : 10; return Math.round(v / u) * u; } return Math.round(v * (v >= 100 ? 2 : 20)) / (v >= 100 ? 2 : 20); }
@@ -30576,17 +30590,17 @@ function aqStOpen(tk, opt) {
     _stc.sym = tk; _stc.nav = []; _stc.mode = null; _stc.tid = opt.tid || ''; _stc.f = _stF(tk); _stc.quick = false; _stc.renew = false; _stc.hist = false; _stc.wz = null;
     if (!_stEff(tk)) { _stWizStart([tk]); return; }
     if (opt.focus === 'conv') _stc.mode = 'conv';
-    else if (opt.focus === 'renew') { _stc.mode = 'card'; _stc.nav = []; _stGo('reason', { renew: true }); _stShow(); return; }
-    else if (opt.focus === 'exit') { _stc.mode = 'card'; _stGo('extra'); _stShow(); return; }
-    else if (opt.view) { _stc.f.view = opt.view; _stc.mode = 'card'; _stGo('pick2', { grp: (_stM().views[opt.view] || {}).group }); _stShow(); return; }
+    else if (opt.focus === 'renew') { _stc.mode = 'card'; _stc.nav = []; _stShow(); _stGo('reason', { renew: true }); return; }
+    else if (opt.focus === 'exit') { _stc.mode = 'card'; _stShow(); _stGo('extra'); return; }
+    else if (opt.view) { _stc.f.view = opt.view; _stc.mode = 'card'; _stShow(); _stGo('pick2', { grp: (_stM().views[opt.view] || {}).group }); return; }
     else _stc.mode = 'card';
-    _stR(); _stShow();
+    _stShow(); _stR();
   };
   if (!_stc.d) aqStLoad().then(go); else go();
 }
 function aqStQuick(tk) {   // 보유 목록 길게 누르기 → 평가 빠른 시트
   tk = String(tk || '').toUpperCase(); if (!tk) return;
-  const go = () => { _stc.sym = tk; _stc.nav = []; _stc.mode = 'conv'; _stc.quick = true; _stc.wz = null; _stc.tid = ''; _stc.f = _stF(tk); _stR(); _stShow(); };
+  const go = () => { _stc.sym = tk; _stc.nav = []; _stc.mode = 'conv'; _stc.quick = true; _stc.wz = null; _stc.tid = ''; _stc.f = _stF(tk); _stShow(); _stR(); };
   if (!_stc.d) aqStLoad().then(go); else go();
 }
 function aqStClose() { document.getElementById('stSheet')?.classList.remove('open'); document.getElementById('stSheetBg')?.classList.remove('open'); _stc.sym = null; _stc.mode = null; _stc.wz = null; }
@@ -30611,7 +30625,7 @@ function _stWizStart(list) {
   const held = (_stc.d || {}).held || {};
   if (!list) list = Object.keys(held).filter(s => !_stEff(s) && _gdVis(_stMk(s))).sort((a, b) => (held[b].usd || 0) - (held[a].usd || 0));
   if (!list.length) { aqToast('정할 종목이 없어요'); return; }
-  _stc.wz = { list, i: 0, ok: 0, ch: 0, later: 0 }; _stc.nav = []; _stc.mode = 'wiz'; _stWizSet(); _stR(); _stShow();
+  _stc.wz = { list, i: 0, ok: 0, ch: 0, later: 0 }; _stc.nav = []; _stc.mode = 'wiz'; _stWizSet(); _stShow(); _stR();
 }
 function _stWizSet() { const w = _stc.wz; if (!w || w.i >= w.list.length) return; _stc.sym = w.list[w.i]; _stc.f = _stF(_stc.sym); _stc.tid = ''; }
 function _stWizNext(kind) { const w = _stc.wz; if (!w) { _stc.nav = []; _stc.mode = 'card'; _stR(); return; } if (kind) w[kind]++; w.i++; if (w.list.length === 1 && w.i >= 1 && _stEff(w.list[0])) { _stc.wz = null; _stc.sym = w.list[0]; _stc.f = _stF(_stc.sym); _stc.nav = []; _stc.mode = 'card'; _stR(); return; } _stc.nav = []; _stc.mode = 'wiz'; _stWizSet(); _stR(); }
@@ -30638,7 +30652,7 @@ function _stWizHtml() {
   const pv = d.view ? _stPreview(tk, d.view) : '';
   return `<div class="st-prog"><button class="st-x" onclick="aqStClose()" aria-label="닫기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="st-pbar"><i style="width:${(w.i / w.list.length * 100).toFixed(0)}%"></i></div><span>${w.i + 1} / ${w.list.length}</span></div>`
     + `<div class="st-wc" id="stWzCard"><div class="st-hd2">${_gmLogo(null, tk)}<div><b>${escapeHtml(_stName(tk))}</b><small>${[wt != null ? `비중 ${wt.toFixed(wt < 1 ? 1 : 0)}%` : '', ret != null ? `수익 ${_gmPct(ret)}` : '', days != null ? `보유 ${days}일` : ''].filter(Boolean).join(' · ')}</small></div></div>`
-    + _stSvg(tk, { h: 150, avg: h.avg, trades: cx.trades })
+    + _stSvg(tk, { h: 150, avg: h.avg, trades: cx.trades, inCard: true })
     + (tr ? `<div class="st-k2"><span style="color:#63e6be">●</span> 매수 <span style="color:#ff8787">●</span> 매도 · 최근 ${escapeHtml(tr)}</div>` : '')
     + `<div class="st-hr"></div>`
     + (d.view ? `<div class="st-k2" style="color:#8ec5f0">${d.by === 'AI' ? 'AI 초안' : '서버 추정'}${d.why ? ` · ${escapeHtml(d.why)}` : ''}</div><div class="st-big">${escapeHtml(_stVN(d.view))} <span>·</span> ${escapeHtml((M.stages || {})[d.stage] || '')}</div>${d.reason ? `<div class="st-q">"${escapeHtml(d.reason)}"</div>` : ''}${d.exit_cond ? `<div class="st-c3"><div class="st-k2">끝낼 조건</div>${escapeHtml(_stExitHuman(tk, d.exit_cond))}</div>` : ''}<div class="st-k2" style="margin-top:10px">이렇게 정하면 → ${escapeHtml(pv)}</div>`
@@ -30841,7 +30855,7 @@ async function aqStExtraSave() {
 function _stBind() {
   const svg = document.getElementById('stExSvg');
   if (svg) { let on = false; const mv = ev => { if (!on) return; ev.preventDefault(); const p = ev.touches ? ev.touches[0] : ev; const { y, v } = _stSvgVal(svg, p.clientY); const tk = _stc.sym; const val = _stRound(tk, v);
-      const L = document.getElementById('stDragL'), Hd = document.getElementById('stDragH'), Tx = document.getElementById('stDragT'); if (L) { L.setAttribute('y1', y); L.setAttribute('y2', y); } if (Hd) Hd.setAttribute('transform', `translate(300,${y})`); if (Tx) { Tx.setAttribute('y', y - 6); Tx.textContent = _stPx(tk, val) + ' · 끌어서 바꾸기'; }
+      const L = document.getElementById('stDragL'), Hd = document.getElementById('stDragH'), Tx = document.getElementById('stDragT'); if (L) { L.setAttribute('y1', y); L.setAttribute('y2', y); } if (Hd) Hd.setAttribute('transform', `translate(${(+svg.dataset.w || 330) - 30},${y})`); if (Tx) { Tx.setAttribute('y', y - 6); Tx.textContent = _stPx(tk, val) + ' · 끌어서 바꾸기'; }
       if (_stc.mode === 'exit') { const E = _stc.f.exit; const kind = (E.k || '').split('|')[0]; const h = _stHeld(tk) || {}; E.v = kind === '수익률' && h.avg ? String(Math.round((val / h.avg - 1) * 1000) / 10) : String(val); const inp = document.getElementById('stExV'); if (inp) inp.value = E.v; }
       else if (_stc.mode === 'extra') { _stc.f.extra.stop = { type: 'px', px: val }; } };
     const up = () => { if (on) { on = false; _stR(); } };
