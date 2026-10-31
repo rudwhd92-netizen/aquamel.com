@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.51';   // v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.52';   // v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -16639,6 +16639,8 @@ function aqRenderReportVerdict(mkt, tkUpper) {
   if (!vEl) return;
   const key = mkt + '/' + tkUpper;
   const a = _analysisActions[key];
+  const _d0 = (((_state.reports || {})[mkt] || {})[tkUpper] || [])[0];
+  if (aqAnNeed(key, _d0) && a !== undefined) { vEl.style.display = 'none'; if (_d0) aqLoadAnalysisAction(mkt, tkUpper, _d0).then(() => { if (_state.openTicker && String(_state.openTicker).toUpperCase() === tkUpper) aqRenderReportVerdict(mkt, tkUpper); }).catch(() => {}); return; }   // v6.52: 실패했거나 새 보고서면 다시
   if (a && a.action) {
     vEl.className = 'mvt-action an-action-pill an-' + (a.type || 'neutral');
     vEl.textContent = a.action;
@@ -16854,9 +16856,19 @@ function aqAnalysisActionRank(a) {
   if (!a || a.type == null) return 9;
   return (R[a.type] != null) ? R[a.type] : 5;
 }
+// v6.52: 보고서 의견 불러오기 — 한 번에 4개까지 · 실패는 '없음'으로 굳히지 않고 30초 뒤 다시(3번까지) · 새 보고서가 오면 다시
+const _anFail = {}, _anInflight = {}, _anActDate = {}; let _anRun = 0; const _anQ = [];
+function _anSlot() { return new Promise(r => { if (_anRun < 4) { _anRun++; r(); } else _anQ.push(r); }); }
+function _anDone() { const n = _anQ.shift(); if (n) n(); else _anRun = Math.max(0, _anRun - 1); }
+function aqAnRetryable(key) { const f = _anFail[key]; return !!f && f.n < 3 && Date.now() - f.at > 30e3; }
+function aqAnNeed(key, date) { return _analysisActions[key] === undefined || aqAnRetryable(key) || !!(date && _anActDate[key] && _anActDate[key] !== date); }
 async function aqLoadAnalysisAction(mkt, tk, date) {
   const key = mkt + '/' + tk;
-  if (_analysisActions[key] !== undefined) return _analysisActions[key];
+  if (!aqAnNeed(key, date)) return _analysisActions[key];
+  if (_anInflight[key]) return _anInflight[key];
+  return (_anInflight[key] = (async () => { await _anSlot(); try { await _aqLoadAnalysisAction0(mkt, tk, date, key); } finally { _anDone(); delete _anInflight[key]; } return _analysisActions[key]; })());
+}
+async function _aqLoadAnalysisAction0(mkt, tk, date, key) {
   try {
     const content = await fetchReportContent(tk, date);
     if (aqReportIsV3(content)) {
@@ -16875,7 +16887,8 @@ async function aqLoadAnalysisAction(mkt, tk, date) {
       const a = arr.find(x => x && x.type === 'action');
       _analysisActions[key] = a ? { action: a.action, type: a.actionType } : null;
     }
-  } catch (e) { _analysisActions[key] = null; }
+    _anActDate[key] = date; delete _anFail[key];
+  } catch (e) { _analysisActions[key] = null; _anFail[key] = { at: Date.now(), n: ((_anFail[key] || {}).n || 0) + 1 }; }
   return _analysisActions[key];
 }
 function aqActionPillHtml(mkt, tk) {
@@ -16918,7 +16931,7 @@ async function buildAnalysisGrid() {
 
   // 추천순: 전체 액션 선로딩 필요
   if (_analysisSortMode === 'action') {
-    const need = list.filter(([tk]) => _analysisActions[mkt + '/' + String(tk).toUpperCase()] === undefined);
+    const need = list.filter(([tk, dates]) => aqAnNeed(mkt + '/' + String(tk).toUpperCase(), dates[0]));
     if (need.length) {
       area.innerHTML = `<div class="analysis-empty">추천순 정렬 중… (보고서 ${need.length}건 분석)</div>`;
       await Promise.all(need.map(([tk, dates]) => aqLoadAnalysisAction(mkt, String(tk).toUpperCase(), dates[0])));
@@ -16988,7 +17001,7 @@ async function buildAnalysisGrid() {
   // 액션 알약 lazy 채우기 (아직 안 받은 것)
   list.forEach(([tk, dates]) => {
     const T = String(tk).toUpperCase(); const key = mkt + '/' + T;
-    if (_analysisActions[key] === undefined) {
+    if (aqAnNeed(key, dates[0])) {
       aqLoadAnalysisAction(mkt, T, dates[0]).then(a => {
         if (_mo) { clearTimeout(_gl.rpT); _gl.rpT = setTimeout(() => buildAnalysisGrid(), 250); return; }   // v6.40
         const el = area.querySelector('.an-action-pill[data-akey="' + key + '"]');
