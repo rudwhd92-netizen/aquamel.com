@@ -54,7 +54,8 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.41';   // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
+window.AQ_PWA_VERSION = '6.42';   // v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+// v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
 // v6.38: 내 지침 개편 — 꼬리표 전부 읽기(약속·조건 추천·조건 다시 볼 때·조건 실행·대체·병행·이유, 원문을 서버가 해석) · 지키는 중 로고를 누르면 같은 화면에서 아래 목록만 그 종목으로(개수 배지·전체) · 상세는 갈림길 하나(지금 → 약속 → 일정 → A 좋아지면·B 나빠지면·C 그대로면, 닿은 갈래 강조, 판단 근거) · 따르기 확인 창에 같은 종목 먼저 지침을 나란히(부딪히는 점, 바꾸기/둘 다 두기, AI 표시) · '정할 것'에 부딪힘 카드·AI 완료 카드 · 사슬 진행 줄(신호 닿음 → 보고서 → 가이드 고치기 → 따르기) · 보고서·매수심사 요청에 '확인할 것' 한 줄 · G번호를 화면에서 없앰 · 한도 30 때 어떤 지침을 정리하는지 보여 줌 · v6.37: 계단식 평단 — 첫 시즌 전 점선 높이를 첫 진입가로(과거 순서대로) · 평단 숫자는 지금 평단 선이 끊김 없이 시작되는 곳에 · v6.36: 계단식 평단 — 시즌1·시즌2가 있으면 왼쪽 끝까지 잇는 점선 높이를 시즌1 평단으로 (가장 이른 시즌 기준) · v6.35: 계단식 평단 다시 — 보유한 기간은 실선(이전 시즌 포함), 보유하지 않은 기간은 점선 · 전량 매도 뒤 재진입은 두 시즌 사이를 직각(ㄴ·ㄱ자)으로 · 처음 진입은 진입 전 기간을 지금 평단으로 왼쪽 끝까지 점선 · 평단 숫자는 예전처럼 그래프 안(차트 위 한 줄 없앰) · v6.34: 반응형 그래프 — 포트폴리오(비중 지도·오늘 기여·30일 비중·묶음 시트), 운영 차트(카드 넘기기·끝낼 조건·사상별 값), 내 지침 신호 그림·거래량 막대를 실제 폭으로 다시 그림(글씨 크기 고정, 높이는 폭 따라 늘되 상한) · 폴드 접기/펴기 때 다시 그림 · 넓은 화면에서 작은 칸에도 이름이 들어감 · 누적 성과 선·낙폭·스파크라인·매수심사 경로의 선 굵기 고정 · v6.33: 계단식 평단 다듬기 — 지금 평단 구간만 실선, 그 밖은 점선(처음 진입이면 지금 평단을 왼쪽 끝까지, 재진입이면 전량 매도한 날에서 이전 평단으로 ㄴ자 연결, 이전 평단 계단도 점선) · 평단 숫자는 그래프 밖 차트 바로 위 한 줄('평단 $425.00 · 지금 +1.6%') · v6.32: PC 화면 없앰 — 넓은 화면은 가운데 폭 430px 틀에 모바일 화면(pc.html) · 포트폴리오를 내 기준으로 — 오늘(주말·휴장엔 날짜) = 어제부터 든 수량은 전날 종가, 오늘 산 수량은 매수가, 판 것은 확정손익까지 (누적 성과의 오늘 손익과 같은 값) · 비중 지도 색·오늘 기여·오늘순 정렬도 같은 기준 · 30일 비중은 그날그날 실제 보유 수량 · 묶음 시트 그래프 = 묶음 손익(평가+확정) 30일 변화 (+같은 기간 나스닥/코스피) · 종목 차트·운영 차트의 평단을 계단식으로(매수일에 꺾임, 전량 매도 구간 끊김), 금액은 지금 구간에만 · 차트 평단을 보유 계산과 같은 값으로(토스 시드 포함) · v6.31: 마이 › 보유 종목 → '포트폴리오' 개편 (MO) — 평가금·오늘·총 수익 · [메가 | 섹터 | 종목] 묶어 보기(한국은 섹터·종목) · 차트 [비중 지도 | 오늘 기여 | 30일 비중] · 메가는 고유 색, 섹터·종목은 오늘 오르면 초록·내리면 빨강 · 한 묶음 50% 넘으면 한 줄 알림 · 묶음 목록(접고 펼치기, 비중·오늘·수익률 순) · 묶음 시트(30일 묶음 vs 나스닥/코스피, 섹터 비중, 종목) · 종목 줄 누르면 차트, 길게 누르면 내 평가 · v6.30: 미국 서머타임 해제 대응 — 내 브리핑 '실적 발표 예정(장 시작 전)'의 개장 시각을 서머타임에 따라 22:30/23:30으로 · 실적 캘린더 기본 시각 뉴욕 17:00 · v6.29: 운영 편집 개편 — 처음 정하기는 카드 넘기기(6개월 차트·평단·매매 점, AI 초안 → 맞아요/바꾸기/나중에, 밀어서 넘기기, 끝나면 요약) · 사상 고르기는 '왜 들고 계세요?' 5묶음 → 묶음 안 비교(사는 때·파는 때·AI가 안 하는 것) + 단계(최근 30일 매매로 추천) · 잘 모르겠으면 질문 3개 · 운영 카드(사상·단계·내 평가 칸을 눌러 그것만 고치기, 끝낼 조건 거리, 실적 체크, 기록 접기) · 보유 목록 길게 누르기 = 내 평가 빠른 시트(확신·결과, 다른 메뉴는 안에) · 끝낼 조건은 문장 + 차트 선 끌기 · 사상별 값(추세 이탈선 차트·지난 1년 이탈 통계, 역발상 가격선 눌러 추가, 이벤트 실적일, 목표 비중 막대, 배당 기준, 확인 신호, 다시 볼 날, 정리 계획 차트) · 저장하면 'AI가 이제 하는 것' 안내 · v6.28: 운영 — 종목마다 사상(왜 들고 있나 10개 · 5묶음) × 단계(정찰·모으는 중·보유·줄이는 중) × 내 평가(강한확신·반신반의·판단보류·기획성공·기획실패) · 편집 시트(AI·서버 초안 확정, 한 줄 이유·끝낼 조건·숫자 감시, 사상별 값) · 내 지침 '정할 것'에 운영 점검(사상 정하기·맞지 않는 조합·이벤트 뒤 보유·계획 밖 매수·흔들림 매도 확인·끝낼 조건·추세 이탈·다시 볼 날·기획성공 다음 단계·정리 계획·AI 제안·사상 예산·비중 맞추기·숨은 집중·실적 체크) · 운영 지도(사상·묶음 비중, 기준 고치기, 급락장 플레이북, 운영 성적·오답노트) · 보유 목록·신호표·종목 칩 · 매수심사 전 사상 확인 · 초장기 수집은 AI 평가 제외 · v6.27: 포인트색 정리 — 행동·결정·닿음 자리의 주황을 하늘색(#569cd6, 앱 기본 강조색)으로 (내 지침 버튼·정할 것·닿음·신호등 첫 칸·그래프 닿은 점 · AI 추천 개수 배지·오늘 묶음 · 매매심사 만료 버튼·만료 수) · 주황은 경고·만료·실적 전·위험 표시에만 남김 · v6.26: 내 지침 — 꼬리표 끝 '→ 할 일'을 갈림길·기다리는 신호·정할 것에 표시 (닿으면 [했어요 / 계속 따르기 / 그만]) · v6.25: 내 지침 개편 — 첫 화면 '오늘 정할 것 N개' · 정할 것 · 곧 닿아요(작은 선·달력) · 지키는 중 · 상세: 지금 할 일 · 약속(방패·지킨 날) · 왜 · 기다리는 신호를 종류별 그림으로(가격·지표 선과 기준선, 평단 눈금, 비중 막대, 연속 칸, 거래량 막대, 달력, 판단 질문) · 갈림길 · 켜 둔 설정 기간 막대 · 한 일 체크 · 기록 접기 · '했어요'는 할 일이 있는 지침에만 · v6.24: AI 보고서 5 WHY — 제목 모양이 조금 달라도 단계 화면으로 표시('고른 쟁점:' · '1단계 (…):' · '이 진실이 바뀔 수 있는 조건') · 쟁점 아래 '고른 이유' 문단 표시 · 바뀌는 조건이 5단계 인용 상자에 붙던 문제 · v6.23: 팝업을 모두 '맨 위 손잡이를 쓸어내리면 닫힘'으로 통일 — 매크로 지표 · 운영 로그 · 비밀번호 · 일정 등록 · 밸류에이션 · 종목 검색 · 누적 시그널 · 계정 관리 · AI 매수심사 리포트 · 매매 기록 입력·내역 · 계좌 · 보유 입력 · 로고 선택 · 엑셀 붙여넣기 (모바일에선 가운데 상자도 아래에서 올라오는 시트, ✕ 숨김 · 뒤로가기로도 닫힘) · 뒤로가기로 시트를 닫으면 기록이 한 칸 더 지워지던 문제 · v6.22: 토글·탭을 눌러도 화면 위치 그대로(내용이 짧아져도 스크롤이 당겨지지 않음 · AI 가이드 토글이 화면을 끌어올리던 것 없앰) · AI 가이드 [AI 추천 | 내 지침]과 AI 브리핑 [장후 | 장전]을 폭을 꽉 채운 같은 모양으로 · v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
@@ -3584,6 +3585,23 @@ body:not([data-role="admin"]) [data-pc-tab="ops"], body:not([data-role="admin"])
 .aq-sec-sheet { max-height: 80vh; display: none; flex-direction: column; }
 .aq-sec-sheet.open { display: flex; }
 .aq-sec-chips { overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 0 6px; max-height: 48vh; }
+/* v6.42: 섹터 지정 — 정의된 섹터에서만 (기타 · 메가별 줄 · 한국은 칩) */
+.sp-hd { display: flex; align-items: center; gap: 12px; margin: 2px 0 6px; } .sp-lg { flex: none; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: var(--bg-3); display: flex; align-items: center; justify-content: center; } .sp-lg img { width: 100%; height: 100%; object-fit: cover; }
+.sp-tt { min-width: 0; display: flex; flex-direction: column; gap: 1px; } .sp-tt b { font-size: 17px; color: var(--text-hi); } .sp-tt small { font-size: 12.5px; color: var(--text-mute); }
+.sp-meta { font-size: 12.5px; color: var(--text-mute); margin: 6px 0 14px; } .sp-meta b { color: var(--text-hi); } .sp-meta b.x { color: #ffd43b; }
+.sp-q { position: relative; margin-bottom: 12px; } .sp-q svg { position: absolute; left: 13px; top: 13px; color: var(--text-mute); } .sp-q input { width: 100%; height: 44px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.06); color: var(--text-hi); padding: 0 14px 0 40px; font-size: 14px !important; font-family: inherit; outline: none; } .sp-q input:focus { border-color: #569cd6; }
+.sp-megas { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 10px; flex: none; } .sp-megas::-webkit-scrollbar { display: none; } .sp-megas:empty { display: none; }
+.sp-megas button { flex: none; height: 32px; padding: 0 12px; border: none; border-radius: 16px; background: rgba(255,255,255,.06); color: var(--text-mute); font: 700 12.5px inherit; font-family: inherit; cursor: pointer; } .sp-megas button.on { background: var(--bg-3); color: var(--text-hi); }
+.aq-sec-chips.sp-list { display: block; flex-wrap: nowrap; max-height: 50vh; padding: 0 0 6px; }
+.sp-gh { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text-hi); margin: 18px 0 6px; } .sp-gh:first-child { margin-top: 2px; } .sp-gh i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; } .sp-gh small { font-size: 11.5px; font-weight: 500; color: var(--text-mute); }
+.sp-row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 8px 4px; border: none; border-top: 1px solid rgba(255,255,255,.06); background: none; color: inherit; text-align: left; font-family: inherit; cursor: pointer; } .sp-row:last-of-type { border-bottom: 1px solid rgba(255,255,255,.06); }
+.sp-row span { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; } .sp-row b { font-size: 15px; color: var(--text-hi); } .sp-row b small { font-size: 11.5px; font-weight: 500; color: var(--text-mute); margin-left: 4px; } .sp-row span > small { font-size: 12px; color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .sp-row mark { background: none; color: #569cd6; }
+.sp-row i { width: 22px; height: 22px; border-radius: 11px; border: 1.5px solid #52525b; flex: none; box-sizing: border-box; display: flex; align-items: center; justify-content: center; } .sp-row i svg { display: none; } .sp-row.on i { background: #569cd6; border-color: #569cd6; } .sp-row.on i svg { display: block; } .sp-row.on b { color: #8ec5f0; }
+.sp-chips { display: flex; flex-wrap: wrap; gap: 8px; } .sp-chips button { height: 34px; padding: 0 12px; border: none; border-radius: 17px; background: rgba(255,255,255,.06); color: var(--text); font: 500 13px inherit; font-family: inherit; cursor: pointer; } .sp-chips button.on { background: rgba(86,156,214,.2); color: #8ec5f0; font-weight: 700; }
+.sp-cnt { font-size: 12.5px; color: var(--text-mute); margin: 2px 0 6px; } .sp-none { background: rgba(255,255,255,.04); border-radius: 12px; padding: 14px 16px; margin-top: 14px; font-size: 13px; color: var(--text-mute); line-height: 1.6; } .sp-none b { color: var(--text); }
+.sp-acts { display: flex; gap: 10px; margin-top: 14px; flex: none; } .sp-b { flex: 1; height: 46px; border: none; border-radius: 12px; background: rgba(255,255,255,.08); color: var(--text); font: 700 14px inherit; font-family: inherit; cursor: pointer; } .sp-b.p { flex: 1.4; background: #569cd6; color: #0b1620; } .sp-b.p:disabled { background: rgba(86,156,214,.3); color: var(--text-mute); cursor: default; }
+.sp-note { font-size: 12px; color: var(--text-mute); margin-top: 10px; line-height: 1.6; flex: none; }
+.pv-fixb { flex: none; height: 32px; padding: 0 12px; border: none; border-radius: 16px; background: #569cd6; color: #0b1620; font: 700 12px inherit; font-family: inherit; cursor: pointer; } .pv-nm .pv-xs { color: #ffd43b; }
 .aq-sec-chip { padding: 7px 11px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,.05); color: var(--text); font-size: 12px; cursor: pointer; white-space: nowrap; }
 .aq-sec-chip:hover { background: rgba(255,255,255,.1); }
 .aq-sec-chip.on { border-color: #63e6be; color: #63e6be; background: rgba(99,230,190,.12); font-weight: 700; }
@@ -9490,14 +9508,16 @@ html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-
     <div class="ops-sheet-bg" id="aqSecBg" onclick="aqSecClose()"></div>
     <div class="ops-sheet aq-sec-sheet" id="aqSecSheet">
       <div class="ops-sheet-grip"></div>
-      <div class="ops-sheet-title" id="aqSecTitle">섹터 지정</div>
-      <div class="ops-sheet-meta" id="aqSecMeta">마스터에 없는 종목(ETF 등)의 섹터를 고르세요</div>
-      <input type="text" id="aqSecFilter" placeholder="섹터 검색 또는 새 섹터 이름" oninput="aqSecRender()" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text-hi);font-size:14px !important;margin-bottom:10px;font-family:inherit">
-      <div class="aq-sec-chips" id="aqSecChips"></div>
-      <div class="ops-sheet-actions">
-        <button class="btn sm" id="aqSecNewBtn" onclick="aqSecPickNew()" style="display:none">새 섹터로 저장</button>
-        <button class="btn sm secondary" id="aqSecClearBtn" onclick="aqSecPick('')">지정 해제</button>
+      <div class="sp-hd"><span class="sp-lg" id="aqSecLogo"></span><div class="sp-tt"><b id="aqSecTitle">섹터 지정</b><small>마스터에 없는 종목 · 정의된 섹터 중에서 골라요</small></div></div>
+      <div class="sp-meta" id="aqSecMeta"></div>
+      <div class="sp-q"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="aqSecFilter" placeholder="섹터 이름이나 설명으로 찾기" oninput="aqSectorPickRender()" autocomplete="off"></div>
+      <div class="sp-megas" id="aqSecMegas"></div>
+      <div class="aq-sec-chips sp-list" id="aqSecChips"></div>
+      <div class="sp-acts">
+        <button type="button" class="sp-b" id="aqSecClearBtn" onclick="aqSecPick('')">지정 해제</button>
+        <button type="button" class="sp-b p" id="aqSecSaveBtn" onclick="aqSecSave()" disabled>섹터를 골라 주세요</button>
       </div>
+      <div class="sp-note">직접 입력 칸은 없어요. 섹터를 새로 만들려면 '섹터 정의' 시트에 행을 추가해요.</div>
     </div>
 
     <!-- v4.99: 토스 연동 게이트 (MO 마이 · PC 보드) -->
@@ -10631,7 +10651,7 @@ function aqOpenTradesPasteModal() {
         if (col && col.type === 'date' && val) { const d = new Date(val); if (!isNaN(d.getTime())) val = d.toISOString().split('T')[0]; }
         else if (col && col.type === 'number' && val) { val = val.replace(/[,$\s]/g, ''); }
         else if (col && col.type === 'dropdown' && col.options === SECTORS_40 && val) {
-          const mm = SECTORS_40.find(sx => sx.includes(val) || val.includes(sx.replace(/^[^\w가-힣]+/, '').trim()));
+          const mm = (typeof col.dynamicOptions === 'function' ? col.dynamicOptions() : SECTORS_40).find(sx => sx.includes(val) || val.includes(sx.replace(/^[^\w가-힣]+/, '').trim()));
           if (mm) val = mm;
         }
         row[key] = val;
@@ -11345,6 +11365,7 @@ class SpreadsheetTable {
             // v1.75: 동적 옵션 지원 (시장에 따라 섹터 목록 다름)
             const opts = (typeof c.dynamicOptions === 'function') ? c.dynamicOptions() : c.options;
             html += `<td><select data-row="${dataIdx}" data-key="${c.key}"><option value=""></option>`;
+            if (v && opts.indexOf(v) < 0) html += `<option value="${escapeHtml(v)}" selected>${escapeHtml(v)} (정의 밖)</option>`;   // v6.42: 저장된 값이 정의 밖이어도 보이게
             opts.forEach(opt => {
               html += `<option value="${escapeHtml(opt)}" ${opt===v?'selected':''}>${escapeHtml(opt)}</option>`;
             });
@@ -11461,7 +11482,8 @@ class SpreadsheetTable {
         let val = cell.trim();
         // Sector fuzzy match
         if (col.type === 'dropdown' && col.options === SECTORS_40 && val) {
-          const m = SECTORS_40.find(s => s.includes(val) || val.includes(s.replace(/^[^\w가-힣]+/, '').trim()));
+          const _opts = (typeof col.dynamicOptions === 'function' ? col.dynamicOptions() : SECTORS_40);   // v6.42: 정의된 섹터로 맞춤
+          const m = _opts.find(s => s.includes(val) || val.includes(s.replace(/^[^\w가-힣]+/, '').trim()));
           if (m) val = m;
         }
         // Date normalize (YYYY-MM-DD)
@@ -12961,7 +12983,8 @@ function _ccyLbl() {
 }
 
 // v1.75: 섹터 dropdown 옵션 — 시장에 따라 (US: SECTORS_40 / KR: KJP100 섹터들)
-function getSectorOptions() {
+function getSectorOptions() {   // v6.42: 정의된 섹터(기타 + 섹터 정의 + 마스터)만 — 정의 시트를 아직 못 읽었으면 예전 목록
+  try { if (getCurrentMarket() === 'KR' || (typeof _secDef !== 'undefined' && _secDef.byKey)) { const L = aqDefinedSectors().map(d => d.name); if (L.length > 4) return L; } else if (typeof aqLoadSectorDefs === 'function') aqLoadSectorDefs(); } catch (e) {}
   let base;
   if (getCurrentMarket() === 'KR') {
     const krMap = (_state.kjpSectorMaps && _state.kjpSectorMaps.KR) || _state.kjpSectorMap || {};
@@ -17341,7 +17364,7 @@ function simulatePortfolioDaily() {
   // v5.98: 매매기록에 저장된 섹터가 비어 있으면(동기화 당시 섹터 매핑 미로드 · 다른 시장 화면에서 동기화) 현재 섹터 매핑 → 사용자 지정 순으로 보완.
   //   보유 목록과 일별 기록(섹터별 평가수익금)이 같은 기준을 쓰도록 — 실제로는 다 지정돼 있는데 '섹터 미지정'이 뜨던 문제
   const _secMap = (_state && _state.tickerSectorMap) || {}, _secUser = (_state && _state.userSectorMap) || {}, _secCache = {};
-  const _secOf = (tk, s) => { const own = String((s && s.sector) || '').trim(); if (own && own !== '-' && own !== '미분류') return own; if (!(tk in _secCache)) _secCache[tk] = _secMap[tk] || _secUser[tk] || ''; return _secCache[tk]; };
+  const _secOf = (tk, s) => { const own = String((s && s.sector) || '').trim(); if (own && own !== '-' && own !== '미분류' && (typeof aqSecIsDefined !== 'function' || aqSecIsDefined(own))) return own; if (!(tk in _secCache)) _secCache[tk] = _secMap[tk] || _secUser[tk] || own || ''; return _secCache[tk]; };   // v6.42: 정의 밖이면 마스터 → 사용자 지정
 
   allDates.forEach(date => {
     // (a) 그 날의 trades 적용 (reorder 후)
@@ -26651,45 +26674,118 @@ function _aqSectorMapPush() {
   if (!_aqAuth.user) return;
   try { apiCall('userDataSet', { dataType: 'SECTOR_MAP', rows: JSON.stringify(_state.userSectorMap || {}) }); } catch (e) {}
 }
-const _aqSec = { tk: '' };
-function aqAssignSector(tk) {
+const _aqSec = { tk: '', sel: '', mega: '', queue: null };
+// v6.42: 섹터 지정 — 주관식 없이 정의된 섹터에서만. 미국 = '섹터 정의' 시트(+ 마스터 섹터), 한국 = 마스터 섹터, 둘 다 '기타' 4개.
+//   기타는 '섹터 정의' 시트에 코드 X1~X4(메가 '기타') 행이 있으면 그것, 없으면 아래 기본값
+const _SEC_ETC = [
+  { code: 'X1', mega: '기타', name: '💵 현금성·단기채', def: 'SGOV·BIL 같은 현금 대용 · 운영 현금 대기와 연결' },
+  { code: 'X2', mega: '기타', name: '📊 지수 ETF', def: 'QQQ·SPY·KODEX 200 같은 시장 전체' },
+  { code: 'X3', mega: '기타', name: '📜 채권·금리', def: 'TLT·국채 ETF' },
+  { code: 'X4', mega: '기타', name: '🪙 원자재·금', def: 'GLD·SLV·원유 ETF' },
+];
+function _secIsEtc(d) { return /^X\d/i.test(String((d && d.code) || '')) || (d && d.mega === '기타'); }
+function aqSecEtc() { const by = (typeof _secDef !== 'undefined' && _secDef.byKey) || {}; const xs = Object.values(by).filter(_secIsEtc); return xs.length ? xs : _SEC_ETC; }
+function aqDefinedSectors(mk) {   // → [{name, mega, n, def, code, etc}]
+  mk = mk || getCurrentMarket(); const out = []; const seen = new Set();
+  const add = (d, etc) => { const k = _sdNorm(d.name); if (!k || seen.has(k)) return; seen.add(k); out.push(Object.assign({ mega: '', n: 0, def: '', code: '' }, d, { etc: !!etc })); };
+  aqSecEtc().forEach(d => add(d, true));
+  const cnt = {}; Object.values(_state.tickerSectorMap || {}).forEach(v => { v = String(v || '').trim(); if (v) cnt[v] = (cnt[v] || 0) + 1; });
+  if (mk !== 'KR' && typeof _secDef !== 'undefined' && _secDef.byKey) Object.values(_secDef.byKey).filter(d => !_secIsEtc(d)).forEach(d => add(d));
+  Object.keys(cnt).sort((a, b) => aqStripSectorEmoji(a).localeCompare(aqStripSectorEmoji(b), 'ko')).forEach(v => { const d = mk !== 'KR' && typeof aqSectorDef === 'function' ? aqSectorDef(v) : null; add({ name: v, mega: d ? d.mega : '', n: cnt[v], def: d ? d.def : '' }); });
+  if (mk === 'KR') { const km = (_state.kjpSectorMaps && _state.kjpSectorMaps.KR) || {}; Object.keys(km).forEach(v => add({ name: v, n: cnt[v] || 0 })); }
+  return out;
+}
+function aqSecIsDefined(name, mk) {   // 미국은 정의 시트를 아직 못 읽었으면 판단 보류(true)
+  name = String(name || '').trim(); if (!name) return false; mk = mk || getCurrentMarket();
+  if (mk !== 'KR' && (typeof _secDef === 'undefined' || !_secDef.byKey)) return true;
+  const k = _sdNorm(name); return aqDefinedSectors(mk).some(d => _sdNorm(d.name) === k);
+}
+function aqAssignSector(tk, keepQueue) {
   if (!tk) return;
   tk = String(tk).toUpperCase();
   if ((_state.tickerSectorMap || {})[tk]) { if (typeof aqToast === 'function') aqToast('마스터 시트에 섹터가 정의된 종목은 시트에서 바꾸세요'); return; }
-  _aqSec.tk = tk;
-  document.getElementById('aqSecTitle').textContent = `${displayName(tk) || tk} 섹터 지정`;
+  if (!keepQueue) _aqSec.queue = null;
+  _aqSec.tk = tk; _aqSec.mk = /^\d[0-9A-Z]{5}$/.test(tk) ? 'KR' : getCurrentMarket(); _aqSec.mega = '';
   const cur = (_state.userSectorMap || {})[tk] || '';
-  document.getElementById('aqSecMeta').textContent = cur ? `현재: ${cur}` : '마스터에 없는 종목(ETF 등) — 섹터를 고르거나 새로 입력';
+  _aqSec.sel = cur && aqSecIsDefined(cur, _aqSec.mk) ? cur : '';
+  document.getElementById('aqSecTitle').textContent = `${(typeof _glName === 'function' ? _glName(_aqSec.mk, tk) : displayName(tk)) || tk} 섹터 지정`;
+  try { document.getElementById('aqSecLogo').innerHTML = aqLogoHtml(tk, '', ''); } catch (e) {}
   document.getElementById('aqSecFilter').value = '';
   document.getElementById('aqSecClearBtn').style.display = cur ? '' : 'none';
-  aqSecRender();
+  aqSectorPickRender();
   document.getElementById('aqSecSheet').classList.add('open'); document.getElementById('aqSecBg').classList.add('open');
+  if (_aqSec.mk !== 'KR' && (typeof _secDef === 'undefined' || !_secDef.byKey) && typeof aqLoadSectorDefs === 'function') aqLoadSectorDefs().then(() => { if (_aqSec.tk === tk) { const c2 = (_state.userSectorMap || {})[tk] || ''; if (!_aqSec.sel && c2 && aqSecIsDefined(c2, _aqSec.mk)) _aqSec.sel = c2; aqSectorPickRender(); } });
 }
-function aqSecClose() { document.getElementById('aqSecSheet').classList.remove('open'); document.getElementById('aqSecBg').classList.remove('open'); }
-function aqSecRender() {
-  const q = (document.getElementById('aqSecFilter').value || '').trim().toLowerCase();
-  const cur = (_state.userSectorMap || {})[_aqSec.tk] || '';
-  const master = Object.values(_state.tickerSectorMap || {}).filter(Boolean);
-  const custom = Object.values(_state.userSectorMap || {}).filter(Boolean);
-  const all = [...new Set([...master, ...custom])].sort((a, b) => a.localeCompare(b, 'ko'));
-  const list = q ? all.filter(x => x.toLowerCase().includes(q)) : all;
-  document.getElementById('aqSecChips').innerHTML = list.map(x => `<span class="aq-sec-chip ${x === cur ? 'on' : ''}" data-sec="${escapeAttr(x)}">${escapeHtml(x)}</span>`).join('') || '<span style="color:var(--text-mute);font-size:12px">일치하는 섹터 없음</span>';
-  document.querySelectorAll('#aqSecChips .aq-sec-chip').forEach(el => { el.onclick = () => aqSecPick(el.dataset.sec); });
-  const nb = document.getElementById('aqSecNewBtn'); const exact = all.some(x => x.toLowerCase() === q);
-  nb.style.display = (q && !exact) ? '' : 'none'; if (q && !exact) nb.textContent = `"${document.getElementById('aqSecFilter').value.trim()}" 새 섹터로 저장`;
+function aqSecClose(fromPick) { document.getElementById('aqSecSheet').classList.remove('open'); document.getElementById('aqSecBg').classList.remove('open'); if (!fromPick) _aqSec.queue = null; }
+function aqSecSel(name) { _aqSec.sel = _aqSec.sel === name ? '' : name; aqSectorPickRender(); }
+function aqSecMega(m) { _aqSec.mega = m; aqSectorPickRender(); }
+function aqSecSave() { if (_aqSec.sel) aqSecPick(_aqSec.sel); }
+function aqSectorPickRender() {   // v6.42: 이름이 보안 화면의 aqSecRender와 겹쳐 시트가 비어 있던 것 — 이름 바꿈
+  const mk = _aqSec.mk || getCurrentMarket(); const qRaw = (document.getElementById('aqSecFilter').value || '').trim(); const q = qRaw.toLowerCase();
+  const cur = (_state.userSectorMap || {})[_aqSec.tk] || ''; const ok = cur && aqSecIsDefined(cur, mk); const sel = _aqSec.sel;
+  document.getElementById('aqSecMeta').innerHTML = cur ? (ok ? `지금: <b>${escapeHtml(cur)}</b>` : `지금: <b class="x">${escapeHtml(cur)} (정의 밖)</b> → 정의된 섹터로 다시 골라 주세요`) : '아직 지정 안 함';
+  const defs = aqDefinedSectors(mk); const etc = defs.filter(d => d.etc); const rest = defs.filter(d => !d.etc);
+  const megas = mk === 'KR' ? [] : [...new Set(rest.map(d => d.mega).filter(Boolean))];
+  document.getElementById('aqSecMegas').innerHTML = !q && megas.length ? [['', '전체'], ['기타', '기타']].concat(megas.map(m => [m, m])).map(([v, l]) => `<button type="button" class="${_aqSec.mega === v ? 'on' : ''}" data-m="${escapeAttr(v)}" onclick="aqSecMega(this.dataset.m)">${escapeHtml(l)}</button>`).join('') : '';
+  const hit = d => !q || aqStripSectorEmoji(d.name).toLowerCase().includes(q) || String(d.def || '').toLowerCase().includes(q) || String(d.mega || '').toLowerCase().includes(q);
+  const hl = nm => { const t = aqStripSectorEmoji(nm); if (!q) return escapeHtml(t); const i = t.toLowerCase().indexOf(q); return i < 0 ? escapeHtml(t) : escapeHtml(t.slice(0, i)) + `<mark>${escapeHtml(t.slice(i, i + q.length))}</mark>` + escapeHtml(t.slice(i + q.length)); };
+  const ck = '<i><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0b1620" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></i>';
+  const row = d => `<button type="button" class="sp-row${_sdNorm(sel) === _sdNorm(d.name) ? ' on' : ''}" data-sec="${escapeAttr(d.name)}" onclick="aqSecSel(this.dataset.sec)"><span><b>${hl(d.name)}${d.n ? `<small>${d.n}종목</small>` : ''}</b>${d.def ? `<small>${escapeHtml(d.def)}</small>` : ''}</span>${ck}</button>`;
+  const gh = (name, color, n, note) => `<div class="sp-gh"><i style="background:${color}"></i>${escapeHtml(name)} <small>${note || n}</small></div>`;
+  let h = '';
+  if (q) {
+    const xs = defs.filter(hit);
+    h = `<div class="sp-cnt">"${escapeHtml(qRaw)}"에 맞는 섹터 ${xs.length}개</div>` + xs.map(row).join('')
+      + (xs.length ? '' : `<div class="sp-none">찾는 섹터가 없나요? 정의에 없는 이름은 저장할 수 없어요. 가까운 섹터를 고르거나, 한 종목이 아니라 시장 전체면 <b>기타 › 지수 ETF</b>로.</div>`);
+  } else {
+    const showEtc = !_aqSec.mega || _aqSec.mega === '기타';
+    if (showEtc) h += gh('기타', '#a0a4a8', etc.length, 'ETF·현금성 · 섹터 정의 시트에 함께 둬요') + etc.map(row).join('');
+    if (mk === 'KR') {
+      h += gh('한국 섹터', '#569cd6', rest.length) + `<div class="sp-chips">${rest.map(d => `<button type="button" class="${_sdNorm(sel) === _sdNorm(d.name) ? 'on' : ''}" data-sec="${escapeAttr(d.name)}" onclick="aqSecSel(this.dataset.sec)">${escapeHtml(aqStripSectorEmoji(d.name))}</button>`).join('')}</div>`;
+    } else {
+      megas.filter(m => !_aqSec.mega || _aqSec.mega === m).forEach(m => { const xs = rest.filter(d => d.mega === m); h += gh(m, (typeof _PV_MC !== 'undefined' && _PV_MC[m]) || '#6a6a6a', xs.length) + xs.map(row).join(''); });
+      const loose = rest.filter(d => !d.mega); if (loose.length && !_aqSec.mega) h += gh('그 밖 마스터 섹터', '#6a6a6a', loose.length) + loose.map(row).join('');
+      if (typeof _secDef !== 'undefined' && !_secDef.byKey) h += '<div class="sp-cnt" style="margin-top:12px">섹터 정의를 불러오는 중…</div>';
+    }
+  }
+  document.getElementById('aqSecChips').innerHTML = h;
+  const sb = document.getElementById('aqSecSaveBtn'); sb.disabled = !sel; sb.textContent = sel ? `${aqStripSectorEmoji(sel)}로 저장` : '섹터를 골라 주세요';
 }
-function aqSecPickNew() { aqSecPick((document.getElementById('aqSecFilter').value || '').trim()); }
+function aqSecPickNew() { aqToast('정의에 없는 섹터는 저장할 수 없어요'); }
 function aqSecPick(sector) {
   const tk = _aqSec.tk; if (!tk) return;
+  if (sector && !aqSecIsDefined(sector, _aqSec.mk)) { aqToast('정의에 없는 섹터는 저장할 수 없어요'); return; }
   const map = Object.assign({}, _state.userSectorMap || {});
   if (!sector) delete map[tk]; else map[tk] = sector;
   lsSet(LS.USER_SECTOR_MAP, map); _state.userSectorMap = map; _aqSectorMapPush();
   try { if (typeof propagateSectorChange === 'function' && sector) propagateSectorChange(tk, sector); } catch (e) {}
-  aqSecClose();
+  aqSecClose(true);
   aqSyncLocalFromServer(true);
-  if (typeof aqToast === 'function') aqToast(sector ? `${tk} → ${sector}` : `${tk} 섹터 지정 해제`);
+  const nm = (typeof _glName === 'function' ? _glName(_aqSec.mk, tk) : displayName(tk)) || tk;
+  if (typeof aqToast === 'function') aqToast(sector ? `${nm} → ${aqStripSectorEmoji(sector)}` : `${nm} 섹터 지정 해제`);
+  try { if (typeof _dashSimCache !== 'undefined') _dashSimCache = null; } catch (e) {}
+  try { if (typeof _gd !== 'undefined' && _gd.view === 'mine') aqGuideRender(); } catch (e) {}
+  if (_aqSec.queue && _aqSec.queue.length) { const nx = _aqSec.queue.shift(); setTimeout(() => aqAssignSector(nx, true), 260); } else _aqSec.queue = null;
 }
-Object.assign(window, { aqAssignSector, aqSecClose, aqSecRender, aqSecPick, aqSecPickNew });
+// v6.42: 정의 밖·비어 있는 섹터 정리 — 내 지침 '정할 것' 카드 · 포트폴리오 '섹터 미지정' 묶음
+function _secFixList() {   // 보유 중 마스터 밖 종목 → 섹터가 비었거나 정의 밖
+  const mk = getCurrentMarket(); if (mk !== 'KR' && (typeof _secDef === 'undefined' || !_secDef.byKey)) { if (typeof aqLoadSectorDefs === 'function') aqLoadSectorDefs().then(() => { try { if (_gd.view === 'mine') aqGuideRender(); } catch (e) {} }); return null; }
+  let hs = []; try { hs = (simulatePortfolioDaily() || {}).holdings || []; } catch (e) {}
+  const m = _state.tickerSectorMap || {}, u = _state.userSectorMap || {};
+  return hs.map(h => ({ t: String(h.ticker).toUpperCase(), hs: h.sector })).filter(x => x.t && !m[x.t]).map(x => { const own = String(x.hs || '').trim(); const sx = own && own !== '-' && own !== '미분류' && aqSecIsDefined(own, mk) ? own : String(u[x.t] || own || '').trim(); const s2 = sx === '-' || sx === '미분류' ? '' : sx;   /* 일별 기록(_secOf)과 같은 순서 */ return { t: x.t, s: s2, bad: !!s2 && !aqSecIsDefined(s2, mk) }; }).filter(x => !x.s || x.bad);
+}
+function _secFixCardHtml() {
+  const L = _secFixList(); if (!L || !L.length) return '';
+  const sig = L.map(x => x.t).sort().join(','); let d = null; try { d = JSON.parse(localStorage.getItem('aq_secfix_later') || 'null'); } catch (e) {}
+  if (d && d.sig === sig && Date.now() - d.at < 7 * 86400e3) return '';
+  const mk = getCurrentMarket(); const bad = L.filter(x => x.bad), none = L.filter(x => !x.s);
+  const t = bad.length && none.length ? `섹터가 비었거나 정의에 없는 종목 ${L.length}개가 있어요` : bad.length ? `정의에 없는 섹터로 적힌 종목 ${bad.length}개가 있어요` : `섹터를 정하지 않은 종목 ${none.length}개가 있어요`;
+  const sub = L.slice(0, 3).map(x => `${_glName(mk, x.t)} ${x.s ? `'${aqStripSectorEmoji(x.s)}'` : '비어 있음'}`).join(' · ') + (L.length > 3 ? ` 외 ${L.length - 3}` : '') + ' — 포트폴리오 섹터 묶음과 섹터 동향에서 빠져요';
+  return `<div class="gm-dc st-dc y"><div class="hd"><span class="gm-lg st-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffd43b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12l-8 8-9-9V4h7l10 8z"/><circle cx="7.5" cy="7.5" r="1"/></svg></span><div class="tt"><div class="st-k">섹터 · 다시 고르기</div><div class="t">${escapeHtml(t)}</div><div class="s st-s">${escapeHtml(sub)}</div></div></div><div class="gm-btns"><button class="gm-b pri" onclick="aqSecFixStart()">하나씩 고르기</button><button class="gm-b" onclick="aqSecFixLater()">나중에</button></div></div>`;
+}
+function aqSecFixStart() { const L = _secFixList() || []; if (!L.length) { aqToast('정리할 종목이 없어요'); return; } _aqSec.queue = L.map(x => x.t); const first = _aqSec.queue.shift(); aqAssignSector(first, true); }
+function aqSecFixLater() { const L = _secFixList() || []; try { localStorage.setItem('aq_secfix_later', JSON.stringify({ sig: L.map(x => x.t).sort().join(','), at: Date.now() })); } catch (e) {} try { aqGuideRender(); } catch (e) {} }
+Object.assign(window, { aqAssignSector, aqSecClose, aqSectorPickRender, aqSecPick, aqSecPickNew, aqSecSel, aqSecMega, aqSecSave, aqSecFixStart, aqSecFixLater, aqDefinedSectors, aqSecIsDefined });
 // 관심종목: 서버 user_data(WATCHLIST) ↔ 로컬 AqWatchStore 미러
 async function aqWatchLoadFromServer() {
   if (!_aqAuth.user || !window.AqWatchStore) return;
@@ -29603,7 +29699,7 @@ function _gmHome() {
   const L = all.filter(_gmLive); const past = all.filter(x => !_gmLive(x)); const need = _gmQNeed();
   const f = _gd.tkFilter || '';
   const D = _gmDecisions(L, need);
-  const SC = _stCardsAll(); const scN = SC.reduce((a, c) => a + (c._n || 1), 0);   // v6.28 운영 점검
+  const SC = _stCardsAll(); const SX = (() => { try { return _secFixCardHtml(); } catch (e) { return ''; } })(); const scN = SC.reduce((a, c) => a + (c._n || 1), 0) + (SX ? 1 : 0);   // v6.28 운영 점검 · v6.42 섹터 정리
   const dIds = new Set(D.filter(d => d.x).map(d => d.x.id));
   const near = [], keep = [];
   L.forEach(x => { if (dIds.has(x.id)) return; const b = _gmBest(x); if (b && _gmNear(b.p, b.sc)) near.push({ x, b }); else keep.push({ x, b }); });
@@ -29622,10 +29718,10 @@ function _gmHome() {
   const lg = ks.length >= 2 ? `<div class="gm-lgs ${f ? 'f' : ''}"><button class="gm-all ${f ? '' : 'on'}" onclick="aqGmTk('')">전체</button>${ks.map(kk => `<button class="${kk === f ? 'on' : ''}" onclick="aqGmTk('${escapeAttr(kk)}')" aria-label="${escapeAttr(kk === '__etc' ? '기타' : _gmTkName(kk))}만 보기">${kk === '__etc' ? '<span class="gm-lg">기타</span>' : _gmLogo(null, kk)}${(cnt[kk] || 0) > 1 ? `<i>${cnt[kk]}</i>` : ''}</button>`).join('')}</div>` : '';
   const fh = f ? `<div class="gm-fh"><span><b>${escapeHtml(f === '__etc' ? '기타' : (displayName(f) || _gmTkName(f)))}</b> 지침 ${nearF.length + keepF.length}개</span><button onclick="aqGmTk('')">전체 보기 ✕</button></div>` : '';
   const sec = (c, h, body) => `<div class="gm-sec"><div class="gm-h"><i class="gm-lt ${c}"></i>${h}</div>${body}</div>`;
-  const empty = !D.length && !SC.length && !near.length && !keep.length ? `<div class="gm-empty">따르는 지침이 없어요<br><small>AI 추천에서 \'따르기\'를 누르면 여기로 와요</small></div>` : '';
+  const empty = !D.length && !SC.length && !SX && !near.length && !keep.length ? `<div class="gm-empty">따르는 지침이 없어요<br><small>AI 추천에서 \'따르기\'를 누르면 여기로 와요</small></div>` : '';
   const stc = SC.map(_stCardHtml).join('');
   return hero + _stPbBanner()
-    + (D.length || SC.length ? sec('o', '정할 것', dc + stc) : '')
+    + (D.length || SC.length || SX ? sec('o', '정할 것', dc + SX + stc) : '')
     + (near.length && (!f || nearF.length || !keep.length) ? sec('y', '곧 닿아요', (keep.length ? '' : lg + fh) + (nearF.length ? `<div class="gm-box">${nr}</div>` : `<div class="gm-empty">이 종목은 곧 닿을 신호가 없어요</div>`)) : '')
     + (keep.length ? sec('g', `지키는 중<em class="g">${keep.length}</em>`, lg + fh + (keepF.length ? `<div class="gm-box">${kr}</div>` : `<div class="gm-empty">이 종목에 지키는 지침이 없어요</div>`)) : '')
     + empty
@@ -29814,7 +29910,7 @@ function aqLoadSectorDefs() {
   }).catch(() => { _secDef.loading = null; return _secDef; });
   return _secDef.loading;
 }
-function aqSectorDef(key) { if (getCurrentMarket() === 'KR' || !_secDef.byKey) return null; return _secDef.byKey[_sdNorm(key)] || _secDef.byKey[_sdNorm(typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(key) : key)] || null; }
+function aqSectorDef(key) { if (getCurrentMarket() === 'KR' || !_secDef.byKey) return null; return _secDef.byKey[_sdNorm(key)] || _secDef.byKey[_sdNorm(typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(key) : key)] || (typeof _SEC_ETC !== 'undefined' ? _SEC_ETC.find(d => _sdNorm(d.name) === _sdNorm(key)) : null) || null; }   // v6.42: 기타 기본값
 function _sdPct(v) { const n = parseFloat(String(v).replace('%', '')); return isNaN(n) ? '—' : `<b class="${n >= 0 ? 'up' : 'down'}">${aqSg(n)}${Math.abs(n).toFixed(1)}%</b>`; }
 function aqSectorDefHtml(key) {
   const d = aqSectorDef(key); if (!d) return '';
@@ -30596,8 +30692,8 @@ function _pvM(v) { if (v == null || !isFinite(v)) return '—'; if (_pvKR()) ret
 function _pvS(v) { return (v >= 0 ? '+' : '') + _pvM(v); }
 function _pvP(v) { return aqSgPct(v); }
 function _pvC(v) { return v > 0 ? 'up' : v < 0 ? 'dn' : ''; }
-function _pvMega(sec) { if (_pvKR()) return ''; const d = typeof aqSectorDef === 'function' ? aqSectorDef(sec) : null; return (d && d.mega) || _PV_UNK; }
-function _pvSecName(sec) { const s = String(sec || '').trim(); if (!s || s === '-' || s === _PV_UNK) return _PV_UNK; return (typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(s) : s) || _PV_UNK; }
+function _pvMega(sec) { if (_pvKR()) return ''; if (typeof aqSecIsDefined === 'function' && sec && !aqSecIsDefined(sec)) return _PV_UNK; const d = typeof aqSectorDef === 'function' ? aqSectorDef(sec) : null; return (d && d.mega) || _PV_UNK; }
+function _pvSecName(sec) { const s = String(sec || '').trim(); if (!s || s === '-' || s === _PV_UNK) return _PV_UNK; if (typeof aqSecIsDefined === 'function' && !aqSecIsDefined(s)) return _PV_UNK; return (typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(s) : s) || _PV_UNK; }   // v6.42: 정의 밖 → 미지정
 function _pvBenchSer() { try { return _gmSer({ kind: '지표', target: _pvKR() ? 'KOSPI' : '나스닥' }); } catch (e) { return []; } }
 function _pvPrep(holdings) {   // v6.32: 내 기준 — 일별 계좌 기록(보유 수량·평단·확정손익)으로 계산
   let snaps = []; try { snaps = simulatePortfolioDaily().snapshots || []; } catch (e) {}
@@ -30682,9 +30778,10 @@ function _pvArea(G, P, mode) {
   return `<svg class="pv-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="30일 비중 추이">${s}<line x1="0" x2="${W}" y1="${Y(.5)}" y2="${Y(.5)}" stroke="rgba(0,0,0,.35)" stroke-dasharray="3 3"></line><text x="${W - 4}" y="${Y(.5) - 5}" text-anchor="end" font-size="11" fill="#e6e6e6">50%</text><text x="0" y="${H - 4}" font-size="11" fill="#9d9d9d">${md(P.dates[0])}</text><text x="${W}" y="${H - 4}" text-anchor="end" font-size="11" fill="#9d9d9d">${md(P.dates[n - 1])}</text></svg>`
     + `<div class="pv-lgd">${gs.map((g, i) => `<span><i style="background:${col(g, i)}"></i>${escapeHtml(_pvLabel(g, mode))} ${Math.round(g.hist[n - 1] / tot[n - 1] * 100)}%</span>`).join('')}</div>`;
 }
-function _pvRow(x, inG, st) {   // v6.39: st = 운영 탭 — 이름 밑에 단계·확신(색), 미정이면 [운영 정하기]
+function _pvRow(x, inG, st, fix) {   // v6.39: st = 운영 탭 — 이름 밑에 단계·확신(색), 미정이면 [운영 정하기] · v6.42: fix = 섹터 미지정 묶음 — [섹터 고르기]
   const T = escapeAttr(x.t);
   let sub = `<span>${escapeHtml(displaySub(x.t) || '')}</span>`, btn = '';
+  if (fix && !(_state.tickerSectorMap || {})[x.t]) { const raw = String(x.sec || '').trim(); sub = raw && raw !== '-' && raw !== _PV_UNK ? `<span class="pv-xs">'${escapeHtml(aqStripSectorEmoji(raw))}' — 정의에 없음</span>` : `<span>섹터 없음</span>`; btn = `<button type="button" class="pv-fixb" onclick="event.stopPropagation(); aqAssignSector('${T}')">섹터 고르기</button>`; }
   if (st) {
     const e = _stEff(x.t); const M = _stM();
     if (e) { const cv = e.conv || ''; const cls = cv === 'fail' || e.stage === 'reduce' ? 'x' : cv === 'strong' || cv === 'success' ? 's' : ''; sub = `<span class="pv-ss ${cls}">${escapeHtml([(M.stages || {})[e.stage] || '', (M.convs || {})[cv] || ''].filter(Boolean).join(' · '))}</span>`; }
@@ -30737,7 +30834,7 @@ function aqPvRender(holdings) {
       }
       const none = st && !g.vk;
       return `<button type="button" class="pv-gr${none ? ' pv-none' : ''}${over ? ' over' : ''}" data-k="${K}" onclick="aqPvToggle(this.dataset.k)">${dot}<span class="pv-gn"><b>${escapeHtml(g.k === _PV_UNK && mode === 'sec' ? '섹터 미지정' : g.k)}</b><small>${sub}</small></span><span class="pv-gv"><b>${g.w.toFixed(1)}%</b><small><span class="mu">${_pvM(g.v)}</span> <span class="${_pvC(g.d)}">${_pvP(g.d)}</span></small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9d9d9d" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="${o ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6'}"></path></svg></button>`
-        + (o || none ? g.xs.map(x => _pvRow(x, true, st)).join('') + (none ? (g.xs.length > 1 ? `<button type="button" class="pv-more" onclick="_stWizStart()">${g.xs.length}개 한 번에 정하기 ›</button>` : '') : `<button type="button" class="pv-more" data-k="${K}" onclick="aqPvSheet(this.dataset.k)">${escapeHtml(g.k)} 자세히 ›</button>`) : '');
+        + (o || none ? g.xs.map(x => _pvRow(x, true, st, mode === 'sec' && g.k === _PV_UNK)).join('') + (none ? (g.xs.length > 1 ? `<button type="button" class="pv-more" onclick="_stWizStart()">${g.xs.length}개 한 번에 정하기 ›</button>` : '') : `<button type="button" class="pv-more" data-k="${K}" onclick="aqPvSheet(this.dataset.k)">${escapeHtml(g.k)} 자세히 ›</button>`) : '');
     }).join('');
     if (st) h += `<div class="pv-note" style="margin:6px 4px 18px">종목을 누르면 차트 · 운영은 차트 › 내 주식 맨 아래에서 고쳐요</div>` + _pvStFoot();
   }
