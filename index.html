@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.37';   // v6.37: 계단식 평단 — 첫 시즌 전 점선 높이를 첫 진입가로(과거 순서대로) · 평단 숫자는 지금 평단 선이 끊김 없이 시작되는 곳에 · v6.36: 계단식 평단 — 시즌1·시즌2가 있으면 왼쪽 끝까지 잇는 점선 높이를 시즌1 평단으로 (가장 이른 시즌 기준) · v6.35: 계단식 평단 다시 — 보유한 기간은 실선(이전 시즌 포함), 보유하지 않은 기간은 점선 · 전량 매도 뒤 재진입은 두 시즌 사이를 직각(ㄴ·ㄱ자)으로 · 처음 진입은 진입 전 기간을 지금 평단으로 왼쪽 끝까지 점선 · 평단 숫자는 예전처럼 그래프 안(차트 위 한 줄 없앰) · v6.34: 반응형 그래프 — 포트폴리오(비중 지도·오늘 기여·30일 비중·묶음 시트), 운영 차트(카드 넘기기·끝낼 조건·사상별 값), 내 지침 신호 그림·거래량 막대를 실제 폭으로 다시 그림(글씨 크기 고정, 높이는 폭 따라 늘되 상한) · 폴드 접기/펴기 때 다시 그림 · 넓은 화면에서 작은 칸에도 이름이 들어감 · 누적 성과 선·낙폭·스파크라인·매수심사 경로의 선 굵기 고정 · v6.33: 계단식 평단 다듬기 — 지금 평단 구간만 실선, 그 밖은 점선(처음 진입이면 지금 평단을 왼쪽 끝까지, 재진입이면 전량 매도한 날에서 이전 평단으로 ㄴ자 연결, 이전 평단 계단도 점선) · 평단 숫자는 그래프 밖 차트 바로 위 한 줄('평단 $425.00 · 지금 +1.6%') · v6.32: PC 화면 없앰 — 넓은 화면은 가운데 폭 430px 틀에 모바일 화면(pc.html) · 포트폴리오를 내 기준으로 — 오늘(주말·휴장엔 날짜) = 어제부터 든 수량은 전날 종가, 오늘 산 수량은 매수가, 판 것은 확정손익까지 (누적 성과의 오늘 손익과 같은 값) · 비중 지도 색·오늘 기여·오늘순 정렬도 같은 기준 · 30일 비중은 그날그날 실제 보유 수량 · 묶음 시트 그래프 = 묶음 손익(평가+확정) 30일 변화 (+같은 기간 나스닥/코스피) · 종목 차트·운영 차트의 평단을 계단식으로(매수일에 꺾임, 전량 매도 구간 끊김), 금액은 지금 구간에만 · 차트 평단을 보유 계산과 같은 값으로(토스 시드 포함) · v6.31: 마이 › 보유 종목 → '포트폴리오' 개편 (MO) — 평가금·오늘·총 수익 · [메가 | 섹터 | 종목] 묶어 보기(한국은 섹터·종목) · 차트 [비중 지도 | 오늘 기여 | 30일 비중] · 메가는 고유 색, 섹터·종목은 오늘 오르면 초록·내리면 빨강 · 한 묶음 50% 넘으면 한 줄 알림 · 묶음 목록(접고 펼치기, 비중·오늘·수익률 순) · 묶음 시트(30일 묶음 vs 나스닥/코스피, 섹터 비중, 종목) · 종목 줄 누르면 차트, 길게 누르면 내 평가 · v6.30: 미국 서머타임 해제 대응 — 내 브리핑 '실적 발표 예정(장 시작 전)'의 개장 시각을 서머타임에 따라 22:30/23:30으로 · 실적 캘린더 기본 시각 뉴욕 17:00 · v6.29: 운영 편집 개편 — 처음 정하기는 카드 넘기기(6개월 차트·평단·매매 점, AI 초안 → 맞아요/바꾸기/나중에, 밀어서 넘기기, 끝나면 요약) · 사상 고르기는 '왜 들고 계세요?' 5묶음 → 묶음 안 비교(사는 때·파는 때·AI가 안 하는 것) + 단계(최근 30일 매매로 추천) · 잘 모르겠으면 질문 3개 · 운영 카드(사상·단계·내 평가 칸을 눌러 그것만 고치기, 끝낼 조건 거리, 실적 체크, 기록 접기) · 보유 목록 길게 누르기 = 내 평가 빠른 시트(확신·결과, 다른 메뉴는 안에) · 끝낼 조건은 문장 + 차트 선 끌기 · 사상별 값(추세 이탈선 차트·지난 1년 이탈 통계, 역발상 가격선 눌러 추가, 이벤트 실적일, 목표 비중 막대, 배당 기준, 확인 신호, 다시 볼 날, 정리 계획 차트) · 저장하면 'AI가 이제 하는 것' 안내 · v6.28: 운영 — 종목마다 사상(왜 들고 있나 10개 · 5묶음) × 단계(정찰·모으는 중·보유·줄이는 중) × 내 평가(강한확신·반신반의·판단보류·기획성공·기획실패) · 편집 시트(AI·서버 초안 확정, 한 줄 이유·끝낼 조건·숫자 감시, 사상별 값) · 내 지침 '정할 것'에 운영 점검(사상 정하기·맞지 않는 조합·이벤트 뒤 보유·계획 밖 매수·흔들림 매도 확인·끝낼 조건·추세 이탈·다시 볼 날·기획성공 다음 단계·정리 계획·AI 제안·사상 예산·비중 맞추기·숨은 집중·실적 체크) · 운영 지도(사상·묶음 비중, 기준 고치기, 급락장 플레이북, 운영 성적·오답노트) · 보유 목록·신호표·종목 칩 · 매수심사 전 사상 확인 · 초장기 수집은 AI 평가 제외 · v6.27: 포인트색 정리 — 행동·결정·닿음 자리의 주황을 하늘색(#569cd6, 앱 기본 강조색)으로 (내 지침 버튼·정할 것·닿음·신호등 첫 칸·그래프 닿은 점 · AI 추천 개수 배지·오늘 묶음 · 매매심사 만료 버튼·만료 수) · 주황은 경고·만료·실적 전·위험 표시에만 남김 · v6.26: 내 지침 — 꼬리표 끝 '→ 할 일'을 갈림길·기다리는 신호·정할 것에 표시 (닿으면 [했어요 / 계속 따르기 / 그만]) · v6.25: 내 지침 개편 — 첫 화면 '오늘 정할 것 N개' · 정할 것 · 곧 닿아요(작은 선·달력) · 지키는 중 · 상세: 지금 할 일 · 약속(방패·지킨 날) · 왜 · 기다리는 신호를 종류별 그림으로(가격·지표 선과 기준선, 평단 눈금, 비중 막대, 연속 칸, 거래량 막대, 달력, 판단 질문) · 갈림길 · 켜 둔 설정 기간 막대 · 한 일 체크 · 기록 접기 · '했어요'는 할 일이 있는 지침에만 · v6.24: AI 보고서 5 WHY — 제목 모양이 조금 달라도 단계 화면으로 표시('고른 쟁점:' · '1단계 (…):' · '이 진실이 바뀔 수 있는 조건') · 쟁점 아래 '고른 이유' 문단 표시 · 바뀌는 조건이 5단계 인용 상자에 붙던 문제 · v6.23: 팝업을 모두 '맨 위 손잡이를 쓸어내리면 닫힘'으로 통일 — 매크로 지표 · 운영 로그 · 비밀번호 · 일정 등록 · 밸류에이션 · 종목 검색 · 누적 시그널 · 계정 관리 · AI 매수심사 리포트 · 매매 기록 입력·내역 · 계좌 · 보유 입력 · 로고 선택 · 엑셀 붙여넣기 (모바일에선 가운데 상자도 아래에서 올라오는 시트, ✕ 숨김 · 뒤로가기로도 닫힘) · 뒤로가기로 시트를 닫으면 기록이 한 칸 더 지워지던 문제 · v6.22: 토글·탭을 눌러도 화면 위치 그대로(내용이 짧아져도 스크롤이 당겨지지 않음 · AI 가이드 토글이 화면을 끌어올리던 것 없앰) · AI 가이드 [AI 추천 | 내 지침]과 AI 브리핑 [장후 | 장전]을 폭을 꽉 채운 같은 모양으로 · v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.38';   // v6.38: 내 지침 개편 — 꼬리표 전부 읽기(약속·조건 추천·조건 다시 볼 때·조건 실행·대체·병행·이유, 원문을 서버가 해석) · 지키는 중 로고를 누르면 같은 화면에서 아래 목록만 그 종목으로(개수 배지·전체) · 상세는 갈림길 하나(지금 → 약속 → 일정 → A 좋아지면·B 나빠지면·C 그대로면, 닿은 갈래 강조, 판단 근거) · 따르기 확인 창에 같은 종목 먼저 지침을 나란히(부딪히는 점, 바꾸기/둘 다 두기, AI 표시) · '정할 것'에 부딪힘 카드·AI 완료 카드 · 사슬 진행 줄(신호 닿음 → 보고서 → 가이드 고치기 → 따르기) · 보고서·매수심사 요청에 '확인할 것' 한 줄 · G번호를 화면에서 없앰 · 한도 30 때 어떤 지침을 정리하는지 보여 줌 · v6.37: 계단식 평단 — 첫 시즌 전 점선 높이를 첫 진입가로(과거 순서대로) · 평단 숫자는 지금 평단 선이 끊김 없이 시작되는 곳에 · v6.36: 계단식 평단 — 시즌1·시즌2가 있으면 왼쪽 끝까지 잇는 점선 높이를 시즌1 평단으로 (가장 이른 시즌 기준) · v6.35: 계단식 평단 다시 — 보유한 기간은 실선(이전 시즌 포함), 보유하지 않은 기간은 점선 · 전량 매도 뒤 재진입은 두 시즌 사이를 직각(ㄴ·ㄱ자)으로 · 처음 진입은 진입 전 기간을 지금 평단으로 왼쪽 끝까지 점선 · 평단 숫자는 예전처럼 그래프 안(차트 위 한 줄 없앰) · v6.34: 반응형 그래프 — 포트폴리오(비중 지도·오늘 기여·30일 비중·묶음 시트), 운영 차트(카드 넘기기·끝낼 조건·사상별 값), 내 지침 신호 그림·거래량 막대를 실제 폭으로 다시 그림(글씨 크기 고정, 높이는 폭 따라 늘되 상한) · 폴드 접기/펴기 때 다시 그림 · 넓은 화면에서 작은 칸에도 이름이 들어감 · 누적 성과 선·낙폭·스파크라인·매수심사 경로의 선 굵기 고정 · v6.33: 계단식 평단 다듬기 — 지금 평단 구간만 실선, 그 밖은 점선(처음 진입이면 지금 평단을 왼쪽 끝까지, 재진입이면 전량 매도한 날에서 이전 평단으로 ㄴ자 연결, 이전 평단 계단도 점선) · 평단 숫자는 그래프 밖 차트 바로 위 한 줄('평단 $425.00 · 지금 +1.6%') · v6.32: PC 화면 없앰 — 넓은 화면은 가운데 폭 430px 틀에 모바일 화면(pc.html) · 포트폴리오를 내 기준으로 — 오늘(주말·휴장엔 날짜) = 어제부터 든 수량은 전날 종가, 오늘 산 수량은 매수가, 판 것은 확정손익까지 (누적 성과의 오늘 손익과 같은 값) · 비중 지도 색·오늘 기여·오늘순 정렬도 같은 기준 · 30일 비중은 그날그날 실제 보유 수량 · 묶음 시트 그래프 = 묶음 손익(평가+확정) 30일 변화 (+같은 기간 나스닥/코스피) · 종목 차트·운영 차트의 평단을 계단식으로(매수일에 꺾임, 전량 매도 구간 끊김), 금액은 지금 구간에만 · 차트 평단을 보유 계산과 같은 값으로(토스 시드 포함) · v6.31: 마이 › 보유 종목 → '포트폴리오' 개편 (MO) — 평가금·오늘·총 수익 · [메가 | 섹터 | 종목] 묶어 보기(한국은 섹터·종목) · 차트 [비중 지도 | 오늘 기여 | 30일 비중] · 메가는 고유 색, 섹터·종목은 오늘 오르면 초록·내리면 빨강 · 한 묶음 50% 넘으면 한 줄 알림 · 묶음 목록(접고 펼치기, 비중·오늘·수익률 순) · 묶음 시트(30일 묶음 vs 나스닥/코스피, 섹터 비중, 종목) · 종목 줄 누르면 차트, 길게 누르면 내 평가 · v6.30: 미국 서머타임 해제 대응 — 내 브리핑 '실적 발표 예정(장 시작 전)'의 개장 시각을 서머타임에 따라 22:30/23:30으로 · 실적 캘린더 기본 시각 뉴욕 17:00 · v6.29: 운영 편집 개편 — 처음 정하기는 카드 넘기기(6개월 차트·평단·매매 점, AI 초안 → 맞아요/바꾸기/나중에, 밀어서 넘기기, 끝나면 요약) · 사상 고르기는 '왜 들고 계세요?' 5묶음 → 묶음 안 비교(사는 때·파는 때·AI가 안 하는 것) + 단계(최근 30일 매매로 추천) · 잘 모르겠으면 질문 3개 · 운영 카드(사상·단계·내 평가 칸을 눌러 그것만 고치기, 끝낼 조건 거리, 실적 체크, 기록 접기) · 보유 목록 길게 누르기 = 내 평가 빠른 시트(확신·결과, 다른 메뉴는 안에) · 끝낼 조건은 문장 + 차트 선 끌기 · 사상별 값(추세 이탈선 차트·지난 1년 이탈 통계, 역발상 가격선 눌러 추가, 이벤트 실적일, 목표 비중 막대, 배당 기준, 확인 신호, 다시 볼 날, 정리 계획 차트) · 저장하면 'AI가 이제 하는 것' 안내 · v6.28: 운영 — 종목마다 사상(왜 들고 있나 10개 · 5묶음) × 단계(정찰·모으는 중·보유·줄이는 중) × 내 평가(강한확신·반신반의·판단보류·기획성공·기획실패) · 편집 시트(AI·서버 초안 확정, 한 줄 이유·끝낼 조건·숫자 감시, 사상별 값) · 내 지침 '정할 것'에 운영 점검(사상 정하기·맞지 않는 조합·이벤트 뒤 보유·계획 밖 매수·흔들림 매도 확인·끝낼 조건·추세 이탈·다시 볼 날·기획성공 다음 단계·정리 계획·AI 제안·사상 예산·비중 맞추기·숨은 집중·실적 체크) · 운영 지도(사상·묶음 비중, 기준 고치기, 급락장 플레이북, 운영 성적·오답노트) · 보유 목록·신호표·종목 칩 · 매수심사 전 사상 확인 · 초장기 수집은 AI 평가 제외 · v6.27: 포인트색 정리 — 행동·결정·닿음 자리의 주황을 하늘색(#569cd6, 앱 기본 강조색)으로 (내 지침 버튼·정할 것·닿음·신호등 첫 칸·그래프 닿은 점 · AI 추천 개수 배지·오늘 묶음 · 매매심사 만료 버튼·만료 수) · 주황은 경고·만료·실적 전·위험 표시에만 남김 · v6.26: 내 지침 — 꼬리표 끝 '→ 할 일'을 갈림길·기다리는 신호·정할 것에 표시 (닿으면 [했어요 / 계속 따르기 / 그만]) · v6.25: 내 지침 개편 — 첫 화면 '오늘 정할 것 N개' · 정할 것 · 곧 닿아요(작은 선·달력) · 지키는 중 · 상세: 지금 할 일 · 약속(방패·지킨 날) · 왜 · 기다리는 신호를 종류별 그림으로(가격·지표 선과 기준선, 평단 눈금, 비중 막대, 연속 칸, 거래량 막대, 달력, 판단 질문) · 갈림길 · 켜 둔 설정 기간 막대 · 한 일 체크 · 기록 접기 · '했어요'는 할 일이 있는 지침에만 · v6.24: AI 보고서 5 WHY — 제목 모양이 조금 달라도 단계 화면으로 표시('고른 쟁점:' · '1단계 (…):' · '이 진실이 바뀔 수 있는 조건') · 쟁점 아래 '고른 이유' 문단 표시 · 바뀌는 조건이 5단계 인용 상자에 붙던 문제 · v6.23: 팝업을 모두 '맨 위 손잡이를 쓸어내리면 닫힘'으로 통일 — 매크로 지표 · 운영 로그 · 비밀번호 · 일정 등록 · 밸류에이션 · 종목 검색 · 누적 시그널 · 계정 관리 · AI 매수심사 리포트 · 매매 기록 입력·내역 · 계좌 · 보유 입력 · 로고 선택 · 엑셀 붙여넣기 (모바일에선 가운데 상자도 아래에서 올라오는 시트, ✕ 숨김 · 뒤로가기로도 닫힘) · 뒤로가기로 시트를 닫으면 기록이 한 칸 더 지워지던 문제 · v6.22: 토글·탭을 눌러도 화면 위치 그대로(내용이 짧아져도 스크롤이 당겨지지 않음 · AI 가이드 토글이 화면을 끌어올리던 것 없앰) · AI 가이드 [AI 추천 | 내 지침]과 AI 브리핑 [장후 | 장전]을 폭을 꽉 채운 같은 모양으로 · v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8459,7 +8459,7 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .gm-sec { margin-bottom: 28px; } .gm-h { font-size: 15px; font-weight: 800; color: var(--text-hi); margin: 0 2px 8px; } .gm-h em { font-style: normal; color: #569cd6; margin-left: 5px; } .gm-h small { font-size: 12.5px; font-weight: 500; color: var(--text-mute); margin-left: 6px; }
 .gm-lg { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; flex: none; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.08); color: var(--text-hi); font-size: 11px; font-weight: 800; } .gm-lg.s { width: 26px; height: 26px; font-size: 10px; }
 .gm-dc { background: rgba(255,255,255,.05); border-radius: 16px; padding: 14px; margin-bottom: 8px; } .gm-dc .hd { display: flex; gap: 10px; align-items: center; cursor: pointer; } .gm-dc .tt { flex: 1; min-width: 0; }
-.gm-dc .t { font-size: 15px; font-weight: 700; color: var(--text-hi); line-height: 1.4; } .gm-dc .s { font-size: 12.5px; color: var(--text-mute); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gm-dc .t { font-size: 15px; font-weight: 700; color: var(--text-hi); line-height: 1.4; } .gm-dc .s { font-size: 13px; color: var(--text-mute); margin-top: 3px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .gm-btns { display: flex; gap: 6px; margin-top: 12px; } .gm-b { flex: 1; height: 44px; border-radius: 12px; border: none; background: rgba(255,255,255,.09); color: var(--text); font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: inherit; } .gm-b.pri { background: #569cd6; color: #0b0b0d; font-weight: 800; } .gm-b.sm { flex: none; width: 60px; } .gm-b.gm-xs { flex: none; width: auto; height: 40px; padding: 0 14px; }
 .gm-row { display: flex; align-items: center; gap: 12px; padding: 13px 2px; border-bottom: 1px solid rgba(255,255,255,.06); cursor: pointer; } .gm-row:last-child { border-bottom: none; } .gm-row.nc { cursor: default; } .gm-row > svg { flex: none; color: var(--text-mute); }
 .gm-row .tx { flex: 1; min-width: 0; font-size: 14px; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } .gm-row .m { flex: none; font-size: 14px; font-weight: 800; color: var(--text-hi); } .gm-row .d { flex: none; font-size: 12.5px; color: var(--text-mute); }
@@ -8486,7 +8486,11 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .gm-box { background: rgba(255,255,255,.04); border-radius: 16px; padding: 2px 14px; }
 .gm-nr .tx small { display: block; font-size: 12.5px; color: #ffd43b; font-weight: 700; margin-top: 1px; } .gm-nr > svg { flex: none; color: inherit; }
 .gm-row .gm-ic { flex: none; display: inline-flex; color: var(--text-mute); } .gm-row .gm-ic.g, .gm-li .gm-ic.g { color: #63e6be; } .gm-row .gm-ic svg { width: 16px; height: 16px; }
-.gm-lgs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 10px; } .gm-lgs button { border: none; background: none; padding: 0; cursor: pointer; } .gm-lgs .gm-lg { width: 34px; height: 34px; }
+.gm-lgs { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 0 0 14px; } .gm-lgs button { position: relative; border: none; background: none; padding: 0; cursor: pointer; } .gm-lgs .gm-lg { width: 40px; height: 40px; font-size: 12px; }
+/* v6.38: 로고 필터 — 고른 종목은 테두리, 나머지는 흐리게 · 개수 배지 · '전체' */
+.gm-lgs.f button:not(.on) .gm-lg { opacity: .35; } .gm-lgs button.on .gm-lg { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text-hi); } .gm-lgs button i { position: absolute; right: -4px; top: -4px; min-width: 18px; height: 18px; line-height: 18px; border-radius: 9px; background: var(--text-hi); color: var(--bg); font-size: 11px; font-weight: 800; font-style: normal; text-align: center; padding: 0 4px; }
+.gm-lgs .gm-all { height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,.18); color: var(--text-mute); font-size: 13px; font-weight: 700; font-family: inherit; } .gm-lgs .gm-all.on { color: var(--text-hi); border-color: var(--text-hi); }
+.gm-fh { display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; color: var(--text-mute); margin: 0 2px 12px; } .gm-fh b { color: var(--text-hi); } .gm-fh button { height: 34px; padding: 0 12px; border: none; border-radius: 17px; background: rgba(255,255,255,.07); color: var(--text); font-size: 12.5px; font-family: inherit; cursor: pointer; }
 .gm-cal { flex: none; width: 46px; border-radius: 9px; overflow: hidden; text-align: center; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); } .gm-cal i { display: block; font-style: normal; font-size: 10.5px; font-weight: 700; color: #fff; background: #e8590c; padding: 1px 0; } .gm-cal b { display: block; font-size: 18px; color: var(--text-hi); padding: 2px 0 3px; }
 .gm-cal.s { width: 38px; } .gm-cal.s i { font-size: 9.5px; } .gm-cal.s b { font-size: 14px; padding: 1px 0 2px; }
 .gm-sh .hd { align-items: flex-start; } .gm-sh .hd .tt { flex: 1; min-width: 0; } .gm-chip { flex: none; font-size: 12px; font-weight: 700; border-radius: 20px; padding: 3px 10px; color: var(--text-mute); border: 1px solid rgba(255,255,255,.14); } .gm-chip.g { color: #63e6be; border-color: rgba(99,230,190,.4); } .gm-chip.o { color: #569cd6; border-color: rgba(86,156,214,.5); }
@@ -8512,6 +8516,25 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .gm-ck { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.25); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #1e1e1e; } .gm-ck.on { background: #63e6be; border-color: #63e6be; }
 .gm-hh { display: flex; justify-content: space-between; padding: 6px 2px 16px; font-size: 13px; color: var(--text-mute); cursor: pointer; } .gm-hh em { font-style: normal; }
 .gm-b.gm-xs2 { flex: none; width: 74px; }
+/* v6.38: 갈림길 — 줄기(지금 → 약속 → 일정)와 갈래 카드(A 좋아지면 · B 나빠지면 · C 그대로면) · 닿은 갈래 강조 · 판단 근거 */
+.gm-sl small { font-weight: 500; margin-left: 8px; color: var(--text-mute); }
+.gm-trk { position: relative; padding-left: 40px; } .gm-trk::before { content: ''; position: absolute; left: 14px; top: 10px; bottom: 28px; width: 2px; background: rgba(255,255,255,.14); }
+.gm-tn { position: relative; padding: 0 0 26px; } .gm-tn .dot { position: absolute; left: -32px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--text-hi); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--bg); } .gm-tn.now .dot { box-shadow: 0 0 0 4px rgba(255,255,255,.14); }
+.gm-tn.ev .dot { border-radius: 6px; background: rgba(255,255,255,.14); color: var(--text-hi); } .gm-tn.ev .dot svg { width: 11px; height: 11px; } .gm-tn.ev.met .dot { background: #63e6be; color: #0b0b0d; }
+.gm-tn .tt b { display: block; font-size: 15.5px; color: var(--text-hi); line-height: 1.5; } .gm-tn .tt small { display: block; font-size: 13px; color: var(--text-mute); margin-top: 3px; line-height: 1.5; } .gm-tn .gm-pl { margin-top: 12px; } .gm-tn .gm-vc { margin-top: 8px; }
+.gm-br { position: relative; padding: 0 0 16px; } .gm-br::before { content: ''; position: absolute; left: -26px; top: 0; width: 26px; height: 30px; border-left: 2px solid var(--brc, #8b8b93); border-bottom: 2px solid var(--brc, #8b8b93); border-bottom-left-radius: 14px; box-sizing: border-box; }
+.gm-br.g { --brc: #63e6be; } .gm-br.o { --brc: #ffa94d; } .gm-br.b { --brc: #569cd6; } .gm-br.y { --brc: #ffd43b; } .gm-br.n { --brc: #8b8b93; } .gm-br.last { padding-bottom: 4px; } .gm-br.last::after { content: ''; position: absolute; left: -26px; top: 30px; bottom: 0; width: 4px; background: var(--bg); }
+.gm-br.dim { opacity: .45; } .gm-br.hit .gm-brc { box-shadow: 0 0 0 2px var(--brc); } .gm-br.hit::before { border-width: 3px; }
+.gm-brc { background: rgba(255,255,255,.05); border-radius: 16px; padding: 16px; } .gm-brh2 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; } .gm-brh2 .nm { font-size: 13.5px; font-weight: 700; color: var(--brc, var(--text)); } .gm-brh2 .need { flex: none; font-size: 12px; color: var(--text-mute); }
+.gm-brr { display: flex; align-items: center; gap: 8px; font-size: 16.5px; font-weight: 800; color: var(--text-hi); line-height: 1.45; margin-top: 4px; } .gm-brr .gm-sv { margin-left: auto; } .gm-ran { margin-left: auto; font-size: 12.5px; font-weight: 500; color: #63e6be; }
+.gm-brp { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; } .gm-brp > small { font-size: 12.5px; color: var(--text-mute); } .gm-brp .gm-vc { margin-bottom: 0; } .gm-brp .gm-or { margin: 0; text-align: center; }
+.gm-jq { display: flex; gap: 12px; align-items: flex-start; } .gm-jq .ic { flex: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--text-hi); background: rgba(255,255,255,.12); } .gm-jq.hit .ic { background: #ffa94d; color: #231405; } .gm-jq .tt { flex: 1; min-width: 0; } .gm-jq b { display: block; font-size: 15px; color: var(--text-hi); line-height: 1.5; } .gm-jq small { display: block; font-size: 13px; color: var(--text-mute); margin-top: 3px; line-height: 1.55; } .gm-jq.hit small { color: #ffa94d; }
+.gm-brh { display: block; font-size: 12.5px; font-weight: 700; color: #ffa94d; margin-bottom: 4px; } .gm-now.hot .gm-brh { color: #ffa94d; } .gm-now.hot { background: rgba(255,169,77,.12); color: var(--text-hi); }
+.gm-whybox { background: rgba(255,255,255,.05); border-radius: 14px; padding: 14px 16px; margin-top: 10px; display: flex; flex-direction: column; gap: 10px; } .gm-whybox div { display: flex; flex-direction: column; gap: 4px; } .gm-whybox b { font-size: 14.5px; color: var(--text-hi); } .gm-whybox span { font-size: 13.5px; color: var(--text); line-height: 1.6; }
+.gm-ss { padding-bottom: 26px; margin-bottom: 26px; } .gm-sl { margin-bottom: 12px; font-size: 13px; } .gm-now { padding: 16px; line-height: 1.5; } .gm-now small { margin-top: 6px; line-height: 1.5; } .gm-why { font-size: 15.5px; line-height: 1.7; }
+/* v6.38: 부딪힘 카드 본문 · 사슬 진행 줄 */
+.gm-cfb { background: rgba(0,0,0,.18); border-radius: 12px; padding: 4px 12px; margin-top: 12px; } .gm-cfr { display: flex; flex-direction: column; gap: 3px; padding: 10px 0; } .gm-cfr + .gm-cfr { border-top: 1px solid rgba(255,255,255,.07); } .gm-cfr small { font-size: 12px; color: var(--text-mute); } .gm-cfr span { font-size: 14px; color: var(--text); line-height: 1.5; } .gm-cfr em { font-style: normal; font-size: 13px; color: #ffa94d; line-height: 1.5; }
+.gm-chain { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin-top: 12px; font-size: 12px; color: var(--text-mute); } .gm-chain span { padding: 3px 8px; border-radius: 10px; background: rgba(255,255,255,.05); } .gm-chain span.done { color: #63e6be; } .gm-chain span.now, .gm-chain span.run { color: var(--text-hi); background: rgba(86,156,214,.18); } .gm-chain span.me { box-shadow: 0 0 0 1.5px #569cd6; } .gm-chain i { font-style: normal; }
 .gm-mbar { flex: none; position: relative; width: 70px; height: 8px; border-radius: 4px; background: rgba(255,255,255,.1); } .gm-mbar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: #adb5bd; } .gm-mbar em { position: absolute; top: -4px; bottom: -4px; width: 2px; background: #ffd43b; }
 .gdm-grp { margin-bottom: 8px; } .gdm-gh { display: flex; align-items: center; gap: 8px; padding: 12px 4px 10px; cursor: pointer; } .gdm-gh b { font-size: 14px; color: var(--text-hi); } .gdm-gh span { font-size: 12px; color: var(--text-mute); } .gdm-gh i { margin-left: auto; font-style: normal; color: var(--text-mute); font-size: 12px; }
 .gdm-grp.now .gdm-gh b { color: #569cd6; } .gdm-card.hot { box-shadow: inset 0 0 0 1px rgba(86,156,214,.45); }
@@ -8519,7 +8542,12 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .gdm-dist { margin-top: 5px; } .gdm-dist small { display: block; font-size: 10.5px; color: var(--text-mute); margin-top: 3px; } .gdm-ed { color: #4dabf7; font-size: 11px; margin-left: 6px; cursor: pointer; white-space: nowrap; }
 .gdm-btns { display: flex; gap: 6px; margin-top: 12px; } .gdm-b { flex: 1; padding: 9px 4px; border-radius: 10px; border: none; background: rgba(255,255,255,.07); color: var(--text); font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit; } .gdm-b.pri { background: #1d2b3a; color: #74c0fc; }
 .gdm-flt { font-size: 12px; color: var(--text-dim); margin: 0 4px 6px; } .gdm-flt a { color: #4dabf7; cursor: pointer; margin-left: 6px; }
-.gda-pick { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; cursor: pointer; } .gda-pick input { margin-top: 4px; flex: none; } .gda-pick em { display: block; font-style: normal; font-size: 11px; color: var(--text-mute); } .gda-pick.risk { color: #ffa94d; } .gda-dup { border: 1px solid rgba(77,171,247,.35); }
+.gda-pick { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; cursor: pointer; } .gda-pick input { margin-top: 4px; flex: none; } .gda-pick em { display: block; font-style: normal; font-size: 11px; color: var(--text-mute); } .gda-pick.risk { color: #ffa94d; } .gda-dup { border: 1px solid rgba(255,169,77,.35); padding: 14px 14px 10px; line-height: 1.6; }
+/* v6.38: 따르기 확인 — 같은 종목 먼저 지침 나란히 · 부딪힘 · 바꾸기/둘 다 */
+.gda-reltt { font-size: 12.5px; color: var(--text-mute); margin: 2px 0 10px; } .gda-reltt b { display: block; font-size: 14.5px; color: var(--text-hi); line-height: 1.5; margin-top: 2px; }
+.gda-cmp { display: flex; flex-direction: column; gap: 2px; padding: 8px 0; border-top: 1px solid rgba(255,255,255,.07); } .gda-cmp small { margin: 0; font-size: 12px; } .gda-cmp span { font-size: 13.5px; color: var(--text); line-height: 1.5; }
+.gda-conf { font-size: 13px; color: #ffa94d; line-height: 1.6; padding: 10px 0 6px; } .gda-ai { font-style: normal; font-size: 11px; font-weight: 700; color: #0b1620; background: #8ec5f0; border-radius: 8px; padding: 1px 7px; margin-left: 4px; vertical-align: 1px; }
+.gda-dup .gda-pick { padding: 10px 0 6px; } .gda-dup .gda-pick input[type=radio] { width: 18px; height: 18px; accent-color: #569cd6; }
 .gda-exp { display: block; margin-top: 4px; font-size: 13px; } .gda-exp input { background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 8px; color: var(--text-hi); padding: 3px 6px; font-family: inherit; color-scheme: dark; }
 .ms-chip.gd-tkchip { background: rgba(99,230,190,.12) !important; color: #63e6be !important; cursor: pointer; }
 .gd-runrow { display: flex; align-items: center; gap: 8px; } .gd-runrow .gd-src { flex: 1; min-width: 0; } .gd-run { flex: none; display: inline-flex; align-items: center; gap: 6px; }
@@ -16689,7 +16717,8 @@ async function aqArRefresh(tk) {
 }
 async function aqArRequest(tk, renew) {
   if (!confirm(renew ? `${displayName(tk) || tk} AI 보고서를 리뉴얼할까요?\n지난 보고서와 비교해 새로 써요 (15~30분).` : `${displayName(tk) || tk} AI 보고서를 만들까요?\n보통 15~30분 걸려요.`)) return;
-  let r = null; try { r = await apiCall('reportRequest', { ticker: tk }); } catch (e) {}
+  const focus = (prompt('이번 보고서에서 꼭 확인할 것이 있으면 한 줄로 적어 주세요 (비우면 전체 분석)', '') || '').trim();   // v6.38: 요청 목적 → AI가 먼저 답함
+  let r = null; try { r = await apiCall('reportRequest', { ticker: tk, focus }); } catch (e) {}
   if (!r || !r.ok) aqToast((r && r.error) || '요청하지 못했어요');
   aqArRefresh(tk);
 }
@@ -26434,7 +26463,7 @@ function aqTLEventsFor(dateStr) {
     out.push({ kind: 'external', time: e.time || '', ticker: String(e.ticker).toUpperCase(), market: 'US', title: `${displayName(e.ticker) || e.ticker} 실적 발표`, detail: sess + (eps ? ` · EPS 예상 ${eps[1]}` : ''), status: '외부', done: dateStr < aqCalTodayStr() });
   });
   // 2.5) v5.63: 받아들인 AI 가이드의 할 일
-  (window._gdTodos || []).forEach(t => { if (t.date !== dateStr) return; out.push({ kind: 'manual', time: '', title: t.text, detail: `AI 가이드 ${t.gid} · ${t.title || ''}`, status: '할 일', done: dateStr < aqCalTodayStr() }); });
+  (window._gdTodos || []).forEach(t => { if (t.date !== dateStr) return; out.push({ kind: 'manual', time: '', title: t.text, detail: `AI 가이드 · ${t.title || ''}`, status: '할 일', done: dateStr < aqCalTodayStr() }); });
   // 3) 자동 작업 — 실행 기록(완료/실패) + 예정
   _aqTL.runs.forEach(r => { const k = _aqKST(r.started_at); if (!k || k.date !== dateStr) return;
     return;   // v5.51: 작업 실행 기록(자동·수동)은 일정에서 모두 제외 — 운영 탭에서 확인
@@ -28108,7 +28137,8 @@ async function aqBrRequest(tk) {
     await aqStLoad();
     if (_stc.d && !_stEff(tk) && confirm(`${displayName(tk) || tk}을(를) 어떤 사상으로 사는지 아직 정하지 않았어요.\n지금 정할까요? (취소하면 그대로 심사를 요청해요)`)) { try { document.getElementById('brSheet')?.remove(); } catch (e) {} aqStOpen(tk); return; }
   } catch (e) {}
-  let r = null; try { r = await apiCall('buyReviewRequest', { ticker: tk }); } catch (e) {}
+  const focus = (prompt('이번 심사에서 꼭 확인할 것이 있으면 한 줄로 적어 주세요 (비우면 전체 심사)', '') || '').trim();   // v6.38: 요청 목적 → AI가 먼저 답함
+  let r = null; try { r = await apiCall('buyReviewRequest', { ticker: tk, focus }); } catch (e) {}
   if (!r || !r.ok) aqToast((r && r.error) || '요청하지 못했어요');
   try { document.getElementById('brSheet')?.remove(); } catch (e) {}
   aqBrRefresh(tk);
@@ -28611,7 +28641,8 @@ function _gdParse(doc) {   // → { asof, slot, days: { 'YYYY-MM-DD': [items] } 
   const me = t.match(/^[-*>\s]*수정\s*:\s*(\d{1,2}:\d{2})/m); if (me) out.edit = me[1];   // v6.10: '지금 고치기'로 고친 시각
   const mw = t.match(/^[-*>\s]*주의\s*:\s*(.+)$/m); if (mw) out.warn = mw[1].trim();
   // v5.57: 구글 문서 변환에 따라 세 가지 모양 모두 읽음 — 들여 쓴 줄 / '- 상황:' 하위 목록 / 한 문단으로 합쳐진 줄
-  const LBL = /(상황|추천|확인할 것|다시 볼 때|행동 후보|갱신 사유|철회 사유|실행|감시|조건|종료)\s*:/g; const lines = [];
+  // v6.38: 꼬리표 전부(약속·조건 추천·조건 다시 볼 때·조건 실행·대체·병행)와 '이유' 칸 — 긴 이름을 먼저 두어 '조건 추천:'이 '추천' 칸을 덮지 않게. 해석은 서버가 하고(원문 raw를 보냄) 앱은 보여 주기만
+  const LBL = /(조건\s*추천|조건\s*다시\s*볼\s*때|조건\s*실행|조건|실행|감시|종료|약속|대체|병행|상황|추천|확인할 것|다시 볼 때|이유|행동 후보|갱신 사유|철회 사유)\s*:/g; const lines = [];
   t.split('\n').forEach(raw => { const ln = raw.replace(/\s+$/, ''); LBL.lastIndex = 0; const hits = [...ln.matchAll(LBL)];
     if (hits.length > 1 || (hits.length && /^\s*[-*•]\s*\[/.test(ln) && hits[0].index > 0)) {
       let pos = 0; hits.forEach((h, k) => { if (h.index > pos) lines.push(ln.slice(pos, h.index)); pos = h.index; if (k === hits.length - 1) lines.push(ln.slice(pos)); });
@@ -28620,9 +28651,10 @@ function _gdParse(doc) {   // → { asof, slot, days: { 'YYYY-MM-DD': [items] } 
     let m = ln.match(/^#{2,6}\s*(\d{1,2})\/(\d{1,2})/); if (m) { let yy = y; if (Number(m[1]) === 1 && String(doc.date).slice(5, 7) === '12') yy = y + 1; cur = `${yy}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`; out.days[cur] = out.days[cur] || []; it = null; return; }
     if (!cur) return;
     m = ln.match(/^\s*[-*•]\s*\[([^\]]+)\]\s*\[([^\]]+)\]\s*\[장면:\s*([^\]]+)\]\s*(.*?)\s*$/);
-    if (m) { const st = (m[4].match(/\{(유지|갱신|철회|추가)\}/) || [])[1] || ''; it = { time: m[1].trim(), target: m[2].trim(), scene: m[3].trim(), title: m[4].replace(/\{(유지|갱신|철회|추가)\}/, '').trim(), status: st, f: {} }; out.days[cur].push(it); return; }
-    m = ln.trim().match(/^(?:[-*•]\s*)?(실행|감시|조건|종료)\s*:\s*(.*?)\s*$/); if (m && it) { (it.tags = it.tags || []).push(m[1] + ': ' + m[2]); return; }   // v5.63: 꼬리표
-    m = ln.trim().match(/^(?:[-*•]\s*)?(상황|추천|확인할 것|다시 볼 때|행동 후보|갱신 사유|철회 사유)\s*:\s*(.*?)\s*$/); if (m && it) { it.f[m[1]] = m[2]; return; }
+    if (m) { const st = (m[4].match(/\{(유지|갱신|철회|추가)\}/) || [])[1] || ''; it = { time: m[1].trim(), target: m[2].trim(), scene: m[3].trim(), title: m[4].replace(/\{(유지|갱신|철회|추가)\}/, '').trim(), status: st, f: {}, raw: [] }; out.days[cur].push(it); return; }
+    if (it) it.raw.push(ln.trim());
+    m = ln.trim().match(/^(?:[-*•]\s*)?(조건\s*추천|조건\s*다시\s*볼\s*때|조건\s*실행|조건|실행|감시|종료|약속|대체|병행)\s*:\s*(.*?)\s*$/); if (m && it) { (it.tags = it.tags || []).push(m[1].replace(/\s+/g, ' ') + ': ' + m[2]); return; }   // v5.63: 꼬리표
+    m = ln.trim().match(/^(?:[-*•]\s*)?(상황|추천|확인할 것|다시 볼 때|이유|행동 후보|갱신 사유|철회 사유)\s*:\s*(.*?)\s*$/); if (m && it) { if (!it.f[m[1]]) it.f[m[1]] = m[2]; return; }
   });
   return out;
 }
@@ -28637,14 +28669,14 @@ function _gdForDay(day) {   // 그날 문서(오전·오후) 우선, 없으면 �
   const am = own.find(x => x.slot === 'AM'), pm = own.find(x => x.slot === 'PM');
   if (pm || am) {
     const P = pm ? _gdParse(pm) : null, A = am ? _gdParse(am) : null; src = pm ? `오후 ${P.at || '20:30'} 갱신` : `오전 ${A.at || '07:15'}`;
-    if (P) { items = (P.days[day] || []).map(x => { if (x.status === '갱신' && A) { const o = (A.days[day] || []).find(a => a.target === x.target && String(a.scene).split('·')[0] === String(x.scene).split('·')[0]); if (o) x.orig = o; } return x; });
-      if (A) (A.days[day] || []).forEach(a => { if (!items.some(x => x.time === a.time && x.target === a.target && String(x.scene).split('·')[0] === String(a.scene).split('·')[0]) && !items.some(x => x.orig === a)) items.push(Object.assign({}, a, { status: '유지' })); }); }
-    else items = A.days[day] || [];
+    if (P) { items = (P.days[day] || []).map(x => { x.docDate = day; if (x.status === '갱신' && A) { const o = (A.days[day] || []).find(a => a.target === x.target && String(a.scene).split('·')[0] === String(x.scene).split('·')[0]); if (o) x.orig = o; } return x; });
+      if (A) (A.days[day] || []).forEach(a => { if (!items.some(x => x.time === a.time && x.target === a.target && String(x.scene).split('·')[0] === String(a.scene).split('·')[0]) && !items.some(x => x.orig === a)) items.push(Object.assign({}, a, { status: '유지', docDate: day })); }); }
+    else items = (A.days[day] || []).map(x => Object.assign(x, { docDate: day }));
     if (P && !A) items = items.map(x => Object.assign({}, x, { status: x.status === '철회' ? '철회' : '' }));   // 오전 문서가 없던 날은 '추가' 표시가 의미 없음
     meta = { kind: 'own', am: A ? (A.at || '07:15') : '', pm: P ? (P.at || '20:30') : '', amEdit: (A && A.edit) || '', pmEdit: (P && P.edit) || '', warn: (P && P.warn) || (A && A.warn) || '' };
   } else {
     const prevs = docs.filter(x => x.date < day).sort((a, b) => (b.date + b.slot).localeCompare(a.date + a.slot));
-    for (const prev of prevs) { const P = _gdParse(prev); if (P.days[day]) { items = P.days[day].map(x => Object.assign({}, x, { status: '' })); src = 'pre'; meta = { kind: 'pre', from: `${prev.date.slice(5).replace('-', '/')} ${prev.slot === 'PM' ? '저녁' : '아침'}` }; break; } }
+    for (const prev of prevs) { const P = _gdParse(prev); if (P.days[day]) { items = P.days[day].map(x => Object.assign({}, x, { status: '', docDate: prev.date })); src = 'pre'; meta = { kind: 'pre', from: `${prev.date.slice(5).replace('-', '/')} ${prev.slot === 'PM' ? '저녁' : '아침'}` }; break; } }
   }
   return { items: items.filter(x => _gdVis(_gdMktOf(x.target))).sort((a, b) => _gdMin(a.time) - _gdMin(b.time)), src, meta };
 }
@@ -28681,12 +28713,12 @@ async function aqGuideRender() {
       const tags = [/·\s*변형/.test(x.scene) ? '변형' : '', /·\s*신규/.test(x.scene) ? '신규' : '', x.status === '갱신' ? '저녁 갱신' : '', x.status === '추가' ? '저녁 추가' : '', x.status === '철회' ? '철회' : ''].filter(Boolean).map(t => `<span class="gd-tag ${t === '철회' ? 'off' : ''}">${t}</span>`).join('');
       const tparts = String(x.time).replace('다음 날', '').trim().split('~');
       const isOpen = _gd.open[key];
-      const f = x.f || {}; const det = isOpen ? `<div class="gd-det">${['상황', '추천', '확인할 것', '다시 볼 때', '행동 후보', '갱신 사유', '철회 사유'].filter(k => f[k]).map(k => `<div class="${k === '추천' ? 'gd-rec' : ''}"><b>${k}</b> ${escapeHtml(f[k])}</div>`).join('')}${x.orig ? `<details class="gd-orig"><summary>오전 원문</summary><div>${escapeHtml(x.orig.title)}</div>${['상황', '확인할 것', '행동 후보'].filter(k => x.orig.f[k]).map(k => `<div><b>${k}</b> ${escapeHtml(x.orig.f[k])}</div>`).join('')}</details>` : ''}</div>` : '';
+      const f = x.f || {}; const det = isOpen ? `<div class="gd-det">${['이유', '상황', '추천', '확인할 것', '다시 볼 때', '행동 후보', '갱신 사유', '철회 사유'].filter(k => f[k]).map(k => `<div class="${k === '추천' ? 'gd-rec' : ''}"><b>${k}</b> ${escapeHtml(f[k])}</div>`).join('')}${x.orig ? `<details class="gd-orig"><summary>오전 원문</summary><div>${escapeHtml(x.orig.title)}</div>${['상황', '확인할 것', '행동 후보'].filter(k => x.orig.f[k]).map(k => `<div><b>${k}</b> ${escapeHtml(x.orig.f[k])}</div>`).join('')}</details>` : ''}</div>` : '';
       let after = ''; if (tk && sel < today) { try { const f2 = findTickerSeries(tk); const rr = f2 && f2.rows; if (rr && rr.length) { const base = rr.filter(r => String(r.Date).slice(0, 10) < sel).pop(); const last = rr[rr.length - 1]; if (base && Number(base.Close) > 0) { const v = (Number(last.Close) / Number(base.Close) - 1) * 100; after = `<span class="gd-after ${v >= 0 ? 'up' : 'down'}">이후 ${aqSg(v)}${Math.abs(v).toFixed(1)}%</span>`; } } } catch (e) {} }
       tl += `<div class="gd-it ${x.status === '철회' ? 'off' : ''} ${passed ? 'past' : ''} ${done ? 'done' : ''} ${i === g.items.length - 1 ? 'last' : ''}">
         <div class="gd-tm">${showT ? `${/다음 날/.test(x.time) ? '<small>다음 날</small>' : ''}${tparts.map(escapeHtml).join('<br>')}` : ''}</div>
         <div class="gd-rail">${circle}</div>
-        <div class="gd-body" onclick="aqGuideToggle('${escapeAttr(key)}')"><div class="gd-sub">${tk ? `<span class="gd-tk" onclick="event.stopPropagation(); openChart('${escapeAttr(tk)}')">${escapeHtml(displayName(tk) || tk)}</span> · ` : escapeHtml(x.target) + ' · '}${escapeHtml(String(x.scene).split('·')[0].trim())}${tags}</div><div class="gd-tt">${escapeHtml(x.title)}${after}<span class="gd-chev">${isOpen ? '▴' : '▾'}</span></div>${x.status === '철회' ? '' : `<div class="gd-folrow">${fol ? `<button class="gd-fol on" onclick="event.stopPropagation(); aqGdOpenMine(${fol.id})">따르는 중 · ${escapeHtml(fol.gid)}</button>` : `<button class="gd-fol" onclick="event.stopPropagation(); aqGuideCheck('${escapeAttr(key)}')">따르기</button>`}</div>`}${det}</div>
+        <div class="gd-body" onclick="aqGuideToggle('${escapeAttr(key)}')"><div class="gd-sub">${tk ? `<span class="gd-tk" onclick="event.stopPropagation(); openChart('${escapeAttr(tk)}')">${escapeHtml(displayName(tk) || tk)}</span> · ` : escapeHtml(x.target) + ' · '}${escapeHtml(String(x.scene).split('·')[0].trim())}${tags}</div><div class="gd-tt">${escapeHtml(x.title)}${after}<span class="gd-chev">${isOpen ? '▴' : '▾'}</span></div>${x.status === '철회' ? '' : `<div class="gd-folrow">${fol ? `<button class="gd-fol on" onclick="event.stopPropagation(); aqGdOpenMine(${fol.id})">따르는 중</button>` : `<button class="gd-fol" onclick="event.stopPropagation(); aqGuideCheck('${escapeAttr(key)}')">따르기</button>`}</div>`}${det}</div>
         <button class="gd-ck ${done ? 'done' : ''}" style="--c:${col}" onclick="aqGdSeen('${escapeAttr(key)}')" aria-label="확인" title="확인 — 읽었거나 직접 했어요"></button></div>`;
     });
   }
@@ -28739,7 +28771,7 @@ async function aqGuideLoadAcc(force) {
   let r = null; try { r = await apiCall('guideList', {}); } catch (e) {}
   _gd.acc = {}; _gd.accList = (r && r.ok) ? (r.items || []) : []; _gd.accTs = Date.now();
   _gd.accList.forEach(x => { _gd.acc[x.key] = x; });
-  if (r && r.ok) { _gd.seen = new Set(r.seen || []); _gd.queue = r.queue || []; _gd.picks = r.picks || null; _gd.pledge = r.pledge || null; setTimeout(() => { _gdClientRetry().catch(() => {}); }, 0); }   // v6.11 · v6.12 AI 요청 대기열
+  if (r && r.ok) { _gd.seen = new Set(r.seen || []); _gd.queue = r.queue || []; _gd.picks = r.picks || null; _gd.pledge = r.pledge || null; _gd.conflicts = r.conflicts || []; setTimeout(() => { _gdClientRetry().catch(() => {}); }, 0); }   // v6.11 · v6.12 AI 요청 대기열
   window._gdTodos = []; _gd.accList.forEach(x => (x.applied || []).forEach(a => { if (a.client && a.client.act === '할 일 등록' && a.client.date) window._gdTodos.push({ date: a.client.date, text: a.client.text, gid: x.gid, title: x.title }); }));
   try { await aqStLoad(force); } catch (e) {}   // v6.28 운영
   return _gd.acc;
@@ -28749,10 +28781,23 @@ async function aqGuideCheck(key) {
   const live = _gdAccLive(key);
   if (live) { aqGdOpenMine(live.id); return; }   // v6.11: 이미 따르는 지침은 내 지침에서 관리
   const it = _gd.items[key]; if (!it) return;
-  const item = { key, date: it.date, time: it.time, target: it.target, scene: it.scene, title: it.title, fields: it.f || {}, tags: it.tags || [] };
+  const item = { key, date: it.date, doc_date: it.docDate || it.date, time: it.time, target: it.target, scene: it.scene, title: it.title, fields: it.f || {}, tags: it.tags || [], raw: (it.raw || []).join('\n') };   // v6.38: 원문을 보내 서버가 해석
   let pv = null; try { pv = await apiCall('guidePreview', { item: JSON.stringify(item) }); } catch (e) {}
   if (!pv || !pv.ok) { if (typeof aqToast === 'function') aqToast('확인하지 못했어요. 잠시 후 다시 시도해 주세요'); return; }
   _gdOpenSheet(item, pv);   // v5.64: 꼬리표가 없어도 항상 확인
+}
+function _gdRelatedHtml(pv) {   // v6.38: 같은 종목으로 진행 중인 먼저 지침 — 세 줄 나란히 · 부딪히는 점 · 바꾸기/둘 다 두기
+  const rel = pv.related || []; if (!rel.length) return '';
+  return rel.map((r, i) => {
+    const def = r.hint === 'coexist' ? 'coexist' : (r.hint === 'replace' || r.same_scene || (r.conflicts || []).length) ? 'replace' : 'coexist';
+    const L = r.lines || {}; const row = (k, v) => v ? `<div class="gda-cmp"><small>${k}</small><span>${escapeHtml(aqKrText(v))}</span></div>` : '';
+    return `<div class="gda-blk gda-dup"><small>같은 종목 지침이 진행 중이에요${(r.conflicts || []).length ? ' · 부딪혀요' : ''}</small>
+      <div class="gda-reltt">먼저 따른 지침 · ${escapeHtml(r.accepted || '')}<b>${escapeHtml(aqKrText(r.title || ''))}</b></div>
+      ${row('다시 볼 때', L['다시 볼 때'])}${row('추천 조건', L['추천 조건'])}${row('닿으면', L['닿으면'])}${row('약속', L['약속'])}
+      ${(r.conflicts || []).length ? `<div class="gda-conf">${r.conflicts.map(c => '• ' + escapeHtml(c)).join('<br>')}</div>` : ''}
+      <label class="gda-pick"><input type="radio" name="gdaRel-${i}" value="replace" data-key="${escapeAttr(r.key)}" ${def === 'replace' ? 'checked' : ''}><span>이걸로 바꾸기${r.hint === 'replace' ? ' <i class="gda-ai">AI 표시: 먼저 지침을 대신함</i>' : ''}<em>먼저 따른 지침은 끝내고, 그 지침이 바꾼 설정은 되돌려요</em></span></label>
+      <label class="gda-pick"><input type="radio" name="gdaRel-${i}" value="coexist" data-key="${escapeAttr(r.key)}" ${def === 'coexist' ? 'checked' : ''}><span>둘 다 두기${r.hint === 'coexist' ? ' <i class="gda-ai">AI 표시: 함께 가도 됨</i>' : ''}<em>두 지침을 각각 지켜요</em></span></label></div>`;
+  }).join('');
 }
 function _gdOpenSheet(item, pv) {   // v6.11: 유형 · 부분 선택 · 기한 고치기 · 같은 지침 갱신
   { const tt = document.querySelector('#gdaSheet .ops-sheet-title'); if (tt) tt.style.display = ''; _gd.sheetId = null; }   // v6.20: 내 지침 시트와 같은 틀
@@ -28762,13 +28807,13 @@ function _gdOpenSheet(item, pv) {   // v6.11: 유형 · 부분 선택 · 기한 
   const wat = (pa.watches || []).map((w, i) => ck('watches', i, `👀 ${escapeHtml(_gdHuman(w))}`, true));
   const rec = (pa.rec_conds || []).map((g, i) => ck('rec_conds', i, `🎯 ${escapeHtml(_gdCondHuman(g))}`, true));
   const aon = (pv.act_on || []).map((o, i) => ck('act_on', i, `🎯 ${escapeHtml(aqKrText(_gdCondHuman((pa.act_on || [])[i] ? pa.act_on[i].groups : [])))} → <b>${escapeHtml(aqKrText(o.act))}</b>${o.risk ? '<em>위험을 키우는 동작이라 조건이 되면 확인을 받고 실행해요</em>' : '<em>조건이 되면 바로 실행해요</em>'}`, true));
-  const plg = (pa.pledges || []).map((p, i) => ck('pledges', i, `🤝 ${escapeHtml(aqKrText(_gdPledgeText(p)))}<em>어기면 기록하고 알려 줘요 · 어긴 매매는 20거래일 뒤 결과를 돌아봐요</em>`, true));
+  const plg = (pa.pledges || []).map((p, i) => ck('pledges', i, `🤝 ${escapeHtml(aqKrText(_gdPledgeText(p)))}<em>${/매수|물타기|추격/.test(p.kind) ? '그 종목 자동매수도 같이 막아요 · ' : ''}어기면 기록하고 알려 줘요 · 어긴 매매는 20거래일 뒤 결과를 돌아봐요</em>`, true));
   const cond = (pa.conds || []).map((g, i) => (g.length === 1 && g[0].length === 1 && g[0][0].auto) ? '' : ck('conds', i, `🔁 ${escapeHtml(_gdCondHuman(g))}`, true)).filter(Boolean);
   const blk = (t, rows) => rows.length ? `<div class="gda-blk"><small>${t}</small>${rows.join('')}</div>` : '';
   const judg = (pv.judg || []).length ? pv.judg.map(t => escapeHtml(aqKrText(t))) : [escapeHtml((item.fields || {})['다시 볼 때'] || (item.fields || {})['확인할 것'] || item.title || '')];
   const today = _kstToday(); const maxD = new Date(Date.now() + (9 + 24 * 120) * 3600e3).toISOString().slice(0, 10);
   document.getElementById('gdaBody').innerHTML = `<div class="gda-sub">${escapeHtml(item.title || '')}</div><div class="gdm-tys" style="margin:-6px 2px 12px">${_gdTypeChips(pv.types)}</div>`
-    + (pv.dup ? `<div class="gda-blk gda-dup"><label class="gda-pick"><input type="checkbox" id="gdaRep" checked><span>진행 중인 ${escapeHtml(pv.dup.gid)} '${escapeHtml(aqKrText(pv.dup.title || ''))}'을 이걸로 바꾸기<em>옛 지침이 바꾼 설정은 되돌리고 새로 적용해요</em></span></label></div>` : '')
+    + _gdRelatedHtml(pv)
     + blk('지금 바로 바뀌는 것', acts)
     + ((pv.bad_acts || []).length ? `<div class="gda-blk gda-warn"><small>읽지 못한 실행 꼬리표 — 이 설정은 바뀌지 않아요</small>${pv.bad_acts.map(t => escapeHtml(aqKrText(t))).join('<br>')}</div>` : '')
     + blk('조건이 되면 실행해요', aon)
@@ -28782,8 +28827,10 @@ function _gdOpenSheet(item, pv) {   // v6.11: 유형 · 부분 선택 · 기한 
     const sel = { acts: [], watches: [], conds: [], rec_conds: [], act_on: [], pledges: [] }; let risk = false;
     document.querySelectorAll('#gdaBody input[data-g]').forEach(el => { if (el.checked) { sel[el.dataset.g].push(Number(el.dataset.i)); if (el.closest('.risk') && el.dataset.g === 'acts') risk = true; } });
     (pa.conds || []).forEach((g, i) => { if (g.length === 1 && g[0].length === 1 && g[0][0].auto) sel.conds.push(i); });   // 다시 볼 때 문장(안전망)은 항상
-    const exp = (document.getElementById('gdaExp') || {}).value; const rep = document.getElementById('gdaRep');
-    const it2 = Object.assign({}, item, { pick: sel, expire: exp || '', replace: rep && rep.checked ? pv.dup.key : '' });
+    const exp = (document.getElementById('gdaExp') || {}).value;
+    const rep = [], coex = [];   // v6.38: 같은 종목의 먼저 지침마다 바꾸기 / 둘 다 두기
+    document.querySelectorAll('#gdaBody input[name^="gdaRel-"]:checked').forEach(el => { (el.value === 'replace' ? rep : coex).push(el.dataset.key); });
+    const it2 = Object.assign({}, item, { pick: sel, expire: exp || '', replace: rep, coexist: coex });
     aqGuideSheetClose(); await _gdDoAccept(it2, risk);
   };
   document.getElementById('gdaSheet').classList.add('open'); document.getElementById('gdaBg').classList.add('open');
@@ -28792,8 +28839,9 @@ function aqGuideSheetClose() { _gd.sheetId = null; document.getElementById('gdaS
 async function _gdDoAccept(item, risk) {
   let r = await apiCall('guideAccept', { item: JSON.stringify(item), risk: risk ? '1' : '0' });
   if (r && !r.ok && r.error === 'limit') {
-    if (!confirm(`따르는 지침이 ${r.limit}개예요. 가장 오래된 것을 정리하고 이 지침을 따를까요?`)) return;
-    const oldest = (_gd.accList || []).filter(x => x.status === 'active' || x.status === 'hit').sort((a, b) => String(a.accepted_at).localeCompare(String(b.accepted_at)))[0];
+    const o0 = (r.oldest || [])[0]; const nm = o0 ? `${o0.tk ? (displayName(o0.tk) || o0.tk) + ' · ' : ''}${aqKrText(o0.title || '')} (${o0.accepted || ''}부터)` : '가장 오래된 지침';   // v6.38: 무엇을 정리하는지 보여 줌
+    if (!confirm(`따르는 지침이 ${r.limit}개예요.\n가장 오래된 지침을 그만 따르고 이 지침을 따를까요?\n\n그만 따를 지침: ${nm}`)) return;
+    const oldest = o0 || (_gd.accList || []).filter(x => x.status === 'active' || x.status === 'hit').sort((a, b) => String(a.accepted_at).localeCompare(String(b.accepted_at)))[0];
     if (oldest) await apiCall('guideCancel', { key: oldest.key });
     r = await apiCall('guideAccept', { item: JSON.stringify(item), risk: risk ? '1' : '0' });
   }
@@ -28942,7 +28990,7 @@ async function aqGdAct(key, op, args) {
   if (op === 'stop' && !confirm('이 지침을 그만 따를까요?\n가이드가 바꾼 자동매매 설정은 원래대로 돌아가요.')) return;
   if (op === 'done' && !confirm('직접 처리했다고 표시하고 끝낼까요?\n가이드가 바꾼 자동매매 설정은 원래대로 돌아가요.')) return;
   let r = null; try { r = await apiCall('guideAct', { key, op, args: JSON.stringify(args || {}) }); } catch (e) {}
-  aqToast(r && r.ok ? ({ done: '끝냈어요', extend: '7일 연장했어요', resume: '계속 지켜볼게요', edit: '기준을 고쳤어요', stop: '그만 따르기로 했어요' }[op] || '처리했어요') : ((r && r.error) || '처리하지 못했어요'));
+  aqToast(r && r.ok ? ({ done: '끝냈어요', extend: '7일 연장했어요', resume: '계속 지켜볼게요', edit: '기준을 고쳤어요', stop: '그만 따르기로 했어요', coexist: '둘 다 두기로 했어요', ack: '계속 따를게요' }[op] || '처리했어요') : ((r && r.error) || '처리하지 못했어요'));
   await aqGuideLoadAcc(true); aqGuideRender();
   if (_gmSheetOpen()) { if (r && r.ok && (op === 'done' || op === 'stop')) aqGuideSheetClose(); else _gmSheetRender(); }   // v6.20
 }
@@ -28980,7 +29028,7 @@ function _gmLogo(x, tk, cls) {
   if (t) return `<span class="gm-lg ${cls || ''}">${aqLogoHtml(t, '', '')}</span>`;
   return `<span class="gm-lg ${cls || ''}">${escapeHtml(String((x && x.target) || '').trim().slice(0, 1) || '·')}</span>`;
 }
-const _GM_IC = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', bars: '<path d="M4 20h16"/><path d="M7 16V9"/><path d="M12 16V5"/><path d="M17 16v-4"/>', shield: '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/>', power: '<path d="M12 3v8"/><path d="M6.3 7.5a8 8 0 1 0 11.4 0"/>', dot: '<circle cx="12" cy="12" r="3"/>' };
+const _GM_IC = { cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>', lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', bars: '<path d="M4 20h16"/><path d="M7 16V9"/><path d="M12 16V5"/><path d="M17 16v-4"/>', shield: '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/>', power: '<path d="M12 3v8"/><path d="M6.3 7.5a8 8 0 1 0 11.4 0"/>', dot: '<circle cx="12" cy="12" r="3"/>' };
 function _gmSvg(k) { return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${_GM_IC[k] || _GM_IC.dot}</svg>`; }
 function _gmIc(act) { const a = act || ''; return /블랙리스트|일시정지|대기 취소/.test(a) ? 'lock' : /하루 최대/.test(a) ? 'bars' : /신호/.test(a) ? 'power' : 'dot'; }
 function _gmAct(a) {   // 조건 실행 동작 — 짧게
@@ -29037,21 +29085,54 @@ function _gmDecisions(L, need) {
     const pa = x.parsed || {}; const ws = x.wstate || {}; const k = escapeAttr(x.key); const tk = _gmTk(x); const sub = aqKrText(x.title || '');
     const nk = (pa.act_on || []).findIndex((o, i) => (ws['xcond' + i] || {}).need_ok && !(ws['xcond' + i] || {}).ran);
     const last = (x.history || []).filter(h => ['hit', 'revert', 'pledge'].includes(h.kind)).slice(-1)[0];
-    const msg = last ? aqKrText(String(last.msg || '').replace(/^[^:]{1,20}:\s*/, '')) : '';
+    const msg = last ? _gmNoG(aqKrText(String(last.msg || '').replace(/^[^:]{1,20}:\s*/, ''))) : '';
     if (nk >= 0) out.push({ x, t: `조건이 됐어요 · ${_gmAct(pa.act_on[nk].act)}`, s: sub, b: [['실행', `aqGdRun('${k}',${nk})`, 'pri'], ['그만', `aqGdAct('${k}','stop')`, 'sm']] });
     else if (x.status === 'hit') {
       const wi = (pa.watches || []).findIndex((w, i) => (ws['w' + i] || {}).met); const st = wi >= 0 ? ws['w' + wi] : null;
-      const t = wi >= 0 ? `${tk ? _gmTkName(tk) + ' ' : ''}${_gmW(pa.watches[wi])} 닿았어요` : (msg || '조건에 닿았어요');
-      const th = _gmHitThen(x);
-      out.push({ x, t, s: th ? `→ ${aqKrText(th)}` : st && st.shown ? `${st.shown} · ${sub}` : sub, b: th ? [['했어요', `aqGdAct('${k}','done')`, 'pri'], ['계속 따르기', `aqGdAct('${k}','resume')`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] : _gmTodo(x) ? [['했어요', `aqGdAct('${k}','done')`, 'pri'], ['계속 감시', `aqGdAct('${k}','resume')`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] : [['계속 따르기', `aqGdAct('${k}','resume')`, 'pri'], ['끝내기', `aqGdAct('${k}','done')`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] });
+      const sets = _gmSets(x); const hs = _gmHitSet(x, sets); const nm = tk ? _gmTkName(tk) + ' ' : '';
+      const t = wi >= 0 ? `${nm}${_gmW(pa.watches[wi])} 닿았어요` : hs ? `${nm}${_gmBrName(hs, sets).replace(/^[A-Z] · /, '')} 쪽에 닿았어요` : (msg || '조건에 닿았어요');   // v6.38: 갈래 이름으로
+      const th = _gmHitThen(x) || (hs && hs.cons);
+      const pend = (_gd.queue || []).find(q => q.chain && q.chain.gid === x.id && q.status === 'queued' && !q.confirmed && q.source !== 'user');   // v6.38: 같은 사슬의 AI 요청이 기다리면 한 카드로
+      if (pend) { const v = { report: '보고서 받기', review: '매수심사 받기', guide: '가이드 고치기' }[pend.kind] || '실행'; const pp = pend.purpose || {};
+        out.push({ x, t, s: `→ ${aqKrText(th || v)}${pp.reason ? ' · ' + _gmNoG(aqKrText(pp.reason)) : ''}`, b: [[v, `aqGdQConfirm(${pend.id})`, 'pri'], ['안 함', `aqGdQCancel(${pend.id},1)`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] }); }
+      else out.push({ x, t, s: th ? `→ ${aqKrText(th)}` : st && st.shown ? `${st.shown} · ${sub}` : sub, b: th ? [['했어요', `aqGdAct('${k}','done')`, 'pri'], ['계속 따르기', `aqGdAct('${k}','resume')`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] : _gmTodo(x) ? [['했어요', `aqGdAct('${k}','done')`, 'pri'], ['계속 감시', `aqGdAct('${k}','resume')`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] : [['계속 따르기', `aqGdAct('${k}','resume')`, 'pri'], ['끝내기', `aqGdAct('${k}','done')`], ['그만', `aqGdAct('${k}','stop')`, 'sm']] });
     } else if ((x.applied || []).some(a => a.client && a.act === '관심 추가' && a.client_done === false)) out.push({ x, t: '관심 종목에 넣지 못했어요', s: sub, b: [['다시 시도', `aqGmRetry(${x.id})`, 'pri']] });
+    else if (_gmAiDone(x)) out.push({ x, t: 'AI는 이 지침이 끝났다고 봐요 — 끝낼까요?', s: _gmAiDone(x).why || sub, b: [['끝내기', `aqGdAct('${k}','done')`, 'pri'], ['계속 따르기', `aqGdAct('${k}','ack')`]] });   // v6.38
     else if (x.unread) out.push({ x, t: msg || sub, s: msg ? sub : '', b: [['확인', `aqGmRead(${x.id})`, 'pri']] });
   });
-  need.forEach(q => {
-    const T = String(q.ticker || '').toUpperCase(); const v = { report: ['보고서 새로 쓸까요?', '쓰기'], review: ['매수심사 받을까요?', '받기'], guide: ['가이드 고칠까요?', '고치기'] }[q.kind] || [`${q.kind} 할까요?`, '실행'];
-    out.push({ q, tk: T, t: (T ? _gmTkName(T) + ' ' : '') + v[0], s: aqKrText(q.reason || ''), b: [[v[1], `aqGdQConfirm(${q.id})`, 'pri'], ['안 함', `aqGdQCancel(${q.id},1)`]] });
+  // v6.38: 같은 종목 지침끼리 부딪힘 — 서버가 찾은 쌍 (둘 다 두기로 정한 쌍은 안 옴)
+  (_gd.conflicts || []).forEach(cf => {
+    if (!_gdVis(_gdTkMkt(cf.tk))) return;
+    const nm = displayName(cf.tk) || _gmTkName(cf.tk); const row = (lab, g) => { const Lx = g.lines || {}; const v = Lx['다시 볼 때'] || Lx['추천 조건'] || ''; return `<div class="gm-cfr"><small>${lab}</small><span>${escapeHtml(aqKrText(g.title || ''))}</span>${v ? `<em>${escapeHtml(aqKrText(v))}</em>` : ''}${Lx['닿으면'] ? `<em>닿으면 → ${escapeHtml(aqKrText(Lx['닿으면']))}</em>` : ''}</div>`; };
+    out.push({ tk: cf.tk, t: `${nm} 지침 2개가 부딪혀요`, s: aqKrText((cf.conflicts || [])[0] || ''), body: `<div class="gm-cfb">${row('먼저 따른 지침', cf.old)}${row('나중 지침', cf.new)}</div>`,
+      b: [['먼저 것 끝내고 새것만', `aqGdAct('${escapeAttr(cf.old.key)}','stop')`, 'pri'], ['둘 다 두기', `aqGdAct('${escapeAttr(cf.new.key)}','coexist',{other:'${escapeAttr(cf.old.key)}'})`]] });
   });
+  const shownQ = new Set(out.filter(d => d.x && d.b.some(b => /aqGdQConfirm\((\d+)\)/.test(b[1]))).map(d => Number((d.b.find(b => /aqGdQConfirm/.test(b[1]))[1].match(/\d+/) || [])[0])));
+  need.forEach(q => {
+    if (shownQ.has(q.id)) return;
+    const T = String(q.ticker || '').toUpperCase(); const v = { report: ['보고서 새로 쓸까요?', '쓰기'], review: ['매수심사 받을까요?', '받기'], guide: ['가이드 고칠까요?', '고치기'] }[q.kind] || [`${q.kind} 할까요?`, '실행'];
+    const pp = q.purpose || {}; const why = _gmNoG(aqKrText(pp.reason || q.reason || ''));
+    out.push({ q, tk: T, t: (T ? _gmTkName(T) + ' ' : '') + v[0], s: why, chain: _gmChainHtml(q.chain && q.chain.gid, q), b: [[v[1], `aqGdQConfirm(${q.id})`, 'pri'], ['안 함', `aqGdQCancel(${q.id},1)`]] });
+  });
+  out.forEach(d => { if (d.x && !d.chain) d.chain = _gmChainHtml(d.x.id, null); });
   return out;
+}
+function _gmAiDone(x) { const j = (x.judg || {})._전체; return j && typeof j === 'object' && j.result === '완료' && !j.ack ? j : null; }
+// v6.38: 사슬 — 신호 닿음 → 보고서/매수심사 → 가이드 고치기 → 따르기. 같은 지침에서 이어진 요청(chain.gid)을 모아 진행 줄로
+function _gmChainHtml(gid, cur) {
+  if (!gid) return '';
+  const x = (_gd.accList || []).find(y => y.id === gid); if (!x) return '';
+  const qs = (_gd.queue || []).filter(q => q.chain && q.chain.gid === gid).sort((a, b) => a.id - b.id);
+  const hit = (x.history || []).some(h => h.kind === 'hit') || x.status === 'hit';
+  const st = q => !q ? 'todo' : q.status === 'done' ? 'done' : q.status === 'started' || (q.status === 'queued' && (q.confirmed || q.source === 'user')) ? 'run' : q.status === 'queued' ? 'now' : 'skip';
+  const req = qs.filter(q => q.kind !== 'guide'); const gd = qs.filter(q => q.kind === 'guide');
+  const steps = [{ l: '신호 닿음', s: hit ? 'done' : 'todo' }];
+  req.forEach(q => steps.push({ l: q.kind === 'review' ? '매수심사' : '보고서', s: st(q), me: cur && cur.id === q.id }));
+  gd.forEach(q => steps.push({ l: '가이드 고치기', s: st(q), me: cur && cur.id === q.id }));
+  if (!req.length && !gd.length) return '';
+  steps.push({ l: '따르기', s: 'todo' });
+  const ic = { done: '✓', run: '…', now: '●', todo: '○', skip: '–' };
+  return `<div class="gm-chain">${steps.map((t, i) => `${i ? '<i>→</i>' : ''}<span class="${t.s} ${t.me ? 'me' : ''}">${escapeHtml(t.l)} ${ic[t.s] || ''}</span>`).join('')}</div>`;
 }
 function _gmDecCount() { let n = 0; try { n = _stCardsAll().reduce((a, c) => a + (c._n || 1), 0); } catch (e) {} return _gmDecisions((_gd.accList || []).filter(x => _gmLive(x) && _gdVis(_gdMktOf(x.target))), _gmQNeed()).length + n; }
 function _gmLens(f) {   // 종목 줄에서 고른 종목: 이름 · 지금 가격 · AI 보고서 · AI 매수심사
@@ -29167,7 +29248,7 @@ function _gmSplit(x) {   // 제목 → { 한 줄 행동, 이유 } — "…했으
   const m = t.match(/^(.{4,}?(?:으니까|니까|으니|이니|였으니|았으니|었으니|해서|어서|아서|라서|므로))[,\s]\s*(.{4,})$/);
   return m ? { act: m[2].trim(), why: m[1].trim() } : { act: t, why: '' };
 }
-function _gmWhy(x) { const s = String(((x.fields || {})['상황']) || '').trim(); const one = s ? (s.match(/^[\s\S]*?[.!?。](?=\s|$)/) || [s])[0] : ''; return aqKrText(one && one.length <= 120 ? one : (_gmSplit(x).why || one.slice(0, 120))); }
+function _gmWhy(x) { const s = String(((x.fields || {})['상황']) || '').trim(); const one = s ? (s.match(/^[\s\S]*?[.!?。](?=\s|$)/) || [s])[0] : ''; return _gmNoG(aqKrText(one && one.length <= 120 ? one : (_gmSplit(x).why || one.slice(0, 120)))); }
 function _gmLeft(p, st) {   // 기준까지 남은 거리 (사람 말)
   if (!st || st.value == null) return '';
   const n = p.persist && p.persist !== '즉시' && p.persist !== '종가' && p.n > 1 ? p.n : 0;
@@ -29272,34 +29353,38 @@ function _gmNow(x) {   // '지금 할 일' 한 줄
 }
 function _gmRow(x, right) { const sp = _gmSplit(x); return `<div class="gm-row" onclick="aqGmOpen(${x.id})">${_gmLogo(x, '', 's')}<span class="tx">${escapeHtml(sp.act)}</span>${right || ''}</div>`; }
 function _gmHome() {
+  // v6.38: 로고를 누르면 다른 화면으로 가지 않고 아래 목록(곧 닿아요·지키는 중)만 그 종목으로 걸러짐 · '정할 것'은 그대로 · 부딪힘 카드 · 사슬 진행 줄
   const all = (_gd.accList || []).filter(x => _gdVis(_gdMktOf(x.target)));
-  let L = all.filter(_gmLive); const past = all.filter(x => !_gmLive(x)); const need = _gmQNeed();
+  const L = all.filter(_gmLive); const past = all.filter(x => !_gmLive(x)); const need = _gmQNeed();
   const f = _gd.tkFilter || '';
-  if (f) L = L.filter(x => _gmKey(x) === f);
-  const D = _gmDecisions(L, f ? need.filter(q => (String(q.ticker || '').toUpperCase() || '__etc') === f) : need);
-  const SC = f ? _stCardsFor(f) : _stCardsAll(); const scN = SC.reduce((a, c) => a + (c._n || 1), 0);   // v6.28 운영 점검
+  const D = _gmDecisions(L, need);
+  const SC = _stCardsAll(); const scN = SC.reduce((a, c) => a + (c._n || 1), 0);   // v6.28 운영 점검
   const dIds = new Set(D.filter(d => d.x).map(d => d.x.id));
   const near = [], keep = [];
   L.forEach(x => { if (dIds.has(x.id)) return; const b = _gmBest(x); if (b && _gmNear(b.p, b.sc)) near.push({ x, b }); else keep.push({ x, b }); });
   near.sort((a, b) => a.b.sc - b.b.sc);
+  keep.sort((a, b) => _gmKey(a.x).localeCompare(_gmKey(b.x)) || b.x.id - a.x.id);   // 같은 종목끼리 모아서
+  const cnt = {}; near.concat(keep).forEach(k => { const kk = _gmKey(k.x); cnt[kk] = (cnt[kk] || 0) + 1; });
+  const nearF = f ? near.filter(k => _gmKey(k.x) === f) : near; const keepF = f ? keep.filter(k => _gmKey(k.x) === f) : keep;
   const dN = dIds.size; const rest = L.length - dN;
   const today = _kstToday(); const dow = '일월화수목금토'[new Date(today + 'T00:00:00Z').getUTCDay()];
-  const hero = f ? `<button class="gm-allb" onclick="aqGmTk('')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>전체 지침</button>` + (f !== '__etc' ? _gmLens(f) : '')
-    : `<div class="gm-hero"><small>${_gmMD(today)} ${dow}</small><b>${D.length + scN ? `오늘 정할 것 <em>${D.length + scN}개</em>` : '오늘 정할 것 없음'}</b>${rest > 0 ? `<span>${D.length ? `나머지 ${rest}개는` : `따르는 지침 ${rest}개 모두`} 기다리기만 하면 돼요</span>` : ''}</div>`;
-  const dc = D.map(d => `<div class="gm-dc"><div class="hd" ${d.x ? `onclick="aqGmOpen(${d.x.id})"` : ''}>${_gmLogo(d.x, d.tk)}<div class="tt"><div class="t">${escapeHtml(d.t)}</div>${d.s ? `<div class="s">${escapeHtml(d.s)}</div>` : ''}</div></div><div class="gm-btns">${d.b.map(b => `<button class="gm-b ${b[2] || ''}" onclick="event.stopPropagation(); ${b[1]}">${b[0]}</button>`).join('')}</div></div>`).join('');
-  const nr = near.map(({ x, b }) => `<div class="gm-row gm-nr" onclick="aqGmOpen(${x.id})">${_gmLogo(x, '', 's')}<span class="tx">${escapeHtml(_gmNearTx(x, b))}<small>${escapeHtml(b.p.type === 'date' ? _gmDText(b.p.date) : (b.st && b.st.met ? '닿음' : _gmLeft(b.p, b.st) || b.m))}</small></span>${_gmNearVis(b)}</div>`).join('');
-  const kr = keep.map(({ x }) => { const pl = ((x.parsed || {}).pledges || []).length; const setOn = (x.applied || []).some(a => a.ok && !a.reverted && !a.no_revert && !a.client && !a.queue_id);
+  const hero = `<div class="gm-hero"><small>${_gmMD(today)} ${dow}</small><b>${D.length + scN ? `오늘 정할 것 <em>${D.length + scN}개</em>` : '오늘 정할 것 없음'}</b>${rest > 0 ? `<span>${D.length ? `나머지 ${rest}개는` : `따르는 지침 ${rest}개 모두`} 기다리기만 하면 돼요</span>` : ''}</div>`;
+  const dc = D.map(d => `<div class="gm-dc"><div class="hd" ${d.x ? `onclick="aqGmOpen(${d.x.id})"` : ''}>${_gmLogo(d.x, d.tk)}<div class="tt"><div class="t">${escapeHtml(d.t)}</div>${d.s ? `<div class="s">${escapeHtml(d.s)}</div>` : ''}</div></div>${d.body || ''}${d.chain || ''}<div class="gm-btns">${d.b.map(b => `<button class="gm-b ${b[2] || ''}" onclick="event.stopPropagation(); ${b[1]}">${b[0]}</button>`).join('')}</div></div>`).join('');
+  const nr = nearF.map(({ x, b }) => `<div class="gm-row gm-nr" onclick="aqGmOpen(${x.id})">${_gmLogo(x, '', 's')}<span class="tx">${escapeHtml(_gmNearTx(x, b))}<small>${escapeHtml(b.p.type === 'date' ? _gmDText(b.p.date) : (b.st && b.st.met ? '닿음' : _gmLeft(b.p, b.st) || b.m))}</small></span>${_gmNearVis(b)}</div>`).join('');
+  const kr = keepF.map(({ x }) => { const pl = ((x.parsed || {}).pledges || []).length; const setOn = (x.applied || []).some(a => a.ok && !a.reverted && !a.no_revert && !a.client && !a.queue_id);
     return _gmRow(x, `${pl ? `<span class="gm-ic g">${_gmSvg('shield')}</span>` : ''}${setOn ? `<span class="gm-ic">${_gmSvg('lock')}</span>` : ''}<span class="d">${escapeHtml(x.expire_on ? _gmDText(x.expire_on) : '')}</span>`); }).join('');
-  const lg = f ? '' : (() => { const ks = [...new Set(keep.map(k => _gmKey(k.x)))]; return ks.length >= 2 ? `<div class="gm-lgs">${ks.map(kk => `<button onclick="aqGmTk('${escapeAttr(kk)}')" aria-label="${escapeAttr(kk === '__etc' ? '기타' : _gmTkName(kk))}만 보기">${kk === '__etc' ? '<span class="gm-lg">기타</span>' : _gmLogo(null, kk)}</button>`).join('')}</div>` : ''; })();
+  const ks = [...new Set(keep.concat(near).map(k => _gmKey(k.x)))].sort();
+  const lg = ks.length >= 2 ? `<div class="gm-lgs ${f ? 'f' : ''}"><button class="gm-all ${f ? '' : 'on'}" onclick="aqGmTk('')">전체</button>${ks.map(kk => `<button class="${kk === f ? 'on' : ''}" onclick="aqGmTk('${escapeAttr(kk)}')" aria-label="${escapeAttr(kk === '__etc' ? '기타' : _gmTkName(kk))}만 보기">${kk === '__etc' ? '<span class="gm-lg">기타</span>' : _gmLogo(null, kk)}${(cnt[kk] || 0) > 1 ? `<i>${cnt[kk]}</i>` : ''}</button>`).join('')}</div>` : '';
+  const fh = f ? `<div class="gm-fh"><span><b>${escapeHtml(f === '__etc' ? '기타' : (displayName(f) || _gmTkName(f)))}</b> 지침 ${nearF.length + keepF.length}개</span><button onclick="aqGmTk('')">전체 보기 ✕</button></div>` : '';
   const sec = (c, h, body) => `<div class="gm-sec"><div class="gm-h"><i class="gm-lt ${c}"></i>${h}</div>${body}</div>`;
-  const empty = !D.length && !SC.length && !near.length && !keep.length ? `<div class="gm-empty">${f ? '이 종목에 따르는 지침이 없어요' : '따르는 지침이 없어요<br><small>AI 추천에서 \'따르기\'를 누르면 여기로 와요</small>'}</div>` : '';
+  const empty = !D.length && !SC.length && !near.length && !keep.length ? `<div class="gm-empty">따르는 지침이 없어요<br><small>AI 추천에서 \'따르기\'를 누르면 여기로 와요</small></div>` : '';
   const stc = SC.map(_stCardHtml).join('');
-  return hero + (f ? '' : _stPbBanner())
+  return hero + _stPbBanner()
     + (D.length || SC.length ? sec('o', '정할 것', dc + stc) : '')
-    + (near.length ? sec('y', '곧 닿아요', `<div class="gm-box">${nr}</div>`) : '')
-    + (keep.length ? sec('g', `지키는 중<em class="g">${keep.length}</em>`, lg + `<div class="gm-box">${kr}</div>`) : '')
+    + (near.length && (!f || nearF.length || !keep.length) ? sec('y', '곧 닿아요', (keep.length ? '' : lg + fh) + (nearF.length ? `<div class="gm-box">${nr}</div>` : `<div class="gm-empty">이 종목은 곧 닿을 신호가 없어요</div>`)) : '')
+    + (keep.length ? sec('g', `지키는 중<em class="g">${keep.length}</em>`, lg + fh + (keepF.length ? `<div class="gm-box">${kr}</div>` : `<div class="gm-empty">이 종목에 지키는 지침이 없어요</div>`)) : '')
     + empty
-    + (f ? '' : `<div class="gm-foot" onclick="aqGmView('stance')"><span>${(() => { const mp = (_stc.d || {}).map || {}; const g = Object.entries(mp.groups || {}).sort((a, b) => b[1] - a[1])[0]; return g && g[1] >= 1 ? `가장 큰 묶음 ${escapeHtml(g[0])} ${Math.round(g[1])}%` : '사상 · 단계 · 내 평가'; })()}</span><b>운영 지도 ›</b></div><div class="gm-foot" onclick="aqGmView('record')"><span>끝난 것 ${past.length}</span><b>성적표 ›</b></div>`);
+    + (`<div class="gm-foot" onclick="aqGmView('stance')"><span>${(() => { const mp = (_stc.d || {}).map || {}; const g = Object.entries(mp.groups || {}).sort((a, b) => b[1] - a[1])[0]; return g && g[1] >= 1 ? `가장 큰 묶음 ${escapeHtml(g[0])} ${Math.round(g[1])}%` : '사상 · 단계 · 내 평가'; })()}</span><b>운영 지도 ›</b></div><div class="gm-foot" onclick="aqGmView('record')"><span>끝난 것 ${past.length}</span><b>성적표 ›</b></div>`);
 }
 function _gmRet(x) {   // 끝난 지침: 따를 때 주가 → 지금
   const tk = _gmTk(x); if (!tk || !x.px0) return null;
@@ -29323,7 +29408,7 @@ function _gmRecord() {
 }
 function _gdMineHtml() { return _gd.mineView === 'record' ? _gmRecord() : _gd.mineView === 'stance' ? _stPage() : _gmHome(); }
 function aqGmView(v) { _gd.mineView = v; aqGuideRender(); try { document.getElementById('guideBody').scrollIntoView({ block: 'start' }); } catch (e) {} }
-function aqGmTk(k) { aqHoldScroll(); _gd.tkFilter = _gd.tkFilter === k ? '' : (k || ''); aqGuideRender(); }
+function aqGmTk(k) { aqHoldScroll(); _gd.tkFilter = _gd.tkFilter === k ? '' : (k || ''); aqGuideRender(); }   // v6.38: 같은 화면에서 아래 목록만 거름
 async function aqGmRead(id) { const x = (_gd.accList || []).find(y => y.id === id); if (x) x.unread = false; aqGuideRender(); try { await apiCall('guideRead', { ids: String(id) }); } catch (e) {} }
 async function aqGmRetry(id) {
   const x = (_gd.accList || []).find(y => y.id === id); if (!x) return; let ok = false;
@@ -29362,35 +29447,70 @@ function _gmJudg(st) {   // Claude 판단 결과 → { 한 단어, 근거 짧게
   return { s: s.length > 20 ? s.slice(0, 20) + '…' : s, d };
 }
 function _gmSheetRender() {
+  // v6.38: 지금 할 일 → 왜(이유 한 줄) → 갈림길·기다리는 신호(줄기: 지금 → 약속 → 일정 → 갈래 A·B·C) → 켜 둔 설정 → 한 일 → 기록. G번호는 어디에도 안 보임
   const x = (_gd.accList || []).find(y => y.id === _gd.sheetId); const box = document.getElementById('gdaBody'); if (!x || !box) return;
   const pa = x.parsed || {}; const ws = x.wstate || {}; const live = _gmLive(x); const k = escapeAttr(x.key); const ed = _gd.gmEd || {};
   const sp = _gmSplit(x); const now = _gmNow(x);
   const chip = live ? (x.status === 'hit' ? '<span class="gm-chip o">닿음</span>' : '<span class="gm-chip g">지키는 중</span>') : `<span class="gm-chip">${x.status === 'done' ? '했음' : '끝남'}</span>`;
   const sub = `${_gmMD(x.gdate || _rvKstDate(x.accepted_at))} 가이드` + (live && x.expire_on ? ` · ${_gmMD(x.expire_on)}까지 (${_gmDText(x.expire_on)})` : '');
   const S = [];
-  if (live) { const last = x.status === 'hit' ? (x.history || []).filter(h => h.kind === 'hit').slice(-1)[0] : null;
-    S.push(['지금 할 일', `<div class="gm-now ${now.hot ? 'hot' : ''}">${escapeHtml(now.t)}${last ? `<small>${escapeHtml(aqKrText(String(last.msg || '').replace(/^[^:]{1,20}:\s*/, '')))}</small>` : ''}</div>`]); }
+  // ---- 갈래 재료 ----
+  const sets = _gmSets(x);
+  const autoJ = (pa.conds || []).filter(_gmAuto).map(gs => gs[0][0]);   // 꼬리표가 없던 옛 지침의 '다시 볼 때' 문장 (판단 하나)
+  const hitSet = _gmHitSet(x, sets);
+  // ---- 지금 할 일 ----
+  if (live) {
+    const last = x.status === 'hit' ? (x.history || []).filter(h => h.kind === 'hit').slice(-1)[0] : null;
+    const pend = (_gd.queue || []).find(q => q.chain && q.chain.gid === x.id && q.status === 'queued' && !q.confirmed && q.source !== 'user');
+    const dates = []; sets.forEach(s => s.g.forEach(g => g.forEach(({ p, path }) => { if (p.type === 'date' && !(ws[path] || {}).met) dates.push(p); })));
+    const nd = dates.sort((a, b) => String(a.date).localeCompare(String(b.date)))[0];
+    const nextTx = now.hot ? '' : nd ? `다음 신호 · ${_gmMD(nd.date)}${nd.time ? ' ' + nd.time : ''} ${aqKrText(nd.text || '')} (${_gmDText(nd.date)})` : (_gmBest(x) ? `다음 신호 · ${aqKrText(_gmNearTx(x, _gmBest(x)))}` : '');
+    let body = `<div class="gm-now ${now.hot ? 'hot' : ''}">${hitSet && now.hot ? `<small class="gm-brh">${escapeHtml(_gmBrName(hitSet, sets))} 쪽에 닿았어요</small>` : ''}${escapeHtml(now.hot && hitSet ? `→ ${aqKrText(hitSet.cons)}` : now.t)}${last && !hitSet ? `<small>${escapeHtml(aqKrText(String(last.msg || '').replace(/^[^:]{1,20}:\s*/, '')))}</small>` : ''}${nextTx ? `<small>${escapeHtml(nextTx)}</small>` : ''}</div>`;
+    if (now.hot && hitSet) {   // 닿은 갈래의 판단 근거
+      const hits = hitSet.g.flat().filter(({ path }) => (ws[path] || {}).met && ws[path].why);
+      if (hits.length) body += `<div class="gm-whybox">${hits.map(({ p, path }) => `<div><b>${escapeHtml(aqKrText(p.text || _gmW(p)))}</b><span>${escapeHtml(aqKrText(ws[path].why))}</span></div>`).join('')}</div>`;
+    }
+    if (pend) { const v = { report: ['보고서 받기'], review: ['매수심사 받기'], guide: ['가이드 고치기'] }[pend.kind] || ['실행']; body += `<div class="gm-btns"><button class="gm-b pri" onclick="aqGdQConfirm(${pend.id})">${v[0]}</button><button class="gm-b" onclick="aqGdQCancel(${pend.id},1)">안 함</button></div>`; }
+    S.push(['지금 할 일', body]);
+  }
+  // ---- 왜 ----
+  const why = (x.fields || {})['이유'] ? aqKrText((x.fields || {})['이유']) : _gmWhy(x); if (why) S.push(['왜', `<div class="gm-why">${escapeHtml(why)}</div>`]);
+  // ---- 갈림길 · 기다리는 신호 ----
   const pl = ws.pl || {}; const days = _gmDaysSince(x.accepted_at);
-  if ((pa.pledges || []).length) S.push(['약속', pa.pledges.map(p => { const v = _gmPledgeVis(p); const nm = _gmTkName(String(p.ticker || '').toUpperCase());
-    return `<div class="gm-pl ${pl.viol ? 'bad' : ''}"><span class="ic">${_gmSvg('shield')}</span><div class="tt"><b>${escapeHtml(aqKrText(`${nm} ${_GM_PL[p.kind] || p.kind}`))}</b><small>${pl.viol ? `${pl.viol}번 어김` : live ? `${days ? days + '일째 ' : ''}지키는 중 · 어기면 기록돼요` : '지킴'}</small></div></div>${v ? `<div class="gm-vc">${v}</div>` : ''}`; }).join('')]);
-  const why = _gmWhy(x); if (why) S.push(['왜', `<div class="gm-why">${escapeHtml(why)}</div>`]);
-  const sets = [];
-  (pa.watches || []).forEach((w, i) => sets.push({ cons: w.then || '알림', g: [[{ p: Object.assign({ type: 'watch' }, w), path: 'w' + i }]] }));
-  const add = (arr, pre, cons) => (arr || []).forEach((gs, ci) => sets.push({ cons: _gmThen(gs) || cons, g: gs.map((g, gi) => g.map((p, pi) => ({ p, path: `${pre}${ci}_${gi}_${pi}` }))) }));
-  add(pa.rec_conds, 'r', '추천대로 하기'); add(pa.conds, 'c', '알림 · 다시 보기');
-  (pa.act_on || []).forEach((o, xi) => sets.push({ cons: _gdActHuman(o.act), xi, xs: ws['xcond' + xi] || {}, g: (o.groups || []).map((g, gi) => g.map((p, pi) => ({ p, path: `x${xi}_${gi}_${pi}` }))) }));
-  const card = ({ p, path }) => {
+  const card = ({ p, path }) => {   // 숫자 신호 그림 · 판단 카드 (근거 포함) — 날짜는 줄기에 따로
     const st = ws[path] || {};
-    if (p.type === 'date') return `<div class="gm-vc"><div class="gm-calw">${_gmCal(p.date)}<div class="tt"><b>${escapeHtml(aqKrText(p.text || '일정'))}</b><small>${escapeHtml(_gmDText(p.date))}</small></div></div></div>`;
-    if (p.type === 'judg') { const j = _gmJudg(st);
-      return `<div class="gm-vc"><div class="gm-q"><span class="ic ${st.met ? 'hit' : ''}">${st.met ? '!' : '?'}</span><div class="tt"><b>${escapeHtml(aqKrText(p.text || ''))}</b><small class="${st.met ? 'hit' : ''}">${j.s ? `<em>${escapeHtml(aqKrText(j.s))}</em>${j.d ? ' · ' + escapeHtml(aqKrText(j.d)) : ''}` : 'AI가 확인해서 알려 줘요'}</small></div></div></div>`; }
+    if (p.type === 'date') return '';
+    if (p.type === 'judg') { const j = _gmJudg(st); const why2 = st.why || j.d;
+      return `<div class="gm-jq ${st.met ? 'hit' : ''}"><span class="ic">${st.met ? '!' : '?'}</span><div class="tt"><b>${escapeHtml(aqKrText(p.text || ''))}</b><small>${st.met ? '닿음' : (j.s && j.s !== 'Claude 확인 대기' ? escapeHtml(aqKrText(j.s)) : 'AI가 확인해서 알려 줘요')}${why2 ? ' · ' + escapeHtml(aqKrText(why2)) : ''}</small></div></div>`; }
     const o = _gmWP(p, true); const canEd = live && !o.fixed; const v = ed[path] != null ? ed[path] : Number(p.value); const chg = ed[path] != null && ed[path] !== Number(p.value);
     const left = st.met ? '닿음' : _gmLeft(p, st);
     const edit = canEd ? `<div class="gm-ed"><span>기준</span><span class="gm-step"><button aria-label="기준 내리기" onclick="aqGmStep('${path}',-1)">−</button><span onclick="aqGdEdit('${k}','${path}',${Number(p.value)})">${escapeHtml(o.f(v))}</span><button aria-label="기준 올리기" onclick="aqGmStep('${path}',1)">+</button></span>${chg ? `<button class="gm-sv" onclick="aqGmSave('${k}','${path}')">바꾸기</button>` : ''}</div>` : '';
     return `<div class="gm-vc"><div class="gm-vh"><span>${escapeHtml(_gmW(p, true))}</span>${left ? `<b class="${st.met ? 'hit' : ''}">${escapeHtml(left)}</b>` : ''}</div>${_gmVis(p, st)}${edit}</div>`;
   };
-  const thenL = s => `<div class="gm-then">닿으면 → <b>${escapeHtml(aqKrText(s.cons))}</b>${s.xi != null ? (s.xs.ran ? '<span class="st">실행함</span>' : s.xs.need_ok && live ? `<button class="gm-sv" onclick="aqGdRun('${k}',${s.xi})">실행</button>` : '') : ''}</div>`;
-  if (sets.length) S.push(['기다리는 신호', sets.map(s => s.g.map(g => g.map(card).join('<div class="gm-or">그리고</div>')).join('<div class="gm-or">또는</div>') + thenL(s)).join('<div class="gm-gap"></div>')]);
+  const nodes = [];
+  nodes.push(`<div class="gm-tn now"><span class="dot"></span><div class="tt"><b>${live ? '지금' : '따르기'} · ${_gmMD(_rvKstDate(x.accepted_at))} 시작</b>${days && live ? `<small>${days}일째</small>` : ''}</div>${(pa.pledges || []).map(p => { const nm = _gmTkName(String(p.ticker || '').toUpperCase()); const v = _gmPledgeVis(p);
+    return `<div class="gm-pl ${pl.viol ? 'bad' : ''}"><span class="ic">${_gmSvg('shield')}</span><div class="tt"><b>${escapeHtml(aqKrText(`약속 ${_GM_PL[p.kind] || p.kind}`))}${p.until ? ` · ${_gmMD(p.until)}까지` : ''}</b><small>${pl.viol ? `${pl.viol}번 어김` : live ? `${days ? days + '일째 ' : ''}지키는 중${/매수|물타기|추격/.test(p.kind) ? ' · 자동매수도 막아 둠' : ''}` : '지킴'}</small></div></div>${v ? `<div class="gm-vc">${v}</div>` : ''}`; }).join('')}</div>`);
+  const dateParts = {}; sets.forEach(s => s.g.forEach(g => g.forEach(({ p, path }) => { if (p.type === 'date') { const key2 = `${p.date}|${p.time || ''}|${p.text || ''}`; if (!dateParts[key2]) dateParts[key2] = { p, met: !!(ws[path] || {}).met }; } })));
+  Object.values(dateParts).sort((a, b) => String(a.p.date).localeCompare(String(b.p.date))).forEach(({ p, met }, i, arr) => {
+    nodes.push(`<div class="gm-tn ev ${met ? 'met' : ''}"><span class="dot">${met ? '✓' : _gmSvg('cal')}</span><div class="tt"><b>${_gmMD(p.date)}${p.time ? ' ' + p.time : ''} ${escapeHtml(aqKrText(p.text || '일정'))}</b><small>${met ? '지남' : _gmDText(p.date)}${i === arr.length - 1 && sets.length > 1 ? ' · 여기서 갈래가 나뉘어요' : ''}</small></div></div>`);
+  });
+  const brs = sets.map((s, i) => {
+    const met = !!(ws[s.ck] || {}).met; const name = _gmBrName(s, sets); const col = s.kind === 'rec' ? 'g' : s.kind === 'conds' ? 'o' : s.kind === 'act' ? 'b' : 'y';
+    const need = s.g.length > 1 ? '하나라도 맞으면' : (s.g[0] || []).filter(({ p }) => p.type !== 'date').length > 1 ? '모두 맞아야' : '';
+    const parts = s.g.map(g => g.map(card).filter(Boolean).join('')).filter(Boolean).join('<div class="gm-or">또는</div>');
+    const run = s.xi != null ? (s.xs.ran ? '<small class="gm-ran">실행함</small>' : s.xs.need_ok && live ? `<button class="gm-sv" onclick="aqGdRun('${k}',${s.xi})">실행</button>` : '') : '';
+    const dim = hitSet && !met && x.status === 'hit';
+    return `<div class="gm-br ${col} ${met ? 'hit' : ''} ${dim ? 'dim' : ''}"><div class="gm-brc"><div class="gm-brh2"><span class="nm">${escapeHtml(name)}${met ? ' — 여기로 왔어요' : ''}</span>${need ? `<span class="need">${need}</span>` : ''}</div><div class="gm-brr">→ ${escapeHtml(aqKrText(s.cons))}${run}</div>${parts ? `<div class="gm-brp"><small>기다리는 신호</small>${parts}</div>` : ''}</div></div>`;
+  });
+  if (autoJ.length) brs.push(`<div class="gm-br o"><div class="gm-brc"><div class="gm-brh2"><span class="nm">다시 볼 때</span></div>${autoJ.map(p => { const st = ws['c' + (pa.conds || []).findIndex(gs => gs[0] && gs[0][0] === p) + '_0_0'] || {}; const j = _gmJudg(st); return `<div class="gm-jq ${st.met ? 'hit' : ''}"><span class="ic">${st.met ? '!' : '?'}</span><div class="tt"><b>${escapeHtml(aqKrText(p.text || ''))}</b><small>${st.met ? '닿음' : (j.s && j.s !== 'Claude 확인 대기' ? escapeHtml(aqKrText(j.s)) : 'AI가 확인해서 알려 줘요')}${(st.why || j.d) ? ' · ' + escapeHtml(aqKrText(st.why || j.d)) : ''}</small></div></div>`; }).join('')}</div></div>`);
+  if (live) {
+    const endP = (pa.ends || []).find(e => e.trigger === '기한'); const hasSet = (x.applied || []).some(a => a.ok && !a.reverted && !a.no_revert && !a.client && !a.queue_id);
+    const endTx = endP ? (endP.proc === '완료' ? '지침 끝' : '설정 되돌리고 끝') : hasSet ? '설정 되돌리고 끝' : '지침 끝';
+    brs.push(`<div class="gm-br n last ${hitSet ? 'dim' : ''}"><div class="gm-brc"><div class="gm-brh2"><span class="nm">${String.fromCharCode(65 + Math.min(sets.length + (autoJ.length ? 1 : 0), 24))} · 그대로면</span><span class="need">${x.expire_on ? _gmMD(x.expire_on) + '까지' : '끝까지'} 아무 갈래도 아니면</span></div><div class="gm-brr">→ ${endTx}${(pa.pledges || []).length ? ' · 약속 결과 기록' : ''}</div>${x.expire_on ? _gmSpan(_rvKstDate(x.accepted_at), x.expire_on) : ''}</div></div>`);
+  }
+  const aiAt = (() => { const h = (x.history || []).filter(h2 => h2.kind === 'claude' || h2.kind === 'ai').slice(-1)[0]; return h ? `AI 확인 ${_gdKst(h.at)}` : ''; })();
+  S.push([`갈림길 · 기다리는 신호${aiAt ? `<small>${escapeHtml(aiAt)}</small>` : ''}`, `<div class="gm-trk">${nodes.join('')}${brs.join('')}</div>`]);
+  // ---- 켜 둔 설정 · 한 일 ----
   const setRows = [], didRows = [];
   (x.applied || []).forEach(a => {
     const row = (ic, tx, st, done) => `<div class="gm-li">${ic}<span class="tx">${escapeHtml(aqKrText(tx))}</span>${st ? `<span class="st ${done ? 'ok' : ''}">${escapeHtml(st)}</span>` : ''}</div>`;
@@ -29398,25 +29518,33 @@ function _gmSheetRender() {
     if (a.queue_id) { const q = (_gd.queue || []).find(y => y.id === a.queue_id) || {}; const lb = _gdQState(q, a)[1]; const done = /끝|완료|받음|씀|반영/.test(lb); didRows.push(row(chk(done), a.text || a.act || '', lb, done)); return; }
     if (a.client) { const lb = a.act === '할 일 등록' ? (a.client && a.client.date ? _gmMD(a.client.date) : '일정 탭') : a.client_done ? '반영됨' : a.client_done === false ? '실패' : '반영 중'; didRows.push(row(chk(!!a.client_done && a.act !== '할 일 등록'), a.text || a.act || '', lb, !!a.client_done)); return; }
     const st = a.reverted ? '되돌림' : a.ok ? (a.no_revert ? '실행함' : '') : a.skipped ? '건너뜀' : '실패';
-    if (a.no_revert) didRows.push(row(chk(a.ok), a.text || a.act || '', st, a.ok)); else setRows.push(row(`<span class="gm-ic">${_gmSvg(_gmIc(a.act))}</span>`, a.text || a.act || '', st));
+    if (a.no_revert) didRows.push(row(chk(a.ok), a.text || a.act || '', st, a.ok)); else setRows.push(row(`<span class="gm-ic ${a.pledge ? 'g' : ''}">${_gmSvg(a.pledge ? 'shield' : _gmIc(a.act))}</span>`, a.text || a.act || '', st));
   });
-  if (live && sets.length) {
-    const cons = [...new Set(sets.flatMap(s => s.xi != null ? [_gmAct(pa.act_on[s.xi].act)] : s.cons.split(' · ')))];
-    const endP = (pa.ends || []).find(e => e.trigger === '기한'); const hasSet = setRows.length && (x.applied || []).some(a => a.ok && !a.reverted && !a.no_revert && !a.client && !a.queue_id);
-    const endTx = endP ? (endP.proc === '완료' ? '지침 끝' : '설정 되돌리고 끝') : hasSet ? '설정 되돌리고 끝' : '지침 끝';
-    S.push(['갈림길', `<div class="gm-fork"><div><small>신호가 닿으면</small><b>→ ${escapeHtml(aqKrText(cons.join(' · ')))}</b></div><div><small>${x.expire_on ? _gmMD(x.expire_on) + '까지' : '끝까지'} 그대로면</small><b>→ ${endTx}</b></div></div>`]);
-  }
   if (setRows.length) S.push(['켜 둔 설정', setRows.join('') + (live && x.expire_on ? _gmSpan(_rvKstDate(x.accepted_at), x.expire_on) : '')]);
   if (didRows.length) S.push(['한 일', didRows.join('')]);
   if (!live) { const r = _gmRet(x); S.push(['끝남', `<div class="gm-cl"><span class="tx">${escapeHtml(aqKrText(x.end_reason || ''))}${x.ended_at ? ' · ' + _gmMD(_rvKstDate(x.ended_at)) : ''}</span>${r != null ? `<span class="r">따른 뒤 ${_gmPct(r)}</span>` : ''}</div>`]); }
   const H = (x.history || []).slice().reverse();
-  const hist = H.length ? `<div class="gm-hh" onclick="aqGmHist()"><span>기록 ${H.length}건</span><em>${_gd.gmHist ? '접기 ▴' : '펼치기 ▾'}</em></div>${_gd.gmHist ? `<div class="gm-hist">${H.map(h => `<div><em>${escapeHtml(aqKrText(h.msg || ''))}</em><span>${_gdKst(h.at).slice(0, 5)}</span></div>`).join('')}</div>` : ''}` : '';
+  const hist = H.length ? `<div class="gm-hh" onclick="aqGmHist()"><span>기록 ${H.length}건</span><em>${_gd.gmHist ? '접기 ▴' : '펼치기 ▾'}</em></div>${_gd.gmHist ? `<div class="gm-hist">${H.map(h => `<div><em>${escapeHtml(_gmNoG(aqKrText(h.msg || '')))}</em><span>${_gdKst(h.at).slice(0, 5)}</span></div>`).join('')}</div>` : ''}` : '';
   const todo = _gmTodo(x);
   const btn = (t, js, cls) => `<button class="gm-b ${cls || ''}" onclick="${js}">${t}</button>`;
   const btns = !live ? '' : x.status === 'hit' ? `<div class="gm-btns gm-sbtn">${btn('그만', `aqGdAct('${k}','stop')`, 'sm')}${todo || now.then ? btn('계속 감시', `aqGdAct('${k}','resume')`) + btn('했어요', `aqGdAct('${k}','done')`, 'pri') : btn('끝내기', `aqGdAct('${k}','done')`) + btn('계속 따르기', `aqGdAct('${k}','resume')`, 'pri')}</div>`
     : `<div class="gm-btns gm-sbtn">${btn('그만 따르기', `aqGdAct('${k}','stop')`)}${btn('+7일', `aqGdAct('${k}','extend')`, 'gm-xs2')}${todo ? btn('했어요', `aqGdAct('${k}','done')`, 'pri') : ''}</div>`;
   box.innerHTML = `<div class="gm-sh"><div class="hd">${_gmLogo(x)}<div class="tt"><b>${escapeHtml(sp.act)}</b><small>${escapeHtml(sub)}</small></div>${chip}</div>${S.map(([h, b]) => `<div class="gm-ss"><div class="gm-sl">${h}</div>${b}</div>`).join('')}${hist}${btns}</div>`;
 }
+function _gmSets(x) {   // v6.38: 지침의 갈래 — 감시 · 추천 조건(rec) · 다시 볼 조건(conds) · 조건 실행(act)
+  const pa = x.parsed || {}; const ws = x.wstate || {}; const sets = [];
+  (pa.watches || []).forEach((w, i) => sets.push({ kind: 'watch', cons: w.then || '알림', g: [[{ p: Object.assign({ type: 'watch' }, w), path: 'w' + i }]], ck: 'w' + i }));
+  const add = (arr, pre, cons, kind) => (arr || []).forEach((gs, ci) => { if (kind === 'conds' && _gmAuto(gs)) return; sets.push({ kind, cons: _gmThen(gs) || cons, g: gs.map((g, gi) => g.map((p, pi) => ({ p, path: `${pre}${ci}_${gi}_${pi}` }))), ck: `${pre}cond${ci}` }); });
+  add(pa.rec_conds, 'r', '추천대로 하기', 'rec'); add(pa.conds, 'c', '알림 · 다시 보기', 'conds');
+  (pa.act_on || []).forEach((o, xi) => sets.push({ kind: 'act', cons: _gdActHuman(o.act), xi, xs: ws['xcond' + xi] || {}, g: (o.groups || []).map((g, gi) => g.map((p, pi) => ({ p, path: `x${xi}_${gi}_${pi}` }))), ck: 'xcond' + xi }));
+  return sets;
+}
+function _gmHitSet(x, sets) { const ws = x.wstate || {}; return (sets || _gmSets(x)).find(s => (ws[s.ck] || {}).met) || null; }
+function _gmBrName(s, sets) {   // 갈래 이름 — A·B·C 순서 + 뜻 (추천 조건 = 좋아지면, 다시 볼 때 = 나빠지면, 감시 = 감시, 조건 실행 = 조건이 되면)
+  const i = sets.indexOf(s); const L = String.fromCharCode(65 + Math.min(Math.max(i, 0), 24));
+  return `${L} · ${s.kind === 'rec' ? '좋아지면' : s.kind === 'conds' ? '나빠지면' : s.kind === 'act' ? '조건이 되면' : '감시'}`;
+}
+function _gmNoG(t) { return String(t || '').replace(/\bG(\d+)\b/g, (m, n) => { const r = (_gd.accList || []).find(y => y.id === Number(n)); return r ? `'${aqKrText(_gmSplit(r).act).slice(0, 18)}…' 지침` : '먼저 지침'; }); }   // v6.38: 사용자 글에서 G번호 지우기
 Object.assign(window, { aqGdQConfirm, aqGdQCancel, aqGdRun, aqGdView, aqGdSeen, aqGdOpenMine, aqGdOpenTk, aqGdTkChip, aqGdAct, aqGdEdit, aqGmView, aqGmTk, aqGmRead, aqGmRetry, aqGmOpen, aqGmStep, aqGmSave, aqGmHist });
 
 // ============================================================================
