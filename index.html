@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.57';   // v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.58';   // v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -2351,7 +2351,8 @@ body.modal-report-mode #chartModal #positionPanel { display: none !important; }
 #feedCard { padding: 0; }
 .feed-item { background: transparent; padding: 26px 0 44px; border-bottom: 1px solid var(--border, #3e3e42); }
 .feed-item:last-child { border-bottom: none; padding-bottom: 8px; }
-.feed-head { display: flex; align-items: center; gap: 8px; padding: 2px 12px 8px; cursor: pointer; }
+.feed-head { display: flex; align-items: center; gap: 8px; padding: 2px 12px 8px; }
+.feed-head .feed-avatar, .feed-head .feed-name { cursor: pointer; }
 .feed-avatar { flex-shrink: 0; }
 .feed-avatar .feed-logo { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; background: #fff; }
 .feed-id { min-width: 0; flex: 1; }
@@ -25184,7 +25185,7 @@ function aqFeedSigRows(tk, tf) {
   const win = sampleTimeframe(found.rows, tf || '3M');
   const cutoff = win.length ? win[0].Date : '';
   const last = found.rows[found.rows.length - 1].Close;
-  const lastDate = normalizeDate(found.rows[found.rows.length - 1].Date) || '';
+  const dates = found.rows.map(x => normalizeDate(x.Date));
   const priority = _isAllMode()
     ? ['RSI_Panic', 'V_Panic', 'V_Vol', 'V_Main', 'T_KJP_Sharp', 'T_KJP_Wide', 'T_Claude_Sharp', 'T_Claude_Wide', 'T', 'A']
     : _isV1Mode()
@@ -25196,8 +25197,11 @@ function aqFeedSigRows(tk, tf) {
     const ds = normalizeDate(r.Date); if (!ds || ds < cutoff) return;
     const sigs = String(r.Signal_Type || '').split('+').map(z => z.trim()).filter(Boolean);
     const p = priority.find(x => sigs.includes(x) && _state.signalFilter.has(x)); if (!p) return;
-    const px = Number(r.Close_Price);
-    rows.push({ date: ds, sig: p, ret: (px > 0 && last > 0 && ds < lastDate) ? (last / px - 1) * 100 : null, today: ds >= lastDate });
+    // v6.58: 신호 뒤 5거래일 수익률 (5일이 안 지났으면 'n일째')
+    const i0 = dates.indexOf(ds); const px = i0 >= 0 ? Number(found.rows[i0].Close) : Number(r.Close_Price);
+    const n = i0 >= 0 ? found.rows.length - 1 - i0 : null;
+    const ret5 = (i0 >= 0 && n >= 5 && px > 0) ? (Number(found.rows[i0 + 5].Close) / px - 1) * 100 : null;
+    rows.push({ date: ds, sig: p, ret: ret5, wait: (n != null && n < 5) ? n : null });
   });
   rows.sort((a, b) => b.date.localeCompare(a.date));
   return { rows, total: all.length, last, cutoff };
@@ -25207,12 +25211,12 @@ function aqFeedSideHtml(tk, tf) {
   const tfName = { '3M': '3개월', '6M': '6개월', '1Y': '1년' }[tf] || tf;
   const col = getSignalColors();
   const tka = escapeAttr(tk);
-  let h = `<div class="fs-hd"><b>시그널 이력</b><span>${tfName} · ${S.rows.length}건</span></div>`;
+  let h = `<div class="fs-hd"><b>시그널 이력</b><span>${tfName} · ${S.rows.length}건 · 5일 수익률</span></div>`;
   if (!S.rows.length) h += '<div class="fs-empty">이 기간엔 시그널이 없어요</div>';
   S.rows.slice(0, 5).forEach(r => {
     const md = r.date.slice(5).replace('-', '/');
-    const lab = `${md} ${r.sig}` + (r.ret == null ? '' : ` · 그 뒤 ${aqSgPct(r.ret, 1)}`);
-    h += `<button type="button" class="fs-row" data-d="${r.date}" onclick="aqFeedHL('${tka}','${r.date}','${escapeAttr(lab)}',this)"><span class="fs-d">${md}</span><span class="fs-mk" style="background:${col[r.sig] || '#8f8f8f'}"></span><span class="fs-n">${escapeHtml(r.sig)}</span><span class="fs-r${r.today ? ' dim' : ''}">${r.today ? '오늘' : r.ret == null ? '—' : aqSgPct(r.ret, 1)}</span></button>`;
+    const lab = `${md} ${r.sig}` + (r.ret == null ? '' : ` · 5일 ${aqSgPct(r.ret, 1)}`);
+    h += `<button type="button" class="fs-row" data-d="${r.date}" onclick="aqFeedHL('${tka}','${r.date}','${escapeAttr(lab)}',this)"><span class="fs-d">${md}</span><span class="fs-mk" style="background:${col[r.sig] || '#8f8f8f'}"></span><span class="fs-n">${escapeHtml(r.sig)}</span><span class="fs-r${r.ret == null ? ' dim' : ''}">${r.ret != null ? aqSgPct(r.ret, 1) : r.wait === 0 ? '오늘' : r.wait != null ? r.wait + '일째' : '—'}</span></button>`;
   });
   // 내부자 — 차트 기간 안 가장 최근 1건 (매수·매도 중)
   const ins = [];
@@ -25409,10 +25413,10 @@ function buildDiscoverFeed(res, keepShown) {
     const isUS = market === 'US';
     const stat = (label, val, zero, end) => `<span class="feed-st${zero ? ' zero' : ''}${end ? ' end' : ''}">${label}<b>${val}</b></span>`;
     return `<div class="feed-item" data-ticker="${tka}">
-      <div class="feed-head" onclick="openChart('${tka}')">
-        <div class="feed-avatar">${aqWrapLogo(aqLogoHtml(tk, (_state.tickerSectorMap||{})[tk]||'', 'feed-logo'), tk, true)}</div>
+      <div class="feed-head">
+        <div class="feed-avatar" onclick="openChart('${tka}')">${aqWrapLogo(aqLogoHtml(tk, (_state.tickerSectorMap||{})[tk]||'', 'feed-logo'), tk, true)}</div>
         <div class="feed-id">
-          <div class="feed-name-row"><span class="feed-name">${escapeHtml(topName)}</span>${holdHtml}</div>
+          <div class="feed-name-row"><span class="feed-name" onclick="openChart('${tka}')">${escapeHtml(topName)}</span>${holdHtml}</div>
           <div class="feed-sub">${subHtml}</div>
         </div>
         <div class="feed-hstat">
@@ -27643,6 +27647,7 @@ document.addEventListener('click', e => {
   if (row.hasAttribute('onclick') || typeof row.onclick === 'function') return;
   if (t.closest('button, a, input, select, textarea, label, .aq-switch, .lb-cf-toggle, [onclick]')) { const oc = t.closest('[onclick]'); if (oc && oc !== row && row.contains(oc)) return; if (t.closest('button, a, input, select, textarea, label, .aq-switch')) return; }
   if (row.closest('#chartModal')) return;
+  if (row.classList.contains('feed-item')) return;   // v6.58: 발견 피드는 로고·종목명만 종목 페이지
   const tk = String(row.dataset.ticker || '').toUpperCase(); if (!tk || typeof openChart !== 'function') return;
   openChart(tk);
 });
