@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.42';   // v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.43';   // v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -24755,13 +24755,9 @@ function aqDiscoverItems() {
   if (market === 'US') { addSig(_state.archivesV1.US, 'V-Shape'); }
   else if (market === 'KR') {
     addSig(_state.archives.KR, '신호');
-    // v4.60: 외국인 OR 기관 연속 순매수 5일 이상 → 금주의 발견/피드에 노출
+    // v4.60: 외국인 OR 기관 연속 순매수 5일 이상. v6.43: 단독으로는 넣지 않고 신호가 있는 종목에 강도 표시로만 붙임 (날짜도 신호 날짜 유지)
     try {
-      const seen = new Set();
-      for (const sec of Object.keys(_state.sectors || {})) {
-        for (const r of _state.sectors[sec]) { const tk = (r.Ticker || '').toUpperCase(); if (tk) seen.add(tk); }
-      }
-      seen.forEach(tk => {
+      Object.keys(merged).forEach(tk => {
         const fnd = findTickerSeries(tk); if (!fnd || !fnd.rows || !fnd.rows.length) return;
         const trading = fnd.rows.filter(r =>
           (Number(r.Volume) || 0) > 0 &&
@@ -24770,11 +24766,9 @@ function aqDiscoverItems() {
         const fStreak = _aqKrFlowStreak(trading, 'Foreign');
         const iStreak = _aqKrFlowStreak(trading, 'Inst');
         if (fStreak >= 5 || iStreak >= 5) {
-          const lastDate = trading[trading.length - 1].Date;
-          const it = ensure(tk, lastDate);
-          if (fStreak >= 5) addType(it, '외국인 ' + fStreak + '일');
-          if (iStreak >= 5) addType(it, '기관 ' + iStreak + '일');
-          if (lastDate > (it.date || '')) it.date = lastDate;
+          const it = merged[tk];
+          if (fStreak >= 5) { addType(it, '외국인 ' + fStreak + '일'); it.flowF = fStreak; }
+          if (iStreak >= 5) { addType(it, '기관 ' + iStreak + '일'); it.flowI = iStreak; }
         }
       });
     } catch (e) { console.warn('[discover] KR flow streak', e); }
@@ -25091,7 +25085,7 @@ function buildDiscoverFeed(res, keepShown) {
         <div class="feed-avatar">${aqWrapLogo(aqLogoHtml(tk, (_state.tickerSectorMap||{})[tk]||'', 'feed-logo'), tk, true)}</div>
         <div class="feed-id">
           <div class="feed-name">${escapeHtml(topName)}</div>
-          <div class="feed-sub">${escapeHtml(sector || '—')}</div>
+          <div class="feed-sub">${escapeHtml(sector || '—')}${(it.flowF || it.flowI) ? ` · <span style="color:#51cf66">${[it.flowF ? '외국인 ' + it.flowF + '일' : '', it.flowI ? '기관 ' + it.flowI + '일' : ''].filter(Boolean).join(' · ')} 연속 순매수</span>` : ''}</div>
         </div>
         <div class="feed-hstat">
           <span class="feed-chg ${dayCls}">${fmtPct(st.dayPct)}</span>
