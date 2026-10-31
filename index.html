@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.53';   // v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.54';   // v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -4167,6 +4167,124 @@ body[data-mtab="auto"][data-atab="guide"] footer, body[data-mtab="auto"][data-at
 /* v6.49: AI 비서 탭 배지 · AI 리포트 [기업 분석 | 매매 분석] */
 #aiSubtabs .xtab-btn em { font-style: normal; display: inline-block; min-width: 16px; height: 16px; line-height: 16px; padding: 0 4px; margin-left: 4px; border-radius: 8px; background: #569cd6; color: #06101f; font-size: 10.5px; font-weight: 800; vertical-align: 1px; box-sizing: border-box; }
 .rpt-togw:empty { display: none; } .rpt-togw { padding: 0; } .rpt-togw .gd-top { margin: 4px 0 18px; }
+/* v6.54: AI 리포트 › 거시 분석 — 기사형 피드 · 기사 · 시트 · AI 비서 브레인 */
+body[data-mtab="auto"][data-atab="macro"] section.card[data-atab="macro"] { display: block !important; }
+body[data-mtab="auto"][data-atab="macro"] footer { display: none !important; }
+#macroCard .card-body { padding: 0 0 32px; margin-top: 0; }
+.mc-bleed { margin-left: -28px; margin-right: -28px; }   /* 바깥 틀 18px + 카드 10px */
+.mc-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 6px; } .mc-head > b { font-size: 22px; font-weight: 800; color: var(--text-hi); letter-spacing: -.3px; }
+.mc-pill { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border: none; border-radius: 18px; background: rgba(86,156,214,.14); color: #8ec5f0; font-weight: 700; font-size: 13px; font-family: inherit; cursor: pointer; }
+.mc-sub { font-size: 13px; color: var(--text-dim); margin-bottom: 26px; }
+.mc-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mc-auto { position: relative; width: 100%; height: 100%; background: var(--b); display: flex; flex-direction: column; justify-content: flex-end; padding: 10px 11px; box-sizing: border-box; overflow: hidden; }
+.mc-auto .dec { position: absolute; right: -18px; top: -22px; width: 70px; height: 70px; border-radius: 50%; border: 11px solid var(--d); }
+.mc-auto.series .dec { right: auto; left: 0; top: 0; width: 100%; height: 26%; border: none; border-radius: 0; background: repeating-linear-gradient(90deg, var(--d) 0 8px, transparent 8px 16px); }
+.mc-auto.once .dec { width: 46%; height: 46%; right: -10%; top: -12%; border-width: 0; background: var(--d); }
+.mc-auto small { position: relative; font-size: 10.5px; font-weight: 700; color: var(--f); opacity: .72; }
+.mc-auto b { position: relative; font-size: 17px; line-height: 1.2; font-weight: 800; color: var(--f); word-break: keep-all; }
+.mc-auto.hero { padding: 22px 22px 20px; } .mc-auto.hero b { font-size: 34px; letter-spacing: -.5px; } .mc-auto.hero small { font-size: 13px; }
+.mc-auto.hero .dec { transform: scale(2.4); transform-origin: top right; } .mc-auto.series.hero .dec { transform: none; height: 22%; }
+.mc-auto.small { padding: 6px 7px; } .mc-auto.small b { font-size: 11.5px; } .mc-auto.small small { display: none; }
+.mc-hero { cursor: pointer; }
+.mc-hero-img { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #0b111a; margin-bottom: 20px; }
+.mc-badge { position: absolute; left: 18px; top: 16px; font-size: 12px; font-weight: 800; color: #fff; background: rgba(10,16,24,.72); border-radius: 6px; padding: 3px 9px; }
+.mc-kick { font-size: 13px; font-weight: 700; color: #b8b8b8; margin-bottom: 9px; } .mc-kick.ser { color: #8ec5f0; } .mc-kick.buzz { color: #ffa94d; }
+.mc-req { margin-left: 8px; font-size: 11.5px; font-weight: 700; color: #8ec5f0; background: rgba(86,156,214,.14); border-radius: 6px; padding: 1px 7px; }
+.mc-h1 { font-size: 22px; line-height: 1.42; font-weight: 800; color: var(--text-hi); margin-bottom: 12px; word-break: keep-all; letter-spacing: -.2px; }
+.mc-dek { font-size: 15px; line-height: 1.7; color: #b8b8b8; margin-bottom: 14px; }
+.mc-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; font-size: 12.5px; color: var(--text-dim); } .mc-meta i { font-style: normal; color: var(--text-mute); }
+.mc-meta b { font-weight: 700; } .mc-meta .y, .mc-meta b.y { color: #ffd43b; } .mc-meta .g, .mc-meta b.g { color: #51cf66; } .mc-meta b.r { color: #ff8787; }
+.mc-decl { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,.04); font-size: 13px; color: var(--text-dim); cursor: pointer; }
+.mc-decl b { color: var(--text-hi); } .mc-decl b.y { color: #ffd43b; } .mc-decl .go { color: #8ec5f0; flex: none; }
+.mc-div { height: 1px; background: rgba(255,255,255,.08); margin: 34px 0 6px; }
+.mc-row { display: flex; gap: 16px; padding: 22px 0; border-bottom: 1px solid rgba(255,255,255,.06); cursor: pointer; }
+.mc-row-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; } .mc-row-tx .mc-kick { margin: 0; font-size: 12.5px; }
+.mc-h3 { font-size: 16.5px; line-height: 1.5; font-weight: 700; color: var(--text-hi); word-break: keep-all; }
+.mc-thumb { flex: none; width: 108px; height: 81px; border-radius: 10px; overflow: hidden; background: #0b111a; }
+.mc-ph { display: flex; align-items: baseline; justify-content: space-between; margin: 44px 0 4px; } .mc-ph b { font-size: 17px; color: var(--text-hi); } .mc-ph span { font-size: 12.5px; color: var(--text-dim); }
+.mc-prow { display: flex; gap: 14px; align-items: center; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.06); cursor: pointer; }
+.mc-pthumb { flex: none; width: 64px; height: 48px; border-radius: 8px; overflow: hidden; background: #22262d; } .mc-pthumb.ep { width: 84px; height: 63px; }
+.mc-h4 { font-size: 15px; line-height: 1.5; color: #e6e6e6; word-break: keep-all; }
+.mc-endh { display: flex; align-items: center; justify-content: space-between; min-height: 58px; border-bottom: 1px solid rgba(255,255,255,.06); font-size: 14.5px; color: var(--text); cursor: pointer; margin-top: 12px; }
+.mc-endh em { font-style: normal; color: var(--text-dim); margin-left: 4px; } .mc-endh span.up svg { transform: rotate(180deg); } .mc-endh svg { color: var(--text-dim); }
+/* 기사 */
+.mc-abar { display: flex; margin: 0 0 12px -10px; }
+.mc-ob { width: 40px; height: 40px; border: none; border-radius: 20px; background: rgba(10,16,24,.6); color: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; font-weight: 700; font-size: 13px; font-family: inherit; }
+.mc-abar .mc-ob { background: none; color: var(--text); }
+.mc-ahero { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #0b111a; margin-top: -14px; }
+.mc-shade { position: absolute; left: 0; right: 0; top: 0; height: 80px; background: linear-gradient(rgba(0,0,0,.45), transparent); pointer-events: none; }
+.mc-ahero .mc-ob { position: absolute; top: 14px; } .mc-ahero .mc-ob.l { left: 12px; } .mc-ahero .mc-ob.r { right: 12px; width: auto; padding: 0 14px 0 12px; }
+.mc-cap { padding: 8px 0 0; font-size: 12px; color: var(--text-mute); }
+.mc-abody { padding: 26px 2px 0; }
+.mc-ah1 { margin: 0 0 14px; font-size: 25px; line-height: 1.42; font-weight: 800; color: var(--text-hi); word-break: keep-all; letter-spacing: -.3px; }
+.mc-adek { font-size: 16px; line-height: 1.75; color: #b8b8b8; margin-bottom: 22px; }
+.mc-by { display: flex; align-items: center; gap: 10px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 28px; }
+.mc-by .av { flex: none; width: 34px; height: 34px; border-radius: 17px; background: #26303c; color: #8ec5f0; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.mc-by b { display: block; font-size: 13.5px; color: #e6e6e6; } .mc-by small { display: block; font-size: 12px; color: var(--text-dim); margin-top: 1px; line-height: 1.5; }
+.mc-cbox { background: rgba(86,156,214,.1); border: 1px solid rgba(86,156,214,.35); border-radius: 16px; padding: 20px 18px; margin-bottom: 34px; }
+.mc-cbox.chg { background: rgba(255,212,59,.07); border-color: rgba(255,212,59,.4); } .mc-cbox.chg .h span:first-child { color: #ffd43b; }
+.mc-cbox .h { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12.5px; font-weight: 700; color: #8ec5f0; } .mc-cbox .cf { font-weight: 500; color: var(--text-dim); }
+.mc-cbox .t { font-size: 16.5px; line-height: 1.6; font-weight: 700; color: var(--text-hi); } .mc-cbox .s { font-size: 13px; color: var(--text-dim); margin-top: 8px; line-height: 1.6; }
+.mc-st { font-size: 17px; font-weight: 800; color: var(--text-hi); margin: 34px 0 12px; } .mc-cbox + .mc-st { margin-top: 0; }
+.mc-p p { margin: 0 0 14px; font-size: 16px; line-height: 1.9; color: #d9d9d9; word-break: keep-all; } .mc-p p:last-child { margin-bottom: 0; } .mc-p a { color: #8ec5f0; word-break: break-all; }
+.mc-quote { border-left: 3px solid #569cd6; padding: 4px 0 4px 16px; margin: 30px 0 4px; } .mc-quote div { font-size: 18px; line-height: 1.6; font-weight: 700; color: var(--text-hi); } .mc-quote small { display: block; font-size: 12.5px; color: var(--text-dim); margin-top: 6px; }
+.mc-hy { background: rgba(255,255,255,.05); border-radius: 16px; padding: 18px; margin: 34px 0 0; }
+.mc-hy .h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 12.5px; font-weight: 700; color: var(--text-dim); }
+.mc-hy .st, .bn-hy .st { font-size: 12px; font-weight: 700; color: var(--text); background: rgba(255,255,255,.07); border-radius: 6px; padding: 2px 8px; } .st.right { color: #51cf66 !important; } .st.wrong { color: #ff8787 !important; }
+.mc-hy .t { font-size: 15px; line-height: 1.6; color: var(--text-hi); margin-bottom: 8px; } .mc-hy .s { font-size: 12.5px; color: var(--text-dim); line-height: 1.6; }
+.mc-dec { background: rgba(255,255,255,.05); border-radius: 16px; padding: 20px 18px; margin: 24px 0 0; }
+.mc-dec .t { font-size: 15.5px; font-weight: 800; color: var(--text-hi); margin-bottom: 8px; } .mc-dec .r { font-size: 14px; color: var(--text-hi); margin-bottom: 4px; } .mc-dec .r b.y { color: #ffd43b; }
+.mc-dec .why { font-size: 13.5px; line-height: 1.65; color: var(--text-dim); } .mc-dec .gm-btns { margin-top: 16px; } .mc-dec .n { font-size: 12.5px; color: var(--text-mute); margin-top: 12px; } .mc-dec .n a { color: #8ec5f0; cursor: pointer; }
+.mc-priv { border: 1px solid rgba(255,212,59,.4); background: rgba(255,212,59,.06); border-radius: 16px; padding: 18px; margin-top: 24px; }
+.mc-priv .h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; } .mc-priv .h span { font-size: 12.5px; font-weight: 700; color: #ffd43b; } .mc-priv .h small { font-size: 11.5px; color: var(--text-dim); }
+.mc-priv .mc-p p { font-size: 14px; line-height: 1.7; }
+.mc-src { margin-top: 34px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.06); } .mc-src b { display: block; font-size: 12.5px; color: var(--text-dim); margin-bottom: 6px; } .mc-src .mc-p a { color: #8ec5f0; } .mc-src .mc-p p { font-size: 12.5px; line-height: 1.7; color: var(--text-dim); margin-bottom: 4px; }
+/* 시트 */
+.mc-ov { position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,.55); display: flex; align-items: flex-end; justify-content: center; }
+.mc-sheet { width: 100%; max-width: 480px; max-height: 90dvh; overflow: auto; background: #1c1c1f; border-radius: 18px 18px 0 0; padding: 10px 20px calc(28px + env(safe-area-inset-bottom, 0px)); box-sizing: border-box; -webkit-overflow-scrolling: touch; }
+[data-theme="light"] .mc-sheet { background: var(--bg-2); }
+.mc-sh-t { font-size: 19px; font-weight: 800; color: var(--text-hi); margin: 6px 0 6px; line-height: 1.45; word-break: keep-all; } .mc-sh-s { font-size: 13.5px; line-height: 1.6; color: var(--text-dim); margin-bottom: 24px; }
+.mc-lb { display: block; font-size: 12.5px; font-weight: 700; color: var(--text-dim); margin: 22px 0 8px; } .mc-lb span { font-weight: 500; } .mc-lb2 { font-size: 12.5px; color: var(--text-dim); margin: 16px 0 10px; }
+.mc-ta, .mc-in { width: 100%; box-sizing: border-box; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: rgba(255,255,255,.04); color: var(--text-hi); padding: 13px 14px; font-weight: 500; font-size: 15px; line-height: 1.6; font-family: inherit; outline: none; resize: none; }
+.mc-ta:focus, .mc-in:focus { border-color: #569cd6; } .mc-in { height: 46px; font-size: 14px; padding: 0 14px; }
+.mc-cnt { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-mute); margin: 8px 2px 0; }
+.mc-chips { display: flex; flex-wrap: wrap; gap: 8px; } .mc-chips button { height: 36px; padding: 0 14px; border: none; border-radius: 18px; background: rgba(255,255,255,.06); color: var(--text); font-weight: 500; font-size: 13px; font-family: inherit; cursor: pointer; }
+.mc-tog { margin-bottom: 10px; } .mc-tog button { height: 40px; }
+.mc-note { font-size: 12.5px; line-height: 1.6; color: var(--text-dim); margin: 8px 0 0; }
+.mc-go { width: 100%; height: 50px; border: none; border-radius: 12px; background: #569cd6; color: #0b1620; font-weight: 800; font-size: 15px; font-family: inherit; margin: 26px 0 34px; cursor: pointer; } .mc-go:disabled { opacity: .5; }
+.mc-lh { display: flex; align-items: baseline; justify-content: space-between; margin: 8px 0 8px; } .mc-lh b { font-size: 15px; color: var(--text-hi); } .mc-lh span { font-size: 12.5px; color: var(--text-dim); }
+.mc-tq { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 0; border-top: 1px solid rgba(255,255,255,.06); } .mc-tq:last-child { border-bottom: 1px solid rgba(255,255,255,.06); margin-bottom: 26px; } .mc-tq.go { cursor: pointer; }
+.mc-tq .n { flex: none; width: 26px; height: 26px; border-radius: 13px; background: rgba(86,156,214,.18); color: #8ec5f0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.mc-tq .tx { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; } .mc-tq .tx > span { font-size: 14.5px; color: var(--text-hi); line-height: 1.5; } .mc-tq small { font-size: 12px; color: var(--text-dim); }
+.mc-tq button { flex: none; height: 34px; padding: 0 12px; border: none; border-radius: 17px; background: rgba(255,255,255,.06); color: var(--text-dim); font-weight: 700; font-size: 12.5px; font-family: inherit; cursor: pointer; } .mc-tq .ch { color: var(--text-dim); font-size: 18px; }
+.mc-crop { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #0b111a; margin-bottom: 10px; } .mc-crop canvas { display: block; touch-action: none; cursor: grab; }
+.mc-crop-tip { position: absolute; left: 12px; bottom: 12px; font-size: 12px; font-weight: 700; color: #fff; background: rgba(10,16,24,.75); border-radius: 6px; padding: 3px 9px; pointer-events: none; }
+.mc-pick { width: 100%; height: 100%; border: 1px dashed rgba(86,156,214,.55); border-radius: 12px; background: rgba(86,156,214,.06); color: #8ec5f0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 14px; font-family: inherit; cursor: pointer; }
+.mc-pv { display: flex; gap: 14px; align-items: flex-end; } .mc-pv > div { display: flex; flex-direction: column; gap: 6px; } .mc-pv small { font-size: 12px; color: var(--text-dim); }
+.mc-pv canvas { border-radius: 8px; display: block; } #mcPvH { width: 196px; height: 110px; } #mcPvT { width: 108px; height: 81px; border-radius: 10px; }
+.mc-warn { display: flex; gap: 10px; padding: 14px 16px; border-radius: 12px; background: rgba(255,212,59,.06); border: 1px solid rgba(255,212,59,.25); font-size: 13px; line-height: 1.6; color: var(--text); margin: 26px 0 22px; } .mc-warn svg { flex: none; margin-top: 2px; }
+.mc-txtbtn { display: block; border: none; background: none; color: #8ec5f0; font-weight: 700; font-size: 13px; font-family: inherit; padding: 12px 0 0; cursor: pointer; } .mc-txtbtn.r { color: #ff8787; margin: 10px auto 0; height: 44px; padding: 0; }
+.mc-sheet .gm-b:disabled { opacity: .45; }
+/* AI 비서 브레인 */
+.bn-week { background: rgba(255,255,255,.05); border-radius: 16px; padding: 18px; margin: 0 0 28px; }
+.bn-week .hd { display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 700; color: #8ec5f0; margin-bottom: 10px; } .bn-week .hd span + span { font-weight: 500; color: var(--text-dim); }
+.bn-week .one { font-size: 15px; line-height: 1.65; color: var(--text-hi); } .bn-week .lb { font-size: 12.5px; font-weight: 700; color: var(--text-dim); margin: 16px 0 6px; }
+.bn-w { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(255,255,255,.06); } .bn-w .tm { flex: none; width: 52px; font-size: 12px; color: var(--text-dim); line-height: 1.4; } .bn-w .tx { font-size: 14px; line-height: 1.55; color: var(--text); }
+.bn-week .ft { font-size: 12px; color: var(--text-mute); margin-top: 10px; }
+.bn-sd .bn-sh { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); margin-bottom: 8px; } .bn-sd .bn-sh span:first-child { color: #8ec5f0; font-weight: 700; }
+.bn-sd .t { font-size: 15px; font-weight: 700; color: var(--text-hi); line-height: 1.45; } .bn-sd .s { font-size: 13px; line-height: 1.65; color: var(--text-dim); margin-top: 6px; } .bn-sd .s b { color: var(--text-hi); } .bn-sd .s b.y { color: #ffd43b; }
+.bn-lk { font-size: 13px; font-weight: 700; color: #8ec5f0; margin-top: 12px; cursor: pointer; }
+.bn-note { font-size: 12.5px; color: var(--text-mute); margin: 2px 2px 12px; line-height: 1.6; }
+.bn-sub { font-size: 13px; line-height: 1.6; color: var(--text-dim); margin: -2px 2px 12px; }
+.bn-gap { background: rgba(255,255,255,.05); border-radius: 16px; padding: 16px; margin-bottom: 10px; } .bn-gap.done { opacity: .72; } .bn-gap .hd { cursor: pointer; }
+.bn-gap .m, .bn-gm { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--text-dim); margin-bottom: 8px; } .bn-gap .ln, .bn-gm span:first-child { color: #ffd43b; font-weight: 700; }
+.bn-gap .t { font-size: 15px; font-weight: 700; line-height: 1.5; color: var(--text-hi); } .bn-gap .s { font-size: 13px; line-height: 1.6; color: var(--text-dim); margin-top: 6px; }
+.bn-rx { display: flex; gap: 6px; margin-top: 12px; } .bn-rx button { flex: 1; height: 38px; border: none; border-radius: 10px; background: rgba(255,255,255,.07); color: var(--text); font-weight: 700; font-size: 13px; font-family: inherit; cursor: pointer; }
+.bn-rx button.on { background: #569cd6; color: #0b0b0d; } .bn-rx.big button { height: 46px; font-size: 14px; }
+.bn-f { margin-bottom: 16px; } .bn-f .l { font-size: 12.5px; font-weight: 700; color: var(--text-dim); margin-bottom: 4px; } .bn-f .mc-p p { font-size: 15px; line-height: 1.75; }
+.bn-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; } .bn-chips button { height: 34px; padding: 0 12px; border: none; border-radius: 17px; background: rgba(255,255,255,.06); color: var(--text-dim); font-weight: 700; font-size: 12.5px; font-family: inherit; cursor: pointer; } .bn-chips button.on { background: #38383e; color: var(--text-hi); }
+.bn-hy { padding: 16px 2px; border-bottom: 1px solid rgba(255,255,255,.06); } .bn-hy .m { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dim); margin-bottom: 6px; } .bn-hy .m span:first-child { flex: 1; }
+.bn-hy .me { font-size: 11.5px; color: #8ec5f0; } .bn-hy .t { font-size: 14.5px; line-height: 1.6; color: var(--text-hi); } .bn-hy .s { font-size: 12.5px; color: var(--text-dim); margin-top: 4px; line-height: 1.6; }
 /* v5.59 */
 .gd-it.past .gd-body, .gd-it.past .gd-tm { opacity: .45; } .gd-it.past .gd-ic { opacity: .55; }
 .gd-after { display: inline-block; font-size: 11.5px; font-weight: 700; margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: rgba(255,255,255,.06); vertical-align: 2px; } .gd-after.up { color: var(--kr-up); } .gd-after.down { color: var(--kr-down); }
@@ -9270,6 +9388,9 @@ html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-
     </section>
     <section class="card" id="guideCard" data-mtab="auto" data-atab="guide">
       <div class="card-body"><div id="guideBody"><div class="auto-empty">불러오는 중…</div></div></div>
+    </section>
+    <section class="card" id="macroCard" data-mtab="auto" data-atab="macro">
+      <div class="card-body"><div class="rpt-togw"></div><div id="macroBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="analysisCard" data-mtab="auto" data-atab="report">
     <div class="card-header">
@@ -27141,6 +27262,7 @@ const _UNI_DYN = [
   { id: 'aqHoldOverlay', panel: r => r.querySelector('.aq-tf-modal'), close: () => window.aqCloseHoldingForm && aqCloseHoldingForm() },
   { id: 'aqLogoPickOverlay', panel: r => r.firstElementChild, close: () => { const e = document.getElementById('aqLogoPickOverlay'); if (e) e.remove(); } },
   { id: 'aqPasteOverlay', panel: r => r.firstElementChild, close: () => { const e = document.getElementById('aqPasteOverlay'); if (e) e.remove(); } },
+  { id: 'mcSheet', panel: r => r.firstElementChild, close: () => window.aqMcSheetClose && aqMcSheetClose() },   // v6.54: 거시 분석 주제 넣기 · 표지 사진 · 놓친 것
 ];
 _UNI_DYN.forEach(d => AQ_SHEETS.push({ id: d.id, dyn: true, root: () => document.getElementById(d.id), panel: d.panel, isOpen: r => !!r, close: d.close, full: false }));
 function _uniDynOpen(d, root) {
@@ -27449,26 +27571,376 @@ function setAiSubtab(x) { aqHoldScroll();
   const _kr = getCurrentMarket() === 'KR';
   if (x === 'pre' || x === 'close') { _brMode(); _br.mode = x === 'pre' ? 'pre' : 'post'; x = 'brief'; }   // v5.55: 장전·장후는 AI 브리핑 안 토글
   if (x === 'auto') { if (isAdmin) { aqGoEngine(); return; } x = 'brief'; }   // v5.99: 자동매매는 햄버거 '자동'으로 이동 (예전 링크 호환)
-  const allowed = ['brief', 'assist', 'guide', 'report', 'review'];   // v6.49: AI 비서 · AI 리포트(report=기업 분석, review=매매 분석)
+  const allowed = ['brief', 'assist', 'guide', 'report', 'review', 'macro'];   // v6.49: AI 비서 · AI 리포트(report=기업 분석, review=매매 분석) · v6.54: macro=거시 분석
   if (!allowed.includes(x)) x = 'brief';
   if (x === 'guide' && !isAdmin) x = 'brief';   // v5.57: AI 가이드는 관리자 계좌 기준
   if (x === 'review' && !isAdmin) x = 'report';   // v5.99: AI 매매심사 — 관리자 전용 (일단) · v6.49: 일반 사용자는 AI 리포트(기업 분석)로
   document.body.setAttribute('data-atab', x);
-  document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === (x === 'review' ? 'report' : x)));
-  if (x === 'report' || x === 'review') { try { localStorage.setItem('aq_rpt_mode', x); } catch (e) {} }
-  try { const tg = isAdmin ? `<div class="gd-top"><span class="gd-tog"><button class="${x === 'report' ? 'on' : ''}" onclick="setAiSubtab('report')">기업 분석</button><button class="${x === 'review' ? 'on' : ''}" onclick="setAiSubtab('review')">매매 분석</button></span></div>` : ''; document.querySelectorAll('.rpt-togw').forEach(el => { el.innerHTML = tg; }); } catch (e) {}
+  document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === (x === 'review' || x === 'macro' ? 'report' : x)));
+  if (x === 'report' || x === 'review' || x === 'macro') { try { localStorage.setItem('aq_rpt_mode', x); } catch (e) {} }
+  try { const tg = `<div class="gd-top"><span class="gd-tog"><button class="${x === 'macro' ? 'on' : ''}" onclick="setAiSubtab('macro')">거시 분석</button><button class="${x === 'report' ? 'on' : ''}" onclick="setAiSubtab('report')">기업 분석</button>${isAdmin ? `<button class="${x === 'review' ? 'on' : ''}" onclick="setAiSubtab('review')">매매 분석</button>` : ''}</span></div>`; document.querySelectorAll('.rpt-togw').forEach(el => { el.innerHTML = tg; }); } catch (e) {}   // v6.54: [거시 분석 | 기업 분석 | 매매 분석(관리자)]
+  try { if (isAdmin) _bnLoad(); } catch (e) {}
   try { aqAsgBadge(); } catch (e) {}
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
   try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
-  try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'guide' || x === 'assist') aqGuideRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'guide' || x === 'assist') aqGuideRender(); else if (x === 'macro') aqMacroRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
 function aqRptGo() {   // v6.49: AI 리포트 탭 — 마지막에 본 쪽(기업 분석·매매 분석)으로
   const isAdmin = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin');
-  let m = 'report'; try { m = localStorage.getItem('aq_rpt_mode') === 'review' && isAdmin ? 'review' : 'report'; } catch (e) {}
+  let m = 'macro'; try { const s = localStorage.getItem('aq_rpt_mode'); m = s === 'review' ? (isAdmin ? 'review' : 'report') : s === 'report' ? 'report' : 'macro'; } catch (e) {}   // v6.54: 처음엔 거시 분석
   setAiSubtab(m);
 }
 window.aqRptGo = aqRptGo;
+// ============================================================================
+// v6.54: AI 리포트 › 거시 분석 — 기사형 피드 · 연재(계속할지 정하기) · 표지 사진(관리자) · 주제 넣기 (관리자)
+//        AI 비서 브레인 — 이번 주(주간 점검) · 연재 정하기 · 놓친 것(반응) · 성적표 가설
+// ============================================================================
+const _mc = { d: null, ts: 0, busy: false, view: 'feed', id: null, art: null, focus: '', endedOpen: false, tp: null, topics: null, ph: null };
+const _bn = { d: null, ts: 0, busy: false, hypo: null, hf: '', hEdit: null };
+const _MC_AC = { series: ['#1d2a3d', '#cfe6fb', 'rgba(142,197,240,.16)'], fixed: ['#3a2414', '#ffd8a8', 'rgba(255,169,77,.22)'], once: ['#24282f', '#d9dee6', 'rgba(255,255,255,.08)'] };
+const _MC_SVG = {
+  back: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
+  cam: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+  plus: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  down: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+  warn: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffd43b" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>' };
+function _mcMedia(n) { try { const u = new URL(getConfig().url); u.search = ''; u.searchParams.set('action', 'media'); u.searchParams.set('n', n); return u.toString(); } catch (e) { return ''; } }
+function _mcMD(s) { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || '')); return m ? `${+m[2]}/${+m[3]}` : ''; }
+function _mcYMD(s) { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || '')); return m ? `${m[1]}.${m[2]}.${m[3]}` : ''; }
+function _mcWeekLabel(s) { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || '')); if (!m) return ''; return `${+m[2]}월 ${['첫', '둘', '셋', '넷', '다섯'][Math.min(4, Math.floor((+m[3] - 1) / 7))]}째 주`; }
+function _mcConf(it) { const c = String((it && it.conf) || '').match(/높음|보통|낮음/); if (c) return c[0]; const m = String((it && it.conclusion) || '').match(/확신\s*(높음|보통|낮음)/); return m ? m[1] : ''; }
+function _mcConcl(t) { return String(t || '').replace(/\s*[(（]\s*확신\s*(높음|보통|낮음)\s*[)）]\s*/g, ' ').trim(); }
+function _mcRead(it) { return Math.max(1, Math.round((Number(it && it.chars) || 0) / 500)); }
+function _mcPara(t) {
+  const s = escapeHtml(String(t || '').trim()); if (!s) return '';
+  const link = x => x.replace(/(https?:\/\/[^\s<)]+)/g, u => `<a href="${u}" target="_blank" rel="noopener">${u.length > 48 ? u.slice(0, 46) + '…' : u}</a>`);
+  return s.split(/\n+/).map(l => `<p>${link(l.replace(/^[-*•]\s+/, '· '))}</p>`).join('');
+}
+function _mcCover(it, size) {   // size: hero | thumb | small
+  const cv = it && it.cover;
+  if (cv && cv.f) { const big = size === 'hero'; const n = big ? cv.f : (cv.t || cv.f);
+    return `<img class="mc-img" src="${escapeAttr(_mcMedia(n))}" alt="" loading="lazy" style="object-position:${big ? `${Math.round((cv.fx ?? .5) * 100)}% ${Math.round((cv.fy ?? .5) * 100)}%` : '50% 50%'}">`; }
+  const k = it && it.kind === 'fixed' ? 'fixed' : it && it.series_id ? 'series' : 'once'; const c = _MC_AC[k];
+  const w = String((it && (it.cover_word || it.series_title)) || '거시 분석').slice(0, 12);
+  const sub = k === 'fixed' ? _mcMD(it.week) : k === 'series' ? (it.kind === 'final' ? '마무리' : `연재 ${it.episode || ''}회`) : '1회성';
+  return `<div class="mc-auto ${k} ${size}" style="--b:${c[0]};--f:${c[1]};--d:${c[2]}"><span class="dec"></span><small>${escapeHtml(sub)}</small><b>${escapeHtml(w)}</b></div>`;
+}
+function _mcKicker(it) {
+  if (it.kind === 'fixed') return ['주간 소셜 버즈 · 매주', 'buzz'];
+  if (it.kind === 'final') return [`${it.series_title || ''} · 마무리 회`, 'ser'];
+  if (it.series_id) return [`${it.series_title || ''} · 연재 ${it.episode || ''}회`, 'ser'];
+  return [`1회성${it.req ? ' · 내 요청' : ''}`, 'once'];
+}
+function _mcHypoTx(h) { if (!h) return ''; return h.status === 'right' ? '<b class="g">맞음</b>' : h.status === 'wrong' ? '<b class="r">틀림</b>' : h.status === 'hold' ? '보류' : (h.check_on ? `${_mcMD(h.check_on)} 확인` : '확인 전'); }
+function _mcMeta(it, S) {
+  const a = [_mcMD(it.week)];
+  if (it.series_id && it.kind !== 'fixed') a.push(it.kind === 'final' ? '연재 끝' : (it.episode || 0) > 1 ? (it.changed ? '<b class="y">결론 바뀜</b>' : '결론 유지') : '첫 분석');
+  const cf = _mcConf(it); if (cf && !it.series_id) a.push(`<span class="${cf === '낮음' ? 'y' : cf === '높음' ? 'g' : ''}">확신 ${cf}</span>`);
+  if (S && S.status === 'active' && S.kind === 'series' && it.kind !== 'final' && S.latest && S.latest.id === it.id) { if (S.decision === 'end') a.push('끝내기로 정함'); else if (!S.decision && S.ai_rec === 'end') a.push('끝내기 추천'); }
+  return a.filter(Boolean).join('<i>·</i>');
+}
+async function _mcLoad(force) {
+  if (_mc.busy) return; if (!force && _mc.d && Date.now() - _mc.ts < 2 * 60e3) return;
+  _mc.busy = true; let r = null; try { r = await apiCall('macroList', {}); } catch (e) {} _mc.busy = false;
+  if (r && r.ok) { _mc.d = r; _mc.ts = Date.now(); } else if (!_mc.d) _mc.d = { err: (r && r.error) || '불러오지 못했어요' };
+  if (document.body.getAttribute('data-atab') === 'macro' && _mc.view === 'feed') aqMacroRender(true);
+}
+function aqMacroRender(noLoad) {
+  const box = document.getElementById('macroBody'); if (!box) return;
+  if (_mc.view === 'article') { box.innerHTML = _mcArtHtml(); return; }
+  box.innerHTML = _mcFeedHtml(); if (!noLoad) _mcLoad();
+}
+function _mcDecLine(S, mid) {
+  const d = S.decision;
+  return `<div class="mc-decl" onclick="aqMcOpen(${mid}, 'dec')"><span>${d ? `내가 정함 · <b>${d === 'end' ? '이번 회로 끝내기' : '계속'}</b>` : `다음 주도 따라갈까요 · AI 추천 <b class="${S.ai_rec === 'end' ? 'y' : ''}">${S.ai_rec === 'end' ? '끝내기' : '계속'}</b>`}</span><b class="go">${d ? '바꾸기 ›' : '정하기 ›'}</b></div>`;
+}
+function _mcFeedHtml() {
+  const D = _mc.d; const adm = _gdAdm();
+  const head = `<div class="mc-head"><b>거시 분석</b>${adm ? `<button class="mc-pill" onclick="aqMcTopic()">${_MC_SVG.plus}주제 넣기</button>` : ''}</div>`;
+  if (!D) return head + '<div class="auto-empty">불러오는 중…</div>';
+  if (D.err) return head + `<div class="gm-empty">${escapeHtml(D.err === 'login required' ? '로그인하면 볼 수 있어요' : D.err)}</div>`;
+  const items = D.items || []; const SM = {}; (D.series || []).concat(D.ended || []).forEach(s => { SM[s.id] = s; });
+  if (!items.length) return head + `<div class="mc-sub">매주 일요일 17시 발행</div><div class="gm-empty">첫 거시 분석은 일요일 17시에 올라와요${adm ? '<br><small>이번 주 다룰 주제를 미리 넣어 둘 수 있어요</small>' : ''}</div>`;
+  const wk = items[0].week; const ord = x => x.kind === 'fixed' ? 2 : x.series_id ? 0 : 1;
+  const cur = items.filter(x => x.week === wk).sort((a, b) => ord(a) - ord(b) || (a.series_id || 0) - (b.series_id || 0) || b.id - a.id);
+  (D.series || []).forEach(s => { if (s.latest && s.latest.week !== wk && !cur.some(x => x.id === s.latest.id)) cur.push(s.latest); });   // 이번 주에 안 쓴 연재도 위에
+  const hero = cur[0]; const rest = cur.slice(1); const hS = hero.series_id ? SM[hero.series_id] : null; const [hk, hc] = _mcKicker(hero);
+  const sub = `<div class="mc-sub">${_mcWeekLabel(wk)} · 일요일 17시 발행${adm && D.slots ? ` · 연재 ${D.slots.used} / ${D.slots.max}` : ''}</div>`;
+  const heroH = `<div class="mc-hero" onclick="aqMcOpen(${hero.id})"><div class="mc-hero-img mc-bleed">${_mcCover(hero, 'hero')}${hero.series_id && hero.kind !== 'fixed' ? `<span class="mc-badge">${hero.kind === 'final' ? '마무리' : `연재 ${hero.episode}회`}</span>` : ''}</div>`
+    + `<div class="mc-kick ${hc}">${escapeHtml(hk)}</div><div class="mc-h1">${escapeHtml(hero.headline)}</div>${hero.dek ? `<div class="mc-dek">${escapeHtml(hero.dek)}</div>` : ''}<div class="mc-meta">${_mcMeta(hero, hS)}<i>·</i>${_mcRead(hero)}분 읽기</div></div>`;
+  const dec = adm && hS && hS.kind === 'series' && hS.status === 'active' && hero.kind !== 'final' ? _mcDecLine(hS, hero.id) : '';
+  const row = it => { const [k, c] = _mcKicker(it); const S = it.series_id ? SM[it.series_id] : null;
+    return `<div class="mc-row" onclick="aqMcOpen(${it.id})"><div class="mc-row-tx"><div class="mc-kick ${c}">${escapeHtml(k)}</div><div class="mc-h3">${escapeHtml(it.headline)}</div><div class="mc-meta">${_mcMeta(it, S)}</div></div><div class="mc-thumb">${_mcCover(it, 'thumb')}</div></div>`; };
+  const past = items.filter(x => x.week !== wk && !x.series_id);
+  const hs = items.map(x => x.hypo).filter(Boolean); const hr = hs.filter(h => h.status === 'right').length, hw = hs.filter(h => h.status === 'wrong').length, ho = hs.length - hr - hw;
+  const prow = it => `<div class="mc-prow" onclick="aqMcOpen(${it.id})"><div class="mc-pthumb">${_mcCover(it, 'small')}</div><div class="mc-row-tx"><div class="mc-h4">${escapeHtml(it.headline)}</div><div class="mc-meta">${_mcMD(it.week)}${it.hypo ? `<i>·</i>가설 ${_mcHypoTx(it.hypo)}` : ''}</div></div></div>`;
+  const ended = D.ended || [];
+  const endH = ended.length ? `<div class="mc-endh" onclick="aqHoldScroll(); _mc.endedOpen = !_mc.endedOpen; aqMacroRender(true)"><span>끝난 연재 <em>${ended.length}</em></span><span class="${_mc.endedOpen ? 'up' : ''}">${_MC_SVG.down}</span></div>`
+    + (_mc.endedOpen ? ended.map(s => s.latest ? `<div class="mc-prow" onclick="aqMcOpen(${s.latest.id})"><div class="mc-pthumb">${_mcCover(Object.assign({}, s.latest, { cover: s.latest.cover || s.cover }), 'small')}</div><div class="mc-row-tx"><div class="mc-h4">${escapeHtml(s.title)}</div><div class="mc-meta">${s.episodes}회 · ${_mcMD(s.first_week)}~${_mcMD(s.last_week)}</div></div></div>` : '').join('') : '') : '';
+  return head + sub + heroH + dec + (rest.length ? `<div class="mc-div"></div>${rest.map(row).join('')}` : '')
+    + (past.length ? `<div class="mc-ph"><b>지난 분석</b>${hs.length ? `<span>가설 맞음 ${hr} · 틀림 ${hw} · 확인 전 ${ho}</span>` : ''}</div>${past.slice(0, 20).map(prow).join('')}` : '')
+    + endH;
+}
+async function aqMcOpen(id, focus) {
+  aqHoldScroll(); _mc.view = 'article'; _mc.id = id; _mc.focus = focus || ''; _mc.art = null; aqMacroRender();
+  try { document.getElementById('macroCard').scrollIntoView({ block: 'start' }); } catch (e) {}
+  let r = null; try { r = await apiCall('macroGet', { id }); } catch (e) {}
+  if (_mc.id !== id || _mc.view !== 'article') return;
+  _mc.art = r && r.ok ? r : { err: (r && r.error) || '불러오지 못했어요' }; aqMacroRender();
+  if (_mc.focus === 'dec') setTimeout(() => { const e = document.getElementById('mcDec'); if (e) e.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, 60);
+}
+function aqMcBack() { _mc.view = 'feed'; _mc.art = null; _mc.id = null; aqMacroRender(); try { document.getElementById('macroCard').scrollIntoView({ block: 'start' }); } catch (e) {} }
+function aqMcGo(mid) { try { switchMobileTab('auto'); } catch (e) {} setAiSubtab('macro'); aqMcOpen(mid); }
+function _mcCard(A) {   // 기사 화면에 쓰는 카드 값 (연재면 회차 카드, 아니면 본문에서)
+  const it = A.item, S = A.series, b = it.body || {};
+  const e = (A.episodes || []).find(x => x.id === it.id);
+  return e || { id: it.id, week: it.week, kind: it.kind, series_id: it.series_id, episode: it.episode, series_title: S ? S.title : null, headline: b['기사 제목'] || it.topic, dek: b['부제'] || '',
+    conclusion: b['결론'] || '', conf: b['확신'] || '', cover: it.cover, cover_word: b['표지 문구'] || (S ? S.title : ''), req: it.req, changed: /바뀜|바꿈/.test(b['결론 변화'] || ''),
+    chars: Object.values(b).reduce((a, v) => a + String(v).length, 0) };
+}
+function _mcArtHtml() {
+  const A = _mc.art; const adm = _gdAdm();
+  const bar = `<div class="mc-abar"><button class="mc-ob" onclick="aqMcBack()" aria-label="거시 분석 목록으로">${_MC_SVG.back}</button></div>`;
+  if (!A) return bar + '<div class="auto-empty">불러오는 중…</div>';
+  if (A.err) return bar + `<div class="gm-empty">${escapeHtml(A.err)}</div>`;
+  const it = A.item, S = A.series, b = it.body || {}; const c = _mcCard(A); const [k, kc] = _mcKicker(c); const cv = it.cover;
+  const img = `<div class="mc-ahero mc-bleed">${_mcCover(c, 'hero')}<span class="mc-shade"></span><button class="mc-ob l" onclick="aqMcBack()" aria-label="거시 분석 목록으로">${_MC_SVG.back}</button>${adm ? `<button class="mc-ob r" onclick="aqMcPhoto()">${_MC_SVG.cam}사진</button>` : ''}</div>`
+    + (cv && (cv.cap || cv.cr) ? `<div class="mc-cap">${escapeHtml([cv.cap, cv.cr].filter(Boolean).join(' · '))}</div>` : '');
+  const by = `<div class="mc-by"><span class="av">AQ</span><span><b>AQUAMEL 거시 분석</b><small>${_mcYMD(it.week)} · ${_mcRead(c)}분 읽기${S && S.end && S.kind === 'series' ? ` · 끝낼 조건: ${escapeHtml(S.end)}` : ''}</small></span></div>`;
+  const cf = _mcConf({ conf: b['확신'], conclusion: b['결론'] });
+  const clab = it.kind === 'final' ? '마지막 결론' : it.series_id && it.kind !== 'fixed' && (it.episode || 0) > 1 ? (c.changed ? '결론 · 이번 회에 바뀜' : '결론 · 지난 회와 같음') : '결론';
+  const concl = b['결론'] ? `<div class="mc-cbox ${c.changed ? 'chg' : ''}"><div class="h"><span>${clab}</span>${cf ? `<span class="cf">확신 ${cf}</span>` : ''}</div><div class="t">${escapeHtml(_mcConcl(b['결론']))}</div>${b['결론 변화'] && c.changed ? `<div class="s">${escapeHtml(b['결론 변화'])}</div>` : ''}</div>` : '';
+  const sec = (t, key) => b[key] ? `<div class="mc-st">${t}</div><div class="mc-p">${_mcPara(b[key])}</div>` : '';
+  let body = sec('이번 주 바뀐 것', '이번 주 바뀐 것');
+  if (b['이번 회 한 줄']) body += `<div class="mc-quote"><div>“${escapeHtml(String(b['이번 회 한 줄']).replace(/^["“]|["”]$/g, ''))}”</div><small>이번 회 한 줄</small></div>`;
+  body += sec('언급 급증', '언급 급증') + sec('가장 뜨거운 쟁점', '가장 뜨거운 쟁점') + sec('커뮤니티와 뉴스가 엇갈린 곳', '엇갈림')
+    + sec('쟁점', '쟁점') + sec('한쪽 논거', '한쪽 논거') + sec('다른 쪽 논거', '다른 쪽 논거') + sec('확인되는 것', '확인되는 것') + sec('아직 모르는 것', '아직 모르는 것')
+    + sec('결론이 틀렸다고 볼 신호', '반증') + sec('지켜볼 지표', '지켜볼 지표');
+  const h = it.hypo; const hy = h ? `<div class="mc-hy"><div class="h"><span>${it.series_id && it.kind !== 'fixed' ? '이번 회 가설' : '가설'}</span><span class="st ${h.status}">${h.status === 'right' ? '맞음' : h.status === 'wrong' ? '틀림' : h.status === 'hold' ? '보류' : '확인 전'}</span></div><div class="t">${escapeHtml(h.text)}</div><div class="s">${h.check_on ? `${_mcMD(h.check_on)} 확인` : '확인일 미정'}${h.criterion ? ` · ${escapeHtml(h.criterion)}` : ''}</div>${h.why ? `<div class="s">AI 채점: ${escapeHtml(h.why)}</div>` : ''}</div>` : '';
+  const isLatest = S && S.latest && S.latest.id === it.id;
+  const dec = adm && S && S.kind === 'series' && S.status === 'active' && isLatest && it.kind !== 'final' ? _mcDecCard(S) : '';
+  const eps = (A.episodes || []).filter(e => e.id !== it.id);
+  const epH = eps.length ? `<div class="mc-st">${S && S.kind === 'fixed' ? '지난주들' : '지난 회차'}</div>` + eps.slice(0, 12).map(e => `<div class="mc-prow" onclick="aqMcOpen(${e.id})"><div class="mc-pthumb ep">${_mcCover(e, 'small')}</div><div class="mc-row-tx"><div class="mc-h4">${escapeHtml(e.headline)}</div><div class="mc-meta">${S && S.kind === 'fixed' ? '' : `${e.kind === 'final' ? '마무리' : e.episode + '회'}<i>·</i>`}${_mcMD(e.week)}${S && S.kind !== 'fixed' ? `<i>·</i>${(e.episode || 0) > 1 ? (e.changed ? '<b class="y">결론 바뀜</b>' : '결론 유지') : '첫 분석'}` : ''}${e.hypo ? `<i>·</i>가설 ${_mcHypoTx(e.hypo)}` : ''}${e.cover && e.cover.scope === 'episode' ? '<i>·</i>회차 사진' : ''}</div></div></div>`).join('') : '';
+  const priv = adm ? ['포트폴리오 영향', '내 보유 종목 버즈'].filter(x => b[x]).map(x => `<div class="mc-priv"><div class="h"><span>${x === '포트폴리오 영향' ? '내 포트폴리오 영향' : '내 보유 종목 버즈'}</span><small>나만 보여요</small></div><div class="mc-p">${_mcPara(b[x])}</div></div>`).join('') : '';
+  const src = b['출처'] ? `<div class="mc-src"><b>출처</b>${_mcPara(b['출처'])}</div>` : '';
+  return `<div class="mc-art">${img}<div class="mc-abody"><div class="mc-kick ${kc}">${escapeHtml(k)}${it.req ? '<span class="mc-req">내 요청</span>' : ''}</div><h1 class="mc-ah1">${escapeHtml(c.headline)}</h1>${c.dek ? `<div class="mc-adek">${escapeHtml(c.dek)}</div>` : ''}${by}${concl}${body}${hy}${dec}${priv}${epH}${src}</div></div>`;
+}
+function _mcDecCard(S) {
+  const d = S.decision; const eff = d || S.ai_rec || 'continue';
+  return `<div class="mc-dec" id="mcDec"><div class="t">다음 주도 따라갈까요?</div><div class="r"><b class="${S.ai_rec === 'end' ? 'y' : ''}">AI 추천: ${S.ai_rec === 'end' ? '끝내기' : '계속'}</b></div>${S.ai_why ? `<div class="why">${escapeHtml(S.ai_why)}</div>` : ''}`
+    + `<div class="gm-btns"><button class="gm-b ${eff === 'continue' ? 'pri' : ''}" onclick="aqMcDecide(${S.id},'continue')">계속</button><button class="gm-b ${eff === 'end' ? 'pri' : ''}" onclick="aqMcDecide(${S.id},'end')">이번 회로 끝내기</button></div>`
+    + `<div class="n">${d ? `내가 정함 · <a onclick="aqMcDecide(${S.id},'')">AI 추천대로 되돌리기</a>` : '일요일 16:30까지 답이 없으면 AI 추천대로 해요'}</div></div>`;
+}
+async function aqMcDecide(sid, d) {
+  aqHoldScroll(); let r = null; try { r = await apiCall('seriesDecide', { id: sid, decision: d }); } catch (e) {}
+  if (!r || !r.ok) { aqToast((r && r.error) || '저장하지 못했어요'); return; }
+  aqToast(d === 'end' ? '이번 회로 끝내요 · 다음 주에 마무리 회차를 써요' : d === 'continue' ? '다음 주도 따라가요' : 'AI 추천대로 해요');
+  const upd = S => { if (S && S.id === sid) S.decision = d || null; };
+  if (_mc.art && _mc.art.series) upd(_mc.art.series);
+  if (_mc.d) (_mc.d.series || []).forEach(upd);
+  if (_bn.d) (_bn.d.decide || []).forEach(x => { if (x.id === sid) x.decision = d || null; });
+  if (document.body.getAttribute('data-atab') === 'macro') aqMacroRender(true); else if (_gdIsAsg()) aqGuideRender();
+  try { aqAsgBadge(); } catch (e) {}
+  _mc.ts = 0; _bn.ts = 0;
+}
+// ---------- 시트 (주제 넣기 · 표지 사진 · 놓친 것 상세) ----------
+function _mcSheet(html) {
+  let r = document.getElementById('mcSheet');
+  if (r) { r.querySelector('.mc-sheet-in').innerHTML = html; return r; }
+  r = document.createElement('div'); r.id = 'mcSheet'; r.className = 'mc-ov';
+  r.addEventListener('click', e => { if (e.target === r) aqMcSheetClose(); });
+  r.innerHTML = `<div class="mc-sheet"><div class="mc-sheet-in">${html}</div></div>`; document.body.appendChild(r); return r;
+}
+function aqMcSheetClose() { const r = document.getElementById('mcSheet'); if (r) r.remove(); _mc.ph = null; }
+function aqMcTopic() { _mc.tp = { mode: 'once' }; _mcSheet(_mcTopicHtml()); _mcTopicList(true); }
+function _mcSlots() { const s = (_mc.topics && _mc.topics.slots) || (_mc.d && _mc.d.slots) || { used: 0, max: 3 }; return s; }
+function _mcTopicHtml() {
+  const s = _mcSlots(); const left = Math.max(0, s.max - s.used); const ser = _mc.tp.mode === 'series';
+  return `<div class="mc-sh-t">이번 주 다룰 주제</div><div class="mc-sh-s">일요일 17시 주간 점검이 먼저 넣은 주제부터 다뤄요.<br>찬반이 갈리는 질문으로 쓰면 결론이 또렷해져요.</div>
+    <label class="mc-lb" for="mcTpIn">주제</label><textarea id="mcTpIn" class="mc-ta" rows="3" maxlength="200" placeholder="예: 엔화 약세가 계속되면 한국 반도체 수출주에 불리할까" oninput="_mcTpCount()"></textarea>
+    <div class="mc-cnt"><span>4자 이상 · 200자까지</span><span id="mcTpN">0 / 200</span></div>
+    <div class="mc-lb2">이런 식으로</div><div class="mc-chips">${['○○는 이미 주가에 반영됐나', '○○가 내 업종에 득일까 실일까', '시장이 ○○를 과하게 걱정하나'].map(x => `<button onclick="_mcTpEx('${escapeAttr(x)}')">${escapeHtml(x)}</button>`).join('')}</div>
+    <div class="mc-lb">얼마나 볼까요</div><div class="gd-tog mc-tog"><button id="mcTpM1" class="${ser ? '' : 'on'}" onclick="aqMcTpMode('once')">한 번만</button><button id="mcTpM2" class="${ser ? 'on' : ''}" onclick="aqMcTpMode('series')">매주 따라가기</button></div>
+    <div class="mc-note" id="mcTpSlot">연재는 ${s.max}개까지예요 · ${left ? `지금 ${s.used}개라 ${left}개 더 넣을 수 있어요` : `지금 ${s.used}개로 가득 찼어요 · 연재 하나를 끝내면 넣을 수 있어요`}</div>
+    <div id="mcTpEndW" style="${ser ? '' : 'display:none'}"><label class="mc-lb" for="mcTpEnd">언제까지 따라갈까요 <span>(비워 두면 AI가 첫 회에 정해요)</span></label><input id="mcTpEnd" class="mc-in" maxlength="200" placeholder="예: 일본은행 금리 결정까지"></div>
+    <button class="mc-go" id="mcTpGo" onclick="aqMcTopicSave()">주제 넣기</button>
+    <div id="mcTpList"></div>`;
+}
+function _mcTpCount() { const t = document.getElementById('mcTpIn'), n = document.getElementById('mcTpN'); if (t && n) n.textContent = `${t.value.length} / 200`; }
+function _mcTpEx(x) { const t = document.getElementById('mcTpIn'); if (!t) return; t.value = x; t.focus(); const i = x.indexOf('○○'); if (i >= 0) t.setSelectionRange(i, i + 2); _mcTpCount(); }
+function aqMcTpMode(m) {
+  _mc.tp.mode = m; const a = document.getElementById('mcTpM1'), b = document.getElementById('mcTpM2'), w = document.getElementById('mcTpEndW');
+  if (a) a.classList.toggle('on', m === 'once'); if (b) b.classList.toggle('on', m === 'series'); if (w) w.style.display = m === 'series' ? '' : 'none';
+}
+async function _mcTopicList(load) {
+  if (load) { let r = null; try { r = await apiCall('topicList', {}); } catch (e) {} if (r && r.ok) _mc.topics = r; }
+  const el = document.getElementById('mcTpList'); if (!el) return; const T = (_mc.topics && _mc.topics.items) || [];
+  const s = _mcSlots(); const sl = document.getElementById('mcTpSlot'); const left = Math.max(0, s.max - s.used);
+  if (sl) sl.textContent = `연재는 ${s.max}개까지예요 · ${left ? `지금 ${s.used}개라 ${left}개 더 넣을 수 있어요` : `지금 ${s.used}개로 가득 찼어요 · 연재 하나를 끝내면 넣을 수 있어요`}`;
+  const open = T.filter(x => x.status === 'open'), used = T.filter(x => x.status === 'used');
+  el.innerHTML = (open.length ? `<div class="mc-lh"><b>기다리는 주제</b><span>${open.length} / 5</span></div>` + open.map((x, i) => `<div class="mc-tq"><span class="n">${i + 1}</span><span class="tx"><span>${escapeHtml(x.topic)}</span><small>${x.mode === 'series' ? `매주 따라가기${x.end ? ' · ' + escapeHtml(x.end) + '까지' : ''}` : '한 번만'} · ${i === 0 ? '이번 일요일에 다뤄요' : '차례를 기다려요'}</small></span><button onclick="aqMcTopicCancel(${x.id})">빼기</button></div>`).join('') : '')
+    + (used.length ? `<div class="mc-lh"><b>다룬 주제</b></div>` + used.slice(0, 10).map(x => `<div class="mc-tq go" onclick="${x.macro_id ? `aqMcSheetClose(); aqMcOpen(${x.macro_id})` : ''}"><span class="tx"><span>${escapeHtml(x.topic)}</span><small>${x.series ? (x.series.status === 'active' ? `연재 중 · ${_mcMD(x.series.first_week)}부터 ${x.series.episodes}회` : `연재 끝 · ${x.series.episodes}회`) : `1회성 · ${_mcMD(x.used_week)}`}</small></span>${x.macro_id ? '<span class="ch">›</span>' : ''}</div>`).join('') : '');
+}
+async function aqMcTopicSave() {
+  const t = (document.getElementById('mcTpIn') || {}).value || ''; const end = (document.getElementById('mcTpEnd') || {}).value || '';
+  if (t.trim().length < 4) { aqToast('주제를 조금 더 길게 써 주세요'); return; }
+  const btn = document.getElementById('mcTpGo'); if (btn) btn.disabled = true;
+  let r = null; try { r = await apiCall('topicRequest', { topic: t.trim(), mode: _mc.tp.mode, end: _mc.tp.mode === 'series' ? end.trim() : '' }); } catch (e) {}
+  if (btn) btn.disabled = false;
+  if (!r || !r.ok) { aqToast((r && r.error) || '넣지 못했어요'); return; }
+  aqToast(_mc.tp.mode === 'series' ? '매주 따라갈 주제로 넣었어요' : '이번 주 주제로 넣었어요');
+  const ta = document.getElementById('mcTpIn'); if (ta) ta.value = ''; const te = document.getElementById('mcTpEnd'); if (te) te.value = ''; _mcTpCount();
+  _mcTopicList(true);
+}
+async function aqMcTopicCancel(id) { let r = null; try { r = await apiCall('topicCancel', { id }); } catch (e) {} if (r && r.ok) { aqToast('뺐어요'); _mcTopicList(true); } else aqToast('빼지 못했어요'); }
+// ---------- 표지 사진 (관리자) ----------
+function aqMcPhoto() {
+  const A = _mc.art; if (!A || !A.item) return; const it = A.item, S = A.series;
+  const scope = S && !(it.cover && it.cover.scope === 'episode') ? 'series' : 'macro';   // 회차 사진이 있으면 회차부터
+  _mc.ph = { img: null, scope, ox: .5, oy: .5, fx: .5, fy: .5, drag: null };
+  _mcSheet(_mcPhotoHtml()); _mcPhotoDraw();
+}
+function _mcPhotoHtml() {
+  const A = _mc.art, it = A.item, S = A.series, P = _mc.ph; const c = _mcCard(A); const fixed = S && S.kind === 'fixed';
+  const scopes = S ? [['series', fixed ? '고정 칸 표지' : '연재 표지'], ['macro', fixed ? '이번 주만' : `이번 회차만 (${it.episode || 1}회)`]] : [['macro', '이 글 표지']];
+  const has = P.scope === 'series' ? !!(S && S.cover) : !!(it.cover && it.cover.scope === 'episode'); const cv = it.cover || (S && S.cover) || {};
+  return `<div class="mc-sh-t">표지 사진</div><div class="mc-sh-s">${escapeHtml(c.headline)}${S ? ` · ${fixed ? '고정 칸' : '연재'}` : ''}</div>
+    <div class="mc-crop" id="mcCropW">${P.img ? '<canvas id="mcCrop"></canvas><span class="mc-crop-tip">끌어서 위치 · 눌러서 중심 잡기</span>' : `<button class="mc-pick" onclick="document.getElementById('mcFile').click()">${_MC_SVG.cam}<span>사진 고르기</span></button>`}</div>
+    <div class="mc-note">사진은 16:9로 잘려요 · 목록 썸네일은 동그라미를 중심으로 다시 잘려요</div>
+    ${P.img ? `<div class="mc-lb2">피드에서 이렇게 보여요</div><div class="mc-pv"><div><canvas id="mcPvH" width="392" height="220"></canvas><small>대표 기사</small></div><div><canvas id="mcPvT" width="216" height="162"></canvas><small>목록 썸네일</small></div></div>` : ''}
+    <div class="mc-lb">어디에 쓸까요</div><div class="gd-tog mc-tog">${scopes.map(([k, l]) => `<button class="${P.scope === k ? 'on' : ''}" onclick="_mc.ph.scope='${k}'; _mcSheet(_mcPhotoHtml()); _mcPhotoDraw()">${l}</button>`).join('')}</div>
+    ${S ? `<div class="mc-note">${fixed ? '고정 칸 표지는 사진이 없는 모든 주에 쓰여요' : '연재 표지는 회차 사진이 없는 모든 회차에 쓰여요'}</div>` : ''}
+    <label class="mc-lb" for="mcCap">사진 설명 <span>(선택)</span></label><input id="mcCap" class="mc-in" maxlength="80" placeholder="예: 뉴욕 증권거래소 앞" value="${escapeAttr(P.cap != null ? P.cap : (cv.cap || ''))}" oninput="_mc.ph.cap=this.value">
+    <label class="mc-lb" for="mcCr">사진 출처 <span>(선택)</span></label><input id="mcCr" class="mc-in" maxlength="60" placeholder="예: 직접 촬영" value="${escapeAttr(P.cr != null ? P.cr : (cv.cr || ''))}" oninput="_mc.ph.cr=this.value">
+    <div class="mc-warn">${_MC_SVG.warn}<span>올린 사진은 일반 사용자에게도 보여요. 화면 캡처처럼 개인 정보가 담긴 사진은 피해 주세요.</span></div>
+    <div class="gm-btns"><button class="gm-b" onclick="document.getElementById('mcFile').click()">${P.img ? '다른 사진 고르기' : '사진 고르기'}</button><button class="gm-b pri" id="mcPhGo" ${P.img ? '' : 'disabled'} onclick="aqMcPhotoSave()">저장</button></div>
+    ${has ? `<button class="mc-txtbtn r" onclick="aqMcPhotoClear()">사진 빼고 ${P.scope === 'series' ? '자동 표지로' : S ? '표지 사진으로' : '자동 표지로'}</button>` : ''}
+    <input type="file" id="mcFile" accept="image/*" hidden onchange="aqMcPhotoFile(this)">`;
+}
+function aqMcPhotoFile(inp) {
+  const f = inp.files && inp.files[0]; if (!f) return; const url = URL.createObjectURL(f); const im = new Image();
+  im.onload = () => { _mc.ph.img = im; _mc.ph.ox = .5; _mc.ph.oy = .5; _mc.ph.fx = .5; _mc.ph.fy = .5; _mcSheet(_mcPhotoHtml()); _mcPhotoDraw(); };
+  im.onerror = () => aqToast('이 사진은 열 수 없어요 · JPG나 PNG로 골라 주세요'); im.src = url;
+}
+function _mcSrcRect(P) {   // 원본에서 16:9로 자를 부분
+  const iw = P.img.naturalWidth, ih = P.img.naturalHeight; let w = iw, h = iw * 9 / 16; if (h > ih) { h = ih; w = ih * 16 / 9; }
+  return { x: (iw - w) * P.ox, y: (ih - h) * P.oy, w, h, iw, ih };
+}
+function _mcPhotoDraw() {
+  const P = _mc.ph; if (!P || !P.img) return; const cv = document.getElementById('mcCrop'); if (!cv) return;
+  const W = cv.parentElement.clientWidth || 340, H = Math.round(W * 9 / 16), dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); const R = _mcSrcRect(P);
+  g.drawImage(P.img, R.x, R.y, R.w, R.h, 0, 0, W, H);
+  g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 1; [1, 2].forEach(i => { g.beginPath(); g.moveTo(W * i / 3, 0); g.lineTo(W * i / 3, H); g.moveTo(0, H * i / 3); g.lineTo(W, H * i / 3); g.stroke(); });
+  g.beginPath(); g.arc(W * P.fx, H * P.fy, 18, 0, Math.PI * 2); g.lineWidth = 5; g.strokeStyle = 'rgba(0,0,0,.35)'; g.stroke(); g.lineWidth = 2; g.strokeStyle = '#fff'; g.stroke();
+  const ph = document.getElementById('mcPvH'); if (ph) ph.getContext('2d').drawImage(P.img, R.x, R.y, R.w, R.h, 0, 0, ph.width, ph.height);
+  const pt = document.getElementById('mcPvT'); if (pt) { const T = _mcThumbRect(P, R); pt.getContext('2d').drawImage(P.img, T.x, T.y, T.w, T.h, 0, 0, pt.width, pt.height); }
+  if (!cv._mcBound) { cv._mcBound = true; cv.style.touchAction = 'none';
+    cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); P.drag = { x: e.clientX, y: e.clientY, ox: P.ox, oy: P.oy, moved: false }; });
+    cv.addEventListener('pointermove', e => { const d = P.drag; if (!d) return; const dx = e.clientX - d.x, dy = e.clientY - d.y; if (Math.abs(dx) + Math.abs(dy) > 5) d.moved = true; if (!d.moved) return;
+      const Rr = _mcSrcRect(P); const sc = (cv.clientWidth || 1) / Rr.w; const ovx = (Rr.iw - Rr.w) * sc, ovy = (Rr.ih - Rr.h) * sc;
+      if (ovx > 1) P.ox = Math.max(0, Math.min(1, d.ox - dx / ovx)); if (ovy > 1) P.oy = Math.max(0, Math.min(1, d.oy - dy / ovy)); _mcPhotoDraw(); });
+    const up = e => { const d = P.drag; P.drag = null; if (!d || d.moved) return; const r = cv.getBoundingClientRect(); P.fx = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); P.fy = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height)); _mcPhotoDraw(); };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', () => { P.drag = null; }); }
+}
+function _mcThumbRect(P, R) { const h = R.h, w = Math.min(R.w, h * 4 / 3); const cx = R.x + R.w * P.fx; return { x: Math.max(R.x, Math.min(R.x + R.w - w, cx - w / 2)), y: R.y, w, h }; }
+function _mcJpeg(img, r, W, H, q) { const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, W, H); g.drawImage(img, r.x, r.y, r.w, r.h, 0, 0, W, H); return c.toDataURL('image/jpeg', q); }
+async function aqMcPhotoSave() {
+  const P = _mc.ph, A = _mc.art; if (!P || !P.img || !A) return; const btn = document.getElementById('mcPhGo'); if (btn) { btn.disabled = true; btn.textContent = '올리는 중…'; }
+  try {
+    const R = _mcSrcRect(P); const W = Math.round(Math.min(1600, R.w)), H = Math.round(W * 9 / 16);
+    let full = _mcJpeg(P.img, R, W, H, .82); if (full.length > 3.2e6) full = _mcJpeg(P.img, R, W, H, .68);
+    const T = _mcThumbRect(P, R); const tw = Math.round(Math.min(480, T.w)), th = Math.round(tw * 3 / 4); const thumb = _mcJpeg(P.img, T, tw, th, .8);
+    const kind = P.scope === 'series' ? 'series' : 'macro'; const id = kind === 'series' ? A.series.id : A.item.id;
+    const u = new URL(getConfig().url); u.search = ''; u.searchParams.set('action', 'coverUpload'); u.searchParams.set('kind', kind); u.searchParams.set('id', id);
+    let tok = ''; try { tok = localStorage.getItem('aq_session_token') || ''; } catch (e) {}
+    const res = await fetch(u.toString(), { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok }, body: JSON.stringify({ full, thumb, fx: P.fx, fy: P.fy, cap: P.cap != null ? P.cap : ((document.getElementById('mcCap') || {}).value || ''), cr: P.cr != null ? P.cr : ((document.getElementById('mcCr') || {}).value || '') }) });
+    const j = await res.json().catch(() => null);
+    if (!j || !j.ok) throw new Error((j && j.error) || `HTTP ${res.status}`);
+    aqToast('표지를 바꿨어요'); aqMcSheetClose(); _mc.ts = 0; _mcLoad(true); aqMcOpen(A.item.id);
+  } catch (e) { aqToast('올리지 못했어요 · ' + String(e.message || e).slice(0, 40)); if (btn) { btn.disabled = false; btn.textContent = '저장'; } }
+}
+async function aqMcPhotoClear() {
+  const P = _mc.ph, A = _mc.art; if (!P || !A) return; const kind = P.scope === 'series' ? 'series' : 'macro'; const id = kind === 'series' ? A.series.id : A.item.id;
+  let r = null; try { r = await apiCall('coverClear', { kind, id }); } catch (e) {}
+  if (!r || !r.ok) { aqToast('빼지 못했어요'); return; } aqToast('사진을 뺐어요'); aqMcSheetClose(); _mc.ts = 0; _mcLoad(true); aqMcOpen(A.item.id);
+}
+// ---------- AI 비서 브레인 (관리자) ----------
+async function _bnLoad(force) {
+  if (!_gdAdm() || _bn.busy) return; if (!force && _bn.d && Date.now() - _bn.ts < 3 * 60e3) return;
+  _bn.busy = true; let r = null; try { r = await apiCall('brainHome', { days: 21 }); } catch (e) {} _bn.busy = false;
+  if (!(r && r.ok)) return; _bn.d = r; _bn.ts = Date.now();
+  try { aqAsgBadge(); } catch (e) {}
+  if (_gdIsAsg() && document.body.getAttribute('data-mtab') === 'auto') { aqHoldScroll(); aqGuideRender(); }
+}
+function _bnDecide() { return ((_bn.d && _bn.d.decide) || []).filter(x => !x.decision); }
+function _bnDecN() { return _gdAdm() ? _bnDecide().length : 0; }
+function _bnWeekHtml() {
+  const W = _bn.d && _bn.d.weekly; if (!W) return '';
+  const ws = (W.watch || []).map(w => { const m = String(w.when || '').match(/^(\d{1,2}\/\d{1,2})\s*(.*)$/); return `<div class="bn-w"><span class="tm">${escapeHtml(m ? m[1] : w.when || '')}${m && m[2] ? `<br>${escapeHtml(m[2])}` : ''}</span><span class="tx">${escapeHtml(w.title)}</span></div>`; }).join('');
+  return `<div class="bn-week"><div class="hd"><span>이번 주 · 주간 점검</span><span>${_mcMD(W.week)}</span></div>${W.oneline ? `<div class="one">${escapeHtml(W.oneline)}</div>` : ''}${ws ? `<div class="lb">다음 주 지켜볼 것</div>${ws}<div class="ft">평일 가이드가 그날 칸에 옮겨 써요 · 따르기는 거기서</div>` : ''}</div>`;
+}
+function _bnDecCards() {
+  const L = _bnDecide(); if (!L.length) return '';
+  return L.map(x => { const eff = x.ai_rec || 'continue';
+    return `<div class="gm-dc bn-sd"><div class="bn-sh"><span>거시 분석 연재 · ${x.episodes}회</span><span>일요일 16:30까지</span></div><div class="t">${escapeHtml(x.title)} — ${eff === 'end' ? '이번 회로 끝낼까요?' : '다음 주도 따라갈까요?'}</div>`
+      + `<div class="s">${x.headline ? `이번 주: ${escapeHtml(x.headline)}${x.changed ? ' · 결론 바뀜' : ' · 결론 유지'}<br>` : ''}<b class="${eff === 'end' ? 'y' : ''}">AI 추천 ${eff === 'end' ? '끝내기' : '계속'}</b>${x.ai_why ? ` — ${escapeHtml(x.ai_why)}` : ''}</div>`
+      + `<div class="gm-btns"><button class="gm-b ${eff === 'continue' ? 'pri' : ''}" onclick="aqMcDecide(${x.id},'continue')">계속</button><button class="gm-b ${eff === 'end' ? 'pri' : ''}" onclick="aqMcDecide(${x.id},'end')">끝내기</button></div>`
+      + (x.macro_id ? `<div class="bn-lk" onclick="aqMcGo(${x.macro_id})">이번 회 읽기 ›</div>` : '') + `</div>`; }).join('')
+    + `<div class="bn-note">답이 없으면 AI 추천대로 해요 · 끝내면 다음 주에 마무리 회차를 써요</div>`;
+}
+const _BN_RX = ['몰랐다', '알고 있었다', '틀렸다'];
+function _bnGapsHtml() {
+  const G = ((_bn.d && _bn.d.gaps) || []).slice().sort((a, b) => (!!a.reaction - !!b.reaction) || String(b.date).localeCompare(String(a.date)) || b.id - a.id).slice(0, 8);
+  if (!G.length) return ''; const n = G.filter(g => !g.reaction).length;
+  const cards = G.map(g => { const b = g.body || {}; const s = [b['놓친 이유'], b['제안']].filter(Boolean).join(' ');
+    return `<div class="bn-gap ${g.reaction ? 'done' : ''}"><div class="hd" onclick="aqBnGap(${g.id})"><div class="m"><span class="ln">${escapeHtml(g.lens || '')}</span><span>${g.kind === 'missed' ? '가이드' : '주간 점검'} · ${_mcMD(g.date)}</span></div><div class="t">${escapeHtml(g.title)}</div>${s ? `<div class="s">${escapeHtml(s.length > 90 ? s.slice(0, 88) + '…' : s)}</div>` : ''}</div>`
+      + `<div class="bn-rx">${_BN_RX.map(r => `<button class="${g.reaction === r ? 'on' : ''}" onclick="aqBnReact(${g.id},'${r}')">${r}</button>`).join('')}</div></div>`; }).join('');
+  return `<div class="gm-sec"><div class="gm-h"><i class="gm-lt o"></i>놓친 것${n ? `<em>${n}</em>` : ''}</div><div class="bn-sub">AI가 본 내 포트폴리오의 약한 곳이에요. 알고 있었는지 알려 주면 다음엔 더 깊은 걸 찾아요.</div>${cards}</div>`;
+}
+async function aqBnReact(id, r) {
+  const g = ((_bn.d && _bn.d.gaps) || []).find(x => x.id === id); if (!g) return; const nv = g.reaction === r ? '' : r; const old = g.reaction; g.reaction = nv || null;
+  aqHoldScroll(); if (document.getElementById('mcSheet') && _bn.gapOpen === id) _mcSheet(_bnGapSheet(g)); if (_gdIsAsg()) aqGuideRender();
+  let res = null; try { res = await apiCall('brainReact', { id, reaction: nv }); } catch (e) {}
+  if (!res || !res.ok) { g.reaction = old; aqToast('저장하지 못했어요'); if (_gdIsAsg()) aqGuideRender(); }
+}
+function aqBnGap(id) { const g = ((_bn.d && _bn.d.gaps) || []).find(x => x.id === id); if (!g) return; _bn.gapOpen = id; _mcSheet(_bnGapSheet(g)); }
+function _bnGapSheet(g) {
+  const b = g.body || {}; const h = g.hypo;
+  const f = [['관찰', '관찰'], ['근거', '근거'], ['왜 놓쳤을까', '놓친 이유'], ['제안', '제안'], ['이 걱정이 틀렸다고 볼 신호', '반증']].filter(([, k]) => b[k]).map(([l, k]) => `<div class="bn-f"><div class="l">${l}</div><div class="v">${_mcPara(b[k])}</div></div>`).join('');
+  return `<div class="bn-gm"><span>렌즈 · ${escapeHtml(g.lens || '')}</span><span>${escapeHtml(g.target || '')} · ${g.kind === 'missed' ? '가이드' : '주간 점검'} ${_mcMD(g.date)}</span></div><div class="mc-sh-t">${escapeHtml(g.title)}</div>${f}`
+    + (h ? `<div class="mc-hy"><div class="h"><span>가설 — ${h.check_on ? _mcMD(h.check_on) + '에 채점' : '확인일 미정'}</span><span class="st ${h.status}">${h.status === 'right' ? '맞음' : h.status === 'wrong' ? '틀림' : h.status === 'hold' ? '보류' : '확인 전'}</span></div><div class="t">${escapeHtml(h.text)}</div></div>` : '')
+    + `<div class="mc-lb">이건 알고 있었나요?</div><div class="bn-rx big">${_BN_RX.map(r => `<button class="${g.reaction === r ? 'on' : ''}" onclick="aqBnReact(${g.id},'${r}')">${r}</button>`).join('')}</div><div class="mc-note">몰랐다가 많은 렌즈는 더 파고, 알고 있었다가 많은 렌즈는 줄여요.</div>`
+    + `<div class="mc-lb">행동으로 옮기려면</div><div class="mc-note">평일 AI 가이드가 '허점 점검' 항목으로 꼬리표와 함께 올려요. 거기서 따르기를 누르면 내 지침이 돼요.</div>`;
+}
+function _bnScoreTx() { const S = (_bn.d && _bn.d.score) || {}; let r = 0, w = 0; Object.values(S).forEach(v => { r += v.right || 0; w += v.wrong || 0; }); return r + w ? ` · 가설 맞음 ${r}/${r + w}` : ''; }
+async function _bnHypoLoad() { let r = null; try { r = await apiCall('hypoList', {}); } catch (e) {} if (r && r.ok) { _bn.hypo = r.items || []; if (_gd.mineView === 'record' && _gdIsAsg()) aqGuideRender(); } }
+function _bnHypoHtml() {
+  if (!_gdAdm()) return ''; if (!_bn.hypo) { _bnHypoLoad(); return '<div class="gm-sec"><div class="gm-h">가설</div><div class="auto-empty">불러오는 중…</div></div>'; }
+  const H = _bn.hypo; if (!H.length) return '<div class="gm-sec"><div class="gm-h">가설</div><div class="gm-empty">아직 가설이 없어요<br><small>AI 가이드의 놓친 것과 주간 점검이 가설을 남겨요</small></div></div>';
+  const SRC = { missed: '놓친 것', gap: '허점', macro: '거시 분석' };
+  const tiles = Object.entries(SRC).map(([k, l]) => { const a = H.filter(h => h.src === k); const r = a.filter(h => h.status === 'right').length, w = a.filter(h => h.status === 'wrong').length; return `<div class="gm-tile"><small>${l}</small><b>${r + w ? `${r}/${r + w}` : '—'}</b><small>맞음</small></div>`; }).join('');
+  const cnt = { '': H.length, open: H.filter(h => h.status === 'open' || h.status === 'hold').length, right: H.filter(h => h.status === 'right').length, wrong: H.filter(h => h.status === 'wrong').length };
+  const chips = [['', '전체'], ['open', '확인 전'], ['right', '맞음'], ['wrong', '틀림']].map(([k, l]) => `<button class="${_bn.hf === k ? 'on' : ''}" onclick="aqHoldScroll(); _bn.hf='${k}'; aqGuideRender()">${l} ${cnt[k]}</button>`).join('');
+  const today = _kstToday();
+  const L = H.filter(h => !_bn.hf || (_bn.hf === 'open' ? (h.status === 'open' || h.status === 'hold') : h.status === _bn.hf)).slice(0, 40).map(h => {
+    const st = h.status; const dd = h.check_on && st === 'open' ? Math.round((new Date(h.check_on + 'T00:00:00Z') - new Date(today + 'T00:00:00Z')) / 864e5) : null;
+    const lab = st === 'right' ? '맞음' : st === 'wrong' ? '틀림' : st === 'hold' ? '보류' : `확인 전${dd != null ? (dd > 0 ? ` D-${dd}` : dd === 0 ? ' 오늘' : ' 채점 기다림') : ''}`;
+    const ed = _bn.hEdit === h.id ? `<div class="gm-btns">${[['right', '맞음'], ['wrong', '틀림'], ['hold', '보류']].map(([k, l]) => `<button class="gm-b ${h.user && st === k ? 'pri' : ''}" onclick="aqBnHypoSet(${h.id},'${k}')">${l}</button>`).join('')}${h.user ? `<button class="gm-b" onclick="aqBnHypoSet(${h.id},'')">AI 채점으로</button>` : ''}</div>` : '';
+    return `<div class="bn-hy"><div class="m"><span>${SRC[h.src] || ''} · ${_mcMD(h.date)} → ${_mcMD(h.check_on) || '미정'}</span><span class="st ${st}">${lab}</span>${h.user ? '<span class="me">내가 고침</span>' : ''}</div><div class="t">${escapeHtml(h.text)}</div>`
+      + (h.user ? `<div class="s">AI 채점은 ${h.ai_status === 'right' ? '맞음' : h.ai_status === 'wrong' ? '틀림' : h.ai_status === 'hold' ? '보류' : '확인 전'} · 내가 ${lab}으로 바꿈</div>` : h.why ? `<div class="s">AI 채점: ${escapeHtml(h.why)}</div>` : '')
+      + (st !== 'open' || h.user ? `<button class="mc-txtbtn" onclick="aqHoldScroll(); _bn.hEdit = _bn.hEdit === ${h.id} ? null : ${h.id}; aqGuideRender()">${h.user ? '채점 바꾸기 · 되돌리기' : '채점 바꾸기'}</button>` : '') + ed + `</div>`; }).join('');
+  return `<div class="gm-sec"><div class="gm-h">가설</div><div class="bn-sub">AI가 남긴 판단을 확인일에 주간 점검이 채점해요. 채점이 틀렸으면 바꿀 수 있어요.</div><div class="gm-tiles c3">${tiles}</div><div class="bn-chips">${chips}</div>${L || '<div class="gm-empty">이 칸에 해당하는 가설이 없어요</div>'}</div>`;
+}
+async function aqBnHypoSet(id, s) {
+  let r = null; try { r = await apiCall('hypoSet', { id, status: s }); } catch (e) {}
+  if (!r || !r.ok) { aqToast('바꾸지 못했어요'); return; }
+  const h = (_bn.hypo || []).find(x => x.id === id); if (h) { h.user = !!s; h.status = s || h.ai_status; }
+  _bn.hEdit = null; _bn.ts = 0; aqHoldScroll(); aqGuideRender();
+}
+Object.assign(window, { aqMacroRender, aqMcOpen, aqMcBack, aqMcGo, aqMcDecide, aqMcTopic, aqMcTpMode, aqMcTopicSave, aqMcTopicCancel, aqMcSheetClose, aqMcPhoto, aqMcPhotoFile, aqMcPhotoSave, aqMcPhotoClear, aqBnReact, aqBnGap, aqBnHypoSet, _mcTpCount, _mcTpEx, _mcSheet, _mcPhotoHtml, _mcPhotoDraw, _mc, _bn });
 // v5.99: 자동 페이지로 이동 (모바일 = 햄버거 '자동', PC = 사이드바 '자동')
 function aqGoEngine() { try { if (typeof isPCViewport === 'function' && isPCViewport()) setPCTab('engine'); else switchMobileTab('engine'); } catch (e) {} }
 window.aqGoEngine = aqGoEngine;
@@ -29080,7 +29552,7 @@ async function aqGuideRender() {
   }
   try { await aqGuideLoadAcc(); } catch (e) { _gd.acc = _gd.acc || {}; }   // v5.63: 체크 상태 = 받아들인 가이드
   try { aqAsgBadge(); } catch (e) {}
-  if (asg) { box.innerHTML = `<div class="gdm">${_gdMineHtml()}</div>`; return; }   // v6.11: 내 지침 → v6.49: AI 비서 탭
+  if (asg) { try { _bnLoad(); } catch (e) {} box.innerHTML = `<div class="gdm">${_gdMineHtml()}</div>`; return; }   // v6.11: 내 지침 → v6.49: AI 비서 탭
   const days = [-3, -2, -1, 0, 1, 2, 3].map(n => _gdAdd(today, n));
   const strip = days.map(d => { const dd = new Date(d + 'T00:00:00'); const g = _gdForDay(d); const dots = g.items.filter(x => x.status !== '철회').slice(0, 4).map(() => '<i></i>').join('');
     return `<button class="gd-d ${d === _gd.sel ? 'sel' : ''} ${d === today ? 'today' : ''} ${d > today ? 'fut' : ''}" onclick="aqGuideSel('${d}')"><span class="gd-w">${'일월화수목금토'[dd.getDay()]}</span><span class="gd-n">${dd.getDate()}</span><span class="gd-dots">${dots}</span>${d === today ? '<span class="gd-today">오늘</span>' : ''}</button>`; }).join('');
@@ -29549,7 +30021,7 @@ function _gmChainHtml(gid, cur) {
   const ic = { done: '✓', run: '…', now: '●', todo: '○', skip: '–' };
   return `<div class="gm-chain">${steps.map((t, i) => `${i ? '<i>→</i>' : ''}<span class="${t.s} ${t.me ? 'me' : ''}">${escapeHtml(t.l)} ${ic[t.s] || ''}</span>`).join('')}</div>`;
 }
-function _gmDecCount() { let n = 0; try { n = _stCardsAll().reduce((a, c) => a + (c._n || 1), 0); } catch (e) {} return _gmDecisions((_gd.accList || []).filter(x => _gmLive(x) && _gdVis(_gdMktOf(x.target))), _gmQNeed()).length + n; }
+function _gmDecCount() { let n = 0; try { n = _stCardsAll().reduce((a, c) => a + (c._n || 1), 0); } catch (e) {} try { n += _bnDecN(); } catch (e) {} return _gmDecisions((_gd.accList || []).filter(x => _gmLive(x) && _gdVis(_gdMktOf(x.target))), _gmQNeed()).length + n; }
 function _gmLens(f) {   // 종목 줄에서 고른 종목: 이름 · 지금 가격 · AI 보고서 · AI 매수심사
   const mk = /^\d{6}$/.test(f) ? 'KR' : 'US';
   const dates = (((_state.reports || {})[mk]) || {})[f] || []; const rk = mk + '/' + f;
@@ -29774,7 +30246,7 @@ function _gmHome() {
   const L = all.filter(_gmLive); const past = all.filter(x => !_gmLive(x)); const need = _gmQNeed();
   const f = _gd.tkFilter || '';
   const D = _gmDecisions(L, need);
-  const SC = _stCardsAll(); const SX = (() => { try { return _secFixCardHtml(); } catch (e) { return ''; } })(); const scN = SC.reduce((a, c) => a + (c._n || 1), 0) + (SX ? 1 : 0);   // v6.28 운영 점검 · v6.42 섹터 정리
+  const SC = _stCardsAll(); const SX = (() => { try { return _secFixCardHtml(); } catch (e) { return ''; } })(); const BD = (() => { try { return _gdAdm() ? _bnDecCards() : ''; } catch (e) { return ''; } })(); const scN = SC.reduce((a, c) => a + (c._n || 1), 0) + (SX ? 1 : 0) + _bnDecN();   // v6.28 운영 점검 · v6.42 섹터 정리 · v6.54 연재 정하기
   const dIds = new Set(D.filter(d => d.x).map(d => d.x.id));
   const near = [], keep = [];
   L.forEach(x => { if (dIds.has(x.id)) return; const b = _gmBest(x); if (b && _gmNear(b.p, b.sc)) near.push({ x, b }); else keep.push({ x, b }); });
@@ -29793,14 +30265,15 @@ function _gmHome() {
   const lg = ks.length >= 2 ? `<div class="gm-lgs ${f ? 'f' : ''}"><button class="gm-all ${f ? '' : 'on'}" onclick="aqGmTk('')">전체</button>${ks.map(kk => `<button class="${kk === f ? 'on' : ''}" onclick="aqGmTk('${escapeAttr(kk)}')" aria-label="${escapeAttr(kk === '__etc' ? '기타' : _gmTkName(kk))}만 보기">${kk === '__etc' ? '<span class="gm-lg">기타</span>' : _gmLogo(null, kk)}${(cnt[kk] || 0) > 1 ? `<i>${cnt[kk]}</i>` : ''}</button>`).join('')}</div>` : '';
   const fh = f ? `<div class="gm-fh"><span><b>${escapeHtml(f === '__etc' ? '기타' : (displayName(f) || _gmTkName(f)))}</b> 지침 ${nearF.length + keepF.length}개</span><button onclick="aqGmTk('')">전체 보기 ✕</button></div>` : '';
   const sec = (c, h, body) => `<div class="gm-sec"><div class="gm-h"><i class="gm-lt ${c}"></i>${h}</div>${body}</div>`;
-  const empty = !D.length && !SC.length && !SX && !near.length && !keep.length ? `<div class="gm-empty">따르는 지침이 없어요<br><small>${_gdAdm() ? 'AI 가이드에서 \'따르기\'를 누르면 여기로 와요' : 'AI 가이드가 열리면 따른 지침이 여기 모여요'}</small></div>` : '';
+  const empty = !D.length && !SC.length && !SX && !BD && !near.length && !keep.length ? `<div class="gm-empty">따르는 지침이 없어요<br><small>${_gdAdm() ? 'AI 가이드에서 \'따르기\'를 누르면 여기로 와요' : 'AI 가이드가 열리면 따른 지침이 여기 모여요'}</small></div>` : '';
   const stc = SC.map(_stCardHtml).join('');
-  return hero + _stPbBanner()
-    + (D.length || SC.length || SX ? sec('o', '정할 것', dc + SX + stc) : '')
+  const BW = (() => { try { return _gdAdm() ? _bnWeekHtml() : ''; } catch (e) { return ''; } })(); const BG = (() => { try { return _gdAdm() ? _bnGapsHtml() : ''; } catch (e) { return ''; } })();   // v6.54: 이번 주 · 놓친 것
+  return hero + BW + _stPbBanner()
+    + (D.length || SC.length || SX || BD ? sec('o', '정할 것', BD + dc + SX + stc) : '') + BG
     + (near.length && (!f || nearF.length || !keep.length) ? sec('y', '곧 닿아요', (keep.length ? '' : lg + fh) + (nearF.length ? `<div class="gm-box">${nr}</div>` : `<div class="gm-empty">이 종목은 곧 닿을 신호가 없어요</div>`)) : '')
     + (keep.length ? sec('g', `지키는 중<em class="g">${keep.length}</em>`, lg + fh + (keepF.length ? `<div class="gm-box">${kr}</div>` : `<div class="gm-empty">이 종목에 지키는 지침이 없어요</div>`)) : '')
     + empty
-    + (`<div class="gm-foot" onclick="aqPvGoSt()"><span>${(() => { const mp = (_stc.d || {}).map || {}; const g = Object.entries(mp.groups || {}).sort((a, b) => b[1] - a[1])[0]; return g && g[1] >= 1 ? `가장 큰 묶음 ${escapeHtml(g[0])} ${Math.round(g[1])}%` : '사상 · 단계 · 내 평가'; })()}</span><b>운영 ›</b></div><div class="gm-foot" onclick="aqGmView('record')"><span>끝난 것 ${past.length}</span><b>성적표 ›</b></div>`);
+    + (`<div class="gm-foot" onclick="aqPvGoSt()"><span>${(() => { const mp = (_stc.d || {}).map || {}; const g = Object.entries(mp.groups || {}).sort((a, b) => b[1] - a[1])[0]; return g && g[1] >= 1 ? `가장 큰 묶음 ${escapeHtml(g[0])} ${Math.round(g[1])}%` : '사상 · 단계 · 내 평가'; })()}</span><b>운영 ›</b></div><div class="gm-foot" onclick="aqGmView('record')"><span>끝난 것 ${past.length}${(() => { try { return _bnScoreTx(); } catch (e) { return ''; } })()}</span><b>성적표 ›</b></div>`);
 }
 function _gmRet(x) {   // 끝난 지침: 따를 때 주가 → 지금
   const tk = _gmTk(x); if (!tk || !x.px0) return null;
@@ -29820,7 +30293,7 @@ function _gmRecord() {
   const sec = (h, body) => `<div class="gm-sec"><div class="gm-h">${h}</div>${body}</div>`;
   return `<div class="gm-rh"><button class="gm-back" aria-label="AI 비서로" onclick="aqGmView('home')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><b>성적표</b></div>`
     + tiles + (pr ? sec('끝난 지침', pr) : '') + (rr ? sec('선제 추천<small>시장 대비 20일</small>', rr) : '') + (plr ? sec('약속 기록', plr) : '')
-    + (!pr && !rr && !plr ? '<div class="gm-empty">아직 끝난 지침이 없어요</div>' : '');
+    + (!pr && !rr && !plr ? '<div class="gm-empty">아직 끝난 지침이 없어요</div>' : '') + (() => { try { return _bnHypoHtml(); } catch (e) { return ''; } })();   // v6.54: 가설
 }
 function _gdMineHtml() { return _gd.mineView === 'record' ? _gmRecord() : _gd.mineView === 'stance' ? _stPage() : _gmHome(); }
 function aqGmView(v) { if (v === 'stance') { aqPvGoSt(); return; }   // v6.39: 운영 지도 → 마이 › 포트폴리오 › 운영
