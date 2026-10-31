@@ -53,7 +53,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.30';   // v6.30: 미국 서머타임 해제 대응 — 내 브리핑 '실적 발표 예정(장 시작 전)'의 개장 시각을 서머타임에 따라 22:30/23:30으로 · 실적 캘린더 기본 시각 뉴욕 17:00 · v6.29: 운영 편집 개편 — 처음 정하기는 카드 넘기기(6개월 차트·평단·매매 점, AI 초안 → 맞아요/바꾸기/나중에, 밀어서 넘기기, 끝나면 요약) · 사상 고르기는 '왜 들고 계세요?' 5묶음 → 묶음 안 비교(사는 때·파는 때·AI가 안 하는 것) + 단계(최근 30일 매매로 추천) · 잘 모르겠으면 질문 3개 · 운영 카드(사상·단계·내 평가 칸을 눌러 그것만 고치기, 끝낼 조건 거리, 실적 체크, 기록 접기) · 보유 목록 길게 누르기 = 내 평가 빠른 시트(확신·결과, 다른 메뉴는 안에) · 끝낼 조건은 문장 + 차트 선 끌기 · 사상별 값(추세 이탈선 차트·지난 1년 이탈 통계, 역발상 가격선 눌러 추가, 이벤트 실적일, 목표 비중 막대, 배당 기준, 확인 신호, 다시 볼 날, 정리 계획 차트) · 저장하면 'AI가 이제 하는 것' 안내 · v6.28: 운영 — 종목마다 사상(왜 들고 있나 10개 · 5묶음) × 단계(정찰·모으는 중·보유·줄이는 중) × 내 평가(강한확신·반신반의·판단보류·기획성공·기획실패) · 편집 시트(AI·서버 초안 확정, 한 줄 이유·끝낼 조건·숫자 감시, 사상별 값) · 내 지침 '정할 것'에 운영 점검(사상 정하기·맞지 않는 조합·이벤트 뒤 보유·계획 밖 매수·흔들림 매도 확인·끝낼 조건·추세 이탈·다시 볼 날·기획성공 다음 단계·정리 계획·AI 제안·사상 예산·비중 맞추기·숨은 집중·실적 체크) · 운영 지도(사상·묶음 비중, 기준 고치기, 급락장 플레이북, 운영 성적·오답노트) · 보유 목록·신호표·종목 칩 · 매수심사 전 사상 확인 · 초장기 수집은 AI 평가 제외 · v6.27: 포인트색 정리 — 행동·결정·닿음 자리의 주황을 하늘색(#569cd6, 앱 기본 강조색)으로 (내 지침 버튼·정할 것·닿음·신호등 첫 칸·그래프 닿은 점 · AI 추천 개수 배지·오늘 묶음 · 매매심사 만료 버튼·만료 수) · 주황은 경고·만료·실적 전·위험 표시에만 남김 · v6.26: 내 지침 — 꼬리표 끝 '→ 할 일'을 갈림길·기다리는 신호·정할 것에 표시 (닿으면 [했어요 / 계속 따르기 / 그만]) · v6.25: 내 지침 개편 — 첫 화면 '오늘 정할 것 N개' · 정할 것 · 곧 닿아요(작은 선·달력) · 지키는 중 · 상세: 지금 할 일 · 약속(방패·지킨 날) · 왜 · 기다리는 신호를 종류별 그림으로(가격·지표 선과 기준선, 평단 눈금, 비중 막대, 연속 칸, 거래량 막대, 달력, 판단 질문) · 갈림길 · 켜 둔 설정 기간 막대 · 한 일 체크 · 기록 접기 · '했어요'는 할 일이 있는 지침에만 · v6.24: AI 보고서 5 WHY — 제목 모양이 조금 달라도 단계 화면으로 표시('고른 쟁점:' · '1단계 (…):' · '이 진실이 바뀔 수 있는 조건') · 쟁점 아래 '고른 이유' 문단 표시 · 바뀌는 조건이 5단계 인용 상자에 붙던 문제 · v6.23: 팝업을 모두 '맨 위 손잡이를 쓸어내리면 닫힘'으로 통일 — 매크로 지표 · 운영 로그 · 비밀번호 · 일정 등록 · 밸류에이션 · 종목 검색 · 누적 시그널 · 계정 관리 · AI 매수심사 리포트 · 매매 기록 입력·내역 · 계좌 · 보유 입력 · 로고 선택 · 엑셀 붙여넣기 (모바일에선 가운데 상자도 아래에서 올라오는 시트, ✕ 숨김 · 뒤로가기로도 닫힘) · 뒤로가기로 시트를 닫으면 기록이 한 칸 더 지워지던 문제 · v6.22: 토글·탭을 눌러도 화면 위치 그대로(내용이 짧아져도 스크롤이 당겨지지 않음 · AI 가이드 토글이 화면을 끌어올리던 것 없앰) · AI 가이드 [AI 추천 | 내 지침]과 AI 브리핑 [장후 | 장전]을 폭을 꽉 채운 같은 모양으로 · v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
+window.AQ_PWA_VERSION = '6.31';   // v6.31: 마이 › 보유 종목 → '포트폴리오' 개편 (MO) — 평가금·오늘·총 수익 · [메가 | 섹터 | 종목] 묶어 보기(한국은 섹터·종목) · 차트 [비중 지도 | 오늘 기여 | 30일 비중] · 메가는 고유 색, 섹터·종목은 오늘 오르면 초록·내리면 빨강 · 한 묶음 50% 넘으면 한 줄 알림 · 묶음 목록(접고 펼치기, 비중·오늘·수익률 순) · 묶음 시트(30일 묶음 vs 나스닥/코스피, 섹터 비중, 종목) · 종목 줄 누르면 차트, 길게 누르면 내 평가 · v6.30: 미국 서머타임 해제 대응 — 내 브리핑 '실적 발표 예정(장 시작 전)'의 개장 시각을 서머타임에 따라 22:30/23:30으로 · 실적 캘린더 기본 시각 뉴욕 17:00 · v6.29: 운영 편집 개편 — 처음 정하기는 카드 넘기기(6개월 차트·평단·매매 점, AI 초안 → 맞아요/바꾸기/나중에, 밀어서 넘기기, 끝나면 요약) · 사상 고르기는 '왜 들고 계세요?' 5묶음 → 묶음 안 비교(사는 때·파는 때·AI가 안 하는 것) + 단계(최근 30일 매매로 추천) · 잘 모르겠으면 질문 3개 · 운영 카드(사상·단계·내 평가 칸을 눌러 그것만 고치기, 끝낼 조건 거리, 실적 체크, 기록 접기) · 보유 목록 길게 누르기 = 내 평가 빠른 시트(확신·결과, 다른 메뉴는 안에) · 끝낼 조건은 문장 + 차트 선 끌기 · 사상별 값(추세 이탈선 차트·지난 1년 이탈 통계, 역발상 가격선 눌러 추가, 이벤트 실적일, 목표 비중 막대, 배당 기준, 확인 신호, 다시 볼 날, 정리 계획 차트) · 저장하면 'AI가 이제 하는 것' 안내 · v6.28: 운영 — 종목마다 사상(왜 들고 있나 10개 · 5묶음) × 단계(정찰·모으는 중·보유·줄이는 중) × 내 평가(강한확신·반신반의·판단보류·기획성공·기획실패) · 편집 시트(AI·서버 초안 확정, 한 줄 이유·끝낼 조건·숫자 감시, 사상별 값) · 내 지침 '정할 것'에 운영 점검(사상 정하기·맞지 않는 조합·이벤트 뒤 보유·계획 밖 매수·흔들림 매도 확인·끝낼 조건·추세 이탈·다시 볼 날·기획성공 다음 단계·정리 계획·AI 제안·사상 예산·비중 맞추기·숨은 집중·실적 체크) · 운영 지도(사상·묶음 비중, 기준 고치기, 급락장 플레이북, 운영 성적·오답노트) · 보유 목록·신호표·종목 칩 · 매수심사 전 사상 확인 · 초장기 수집은 AI 평가 제외 · v6.27: 포인트색 정리 — 행동·결정·닿음 자리의 주황을 하늘색(#569cd6, 앱 기본 강조색)으로 (내 지침 버튼·정할 것·닿음·신호등 첫 칸·그래프 닿은 점 · AI 추천 개수 배지·오늘 묶음 · 매매심사 만료 버튼·만료 수) · 주황은 경고·만료·실적 전·위험 표시에만 남김 · v6.26: 내 지침 — 꼬리표 끝 '→ 할 일'을 갈림길·기다리는 신호·정할 것에 표시 (닿으면 [했어요 / 계속 따르기 / 그만]) · v6.25: 내 지침 개편 — 첫 화면 '오늘 정할 것 N개' · 정할 것 · 곧 닿아요(작은 선·달력) · 지키는 중 · 상세: 지금 할 일 · 약속(방패·지킨 날) · 왜 · 기다리는 신호를 종류별 그림으로(가격·지표 선과 기준선, 평단 눈금, 비중 막대, 연속 칸, 거래량 막대, 달력, 판단 질문) · 갈림길 · 켜 둔 설정 기간 막대 · 한 일 체크 · 기록 접기 · '했어요'는 할 일이 있는 지침에만 · v6.24: AI 보고서 5 WHY — 제목 모양이 조금 달라도 단계 화면으로 표시('고른 쟁점:' · '1단계 (…):' · '이 진실이 바뀔 수 있는 조건') · 쟁점 아래 '고른 이유' 문단 표시 · 바뀌는 조건이 5단계 인용 상자에 붙던 문제 · v6.23: 팝업을 모두 '맨 위 손잡이를 쓸어내리면 닫힘'으로 통일 — 매크로 지표 · 운영 로그 · 비밀번호 · 일정 등록 · 밸류에이션 · 종목 검색 · 누적 시그널 · 계정 관리 · AI 매수심사 리포트 · 매매 기록 입력·내역 · 계좌 · 보유 입력 · 로고 선택 · 엑셀 붙여넣기 (모바일에선 가운데 상자도 아래에서 올라오는 시트, ✕ 숨김 · 뒤로가기로도 닫힘) · 뒤로가기로 시트를 닫으면 기록이 한 칸 더 지워지던 문제 · v6.22: 토글·탭을 눌러도 화면 위치 그대로(내용이 짧아져도 스크롤이 당겨지지 않음 · AI 가이드 토글이 화면을 끌어올리던 것 없앰) · AI 가이드 [AI 추천 | 내 지침]과 AI 브리핑 [장후 | 장전]을 폭을 꽉 채운 같은 모양으로 · v6.21: AI 매매심사 정리 — 숫자 칸·채점 딱지·의견 색 딱지를 글로 · 상태와 요약 한 줄 · 단계 한 줄 · 탭과 정렬 한 줄 · 카드 여백·간격 넓힘 (심사 후 주가·다음 할 일 상자는 그대로) · v6.20: 내 지침 개편 — 결정할 것 · 곧 닿을 것(가까운 순) · 켜져 있는 것 · 종목 줄 · 상세 시트(기준 −/+ 고치기) · 성적표 · 유형 칩과 AI 요청 상자 없앰 · v6.19: AI 가이드를 앱 맨 위 미국/한국 선택에 따라 나눠 보여 줌 (문서·작업은 하나 그대로 · 환전·자동매매는 미국, 포트폴리오는 양쪽) · v6.18: 내 지침 유형 칩 필터 (전체 · 유형별 개수 · 한 번에 하나 · 이 기기에 기억) · v6.17: AI가 제안한 문서 작성(보고서·매수심사·가이드 고치기)은 내 지침 › AI 요청에서 [실행]을 눌러야 시작 · v6.16: v6.15 '지금 고치기' 이유 표시 되돌림 · v6.14: AI 가이드 화면이 안 나오던 문제 (v6.11 줄 주석이 변수 선언을 가림) · v6.13: 제안 수용 3단계 — 행동 약속(어김 기록·20거래일 뒤 결과) · AI 선제 추천 성적 · 장중 판정(시장 따라/혼자 빠짐) · v6.12: 제안 수용 2단계 — AI 요청(보고서·매수심사·가이드 고치기) 대기열 표시 · 조건 실행(닿으면 실행, 위험한 것은 확인 뒤) · v6.11: 제안 수용 1단계 — AI 가이드 우상단 [AI 추천 | 내 지침] · 확인(○)과 따르기 · 지침 유형 7개 · 부분 따르기·기한 고치기·같은 지침 갱신 · 내 지침 묶음·처리(했음·연장·계속·고치기·그만) · 종목 배지 · v6.10: AI 가이드 '지금 고치기' (오늘 마지막 가이드를 별도 수정 작업이 고침) · 'HH:MM 수정됨' 표시 · v6.09: AI 가이드 버튼 · v6.08: 장전 브리핑 일정 — 매수심사 다시 볼 날·만료 (다시 심사 / 넘기기) · v6.07: AI 매매심사 썸네일 — 지금 가격(1분)·유효 상태 칩·만료 다시 심사·만료 먼저 정렬 · v6.06: AI 매수심사 리포트 — 유효 상태 바(지금 가격·손절선·다시 심사 선·실적) · 비슷했던 구간 5·10·20일 · 할 일 더보기 · v6.05: AI 보고서 생성·리뉴얼 버튼 (서버가 Claude 보고서 작업 실행 · 관리자 무제한 · 일반 하루 3건) · v6.04: AI 매매심사 — 채점 결과(카드)·채점표·오답노트 규칙 표시 · v6.03: AI 매수심사 — 다른 작업 중에도 완성된 리포트 열림(재심사만 막음) · 숫자 완료 직후 'AI 실패'로 보이던 문제 · 안내 '다른 작업 중' · v6.02: 보안 경고 '확인함 — 등록 안 함'·모두 확인 버튼 · v6.01: 유니버스 밖 보유 종목(ETF 등) 시세 — 서버가 매일 받아 둔 값으로 차트·평가손익 계산 · v6.00: 종목·시트 등 전 화면 색을 메인 어두운 톤에 맞춤 · 등락 기호 +/- 복귀 · 장전 프리마켓 내 종목을 본인 기준으로 · v5.99: AI 탭 개편(AI 브리핑·장후 상단 타일·날짜 표기·AI 매매심사 탭) · 자동매매 → 햄버거 '자동' · 미국 매매 손익을 미국 장 날짜로 · v5.98: 섹터별 평가수익금 '섹터 미지정' 오표시 수정(매매기록 섹터 빈칸을 현재 매핑으로 보완) · v5.97: 미국식 등락 표기(초록▲/빨강▼) 전면 적용 · 누적 성과 기간 날짜 표기·평가수익금 추이 소실 수정·나스닥 비교 · v5.96: 매수 계획 상태·변경 이력·가이드 점검 장면 · v5.95: 리포트 줄 간격·목록 기호·방어형 · v5.94: 매수심사 한 번에 하나·리포트 정리 · v5.93: AI 분석 끝나야 리포트 열림·AI 글 표시 수정 · v5.92: AI 매수심사 Claude 연결 (의견·줄인 수량·실패 이유) · v5.91: AI 매수심사 (버튼·리포트) · v5.90: 내 계좌 카드 종목 로고 크기 수정 (v5.89: 브리핑 숫자 한 가지 계산·장 날짜 고정, 내 계좌 카드)
 
 // splash version 초기 갱신 (DOM 준비 즉시 — 가장 빠른 시점)
 function _aqUpdateSplashVersion() {
@@ -8343,6 +8343,33 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .gdm-chip { flex: none; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px; border: 1px solid #333338; background: none; color: var(--text); cursor: pointer; font-family: inherit; white-space: nowrap; } .gdm-chip.on { border-color: #74c0fc; background: #1d2b3a; color: #74c0fc; }
 .gdm-ty.on { background: #1d2b3a; color: #74c0fc; }
 .gdm-qn { display: block; font-size: 10.5px; color: var(--text-mute); } .gdm-xo .v b { color: var(--text-hi); } .gdm-sub { padding-left: 14px !important; border-top: none !important; } .gdm-run { margin: 6px 0 2px; display: flex; }
+/* v6.31: 마이 › 포트폴리오 (MO) — 평가금 · [메가|섹터|종목] · 비중 지도/오늘/30일 · 묶음 목록 · 묶음 시트 */
+@media (max-width: 1024px) {
+  #boardHoldingsCard #dashPortfolioCard, #boardHoldingsCard #dashHoldingsCard > .dash-card-header { display: none !important; }
+}
+.pv-top { padding: 4px 2px 0; }
+:is(#aqPvTop, #dashHoldingsBody, #pvBody) .up { color: #51cf66; } :is(#aqPvTop, #dashHoldingsBody, #pvBody) .dn { color: #ff6b6b; } :is(#aqPvTop, #dashHoldingsBody, #pvBody) .mu { color: var(--text-mute); }
+.pv-hero { padding: 6px 2px 0; } .pv-hero small { display: block; font-size: 12.5px; color: var(--text-mute); } .pv-hero > b { display: block; font-size: 28px; font-weight: 800; color: var(--text-hi); letter-spacing: -.3px; margin: 2px 0 4px; } .pv-hero div { font-size: 13.5px; } .pv-hero .sp { margin-left: 14px; }
+.pv-seg { display: flex; background: rgba(255,255,255,.06); border-radius: 12px; padding: 3px; margin: 26px 0 14px; } .pv-seg button { flex: 1; height: 36px; border: none; border-radius: 10px; background: none; color: var(--text-mute); font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; } .pv-seg button.on { background: rgba(255,255,255,.13); color: var(--text-hi); }
+.pv-card { background: rgba(255,255,255,.04); border-radius: 16px; padding: 12px 14px 14px; } .pv-tabs { display: flex; gap: 18px; margin: 0 2px 10px; } .pv-tabs button { border: none; background: none; padding: 4px 0; color: var(--text-mute); font-size: 13.5px; font-weight: 700; font-family: inherit; cursor: pointer; } .pv-tabs button.on { color: var(--text-hi); }
+.pv-svg { display: block; width: 100%; height: auto; } .pv-blk { cursor: pointer; } .pv-cap { font-size: 12.5px; color: var(--text-mute); margin: 0 2px 8px; } .pv-note { font-size: 11.5px; color: var(--text-mute); margin: 8px 2px 0; }
+.pv-lgd { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11.5px; color: var(--text-mute); margin-top: 8px; } .pv-lgd i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; }
+.pv-warn { font-size: 12.5px; color: #e0b84a; margin: 10px 4px 0; }
+#dashHoldingsBody .pv-lh { display: flex; justify-content: space-between; align-items: center; height: 44px; padding: 0 2px; } .pv-lh b { font-size: 15px; color: var(--text-hi); } .pv-lh button { border: none; background: none; padding: 8px 0; color: var(--text-mute); font-size: 13px; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.pv-gr { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 64px; padding: 0 2px; background: none; border: none; border-top: 1px solid rgba(255,255,255,.06); color: inherit; font-family: inherit; text-align: left; cursor: pointer; }
+.pv-dot { width: 9px; height: 9px; border-radius: 3px; flex: none; display: inline-block; } .pv-gn { flex: 1; min-width: 0; } .pv-gn b { display: block; font-size: 15px; color: var(--text-hi); } .pv-gn small { display: block; font-size: 12px; color: var(--text-mute); margin-top: 1px; }
+.pv-gv { text-align: right; flex: none; } .pv-gv b { display: block; font-size: 15px; color: var(--text-hi); } .pv-gv small { display: block; font-size: 12px; margin-top: 1px; }
+#dashHoldingsBody .insider-archive-item.pv-tr { grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; padding: 9px 2px; } #dashHoldingsBody .insider-archive-item.pv-tr.in { padding-left: 19px; }
+.pv-tr .gm-lg, .pv-str .gm-lg { width: 30px; height: 30px; } .pv-nm { min-width: 0; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .pv-nm b { color: var(--text-hi); } .pv-nm span { color: var(--text-mute); font-size: 12.5px; }
+.pv-r { text-align: right; font-size: 13.5px; flex: none; } .pv-r span { display: block; color: var(--text-hi); } .pv-r small { display: block; font-size: 12px; }
+.pv-more { display: block; width: 100%; height: 40px; padding: 0 0 0 19px; border: none; background: none; text-align: left; color: #8ec5f0; font-size: 13px; font-family: inherit; cursor: pointer; }
+.pv-more2 { display: block; width: 100%; height: 44px; border: none; border-top: 1px solid rgba(255,255,255,.06); background: none; color: var(--text-mute); font-size: 13px; font-family: inherit; cursor: pointer; }
+.pv-shd { display: flex; align-items: center; gap: 10px; margin: 2px 2px 8px; } .pv-shd b { font-size: 19px; font-weight: 800; color: var(--text-hi); } .pv-shd small { font-size: 13px; color: var(--text-mute); } .pv-shd .pv-dot { width: 11px; height: 11px; }
+.pv-sst { display: flex; gap: 16px; align-items: center; font-size: 13.5px; margin: 0 2px 12px; } .pv-sst b { color: var(--text-hi); } .pv-sst .r, .pv-leg .r { margin-left: auto; }
+.pv-leg { display: flex; gap: 14px; align-items: center; font-size: 12.5px; margin: 0 2px 8px; } .pv-leg span { display: inline-flex; align-items: center; gap: 6px; } .pv-leg i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; } .pv-leg i.ds { height: 0; border-top: 2px dashed #6a6a6a; }
+.pv-sh { font-size: 15px; font-weight: 700; color: var(--text-hi); margin: 18px 2px 8px; }
+.pv-sb { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 2px; font-size: 13.5px; } .pv-sb .n { flex: none; width: 96px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .pv-sb .b { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden; } .pv-sb .b i { display: block; height: 100%; opacity: .75; } .pv-sb .p { flex: none; width: 38px; text-align: right; color: var(--text-hi); }
+.pv-str { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 4px 2px; border: none; background: none; color: inherit; font-family: inherit; text-align: left; cursor: pointer; } .pv-str .pv-nm { flex: 1; }
 /* v6.28: 운영 — 칩 · 정할 것 카드 · 운영 지도 · 편집 시트 · 급락장 플레이북 */
 .st-chip { display: inline-block; margin-left: 6px; font-size: 10.5px; font-weight: 700; line-height: 1; padding: 3px 7px; border-radius: 999px; background: rgba(86,156,214,.14); color: #8ec5f0; vertical-align: 1px; white-space: nowrap; cursor: pointer; font-style: normal; }
 .st-chip.s { background: rgba(99,230,190,.13); color: #63e6be; } .st-chip.x { background: rgba(255,135,135,.13); color: #ff8787; } .st-chip.n { background: rgba(255,255,255,.07); color: var(--text-mute); } .st-chip.c { background: rgba(255,255,255,.06); color: var(--text-mute); font-weight: 600; } .st-chip[hidden] { display: none; }
@@ -8796,7 +8823,7 @@ html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-
   <!-- v3.39: 보드 서브탭 (탐색 서브탭과 동일 양식) — 보유 종목 / 누적 성과 / 계좌 분석 -->
   <section class="card mobile-only explore-subtabs" id="boardSubtabs" data-mtab="board">
     <div class="xtab-row">
-      <button class="xtab-btn active" data-btab="holdings" onclick="setBoardSubtab('holdings')">보유 종목</button>
+      <button class="xtab-btn active" data-btab="holdings" onclick="setBoardSubtab('holdings')">포트폴리오</button>
         <button class="xtab-btn" data-btab="performance" onclick="setBoardSubtab('performance')">누적 성과</button>
         <button class="xtab-btn" data-btab="stats" onclick="setBoardSubtab('stats')">운영 통계</button>
         <button class="xtab-btn" data-btab="audit" onclick="setBoardSubtab('audit')" data-role-admin-tab>감사 보고서</button>
@@ -18308,7 +18335,10 @@ function renderDashHoldingsList(holdings, hiddenHoldings) {
   if (!body) return;
   meta.textContent = `총 ${holdings.length}종목` + (hiddenHoldings.length ? ` (숨김 ${hiddenHoldings.length})` : '');
 
-  if (holdings.length === 0) {
+  if (typeof isMobileViewport === 'function' && isMobileViewport() && typeof aqPvRender === 'function') {   // v6.31: MO = 포트폴리오 (메가·섹터·종목 묶음)
+    try { aqPvRender(holdings); } catch (e) { console.warn('[포트폴리오]', e); }
+    try { if (typeof aqStLoad === 'function') aqStLoad(); } catch (e) {}
+  } else if (holdings.length === 0) {
     body.innerHTML = '<div style="text-align:center;color:var(--text-mute);font-size:11px;padding:30px;">보유 종목 없음</div>';
   } else {
     const market = getCurrentMarket();
@@ -30114,6 +30144,181 @@ async function aqAuthBoot() {
 }
 Object.assign(window, { aqGateTossLink, aqBrokerSyncNow, aqAuthShow, aqAuthLogin, aqAuthRegister, aqAuthTossLink, aqAuthFinish, aqAuthTossFromMy, aqAuthLogout, aqAuthChangePw, aqAdminInvite, aqAdminRefresh, aqAdminToggle, aqAuthBoot });
 document.addEventListener('DOMContentLoaded', () => { setTimeout(aqAuthBoot, 0); });
+// ============================================================================
+// v6.31: 마이 › 포트폴리오 (MO) — [메가 | 섹터 | 종목] 묶음 · 차트 [비중 | 오늘 | 30일] · 묶음 목록 · 묶음 시트
+//   메가(최대 10개)만 고유 색 · 섹터·종목은 오늘 오르면 초록, 내리면 빨강 · 한국은 메가가 없어 [섹터 | 종목]
+//   목록의 종목 줄은 .insider-archive-item 그대로 — 누르면 차트, 길게 누르면 내 평가 시트 (attachHoldingInteractions)
+// ============================================================================
+const _pv = { last: null, open: {}, all: false, sheet: null, defWait: false };
+const _PV_MC = { 'AI·반도체': '#569cd6', 'DC·전력': '#3fbf9a', 'SW·플랫폼': '#8c8fe8', '방산·우주': '#c77dd6', '산업': '#5fb0c9', '에너지·소재': '#d4b13f', '헬스케어': '#e07fa8', '금융·부동산': '#9cc45a', '소비·통신': '#d99a5b', '디펜시브': '#a0a4a8' };
+const _PV_ML = { 'AI·반도체': '#8ec5f0', 'DC·전력': '#63e6be', 'SW·플랫폼': '#b4b6f2', '방산·우주': '#e0a8ea', '산업': '#9bd3e4', '에너지·소재': '#e8cf7a', '헬스케어': '#f2aac8', '금융·부동산': '#c0e08c', '소비·통신': '#ebbd8c', '디펜시브': '#cfd2d5' };
+const _PV_UNK = '미분류';
+function _pvGet(k, d) { try { const v = localStorage.getItem('aq_pv_' + k); return v == null ? d : v; } catch (e) { return d; } }
+function _pvSet(k, v) { try { localStorage.setItem('aq_pv_' + k, v); } catch (e) {} }
+function _pvKR() { return getCurrentMarket() === 'KR'; }
+function _pvMode() { const m = _pvGet('mode', 'mega'); return _pvKR() && m === 'mega' ? 'sec' : (['mega', 'sec', 't'].includes(m) ? m : 'mega'); }
+function _pvM(v) { if (v == null || !isFinite(v)) return '—'; if (_pvKR()) return fmtMoney(v); return (v < 0 ? '-' : '') + '$' + Math.round(Math.abs(v)).toLocaleString(); }
+function _pvS(v) { return (v >= 0 ? '+' : '') + _pvM(v); }
+function _pvP(v) { return aqSgPct(v); }
+function _pvC(v) { return v > 0 ? 'up' : v < 0 ? 'dn' : ''; }
+function _pvMega(sec) { if (_pvKR()) return ''; const d = typeof aqSectorDef === 'function' ? aqSectorDef(sec) : null; return (d && d.mega) || _PV_UNK; }
+function _pvSecName(sec) { const s = String(sec || '').trim(); if (!s || s === '-' || s === _PV_UNK) return _PV_UNK; return (typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(s) : s) || _PV_UNK; }
+function _pvBenchSer() { try { return _gmSer({ kind: '지표', target: _pvKR() ? 'KOSPI' : '나스닥' }); } catch (e) { return []; } }
+function _pvPrep(holdings) {
+  const bench = _pvBenchSer(); let dates = bench.slice(-31).map(p => p.d);
+  const items = holdings.filter(h => h && h.ticker && h.evalVal > 0).map(h => {
+    let ser = []; try { ser = _gmSer(null, h.ticker); } catch (e) {}
+    const n = ser.length; const d = n >= 2 && ser[n - 2].v ? (ser[n - 1].v / ser[n - 2].v - 1) * 100 : 0;
+    const v = h.evalVal; const dd = v - v / (1 + d / 100);
+    return { t: h.ticker, sec: h.sector, secName: _pvSecName(h.sector), mega: _pvMega(h.sector), v, c: h.cost || v, d, dd, r: isFinite(h.roi) ? h.roi : 0, qty: h.qty, ser };
+  });
+  if (!dates.length) { const lg = items.reduce((a, x) => x.ser.length > a.length ? x.ser : a, []); dates = lg.slice(-31).map(p => p.d); }
+  items.forEach(x => {   // 30일 평가금 (지금 수량 그대로 · 날짜마다 그날까지 마지막 종가)
+    if (!x.ser.length || !dates.length) { x.hist = dates.map(() => x.v); return; }
+    let j = 0, last = x.ser[0].v; x.hist = dates.map(dt => { while (j < x.ser.length && x.ser[j].d <= dt) { last = x.ser[j].v; j++; } return x.qty * last; });
+    x.hist[x.hist.length - 1] = x.v;
+  });
+  return { items, dates, bench: dates.map(dt => { const p = bench.find(b => b.d === dt); return p ? p.v : null; }) };
+}
+function _pvGroups(P, mode) {
+  const key = mode === 'mega' ? 'mega' : mode === 'sec' ? 'secName' : 't'; const g = {};
+  P.items.forEach(x => { const k = x[key]; (g[k] = g[k] || { k, xs: [] }).xs.push(x); });
+  const T = P.items.reduce((a, x) => a + x.v, 0) || 1;
+  return Object.values(g).map(o => {
+    o.v = o.xs.reduce((a, x) => a + x.v, 0); o.dd = o.xs.reduce((a, x) => a + x.dd, 0); o.c = o.xs.reduce((a, x) => a + x.c, 0);
+    o.w = o.v / T * 100; o.d = o.v - o.dd ? o.dd / (o.v - o.dd) * 100 : 0; o.r = o.c ? (o.v / o.c - 1) * 100 : 0;
+    o.xs.sort((a, b) => b.v - a.v); o.mega = o.xs[0].mega; o.hist = P.dates.map((_, i) => o.xs.reduce((a, x) => a + (x.hist[i] || 0), 0)); return o;
+  });
+}
+const _PV_SORTS = [['비중순', (a, b) => b.v - a.v], ['오늘순', (a, b) => b.d - a.d], ['수익률순', (a, b) => b.r - a.r]];
+function _pvSq(items, x, y, w, h) {   // squarified treemap
+  const out = []; let rest = items.slice(), rt = rest.reduce((a, b) => a + b.val, 0);
+  while (rest.length && rt > 0) {
+    const sh = Math.min(w, h); let row = [], best = 1e9;
+    for (const it of rest) { const r = row.concat(it), s = r.reduce((a, b) => a + b.val, 0), side = s / rt * w * h / sh; const worst = Math.max(...r.map(o => { const l = o.val / s * sh; return Math.max(side / l, l / side); })); if (worst <= best) { best = worst; row = r; } else break; }
+    const s = row.reduce((a, b) => a + b.val, 0), ar = s / rt * w * h;
+    if (w >= h) { const cw = ar / h; let cy = y; row.forEach(o => { const ch = o.val / s * h; out.push({ o, X: x, Y: cy, W: cw, H: ch }); cy += ch; }); x += cw; w -= cw; }
+    else { const ch = ar / w; let cx = x; row.forEach(o => { const cw = o.val / s * w; out.push({ o, X: cx, Y: y, W: cw, H: ch }); cx += cw; }); y += ch; h -= ch; }
+    rt -= s; rest = rest.slice(row.length);
+  }
+  return out;
+}
+function _pvTw(s, fs) { let w = 0; for (const ch of String(s)) w += /[\u3131-\uD79D]/.test(ch) ? fs * 0.95 : /[A-Z0-9]/.test(ch) ? fs * 0.66 : fs * 0.5; return w; }
+function _pvCut(s, px, fs) {   // 칸에 맞는 이름 — 전체 → '·' 앞부분 → 글자 자르기
+  s = String(s); if (_pvTw(s, fs) <= px) return s;
+  const sh = s.split(/[·\s]/)[0]; if (sh && sh !== s && _pvTw(sh, fs) <= px) return sh;
+  let t = sh || s; while (t.length > 1 && _pvTw(t + '…', fs) > px) t = t.slice(0, -1); return t.length < (sh || s).length ? t + '…' : t;
+}
+function _pvLabel(g, mode) { return mode === 't' ? (_pvKR() ? displayName(g.k) : g.k) : g.k; }
+function _pvTree(G, mode) {
+  const W = 326, H = 220; const bl = _pvSq(G.filter(g => g.v > 0).sort((a, b) => b.v - a.v).map(g => ({ val: g.v, g })), 0, 0, W, H);
+  return `<svg class="pv-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="비중 지도">` + bl.map(b => {
+    const g = b.o.g; const mg = mode === 'mega'; const x = b.X + 1.5, y = b.Y + 1.5, w = Math.max(0, b.W - 3), h = Math.max(0, b.H - 3);
+    const fill = mg ? (_PV_MC[g.k] || '#6a6a6a') : (g.d >= 0 ? '#51cf66' : '#ff6b6b'); const op = mg ? 0.24 : (Math.abs(g.d) < 1 ? 0.16 : Math.abs(g.d) < 3 ? 0.26 : 0.38);
+    const big = w > 70 && h > 50, mid = w > 38 && h > 26, two = h > 42; const fs = big ? 14 : 11.5;
+    const lab = mid ? `<text x="${x + 8}" y="${y + (big ? 20 : 17)}" font-size="${fs}" font-weight="700" fill="#ffffff">${escapeHtml(_pvCut(_pvLabel(g, mode), w - 12, fs))}</text>` + (two ? `<text x="${x + 8}" y="${y + (big ? 38 : 32)}" font-size="${big ? 12 : 11}" fill="${mg ? (_PV_ML[g.k] || '#cfcfcf') : '#e6e6e6'}">${Math.round(g.w)}%</text>` : '') : '';
+    const dl = big ? `<text x="${x + w - 8}" y="${y + h - 9}" text-anchor="end" font-size="12" font-weight="700" fill="${mg ? (g.d >= 0 ? '#51cf66' : '#ff6b6b') : '#ffffff'}">${_pvP(g.d)}</text>` : '';
+    return `<g class="pv-blk" data-k="${escapeAttr(g.k)}" onclick="aqPvTap(this.dataset.k)"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${fill}" fill-opacity="${op}"></rect>${lab}${dl}</g>`;
+  }).join('') + '</svg>';
+}
+function _pvToday(G, TD, mode) {
+  const gs = G.slice().sort((a, b) => Math.abs(b.dd) - Math.abs(a.dd)).slice(0, 7); const mx = Math.max(...gs.map(g => Math.abs(g.dd)), 1e-9); const W = 326, rh = 32, mid = 190;
+  return `<div class="pv-cap">오늘 ${_pvS(TD)}은 어디서 났나</div><svg class="pv-svg" viewBox="0 0 ${W} ${gs.length * rh}" role="img" aria-label="오늘 손익 기여"><line x1="${mid}" x2="${mid}" y1="0" y2="${gs.length * rh}" stroke="rgba(255,255,255,.14)"></line>` + gs.map((g, i) => {
+    const w = Math.max(2, Math.abs(g.dd) / mx * 60), y = i * rh, up = g.dd >= 0, c = up ? '#51cf66' : '#ff6b6b';
+    return `<g class="pv-blk" data-k="${escapeAttr(g.k)}" onclick="aqPvTap(this.dataset.k)"><text x="0" y="${y + 20}" font-size="12.5" fill="#d4d4d4">${escapeHtml(_pvCut(_pvLabel(g, mode), 120, 12.5))}</text><rect x="${up ? mid : mid - w}" y="${y + 8}" width="${w}" height="16" rx="3" fill="${c}" fill-opacity="0.75"></rect><text x="${W}" y="${y + 20}" text-anchor="end" font-size="12" fill="${c}">${_pvS(g.dd)}</text></g>`;
+  }).join('') + '</svg>';
+}
+function _pvArea(G, P, mode) {
+  let gs = G.slice().sort((a, b) => b.v - a.v); const n = P.dates.length; if (n < 2) return '<div class="pv-cap">30일 기록이 아직 없어요</div>';
+  if (gs.length > 6) { const rest = gs.slice(5); gs = gs.slice(0, 5).concat([{ k: '나머지', mega: '', hist: P.dates.map((_, i) => rest.reduce((a, g) => a + g.hist[i], 0)) }]); }
+  const shade = ['#569cd6', '#4a82b2', '#3f6c93', '#365a7a', '#2e4a63', '#5c5f66'];
+  const col = (g, i) => g.k === '나머지' ? '#5c5f66' : mode === 'mega' ? (_PV_MC[g.k] || '#6a6a6a') : shade[i];
+  const tot = P.dates.map((_, i) => gs.reduce((a, g) => a + g.hist[i], 0) || 1); const W = 326, H = 198, X = i => i / (n - 1) * W, Y = v => 4 + (1 - v) * 176;
+  let base = Array(n).fill(0), s = '';
+  gs.slice().reverse().forEach(g => { const i0 = gs.indexOf(g); const top = base.map((b, i) => b + g.hist[i] / tot[i]); s += `<path d="M${top.map((v, i) => X(i).toFixed(1) + ',' + Y(v).toFixed(1)).join('L')}L${base.map((v, i) => X(i).toFixed(1) + ',' + Y(v).toFixed(1)).reverse().join('L')}Z" fill="${col(g, i0)}" fill-opacity="${mode === 'mega' ? 0.5 : 0.75}"></path>`; base = top; });
+  const md = d => String(d).slice(5).replace('-', '/');
+  return `<svg class="pv-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="30일 비중 추이">${s}<line x1="0" x2="${W}" y1="${Y(.5)}" y2="${Y(.5)}" stroke="rgba(0,0,0,.35)" stroke-dasharray="3 3"></line><text x="${W - 4}" y="${Y(.5) - 5}" text-anchor="end" font-size="11" fill="#e6e6e6">50%</text><text x="0" y="${H - 4}" font-size="11" fill="#9d9d9d">${md(P.dates[0])}</text><text x="${W}" y="${H - 4}" text-anchor="end" font-size="11" fill="#9d9d9d">${md(P.dates[n - 1])}</text></svg>`
+    + `<div class="pv-lgd">${gs.map((g, i) => `<span><i style="background:${col(g, i)}"></i>${escapeHtml(_pvLabel(g, mode))} ${Math.round(g.hist[n - 1] / tot[n - 1] * 100)}%</span>`).join('')}</div>`;
+}
+function _pvRow(x, inG) {
+  const T = escapeAttr(x.t);
+  return `<div class="insider-archive-item pv-tr${inG ? ' in' : ''}" data-ticker="${T}">${_gmLogo(null, x.t, 's')}<div class="pv-nm"><b>${escapeHtml(displayName(x.t))}</b> <span>${escapeHtml(displaySub(x.t) || '')}</span></div><div class="pv-r"><span>${_pvM(x.v)}</span><small class="${_pvC(x.d)}">${_pvP(x.d)}</small></div></div>`;
+}
+function _pvTopHost() {
+  let el = document.getElementById('aqPvTop'); const hd = document.getElementById('dashHoldingsCard');
+  if (!el) { el = document.createElement('div'); el.id = 'aqPvTop'; el.className = 'pv-top'; }
+  if (hd && hd.parentElement && el.nextElementSibling !== hd) hd.parentElement.insertBefore(el, hd);
+  return el;
+}
+function aqPvRender(holdings) {
+  if (holdings) _pv.last = holdings; holdings = _pv.last || [];
+  const body = document.getElementById('dashHoldingsBody'); if (!body) return; const top = _pvTopHost();
+  const kr = _pvKR();
+  if (!kr && (typeof _secDef === 'undefined' || !_secDef.byKey) && !_pv.defWait && typeof aqLoadSectorDefs === 'function') { _pv.defWait = true; aqLoadSectorDefs().then(() => { _pv.defWait = false; aqPvRender(); }).catch(() => { _pv.defWait = false; }); }
+  if (!holdings.length) { top.innerHTML = ''; body.innerHTML = '<div class="gm-empty">보유 종목이 없어요</div>'; return; }
+  const P = _pvPrep(holdings); const mode = _pvMode(); const tab = _pvGet('tab', 'w'); const sort = Math.min(2, Number(_pvGet('sort', 0)) || 0);
+  const G = _pvGroups(P, mode); _pv.P = P; _pv.G = G; _pv.mode = mode;
+  const T = P.items.reduce((a, x) => a + x.v, 0), TD = P.items.reduce((a, x) => a + x.dd, 0), TC = P.items.reduce((a, x) => a + x.c, 0);
+  const segs = (kr ? [['sec', '섹터'], ['t', '종목']] : [['mega', '메가'], ['sec', '섹터'], ['t', '종목']]).map(([k, l]) => `<button type="button" class="${mode === k ? 'on' : ''}" onclick="aqPvMode('${k}')">${l}</button>`).join('');
+  const tabs = [['w', '비중'], ['d', '오늘'], ['m', '30일']].map(([k, l]) => `<button type="button" class="${tab === k ? 'on' : ''}" onclick="aqPvTab('${k}')">${l}</button>`).join('');
+  const topG = G.slice().sort((a, b) => b.v - a.v)[0];
+  top.innerHTML = `<div class="pv-hero"><small>평가금 · ${P.items.length}종목</small><b>${_pvM(T)}</b><div><span class="mu">오늘</span> <span class="${_pvC(TD)}">${_pvS(TD)} (${_pvP(T - TD ? TD / (T - TD) * 100 : 0)})</span><span class="mu sp">총</span> <span class="${_pvC(T - TC)}">${_pvP(TC ? (T / TC - 1) * 100 : 0)}</span></div></div>`
+    + `<div class="pv-seg">${segs}</div>`
+    + `<div class="pv-card"><div class="pv-tabs">${tabs}</div>${tab === 'd' ? _pvToday(G, TD, mode) : tab === 'm' ? _pvArea(G, P, mode) : _pvTree(G, mode)}${tab === 'w' && mode !== 'mega' ? `<div class="pv-note">칸 색 = 오늘 오르면 초록 · 내리면 빨강 (진할수록 많이)</div>` : ''}</div>`
+    + (mode !== 't' && topG && topG.w > 50 && topG.k !== _PV_UNK ? `<div class="pv-warn">${escapeHtml(topG.k)} ${Math.round(topG.w)}% — 한 묶음이 절반을 넘어요</div>` : '');
+  const Gs = G.slice().sort(_PV_SORTS[sort][1]);
+  let h = `<div class="pv-lh"><b>${mode === 'mega' ? '메가' : mode === 'sec' ? '섹터' : '종목'} ${G.length}개</b><button type="button" onclick="aqPvSort()">${_PV_SORTS[sort][0]} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"></path></svg></button></div>`;
+  if (mode === 't') {
+    const xs = Gs.map(g => g.xs[0]); const lim = _pv.all ? xs.length : 12;
+    h += xs.slice(0, lim).map(x => _pvRow(x, false)).join('') + (xs.length > lim ? `<button type="button" class="pv-more2" onclick="_pv.all=true;aqPvRender()">${xs.length - lim}종목 더 보기</button>` : '');
+  } else {
+    h += Gs.map(g => {
+      const o = !!_pv.open[mode + ':' + g.k]; const K = escapeAttr(g.k);
+      const sub = mode === 'mega' ? `${g.xs.length}종목` : (kr || g.mega === _PV_UNK ? `${g.xs.length}종목` : `${escapeHtml(g.mega)} · ${g.xs.length}종목`);
+      return `<button type="button" class="pv-gr" data-k="${K}" onclick="aqPvToggle(this.dataset.k)">${mode === 'mega' ? `<i class="pv-dot" style="background:${_PV_MC[g.k] || '#6a6a6a'}"></i>` : ''}<span class="pv-gn"><b>${escapeHtml(g.k === _PV_UNK && mode === 'sec' ? '섹터 미지정' : g.k)}</b><small>${sub}</small></span><span class="pv-gv"><b>${g.w.toFixed(1)}%</b><small><span class="mu">${_pvM(g.v)}</span> <span class="${_pvC(g.d)}">${_pvP(g.d)}</span></small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9d9d9d" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="${o ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6'}"></path></svg></button>`
+        + (o ? g.xs.map(x => _pvRow(x, true)).join('') + `<button type="button" class="pv-more" data-k="${K}" onclick="aqPvSheet(this.dataset.k)">${escapeHtml(g.k)} 자세히 ›</button>` : '');
+    }).join('');
+  }
+  body.innerHTML = h;
+}
+function aqPvMode(m) { aqHoldScroll(); _pvSet('mode', m); _pv.all = false; aqPvRender(); }
+function aqPvTab(t) { aqHoldScroll(); _pvSet('tab', t); aqPvRender(); }
+function aqPvSort() { aqHoldScroll(); _pvSet('sort', String(((Number(_pvGet('sort', 0)) || 0) + 1) % 3)); aqPvRender(); }
+function aqPvToggle(k) { aqHoldScroll(); const id = _pvMode() + ':' + k; _pv.open[id] = !_pv.open[id]; aqPvRender(); }
+function aqPvTap(k) { if (_pvMode() === 't') { if (typeof openChart === 'function') openChart(k); return; } aqPvSheet(k); }
+// ---- 묶음 시트 ----
+function aqPvSheet(k) {
+  const g = (_pv.G || []).find(x => x.k === k); if (!g) return; _pv.sheet = k;
+  const P = _pv.P; const mode = _pv.mode; const mg = mode === 'mega'; const c = mg ? (_PV_MC[g.k] || '#569cd6') : '#569cd6'; const cl = mg ? (_PV_ML[g.k] || '#8ec5f0') : '#8ec5f0';
+  const n = P.dates.length; let chart = '';
+  if (n >= 2 && g.hist[0] > 0) {
+    const a = g.hist.map(v => (v / g.hist[0] - 1) * 100); const b0 = P.bench.find(v => v != null); const b = b0 ? P.bench.map(v => v == null ? null : (v / b0 - 1) * 100) : [];
+    const all = a.concat(b.filter(v => v != null)); const mn = Math.min(...all) - 1.5, mx = Math.max(...all) + 1.5; const W = 326, H = 176, X = i => i / (n - 1) * W, Y = v => 6 + (mx - v) / (mx - mn) * 156;
+    const pts = arr => arr.map((v, i) => v == null ? null : X(i).toFixed(1) + ',' + Y(v).toFixed(1)).filter(Boolean).join(' ');
+    const md = d => String(d).slice(5).replace('-', '/'); const bn = _pvKR() ? '코스피' : '나스닥'; const bl = b.filter(v => v != null).slice(-1)[0];
+    chart = `<div class="pv-card"><div class="pv-leg"><span style="color:${cl}"><i style="background:${c}"></i>${escapeHtml(_pvLabel(g, mode))} ${_pvP(a[n - 1])}</span>${b.length ? `<span class="mu"><i class="ds"></i>${bn} ${_pvP(bl)}</span>` : ''}<span class="mu r">30일</span></div><svg class="pv-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="30일 수익률 비교"><line x1="0" x2="${W}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="rgba(255,255,255,.12)"></line>${b.length ? `<polyline fill="none" stroke="#6a6a6a" stroke-width="1.6" stroke-dasharray="4 3" points="${pts(b)}"></polyline>` : ''}<polyline fill="none" stroke="${c}" stroke-width="2.4" stroke-linejoin="round" points="${pts(a)}"></polyline><text x="0" y="${H - 2}" font-size="11" fill="#9d9d9d">${md(P.dates[0])}</text><text x="${W}" y="${H - 2}" text-anchor="end" font-size="11" fill="#9d9d9d">${md(P.dates[n - 1])}</text></svg></div>`;
+  }
+  let subs = '';
+  if (mg) { const m = {}; g.xs.forEach(x => { m[x.secName] = (m[x.secName] || 0) + x.v; }); const arr = Object.entries(m).sort((p, q) => q[1] - p[1]);
+    if (arr.length > 1) subs = `<div class="pv-sh">섹터</div>` + arr.map(([s, v]) => `<div class="pv-sb"><span class="n">${escapeHtml(s)}</span><span class="b"><i style="width:${(v / g.v * 100).toFixed(1)}%;background:${c}"></i></span><span class="p">${Math.round(v / g.v * 100)}%</span></div>`).join(''); }
+  const nsec = mg ? new Set(g.xs.map(x => x.secName)).size : 0;
+  document.getElementById('pvBody').innerHTML = `<div class="pv-shd">${mg ? `<i class="pv-dot" style="background:${c}"></i>` : ''}<b>${escapeHtml(g.k === _PV_UNK && mode === 'sec' ? '섹터 미지정' : g.k)}</b><small>${mg ? `${nsec}개 섹터 · ` : (!_pvKR() && g.mega !== _PV_UNK ? `${escapeHtml(g.mega)} · ` : '')}${g.xs.length}종목</small></div>`
+    + `<div class="pv-sst"><span><span class="mu">비중</span> <b>${g.w.toFixed(1)}%</b></span><span><span class="mu">오늘</span> <b class="${_pvC(g.d)}">${_pvP(g.d)}</b></span><span><span class="mu">총</span> <b class="${_pvC(g.r)}">${_pvP(g.r)}</b></span><span class="mu r">${_pvM(g.v)}</span></div>`
+    + chart + subs + `<div class="pv-sh">종목</div>` + g.xs.map(x => `<button type="button" class="pv-str" onclick="aqPvClose();openChart('${escapeAttr(x.t)}')">${_gmLogo(null, x.t, 's')}<span class="pv-nm"><b>${escapeHtml(displayName(x.t))}</b> <span>${escapeHtml(displaySub(x.t) || '')}</span></span><span class="pv-r"><span>${_pvM(x.v)}</span><small class="${_pvC(x.d)}">${_pvP(x.d)}</small></span></button>`).join('');
+  document.getElementById('pvSheet').classList.add('open'); document.getElementById('pvSheetBg').classList.add('open');
+  try { document.querySelector('#pvSheet .auto-sheet-scroll').scrollTop = 0; } catch (e) {}
+}
+function aqPvClose() { document.getElementById('pvSheet')?.classList.remove('open'); document.getElementById('pvSheetBg')?.classList.remove('open'); _pv.sheet = null; }
+Object.assign(window, { aqPvRender, aqPvMode, aqPvTab, aqPvSort, aqPvToggle, aqPvTap, aqPvSheet, aqPvClose });
+(function () {
+  const bg = document.createElement('div'); bg.className = 'ops-sheet-bg'; bg.id = 'pvSheetBg'; bg.style.zIndex = '1102'; bg.onclick = aqPvClose;
+  const sh = document.createElement('div'); sh.className = 'ops-sheet aq-sec-sheet'; sh.id = 'pvSheet'; sh.style.zIndex = '1103';
+  sh.innerHTML = '<div class="ops-sheet-grip"></div><div class="auto-sheet-scroll" id="pvBody"></div>';
+  const put = () => { document.body.appendChild(bg); document.body.appendChild(sh); };
+  if (document.body) put(); else document.addEventListener('DOMContentLoaded', put);
+  try { AQ_SHEETS.push({ id: 'pvSheet', root: () => document.getElementById('pvSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: aqPvClose, full: true }); } catch (e) {}
+})();
+
 // ============================================================================
 // v6.28: 운영 — 종목마다 사상(왜 들고 있나 10개) × 단계(지금 무엇을 하는 중 4개) × 내 평가(5개)
 //   서버 stance.py · 확정 전 초안은 AI 가이드·매수심사가 쓰지 않음 · 초장기 수집은 AI 평가 제외
