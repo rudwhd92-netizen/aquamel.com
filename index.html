@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.50';   // v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.51';   // v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -29286,7 +29286,28 @@ async function aqGuideAlertCard() {
   if (document.body.getAttribute('data-role') !== 'admin') return '';
   try { await aqGuideLoadAcc(); } catch (e) { return ''; }
   const un = (_gd.accList || []).filter(x => x.unread); if (!un.length) return '';
-  return `<div class="bf-galert" onclick="aqGuideAlertOpen('${un.map(x => x.id).join(',')}')"><span>가이드 알림</span>${un.slice(0, 3).map(x => { const h = (x.history || []).filter(y => y.kind === 'hit' || y.kind === 'revert').slice(-1)[0]; return `<div>${escapeHtml((x.title || '').slice(0, 28))} — ${escapeHtml(h ? h.msg.slice(0, 60) : x.status)}</div>`; }).join('')}${un.length > 3 ? `<div>외 ${un.length - 3}개</div>` : ''}</div>`;
+  return `<div class="bf-galert" onclick="aqGuideAlertOpen('${un.map(x => x.id).join(',')}')"><span>가이드 알림</span>${un.slice(0, 3).map(_gaLine).join('')}${un.length > 3 ? `<div>외 ${un.length - 3}개</div>` : ''}</div>`;
+}
+// v6.51: 가이드 알림 한 줄 — 종목명 · 무슨 일 · 사람 말 (제목을 글자 수로 자르던 것 · 'active' 그대로 나오던 것 · 감시 원문)
+const _GA_KIND = { hit: '신호 닿음', revert: '되돌림', ai: 'AI 결과', claude: 'AI 판단', pledge: '약속 결과', end: '끝남', auto: '자동 처리' };
+function _gaWatch(t) {   // 서버 감시 원문 '지표 금 이탈 3900 (종가)' → '금 3,900 이탈 (종가)'
+  const m = /^(주가|지표|등락|수익률|비중|업종비중|현금비중|거래량|이평|수급)\s+(.+?)\s+(이상|이하|돌파|이탈)\s+(-?[\d.,]+)(?:%|배|일선|일)?(?:\s*\((종가|(\d+)거래일 연속)\))?/.exec(t); if (!m) return null;
+  const w = { kind: m[1], target: m[2], cmp: m[3], value: Number(m[4].replace(/,/g, '')), persist: m[5] === '종가' ? '종가' : m[6] ? '연속' : '즉시', n: m[6] ? Number(m[6]) : 0 };
+  if (['주가', '등락', '수익률', '비중', '거래량', '이평', '수급'].includes(w.kind)) w.ticker = String(w.target).split(/\s+/)[0].toUpperCase();
+  if (w.kind === '수급') { w.who = /기관/.test(w.target) ? '기관' : '외국인'; if (w.cmp === '이하' || w.cmp === '이탈') w.value = -Math.abs(w.value); }
+  let tx = ''; try { tx = _gmW(w, true); } catch (e) { return null; }
+  return { tx: tx + (w.persist === '종가' && w.kind !== '주가' ? ' (종가)' : ''), rest: t.slice(m[0].length) };
+}
+function _gaLine(x) {
+  const tk = (() => { try { return _gmTk(x); } catch (e) { return ''; } })();
+  let subj = tk ? (_gmTkName(tk) || tk) : aqKrText(String(x.title || '지침'));
+  if (!tk && subj.length > 24) { const cut = subj.slice(0, 24); subj = (cut.lastIndexOf(' ') > 10 ? cut.slice(0, cut.lastIndexOf(' ')) : cut) + '…'; }
+  const h = (x.history || []).filter(y => y && y.msg).slice(-1)[0];
+  if (!h) return `<div><b>${escapeHtml(subj)}</b> · ${escapeHtml(x.status === 'hit' ? '신호 닿음' : '확인할 것이 있어요')}</div>`;
+  let msg = String(h.msg).replace(/^[^:：]{1,14}[:：]\s*/, '');   // '감시 조건 도달: ' 같은 머리말
+  const wv = _gaWatch(msg); if (wv) msg = wv.tx + wv.rest;
+  msg = aqKrText(msg); if (msg.length > 70) msg = msg.slice(0, 69) + '…';
+  return `<div><b>${escapeHtml(subj)}</b> · ${escapeHtml(_GA_KIND[h.kind] || '새 소식')}: ${escapeHtml(msg)}</div>`;
 }
 async function aqGuideAlertOpen(ids) { try { await apiCall('guideRead', { ids }); } catch (e) {} switchMobileTab('auto'); setAiSubtab('assist'); _gd.view = 'mine'; _gd.mineView = 'home'; _gd.tkFilter = ''; await aqGuideLoadAcc(true); aqGuideRender(); }   // v6.11: 내 지침 › 지금 할 것
 Object.assign(window, { aqGuideCheck, aqGuideSheetClose, aqGuideAccTab, aqGuideHistToggle, aqGuideStop, aqGuideAlertOpen, aqGuideLoadAcc, aqGuideSecToggle, aqGuideCardToggle });
