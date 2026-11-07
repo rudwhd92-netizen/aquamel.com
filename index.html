@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.77';   // v6.77: 데칼코마니 차트 — 손가락·마우스를 올린 날에 세로선 + 그룹·종목 누적(그날 하루) · v6.76: 발견 — 신호 있는 종목은 보고서가 있어도 그대로 보임 (보고서만 있고 신호 없는 종목만 안 나옴) · v6.75: 설정 › 발견 › ATR 기준 (끔 · 6 · 7 · 8 기본 · 10 · 12% · 이 기기에 저장) · v6.74: 발견에서 빼기 — AI 보고서가 있는 종목 · 미국 최근 종가 $10 이하 또는 ATR(14)/종가 8% 이상 · v6.73: 밸런스 목록에서 종목을 누르면 데칼코마니 시트 — 60거래일 일간 차트(그룹 vs 종목) · 반대로 움직인 구간(띠, 3~10일 · 그룹 누적 1.5σ×√일수 · 가장 뚜렷한 2곳)·날(점, 그룹 1σ) · 종목은 반대로 그룹의 절반 이상 · 등급 칸 · 종목 페이지 버튼 · v6.72: 밸런스 급락일 지표 — 그룹 최대 하락 5일(20일 2·40일 3) 따로 등급 · 빠질 때는 급락일 뺀 평소 · 그룹이 조용한 날 혼자 튄 크기는 3σ까지만 · 급락일 순 정렬 · 목록 '급락일' 딱지(좋음 이상) · 종목 페이지 3번째 타일 · v6.71: 밸런스 '둘 다 좋은 순' — 낮은 쪽 등급 → 높은 쪽 등급 → 빠질 때 값 순 (빠질 때 값만으로 정렬되던 문제) · v6.70: 밸런스 — 평균 대신 구간별 기울기(그룹 1% 기준, 절편으로 종목 자체 추세 제거) · 알파 강한 종목이 1등 하던 문제 · v6.69: 밸런스 목록 — 게이지를 오른쪽 끝에 맞춤(등급 글자는 게이지 왼쪽, 오른쪽 정렬) · v6.68: AI 보고서·매수심사 대기열 — 다른 작업 중이면 거절 대신 대기열(종류별 최대 3 · 들어온 순서 · 끝나면 자동 시작) · '대기 n번째 · 취소' · v6.67: 밸런스 등급 색·5칸 막대 — 탐색 목록(점은 티커 옆) · 종목 페이지 '밸런스' 칸(접힘 막대 / 펼침 그룹별 빠질 때·오를 때 타일 · 보유 종목은 소속 딱지와 다른 그룹만 · 목록 n위) · v6.66: 섹터 시트 NaN 수정 — 같은 이름 함수(_stSeries) 덮어쓰기로 섹터 시트 등락·1개월과 운영 통계(판 뒤 흐름·놓아준 종목·신호 따라 산 매매)가 깨지던 문제 · v6.65: 밸런스 종목 — '빠질 때 → 좋음 · 오를 때 → 좋음' 5단계 등급 표시 · 충족 기준 빠질 때 0배 초과·오를 때 1배 미만 · 정렬 빠질 때 순·오를 때 순·둘 다 좋은 순 · v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.78';   // v6.78: AI 보고서 섹션 읽어 주기 — 섹션 제목 옆 ▶(기기 음성) · 다 읽으면 다음 섹션 · ⏸ 멈춤 · 보고서·종목 창 닫으면 멈춤 · v6.77: 데칼코마니 차트 — 손가락·마우스를 올린 날에 세로선 + 그룹·종목 누적(그날 하루) · v6.76: 발견 — 신호 있는 종목은 보고서가 있어도 그대로 보임 (보고서만 있고 신호 없는 종목만 안 나옴) · v6.75: 설정 › 발견 › ATR 기준 (끔 · 6 · 7 · 8 기본 · 10 · 12% · 이 기기에 저장) · v6.74: 발견에서 빼기 — AI 보고서가 있는 종목 · 미국 최근 종가 $10 이하 또는 ATR(14)/종가 8% 이상 · v6.73: 밸런스 목록에서 종목을 누르면 데칼코마니 시트 — 60거래일 일간 차트(그룹 vs 종목) · 반대로 움직인 구간(띠, 3~10일 · 그룹 누적 1.5σ×√일수 · 가장 뚜렷한 2곳)·날(점, 그룹 1σ) · 종목은 반대로 그룹의 절반 이상 · 등급 칸 · 종목 페이지 버튼 · v6.72: 밸런스 급락일 지표 — 그룹 최대 하락 5일(20일 2·40일 3) 따로 등급 · 빠질 때는 급락일 뺀 평소 · 그룹이 조용한 날 혼자 튄 크기는 3σ까지만 · 급락일 순 정렬 · 목록 '급락일' 딱지(좋음 이상) · 종목 페이지 3번째 타일 · v6.71: 밸런스 '둘 다 좋은 순' — 낮은 쪽 등급 → 높은 쪽 등급 → 빠질 때 값 순 (빠질 때 값만으로 정렬되던 문제) · v6.70: 밸런스 — 평균 대신 구간별 기울기(그룹 1% 기준, 절편으로 종목 자체 추세 제거) · 알파 강한 종목이 1등 하던 문제 · v6.69: 밸런스 목록 — 게이지를 오른쪽 끝에 맞춤(등급 글자는 게이지 왼쪽, 오른쪽 정렬) · v6.68: AI 보고서·매수심사 대기열 — 다른 작업 중이면 거절 대신 대기열(종류별 최대 3 · 들어온 순서 · 끝나면 자동 시작) · '대기 n번째 · 취소' · v6.67: 밸런스 등급 색·5칸 막대 — 탐색 목록(점은 티커 옆) · 종목 페이지 '밸런스' 칸(접힘 막대 / 펼침 그룹별 빠질 때·오를 때 타일 · 보유 종목은 소속 딱지와 다른 그룹만 · 목록 n위) · v6.66: 섹터 시트 NaN 수정 — 같은 이름 함수(_stSeries) 덮어쓰기로 섹터 시트 등락·1개월과 운영 통계(판 뒤 흐름·놓아준 종목·신호 따라 산 매매)가 깨지던 문제 · v6.65: 밸런스 종목 — '빠질 때 → 좋음 · 오를 때 → 좋음' 5단계 등급 표시 · 충족 기준 빠질 때 0배 초과·오를 때 1배 미만 · 정렬 빠질 때 순·오를 때 순·둘 다 좋은 순 · v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -3789,6 +3789,10 @@ body[data-broker="linked"] #aqTossGateCard { display: none !important; }
 .rv4-sec-h[data-toggle] { cursor: pointer; user-select: none; margin-bottom: 0; }
 .rv4-sec-h .rv4-chev { margin-left: auto; color: var(--text-mute); font-size: 18px; transition: transform .15s; }
 .rv4-sec.open .rv4-sec-h .rv4-chev { transform: rotate(90deg); }
+/* v6.78: 섹션 읽어 주기 (기기 음성) */
+.rv4-tts { align-self: center; margin-left: auto; width: 32px; height: 32px; flex: 0 0 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,.16); background: transparent; color: var(--text-mute); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+[data-theme="light"] .rv4-tts { border-color: rgba(0,0,0,.14); } .rv4-tts svg { width: 12px; height: 12px; } .rv4-tts.on { color: #569cd6; border-color: rgba(86,156,214,.5); }
+.rv4-sec-h .rv4-tts ~ .rv4-chev { margin-left: 6px; align-self: center; }
 .rv4-sec-body { display: none; padding-top: 14px; }
 .rv4-sec.open .rv4-sec-body { display: block; }
 .rv4-sec:not(.open) { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
@@ -16306,6 +16310,7 @@ function aqRv4Bind(root) {
   const links = root.querySelectorAll('.rv4-toc, .rv4-mobar a'); const secs = [...root.querySelectorAll('.rv4-sec')];
   links.forEach(a => a.addEventListener('click', e => { e.preventDefault(); const el = root.querySelector('#' + a.dataset.target); if (el) { el.classList.add('open'); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }));
   root.querySelectorAll('.rv4-sec-h[data-toggle]').forEach(h => h.addEventListener('click', () => { const sec = h.closest('.rv4-sec'); sec.classList.toggle('open'); if (sec.classList.contains('open')) sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+  try { aqTtsBind(root); } catch (e) {}   // v6.78: 섹션 읽어 주기
   root.querySelectorAll('.rv4-font button').forEach(b => b.addEventListener('click', () => { root.dataset.font = b.dataset.f; try { localStorage.setItem('aq_rv4_font', b.dataset.f); } catch (e) {} }));
   const bar = root.querySelector('.rv4-progress i');
   const onScroll = () => {
@@ -16317,6 +16322,47 @@ function aqRv4Bind(root) {
   (scroller === window ? window : scroller).addEventListener('scroll', onScroll, { passive: true }); onScroll();
 }
 Object.assign(window, { renderReportContentV4, aqRv4Bind });
+// v6.78: 섹션 읽어 주기 — 기기 내장 한국어 음성(Web Speech) · 섹션 제목 옆 ▶ · 다 읽으면 다음 섹션으로 이어서 · ⏸ 누르면 멈춤
+const _tts = { sec: null, q: [], on: false };
+const _TTS_PLAY = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor"/></svg>', _TTS_STOP = '<svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2.5" y="2" width="2.6" height="8" rx=".6" fill="currentColor"/><rect x="6.9" y="2" width="2.6" height="8" rx=".6" fill="currentColor"/></svg>';
+function aqTtsOk() { return typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined'; }
+function _ttsVoice() { try { const v = speechSynthesis.getVoices().filter(x => /^ko/i.test(x.lang)); return v.find(x => /google|yuna|sora|heami|seoyeon|natural/i.test(x.name)) || v[0] || null; } catch (e) { return null; } }
+function aqTtsBind(root) {
+  if (!aqTtsOk()) return;
+  try { speechSynthesis.getVoices(); } catch (e) {}
+  root.querySelectorAll('.rv4-sec').forEach(sec => {
+    const h = sec.querySelector('.rv4-sec-h'); if (!h || h.querySelector('.rv4-tts')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'rv4-tts'; b.setAttribute('aria-label', '읽어 주기'); b.innerHTML = _TTS_PLAY;
+    b.addEventListener('click', e => { e.stopPropagation(); if (_tts.on && _tts.sec === sec) aqTtsStop(); else _ttsPlay(sec); });
+    const chev = h.querySelector('.rv4-chev'); h.insertBefore(b, chev || null);
+  });
+}
+function _ttsChunks(sec) {
+  const t = sec.querySelector('.rv4-title'), body = sec.querySelector('.rv4-sec-body');
+  const links = body ? [...body.querySelectorAll('a')].map(a => a.innerText.trim()).filter(x => x.length > 1).sort((x, y) => y.length - x.length) : [];   // 출처 링크 글자는 읽지 않음
+  const clean = x => { links.forEach(l => { x = x.split(l).join(''); }); return x.replace(/\(\s*[,·\s]*\)/g, '').replace(/[•·▸▶›→↗]/g, ' ').replace(/\s+/g, ' ').trim(); };
+  const lines = [(t ? t.innerText : '')].concat(String(body ? body.innerText : '').split(/\n+/)).map(clean).filter(x => x && !/^[,.\s]*$/.test(x));
+  const out = []; lines.forEach(l => { let r = l; while (r.length > 180) { let k = r.lastIndexOf(' ', 180); const m = r.slice(0, 180).search(/[.!?。](?=[^.!?。]*$)/); if (m > 60) k = m + 1; if (k < 60) k = 180; out.push(r.slice(0, k)); r = r.slice(k).trim(); } if (r) out.push(r); });
+  return out;
+}
+function _ttsMark() { document.querySelectorAll('.rv4-tts').forEach(b => { const on = _tts.on && b.closest('.rv4-sec') === _tts.sec; b.classList.toggle('on', on); b.innerHTML = on ? _TTS_STOP : _TTS_PLAY; b.setAttribute('aria-label', on ? '멈추기' : '읽어 주기'); }); }
+function _ttsPlay(sec) {
+  try { speechSynthesis.cancel(); } catch (e) {}
+  sec.classList.add('open'); _tts.sec = sec; _tts.on = true; _tts.q = _ttsChunks(sec); _ttsMark(); _ttsNext();
+}
+function _ttsNext() {
+  if (!_tts.on) return;
+  if (!_tts.q.length) {   // 섹션 끝 → 다음 섹션
+    let nx = _tts.sec && _tts.sec.nextElementSibling; while (nx && !(nx.classList && nx.classList.contains('rv4-sec'))) nx = nx.nextElementSibling;
+    if (nx && document.body.contains(nx)) { _ttsPlay(nx); try { nx.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} } else aqTtsStop();
+    return;
+  }
+  const u = new SpeechSynthesisUtterance(_tts.q.shift()); u.lang = 'ko-KR'; const v = _ttsVoice(); if (v) u.voice = v; u.rate = 1.05;
+  const me = _tts.sec; u.onend = () => { if (_tts.on && _tts.sec === me) _ttsNext(); }; u.onerror = u.onend;
+  try { speechSynthesis.speak(u); } catch (e) { aqTtsStop(); }
+}
+function aqTtsStop() { _tts.on = false; _tts.q = []; try { if (aqTtsOk()) speechSynthesis.cancel(); } catch (e) {} _ttsMark(); _tts.sec = null; }
+window.aqTtsStop = aqTtsStop;
 
 function aqReportIsNewFormat(ticker, date) {
   const mkt = getCurrentMarket();
@@ -16571,6 +16617,7 @@ async function openReportPanel() {
 }
 
 function closeReportPanel() {
+  try { aqTtsStop(); } catch (e) {}   // v6.78
   _state.reportMode = null;
   _state.reportCurrentDate = null;
   $('reportPanel').style.display = 'none';
@@ -17037,6 +17084,7 @@ function renderReportList() {
 }
 
 async function openReportDetail(date) {
+  try { if (typeof aqTtsStop === 'function') aqTtsStop(); } catch (e) {}   // v6.78
   const tk = _state.openTicker;
   if (!tk) return;
   _state.reportMode = 'detail';
@@ -22357,6 +22405,7 @@ function syncWatchButton() {
 window.syncWatchButton = syncWatchButton;
 
 function closeModal() {
+  try { if (typeof aqTtsStop === 'function') aqTtsStop(); } catch (e) {}   // v6.78: 읽어 주기 멈춤
   $('chartModal').classList.remove('active');  if (_chart) { _chart.destroy(); _chart = null; }
   document.body.classList.remove('modal-pos-mode');
   // v1.23: 모바일 미니 차트도 정리
