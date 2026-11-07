@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.63';   // v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.64';   // v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -4053,6 +4053,29 @@ html[data-market="KR"] #insiderModeToggle { display: none !important; }
 .cmp-flow .kf-h { font-size: 11px; color: var(--text-mute); } .cmp-flow .kf-c { text-align: right; } .cmp-flow .up { color: #40c057; } .cmp-flow .down { color: #ff6b6b; }
 /* v5.38: AI 탭 (AI 보고서 / 자동매수) · 탐색 종목 리스트 */
 body[data-mtab="explore"][data-xtab="list"] section.card[data-xtab="list"] { display: block !important; }
+body[data-mtab="explore"][data-xtab="balance"] section.card[data-xtab="balance"], body[data-xtab="balance"] .pc-side-panel section.card[data-xtab="balance"] { display: block !important; }   /* v6.64 */
+.bal-h2 { display: flex; align-items: center; gap: 2px; }
+.bal-help { width: 32px; height: 32px; border: none; background: none; color: var(--text-mute); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+.bal-sum { margin: 4px 0 0; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,.035); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bal-sum .hd { display: flex; justify-content: space-between; font-size: 12px; color: #8a8a8a; }
+.bal-sum .bg { display: flex; gap: 8px; font-size: 13px; margin-top: 8px; color: #c8c8c8; } .bal-sum .bg b { min-width: 76px; color: var(--text-hi); font-weight: 700; } .bal-sum .bg.sub b { color: #d4d4d4; font-weight: 600; } .bal-sum .bg.sub span { color: #a8a8a8; }
+.bal-sum .note { font-size: 11.5px; color: #8a8a8a; margin-top: 10px; line-height: 1.55; }
+.bal-gh { display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px; } .bal-gh b { font-size: 14.5px; color: var(--text-hi); } .bal-gh span { font-size: 11.5px; color: #8a8a8a; }
+.bal-m { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.05); font-size: 13px; }
+.bal-m .tk { font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; font-weight: 600; color: #e8e8e8; min-width: 52px; } .bal-m .bw { margin-left: auto; color: #9d9d9d; font-family: Consolas, monospace; }
+.bal-tag { font-size: 10.5px; color: #e8e8e8; border: 1px solid #5a5a5e; border-radius: 4px; padding: 1px 6px; white-space: nowrap; } .bal-from { font-size: 10.5px; color: #8a8a8a; }
+.bal-tog { display: flex; gap: 2px; background: var(--bg-3, #2d2d30); border-radius: 10px; padding: 3px; margin: 16px 0 0; }
+.bal-tog button { flex: 1; border: none; border-radius: 8px; min-height: 40px; font-size: 13px; font-weight: 600; font-family: inherit; background: transparent; color: #9d9d9d; cursor: pointer; }
+.bal-tog button.on { background: #569cd6; color: #fff; }
+.bal-cap { display: flex; justify-content: space-between; font-size: 11.5px; color: #8a8a8a; padding: 18px 2px 4px; }
+.insider-archive-item.bal-row { grid-template-columns: 42px minmax(0, 1fr) auto 46px; }
+.bal-row .bal-mx { text-align: right; display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #8a8a8a; white-space: nowrap; }
+.bal-row .bal-mx b { font-size: 13px; color: var(--text-hi); font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; margin-left: 3px; } .bal-row .bal-mx b.dim { color: #bdbdbd; font-weight: 600; }
+.bal-dots { display: flex; gap: 5px; justify-content: flex-end; align-items: center; }
+.bal-dots i { width: 8px; height: 8px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #5a5a5a; display: inline-block; } .bal-dots i.on { background: #d4d4d4; border-color: #d4d4d4; } .bal-dots i.na { border: none; width: 8px; height: 2px; border-radius: 1px; background: #5a5a5a; }
+.bal-both { font-size: 10px; color: #c8c8c8; border: 1px solid #4a4a4e; border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 2px; font-family: inherit; font-weight: 500; }
+.bal-hp { display: flex; flex-direction: column; gap: 20px; } .bal-hp .t { display: flex; justify-content: space-between; align-items: baseline; } .bal-hp b { font-size: 15px; color: var(--text-hi); } .bal-hp .t span { font-size: 12px; color: #9d9d9d; }
+.bal-hp .d { font-size: 13.5px; color: var(--text); margin-top: 6px; } .bal-hp .e { font-size: 12px; color: #8a8a8a; line-height: 1.6; margin-top: 4px; }
 body[data-mtab="auto"] section.card[data-atab] { display: none !important; }
 body[data-mtab="auto"][data-atab="report"] section.card[data-atab="report"],
 body[data-mtab="auto"][data-atab="review"] section.card[data-atab="review"] { display: block !important; }
@@ -9001,6 +9024,7 @@ html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-
       <button class="xtab-btn active" data-xtab="trend" onclick="setExploreSubtab('trend')">섹터 동향</button>
       <button class="xtab-btn" data-xtab="insider" onclick="setExploreSubtab('insider')">내부자 매매</button>
       <button class="xtab-btn" data-xtab="shorting" onclick="setExploreSubtab('shorting')">공매도 이력</button>
+      <button class="xtab-btn" data-xtab="balance" onclick="setExploreSubtab('balance')">밸런스 종목</button>
     </div>
   </section>
 
@@ -9023,6 +9047,28 @@ html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-
         <div class="buy-points-empty">로딩 중…</div>
       </div>
       <button class="archive-mobile-more" id="shortingMore" onclick="loadMoreShorting()" style="display:none;">더 보기</button>
+    </div>
+  </section>
+
+  <!-- v6.64: 밸런스 종목 — 내 계좌 주력·보조 그룹과 반대로 움직인 종목 (60일 · 앱 안 계산) -->
+  <section class="card mobile-only" id="balanceCard" data-mtab="explore" data-xtab="balance">
+    <div class="card-header">
+      <h2 class="bal-h2">밸런스 종목<button type="button" class="bal-help" onclick="event.stopPropagation(); aqBalHelp()" aria-label="지표 설명"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M6.3 6.2a1.8 1.8 0 1 1 2.5 1.7c-.5.2-.8.6-.8 1.1v.4"></path><circle cx="8" cy="11.4" r=".4" fill="currentColor"></circle></svg></button></h2>
+      <div class="stock-list-sort">
+        <button class="sort-toggle" id="balSortBtn" onclick="event.stopPropagation(); aqBalSortMenu();"><span id="balSortLabel">밸런스순</span><span class="sort-arrow">↕</span></button>
+        <div class="sort-menu" id="balSortMenu" style="display:none;">
+          <button onclick="event.stopPropagation(); aqBalSetSort('def');" data-mode="def">하락방어순</button>
+          <button onclick="event.stopPropagation(); aqBalSetSort('cost');" data-mode="cost">상승비용순</button>
+          <button onclick="event.stopPropagation(); aqBalSetSort('bal');" data-mode="bal" class="active">밸런스순</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="balSummary"></div>
+      <div class="bal-tog" id="balTog"></div>
+      <div class="bal-cap" id="balCap"></div>
+      <div class="archive-mobile-list" id="balList"><div class="buy-points-empty">계산 중…</div></div>
+      <button class="archive-mobile-more" id="balMore" onclick="aqBalMore()" style="display:none;">더 보기</button>
     </div>
   </section>
 
@@ -24857,6 +24903,7 @@ window.aqLayoutBoardHoldings = aqLayoutBoardHoldings;
 
 function setExploreSubtab(x) { aqHoldScroll();
   if (!x || x === 'signals') x = 'trend';   // v5.14: 누적 시그널 탭 폐지 → 섹터 동향
+  if (x === 'shorting' && getCurrentMarket() !== 'KR') x = 'balance';   // v6.64: 미국은 공매도 이력 대신 밸런스 종목 (한국 '기관 매수'는 그대로)
   if (x === 'report') { try { switchMobileTab('auto'); setAiSubtab('report'); } catch (e) {} return; }   // v5.38: AI 보고서는 AI 탭으로
   document.body.setAttribute('data-xtab', x);
   document.querySelectorAll('.xtab-btn[data-xtab]').forEach(b => b.classList.toggle('active', b.dataset.xtab === x));
@@ -24868,6 +24915,7 @@ function setExploreSubtab(x) { aqHoldScroll();
     else if (x === 'trend') { if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); try { if (typeof buildSectorStreaks === 'function') buildSectorStreaks(); } catch (e) {} }
     else if (x === 'signals' && typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
     else if (x === 'insider') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('foreign'); } else if (typeof buildInsiderArchiveList === 'function') buildInsiderArchiveList(); }
+    else if (x === 'balance') { try { aqBalRender(); } catch (e) { console.warn('밸런스 종목', e); } }
     else if (x === 'shorting') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('inst'); } else if (typeof buildShortingList === 'function') buildShortingList(); }
     else if (x === 'report') {
       try {
@@ -24896,7 +24944,7 @@ function relocateCardsForPC() {
   }
   if (explorePanel) {
     // v3.14: 탐색 서브탭 — 서브탭바 + (시그널필터+누적시그널) + 내부자 + 공매도 + 전체리스트 순
-    ['exploreSubtabs', 'archiveMobileCard', 'filterCard', 'insiderArchiveCard', 'shortingCard', 'stockListCard'].forEach(id => {
+    ['exploreSubtabs', 'archiveMobileCard', 'filterCard', 'insiderArchiveCard', 'shortingCard', 'balanceCard', 'stockListCard'].forEach(id => {
       const el = document.getElementById(id);
       if (el && el.parentElement !== explorePanel) explorePanel.appendChild(el);
     });
@@ -25913,12 +25961,166 @@ let _krFlowPeriod = { foreign: '5d', inst: '5d' };
 let _krFlowShown  = { foreign: 15, inst: 15 };
 function _krPeriodDays(p) { return p === '1d' ? 1 : p === '20d' ? 20 : 5; }
 
+// ============================================================================
+// v6.64: 밸런스 종목 — 내 계좌(현재 시장) 보유 종목을 60거래일 등락 동조화로 2그룹(K-means K=2)으로 나누고
+//   주력(비중 큰 그룹)·보조 각각과 반대로 움직인 유니버스 종목을 찾음 (미국 KJP500 · 한국 KJP100, 보유 종목 제외)
+//   그룹 등락률 = 그룹 종목 일간 등락률을 평가금액 비중으로 합친 값 · 후보 등락률 = 그 종목 자체
+//   하락방어 = 그룹 하락일 후보 평균 ÷ 그룹 평균 하락폭 (≥1 충족) · 상승비용 = 그룹 상승일 후보 평균 하락폭 ÷ 그룹 평균 상승폭 (<1 충족, 같이 오르면 0)
+//   밸런스 = min(하락방어−1, 1−상승비용) · 점 = 같은 그룹(60일로 정함)을 20·40·60일로 평가 (하락일 5일 미만은 –)
+// ============================================================================
+const _bal = { sort: 'bal', grp: 'main', open: false, shown: 20, cache: null, key: '' };
+const BAL_N = 60, BAL_WIN = [20, 40, 60], BAL_MAXVOL = 6, BAL_PAGE = 20;
+function _balSeries(rows) { const m = {}; (rows || []).forEach(r => { if (r && r.Date && r.Close > 0) m[String(r.Date).slice(0, 10)] = Number(r.Close); }); return m; }
+function _balRets(m, dates) {   // dates: N+1개 → 일간 등락률 N개 (빈 날은 null)
+  const out = []; for (let i = 1; i < dates.length; i++) { const a = m[dates[i - 1]], b = m[dates[i]]; out.push(a > 0 && b > 0 ? b / a - 1 : null); } return out;
+}
+function _balZ(v) { const n = v.length, mu = v.reduce((a, b) => a + b, 0) / n; const sd = Math.sqrt(v.reduce((a, b) => a + (b - mu) * (b - mu), 0) / n) || 1; return v.map(x => (x - mu) / sd); }
+function _balKmeans2(vecs) {   // 시작점 고정: 상관이 가장 낮은(거리가 가장 먼) 두 종목
+  const n = vecs.length, d2 = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += (a[i] - b[i]) * (a[i] - b[i]); return s; };
+  let bi = 0, bj = 1, bd = -1;
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) { const d = d2(vecs[i], vecs[j]); if (d > bd) { bd = d; bi = i; bj = j; } }
+  let c = [vecs[bi].slice(), vecs[bj].slice()], lab = new Array(n).fill(-1);
+  for (let it = 0; it < 50; it++) {
+    let moved = false;
+    for (let i = 0; i < n; i++) { const l = d2(vecs[i], c[0]) <= d2(vecs[i], c[1]) ? 0 : 1; if (l !== lab[i]) { lab[i] = l; moved = true; } }
+    for (const k of [0, 1]) { const m = vecs.filter((_, i) => lab[i] === k); if (!m.length) continue; c[k] = m[0].map((_, t) => m.reduce((a, v) => a + v[t], 0) / m.length); }
+    if (!moved) break;
+  }
+  if (!lab.includes(0) || !lab.includes(1)) { lab[bi] = 0; lab[bj] = 1; }
+  return lab;
+}
+function _balMetric(G, X) {
+  let dn = 0, dg = 0, dx = 0, un = 0, ug = 0, ux = 0;
+  for (let i = 0; i < G.length; i++) { if (G[i] == null || X[i] == null) continue; if (G[i] < 0) { dn++; dg += G[i]; dx += X[i]; } else if (G[i] > 0) { un++; ug += G[i]; ux += X[i]; } }
+  if (dn < 5 || !un) return { na: true, dn };
+  const D = (dx / dn) / Math.abs(dg / dn); const mx = ux / un; const C = mx >= 0 ? 0 : -mx / (ug / un);
+  return { D, C, ok: D >= 1 && C < 1, dn, un };
+}
+function _balCompute() {
+  const mkt = getCurrentMarket();
+  let hold = []; try { hold = (computeHoldingsState().holdings || []).filter(h => h.qty > 0 && h.evalVal > 0); } catch (e) {}
+  // 기준 날짜: 유니버스 일봉의 마지막 61거래일
+  const uni = {}; const dset = new Set();
+  Object.keys(_state.sectors || {}).forEach(sec => (_state.sectors[sec] || []).forEach(r => { const tk = String(r.Ticker || '').toUpperCase(); if (!tk || tk.startsWith('^')) return; (uni[tk] = uni[tk] || []).push(r); if (r.Date) dset.add(String(r.Date).slice(0, 10)); }));
+  const allD = [...dset].sort(); if (allD.length < BAL_N + 1) return { err: '시세가 아직 60거래일치가 안 돼요' };
+  // 유니버스 일부만 있는 날(최근 수집 중) 제외: 종목의 절반 이상이 가진 날만
+  const cnt = {}; Object.values(uni).forEach(rows => rows.forEach(r => { const d = String(r.Date).slice(0, 10); cnt[d] = (cnt[d] || 0) + 1; }));
+  const nU = Object.keys(uni).length; const days = allD.filter(d => cnt[d] >= nU * 0.5).slice(-(BAL_N + 1));
+  if (days.length < BAL_N + 1) return { err: '시세가 아직 60거래일치가 안 돼요' };
+  const H = [];
+  hold.forEach(h => {
+    const tk = String(h.ticker).toUpperCase(); const f = findTickerSeries(tk); if (!f || !f.rows) return;
+    const r = _balRets(_balSeries(f.rows), days); const miss = r.filter(x => x == null).length; if (miss > BAL_N * 0.2) return;
+    H.push({ tk, w: h.evalVal, sec: aqStripSectorEmoji(h.sector || _aqSectorOf(tk) || '') || '기타', r: r.map(x => x == null ? 0 : x) });
+  });
+  if (!H.length) return { err: '이 시장에 60거래일 시세가 있는 보유 종목이 없어요', mkt };
+  const totW = H.reduce((a, h) => a + h.w, 0);
+  let lab = H.length >= 4 ? _balKmeans2(H.map(h => _balZ(h.r))) : H.map(() => 0);
+  const wOf = k => H.filter((_, i) => lab[i] === k).reduce((a, h) => a + h.w, 0);
+  if (H.length >= 4 && wOf(1) > wOf(0)) lab = lab.map(l => 1 - l);   // 0 = 주력(비중 큰 쪽)
+  const groups = (H.length >= 4 ? [0, 1] : [0]).map(k => {
+    const mem = H.filter((_, i) => lab[i] === k).sort((a, b) => b.w - a.w); const gw = mem.reduce((a, h) => a + h.w, 0);
+    const series = days.slice(1).map((_, t) => mem.reduce((a, h) => a + h.w * h.r[t], 0) / gw);
+    const bySec = {}; mem.forEach(h => { bySec[h.sec] = (bySec[h.sec] || 0) + h.w; }); const topSec = Object.keys(bySec).sort((a, b) => bySec[b] - bySec[a])[0] || '기타';
+    const r60 = series.reduce((a, x) => a * (1 + x), 1) - 1;
+    return { id: k === 0 ? 'main' : 'sub', name: k === 0 ? '주력' : '보조', pct: gw / totW * 100, sec: topSec, r60, mem: mem.map(h => ({ tk: h.tk, pct: h.w / totW * 100 })), series };
+  });
+  // 후보: 유니버스 − 보유 · 60거래일 빈 날 없음 · 하루 평균 변동 6% 미만
+  const held = new Set(H.map(h => h.tk).concat(hold.map(h => String(h.ticker).toUpperCase())));
+  const cands = [];
+  Object.keys(uni).forEach(tk => {
+    if (held.has(tk)) return;
+    const r = _balRets(_balSeries(uni[tk]), days); if (r.some(x => x == null)) return;
+    if (r.reduce((a, x) => a + Math.abs(x), 0) / r.length * 100 >= BAL_MAXVOL) return;
+    const res = {};
+    groups.forEach(g => {
+      const w = BAL_WIN.map(N => _balMetric(g.series.slice(-N), r.slice(-N)));
+      const m60 = w[2]; if (m60.na) return;
+      res[g.id] = { D: m60.D, C: m60.C, ok: m60.ok, bal: Math.min(m60.D - 1, 1 - m60.C), dots: w.map(x => x.na ? 'na' : (x.ok ? 'on' : '')) };
+    });
+    if (Object.keys(res).length) cands.push({ tk, sec: (_state.tickerSectorMap || {})[tk] || '', res });
+  });
+  cands.forEach(c => { c.both = groups.length > 1 && groups.every(g => c.res[g.id] && c.res[g.id].ok); });
+  // 지난번(이전 날) 대비 그룹 변동
+  const now = {}; groups.forEach(g => g.mem.forEach(m => { now[m.tk] = g.id; }));
+  let st = {}; const lk = 'aq_bal_groups_' + mkt; try { st = JSON.parse(localStorage.getItem(lk) || '{}') || {}; } catch (e) {}
+  const today = new Date().toISOString().slice(0, 10);
+  const prev = st.date === today ? (st.prev || null) : (st.cur || null);
+  try { localStorage.setItem(lk, JSON.stringify({ date: today, prev, cur: now })); } catch (e) {}
+  const nm = { main: '주력', sub: '보조' }; let nChg = 0;
+  groups.forEach(g => g.mem.forEach(m => { if (!prev) return; const p = prev[m.tk]; if (!p) { m.isNew = true; nChg++; } else if (p !== g.id) { m.from = `${nm[p] || p}→${nm[g.id]}`; nChg++; } }));
+  const down60 = groups.map(g => g.series.filter(x => x < 0).length);
+  return { mkt, groups, cands, nChg, down60, asOf: days[days.length - 1] };
+}
+function aqBalRender(keepShown) {
+  const listEl = $('balList'), moreBtn = $('balMore'), sumEl = $('balSummary'), togEl = $('balTog'), capEl = $('balCap');
+  if (!listEl) return;
+  const ck = getCurrentMarket() + '|' + Object.keys(_state.sectors || {}).length + '|' + (localStorage.getItem('aq_toss_holdings') || '').length;
+  if (!_bal.cache || _bal.key !== ck) { _bal.cache = _balCompute(); _bal.key = ck; }
+  if (!keepShown) _bal.shown = BAL_PAGE;
+  const R = _bal.cache;
+  if (R.err) { sumEl.innerHTML = ''; togEl.style.display = 'none'; capEl.innerHTML = ''; listEl.innerHTML = `<div class="buy-points-empty">${escapeHtml(R.err)}</div>`; moreBtn.style.display = 'none'; return; }
+  const G = R.groups; if (!G.find(g => g.id === _bal.grp)) _bal.grp = 'main';
+  const fx = v => `${v >= 0 ? '+' : ''}${(v * 100).toFixed(1)}%`;
+  sumEl.innerHTML = `<div class="bal-sum" onclick="aqBalToggleOpen()">
+    <div class="hd"><span>내 계좌 그룹 · 60일${G.length < 2 ? ' · 보유 4종목 미만이라 하나로 봐요' : ''}</span><span>${R.nChg ? `바뀐 종목 ${R.nChg} · ` : ''}${_bal.open ? '접기 ‹' : '펼치기 ›'}</span></div>
+    ${G.map(g => `<div class="bg ${g.id}"><b>${g.name} · ${g.pct.toFixed(0)}%</b><span>${escapeHtml(g.sec)} 중심 · ${g.mem.slice(0, 3).map(m => escapeHtml(displayName(m.tk))).join(' ')}</span></div>`).join('')}
+    ${_bal.open ? `<div class="note">최근 60일 동안 비슷하게 움직인 종목끼리 묶고, 비중이 큰 쪽을 주력이라고 불러요.</div>` + G.map(g => `<div class="bal-gh"><b>${g.name} 그룹 · ${g.pct.toFixed(0)}%</b><span>${escapeHtml(g.sec)} 중심 · ${g.mem.length}종목 · 60일 ${fx(g.r60)}</span></div>`
+      + g.mem.map(m => `<div class="bal-m"><span class="tk">${escapeHtml(displayName(m.tk))}</span>${m.isNew ? '<span class="bal-tag">신규편입</span>' : ''}${m.from ? `<span class="bal-tag">그룹변동</span><span class="bal-from">${m.from}</span>` : ''}<span class="bw">${m.pct.toFixed(0)}%</span></div>`).join('')).join('') : ''}
+  </div>`;
+  togEl.style.display = G.length > 1 ? '' : 'none';
+  togEl.innerHTML = G.map(g => `<button type="button" class="${_bal.grp === g.id ? 'on' : ''}" onclick="aqBalSetGrp('${g.id}')">${g.name} 그룹 ${g.pct.toFixed(0)}%</button>`).join('');
+  const gid = _bal.grp, gi = G.findIndex(g => g.id === gid);
+  capEl.innerHTML = `<span>${G[gi].name} 그룹이 빠질 때 받쳐 줄 종목 · 하락일 ${R.down60[gi]}일</span><span>20·40·60일</span>`;
+  const key = { def: c => -c.res[gid].D, cost: c => c.res[gid].C - c.res[gid].D * 1e-6, bal: c => -c.res[gid].bal }[_bal.sort];
+  const rows = R.cands.filter(c => c.res[gid]).sort((a, b) => key(a) - key(b));
+  if (!rows.length) { listEl.innerHTML = '<div class="buy-points-empty">계산할 수 있는 종목이 없어요</div>'; moreBtn.style.display = 'none'; return; }
+  const shown = rows.slice(0, _bal.shown);
+  listEl.innerHTML = shown.map(c => {
+    const tk = c.tk, m = c.res[gid]; const layerFile = layerFileName(SECTOR_TO_LAYER[c.sec] || '기타'); const tkFile = tickerFileName(tk);
+    const logoHtml = tkFile ? `<img class="ia-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">`
+      : `<img class="ia-logo" src="./flags/${R.mkt === 'KR' ? 'KR' : 'US'}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+    return `<div class="insider-archive-item bal-row" data-ticker="${escapeAttr(tk)}">${aqWrapLogo(logoHtml, tk)}
+      <div class="ia-info"><div class="ia-ticker" title="${escapeAttr(displayName(tk))}">${escapeHtml(displayName(tk))}${c.both ? '<span class="bal-both">주력·보조</span>' : ''}</div>
+        <div class="ia-company">${escapeHtml(displaySub(tk))}</div><div class="ia-sector">${escapeHtml(aqStripSectorEmoji(c.sec))}</div></div>
+      <div class="bal-mx"><div>하락방어<b class="${_bal.sort === 'cost' ? 'dim' : ''}">${m.D.toFixed(2)}배</b></div><div>상승비용<b class="${_bal.sort === 'def' ? 'dim' : ''}">${m.C.toFixed(2)}배</b></div></div>
+      <div class="bal-dots" aria-label="20·40·60일 충족">${m.dots.map(d => `<i class="${d}"></i>`).join('')}</div></div>`;
+  }).join('');
+  moreBtn.style.display = rows.length > _bal.shown ? '' : 'none';
+  moreBtn.textContent = `더 보기 (${rows.length - _bal.shown}개 남음)`;
+  listEl.querySelectorAll('.bal-row').forEach(el => el.addEventListener('click', () => openChart(el.dataset.ticker)));
+}
+function aqBalMore() { _bal.shown += BAL_PAGE; aqBalRender(true); }
+function aqBalSetGrp(g) { _bal.grp = g; aqHoldScroll(); aqBalRender(); }
+function aqBalToggleOpen() { _bal.open = !_bal.open; aqHoldScroll(); aqBalRender(true); }
+function aqBalSortMenu() { const m = $('balSortMenu'); if (m) m.style.display = m.style.display === 'none' ? 'block' : 'none'; }
+function aqBalSetSort(k) {
+  _bal.sort = k; const lb = { def: '하락방어순', cost: '상승비용순', bal: '밸런스순' };
+  const l = $('balSortLabel'); if (l) l.textContent = lb[k];
+  document.querySelectorAll('#balSortMenu button').forEach(b => b.classList.toggle('active', b.dataset.mode === k));
+  const m = $('balSortMenu'); if (m) m.style.display = 'none'; aqHoldScroll(); aqBalRender();
+}
+document.addEventListener('click', () => { const m = document.getElementById('balSortMenu'); if (m && m.style.display !== 'none') m.style.display = 'none'; });
+function aqBalHelp() {
+  const _m = $('balSortMenu'); if (_m) _m.style.display = 'none';
+  _mcSheet(`<div class="mc-sh-t">밸런스 종목은</div><div class="mc-sh-s">고른 그룹(주력·보조)과 반대로 움직여 계좌의 흔들림을 줄여 줄 종목이에요. 오늘 보유 종목과 비중으로 최근 60거래일을 다시 계산하고, 정렬은 오른쪽 위에서 바꿔요.</div>
+    <div class="bal-hp">
+      <div><div class="t"><b>하락방어</b><span>1배 이상이면 충족</span></div><div class="d">내가 빠질 때 더 오름</div><div class="e">예: 그룹이 평균 −1.5% 빠진 날 이 종목이 평균 +1.8% → 1.2배</div></div>
+      <div><div class="t"><b>상승비용</b><span>1배 미만이면 충족</span></div><div class="d">내가 오를 때 덜 빠짐</div><div class="e">예: 그룹이 평균 +1.2% 오른 날 이 종목이 평균 −0.5% → 0.42배</div></div>
+      <div><div class="t"><b>밸런스순</b></div><div class="d">둘 다 좋은 종목이 위로</div><div class="e">두 조건 중 약한 쪽의 여유로 줄을 세워요</div></div>
+      <div><div class="t"><b>20·40·60일 <span class="bal-dots" style="display:inline-flex;margin-left:6px"><i class="on"></i><i class="on"></i><i></i></span></b></div><div class="e">같은 그룹을 기간만 바꿔 봐서, 두 조건을 다 충족하면 ●. 그룹이 빠진 날이 5일 미만이면 –. 세 개 다 찬 종목이 가장 믿을 만해요.</div></div>
+      <div><div class="t"><b>그룹 등락률</b></div><div class="e">그룹 종목들의 하루 등락률을 내 평가금액 비중대로 합친 값이에요. 후보는 그 종목 자체의 등락률이에요.</div></div>
+    </div>
+    <button type="button" class="mc-go" style="background:#3a3a3e;color:#fff" onclick="aqMcSheetClose()">닫기</button>`);
+}
+window.aqBalRender = aqBalRender; window.aqBalMore = aqBalMore; window.aqBalSetGrp = aqBalSetGrp; window.aqBalToggleOpen = aqBalToggleOpen; window.aqBalSortMenu = aqBalSortMenu; window.aqBalSetSort = aqBalSetSort; window.aqBalHelp = aqBalHelp;
+
 function aqApplyExploreMarketUI() {
   const isKR = getCurrentMarket() === 'KR';
   const bIns = document.querySelector('.xtab-btn[data-xtab="insider"]');
   const bShort = document.querySelector('.xtab-btn[data-xtab="shorting"]');
   if (bIns) bIns.textContent = isKR ? '외국인 매수' : '내부자 매수';
-  if (bShort) bShort.textContent = isKR ? '기관 매수' : '공매도 이력';
+  if (bShort) { bShort.textContent = isKR ? '기관 매수' : '공매도 이력'; bShort.style.display = isKR ? '' : 'none'; }   // v6.64: 미국은 공매도 이력 숨김
   const insH = document.querySelector('#insiderArchiveCard .card-header h2');
   if (insH) insH.textContent = isKR ? '외국인 순매수 비중' : '내부자 누적';
   const shH = document.querySelector('#shortingCard .card-header h2');
@@ -27026,6 +27228,7 @@ async function aqSyncLocalFromServer(silent) {
   try { if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard(); } catch (e) {}
   try { if (typeof _renderSelectedSection === 'function') _renderSelectedSection(); } catch (e) {}
   try { aqStatsRender(); } catch (e) {}   // v5.22
+  try { if (document.body.getAttribute('data-xtab') === 'balance') aqBalRender(); } catch (e) {}   // v6.64
   if (!silent && typeof aqToast === 'function') aqToast(`내 매매 데이터 반영 · 체결 ${(tr.trades || []).length} / 보유 ${(hd.holdings || []).length}`);
   return true;
 }
