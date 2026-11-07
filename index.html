@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.72';   // v6.72: 밸런스 급락일 지표 — 그룹 최대 하락 5일(20일 2·40일 3) 따로 등급 · 빠질 때는 급락일 뺀 평소 · 그룹이 조용한 날 혼자 튄 크기는 3σ까지만 · 급락일 순 정렬 · 목록 '급락일' 딱지(좋음 이상) · 종목 페이지 3번째 타일 · v6.71: 밸런스 '둘 다 좋은 순' — 낮은 쪽 등급 → 높은 쪽 등급 → 빠질 때 값 순 (빠질 때 값만으로 정렬되던 문제) · v6.70: 밸런스 — 평균 대신 구간별 기울기(그룹 1% 기준, 절편으로 종목 자체 추세 제거) · 알파 강한 종목이 1등 하던 문제 · v6.69: 밸런스 목록 — 게이지를 오른쪽 끝에 맞춤(등급 글자는 게이지 왼쪽, 오른쪽 정렬) · v6.68: AI 보고서·매수심사 대기열 — 다른 작업 중이면 거절 대신 대기열(종류별 최대 3 · 들어온 순서 · 끝나면 자동 시작) · '대기 n번째 · 취소' · v6.67: 밸런스 등급 색·5칸 막대 — 탐색 목록(점은 티커 옆) · 종목 페이지 '밸런스' 칸(접힘 막대 / 펼침 그룹별 빠질 때·오를 때 타일 · 보유 종목은 소속 딱지와 다른 그룹만 · 목록 n위) · v6.66: 섹터 시트 NaN 수정 — 같은 이름 함수(_stSeries) 덮어쓰기로 섹터 시트 등락·1개월과 운영 통계(판 뒤 흐름·놓아준 종목·신호 따라 산 매매)가 깨지던 문제 · v6.65: 밸런스 종목 — '빠질 때 → 좋음 · 오를 때 → 좋음' 5단계 등급 표시 · 충족 기준 빠질 때 0배 초과·오를 때 1배 미만 · 정렬 빠질 때 순·오를 때 순·둘 다 좋은 순 · v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.73';   // v6.73: 밸런스 목록에서 종목을 누르면 데칼코마니 시트 — 60거래일 일간 차트(그룹 vs 종목) · 반대로 움직인 구간(띠, 3~10일 · 그룹 누적 1.5σ×√일수 · 가장 뚜렷한 2곳)·날(점, 그룹 1σ) · 종목은 반대로 그룹의 절반 이상 · 등급 칸 · 종목 페이지 버튼 · v6.72: 밸런스 급락일 지표 — 그룹 최대 하락 5일(20일 2·40일 3) 따로 등급 · 빠질 때는 급락일 뺀 평소 · 그룹이 조용한 날 혼자 튄 크기는 3σ까지만 · 급락일 순 정렬 · 목록 '급락일' 딱지(좋음 이상) · 종목 페이지 3번째 타일 · v6.71: 밸런스 '둘 다 좋은 순' — 낮은 쪽 등급 → 높은 쪽 등급 → 빠질 때 값 순 (빠질 때 값만으로 정렬되던 문제) · v6.70: 밸런스 — 평균 대신 구간별 기울기(그룹 1% 기준, 절편으로 종목 자체 추세 제거) · 알파 강한 종목이 1등 하던 문제 · v6.69: 밸런스 목록 — 게이지를 오른쪽 끝에 맞춤(등급 글자는 게이지 왼쪽, 오른쪽 정렬) · v6.68: AI 보고서·매수심사 대기열 — 다른 작업 중이면 거절 대신 대기열(종류별 최대 3 · 들어온 순서 · 끝나면 자동 시작) · '대기 n번째 · 취소' · v6.67: 밸런스 등급 색·5칸 막대 — 탐색 목록(점은 티커 옆) · 종목 페이지 '밸런스' 칸(접힘 막대 / 펼침 그룹별 빠질 때·오를 때 타일 · 보유 종목은 소속 딱지와 다른 그룹만 · 목록 n위) · v6.66: 섹터 시트 NaN 수정 — 같은 이름 함수(_stSeries) 덮어쓰기로 섹터 시트 등락·1개월과 운영 통계(판 뒤 흐름·놓아준 종목·신호 따라 산 매매)가 깨지던 문제 · v6.65: 밸런스 종목 — '빠질 때 → 좋음 · 오를 때 → 좋음' 5단계 등급 표시 · 충족 기준 빠질 때 0배 초과·오를 때 1배 미만 · 정렬 빠질 때 순·오를 때 순·둘 다 좋은 순 · v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -4092,6 +4092,15 @@ body[data-mtab="explore"][data-xtab="balance"] section.card[data-xtab="balance"]
 .bal-ck { font-size: 9.5px; font-weight: 700; border: 1px solid; border-radius: 4px; padding: 0 4px; margin-left: 6px; vertical-align: 2px; font-family: inherit; }
 .bal-tile em { font-style: normal; font-size: 11px; color: #8a8a8a; font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; white-space: nowrap; }
 .bal-st-note { font-size: 11.5px; color: #8a8a8a; padding: 2px 2px 6px; }
+/* v6.73: 데칼코마니 시트 */
+.bal-mr-h { display: flex; align-items: center; gap: 12px; margin: 8px 0 0; } .bal-mr-h .nm { flex: 1; min-width: 0; } .bal-mr-h .nm b { display: block; font-size: 17px; color: var(--text-hi); } .bal-mr-h .nm span { display: block; font-size: 12px; color: #9d9d9d; margin-top: 2px; }
+.bal-mr-x { width: 44px; height: 44px; border: none; background: none; color: #9d9d9d; font-size: 20px; cursor: pointer; }
+.bal-mr-lg { display: flex; justify-content: flex-end; gap: 12px; font-size: 11.5px; color: #9d9d9d; margin-top: 14px; } .bal-mr-lg span { display: inline-flex; align-items: center; gap: 5px; } .bal-mr-lg i { width: 12px; height: 3px; border-radius: 2px; display: inline-block; }
+.bal-mr-ch { margin-top: 12px; } .bal-mr-ch svg { width: 100%; height: auto; display: block; }
+.bal-mr-seg { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.bal-mr-z { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 10px; background: rgba(86,156,214,.10); font-family: Consolas, 'Pretendard Variable', Pretendard, monospace; } .bal-mr-z i { width: 10px; height: 10px; border-radius: 2px; background: rgba(86,156,214,.45); } .bal-mr-z b { font-size: 12.5px; color: var(--text-hi); } .bal-mr-z span { margin-left: auto; font-size: 12px; color: #9d9d9d; } .bal-mr-z span em { font-style: normal; font-weight: 700; color: #569cd6; }
+.bal-mr-d { display: flex; align-items: center; gap: 10px; padding: 2px 12px; font-size: 12px; color: #9d9d9d; } .bal-mr-d i { width: 8px; height: 8px; border-radius: 50%; background: #569cd6; } .bal-mr-d b { color: var(--text-hi); }
+.bal-mr .bal-tiles { margin-top: 16px; }
 [data-theme="light"] .bal-meter i, [data-theme="light"] .bal-meter.w i { background: #d8d8d8; }
 .bal-hp { display: flex; flex-direction: column; gap: 20px; } .bal-hp .t { display: flex; justify-content: space-between; align-items: baseline; } .bal-hp b { font-size: 15px; color: var(--text-hi); } .bal-hp .t span { font-size: 12px; color: #9d9d9d; }
 .bal-gt { width: 100%; border-collapse: collapse; font-size: 12px; } .bal-gt th { text-align: left; font-weight: 600; color: #8a8a8a; padding: 6px 4px; border-bottom: 1px solid rgba(255,255,255,.08); } .bal-gt td { padding: 8px 4px; color: #bdbdbd; border-bottom: 1px solid rgba(255,255,255,.05); vertical-align: top; } .bal-gt td b { font-size: 12.5px; color: var(--text-hi); white-space: nowrap; }
@@ -26155,7 +26164,7 @@ function aqBalRender(keepShown) {
   }).join('');
   moreBtn.style.display = rows.length > _bal.shown ? '' : 'none';
   moreBtn.textContent = `더 보기 (${rows.length - _bal.shown}개 남음)`;
-  listEl.querySelectorAll('.bal-row').forEach(el => el.addEventListener('click', () => openChart(el.dataset.ticker)));
+  listEl.querySelectorAll('.bal-row').forEach(el => { el.onclick = () => aqBalMirror(el.dataset.ticker); });   // v6.73: 데칼코마니 시트 (onclick이라 전역 '행 누르면 종목 페이지'는 건너뜀)
 }
 // v6.67: 종목 페이지 '밸런스' 칸 — 접힘: 주력 기준 막대 2개 · 보유 종목은 소속 딱지 / 펼침: 그룹별 빠질 때·오를 때 타일
 function _balEval(tk) {
@@ -26188,6 +26197,48 @@ function aqBalStock(tk) {
       <div class="bal-tiles${x.m.K != null ? ' t3' : ''}">${tile('빠질 때', _balLvD(x.m.D), '−1%', -x.m.sd / 100)}${tile('오를 때', _balLvC(x.m.C), '+1%', x.m.su / 100)}${x.m.K != null ? tile(`급락일 <small>${pc(x.m.cut)}↓</small>`, _balLvD(x.m.K), pc(x.m.gK), x.m.xK) : ''}</div></div>`).join('')
     + (E.bigVol ? `<div class="bal-st-note">변동 커서 목록 제외</div>` : '');
 }
+// v6.73: 데칼코마니 시트 — 목록에서 종목을 누르면 60거래일 일간 차트(그룹 vs 종목) · 반대로 움직인 구간·날 (그룹 변동성 σ 기준)
+//   날 = 그룹 ±1σ 이상 · 종목은 반대로 그 절반 이상 / 구간 = 3~10거래일 그룹 누적 ±1.5σ×√일수 이상 · 종목은 반대로 그 절반 이상 → 안 겹치게 가장 뚜렷한 2곳
+function _balMirrorCalc(G, X) {
+  const n = G.length, mu = G.reduce((a, b) => a + b, 0) / n, sG = Math.sqrt(G.reduce((a, b) => a + (b - mu) * (b - mu), 0) / n);
+  const days = []; for (let t = 0; t < n; t++) if (Math.abs(G[t]) >= sG && G[t] * X[t] < 0 && Math.abs(X[t]) >= 0.5 * Math.abs(G[t])) days.push(t);
+  const cand = [];
+  for (let i = 0; i < n; i++) { let pg = 1, px = 1; for (let L = 1; L <= 10 && i + L <= n; L++) { pg *= 1 + G[i + L - 1]; px *= 1 + X[i + L - 1]; if (L < 3) continue; const rg = pg - 1, rx = px - 1;
+    if (Math.abs(rg) >= 1.5 * sG * Math.sqrt(L) && rg * rx < 0 && Math.abs(rx) >= 0.5 * Math.abs(rg)) cand.push({ i, j: i + L - 1, rg, rx, s: Math.abs(rg) + Math.abs(rx) }); } }
+  cand.sort((a, b) => b.s - a.s); const segs = [];
+  for (const c of cand) { if (segs.length >= 2) break; if (segs.every(z => c.j < z.i || c.i > z.j)) segs.push(c); }
+  return { sG, days, segs };
+}
+function aqBalMirror(tk) {
+  tk = String(tk || '').toUpperCase(); const R = _balGet(); if (!R || R.err) { openChart(tk); return; }
+  const g = R.groups.find(x => x.id === _bal.grp) || R.groups[0]; const c = R.cands.find(x => x.tk === tk); const f = findTickerSeries(tk);
+  const X = f && f.rows ? _balRets(_balSeries(f.rows), R.days) : null;
+  if (!g || !c || !c.res[g.id] || !X || X.some(x => x == null)) { openChart(tk); return; }
+  const G = g.series, M = _balMirrorCalc(G, X), m = c.res[g.id];
+  const cum = a => { let p = 1; return [0].concat(a.map(r => (p *= 1 + r) - 1)); }; const cg = cum(G), cx = cum(X);   // 61점 (첫날 0%)
+  const W = 354, H = 196, N = cg.length - 1, sx = i => i * W / N;
+  let top = Math.max(...cg, ...cx), bot = Math.min(...cg, ...cx); const pad = (top - bot) * 0.08 || 0.01; top += pad; bot -= pad;
+  const sy = v => H - (v - bot) / (top - bot) * H, pts = a => a.map((v, i) => `${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join(' ');
+  const lab = i => { const d = String(R.days[i]); return `${+d.slice(5, 7)}/${+d.slice(8, 10)}`; };
+  const pc = v => `${v >= 0 ? '+' : '−'}${Math.abs(v * 100).toFixed(1)}%`;
+  const band = M.segs.map(z => `<rect x="${sx(z.i).toFixed(1)}" y="0" width="${(sx(z.j + 1) - sx(z.i)).toFixed(1)}" height="${H}" fill="rgba(86,156,214,0.13)"/>`).join('');
+  const dots = M.days.map(t => `<circle cx="${sx(t + 1).toFixed(1)}" cy="${sy(cx[t + 1]).toFixed(1)}" r="3.2" fill="#569cd6" stroke="#1c1c1f" stroke-width="1.5"/>`).join('');
+  const xl = [0, 20, 40, N].map((i, k) => `<text x="${sx(i).toFixed(1)}" y="216" font-size="10" fill="#8a8a8a" text-anchor="${k === 0 ? 'start' : k === 3 ? 'end' : 'middle'}">${lab(i)}</text>`).join('');
+  const zy = bot < 0 && top > 0 ? `<line x1="0" y1="${sy(0).toFixed(1)}" x2="${W}" y2="${sy(0).toFixed(1)}" stroke="#3a3a3e" stroke-width="1" stroke-dasharray="3 4"/>` : '';
+  const svg = `<svg viewBox="0 0 ${W} 220" role="img" aria-label="60거래일 ${escapeAttr(g.name)} 그룹과 ${escapeAttr(displayName(tk))}">${band}${zy}
+    <polyline points="${pts(cg)}" fill="none" stroke="#a8a8a8" stroke-width="2" stroke-linejoin="round"/><polyline points="${pts(cx)}" fill="none" stroke="#569cd6" stroke-width="2.2" stroke-linejoin="round"/>${dots}${xl}
+    <text x="${W}" y="12" font-size="10" fill="#8a8a8a" text-anchor="end">${pc(top)}</text><text x="${W}" y="${H - 4}" font-size="10" fill="#8a8a8a" text-anchor="end">${pc(bot)}</text></svg>`;
+  const segs = M.segs.slice().sort((a, b) => b.s - a.s).map(z => `<div class="bal-mr-z"><i></i><b>${lab(z.i)}~${lab(z.j + 1)}</b><span>${pc(z.rg)} → <em>${pc(z.rx)}</em></span></div>`).join('');
+  const tile = (lb, n) => `<div class="bal-tile"><span>${lb}</span>${_balGrade(n)}${_balMeter(n, 'w')}</div>`;
+  _mcSheet(`<div class="bal-mr"><div class="bal-mr-h"><div class="nm"><b>${escapeHtml(displayName(tk))}</b><span>${escapeHtml(displaySub(tk))}</span></div><button type="button" class="bal-mr-x" aria-label="닫기" onclick="aqMcSheetClose()">✕</button></div>
+    <div class="bal-mr-lg"><span><i style="background:#a8a8a8"></i>${escapeHtml(g.name)} 그룹</span><span><i style="background:#569cd6"></i>${escapeHtml(displayName(tk))}</span></div>
+    <div class="bal-mr-ch">${svg}</div>
+    <div class="bal-mr-seg">${segs}<div class="bal-mr-d"><i></i><span>반대로 움직인 날 <b>${M.days.length}일</b></span></div></div>
+    <div class="bal-tiles${m.K != null ? ' t3' : ''}">${tile('빠질 때', _balLvD(m.D))}${tile('오를 때', _balLvC(m.C))}${m.K != null ? tile('급락일', _balLvD(m.K)) : ''}</div>
+    <button type="button" class="mc-go" style="background:#3a3a3e;color:#fff" onclick="aqBalMirrorGo('${escapeAttr(tk)}')">종목 페이지 ›</button></div>`);
+}
+function aqBalMirrorGo(tk) { aqMcSheetClose(); setTimeout(() => openChart(tk), 260); }   // 시트 닫힘(뒤로가기 처리)이 끝난 뒤 열어야 종목 페이지가 바로 닫히지 않음
+window.aqBalMirror = aqBalMirror; window.aqBalMirrorGo = aqBalMirrorGo;
 function aqBalGoList(g) {
   try { closeModal(); } catch (e) {}
   setTimeout(() => { try { switchMobileTab('explore'); setExploreSubtab('balance'); aqBalSetGrp(g); document.getElementById('balanceCard').scrollIntoView({ block: 'start' }); } catch (e) {} }, 260);
@@ -26216,6 +26267,7 @@ function aqBalHelp() {
         ${tr('매우 좋음', '빠진 것보다 더 오름', '같이 오름')}${tr('좋음', '빠진 폭의 절반 이상 오름', '오른 폭의 30% 안쪽으로 빠짐')}${tr('보통', '빠진 폭의 20~50% 오름', '30~60% 빠짐')}${tr('약함', '조금 오름', '60~100% 빠짐')}${tr('나쁨', '같이 빠짐', '오른 것보다 더 빠짐')}
       </tbody></table>
       <div><div class="t"><b>20·40·60일 <span class="bal-dots" style="display:inline-flex;margin-left:6px"><i class="on"></i><i class="on"></i><i></i></span></b></div><div class="e">같은 그룹을 기간만 바꿔 봐서, 빠질 때·오를 때 둘 다 '약함' 이상이면 ●. 그룹이 빠진 날이 5일 미만이면 –. 세 개 다 찬 종목이 가장 믿을 만해요.</div></div>
+      <div><div class="t"><b>종목을 누르면</b></div><div class="e">60일 차트에 그룹과 반대로 움직인 구간(파란 띠, 가장 뚜렷한 2곳)과 날(파란 점)을 표시해요. 기준은 그룹의 평소 하루 변동폭이에요.</div></div>
       <div><div class="t"><b>둘 다 좋은 순</b></div><div class="e">빠질 때와 오를 때 중 약한 쪽을 기준으로 줄을 세워서, 둘 다 좋은 종목이 위로 와요.</div></div>
       <div><div class="t"><b>계산</b></div><div class="e">그룹 등락률은 그룹 종목을 내 평가금액 비중대로 합친 값이에요. 빠진 날과 오른 날을 나눠 기울기로 재서, 종목이 혼자 오른 추세는 빼고 그룹에 반응한 만큼만 봐요.</div></div>
     </div>
