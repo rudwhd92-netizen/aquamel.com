@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.74';   // v6.74: 발견에서 빼기 — AI 보고서가 있는 종목 · 미국 최근 종가 $10 이하 또는 ATR(14)/종가 8% 이상 · v6.73: 밸런스 목록에서 종목을 누르면 데칼코마니 시트 — 60거래일 일간 차트(그룹 vs 종목) · 반대로 움직인 구간(띠, 3~10일 · 그룹 누적 1.5σ×√일수 · 가장 뚜렷한 2곳)·날(점, 그룹 1σ) · 종목은 반대로 그룹의 절반 이상 · 등급 칸 · 종목 페이지 버튼 · v6.72: 밸런스 급락일 지표 — 그룹 최대 하락 5일(20일 2·40일 3) 따로 등급 · 빠질 때는 급락일 뺀 평소 · 그룹이 조용한 날 혼자 튄 크기는 3σ까지만 · 급락일 순 정렬 · 목록 '급락일' 딱지(좋음 이상) · 종목 페이지 3번째 타일 · v6.71: 밸런스 '둘 다 좋은 순' — 낮은 쪽 등급 → 높은 쪽 등급 → 빠질 때 값 순 (빠질 때 값만으로 정렬되던 문제) · v6.70: 밸런스 — 평균 대신 구간별 기울기(그룹 1% 기준, 절편으로 종목 자체 추세 제거) · 알파 강한 종목이 1등 하던 문제 · v6.69: 밸런스 목록 — 게이지를 오른쪽 끝에 맞춤(등급 글자는 게이지 왼쪽, 오른쪽 정렬) · v6.68: AI 보고서·매수심사 대기열 — 다른 작업 중이면 거절 대신 대기열(종류별 최대 3 · 들어온 순서 · 끝나면 자동 시작) · '대기 n번째 · 취소' · v6.67: 밸런스 등급 색·5칸 막대 — 탐색 목록(점은 티커 옆) · 종목 페이지 '밸런스' 칸(접힘 막대 / 펼침 그룹별 빠질 때·오를 때 타일 · 보유 종목은 소속 딱지와 다른 그룹만 · 목록 n위) · v6.66: 섹터 시트 NaN 수정 — 같은 이름 함수(_stSeries) 덮어쓰기로 섹터 시트 등락·1개월과 운영 통계(판 뒤 흐름·놓아준 종목·신호 따라 산 매매)가 깨지던 문제 · v6.65: 밸런스 종목 — '빠질 때 → 좋음 · 오를 때 → 좋음' 5단계 등급 표시 · 충족 기준 빠질 때 0배 초과·오를 때 1배 미만 · 정렬 빠질 때 순·오를 때 순·둘 다 좋은 순 · v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.75';   // v6.75: 설정 › 발견 › ATR 기준 (끔 · 6 · 7 · 8 기본 · 10 · 12% · 이 기기에 저장) · v6.74: 발견에서 빼기 — AI 보고서가 있는 종목 · 미국 최근 종가 $10 이하 또는 ATR(14)/종가 8% 이상 · v6.73: 밸런스 목록에서 종목을 누르면 데칼코마니 시트 — 60거래일 일간 차트(그룹 vs 종목) · 반대로 움직인 구간(띠, 3~10일 · 그룹 누적 1.5σ×√일수 · 가장 뚜렷한 2곳)·날(점, 그룹 1σ) · 종목은 반대로 그룹의 절반 이상 · 등급 칸 · 종목 페이지 버튼 · v6.72: 밸런스 급락일 지표 — 그룹 최대 하락 5일(20일 2·40일 3) 따로 등급 · 빠질 때는 급락일 뺀 평소 · 그룹이 조용한 날 혼자 튄 크기는 3σ까지만 · 급락일 순 정렬 · 목록 '급락일' 딱지(좋음 이상) · 종목 페이지 3번째 타일 · v6.71: 밸런스 '둘 다 좋은 순' — 낮은 쪽 등급 → 높은 쪽 등급 → 빠질 때 값 순 (빠질 때 값만으로 정렬되던 문제) · v6.70: 밸런스 — 평균 대신 구간별 기울기(그룹 1% 기준, 절편으로 종목 자체 추세 제거) · 알파 강한 종목이 1등 하던 문제 · v6.69: 밸런스 목록 — 게이지를 오른쪽 끝에 맞춤(등급 글자는 게이지 왼쪽, 오른쪽 정렬) · v6.68: AI 보고서·매수심사 대기열 — 다른 작업 중이면 거절 대신 대기열(종류별 최대 3 · 들어온 순서 · 끝나면 자동 시작) · '대기 n번째 · 취소' · v6.67: 밸런스 등급 색·5칸 막대 — 탐색 목록(점은 티커 옆) · 종목 페이지 '밸런스' 칸(접힘 막대 / 펼침 그룹별 빠질 때·오를 때 타일 · 보유 종목은 소속 딱지와 다른 그룹만 · 목록 n위) · v6.66: 섹터 시트 NaN 수정 — 같은 이름 함수(_stSeries) 덮어쓰기로 섹터 시트 등락·1개월과 운영 통계(판 뒤 흐름·놓아준 종목·신호 따라 산 매매)가 깨지던 문제 · v6.65: 밸런스 종목 — '빠질 때 → 좋음 · 오를 때 → 좋음' 5단계 등급 표시 · 충족 기준 빠질 때 0배 초과·오를 때 1배 미만 · 정렬 빠질 때 순·오를 때 순·둘 다 좋은 순 · v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -9664,6 +9664,10 @@ html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-
           <div class="set-row" onclick="aqSetPwOpen()"><span class="sr-l">비밀번호 변경</span><span class="sr-chev">›</span></div>
           <div class="set-row" onclick="aqAuthLogout()"><span class="sr-l danger-txt">로그아웃</span></div>
         </div>
+        <div class="set-grp-t">발견</div>
+        <div class="set-grp">
+          <div class="set-row" onclick="aqSetAtrOpen()"><span class="sr-l">ATR 기준</span><span class="sr-val" id="setAtrVal">—</span><span class="sr-chev">›</span></div>
+        </div>
         <div class="set-grp-t">데이터</div>
         <div class="set-grp">
           <div class="set-row" onclick="aqSetStampSummary(); aqSetSheet('setStampSheet', true)"><span class="sr-l">데이터 상태</span><span class="sr-val" id="setStampVal">확인 중…</span><span class="sr-chev">›</span></div>
@@ -9681,6 +9685,8 @@ html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-
     </section>
     <div class="ops-sheet-bg" id="setSecSheetBg" onclick="aqSetSheet('setSecSheet', false)"></div>
   <div class="ops-sheet aq-sec-sheet sec-sheet" id="setSecSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">보안 모니터링</div><div class="auto-sheet-scroll" id="setSecBody"></div></div>
+  <div class="ops-sheet-bg" id="setAtrSheetBg" onclick="aqSetSheet('setAtrSheet', false)"></div>
+    <div class="ops-sheet aq-sec-sheet" id="setAtrSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">발견 · ATR 기준</div><div class="set-grp" id="setAtrBody" style="margin-bottom:24px"></div></div>
   <div class="ops-sheet-bg" id="setTossSheetBg" onclick="aqSetSheet('setTossSheet', false)"></div>
     <div class="ops-sheet aq-sec-sheet" id="setTossSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">토스 연동</div><div class="ar-list" id="setTossBody"></div></div>
     <div class="ops-sheet-bg" id="setPwSheetBg" onclick="aqSetSheet('setPwSheet', false)"></div>
@@ -25179,7 +25185,8 @@ function _aqDiscExcluded(tk, market) {
   const n = R.length, c = Number(R[n - 1].Close); if (c <= 10) return '$10';
   let s = 0, k = 0;
   for (let i = n - 14; i < n; i++) { const h = Number(R[i].High), l = Number(R[i].Low), pc = Number(R[i - 1].Close); if (!(h > 0) || !(l > 0)) continue; s += Math.max(h - l, Math.abs(h - pc), Math.abs(l - pc)); k++; }
-  return k >= 10 && s / k / c * 100 >= 8 ? 'ATR' : '';
+  const lim = typeof aqDiscAtr === 'function' ? aqDiscAtr() : 8;   // v6.75: 설정에서 바꿈 (0 = 끔)
+  return lim && k >= 10 && s / k / c * 100 >= lim ? 'ATR' : '';
 }
 // 로고 html (피드/카드 공용)
 function aqLogoHtml(tk, sector, cls) {
@@ -27939,6 +27946,7 @@ function aqSettingsRender() {
       <div class="sp-sub">${linked ? `토스 연결됨${br.last_sync ? ' · 마지막 동기화 ' + _opsFmtTimeSafe(br.last_sync) : ''}` : '토스 연결 안 됨'}</div></div>` : '<div class="sp-info"><div class="sp-name">로그인 필요</div></div>';
   const tv = document.getElementById('setTossVal'); if (tv) { tv.textContent = linked ? '연결됨' : br && br.status === 'pending' ? '키 저장됨' : '연결 안 됨'; tv.className = 'sr-val ' + (linked ? 'ok' : 'warn'); }
   const vv = document.getElementById('setVerVal'); if (vv) vv.textContent = 'v' + (window.AQ_PWA_VERSION || '');
+  const av = document.getElementById('setAtrVal'); if (av) { const a = aqDiscAtr(); av.textContent = a ? `${a}% 이상 제외` : '끔'; }
   aqSetStampSummary();
     if (u && u.role === 'admin') apiCall('userList', {}).then(r => { const el = document.getElementById('setAdmVal'); if (el && r && r.ok) el.textContent = `${r.users.length}명`; }).catch(() => {});
     if (u && u.role === 'admin') { try { aqSecLoad(); } catch (e) {} }   // v5.79: 보안 상태 요약
@@ -28012,11 +28020,25 @@ async function aqSetInvite() {
   if (typeof aqToast === 'function') aqToast(`초대코드 ${r.code} 복사됨 (${r.expires_days}일 유효)`); document.getElementById('setInvMemo').value = ''; aqSetAdmRender();
 }
 function aqSetSheet(id, open) { _setSheet(id, open); }
-Object.assign(window, { aqSettingsRender, aqSetStampForce, aqSetRefresh, aqSetTossOpen, aqSetTossUnlink, aqSetPwOpen, aqSetPwSave, aqSetAdmOpen, aqSetAdmClose, aqSetInvite, aqSetSheet });
+// v6.75: 발견 ATR 기준 (이 기기에 저장 · 기본 8% · 0 = 끔)
+const AQ_DISC_ATR_OPTS = [0, 6, 7, 8, 10, 12];
+function aqDiscAtr() { const v = lsGet('aq_disc_atr', 8); return AQ_DISC_ATR_OPTS.includes(Number(v)) ? Number(v) : 8; }
+function aqSetAtrOpen() {
+  const cur = aqDiscAtr();
+  document.getElementById('setAtrBody').innerHTML = AQ_DISC_ATR_OPTS.map(v => `<div class="set-row" onclick="aqSetAtrPick(${v})"><span class="sr-l">${v ? `${v}% 이상 제외` : '끔'}${v === 8 ? ' <span style="color:var(--text-mute);font-weight:500">· 기본</span>' : ''}</span>${v === cur ? '<span class="sr-val ok">✓</span>' : ''}</div>`).join('');
+  _setSheet('setAtrSheet', true);
+}
+function aqSetAtrPick(v) {
+  lsSet('aq_disc_atr', v); _setSheet('setAtrSheet', false); aqSettingsRender();
+  try { buildBuyPointsCard(); } catch (e) {}
+  if (typeof aqToast === 'function') aqToast(v ? `발견: ATR ${v}% 이상 제외` : '발견: ATR 기준 끔');
+}
+Object.assign(window, { aqSetAtrOpen, aqSetAtrPick, aqSettingsRender, aqSetStampForce, aqSetRefresh, aqSetTossOpen, aqSetTossUnlink, aqSetPwOpen, aqSetPwSave, aqSetAdmOpen, aqSetAdmClose, aqSetInvite, aqSetSheet });
 try {
   AQ_SHEETS.push(
     { id: 'setTossSheet', root: () => document.getElementById('setTossSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => _setSheet('setTossSheet', false), full: true },
     { id: 'setPwSheet', root: () => document.getElementById('setPwSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => _setSheet('setPwSheet', false), full: true },
+    { id: 'setAtrSheet', root: () => document.getElementById('setAtrSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => _setSheet('setAtrSheet', false), full: false },
     { id: 'setStampSheet', root: () => document.getElementById('setStampSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => _setSheet('setStampSheet', false), full: true },
     { id: 'setAdmFull', root: () => document.getElementById('setAdmFull'), panel: r => r, isOpen: r => r.classList.contains('open'), close: aqSetAdmClose, full: false });
 } catch (e) {}
