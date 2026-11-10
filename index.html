@@ -54,7 +54,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.81';   // v6.81: 마이 › 포트폴리오 쏠림 계기판 — 평가금 아래 4칸(실질 종목 · 주력 그룹 · 흔들림 · 급락일, 60일) · 종합 상태 · 심함 2칸 이상 경고 · 칸 누르면 시트(흔들림 몫 순위 · 그룹 구성 · 계좌 vs 지수 차트 · 급락일 목록) · v6.80: 읽어 주기 — 누를 때마다 서버 음성부터 다시 시도(한 번 실패하면 계속 기기 음성이던 것) · 기기 음성으로 바뀔 때 이유 표시 · v6.79: AI 보고서 읽어 주기 — 구글 Cloud TTS(Chirp 3 HD) 음성 · 서버가 만들어 저장한 음성 재생 · 안 되거나 월 무료 한도면 기기 음성 · v6.78: AI 보고서 섹션 읽어 주기 — 섹션 제목 옆 ▶(기기 음성) · 다 읽으면 다음 섹션 · ⏸ 멈춤 · 보고서·종목 창 닫으면 멈춤 · v6.77: 데칼코마니 차트 — 손가락·마우스를 올린 날에 세로선 + 그룹·종목 누적(그날 하루) · v6.76: 발견 — 신호 있는 종목은 보고서가 있어도 그대로 보임 (보고서만 있고 신호 없는 종목만 안 나옴) · v6.75: 설정 › 발견 › ATR 기준 (끔 · 6 · 7 · 8 기본 · 10 · 12% · 이 기기에 저장) · v6.74: 발견에서 빼기 — AI 보고서가 있는 종목 · 미국 최근 종가 $10 이하 또는 ATR(14)/종가 8% 이상 · v6.73: 밸런스 목록에서 종목을 누르면 데칼코마니 시트 — 60거래일 일간 차트(그룹 vs 종목) · 반대로 움직인 구간(띠, 3~10일 · 그룹 누적 1.5σ×√일수 · 가장 뚜렷한 2곳)·날(점, 그룹 1σ) · 종목은 반대로 그룹의 절반 이상 · 등급 칸 · 종목 페이지 버튼 · v6.72: 밸런스 급락일 지표 — 그룹 최대 하락 5일(20일 2·40일 3) 따로 등급 · 빠질 때는 급락일 뺀 평소 · 그룹이 조용한 날 혼자 튄 크기는 3σ까지만 · 급락일 순 정렬 · 목록 '급락일' 딱지(좋음 이상) · 종목 페이지 3번째 타일 · v6.71: 밸런스 '둘 다 좋은 순' — 낮은 쪽 등급 → 높은 쪽 등급 → 빠질 때 값 순 (빠질 때 값만으로 정렬되던 문제) · v6.70: 밸런스 — 평균 대신 구간별 기울기(그룹 1% 기준, 절편으로 종목 자체 추세 제거) · 알파 강한 종목이 1등 하던 문제 · v6.69: 밸런스 목록 — 게이지를 오른쪽 끝에 맞춤(등급 글자는 게이지 왼쪽, 오른쪽 정렬) · v6.68: AI 보고서·매수심사 대기열 — 다른 작업 중이면 거절 대신 대기열(종류별 최대 3 · 들어온 순서 · 끝나면 자동 시작) · '대기 n번째 · 취소' · v6.67: 밸런스 등급 색·5칸 막대 — 탐색 목록(점은 티커 옆) · 종목 페이지 '밸런스' 칸(접힘 막대 / 펼침 그룹별 빠질 때·오를 때 타일 · 보유 종목은 소속 딱지와 다른 그룹만 · 목록 n위) · v6.66: 섹터 시트 NaN 수정 — 같은 이름 함수(_stSeries) 덮어쓰기로 섹터 시트 등락·1개월과 운영 통계(판 뒤 흐름·놓아준 종목·신호 따라 산 매매)가 깨지던 문제 · v6.65: 밸런스 종목 — '빠질 때 → 좋음 · 오를 때 → 좋음' 5단계 등급 표시 · 충족 기준 빠질 때 0배 초과·오를 때 1배 미만 · 정렬 빠질 때 순·오를 때 순·둘 다 좋은 순 · v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '6.82';   // v6.82: AI 탭 — AI 브리핑 · AI 가이드(아래 비서 모듈) · AI 매니저 · AI 리포트 · AI 매니저(관리자): 오늘 할 일(급한 순 · 줄 누르면 줄글 이유 · 승인 → 확인 시트 → 당일 지정가, 세트는 매도 체결 뒤 매수 · 처음 1주 모의) · 종목별 의견(유지·분할 매도·추가매수·분할 매수·대기) · 종목 상세(매수심사 리포트와 같은 틀 + 거시·가격 자리·최종 운영안)   // v6.81: 마이 › 포트폴리오 쏠림 계기판 — 평가금 아래 4칸(실질 종목 · 주력 그룹 · 흔들림 · 급락일, 60일) · 종합 상태 · 심함 2칸 이상 경고 · 칸 누르면 시트(흔들림 몫 순위 · 그룹 구성 · 계좌 vs 지수 차트 · 급락일 목록) · v6.80: 읽어 주기 — 누를 때마다 서버 음성부터 다시 시도(한 번 실패하면 계속 기기 음성이던 것) · 기기 음성으로 바뀔 때 이유 표시 · v6.79: AI 보고서 읽어 주기 — 구글 Cloud TTS(Chirp 3 HD) 음성 · 서버가 만들어 저장한 음성 재생 · 안 되거나 월 무료 한도면 기기 음성 · v6.78: AI 보고서 섹션 읽어 주기 — 섹션 제목 옆 ▶(기기 음성) · 다 읽으면 다음 섹션 · ⏸ 멈춤 · 보고서·종목 창 닫으면 멈춤 · v6.77: 데칼코마니 차트 — 손가락·마우스를 올린 날에 세로선 + 그룹·종목 누적(그날 하루) · v6.76: 발견 — 신호 있는 종목은 보고서가 있어도 그대로 보임 (보고서만 있고 신호 없는 종목만 안 나옴) · v6.75: 설정 › 발견 › ATR 기준 (끔 · 6 · 7 · 8 기본 · 10 · 12% · 이 기기에 저장) · v6.74: 발견에서 빼기 — AI 보고서가 있는 종목 · 미국 최근 종가 $10 이하 또는 ATR(14)/종가 8% 이상 · v6.73: 밸런스 목록에서 종목을 누르면 데칼코마니 시트 — 60거래일 일간 차트(그룹 vs 종목) · 반대로 움직인 구간(띠, 3~10일 · 그룹 누적 1.5σ×√일수 · 가장 뚜렷한 2곳)·날(점, 그룹 1σ) · 종목은 반대로 그룹의 절반 이상 · 등급 칸 · 종목 페이지 버튼 · v6.72: 밸런스 급락일 지표 — 그룹 최대 하락 5일(20일 2·40일 3) 따로 등급 · 빠질 때는 급락일 뺀 평소 · 그룹이 조용한 날 혼자 튄 크기는 3σ까지만 · 급락일 순 정렬 · 목록 '급락일' 딱지(좋음 이상) · 종목 페이지 3번째 타일 · v6.71: 밸런스 '둘 다 좋은 순' — 낮은 쪽 등급 → 높은 쪽 등급 → 빠질 때 값 순 (빠질 때 값만으로 정렬되던 문제) · v6.70: 밸런스 — 평균 대신 구간별 기울기(그룹 1% 기준, 절편으로 종목 자체 추세 제거) · 알파 강한 종목이 1등 하던 문제 · v6.69: 밸런스 목록 — 게이지를 오른쪽 끝에 맞춤(등급 글자는 게이지 왼쪽, 오른쪽 정렬) · v6.68: AI 보고서·매수심사 대기열 — 다른 작업 중이면 거절 대신 대기열(종류별 최대 3 · 들어온 순서 · 끝나면 자동 시작) · '대기 n번째 · 취소' · v6.67: 밸런스 등급 색·5칸 막대 — 탐색 목록(점은 티커 옆) · 종목 페이지 '밸런스' 칸(접힘 막대 / 펼침 그룹별 빠질 때·오를 때 타일 · 보유 종목은 소속 딱지와 다른 그룹만 · 목록 n위) · v6.66: 섹터 시트 NaN 수정 — 같은 이름 함수(_stSeries) 덮어쓰기로 섹터 시트 등락·1개월과 운영 통계(판 뒤 흐름·놓아준 종목·신호 따라 산 매매)가 깨지던 문제 · v6.65: 밸런스 종목 — '빠질 때 → 좋음 · 오를 때 → 좋음' 5단계 등급 표시 · 충족 기준 빠질 때 0배 초과·오를 때 1배 미만 · 정렬 빠질 때 순·오를 때 순·둘 다 좋은 순 · v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -4225,7 +4225,7 @@ html:not([data-theme="light"]) body { background: #161618; }
 #briefCard .bf-head .bf-date { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #briefCard .bf-dismiss { flex: none; white-space: nowrap; }
 /* v5.57: AI 가이드 */
-body:not([data-role="admin"]) #aiSubtabs .xtab-btn[data-atab="guide"] { display: none !important; }
+body:not([data-role="admin"]) #aiSubtabs .xtab-btn[data-atab="manager"] { display: none !important; }   /* v6.82: AI 매니저 관리자 · AI 가이드는 비서 모듈이 있어 모두에게 */
 #guideCard { background: transparent !important; border: none !important; box-shadow: none !important; } #guideCard .card-body { padding: 4px 2px 24px; }
 .gd-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin: 2px 0 10px; }
 .gd-d { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 0; cursor: pointer; color: var(--text-hi); }
@@ -4742,6 +4742,46 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .br-ht .c b { font-weight: 800; } .br-ht .c.j b { font-size: 14px; } .br-ht .c b.up { color: var(--kr-up); } .br-ht .c b.down { color: var(--kr-down); } .br-ht .c small { display: block; font-size: 10px; color: var(--text-mute); }
 .br-p510 { display: block; color: var(--text-dim); font-size: 11.5px; }
 .br-lim { font-size: 11px; color: var(--text-mute); text-align: center; margin-top: 10px; }
+/* v6.82: AI 가이드 아래 비서 모듈 · AI 매니저 */
+#guideCard.gd-none { display: none !important; }
+.asg-mod-h { margin: 6px 4px 12px; font-size: 15px; color: var(--text-hi); }
+.mg-hd { padding: 14px 6px 0; } .mg-hd .t { display: flex; align-items: baseline; justify-content: space-between; } .mg-hd .t b { font-size: 20px; color: var(--text-hi); } .mg-hd .t span { font-size: 12px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.mg-hd .s { margin-top: 8px; font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+.mg-cash { margin-top: 14px; padding: 11px 14px; border-radius: 10px; background: rgba(255,255,255,.04); display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 12.5px; } .mg-cash span { color: var(--text-dim); } .mg-cash b { color: var(--text-hi); font-variant-numeric: tabular-nums; }
+.mg-mode { margin-top: 10px; font-size: 12px; color: #ffc078; } .mg-live { margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: rgba(86,156,214,.08); border: 1px solid rgba(86,156,214,.3); font-size: 13px; color: var(--text); display: flex; align-items: center; gap: 10px; } .mg-live button { margin-left: auto; height: 34px; padding: 0 12px; border: none; border-radius: 9px; background: #569cd6; color: #0b1620; font-weight: 700; font-family: inherit; }
+.mg-list { margin-top: 20px; }
+.mg-it { display: grid; grid-template-columns: 22px minmax(0, 1fr) 64px; gap: 8px; align-items: start; padding: 16px 0; border-top: 1px solid rgba(255,255,255,.06); }
+.mg-rk { padding-top: 22px; text-align: center; font-size: 13px; font-weight: 700; color: var(--text-mute); font-variant-numeric: tabular-nums; }
+.mg-legs { cursor: pointer; min-width: 0; }
+.mg-lg { display: flex; align-items: center; gap: 12px; min-height: 64px; min-width: 0; } .mg-lg .lg { flex: none; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #fff; display: inline-flex; align-items: center; justify-content: center; } .mg-lg .lg img { width: 40px; height: 40px; object-fit: cover; }
+.mg-lg .tx { display: flex; flex-direction: column; gap: 3px; min-width: 0; } .mg-lg .sb { font-size: 11.5px; color: var(--text-dim); } .mg-lg .hd { font-size: 15px; font-weight: 700; color: var(--text-hi); line-height: 1.35; } .mg-lg .ln { font-size: 12px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.mg-lg .hd .sell { color: #ff8787; } .mg-lg .hd .buy { color: #69db7c; } .mg-lg .ln .ok { color: #69db7c; }
+.mg-link { display: block; width: 2px; height: 14px; margin: 2px 0 2px 19px; background: #4a4a4e; border-radius: 1px; }
+.mg-r { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-top: 13px; }
+.mg-ok, .mg-cx { width: 60px; height: 38px; border: none; border-radius: 10px; font-size: 13.5px; font-weight: 700; font-family: inherit; cursor: pointer; } .mg-ok { background: #569cd6; color: #0b1620; } .mg-cx { background: #3a3a3e; color: #fff; font-weight: 600; font-size: 13px; }
+.mg-st { width: 60px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 12.5px; color: var(--text-mute); } .mg-pp { font-size: 10.5px; color: #ffc078; }
+.mg-det { margin: -4px 0 16px 30px; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,.05); font-size: 13px; line-height: 1.65; color: var(--text); } .mg-det > div + div { margin-top: 10px; } .mg-det b { color: var(--text-hi); font-weight: 700; margin-right: 4px; }
+.mg-det .rec { color: var(--text-hi); font-weight: 600; } .mg-det .rec b { color: #63e6be; } .mg-det .nt { color: #ffc078; font-size: 12.5px; } .mg-det a { display: inline-block; margin-top: 4px; color: #74c0fc; font-size: 12.5px; cursor: pointer; }
+.mg-empty { padding: 28px 6px; color: var(--text-mute); font-size: 13px; text-align: center; line-height: 1.6; }
+.mg-op { margin: 30px 0 0; padding: 20px 16px 8px; border-radius: 14px; background: rgba(255,255,255,.035); }
+.mg-op .h { display: flex; align-items: baseline; justify-content: space-between; } .mg-op .h b { font-size: 15px; color: var(--text-hi); } .mg-op .h span { font-size: 11.5px; color: var(--text-mute); }
+.mg-chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; } .mg-chips button { height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); background: transparent; color: var(--text-dim); font-size: 12px; font-family: inherit; cursor: pointer; } .mg-chips button.on { border-color: #fff; background: #3a3a3e; color: #fff; font-weight: 600; } .mg-chips button em { font-style: normal; opacity: .7; margin-left: 3px; }
+.mg-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.05); cursor: pointer; }
+.mg-row .lg { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; background: #fff; display: inline-flex; align-items: center; justify-content: center; } .mg-row .lg img { width: 34px; height: 34px; object-fit: cover; }
+.mg-row .nm { display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: var(--text-hi); } .mg-row .nm i { font-style: normal; font-size: 10.5px; font-weight: 500; color: var(--text-dim); padding: 0 6px; border-radius: 4px; background: rgba(0,0,0,.25); }
+.mg-row .sub { font-size: 12px; color: var(--text-dim); font-variant-numeric: tabular-nums; } .mg-row .sub.up { color: var(--kr-up); } .mg-row .sub.down { color: var(--kr-down); }
+.mg-chip { white-space: nowrap; padding: 4px 10px; border-radius: 999px; font-size: 12px; border: 1px solid rgba(255,255,255,.14); color: var(--text-dim); } .mg-chip.act { border-color: rgba(255,255,255,.5); color: #fff; font-weight: 600; }
+.mg-more { display: block; width: 100%; border: none; background: transparent; padding: 14px 0 10px; font-family: inherit; font-size: 12.5px; color: #74c0fc; cursor: pointer; }
+.mg-sh h3 { margin: 18px 0 0; display: flex; align-items: baseline; justify-content: space-between; font-size: 18px; color: #fff; } .mg-sh h3 span { font-size: 12px; font-weight: 500; color: var(--text-dim); }
+.mg-sh .od { margin-top: 8px; padding: 14px; border-radius: 12px; background: rgba(0,0,0,.25); display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; align-items: center; } .mg-sh .od .n { font-size: 12px; font-weight: 700; color: var(--text-mute); } .mg-sh .od b { font-size: 14.5px; color: #fff; } .mg-sh .od small { display: block; margin-top: 3px; font-size: 12px; color: var(--text-dim); } .mg-sh .od .a { font-size: 14px; font-weight: 700; color: #e8e8e8; font-variant-numeric: tabular-nums; }
+.mg-sh .od .sell { color: #ff8787; } .mg-sh .od .buy { color: #69db7c; }
+.mg-sh .ln { display: flex; justify-content: space-between; gap: 12px; padding: 11px 2px; border-top: 1px solid rgba(255,255,255,.06); font-size: 13px; } .mg-sh .ln span { color: var(--text-dim); } .mg-sh .ln b { color: #e8e8e8; text-align: right; }
+.mg-sh .wn { margin-top: 14px; padding: 12px 14px; border-radius: 10px; background: rgba(255,169,77,.09); font-size: 12.5px; line-height: 1.55; color: #ffc078; }
+.mg-sh .bt { margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .mg-sh .bt button { height: 52px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; } .mg-sh .bt .c { background: #3a3a3e !important; color: #fff !important; font-weight: 600; } .mg-sh .bt .g { background: #569cd6 !important; color: #0b1620 !important; } .mg-sh .bt .g:disabled { opacity: .5; }
+.mg-lamps { display: flex; justify-content: center; gap: 14px; background: #0f0f11; border: 1px solid #2a2a30; border-radius: 999px; padding: 10px 16px; width: fit-content; margin: 0 auto 6px; }
+.mg-lv .k { font-size: 11.5px; color: var(--text-mute); } .mg-pl { display: grid; grid-template-columns: 86px minmax(0, 1fr); gap: 8px; padding: 9px 0; font-size: 13px; line-height: 1.55; } .mg-pl + .mg-pl { border-top: 1px solid var(--line); } .mg-pl > span { color: var(--text-mute); } .mg-pl > b { font-weight: 500; color: var(--text-hi); }
+.mg-pl .chg { display: block; margin-top: 3px; font-size: 12px; color: #74c0fc; font-weight: 500; }
+.mg-go { display: block; width: 100%; margin-top: 22px; height: 52px; border: none; border-radius: 12px; background: #569cd6; color: #0b1620; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
 /* v5.94: 매수심사 리포트 정리 */
 .br-vc { background: rgba(255,255,255,.035); border-radius: 18px; padding: 14px 14px 16px; text-align: center; }
 .br-vs { font-size: 13.5px; line-height: 1.6; color: var(--text); text-align: left; margin: 6px 2px 0; }
@@ -9539,8 +9579,8 @@ html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-
     <section class="card mobile-only explore-subtabs" id="aiSubtabs" data-mtab="auto">
       <div class="xtab-row">
         <button class="xtab-btn active" data-atab="brief" onclick="setAiSubtab('brief')">AI 브리핑</button>
-        <button class="xtab-btn" data-atab="assist" onclick="setAiSubtab('assist')">AI 비서<em id="asgBadge" style="display:none"></em></button>
-        <button class="xtab-btn" data-atab="guide" onclick="setAiSubtab('guide')">AI 가이드</button>
+        <button class="xtab-btn" data-atab="guide" onclick="setAiSubtab('guide')">AI 가이드<em id="asgBadge" style="display:none"></em></button>
+        <button class="xtab-btn" data-atab="manager" onclick="setAiSubtab('manager')">AI 매니저</button>
         <button class="xtab-btn" data-atab="report" onclick="aqRptGo()">AI 리포트</button>
       </div>
     </section>
@@ -9556,11 +9596,14 @@ html:not([data-theme="light"]) .noti-card, html:not([data-theme="light"]) .noti-
       <div class="card-header bf-head"><span class="br-toggle" id="briefToggle"></span><span class="bf-date" id="briefDate"></span><button class="bf-dismiss" id="briefDismissBtn" onclick="aqBriefDismiss()">그만 보기</button></div>
       <div class="card-body"><div id="briefBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
-    <section class="card" id="assistCard" data-mtab="auto" data-atab="assist">
-      <div class="card-body"><div id="assistBody"><div class="auto-empty">불러오는 중…</div></div></div>
-    </section>
     <section class="card" id="guideCard" data-mtab="auto" data-atab="guide">
       <div class="card-body"><div id="guideBody"><div class="auto-empty">불러오는 중…</div></div></div>
+    </section>
+    <section class="card" id="assistCard" data-mtab="auto" data-atab="guide">
+      <div class="card-body"><div class="asg-mod-h"><b>비서</b></div><div id="assistBody"><div class="auto-empty">불러오는 중…</div></div></div>
+    </section>
+    <section class="card" id="managerCard" data-mtab="auto" data-atab="manager">
+      <div class="card-body"><div id="mgrBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="macroCard" data-mtab="auto" data-atab="macro">
       <div class="card-body"><div class="rpt-togw"></div><div id="macroBody"><div class="auto-empty">불러오는 중…</div></div></div>
@@ -14233,7 +14276,7 @@ function setMarket(mkt) {
     }
   } catch (e) { console.warn('[setMarket/activeTab]', e); }
 
-  try { if (document.body.getAttribute('data-mtab') === 'auto' && ['guide', 'assist'].includes(document.body.getAttribute('data-atab')) && typeof aqGuideRender === 'function') aqGuideRender(); } catch (e) {}   // v6.19: AI 가이드 시장별 · v6.61: AI 비서도
+  try { if (document.body.getAttribute('data-mtab') === 'auto' && document.body.getAttribute('data-atab') === 'guide' && typeof aqGuideRender === 'function') aqGuideRender(); } catch (e) {}   // v6.19: AI 가이드 시장별 · v6.61: AI 비서도
   // v2.31/v2.32: 시장 전환 후 vshape 토글 표시 갱신 (KR이면 숨김)
   try {
     if (typeof syncVshapeToggleUI === 'function') syncVshapeToggleUI();
@@ -28409,9 +28452,10 @@ function setAiSubtab(x) { aqHoldScroll();
   const _kr = getCurrentMarket() === 'KR';
   if (x === 'pre' || x === 'close') { _brMode(); _br.mode = x === 'pre' ? 'pre' : 'post'; x = 'brief'; }   // v5.55: 장전·장후는 AI 브리핑 안 토글
   if (x === 'auto') { if (isAdmin) { aqGoEngine(); return; } x = 'brief'; }   // v5.99: 자동매매는 햄버거 '자동'으로 이동 (예전 링크 호환)
-  const allowed = ['brief', 'assist', 'guide', 'report', 'review', 'macro'];   // v6.49: AI 비서 · AI 리포트(report=기업 분석, review=매매 분석) · v6.54: macro=거시 분석
+  let _toAsg = false; if (x === 'assist') { x = 'guide'; _toAsg = true; }   // v6.82: AI 비서 → AI 가이드 아래 '비서' 모듈
+  const allowed = ['brief', 'guide', 'manager', 'report', 'review', 'macro'];   // v6.49: AI 비서 · AI 리포트(report=기업 분석, review=매매 분석) · v6.54: macro=거시 분석
   if (!allowed.includes(x)) x = 'brief';
-  if (x === 'guide' && !isAdmin) x = 'brief';   // v5.57: AI 가이드는 관리자 계좌 기준
+  if (x === 'manager' && !isAdmin) x = 'brief';   // v6.82: AI 매니저는 관리자 계좌 기준
   if (x === 'review' && !isAdmin) x = 'report';   // v5.99: AI 매매심사 — 관리자 전용 (일단) · v6.49: 일반 사용자는 AI 리포트(기업 분석)로
   document.body.setAttribute('data-atab', x);
   document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === (x === 'review' || x === 'macro' ? 'report' : x)));
@@ -28421,7 +28465,7 @@ function setAiSubtab(x) { aqHoldScroll();
   try { aqAsgBadge(); } catch (e) {}
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
   try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
-  try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'guide' || x === 'assist') aqGuideRender(); else if (x === 'macro') aqMacroRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'guide') aqGuideRender().then(() => { if (_toAsg) { try { document.getElementById('assistCard').scrollIntoView({ block: 'start' }); } catch (e) {} } }); else if (x === 'manager') aqMgrRender(); else if (x === 'macro') aqMacroRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
 function aqRptGo() {   // v6.49: AI 리포트 탭 — 마지막에 본 쪽(기업 분석·매매 분석)으로
@@ -29977,6 +30021,282 @@ async function aqBrOpen(id) {
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && _brv.tk && document.getElementById('brBuySlot')) { try { aqBrRefresh(_brv.tk); } catch (e) {} } });   // v6.03: 앱으로 돌아오면 바로 다시 확인
 Object.assign(window, { aqBrActionsHtml, aqBrRefresh, aqBrRequest, aqBrOpen, aqBrRender, aqBrCancelAsk, aqBrGo });
+// ============================================================================
+// v6.82: AI 매니저 (관리자) — 오늘 할 일 · 승인(당일 지정가) · 종목별 의견 · 종목 상세(매수심사 리포트 틀)
+//   서버: managerToday · managerStock · managerApprove · managerCancel · managerMode (jobs/manager.py · manager_orders.py)
+// ============================================================================
+const _mg = { d: null, ts: 0, open: {}, f: 'all', all: false, poll: null, st: null };
+const _MG_ACT = ['분할 매도', '추가매수', '분할 매수'];
+const _MG_ORDER = ['분할 매도', '추가매수', '분할 매수', '유지', '대기'];
+function _mgAdm() { return document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); }
+const _mgM = v => v == null || !isFinite(v) ? '—' : `$${aqNum(Math.round(v), 0)}`;
+const _mgPx = v => _brPx('US', v);
+async function aqMgrRender(force) {
+  const box = document.getElementById('mgrBody'); if (!box) return;
+  if (!_mgAdm()) { box.innerHTML = '<div class="mg-empty">관리자 계좌 기준 기능이에요</div>'; return; }
+  if (force || !_mg.d || Date.now() - _mg.ts > 55e3) {
+    let r = null; try { r = await apiCall('managerToday', {}); } catch (e) {}
+    if (r && r.ok) { _mg.d = r; _mg.ts = Date.now(); }
+    else if (!_mg.d) { box.innerHTML = `<div class="mg-empty">불러오지 못했어요${r && r.error ? ' — ' + escapeHtml(r.error) : ''}</div>`; return; }
+  }
+  box.innerHTML = _mgHtml(); _mgPoll();
+}
+function _mgPoll() {
+  clearTimeout(_mg.poll); const D = _mg.d; if (!D) return;
+  const busy = (D.run && ['requested', 'late'].includes(D.run.status)) || (D.items || []).some(i => i.status === 'working');
+  if (busy) _mg.poll = setTimeout(() => { if (document.body.getAttribute('data-atab') === 'manager' && document.body.getAttribute('data-mtab') === 'auto') { aqHoldScroll(); aqMgrRender(true); } }, 60e3);
+}
+function _mgOp(tk) { return ((_mg.d && _mg.d.opinions) || []).find(o => o.tk === tk) || null; }
+function _mgStk(tk) { return ((_mg.d && _mg.d.stocks) || {})[tk] || {}; }
+function _mgLogo(tk) { try { return aqLogoHtml(tk, '', ''); } catch (e) { return ''; } }
+function _mgLegHtml(g, it, i) {
+  const S = _mgStk(g.tk), o = _mgOp(g.tk) || {}; const held = !!S.held; const sell = g.side === 'SELL';
+  const head = sell ? `${g.tk} ${aqNum(S.qty || 0, 0)}주 중 ${g.qty}주` : `${g.tk} ${g.qty}주`;
+  const verb = sell ? '매도' : held ? '추가매수' : '매수';
+  const sub = held ? ['보유', o.ret != null ? _brP(o.ret) : '', o.one || ''].filter(Boolean).join(' · ') : [...new Set(['관심', '첫 진입', o.one || ''])].filter(Boolean).join(' · ');
+  const T = g.filled_at ? _brHM(g.filled_at).split(' ')[1] : '';
+  const st = g.status || 'proposed';
+  const line = st === 'filled' ? `<span class="ok">체결 ${_mgPx(g.filled_px)}${T ? ' · ' + T : ''}</span>`
+    : st === 'working' ? `주문 중 · 지정가 ${_mgPx(g.price)}${g.filled_qty ? ` · ${g.filled_qty}주 체결` : ''}`
+    : st === 'waiting' ? `매도 체결 뒤 주문 · 지정가 ${_mgPx(g.price)}`
+    : st === 'partial' ? `일부 ${g.filled_qty || 0}/${g.qty}주 체결 · ${_mgPx(g.filled_px)}`
+    : st === 'expired' ? '미체결 · 장 마감 취소' : st === 'skipped' ? '안 냄 (매도 미체결)' : st === 'cancelled' ? '취소' : st === 'rejected' ? `거절 — ${escapeHtml(String(g.error || '').slice(0, 40))}`
+    : `지정가 ${_mgPx(g.price)} · ${_mgM(g.qty * g.price)}`;
+  return `${i ? '<span class="mg-link"></span>' : ''}<div class="mg-lg"><span class="lg">${_mgLogo(g.tk)}</span><span class="tx"><span class="sb">${escapeHtml(sub)}</span><span class="hd">${escapeHtml(head)} <span class="${sell ? 'sell' : 'buy'}">${verb}</span></span><span class="ln">${line}</span></span></div>`;
+}
+function _mgRight(it) {
+  const pp = it.mode === 'paper' && it.status !== 'proposed' ? '<span class="mg-pp">모의</span>' : '';
+  if (it.status === 'proposed') return `<button class="mg-ok" onclick="event.stopPropagation(); aqMgrAsk(${it.id})">승인</button>`;
+  if (it.status === 'working') return `<button class="mg-cx" onclick="event.stopPropagation(); aqMgrCancelAsk(${it.id})">취소</button>${pp}`;
+  const w = { done: '완료', partial: '일부', expired: '미체결', cancelled: '넘김', invalid: '제외' }[it.status] || it.status;
+  return `<span class="mg-st">${w}</span>${pp}`;
+}
+function _mgCashAfter(items, upto) {   // 서버 검사와 같은 순서 계산: 순위대로, 세트 안 매도만 그 세트 매수에 씀
+  const D = _mg.d; let left = D && D.run ? D.run.cash : null; if (left == null) return null;
+  for (const it of items) {
+    if (upto != null && it.rank >= upto) break;
+    if (!['proposed', 'working', 'done', 'partial'].includes(it.status)) continue;
+    const b = it.legs.filter(g => g.side === 'BUY'), s = it.legs.filter(g => g.side === 'SELL');
+    if (b.length) left -= b.reduce((a, g) => a + g.qty * g.price, 0) - s.reduce((a, g) => a + g.qty * g.price, 0);
+  }
+  return left;
+}
+function _mgHtml() {
+  const D = _mg.d, R = D.run, M = D.mode || {}; const items = (D.items || []).slice().sort((a, b) => a.rank - b.rank || a.id - b.id);
+  const today = _kstToday();
+  let h = '';
+  const stamp = R ? (R.result_at ? _brHM(R.result_at) : R.requested_at ? _brHM(R.requested_at) : '') : '';
+  const nS = Object.values(D.stocks || {}); const nH = nS.filter(x => x.held).length, nW = nS.length - nH;
+  const nOrd = items.filter(i => i.status !== 'invalid').reduce((a, i) => a + i.legs.length, 0);
+  const ap = items.filter(i => !['proposed', 'invalid'].includes(i.status));
+  const legsAll = ap.flatMap(i => i.legs); const nF = legsAll.filter(g => g.status === 'filled').length, nW2 = legsAll.filter(g => ['working', 'waiting'].includes(g.status)).length;
+  const sub = !R ? '' : ap.length ? `승인 ${ap.length} · 체결 ${nF} · 주문 중 ${nW2}${nW2 ? ' · 장 마감 때 안 된 주문은 자동 취소' : ''}` : `보유 ${nH} · 관심 ${nW} 점검 · 할 일 ${items.filter(i => i.status === 'proposed').length} · 주문 ${nOrd}건`;
+  h += `<div class="mg-hd"><div class="t"><b>오늘 할 일</b><span>${escapeHtml(stamp)}</span></div>${sub ? `<div class="s">${escapeHtml(sub)}</div>` : ''}`;
+  if (R && R.cash != null) { const after = _mgCashAfter(items) + items.filter(i => ['proposed', 'working', 'done', 'partial'].includes(i.status) && !i.legs.some(g => g.side === 'BUY')).reduce((a, i) => a + i.legs.reduce((x, g) => x + g.qty * g.price, 0), 0);
+    h += `<div class="mg-cash"><span>현금 · 다 체결되면</span><b>${_mgM(R.cash)} → ${_mgM(after)}</b></div>`; }
+  if (M.mode === 'paper') h += `<div class="mg-mode">모의 · 승인해도 실제 주문 없이 가상 체결${M.until ? ` · ${_brMD(M.until)}까지` : ''}</div>`;
+  if (M.mode === 'paper' && M.until && today >= M.until) h += `<div class="mg-live"><span>모의 1주가 끝났어요</span><button onclick="aqMgrLiveAsk()">실제 주문으로</button></div>`;
+  h += '</div>';
+  // 할 일
+  if (!R) h += `<div class="mg-empty">아직 점검 전이에요 · 매일 미국 개장 30분 뒤</div>`;
+  else if (['requested', 'late', 'built'].includes(R.status)) h += `<div class="mg-empty">${R.status === 'built' ? '개장 30분 뒤 점검해요' : 'AI 매니저가 점검하는 중이에요'}${R.status === 'late' ? ' · 늦어지고 있어요' : ''}</div>`;
+  else if (R.status === 'failed') h += `<div class="mg-empty">점검하지 못했어요${R.error ? ` — ${escapeHtml(R.error)}` : ''}</div>`;
+  else if (!items.length) h += `<div class="mg-empty">오늘은 할 일이 없어요</div>`;
+  else {
+    h += '<div class="mg-list">';
+    items.forEach(it => {
+      const op = !!_mg.open[it.id]; const W = it.why || {}; const first = it.legs[0] && it.legs[0].tk;
+      h += `<div class="mg-it"><span class="mg-rk">${it.rank}</span><div class="mg-legs" onclick="aqMgrToggle(${it.id})">${it.legs.map((g, i) => _mgLegHtml(g, it, i)).join('')}</div><div class="mg-r">${_mgRight(it)}</div></div>`;
+      if (op) h += `<div class="mg-det">${['상황', '이유', '추천', '확인할 것'].filter(k => W[k]).map(k => `<div class="${k === '추천' ? 'rec' : ''}"><b>${k}</b> ${escapeHtml(W[k])}</div>`).join('')}${it.note ? `<div class="nt">${escapeHtml(it.note)}</div>` : ''}<div>${[...new Set(it.legs.map(g => g.tk))].map(t => `<a onclick="aqMgrStock('${escapeAttr(t)}')">${escapeHtml(t)} 상세 ›</a>`).join(' &nbsp; ')}</div></div>`;
+    });
+    h += '</div>';
+  }
+  // 종목별 의견
+  const O = (D.opinions || []).slice();
+  if (O.length) {
+    const cnt = k => k === 'all' ? O.length : O.filter(o => o.op === k).length;
+    const chips = ['all', ..._MG_ORDER].filter(k => k === 'all' || cnt(k)).map(k => `<button class="${_mg.f === k ? 'on' : ''}" onclick="aqMgrF('${k}')">${k === 'all' ? '전체' : k}<em>${cnt(k)}</em></button>`).join('');
+    O.sort((a, b) => _MG_ORDER.indexOf(a.op) - _MG_ORDER.indexOf(b.op) || Math.abs(b.ret || 0) - Math.abs(a.ret || 0));
+    const L = O.filter(o => _mg.f === 'all' || o.op === _mg.f); const cap = 8; const shown = _mg.all ? L : L.slice(0, cap);
+    h += `<div class="mg-op"><div class="h"><b>종목별 의견</b><span>보유 ${O.filter(o => o.held).length} · 관심 ${O.filter(o => !o.held).length}</span></div><div class="mg-chips">${chips}</div><div style="margin-top:10px">`;
+    shown.forEach(o => {
+      const s = o.held ? `<span class="sub ${_brC(o.ret)}">${_brP(o.ret)}</span>` : `<span class="sub">RSI ${o.rsi != null ? Math.round(o.rsi) : '—'}${o.range_pos != null ? ` · 6개월 위치 ${Math.round(o.range_pos * 100)}%` : ''}</span>`;
+      h += `<div class="mg-row" onclick="aqMgrStock('${escapeAttr(o.tk)}')"><span class="lg">${_mgLogo(o.tk)}</span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span class="nm">${escapeHtml(o.tk)}${o.held ? '' : '<i>관심</i>'}</span>${s}</span><span class="mg-chip ${_MG_ACT.includes(o.op) ? 'act' : ''}">${escapeHtml(o.op)}</span></div>`;
+    });
+    if (!_mg.all && L.length > cap) h += `<button class="mg-more" onclick="aqMgrAll()">나머지 ${L.length - cap}종목 보기</button>`;
+    h += '</div></div>';
+  }
+  return h;
+}
+function aqMgrToggle(id) { aqHoldScroll(); _mg.open[id] = !_mg.open[id]; const b = document.getElementById('mgrBody'); if (b) b.innerHTML = _mgHtml(); }
+function aqMgrF(k) { aqHoldScroll(); _mg.f = k; _mg.all = false; const b = document.getElementById('mgrBody'); if (b) b.innerHTML = _mgHtml(); }
+function aqMgrAll() { aqHoldScroll(); _mg.all = true; const b = document.getElementById('mgrBody'); if (b) b.innerHTML = _mgHtml(); }
+// ---------- 승인 시트 ----------
+function aqMgrAsk(id) {
+  document.getElementById('brSheet')?.remove();
+  const D = _mg.d; const items = (D.items || []).slice().sort((a, b) => a.rank - b.rank); const it = items.find(i => i.id === id); if (!it) return;
+  const paper = (it.mode || 'paper') === 'paper' || (D.mode || {}).mode !== 'live';
+  const set = it.legs.length > 1; const sells = it.legs.filter(g => g.side === 'SELL'), buys = it.legs.filter(g => g.side === 'BUY');
+  const before = _mgCashAfter(items, it.rank); const need = buys.reduce((a, g) => a + g.qty * g.price, 0) - (buys.length ? sells.reduce((a, g) => a + g.qty * g.price, 0) : 0);
+  const ods = it.legs.map((g, i) => { const S = _mgStk(g.tk); const sell = g.side === 'SELL'; const amt = g.qty * g.price;
+    const cond = set && !sell ? ` · ${sells.map((_, j) => j + 1).join('·')} 다 체결되면` : '';
+    return `<div class="od"><span class="n">${i + 1}</span><span><b>${escapeHtml(g.tk)} ${g.qty}주 <span class="${sell ? 'sell' : 'buy'}">${sell ? '매도' : S.held ? '추가매수' : '매수'}</span></b><small>지정가 ${_mgPx(g.price)}${cond}</small></span><span class="a">${sell ? '+' : '−'}$${aqNum(amt, 2)}</span></div>`; }).join('');
+  const lines = [];
+  if (buys.length && before != null) lines.push([rkPrev(items, it.rank) ? `현금 (앞 순위 몫 뺀 값)` : '현금', `${_mgM(before)} → ${_mgM(before - need)}`]);
+  buys.filter(g => !_mgStk(g.tk).held).forEach(g => lines.push([`${g.tk} 첫 진입`, `${_mgM(g.qty * g.price)} / $2,500`]));
+  sells.filter(g => _mgStk(g.tk).held).forEach(g => { const S = _mgStk(g.tk); if (S.avg) lines.push([`${g.tk} 확정 수익`, `${aqSg(g.price - S.avg)}$${aqNum(Math.abs((g.price - S.avg) * g.qty), 0)}`]); });
+  lines.push(['유효', '오늘 장 마감까지']);
+  const warn = paper ? '모의 주문이에요. 실제 주문 없이 지정가에 닿으면 가상 체결로 기록해요.' : `실제 주문이에요. 안 된 주문은 장 마감 때 자동 취소${set ? ' · 매도가 다 안 되면 매수는 내지 않아요' : ''}.`;
+  _mcSheet(`<div class="mg-sh"><h3>${set ? '세트 승인' : '승인'}<span>주문 ${it.legs.length}건 · ${paper ? '모의' : '토스증권'}</span></h3>${ods}<div style="margin-top:14px">${lines.map(([k, v]) => `<div class="ln"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div><div class="wn">${warn}</div><div class="bt"><button class="c" onclick="aqMcSheetClose()">닫기</button><button class="g" id="mgGo" onclick="aqMgrApprove(${id})">주문 넣기</button></div></div>`);
+}
+function rkPrev(items, rank) { return items.some(i => i.rank < rank && ['proposed', 'working', 'done', 'partial'].includes(i.status) && i.legs.some(g => g.side === 'BUY')); }
+async function aqMgrApprove(id) {
+  const b = document.getElementById('mgGo'); if (b) { b.disabled = true; b.textContent = '주문 넣는 중…'; }
+  let r = null; try { r = await apiCall('managerApprove', { id }); } catch (e) {}
+  if (!r || !r.ok) { if (b) { b.disabled = false; b.textContent = '주문 넣기'; } aqToast(r && r.error ? r.error : '주문하지 못했어요'); return; }
+  aqMcSheetClose(); aqToast(r.mode === 'live' ? '주문을 넣었어요' : '모의 주문을 넣었어요'); aqHoldScroll(); aqMgrRender(true);
+}
+function aqMgrCancelAsk(id) {
+  const it = ((_mg.d && _mg.d.items) || []).find(i => i.id === id); if (!it) return;
+  _mcSheet(`<div class="mg-sh"><h3>주문 취소<span>${it.rank}번</span></h3>${it.legs.map(g => `<div class="ln"><span>${escapeHtml(g.tk)} ${g.qty}주 ${g.side === 'SELL' ? '매도' : '매수'}</span><b>${escapeHtml({ filled: '체결됨', working: '주문 중', waiting: '대기' }[g.status] || g.status || '')}</b></div>`).join('')}<div class="wn">체결된 것은 그대로 두고, 남은 주문만 취소해요.</div><div class="bt"><button class="c" onclick="aqMcSheetClose()">닫기</button><button class="g" id="mgGo" onclick="aqMgrCancel(${id})">취소하기</button></div></div>`);
+}
+async function aqMgrCancel(id) {
+  const b = document.getElementById('mgGo'); if (b) b.disabled = true;
+  let r = null; try { r = await apiCall('managerCancel', { id }); } catch (e) {}
+  aqMcSheetClose(); aqToast(r && r.ok ? '취소했어요' : (r && r.error) || '취소하지 못했어요'); aqHoldScroll(); aqMgrRender(true);
+}
+function aqMgrLiveAsk() {
+  _mcSheet(`<div class="mg-sh"><h3>실제 주문으로 바꾸기</h3><div class="wn">다음 점검부터 승인하면 토스증권에 실제 지정가 주문이 들어가요.</div><div class="bt"><button class="c" onclick="aqMcSheetClose()">닫기</button><button class="g" id="mgGo" onclick="aqMgrLive()">바꾸기</button></div></div>`);
+}
+async function aqMgrLive() {
+  let r = null; try { r = await apiCall('managerMode', { mode: 'live' }); } catch (e) {}
+  aqMcSheetClose(); aqToast(r && r.ok ? '다음 점검부터 실제 주문이에요' : '바꾸지 못했어요'); aqMgrRender(true);
+}
+// ---------- 종목 상세 (매수심사 리포트와 같은 틀) ----------
+async function aqMgrStock(tk) {
+  document.getElementById('brSheet')?.remove();
+  const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
+  d.innerHTML = `<div class="br-bar"><div class="aq-uni-gripwrap"><div class="aq-uni-grip" aria-hidden="true"></div></div><button class="aq-uni-x" onclick="document.getElementById('brSheet').remove()">✕</button><span>AI 매니저 · ${escapeHtml(tk)}</span></div><div class="br-body" id="brSheetBody"><div class="auto-empty">불러오는 중…</div></div>`;
+  document.body.appendChild(d);
+  let r = null; try { r = await apiCall('managerStock', { ticker: tk }); } catch (e) {}
+  const body = document.getElementById('brSheetBody'); if (!body) return;
+  if (!r || !r.ok || !r.data) { body.innerHTML = `<div class="auto-empty">불러오지 못했어요${r && r.error ? ' — ' + escapeHtml(r.error) : ''}</div>`; return; }
+  _mg.st = r; body.innerHTML = _mgStockHtml(r);
+}
+function _mgStockHtml(r) {
+  const S = r.data || {}, A = r.ai || {}, op = r.opinion, tk = S.ticker, mk = 'US'; const Q = S.quant || {}, SM = S.similar || {}; const pos = S.pos || null; const now = S.now || Q.close;
+  const ret = pos && pos.avg && now ? (now / pos.avg - 1) * 100 : null; const nm = escapeHtml(displayName(tk) || S.name || tk);
+  const P1 = A['1차_p'] || null, P2 = A['2차_p'] || null; const lo = A['아래 선_p'], hi = A['위 선_p'];
+  const it = ((_mg.d && _mg.d.items) || []).find(i => i.status === 'proposed' && i.legs.some(g => g.tk === tk));
+  const graded = (r.history || []).find(x => x.grade && x.grade.verdict);
+  let h = `<div class="br-head"><b>${nm} · AI 매니저</b><small>${Q.date ? _brMD(Q.date) + ' 종가 지표 · ' : ''}${r.requested_at ? _brHM(r.requested_at) + ' 점검' : ''}${graded ? ` · 지난 채점 ${escapeHtml(graded.grade.verdict)}` : ''}</small></div>`;
+  // 신호등
+  const icon = { '분할 매도': '<path d="M20 11v18M14 23l6 6 6-6"/>', '유지': '<path d="M16 13v14M24 13v14"/>', '추가매수': '<path d="M20 11v18M11 20h18"/>', '대기': '<path d="M16 13v14M24 13v14"/>', '분할 매수': '<path d="M20 11v18M11 20h18"/>' };
+  const cls = { '분할 매도': 'r', '유지': 'y', '추가매수': 'g', '대기': 'y', '분할 매수': 'g' };
+  const lamps = S.held ? ['분할 매도', '유지', '추가매수'] : ['대기', '분할 매수'];
+  h += `<div class="br-vc"><div class="br-tl">${lamps.map(n => `<span class="br-lamp ${cls[n]}${op === n ? ' on' : ''}"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${icon[n]}</svg></span>`).join('')}</div>
+    <div class="br-tll">${lamps.map(n => `<span class="${op === n ? 'on' : ''}">${n}</span>`).join('')}</div>
+    <div class="br-word ${cls[op] || ''}">${escapeHtml(op || 'AI 의견 없음')}</div>${now ? `<div class="br-basis2">${r.requested_at ? _brHM(r.requested_at).split(' ')[1] : ''} · ${_brPx(mk, now)} 기준</div>` : ''}<p class="br-vs">${escapeHtml(A['요약'] || '')}</p></div>`;
+  if (A['결론']) h += `<div class="br-key ${cls[op] || 'y'}">${escapeHtml(A['결론'])}${A['결론 작은 줄'] ? `<small>${escapeHtml(A['결론 작은 줄'])}</small>` : ''}</div>`;
+  // 유효 상태 바
+  if (lo && hi && hi > lo && now) {
+    const L = { tone: 'g', title: '유효', live: false, line: `지금 <b>${_brPx(mk, now)}</b> · 점검 때 기준`, endL: escapeHtml(A['아래 선'] || ''), endR: escapeHtml(A['위 선'] || ''), lo, hi, px: now,
+      zone: P1 && P1.price ? [P1.price * 0.998, P1.price * 1.002] : null, belowL: _brP((lo / now - 1) * 100), belowR: _brP((hi / now - 1) * 100), foot: '두 선을 넘거나 실적이 지나면 다시 점검해요', x: false };
+    try { h += `<div id="brLiveBox">${_brLiveBar(L, tk)}</div>`; } catch (e) {}
+  }
+  // 지금 · 비중 · 다음
+  const E = Q.earnings; const risk = S.risk;
+  h += `<div class="br-card" style="margin-top:12px">${pos ? `<div class="br-st"><span class="k">지금</span><span><b class="${_brC(ret)}">${_brP(ret)}</b><small>평단 ${_brPx(mk, pos.avg)}</small></span><b class="mu">${aqNum(pos.qty, 0)}주</b></div>` : `<div class="br-st"><span class="k">지금</span><span><b>관심</b><small>${S.watch && S.watch.added ? `등록 ${_brMD(S.watch.added)}` : ''}</small></span><b class="mu">${_brPx(mk, now)}</b></div>`}
+    ${risk ? `<div class="br-st"><span class="k">비중</span><span><b>${(risk.w * 100).toFixed(1)}%</b><small>${S.group ? `${escapeHtml(S.group)} 그룹 · ` : ''}흔들림 몫 ${(risk.rc * 100).toFixed(1)}%</small></span><b class="mu"></b></div>` : ''}
+    ${E ? `<div class="br-st"><span class="k">다음</span><span><b>${_brMD(E.date)} 실적</b><small>${escapeHtml(E.note || '')}</small></span><b class="mu">${E.tdays}거래일</b></div>` : ''}</div>`;
+  // 할 일
+  const sellOp = op === '분할 매도';
+  if (P1 && P1.price && P1.qty) {
+    const st = (p, live) => `<div class="br-st"><span class="k">${p === P1 ? '1차' : '2차'}</span><span><b>${_brPx(mk, p.price)} · ${p.qty}주</b><small>${escapeHtml(p.note || '')}</small></span><b class="${live ? 'g' : 'y'}">${escapeHtml(live ? '지금' : (p.when || '대기'))}</b></div>`;
+    let ln = '';
+    if (sellOp && pos) {
+      const q2 = P2 && P2.qty ? P2.qty : 0; ln += `<div class="br-ln"><span>다 팔면 남는 수량</span><b>${aqNum(pos.qty, 0)}주 → ${aqNum(pos.qty - P1.qty - q2, 0)}주</b></div>`;
+      if (pos.avg) ln += `<div class="br-ln"><span>확정 수익</span><b>1차 ${aqSg(P1.price - pos.avg)}$${aqNum(Math.abs((P1.price - pos.avg) * P1.qty), 0)}${q2 && P2.price ? ` · 2차 ${aqSg(P2.price - pos.avg)}$${aqNum(Math.abs((P2.price - pos.avg) * q2), 0)}` : ''}</b></div>`;
+    } else {
+      const q0 = pos ? pos.qty : 0, a0 = pos ? pos.avg : 0; const q2 = P2 && P2.qty && P2.price ? P2.qty : 0;
+      const n1 = q0 + P1.qty, avg1 = (q0 * a0 + P1.qty * P1.price) / n1;
+      ln += `<div class="br-ln"><span>다 사면 평단</span><b>${a0 ? `${_brPx(mk, a0)} → ` : ''}${_brPx(mk, avg1)}${q2 ? ` (2차까지 ${_brPx(mk, (q0 * a0 + P1.qty * P1.price + q2 * P2.price) / (n1 + q2))})` : ''}</b></div>`;
+      if (a0 && now && a0 > now) ln += `<div class="br-ln"><span>평단까지</span><b>${_brP((a0 / now - 1) * 100)} → ${_brP((avg1 / now - 1) * 100)} 남음</b></div>`;
+      ln += `<div class="br-ln"><span>이번 매수분 손절</span><b class="down">진입가 −10% · 최대 −$${aqNum(P1.qty * P1.price * 0.1 + (q2 ? q2 * P2.price * 0.1 : 0), 0)}</b></div>`;
+    }
+    h += `<div class="br-sec">할 일</div><div class="br-card">${st(P1, !!it)}${P2 && P2.price && P2.qty ? st(P2, false) : ''}${ln}</div>`;
+  }
+  // 가격 자리
+  if (A['가격 자리'] || A['가격 고른 이유']) h += `<div class="br-sec">${sellOp ? '파는 가격 자리' : S.held ? '목표 평단 자리' : '첫 진입 자리'}</div><div class="br-card">${A['가격 자리'] ? String(A['가격 자리']).split(/\s·\s|\n/).filter(x => x.trim()).map(x => `<div class="br-ln"><span>${escapeHtml(x.trim())}</span><b></b></div>`).join('') : ''}${A['가격 고른 이유'] ? `<div class="br-vs" style="margin-top:10px">${escapeHtml(A['가격 고른 이유'])}</div>` : ''}</div>`;
+  // 이유 3줄 (매수심사와 같은 계산)
+  const sm = SM.summary, bs = SM.base; const Po = Q.position || {}, Lv = Q.levels || {};
+  const rp = Po.range_pos == null ? '' : Po.range_pos < 0.25 ? '6개월 중 싼 쪽' : Po.range_pos > 0.75 ? '6개월 중 비싼 쪽' : '6개월 중 가운데쯤';
+  const near = (() => { const s = (Lv.support || [])[0], rz = (Lv.resistance || [])[0]; const ds = s ? now / s[1] - 1 : 9, dr = rz ? rz[0] / now - 1 : 9;
+    return dr < ds && rz ? `바로 위가 저항선 ${_brPxS(mk, rz[0])}~${_brPxS(mk, rz[1])}` : s ? `바로 아래 지지선 ${_brPxS(mk, s[0])}~${_brPxS(mk, s[1])}` : ''; })();
+  const rs = [];
+  const sh5 = sm && sm.h && sm.h['5'], sh10 = sm && sm.h && sm.h['10'];
+  if (sm && bs) rs.push(['📊', `비슷했던 ${sm.n}번은 20일 뒤 보통 <b class="${_brC(sm.median)}">${_brPf(sm.median)}</b> (평소 ${_brPf(bs.median)})${sh5 && sh10 ? `<small class="br-rsub">5일 뒤 <b class="${_brC(sh5.median)}">${_brPf(sh5.median)}</b> · 10일 뒤 <b class="${_brC(sh10.median)}">${_brPf(sh10.median)}</b></small>` : ''}`, 'mgD1']);
+  if (rp) rs.push(['📍', `${rp}${near ? `, ${near}` : ''}`, 'mgD3']);
+  if (A['이유']) rs.push(['🔍', escapeHtml(A['이유']), 'mgD2']);
+  if (rs.length) h += `<div class="br-sec">이유</div><div class="br-card">${rs.map(([i, t, id]) => `<div class="br-rs" onclick="aqBrGo('${id}')"><i>${i}</i><span>${t}</span><em>›</em></div>`).join('')}</div>`;
+  // 거시
+  const mac = [['요인', A['거시 요인']], ['전망', A['거시 전망']], ['운영', A['거시 운영']]].filter(x => x[1]);
+  const chg = A['거시 바뀜'] && !/^없음/.test(A['거시 바뀜']) ? A['거시 바뀜'] : '';
+  if (mac.length) h += `<div class="br-sec">거시${chg ? '<em>오늘 바뀜</em>' : ''}</div><div class="br-card">${mac.map(([k, v]) => `<div class="mg-pl"><span>${k}</span><b>${escapeHtml(v)}${k === '전망' && chg ? `<span class="chg">바뀜 · ${escapeHtml(chg)}</span>` : ''}</b></div>`).join('')}</div>`;
+  // 미시
+  const M = Q.momentum || {}, V = Q.volatility || {};
+  const upR = (SM.periods || []).length ? SM.periods.filter(p => p.fwd20 > 0).length / SM.periods.length : null;
+  const mi = [['RSI(14)', M.rsi14 != null ? Math.round(M.rsi14) : '—'], ['ATR(14)', V.atr_pct != null ? `${V.atr_pct.toFixed(1)}% (평소 ${(V.atr_pct_6m_avg || 0).toFixed(1)}%)` : '—'],
+    ['20일 고점 대비', Lv.swing_high20 && now ? _brP((now / Lv.swing_high20 - 1) * 100) : '—'], ['6개월 위치', Po.range_pos != null ? `${Math.round(Po.range_pos * 100)}%` : '—']];
+  if (sm) { mi.push([`비슷했던 때 (${sm.n}번) 20일 뒤`, `중앙 ${_brPf(sm.median)}${upR != null ? ` · 오른 비율 ${Math.round(upR * 100)}%` : ''}`]); mi.push(['그중 가장 크게 빠진 때', _brPf(sm.mae_worst)]); }
+  if ((S.peers || []).length) mi.push(['동종 5일', S.peers.slice(0, 3).map(p => `${p.ticker} ${_brP(p.ret5)}`).join(' · ')]);
+  h += `<div class="br-sec">미시<em>종가 지표</em></div><div class="br-card">${mi.map(([k, v]) => `<div class="br-ln"><span>${escapeHtml(k)}</span><b>${escapeHtml(String(v))}</b></div>`).join('')}</div>`;
+  // 최종 운영안
+  const tag = !S.held ? '관심' : ret == null ? '' : ret >= 10 ? '수익 +10% 이상' : ret <= -10 ? '수익 −10% 이하' : '그 사이';
+  const pl = [['개요', A['개요']], ['판단', A['판단']], ['몇 주', P1 && P1.qty ? `${P1.qty}주${P2 && P2.qty ? ` · 2차 ${P2.qty}주` : ''}` : ''], ['가격', P1 && P1.price ? `지정가 ${_brPx(mk, P1.price)}` : ''], ['이유', A['이유']], ['다음', A['다음']]].filter(x => x[1]);
+  if (pl.length) h += `<div class="br-sec">최종 운영안${tag ? `<em>${tag}</em>` : ''}</div><div class="br-card">${pl.map(([k, v]) => `<div class="mg-pl"><span>${k}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div>`;
+  // 틀린 조건
+  const inv = String(A['틀린 조건'] || '').split(/\s·\s|\n/).map(x => x.replace(/^[-*•·\s]+/, '').trim()).filter(Boolean);
+  if (inv.length) h += `<div class="br-sec">이렇게 되면 이 판단은 틀린 것</div><div class="br-wr">${inv.map(x => `<div>· ${escapeHtml(x)}</div>`).join('')}</div>`;
+  // 자세히 보기
+  h += `<div class="br-sec">자세히 보기</div>`;
+  if (sm && bs) {
+    const per = SM.periods || [];
+    h += `<details class="br-d" id="mgD1"><summary><span class="t">📊 비슷했던 구간</span><span class="s">${sm.n}번 · 보통 ${_brPf(sm.median)}</span><span class="c">▾</span></summary><div class="br-db">
+      ${sm.h && bs.h ? _brHTable(sm, bs) : ''}${_brPathSvg(per)}
+      ${per.slice(0, 6).map(p => `<div class="br-pr"><div class="top"><span>${escapeHtml(displayName(p.ticker) || p.ticker)} ${p.date} · ${p.own ? '본인' : '피어'}</span><b class="${_brC(p.fwd20)}">${_brPf(p.fwd20)}</b></div><small>흐름 ${Math.round(p.shape * 100)}% 닮음${p.mkt_down ? ' · 시장도 같이 빠짐' : ''}</small></div>`).join('')}
+      ${per.length > 6 ? `<div class="br-more">나머지 ${per.length - 6}개는 같은 기준</div>` : ''}</div></details>`;
+  }
+  if (A['그때와 지금']) h += `<details class="br-d" id="mgD2"><summary><span class="t">🔍 그때와 지금</span><span class="s">AI 조사</span><span class="c">▾</span></summary><div class="br-db br-ai">${_brAiText(A['그때와 지금'])}</div></details>`;
+  if (Q.close) {
+    const T = Q.trend || {}, Vo = Q.volume || {}, R = Q.relative || {}; const ab = T.above || {};
+    const tw = ab['60'] && ab['120'] ? '상승 추세' : !ab['120'] && !ab['60'] ? '하락 추세' : ab['120'] ? '장기 상승 속 조정' : '반등 시도';
+    const zone = z => z && z.length ? z.map(x => `${_brPxS(mk, x[0])}~${_brPxS(mk, x[1])} (${_brP(((x[0] + x[1]) / 2 / now - 1) * 100, 0)})`).join(' · ') : '—';
+    const volx = V.atr_pct_6m_avg ? V.atr_pct / V.atr_pct_6m_avg : 1;
+    const relw = R.vs_market_6m_pp == null ? '' : `${R.vs_market_6m_pp < -5 ? '6개월간 시장보다 약했' : R.vs_market_6m_pp > 5 ? '6개월간 시장보다 강했' : '6개월간 시장과 비슷했'}${R.vs_sector_20d_pp != null ? `고, 최근 20일은 섹터보다 ${R.vs_sector_20d_pp >= 2 ? '강함' : R.vs_sector_20d_pp <= -2 ? '약함' : '비슷함'}` : '음'}`;
+    const row = (k, b, s) => `<div class="br-q"><span>${k}</span><b>${b}${s ? `<small>${s}</small>` : ''}</b></div>`;
+    h += `<details class="br-d" id="mgD3"><summary><span class="t">📍 지금 자리 (6개월)</span><span class="s">${rp.replace('6개월 중 ', '')} · ${tw}</span><span class="c">▾</span></summary><div class="br-db">`
+      + row('추세', tw, `20일선 ${ab['20'] ? '위' : '아래'} · 60일선 ${ab['60'] ? '위' : '아래'} · 120일선 ${ab['120'] ? '위' : '아래'}`)
+      + row('위치', `${rp} (${Math.round((Po.range_pos || 0) * 100)}%)`, `6개월 고점 대비 ${_brP(Po.dd_from_hi6m)}`)
+      + row('지지·저항', `지지 ${zone(Lv.support)}`, `저항 ${zone(Lv.resistance)}`)
+      + (relw ? row('힘', relw, `시장 대비 6개월 ${aqSgPct(R.vs_market_6m_pp || 0, 1, '%p')}${R.vs_sector_20d_pp != null ? ` · 섹터 대비 20일 ${aqSg(R.vs_sector_20d_pp)}${Math.abs(R.vs_sector_20d_pp).toFixed(1)}%p` : ''}`) : '')
+      + row('흔들림', volx > 1.3 ? '평소보다 크게 흔들림 — 나눠서' : volx < 0.85 ? '평소보다 조용함' : '평소와 비슷', `하루 변동 ${(V.atr_pct || 0).toFixed(1)}% (평소 ${(V.atr_pct_6m_avg || 0).toFixed(1)}%)`)
+      + row('모멘텀', (M.rsi14 || 50) < 30 ? '과매도' : (M.rsi14 || 50) > 70 ? '과열' : '보통', `RSI ${Math.round(M.rsi14 || 0)} · 최근 20일 ${_brP(M.ret20)}`)
+      + row('거래', Vo.upday_vs_downday_20d ? (Vo.upday_vs_downday_20d > 1.2 ? '오르는 날 거래가 더 많음' : Vo.upday_vs_downday_20d < 0.8 ? '내리는 날 거래가 더 많음' : '오르는 날·내리는 날 비슷') : '—', `최근 5일 거래는 평소의 ${(Vo.v5_vs_6m || 0).toFixed(1)}배`)
+      + (E ? row('일정', `실적 ${_brMD(E.date)} (${E.tdays}거래일 뒤)`, '') : '') + `</div></details>`;
+  }
+  const th = S.trade_history || {}; const rel = S.relation;
+  h += `<details class="br-d"><summary><span class="t">💼 내 포지션</span><span class="s">${pos ? `${aqNum(pos.qty, 0)}주 · ${_brP(ret)}${risk ? ` · 계좌의 ${Math.round(risk.w * 100)}%` : ''}` : '보유 없음'}</span><span class="c">▾</span></summary><div class="br-db">
+    ${pos ? `<div class="br-q"><span>평단</span><b>${_brPx(mk, pos.avg)}<small>토스 보유 기준</small></b></div>` : ''}
+    ${th.buys_90d ? `<div class="br-q"><span>최근 매수</span><b>90일 동안 ${th.buys_90d}번${th.pattern ? ` (${escapeHtml(th.pattern)})` : ''}</b></div>` : ''}
+    ${rel ? `<div class="br-q"><span>포트폴리오</span><b class="${['방어형', '보완형'].includes(rel.kind) ? 'g' : rel.kind === '더 크게 움직임' ? 'r' : ''}">${escapeHtml(rel.kind || '')}<small>${rel.down_days ? `내 계좌가 많이 빠진 날 평균 ${_brP(rel.down_days.port)}일 때 이 종목 ${_brP(rel.down_days.me)}${rel.kind === '방어형' ? ' — 오히려 오르는 편' : ''}` : escapeHtml(rel.why || '')}</small></b></div>` : ''}</div></details>`;
+  if (A['판단 과정'] || A['출처']) h += `<details class="br-d"><summary><span class="t">🧭 판단 과정</span><span class="s">AI${A['출처'] ? ` · 출처 ${String(A['출처']).split(/\s·\s|\n/).filter(x => x.trim()).length}개` : ''}</span><span class="c">▾</span></summary><div class="br-db br-ai">${_brAiText(A['판단 과정'] || '')}${A['출처'] ? `<div class="br-srcs">${_brSrc(String(A['출처']).split(/\s·\s/).join('\n'))}</div>` : ''}</div></details>`;
+  if ((r.history || []).length > 1) h += `<details class="br-d"><summary><span class="t">🗂 지난 의견</span><span class="s">${r.history.length}회</span><span class="c">▾</span></summary><div class="br-db">${r.history.map(x => `<div class="br-q"><span>${_brMD(String(x.day))}</span><b>${escapeHtml(x.opinion || '')}${x.grade && x.grade.verdict ? ` · 채점 ${escapeHtml(x.grade.verdict)}` : ''}<small>${escapeHtml(x.s || '')}</small></b></div>`).join('')}</div></details>`;
+  if (it) h += `<button class="mg-go" onclick="aqMgrAsk(${it.id})">${it.legs.length > 1 ? '세트 승인' : `${it.legs[0].qty}주 ${it.legs[0].side === 'SELL' ? '매도' : '매수'} 승인`}</button>`;
+  h += `<div class="br-ft">AI 매니저가 매일 미국 개장 30분 뒤 다시 점검해요</div><div class="br-lim">과거 기록과 AI 의견이에요 — 확률 예측이 아니에요</div>`;
+  return h;
+}
+Object.assign(window, { aqMgrRender, aqMgrToggle, aqMgrF, aqMgrAll, aqMgrAsk, aqMgrApprove, aqMgrCancelAsk, aqMgrCancel, aqMgrLiveAsk, aqMgrLive, aqMgrStock });
 
 // ============================================================================
 // v6.22: 토글·탭을 눌러도 화면 위치 그대로 — 바뀐 내용이 짧아지거나 잠깐 비어도 스크롤이 위로 당겨지지 않게
@@ -30449,11 +30769,17 @@ function _gdForDay(day) {   // 그날 문서(오전·오후) 우선, 없으면 �
   }
   return { items: items.filter(x => _gdVis(_gdMktOf(x.target))).sort((a, b) => _gdMin(a.time) - _gdMin(b.time)), src, meta };
 }
-function _gdIsAsg() { return document.body.getAttribute('data-atab') === 'assist'; }   // v6.49: 내 지침 → AI 비서 탭
+function _gdIsAsg() { return document.body.getAttribute('data-atab') === 'guide'; }   // v6.82: 비서는 AI 가이드 탭 아래 모듈   // v6.49: 내 지침 → AI 비서 탭
 function _gdAdm() { return document.body.getAttribute('data-role') === 'admin' || !!(typeof _aqAuth !== 'undefined' && _aqAuth.user && _aqAuth.user.role === 'admin'); }
 function aqAsgBadge() { const el = document.getElementById('asgBadge'); if (!el) return; let n = 0; try { n = _gmDecCount(); } catch (e) {} el.textContent = n || ''; el.style.display = n ? '' : 'none'; }
-async function aqGuideRender() {
-  const asg = _gdIsAsg(); _gd.view = asg ? 'mine' : 'rec';
+async function aqGuideRender() {   // v6.82: AI 가이드(관리자) + 아래 비서 모듈(모두)
+  const gb = document.getElementById('guideBody');
+  if (_gdAdm()) { await _aqGuideRenderPart(false); } else if (gb) { gb.innerHTML = ''; }
+  try { document.getElementById('guideCard').classList.toggle('gd-none', !_gdAdm()); } catch (e) {}
+  await _aqGuideRenderPart(true);
+}
+async function _aqGuideRenderPart(asg) {
+  _gd.view = asg ? 'mine' : 'rec';
   const box = document.getElementById(asg ? 'assistBody' : 'guideBody'); if (!box) return;
   const today = _kstToday(); if (!_gd.sel) _gd.sel = today;
   if (!_gdAdm()) { _gd.docs = []; _gd.acc = {}; _gd.accList = []; _gd.queue = []; }   // 일반 사용자: 지침은 관리자 계좌 기준이라 부르지 않음 (서버도 막음)
