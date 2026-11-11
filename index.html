@@ -83,7 +83,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '6.99';   // v6.99: 지금 가격 칸을 처음 붙일 때 마지막 종가 점이 옛 자리(새 칸 자리)에 남아 같은 칸처럼 보이던 것 — 그래프 처음 그리기 애니메이션이 덮어쓰던 것(멈추고 바로 그림) · v6.98: 지금 가격으로 가는 마지막 한 칸을 점선 · 초록/빨강으로(폰처럼 하루 칸이 5px 안팎일 때도 다음 칸이 보이게) · v6.97: 지금 가격 점을 다른 날들과 같은 간격의 다음 칸으로 · 마이 › 실시간 현황도 발견과 똑같이(폴드 펼침 · 넓은 화면에서 오른쪽 시그널 이력) · v6.96: 그래프 마지막 종가 흰 점 뺌 · 마이 — 감사 보고서 탭 없앰(브리핑 '이번 주 과제' · 빨간 점도) · 탭 순서 실시간 현황 / 포트폴리오 / 누적 성과 / 운영 통계 · 실시간 현황: 좌상단 평가수익금(지금 가격 · 수익률 · 오늘 손익) · 우상단 정렬 · 보유 종목 피드(발견과 같은 모양 · 보유 n주 · 평단 · 평가손익) · 정렬 평가수익률 높은 순(기본) ↔ 오늘 평가수익률 높은 순 · v6.95: AI 매니저 — 결과 글에 섞여 온 가이드 번호(G19 · (G27) 등)를 화면에서 뺌 · v6.94: 지금 가격 점 — 마지막 종가 대비 오르면 초록 · 내리면 빨강 · 다음 거래일 칸을 기간(3M · 6M · 1Y)과 상관없이 같은 폭으로(1Y처럼 촘촘한 그래프에서 전날 종가와 같은 자리처럼 보이던 것) · 마이 30일 비중 그래프의 마지막 날은 종가 그대로 · v6.93: 지금 가격을 그래프 점으로 이어 그림(애프터장부터는 다음 거래일 점) · 발견 피드 그래프에도 · 끝 점에 깜빡이는 고리(실시간 받는 중) · v6.92: 지금 가격 — 본인 토스 키로 1분마다(보고 있는 동안) · 미국 주간거래 · 프리장 · 정규장 · 애프터장, 한국 프리장 · 정규장 · 애프터장 · 종목 창 가격 · 등락 · 차트 지금 점('프리장 · 1분 전 · 11/10 종가 대비') · 마이 포트폴리오 평가금 · 그날 손익 · 탐색 종목 리스트 · 발견 피드 등락 · 토스 미연동은 종가 그대로 · v6.91: S펜 — 종목 창 차트: ① 펜을 띄워 대면 그날 값(위쪽 한 줄 · 툴팁 안 가림) ② 펜 버튼 누른 채 끌기(PC Shift+끌기) 구간 재기 — 수익률 · 거래일 · 중간 최대 하락 · 같은 기간 시장, 떼면 사라짐 · 바로 탭하면 고정 ③ 펜으로 긋기(PC Alt+끌기) 선 메모 — 평평하면 가로선 · 아니면 추세선, 종목별 서버 저장(다른 기기에서도) · 장중 가격이 닿으면 알림 · 선을 펜으로 탭하면 지우기 · 손가락은 그대로 · v6.90: 넓은 화면 2단 — 태블릿 가로 · PC(가로 · 폭 900 · 높이 600 이상)는 왼쪽 세로 메뉴(발견 · 탐색 · 관심 · AI · 일정 · 마이, 아래 자동 · 운영 · 설정) · 왼쪽 칸은 폰 화면 그대로 · 종목 창 · 보고서 · 시트는 오른쪽 칸에 열림 · 설정 › 화면 › 넓은 화면 2단 끄면 예전 가운데 틀 · v6.89: AI 매니저 성적 — 유지·대기도 애매 칸 표시 (채점 기준을 종목 흔들림(ATR)에 맞춤) · v6.88: 한국 탐색 — 외국인 매수 · 기관 매수 탭을 '수급 동향' 하나로 · 1d/5d/20d 왼쪽에 [외국인 | 기관] (기간은 같이) · v6.87: AI 매니저 — 안의 [미국 | 한국] 토글을 빼고 앱 맨 위 시장 전환을 따름 (바꾸면 바로 그 시장으로 다시 그림) · v6.86: AI 보고서 — 제목 앞에 구분선(---)이 붙어 온 보고서의 장 제목이 '---'로 보이던 것 · 최종 의견 딱지가 문장 조각('은 분할 매수이')으로 나오던 것(표 → '최종 의견:' 순, 아는 의견 이름만) · v6.85: AI 매니저 한국 — 맨 위 [미국 | 한국] (이 기기에 기억) · 한국은 개장 30분 뒤(09:30) 점검 · 원화 금액 · 종목명 표시 · 첫 진입 200만원 · 종목 상세 미시에 외국인·기관·개인 순매수(5일·20일) · 성적도 시장별 · v6.84: AI 매니저 성적 — 맨 아래 칸 [모의 | 실제] · 그냥 두었을 때보다(매일 종가) · 승인·체결·이긴 것 · 의견 적중(20거래일) · 상세 시트(누적 선 · 지난 할 일 · 의견 채점, 시트 안에서도 모의·실제 바꾸기) · v6.83: AI 매니저 — 모의 1주 없앰 · 승인 시트 [닫기 | 모의 운영 | 주문 넣기] · 지정가 옆 지금 가격 · 종목별 의견 정렬(의견순 · 수익률 낮은순 · 높은순) · v6.82: AI 탭 — AI 브리핑 · AI 가이드(아래 비서 모듈) · AI 매니저 · AI 리포트 · AI 매니저(관리자): 오늘 할 일(급한 순 · 줄 누르면 줄글 이유 · 승인 → 확인 시트 → 당일 지정가, 세트는 매도 체결 뒤 매수 · 처음 1주 모의) · 종목별 의견(유지·분할 매도·추가매수·분할 매수·대기) · 종목 상세(매수심사 리포트와 같은 틀 + 거시·가격 자리·최종 운영안)   // v6.81: 마이 › 포트폴리오 쏠림 계기판 — 평가금 아래 4칸(실질 종목 · 주력 그룹 · 흔들림 · 급락일, 60일) · 종합 상태 · 심함 2칸 이상 경고 · 칸 누르면 시트(흔들림 몫 순위 · 그룹 구성 · 계좌 vs 지수 차트 · 급락일 목록) · v6.80: 읽어 주기 — 누를 때마다 서버 음성부터 다시 시도(한 번 실패하면 계속 기기 음성이던 것) · 기기 음성으로 바뀔 때 이유 표시 · v6.79: AI 보고서 읽어 주기 — 구글 Cloud TTS(Chirp 3 HD) 음성 · 서버가 만들어 저장한 음성 재생 · 안 되거나 월 무료 한도면 기기 음성 · v6.78: AI 보고서 섹션 읽어 주기 — 섹션 제목 옆 ▶(기기 음성) · 다 읽으면 다음 섹션 · ⏸ 멈춤 · 보고서·종목 창 닫으면 멈춤 · v6.77: 데칼코마니 차트 — 손가락·마우스를 올린 날에 세로선 + 그룹·종목 누적(그날 하루) · v6.76: 발견 — 신호 있는 종목은 보고서가 있어도 그대로 보임 (보고서만 있고 신호 없는 종목만 안 나옴) · v6.75: 설정 › 발견 › ATR 기준 (끔 · 6 · 7 · 8 기본 · 10 · 12% · 이 기기에 저장) · v6.74: 발견에서 빼기 — AI 보고서가 있는 종목 · 미국 최근 종가 $10 이하 또는 ATR(14)/종가 8% 이상 · v6.73: 밸런스 목록에서 종목을 누르면 데칼코마니 시트 — 60거래일 일간 차트(그룹 vs 종목) · 반대로 움직인 구간(띠, 3~10일 · 그룹 누적 1.5σ×√일수 · 가장 뚜렷한 2곳)·날(점, 그룹 1σ) · 종목은 반대로 그룹의 절반 이상 · 등급 칸 · 종목 페이지 버튼 · v6.72: 밸런스 급락일 지표 — 그룹 최대 하락 5일(20일 2·40일 3) 따로 등급 · 빠질 때는 급락일 뺀 평소 · 그룹이 조용한 날 혼자 튄 크기는 3σ까지만 · 급락일 순 정렬 · 목록 '급락일' 딱지(좋음 이상) · 종목 페이지 3번째 타일 · v6.71: 밸런스 '둘 다 좋은 순' — 낮은 쪽 등급 → 높은 쪽 등급 → 빠질 때 값 순 (빠질 때 값만으로 정렬되던 문제) · v6.70: 밸런스 — 평균 대신 구간별 기울기(그룹 1% 기준, 절편으로 종목 자체 추세 제거) · 알파 강한 종목이 1등 하던 문제 · v6.69: 밸런스 목록 — 게이지를 오른쪽 끝에 맞춤(등급 글자는 게이지 왼쪽, 오른쪽 정렬) · v6.68: AI 보고서·매수심사 대기열 — 다른 작업 중이면 거절 대신 대기열(종류별 최대 3 · 들어온 순서 · 끝나면 자동 시작) · '대기 n번째 · 취소' · v6.67: 밸런스 등급 색·5칸 막대 — 탐색 목록(점은 티커 옆) · 종목 페이지 '밸런스' 칸(접힘 막대 / 펼침 그룹별 빠질 때·오를 때 타일 · 보유 종목은 소속 딱지와 다른 그룹만 · 목록 n위) · v6.66: 섹터 시트 NaN 수정 — 같은 이름 함수(_stSeries) 덮어쓰기로 섹터 시트 등락·1개월과 운영 통계(판 뒤 흐름·놓아준 종목·신호 따라 산 매매)가 깨지던 문제 · v6.65: 밸런스 종목 — '빠질 때 → 좋음 · 오를 때 → 좋음' 5단계 등급 표시 · 충족 기준 빠질 때 0배 초과·오를 때 1배 미만 · 정렬 빠질 때 순·오를 때 순·둘 다 좋은 순 · v6.64: 탐색 › 밸런스 종목 탭 신설(미국 공매도 이력 자리 · 한국은 기관 매수 유지) — 보유 종목 60일 K-means 2그룹(주력·보조) · 그룹과 반대로 움직인 종목 하락방어·상승비용·밸런스 정렬 · 20·40·60일 점 · 신규편입·그룹변동 · v6.63: 거시 분석 퀵 분석(주제 넣기 › 지금 바로 · 하루 2건 · 쓰는 중 카드·취소 · 피드 맨 위 · 매주 따라가기로 바꾸기) · 끝난 연재 다시 연재(같은 번호로 다음 회차 · 끝낼 조건 새로) · v6.62: AI 비서 놓친 것 — 답한 것은 바로 치우고 아래 '답한 것 n개 보기'로 접어 둠 · v6.61: AI 비서 주간 점검 칸(지켜볼 것 · 놓친 것 · 가설)도 시장별로 — US·환전·자동매매는 미국, KR은 한국, 포트폴리오는 양쪽 · 다른 시장 항목 수는 한 줄로 · v6.60: 거시 분석 기사 — 위 토글과 표지 사진 사이 여백(붙어 있던 것) · 출처를 제목 링크 목록으로(긴 주소 숨김) · 긴 주소가 화면 밖으로 넘치던 것 · 구글 문서 물결표(~)가 취소선으로 바뀌어 칸이 한 칸에 몰리던 것(가이드 문서도 같은 규칙) · v6.59: AI 리포트 기업 분석·매매 분석 목록 톤 다운 — 의견은 색 없이 회색 테두리 딱지·흰 글자 · 카드 테두리 한 가지 · 재검토/새 보고서 버튼 회색 · 할 일은 종목명 옆·로고 위 파란 점과 '할 일' 숫자 배지만 · 추적·상태·채점 회색(✓/✗) · 수익률 숫자 초록·빨강만 유지 · 상세 화면은 그대로 · v6.58: 발견 피드 — 차트·빈 곳을 눌러도 종목 페이지로 안 감(로고·종목명만) · 시그널 이력 수익률을 신호 뒤 5거래일 수익률로(5일 안 지났으면 'n일째') · v6.57: 발견 피드 — 올라온 이유·며칠 전 · 보유 수익률 · '3개월 고점대비'/'3개월 신고가' · 보고서 의견 · 행동 줄 글자 라벨(30일 신호 · 내부자 매수/매도 금액, 0은 흐리게) · 설명 2줄 접기 · 업종 PER 옆 회색 · PEG 0~5배만 · Forward 오타 · 육각형 뺌 · 차트 고가·저가 선 → 옅은 띠 · 마지막 점 · 아래 여유(버튼과 안 겹침) · 화면 가까이 올 때 그림 · 피드 폭 600 이상(폴드 펼침)은 차트 + 오른쪽 시그널 이력(기간 연동 · 줄 누르면 차트에 표시 · 전체 이력) · v6.56: 거시 분석 고정 칸 이름을 서버 값으로('미국 소셜 버즈') · v6.55: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] 토글 위치를 세 화면에서 같게(카드 본문 위 여백 차이로 8~14px 어긋나던 것) · v6.54: AI 리포트 [거시 분석 | 기업 분석 | 매매 분석] — 거시 분석 기사형 피드(대표 기사 · 목록 썸네일 · 지난 분석 · 끝난 연재) · 기사 화면(표지 사진 · 결론 · 이번 주 바뀐 것 · 한 줄 · 가설 · 지난 회차) · 연재 계속할지 정하기(답 없으면 AI 추천대로) · 주제 넣기(한 번만/매주 따라가기 · 끝낼 조건) · 표지 사진 올리기(16:9 자르기 · 썸네일 중심 · 연재 표지/회차만, 관리자) · 일반 사용자는 내 포트폴리오 칸 없이 · AI 비서 — 이번 주(주간 점검 한 줄 · 지켜볼 것) · 정할 것에 연재 카드 · 놓친 것(몰랐다·알고 있었다·틀렸다) · 성적표 가설(채점 바꾸기) · v6.53: AI 가이드 문서 읽기 — 날짜가 아닌 제목 아래 줄이 마지막 항목 원문에 붙던 것(따르기 때 서버로 같이 가던 것) · v6.52: 종목 상세 'AI 보고서' 의견 딱지가 안 뜨던 것 — 보고서 의견을 한꺼번에 받다 실패하면 '없음'으로 굳던 것(4개씩·30초 뒤 다시) · 새 보고서면 다시 읽음 · v6.51: 브리핑 '가이드 알림' 줄 — 종목명 · 무슨 일 · 사람 말(제목 글자 수로 자르던 것 · 'active' 그대로 · 감시 원문) · v6.50: AI 보고서 — 가격 앞 \ 표시(\$13.72) 없앰 · v6.49: AI 탭 개편 — AI 브리핑 · AI 비서(내 지침을 옮김, 전체 공개 · 정할 것 숫자 배지) · AI 가이드(AI 추천만) · AI 리포트([기업 분석 | 매매 분석], 매매 분석은 관리자) · v6.48: AI 매매심사 카드 — 심사 뒤 등락을 카드 아래 줄 오른쪽에 고정(본문 두 줄에서 잘려 안 보이던 것) · v6.47: AI 보고서 — 끝에 '자료 출처:' 문단만 있는 보고서는 출처로 떼어 냄(다시 볼 날에 📅 줄로 붙던 것) · 다시 볼 날 줄 앞 날짜 표시 · v6.46: 새 보고서 바로 반영 — 2분 확인·앱 복귀·보고서 알림 때 보고서 목록만 다시 받음 · v6.45: 포트폴리오 종목 길게 누르기 — 글자 잡힘 막음 · v6.44: 내 지침 '다음 신호'가 판단 조건이면 질문 문장으로 (undefined 나던 것) · v6.43: 한국 발견 — 외국인·기관 연속 순매수만으로는 안 넣고 신호 종목에 강도 표시로만 · v6.42: 섹터 지정을 정의된 섹터에서만(주관식 없앰 · 기타 4 · 메가별 · 한국 칩) · 정의 밖 섹터 정리 카드 · 포트폴리오 섹터 미지정 묶음에 [섹터 고르기] · 표·종목 추가 드롭다운도 같은 목록
+window.AQ_PWA_VERSION = '7.00';   // v7.00: 새 체계 — 매수심사는 아직 없는 종목만(보유 종목은 AI 매니저 의견으로) · 보고서 없으면 함께 받기 · AI 매니저 정할 것 · 포지션 카드(이탈선 · 목표 가격)
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -30304,7 +30304,8 @@ function _brSlot(tk) {
   const r = _brv.st[tk] || {}; const rv = r.review; const act = r.active; const slot = document.getElementById('brBuySlot'), cap = document.getElementById('brCap'); if (!slot) return;
   const spin = '<span class="br-spin"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
   let b = '', c = '';
-  if (_brBusy(rv)) { b = `<button type="button" class="br-busy" onclick="aqBrCancelAsk(${rv.id}, '${escapeAttr(tk)}')">${spin}매수심사 생성 중</button>`; c = '보통 3~10분 · 끝나면 알림 · 누르면 취소'; }
+  if (r.held && _mgAdm() && !_brBusy(rv)) { b = `<button type="button" class="br-done" onclick="aqMgrStockFrom('${escapeAttr(tk)}')">AI 매니저 의견</button>`; c = '보유 종목은 AI 매니저가 매일 봐요'; }   // v7.00
+  else if (_brBusy(rv)) { b = `<button type="button" class="br-busy" onclick="aqBrCancelAsk(${rv.id}, '${escapeAttr(tk)}')">${spin}매수심사 생성 중</button>`; c = '보통 3~10분 · 끝나면 알림 · 누르면 취소'; }
   else if (rv && rv.status === 'done') {   // v6.03: 다른 작업 중이어도 완성된 리포트는 열림 (재심사만 리포트 하단에서 막음)
     const icon = { '매수': '😊 ', '관망': '😐 ', '금지': '😢 ' }[rv.opinion] || ''; b = `<button type="button" class="br-done" onclick="aqBrOpen(${rv.id})">${icon}AI 매수심사 리포트</button>`;
     c = rv.ai_status === 'done' ? `${_brHM(rv.finished_at || rv.requested_at)} 심사` : `AI 분석을 받지 못했어요 — ${escapeHtml(String(rv.ai_error || '이유 미상').slice(0, 30))}`;
@@ -30331,6 +30332,12 @@ async function aqBrRequest(tk) {
   } catch (e) {}
   const focus = (prompt('이번 심사에서 꼭 확인할 것이 있으면 한 줄로 적어 주세요 (비우면 전체 심사)', '') || '').trim();   // v6.38: 요청 목적 → AI가 먼저 답함
   let r = null; try { r = await apiCall('buyReviewRequest', { ticker: tk, focus }); } catch (e) {}
+  if (r && r.needReport) {   // v7.00: 보고서가 없거나 많이 낡음 → 한 번 확인으로 보고서 → 매수심사
+    if (!confirm(r.error)) return;
+    try { r = await apiCall('buyReviewRequest', { ticker: tk, focus, withReport: 1 }); } catch (e) { r = null; }
+    if (r && r.ok) { aqToast('보고서부터 시작했어요 · 끝나면 매수심사가 이어져요'); try { document.getElementById('brSheet')?.remove(); } catch (e) {} aqBrRefresh(tk); return; }
+  }
+  if (r && r.held) { aqToast(r.error); try { aqMgrStockFrom(tk); } catch (e) {} return; }
   if (!r || !r.ok) aqToast((r && r.error) || '요청하지 못했어요');
   else if (r.queued) aqToast(`대기 ${r.pos}번째에 넣었어요`);
   try { document.getElementById('brSheet')?.remove(); } catch (e) {}
@@ -30485,6 +30492,7 @@ function _brReport(rv) {
   if (ai && X.step1 && ai.q1 != null) X.step1.qty = Math.min(X.step1.qty, ai.q1);
   if (ai && X.step2 && ai.q2 != null) X.step2.qty = Math.min(X.step2.qty, ai.q2);
   if (ai && X.step2 && ai.cond2) X.step2.when = ai.cond2;
+  if (ai && ai.v2) { if (X.step2) X.step2.qty = 0; if (X.step1 && ai.stop) X.step1.stop = ai.stop; }   // v7.00: 새 체계 — 첫 진입만 · 손절선 = 이탈선
   const PL = _brv.plans || []; const st = {};   // 저장된 계획이 있으면 그것이 최신 (AI 가이드 수정·토스 체결 반영)
   PL.forEach(p => { const k = p.step === 1 ? 'step1' : 'step2'; if (!X[k]) return; X[k].zone = [p.zone_lo, p.zone_hi]; X[k].qty = p.qty; X[k].stop = p.stop; if (p.cond) X[k].when = p.cond; st[k] = p; });
   _brv.curX = X; const LV = _brLiveState(rv, X); _brv.liveX = !!(LV && LV.x);   // v6.06
@@ -30495,6 +30503,7 @@ function _brReport(rv) {
   let h = `<div class="br-head"><b>${nm} · AI 매수심사</b><small>${D.asof ? _brMD(D.asof) + ' 종가 지표 · ' : ''}${_brHM(rv.requested_at)} 요청${rv.grade && rv.grade.verdict ? ` · 채점 ${escapeHtml(rv.grade.verdict)}${rv.grade.why ? ' (' + escapeHtml(rv.grade.why) + ')' : ''}` : ''}</small></div>`;   // v6.40: 채점은 리포트 머리에
   let key = '';
   if (op === '관망') key = `<div class="br-key y">${ai && ai.recheck ? `${_brDow(ai.recheck)}에 다시 보기` : '며칠 더 지켜보기'}<small>${ai && ai.recheck ? 'AI 가이드가 그날 다시 점검해요' : '그날 다시 심사를 권해요'}</small></div>`;
+  else if (op === '매수' && ai && ai.v2) key = `<div class="br-key g">첫 진입${ai.q1 != null ? ` ${ai.q1}주` : ''}${ai.stop ? ` · 이탈선 ${_brPx(mk, ai.stop)}` : ''}<small>${[ai.target ? `목표 ${_brPx(mk, ai.target)}` : '', ai.rr != null ? `벌 돈 대 잃을 돈 ${Number(ai.rr).toFixed(1)}배` : '', ai.macro ? `거시 ${escapeHtml(String(ai.macro).split(/[—(·]/)[0].trim())}` : ''].filter(Boolean).join(' · ')}</small></div>`;   // v7.00
   else if (op === '매수') key = `<div class="br-key g">선발대 ${_pfM(P.unit * mult, false)} · 두 번에 나눠 사기<small>${escapeHtml(P.double_why || '')}</small></div>`;
   else if (op === '금지') key = `<div class="br-key r">지금은 사지 않기${ai && ai.recheck ? `<small>${_brDow(ai.recheck)}에 다시 보기</small>` : ''}</div>`;
   const _P0 = Number((D.price_now || {}).price || Q.close);
@@ -30594,8 +30603,8 @@ Object.assign(window, { aqBrActionsHtml, aqBrRefresh, aqBrRequest, aqBrOpen, aqB
 // ============================================================================
 const _mg = { d: null, ts: 0, open: {}, f: 'all', all: false, poll: null, st: null, px: {}, pxTs: 0, sc: {}, scTs: {}, scM: 'paper', sort: (() => { try { return localStorage.getItem('aq_mg_sort') || 'op'; } catch (e) { return 'op'; } })(),
   mk: null };   // v6.87: 시장은 앱 맨 위 미국 · 한국 전환을 따름
-const _MG_ACT = ['분할 매도', '추가매수', '분할 매수'];
-const _MG_ORDER = ['분할 매도', '추가매수', '분할 매수', '유지', '대기'];
+const _MG_ACT = ['전량 매도', '절반 매도', '분할 매도', '추가 매수', '추가매수', '분할 매수'];
+const _MG_ORDER = ['전량 매도', '절반 매도', '분할 매도', '추가 매수', '추가매수', '분할 매수', '보유', '유지', '대기'];   // v7.00: 새 체계 이름 (예전 이름도 그대로)
 function _mgAdm() { return document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); }
 const _mgM = v => v == null || !isFinite(v) ? '—' : _mg.mk === 'KR' ? `${aqNum(Math.round(v), 0)}원` : `$${aqNum(Math.round(v), 0)}`;
 const _mgMs = (v, d) => _mg.mk === 'KR' ? `${aqNum(Math.round(v), 0)}원` : `$${aqNum(v, d == null ? 2 : d)}`;   // 부호 없이 금액
@@ -30683,7 +30692,7 @@ function _mgHtml() {
   const nOrd = items.filter(i => i.status !== 'invalid').reduce((a, i) => a + i.legs.length, 0);
   const ap = items.filter(i => !['proposed', 'invalid'].includes(i.status));
   const legsAll = ap.flatMap(i => i.legs); const nF = legsAll.filter(g => g.status === 'filled').length, nW2 = legsAll.filter(g => ['working', 'waiting'].includes(g.status)).length;
-  const sub = !R ? '' : ap.length ? `승인 ${ap.length} · 체결 ${nF} · 주문 중 ${nW2}${nW2 ? ' · 장 마감 때 안 된 주문은 자동 취소' : ''}` : `보유 ${nH} · 관심 ${nW} 점검 · 할 일 ${items.filter(i => i.status === 'proposed').length} · 주문 ${nOrd}건`;
+  const sub = !R ? '' : ap.length ? `승인 ${ap.length} · 체결 ${nF} · 주문 중 ${nW2}${nW2 ? ' · 장 마감 때 안 된 주문은 자동 취소' : ''}` : `보유 ${nH}${D.v2 ? '' : ` · 관심 ${nW}`} 점검 · 할 일 ${items.filter(i => i.status === 'proposed').length} · 주문 ${nOrd}건`;
   h += `<div class="mg-hd"><div class="t"><b>오늘 할 일</b><span>${escapeHtml(stamp)}</span></div>${sub ? `<div class="s">${escapeHtml(sub)}</div>` : ''}`;
   if (R && R.cash != null) { const after = _mgCashAfter(items) + items.filter(i => ['proposed', 'working', 'done', 'partial'].includes(i.status) && !i.legs.some(g => g.side === 'BUY')).reduce((a, i) => a + i.legs.reduce((x, g) => x + g.qty * g.price, 0), 0);
     h += `<div class="mg-cash"><span>현금 · 다 체결되면</span><b>${_mgM(R.cash)} → ${_mgM(after)}</b></div>`; }
@@ -30701,6 +30710,19 @@ function _mgHtml() {
       if (op) h += `<div class="mg-det">${['상황', '이유', '추천', '확인할 것'].filter(k => W[k]).map(k => `<div class="${k === '추천' ? 'rec' : ''}"><b>${k}</b> ${escapeHtml(_mgTx(W[k]))}</div>`).join('')}${it.note ? `<div class="nt">${escapeHtml(_mgTx(it.note))}</div>` : ''}<div>${[...new Set(it.legs.map(g => g.tk))].map(t => `<a onclick="aqMgrStock('${escapeAttr(t)}')">${escapeHtml(_mgTk(t))} 상세 ›</a>`).join(' &nbsp; ')}</div></div>`;
     });
     h += '</div>';
+  }
+  // v7.00: 정할 것 — 보고서 · 매수심사 받기(받기 = 승인 → 바로 시작) · 포지션 카드 초안 확정
+  const DC = (D.decide || []).filter(x => x.id), DR = D.card_drafts || [];
+  if (DC.length || DR.length) {
+    const col = (t, s2) => `<span style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1"><span class="nm">${t}</span><span class="sub" style="white-space:normal">${s2}</span></span>`;
+    h += `<div class="mg-op" style="margin-top:14px"><div class="h"><b>정할 것</b></div><div style="margin-top:10px">`;
+    DC.forEach(x => {
+      const lab = x.kind === 'report+review' ? '보고서 + 매수심사' : x.kind === 'review' ? '매수심사' : (x.act === '보고서 갱신' ? '보고서 갱신' : '보고서');
+      const stt = x.status === 'queued' && !x.confirmed ? `<button class="mg-ok" style="margin-left:auto" onclick="aqMgrDecide(${x.id})">받기</button>` : `<span class="mg-chip" style="margin-left:auto">${{ queued: '대기', started: '작성 중', done: '완료', failed: '실패', skipped: '넘김', cancelled: '취소' }[x.status] || '—'}</span>`;
+      h += `<div class="mg-row"><span class="lg">${_mgLogo(x.tk)}</span>${col(`${escapeHtml(_mgTk(x.tk))} · ${lab}`, escapeHtml(_mgTx(x.why || '')))}${stt}</div>`;
+    });
+    if (DR.length) h += `<div class="mg-row">${col(`포지션 카드 초안 ${DR.length}종목`, '이탈선 · 목표 가격을 확인하고 확정')}<button class="mg-ok" style="margin-left:auto" onclick="aqMgrCardOk('*')">확정</button></div>`;
+    h += '</div></div>';
   }
   // 종목별 의견
   const O = (D.opinions || []).slice();
@@ -30813,6 +30835,18 @@ async function aqMgrCancel(id) {
   aqMcSheetClose(); aqToast(r && r.ok ? '취소했어요' : (r && r.error) || '취소하지 못했어요'); aqHoldScroll(); aqMgrRender(true);
 }
 // ---------- 종목 상세 (매수심사 리포트와 같은 틀) ----------
+function aqMgrStockFrom(tk) { _mg.mk = /^\d[0-9A-Z]{5}$/.test(String(tk)) ? 'KR' : 'US'; aqMgrStock(tk); }   // v7.00: 종목 페이지에서 바로
+async function aqMgrDecide(id) {   // v7.00: 정할 것 — 받기 = 승인 → 바로 시작
+  let r = null; try { r = await apiCall('aiQueueConfirm', { id }); } catch (e) {}
+  aqToast(r && r.ok ? '시작했어요 · 앞 작업이 있으면 끝나는 대로' : ((r && r.error) || '시작하지 못했어요')); aqMgrRender(true);
+}
+async function aqMgrCardOk(tk) {
+  if (tk === '*' && !confirm('포지션 카드 초안을 모두 확정할까요?\n확정 뒤에는 이탈선을 올리기만 해요.')) return;
+  let r = null; try { r = await apiCall('managerCardConfirm', { ticker: tk, mkt: _mg.mk }); } catch (e) {}
+  aqToast(r && r.ok ? `확정했어요${r.confirmed ? ' · ' + r.confirmed.length + '종목' : ''}` : '확정하지 못했어요');
+  if (tk !== '*') aqMgrStock(tk);
+  aqMgrRender(true);
+}
 async function aqMgrStock(tk) {
   document.getElementById('brSheet')?.remove();
   const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
@@ -30832,9 +30866,11 @@ function _mgStockHtml(r) {
   const graded = (r.history || []).find(x => x.grade && x.grade.verdict);
   let h = `<div class="br-head"><b>${nm} · AI 매니저</b><small>${Q.date ? _brMD(Q.date) + ' 종가 지표 · ' : ''}${r.requested_at ? _brHM(r.requested_at) + ' 점검' : ''}${graded ? ` · 지난 채점 ${escapeHtml(graded.grade.verdict)}` : ''}</small></div>`;
   // 신호등
-  const icon = { '분할 매도': '<path d="M20 11v18M14 23l6 6 6-6"/>', '유지': '<path d="M16 13v14M24 13v14"/>', '추가매수': '<path d="M20 11v18M11 20h18"/>', '대기': '<path d="M16 13v14M24 13v14"/>', '분할 매수': '<path d="M20 11v18M11 20h18"/>' };
-  const cls = { '분할 매도': 'r', '유지': 'y', '추가매수': 'g', '대기': 'y', '분할 매수': 'g' };
-  const lamps = S.held ? ['분할 매도', '유지', '추가매수'] : ['대기', '분할 매수'];
+  const _dn = '<path d="M20 11v18M14 23l6 6 6-6"/>', _pa = '<path d="M16 13v14M24 13v14"/>', _pl = '<path d="M20 11v18M11 20h18"/>';
+  const icon = { '분할 매도': _dn, '절반 매도': _dn, '전량 매도': _dn, '유지': _pa, '보유': _pa, '추가매수': _pl, '추가 매수': _pl, '대기': _pa, '분할 매수': _pl };
+  const cls = { '분할 매도': 'r', '절반 매도': 'r', '전량 매도': 'r', '유지': 'y', '보유': 'y', '추가매수': 'g', '추가 매수': 'g', '대기': 'y', '분할 매수': 'g' };
+  const _sells = ['분할 매도', '절반 매도', '전량 매도']; const CD = r.card || null; const _v2 = !!CD || ['보유', '추가 매수', '절반 매도', '전량 매도'].includes(op);   // v7.00
+  const lamps = S.held ? (_v2 ? [_sells.includes(op) ? op : '분할 매도', '보유', '추가 매수'] : ['분할 매도', '유지', '추가매수']) : ['대기', '분할 매수'];
   h += `<div class="br-vc"><div class="br-tl">${lamps.map(n => `<span class="br-lamp ${cls[n]}${op === n ? ' on' : ''}"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${icon[n]}</svg></span>`).join('')}</div>
     <div class="br-tll">${lamps.map(n => `<span class="${op === n ? 'on' : ''}">${n}</span>`).join('')}</div>
     <div class="br-word ${cls[op] || ''}">${escapeHtml(op || 'AI 의견 없음')}</div>${now ? `<div class="br-basis2">${r.requested_at ? _brHM(r.requested_at).split(' ')[1] : ''} · ${_brPx(mk, now)} 기준</div>` : ''}<p class="br-vs">${escapeHtml(A['요약'] || '')}</p></div>`;
@@ -30850,8 +30886,20 @@ function _mgStockHtml(r) {
   h += `<div class="br-card" style="margin-top:12px">${pos ? `<div class="br-st"><span class="k">지금</span><span><b class="${_brC(ret)}">${_brP(ret)}</b><small>평단 ${_brPx(mk, pos.avg)}</small></span><b class="mu">${aqNum(pos.qty, 0)}주</b></div>` : `<div class="br-st"><span class="k">지금</span><span><b>관심</b><small>${S.watch && S.watch.added ? `등록 ${_brMD(S.watch.added)}` : ''}</small></span><b class="mu">${_brPx(mk, now)}</b></div>`}
     ${risk ? `<div class="br-st"><span class="k">비중</span><span><b>${(risk.w * 100).toFixed(1)}%</b><small>${S.group ? `${escapeHtml(S.group)} 그룹 · ` : ''}흔들림 몫 ${(risk.rc * 100).toFixed(1)}%</small></span><b class="mu"></b></div>` : ''}
     ${E ? `<div class="br-st"><span class="k">다음</span><span><b>${_brMD(E.date)} 실적</b><small>${escapeHtml(E.note || '')}</small></span><b class="mu">${E.tdays}거래일</b></div>` : ''}</div>`;
+  // v7.00: 포지션 카드 — 상황 · 이탈선(올리기만) · 목표 가격 · 남은 벌 돈 대 잃을 돈
+  if (CD || A['상황']) {
+    const AC = A.card || {}; const rs = AC.raised; const k = CD && CD.stop && CD.target && now > CD.stop && CD.target > now ? (CD.target - now) / (now - CD.stop) : null;
+    h += `<div class="br-sec">포지션 카드${CD && CD.status === 'draft' ? ' · 초안' : ''}</div><div class="br-card">`
+      + (A['상황'] ? `<div class="br-ln"><span>상황</span><b>${escapeHtml(_mgTx(A['상황']))}</b></div>` : '')
+      + (CD && CD.stop ? `<div class="br-st"><span class="k">이탈선</span><span><b>${_brPx(mk, CD.stop)}</b><small>${rs ? `${_brPx(mk, rs[0])}에서 올림` : '이 아래로 마감하면 줄여요'}</small></span><b class="mu">${now ? _brP((CD.stop / now - 1) * 100) : ''}</b></div>` : '')
+      + (CD && CD.target ? `<div class="br-st"><span class="k">목표</span><span><b>${_brPx(mk, CD.target)}</b><small>${k != null ? `벌 돈 대 잃을 돈 ${k.toFixed(1)}배` : ''}</small></span><b class="mu">${now ? _brP((CD.target / now - 1) * 100) : ''}</b></div>` : '')
+      + (CD && CD.thesis ? `<div class="br-ln"><span>산 이유</span><b>${escapeHtml(_mgTx(CD.thesis))}</b></div>` : '')
+      + (A['보고서 상태'] ? `<div class="br-ln"><span>보고서</span><b>${escapeHtml(_mgTx(A['보고서 상태']))}</b></div>` : '')
+      + (CD && CD.status === 'draft' ? `<div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="mg-ok" onclick="aqMgrCardOk('${escapeAttr(tk)}')">확정</button></div>` : '')
+      + '</div>';
+  }
   // 할 일
-  const sellOp = op === '분할 매도';
+  const sellOp = _sells.includes(op);
   if (P1 && P1.price && P1.qty) {
     const st = (p, live) => `<div class="br-st"><span class="k">${p === P1 ? '1차' : '2차'}</span><span><b>${_brPx(mk, p.price)} · ${p.qty}주</b><small>${escapeHtml(p.note || '')}</small></span><b class="${live ? 'g' : 'y'}">${escapeHtml(live ? '지금' : (p.when || '대기'))}</b></div>`;
     let ln = '';
@@ -30863,7 +30911,8 @@ function _mgStockHtml(r) {
       const n1 = q0 + P1.qty, avg1 = (q0 * a0 + P1.qty * P1.price) / n1;
       ln += `<div class="br-ln"><span>다 사면 평단</span><b>${a0 ? `${_brPx(mk, a0)} → ` : ''}${_brPx(mk, avg1)}${q2 ? ` (2차까지 ${_brPx(mk, (q0 * a0 + P1.qty * P1.price + q2 * P2.price) / (n1 + q2))})` : ''}</b></div>`;
       if (a0 && now && a0 > now) ln += `<div class="br-ln"><span>평단까지</span><b>${_brP((a0 / now - 1) * 100)} → ${_brP((avg1 / now - 1) * 100)} 남음</b></div>`;
-      ln += `<div class="br-ln"><span>이번 매수분 손절</span><b class="down">진입가 −10% · 최대 −${_mgMs(P1.qty * P1.price * 0.1 + (q2 ? q2 * P2.price * 0.1 : 0), 0)}</b></div>`;
+      if (CD && CD.stop && P1.price > CD.stop) ln += `<div class="br-ln"><span>이번 매수분 · 이탈선에 닿으면</span><b class="down">−${_mgMs((P1.price - CD.stop) * P1.qty, 0)}</b></div>`;   // v7.00
+      else ln += `<div class="br-ln"><span>이번 매수분 손절</span><b class="down">진입가 −10% · 최대 −${_mgMs(P1.qty * P1.price * 0.1 + (q2 ? q2 * P2.price * 0.1 : 0), 0)}</b></div>`;
     }
     h += `<div class="br-sec">할 일</div><div class="br-card">${st(P1, !!it)}${P2 && P2.price && P2.qty ? st(P2, false) : ''}${ln}</div>`;
   }
