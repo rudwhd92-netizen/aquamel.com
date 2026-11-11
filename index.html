@@ -87,7 +87,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.04';   // v7.04: 넓은 화면 2단을 세로로 세운 태블릿에서도 (설정 › 화면 › 넓은 화면 2단 = 세로에서도) · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.05';   // v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -4150,8 +4150,7 @@ body[data-mtab="auto"] section.card[data-atab] { display: none !important; }
 body[data-mtab="auto"][data-atab="report"] section.card[data-atab="report"],
 body[data-mtab="auto"][data-atab="review"] section.card[data-atab="review"] { display: block !important; }
 body[data-pc-page="auto"] section.card[data-atab="report"] { display: block !important; }
-body[data-pc-page="auto"]:not([data-role="admin"]) section.card[data-atab="review"] { display: none !important; }
-body:not([data-role="admin"]) #aiSubtabs [data-atab="review"] { display: none !important; }   /* v5.99: AI 매매심사 — 관리자 전용 (일단) */
+/* v7.05: 매매 분석은 일반 사용자도 읽기 (v5.99의 관리자 전용 숨김을 뺌) */
 /* v5.41: 자동운영 진행 중 */
 .eng-hold-h { margin-top: 22px; }
 .insider-archive-item.eng-hold { grid-template-columns: 42px minmax(0, 1fr) auto 28px; }
@@ -17434,7 +17433,7 @@ async function openReportDetail(date) {
 //   한 번에 하나(서버 전체) · 관리자 무제한 · 일반 하루 3건 · 보통 15~30분 · 끝나면 텔레그램·알림
 // ============================================================================
 const _ar = { st: {}, poll: null, tk: null };
-function aqArSlotHtml() { return `<div class="ar-acts br-acts"><span id="arSlot" class="br-slot"><button type="button" class="br-off" disabled>확인 중…</button></span></div><div class="br-cap ar-cap" id="arCap"></div>`; }
+function aqArSlotHtml() { return `<div class="ar-acts br-acts"><span id="arSlot" class="br-slot"><button type="button" class="br-off" disabled>확인 중…</button></span></div><div class="br-cap ar-cap" id="arCap"></div><button type="button" onclick="aqHistOpen(_ar.tk)" style="width:100%;height:44px;margin-top:10px;border:none;border-radius:10px;background:#2a2a2e;color:#d4d4d4;font-size:13.5px;cursor:pointer">크게 움직였을 때 ›</button>`; }   // v7.05: 종목 이력 카드
 function _arBusy(x) { return !!x && (x.status === 'running' || x.ai_status === 'requested'); }
 function _arSlot(tk) {
   const slot = document.getElementById('arSlot'), cap = document.getElementById('arCap'); if (!slot) return;
@@ -29118,11 +29117,10 @@ function setAiSubtab(x) { aqHoldScroll();
   const allowed = ['brief', 'guide', 'manager', 'report', 'review', 'macro'];   // v6.49: AI 비서 · AI 리포트(report=기업 분석, review=매매 분석) · v6.54: macro=거시 분석
   if (!allowed.includes(x)) x = 'brief';
   if (x === 'manager' && !isAdmin) x = 'brief';   // v6.82: AI 매니저는 관리자 계좌 기준
-  if (x === 'review' && !isAdmin) x = 'report';   // v5.99: AI 매매심사 — 관리자 전용 (일단) · v6.49: 일반 사용자는 AI 리포트(기업 분석)로
   document.body.setAttribute('data-atab', x);
   document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === (x === 'review' || x === 'macro' ? 'report' : x)));
   if (x === 'report' || x === 'review' || x === 'macro') { try { localStorage.setItem('aq_rpt_mode', x); } catch (e) {} }
-  try { const tg = `<div class="gd-top"><span class="gd-tog"><button class="${x === 'macro' ? 'on' : ''}" onclick="setAiSubtab('macro')">거시 분석</button><button class="${x === 'report' ? 'on' : ''}" onclick="setAiSubtab('report')">기업 분석</button>${isAdmin ? `<button class="${x === 'review' ? 'on' : ''}" onclick="setAiSubtab('review')">매매 분석</button>` : ''}</span></div>`; document.querySelectorAll('.rpt-togw').forEach(el => { el.innerHTML = tg; }); } catch (e) {}   // v6.54: [거시 분석 | 기업 분석 | 매매 분석(관리자)]
+  try { const tg = `<div class="gd-top"><span class="gd-tog"><button class="${x === 'macro' ? 'on' : ''}" onclick="setAiSubtab('macro')">거시 분석</button><button class="${x === 'report' ? 'on' : ''}" onclick="setAiSubtab('report')">기업 분석</button><button class="${x === 'review' ? 'on' : ''}" onclick="setAiSubtab('review')">매매 분석</button></span></div>`; document.querySelectorAll('.rpt-togw').forEach(el => { el.innerHTML = tg; }); } catch (e) {}   // v6.54: [거시 분석 | 기업 분석 | 매매 분석(관리자)]
   try { if (isAdmin) _bnLoad(); } catch (e) {}
   try { aqAsgBadge(); } catch (e) {}
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
@@ -31245,7 +31243,61 @@ function _rvCard(it, mk, held, watch) {   // v6.21: 색 딱지·칩을 글로 ·
     ${L && L.x ? again('만료 · 다시 심사', 'x') : stale ? again('다시 심사 · 7일 넘은 심사', '') : ''}
   </div>`;
 }
+// v7.05: 일반 사용자 — 매매 분석 읽기 (의견 · 요약 · 그때와 지금 · 틀린 조건만 · 관리자 포지션 · 수량 · 현금은 서버가 뺌)
+async function aqRvPublicRender(force) {
+  const box = document.getElementById('reviewBody'); if (!box) return; const mk = getCurrentMarket();
+  if (force || !_rv.pub || _rv.pubMk !== mk || Date.now() - (_rv.pubTs || 0) > 60e3) {
+    if (!_rv.pub || _rv.pubMk !== mk) box.innerHTML = '<div class="auto-empty">불러오는 중…</div>';
+    let r = null; try { r = await apiCall('reviewPublicList', { market: mk }); } catch (e) {}
+    _rv.pub = r && r.ok ? (r.items || []) : []; _rv.pubMk = mk; _rv.pubTs = Date.now();
+  }
+  const L = _rv.pub; if (!L.length) { box.innerHTML = '<div class="auto-empty">아직 매매 분석이 없어요</div>'; return; }
+  box.innerHTML = '<div style="margin-top:8px">' + L.map(it => `<div class="mg-row" style="align-items:flex-start;padding-top:14px;padding-bottom:14px" onclick="aqRvPublicOpen(${Number(it.id)})"><span class="lg">${_mgLogo(it.ticker)}</span><span style="display:flex;flex-direction:column;gap:4px;min-width:0;flex:1"><span class="nm">${escapeHtml(displayName(it.ticker) || it.ticker)}</span><span class="sub" style="white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(it.summary || '')}</span><span class="sub">${escapeHtml(_rvAgo(it.requested_at))}</span></span><span class="mg-chip ${it.opinion === '매수' ? 'act' : ''}" style="margin-left:auto;flex:0 0 auto">${escapeHtml(it.opinion || '')}</span></div>`).join('') + '</div>';
+}
+async function aqRvPublicOpen(id) {
+  let r = null; try { r = await apiCall('reviewPublicGet', { id }); } catch (e) {}
+  if (!r || !r.ok || !r.review) { aqToast((r && r.error) || '리포트를 불러오지 못했어요'); return; }
+  const v = r.review, mk = v.market, op = v.opinion || '', nm = escapeHtml(displayName(v.ticker) || v.ticker), cls = { '매수': 'g', '관망': 'y', '금지': 'r' }[op] || '';
+  const lamp = (n, c, f) => `<span class="br-lamp ${c}${op === n ? ' on' : ''}"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><circle cx="20" cy="20" r="17"/><circle cx="14" cy="16" r="1.6" fill="#fff"/><circle cx="26" cy="16" r="1.6" fill="#fff"/>${f}</svg></span>`;
+  const sec = (t, body) => body ? `<div class="br-sec">${t}</div><div class="br-card"><div class="br-ai">${_brAiText(body)}</div></div>` : '';
+  let h = `<div class="br-head"><b>${nm} · AI 매수심사</b><small>${v.asof ? _brMD(v.asof) + ' 종가 지표 · ' : ''}${_brHM(v.requested_at)} 심사</small></div>`;
+  h += `<div class="br-vc"><div class="br-tl">${lamp('매수', 'g', '<path d="M12 23 Q20 31 28 23"/>')}${lamp('관망', 'y', '<path d="M13 26 L27 26"/>')}${lamp('금지', 'r', '<path d="M12 29 Q20 21 28 29"/>')}</div>
+    <div class="br-word ${cls}">${escapeHtml(op)}</div>${v.price ? `<div class="br-basis2">${_brPx(mk, v.price)} 기준</div>` : ''}<p class="br-vs">${escapeHtml(v.summary || '')}</p></div>`;
+  if (op !== '매수' && v.recheck) h += `<div class="br-key ${cls || 'y'}">${_brDow(v.recheck)}에 다시 보기</div>`;
+  h += sec('이유', [v.reason1, v.macro ? '거시: ' + v.macro : '', v.overlap ? '이력 겹침: ' + v.overlap : ''].filter(Boolean).join('\n'));
+  h += sec('그때와 지금', v.compare) + sec('틀린 조건', v.invalid);
+  if (v.sources) h += `<details class="br-d"><summary><span class="t">출처</span><span class="s">${String(v.sources).split('\n').filter(x => x.trim()).length}개</span><span class="c">▾</span></summary><div class="br-db br-ai">${_brAiText(v.sources)}</div></details>`;
+  document.getElementById('brSheet')?.remove();
+  const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
+  d.innerHTML = `<div class="br-bar"><div class="aq-uni-gripwrap"><div class="aq-uni-grip" aria-hidden="true"></div></div><button class="aq-uni-x" onclick="document.getElementById('brSheet').remove()">✕</button><span>AI 매수심사 리포트</span></div><div class="br-body" id="brSheetBody">${h}</div>`;
+  document.body.appendChild(d);
+}
+// v7.05: 종목 이력 카드 — 크게 내렸을 때 · 올랐을 때의 환경 (모든 사용자 · 서버가 구간과 숫자를 계산, 저장된 '급락 앞 · 급등 앞 조건'이 있으면 함께)
+async function aqHistOpen(tk) {
+  tk = String(tk || '').toUpperCase(); if (!tk) return;
+  document.getElementById('brSheet')?.remove();
+  const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
+  d.innerHTML = `<div class="br-bar"><div class="aq-uni-gripwrap"><div class="aq-uni-grip" aria-hidden="true"></div></div><button class="aq-uni-x" onclick="document.getElementById('brSheet').remove()">✕</button><span>크게 움직였을 때</span></div><div class="br-body" id="brSheetBody"><div class="auto-empty">불러오는 중…</div></div>`;
+  document.body.appendChild(d);
+  let r = null; try { r = await apiCall('histCard', { ticker: tk }); } catch (e) {}
+  const body = document.getElementById('brSheetBody'); if (!body) return;
+  if (!r || !r.ok) { body.innerHTML = `<div class="auto-empty">${escapeHtml((r && r.error) || '불러오지 못했어요')}</div>`; return; }
+  const pc = (x, n) => x == null ? '—' : `${x >= 0 ? '+' : '−'}${Math.abs(x * 100).toFixed(n == null ? 1 : n)}%`; const f = (x, n) => x == null ? '—' : Number(x).toFixed(n || 0);
+  const dd = s2 => { const t = String(s2 || ''); return `${t.slice(2, 4)}.${t.slice(5, 7)}.${t.slice(8, 10)}`; };
+  const row = (e, up) => { const v = e.env || {}, du = e.during || {};
+    return `<div class="br-st"><span class="k" style="width:auto;min-width:118px">${dd(e.start)} ~ ${dd(e.end).slice(3)}</span><span><b class="${up ? 'up' : 'down'}">${pc(e.pct)}</b><small>${e.days}거래일 · ${escapeHtml(r.bench)} ${pc(du.mkt)} · 금리 ${f(v.tnx, 2)}→${f(du.tnx1, 2)}% · VIX ${f(v.vix)}→${f(du.vix1)}</small></span></div>`; };
+  const list = (t, a, up) => `<div class="br-sec">${t} ${a.length}</div><div class="br-card">${a.length ? a.slice().reverse().map(e => row(e, up)).join('') : '<div class="br-ln"><span>기준에 닿은 적 없음</span></div>'}</div>`;
+  const ai = r.ai || {}; const sec = (t, b) => b ? `<div class="br-sec">${t}</div><div class="br-card"><div class="br-ai">${_brAiText(b)}</div></div>` : '';
+  const N = r.now || {};
+  let h = `<div class="br-head"><b>${escapeHtml(displayName(tk) || tk)}</b><small>60거래일 안에 ${Math.round(r.rule.drop * 100)}% 이상 내림 · +${Math.round(r.rule.rise * 100)}% 이상 오름 · 최근 ${r.rule.years}년</small></div>`;
+  h += sec('크게 내리기 전에 자주 보인 것', ai.down) + sec('크게 오르기 전에 자주 보인 것', ai.up);
+  h += `<div class="br-sec">지금</div><div class="br-card"><div class="br-ln"><span>직전 60일</span><b>${pc(N.ret60)}</b></div><div class="br-ln"><span>RSI · 120일선 대비</span><b>${f(N.rsi)} · ${pc(N.vs120)}</b></div><div class="br-ln"><span>${escapeHtml(r.bench)} 직전 60일</span><b>${pc(N.mkt60)}</b></div><div class="br-ln"><span>미 10년 금리 · VIX</span><b>${f(N.tnx, 2)}% · ${f(N.vix)}</b></div></div>`;
+  h += list('크게 내린 구간', r.down || [], false) + list('크게 오른 구간', r.up || [], true);
+  body.innerHTML = h;
+}
+window.aqRvPublicOpen = aqRvPublicOpen; window.aqHistOpen = aqHistOpen;
 async function aqReviewRender(force) {
+  if (!_mgAdm()) return aqRvPublicRender(force);   // v7.05
   const box = document.getElementById('reviewBody'); if (!box) return; const mk = getCurrentMarket(); clearTimeout(_rv.poll);
   if (force || !_rv.data || _rv.mk !== mk || Date.now() - _rv.ts > 60e3) {
     if (!_rv.data || _rv.mk !== mk) box.innerHTML = '<div class="auto-empty">불러오는 중…</div>';
