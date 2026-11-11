@@ -98,7 +98,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.09';   // v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.10';   // v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -1590,6 +1590,29 @@ table.sheet tbody tr.drop-below td:last-child {
 
 /* v3.47: 자산 보유 현황 패널 — 헤더는 유지, 차트/필터/이력만 가림 */
 #positionPanel { display: none; }
+/* v7.10: 종목 지도 탭 */
+#mapPanel { display: none; padding: 2px 2px 32px; }
+body.modal-map-mode #mapPanel { display: block; }
+body.modal-map-mode #chartModal .chart-wrap, body.modal-map-mode #chartModal .modal-filter-block,
+body.modal-map-mode #chartModal .modal-report-banner, body.modal-map-mode #chartModal .ticker-history-wrap { display: none !important; }
+.sm-head { display: flex; align-items: center; gap: 8px; margin: 14px 4px 4px; font-size: 12.5px; color: var(--text-mute, #8b8b90); }
+.sm-chip { padding: 3px 10px; border-radius: 999px; background: #2a2a2e; color: #d4d4d4; font-size: 12px; font-weight: 600; }
+.sm-chip.ok { background: rgba(94,234,212,.12); color: #5eead4; }
+.sm-cell { padding: 18px 4px; border-bottom: 1px solid var(--line, rgba(255,255,255,.06)); }
+.sm-k { font-size: 12.5px; color: var(--text-mute, #8b8b90); margin-bottom: 8px; }
+.sm-v { font-size: 15px; line-height: 1.6; color: var(--text, #e8e8ea); word-break: keep-all; overflow-wrap: anywhere; }
+.sm-v div + div { margin-top: 5px; }
+.sm-src { font-size: 11.5px; color: var(--text-mute, #6b6b70); margin-top: 9px; }
+.sm-empty { text-align: center; padding: 60px 12px 44px; color: var(--text-mute, #8b8b90); font-size: 14px; line-height: 1.7; }
+.sm-btn { height: 46px; padding: 0 22px; border: none; border-radius: 12px; background: #2a2a2e; color: #e8e8ea; font-size: 14.5px; font-weight: 600; cursor: pointer; }
+.sm-btn.pri { background: #e8e8ea; color: #121214; }
+.sm-btn:disabled { opacity: .4; cursor: default; }
+.sm-cap { font-size: 12px; color: var(--text-mute, #6b6b70); margin-top: 10px; }
+.sm-ta { width: 100%; min-height: 200px; box-sizing: border-box; background: #1c1c1f; color: #e8e8ea; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 12px; font-size: 14.5px; line-height: 1.6; font-family: inherit; }
+[data-theme="light"] .sm-chip, [data-theme="light"] .sm-btn { background: rgba(0,0,0,.06); color: #222; }
+[data-theme="light"] .sm-btn.pri { background: #222; color: #fff; }
+[data-theme="light"] .sm-chip.ok { background: rgba(13,148,136,.12); color: #0d9488; }
+[data-theme="light"] .sm-ta { background: #fff; color: #222; border-color: rgba(0,0,0,.12); }
 body.modal-pos-mode #positionPanel { display: block; }
 body.modal-pos-mode #chartModal .chart-wrap,
 body.modal-pos-mode #chartModal .modal-filter-block,
@@ -10606,10 +10629,12 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
       <div class="modal-view-tabs" id="modalViewTabs">
         <button class="xtab-btn active" data-view="chart" onclick="aqSetModalView('chart')">차트</button>
         <button class="xtab-btn" data-view="report" onclick="aqSetModalView('report')">AI 보고서<span class="mvt-action an-action-pill" id="modalReportVerdict" style="display:none"></span></button>
+        <button class="xtab-btn" data-view="map" onclick="aqSetModalView('map')">종목 지도</button>
         <button class="xtab-btn" data-view="position" onclick="aqSetModalView('position')">내 주식</button>
       </div>
       <!-- v3.47: 자산 보유 현황 패널 (자산 탭 종목 클릭 시 기본 표시, 차트로 돌아가기로 차트 전환) -->
       <div id="positionPanel"></div>
+      <div id="mapPanel"></div>   <!-- v7.10: 종목 지도 -->
       <div class="modal-filter-block aq-old-filter">
         <div class="aq-coll-head" onclick="aqToggleColl(this)">
           <h4 class="ticker-history-title" style="margin:0;">Signal Type 필터</h4>
@@ -16903,10 +16928,13 @@ function _aqSetActiveTab(view) {
   bar.querySelectorAll('.xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
 }
 function aqSetModalView(view) {
-  document.body.classList.remove('modal-pos-mode');
+  document.body.classList.remove('modal-pos-mode'); document.body.classList.remove('modal-map-mode');
   document.body.classList.remove('modal-report-mode');
   if (view === 'report') {
     if (typeof openReportPanel === 'function') openReportPanel();
+  } else if (view === 'map') {   // v7.10: 종목 지도
+    const rp = document.getElementById('reportPanel'); if (rp) rp.style.display = 'none';
+    document.body.classList.add('modal-map-mode'); aqMapOpen(_state.openTicker);
   } else if (view === 'position') {
     const rp = document.getElementById('reportPanel'); if (rp) rp.style.display = 'none';
     if (typeof openPositionPanel === 'function') openPositionPanel(_state.openTicker);
@@ -16918,9 +16946,62 @@ function aqSetModalView(view) {
   _aqSetActiveTab(view);
 }
 window.aqSetModalView = aqSetModalView;
+// v7.10: 종목 지도 — 종목마다 한 장 '무엇에 영향을 받는가' (없으면 만들기 요청 · 일반 사용자 하루 3회 · 관리자는 칸 고치기 · 확정 · 다시 만들기)
+const _sm = { tk: null, d: null, poll: null };
+const _smEsc = s => escapeHtml(String(s == null ? '' : s));
+async function aqMapOpen(tk, quiet) {
+  tk = String(tk || _state.openTicker || '').toUpperCase().trim(); const box = document.getElementById('mapPanel'); if (!box || !tk) return;
+  clearTimeout(_sm.poll);
+  if (_sm.tk !== tk) { _sm.d = null; _sm.tk = tk; }
+  if (!_sm.d) box.innerHTML = '<div class="sm-empty">불러오는 중…</div>'; else if (!quiet) box.innerHTML = _smHtml(_sm.d);
+  let r = null; try { r = await apiCall('stockMapGet', { ticker: tk }); } catch (e) {}
+  if (_sm.tk !== tk) return;
+  if (!r || !r.ok) { if (!_sm.d) box.innerHTML = `<div class="sm-empty">${r && r.error === 'login required' ? '로그인하면 볼 수 있어요' : '불러오지 못했어요'}</div>`; return; }
+  _sm.d = r; box.innerHTML = _smHtml(r);
+  if (r.req && (r.req.status === 'queued' || r.req.status === 'requested')) _sm.poll = setTimeout(() => { if (document.body.classList.contains('modal-map-mode') && String(_state.openTicker || '').toUpperCase() === tk) aqMapOpen(tk, true); }, 60e3);
+}
+function _smHtml(r) {
+  if (r.unsupported) return '<div class="sm-empty">한국 종목은 준비 중이에요</div>';
+  const busy = !!(r.req && (r.req.status === 'queued' || r.req.status === 'requested')); const M = r.map; let h = '';
+  if (!M) {
+    if (busy) return `<div class="sm-empty">종목 지도를 만들고 있어요<div class="sm-cap">${r.req.status === 'queued' && r.req.ahead ? `앞에 ${r.req.ahead}개 · ` : ''}보통 5~10분</div></div>`;
+    h = '<div class="sm-empty">아직 종목 지도가 없어요';
+    if (r.req && r.req.status === 'failed') h += '<div class="sm-cap">지난 요청은 만들지 못했어요</div>';
+    h += `<div style="margin-top:18px"><button class="sm-btn pri" ${r.can ? '' : 'disabled'} onclick="aqMapRequest()">종목 지도 만들기</button></div>`;
+    if (!r.admin) h += `<div class="sm-cap">오늘 ${r.left}회 남음</div>`;
+    return h + '</div>';
+  }
+  const dt = M.asof ? String(M.asof).slice(5).replace('-', '/') : '';
+  h += `<div class="sm-head"><span class="sm-chip ${M.status === 'confirmed' ? 'ok' : ''}">${M.status === 'confirmed' ? '확정' : '초안'}</span>${dt ? `<span>${dt} 기준</span>` : ''}${busy ? '<span>· 다시 만드는 중</span>' : ''}</div>`;
+  h += (M.cells || []).map((c, i) => `<div class="sm-cell"${r.admin && !c.srv ? ` onclick="aqMapEdit(${i})" style="cursor:pointer"` : ''}><div class="sm-k">${_smEsc(c.k)}</div><div class="sm-v">${(c.v || []).map(x => `<div>${_smEsc(x)}</div>`).join('')}</div>${c.src ? `<div class="sm-src">${_smEsc(c.src)}</div>` : ''}</div>`).join('');
+  if (r.admin) h += `<div style="display:flex;gap:10px;margin:22px 4px 0">${M.status !== 'confirmed' ? '<button class="sm-btn pri" style="flex:1" onclick="aqMapConfirm()">확정</button>' : ''}<button class="sm-btn" style="flex:1" ${busy || !r.can ? 'disabled' : ''} onclick="aqMapRequest()">다시 만들기</button></div>`;
+  return h;
+}
+async function aqMapRequest() {
+  const tk = _sm.tk; if (!tk) return;
+  let r = null; try { r = await apiCall('stockMapRequest', { ticker: tk }); } catch (e) {}
+  if (!r || !r.ok) { aqToast((r && r.error) || '요청하지 못했어요'); return; }
+  aqToast('종목 지도를 만들기 시작했어요'); aqMapOpen(tk, true);
+}
+async function aqMapConfirm() {
+  const tk = _sm.tk; let r = null; try { r = await apiCall('stockMapConfirm', { ticker: tk }); } catch (e) {}
+  if (!r || !r.ok) { aqToast((r && r.error) || '확정하지 못했어요'); return; }
+  aqToast('확정했어요'); aqMapOpen(tk, true);
+}
+function aqMapEdit(i) {
+  const c = _sm.d && _sm.d.map && _sm.d.map.cells[i]; if (!c || c.srv || !_sm.d.admin) return;
+  _mcSheet(`<div style="padding:4px 2px 8px"><div class="sm-k" style="margin-bottom:10px">${_smEsc(c.k)}</div><textarea id="smEditTa" class="sm-ta">${_smEsc((c.v || []).join('\n'))}</textarea><div class="sm-cap">한 줄에 하나 · 비우면 이 칸을 빼요</div><button class="sm-btn pri" style="width:100%;margin-top:14px" onclick="aqMapEditSave(${i})">저장</button></div>`);
+}
+async function aqMapEditSave(i) {
+  const c = _sm.d && _sm.d.map && _sm.d.map.cells[i]; const ta = document.getElementById('smEditTa'); if (!c || !ta) return;
+  let r = null; try { r = await apiCall('stockMapEdit', { ticker: _sm.tk, k: c.k, text: ta.value }); } catch (e) {}
+  if (!r || !r.ok) { aqToast((r && r.error) || '저장하지 못했어요'); return; }
+  try { aqMcSheetClose(); } catch (e) {} aqMapOpen(_sm.tk, true);
+}
 async function openReportPanel() {
   const tk = _state.openTicker;
   if (!tk) return;
+  document.body.classList.remove('modal-map-mode');
   _state.reportMode = 'detail';
   // v3.70: hero(제목/로고/가격/섹터)는 그대로 둔 채 아래 영역만 보고서로 교체 — 전환 시 hero가 안 움직임
   document.body.classList.add('modal-report-mode');
@@ -17043,12 +17124,12 @@ function openPositionPanel(tk) {
     panel.addEventListener('contextmenu', (e) => { if (e.target.closest('.pos-order[data-trade-id]')) e.preventDefault(); });
     panel._lpBound = true;
   }
-  document.body.classList.add('modal-pos-mode');
+  document.body.classList.remove('modal-map-mode'); document.body.classList.add('modal-pos-mode');
   if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('position');
 }
 window.openPositionPanel = openPositionPanel;
 function closePositionPanel() {
-  document.body.classList.remove('modal-pos-mode');
+  document.body.classList.remove('modal-pos-mode'); document.body.classList.remove('modal-map-mode');
   if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('chart');
   try { if (_chart && typeof _chart.resize === 'function') _chart.resize(); } catch (e) {}
 }
@@ -22229,7 +22310,7 @@ async function fetchAdhocOhlcv(ticker) {
 
 async function openChart(ticker) {
   const _freshOpen = !$('chartModal').classList.contains('active');
-  if (_freshOpen) { document.body.classList.remove('modal-pos-mode'); document.body.classList.remove('modal-report-mode'); const _rp0 = document.getElementById('reportPanel'); if (_rp0) _rp0.style.display = 'none'; if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('chart'); }
+  if (_freshOpen) { document.body.classList.remove('modal-pos-mode'); document.body.classList.remove('modal-map-mode'); document.body.classList.remove('modal-report-mode'); const _rp0 = document.getElementById('reportPanel'); if (_rp0) _rp0.style.display = 'none'; if (typeof _aqSetActiveTab === 'function') _aqSetActiveTab('chart'); }
   // v2.31: 매크로 상관관계 종목 리스트 잔상 제거 (일반 종목 모달엔 표시 X)
   const _oldCorr = document.getElementById('macroCorrWrap');
   if (_oldCorr) _oldCorr.remove();
@@ -22747,7 +22828,7 @@ window.syncWatchButton = syncWatchButton;
 function closeModal() {
   try { if (typeof aqTtsStop === 'function') aqTtsStop(); } catch (e) {}   // v6.78: 읽어 주기 멈춤
   $('chartModal').classList.remove('active');  if (_chart) { _chart.destroy(); _chart = null; }
-  document.body.classList.remove('modal-pos-mode');
+  document.body.classList.remove('modal-pos-mode'); document.body.classList.remove('modal-map-mode');
   // v1.23: 모바일 미니 차트도 정리
   if (_miniChart) { try { _miniChart.destroy(); } catch (e) {} _miniChart = null; }
   // v1.19: 매크로 모드 정리 — 다음 일반 ticker 열기 위해 영역들 복원
