@@ -15,7 +15,11 @@ iframe { width: 430px; max-width: 100%; height: 100%; border: 0; border-left: 1p
 <script>
 // v6.32: PC 화면 없앰 — 넓은 화면에서는 앱(모바일 화면)을 가운데 폭 430px 틀에 띄움. 좁은 화면으로 열면 앱으로 바로.
 (function () {
-  try { if (!window.matchMedia('(min-width: 1025px)').matches) { location.replace('./' + location.search + location.hash); } } catch (e) {}
+  // v6.90: 넓은 화면 2단이 켜져 있고(기본) 가로 · 폭 900 · 높이 600 이상이면 앱으로 바로 (틀 없이 2단)
+  try {
+    var wide = localStorage.getItem('aq_wide') !== '0' && window.matchMedia('(min-width: 900px) and (min-height: 600px) and (orientation: landscape)').matches;
+    if (wide || !window.matchMedia('(min-width: 1025px)').matches) { location.replace('./' + location.search + location.hash); }
+  } catch (e) {}
 })();
 </script>
 </head>
