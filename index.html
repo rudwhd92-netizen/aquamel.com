@@ -10,7 +10,12 @@
   // v7.04: 설정 › 넓은 화면 2단 = '세로에서도'(aq_wide='p')면 세로로 세운 태블릿에서도 2단 — 왼쪽 칸 폭은 화면에 맞춰 340~430 (좌우 반반)
   var MODE = null; try { MODE = localStorage.getItem('aq_wide'); } catch (e) {}
   var Q = MODE === 'p' ? '(min-width: 700px) and (min-height: 600px)' : '(min-width: 900px) and (min-height: 600px) and (orientation: landscape)'; window.AQ_WIDE_Q = Q;
-  function vw() { if (MODE !== 'p') return 430; var W = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0; return W > 0 ? Math.max(340, Math.min(430, Math.floor((W - 84) / 2))) : 430; }
+  function vw() {
+    var W = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0;
+    var u = 0; try { u = parseInt(localStorage.getItem('aq_wide_c_' + (W > (window.innerHeight || 0) ? 'l' : 'p')), 10) || 0; } catch (e) {}   // v7.09: 가운데 경계선을 끌어 정한 폭 (가로 · 세로 따로)
+    if (u > 0 && W > 0) return Math.round(Math.max(340, Math.min(u, 900, W - 84 - 360)));
+    if (MODE !== 'p') return 430; return W > 0 ? Math.max(340, Math.min(430, Math.floor((W - 84) / 2))) : 430;
+  }
   window.aqWideVW = vw; window.AQ_WIDE_VW = vw();
   function want() { try { return window.self === window.top && localStorage.getItem('aq_wide') !== '0' && mm(Q).matches; } catch (e) { return false; } }
   window.aqWideWant = want; window.AQ_WIDE = want();
@@ -34,7 +39,7 @@
     if (window.AQ_WIDE) { var r = ev(q, window.AQ_WIDE_VW); if (r !== null) return { matches: r, media: String(q), onchange: null, addListener: function () {}, removeListener: function () {}, addEventListener: function () {}, removeEventListener: function () {}, dispatchEvent: function () { return false; } }; }
     return mm(q);
   };
-  if (window.AQ_WIDE) { document.documentElement.classList.add('aq-wide'); if (MODE === 'p') document.documentElement.style.setProperty('--aqC', window.AQ_WIDE_VW + 'px'); }
+  if (window.AQ_WIDE) { document.documentElement.classList.add('aq-wide'); if (window.AQ_WIDE_VW !== 430) document.documentElement.style.setProperty('--aqC', window.AQ_WIDE_VW + 'px'); }
 })();</script>
 <!-- v2.55: HTTP cache 우회 — index.html이 GitHub Pages CDN cache 또는 브라우저 cache로 stale되는 것 방지 -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -93,7 +98,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.08';   // v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.09';   // v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -9075,6 +9080,14 @@ html.aq-wide .modal-overlay > .modal-content { width: 100% !important; }
 /* 왼쪽 칸에 붙는 것 — 알림 창 · 토스트 */
 html.aq-wide .noti-pop { left: calc(var(--aqR) + 10px) !important; right: auto !important; width: calc(var(--aqC) - 20px) !important; }
 html.aq-wide .aq-toast { left: calc(var(--aqR) + var(--aqC) / 2) !important; }
+/* v7.09: 가운데 경계선 — 끌어서 왼쪽 칸 폭 조정 */
+.aq-split { display: none; }
+html.aq-wide .aq-split { display: block; position: fixed; top: 0; bottom: 0; left: calc(var(--aqL) - 10px); width: 20px; z-index: 100002; cursor: col-resize; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+html.aq-wide .aq-split::before { content: ""; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: transparent; }
+html.aq-wide .aq-split::after { content: ""; position: absolute; left: 7px; top: 50%; width: 6px; height: 48px; margin-top: -24px; border-radius: 3px; background: rgba(255,255,255,.22); }
+[data-theme="light"].aq-wide .aq-split::after, html.aq-wide [data-theme="light"] .aq-split::after { background: rgba(0,0,0,.22); }
+html.aq-wide .aq-split.drag::before, html.aq-wide .aq-split.drag::after { background: #4a9eff; }
+.splash-overlay:not(.fade-out) ~ .aq-split, html:has(.aq-auth.open) .aq-split { display: none !important; }   /* 시작 화면 · 로그인 화면 위에는 안 보이게 */
 </style>
 <script>
 /* v6.90: 넓은 화면 2단 — CSS @media를 폭 430(폰 화면) 기준으로 다시 판정 · 화면을 돌리거나 창 크기를 바꾸면 다시 맞춤 */
@@ -9105,6 +9118,27 @@ html.aq-wide .aq-toast { left: calc(var(--aqR) + var(--aqC) / 2) !important; }
   }
   window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(sync, 200); });
   window.addEventListener('orientationchange', function () { clearTimeout(t); t = setTimeout(sync, 300); });
+})();
+/* v7.09: 가운데 경계선을 끌어 왼쪽 칸 폭 조정 — 이 기기에 저장 (가로 · 세로 따로) · 두 번 누르면 처음 폭 */
+(function () {
+  var R = 84;
+  function key() { return 'aq_wide_c_' + (window.innerWidth > window.innerHeight ? 'l' : 'p'); }
+  function lim(v) { var W = window.innerWidth || 0; return Math.round(Math.max(340, Math.min(v, 900, W - R - 360))); }
+  function apply(v) { window.AQ_WIDE_VW = v; document.documentElement.style.setProperty('--aqC', v + 'px'); try { window.aqWideCss(true); } catch (e) {} try { window.dispatchEvent(new Event('resize')); } catch (e) {} }
+  function init() {
+    var el = document.createElement('div'); el.className = 'aq-split'; el.id = 'aqSplit'; el.setAttribute('role', 'separator'); el.setAttribute('aria-label', '칸 너비 조정'); document.body.appendChild(el);
+    var on = false, moved = false, x0 = 0, cur = 0, last = 0;
+    el.addEventListener('pointerdown', function (e) { if (!window.AQ_WIDE) return; on = true; moved = false; x0 = e.clientX; cur = 0; el.classList.add('drag'); try { el.setPointerCapture(e.pointerId); } catch (_) {} e.preventDefault(); });
+    el.addEventListener('pointermove', function (e) { if (!on) return; if (Math.abs(e.clientX - x0) > 3) moved = true; if (!moved) return; cur = lim(e.clientX - R); document.documentElement.style.setProperty('--aqC', cur + 'px'); });
+    function end() {
+      if (!on) return; on = false; el.classList.remove('drag');
+      if (moved && cur) { try { localStorage.setItem(key(), String(cur)); } catch (_) {} apply(cur); last = 0; return; }
+      var n = Date.now();
+      if (n - last < 400) { last = 0; try { localStorage.removeItem(key()); } catch (_) {} apply(window.aqWideVW()); } else last = n;
+    }
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+  }
+  if (document.body) init(); else document.addEventListener('DOMContentLoaded', init);
 })();
 /* 설정 › 넓은 화면 2단 켜기 · 끄기 (이 기기에 저장) */
 function aqWideCapable() { try { var a = Math.max(screen.width, screen.height), b = Math.min(screen.width, screen.height); return a >= 900 && b >= 600; } catch (e) { return false; } }
