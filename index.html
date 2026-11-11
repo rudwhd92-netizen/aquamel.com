@@ -83,7 +83,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.02';   // v7.02: 설정 › 관리자 › 신호 자동 연계 — 켠 신호 유형은 발견에 뜨면 AI 보고서(없을 때) → AI 매수심사까지 확인 없이 (미국) · v7.01: 매수심사 리포트 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.03';   // v7.03: 밸런스 데칼코마니 차트를 종목 차트와 같은 모양으로 + 지금 가격(종목 · 그룹)을 다음 칸에 · v7.02: 신호 자동 연계 · v7.01: 매수심사 리포트 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -23850,6 +23850,7 @@ function aqLiveApply() {
     el.innerHTML = L && avg > 0 ? '보유 ' + aqSgPct((L.p / avg - 1) * 100, 1) : el.dataset.lo;
   });
   try { _aqLiveBoardTick(); } catch (e) {}
+  try { _balMrLive(); } catch (e) {}   // v7.03: 밸런스 데칼코마니 차트
   // 종목 창 가격 줄
   try {
     const mp = document.getElementById('modalPrice');
@@ -27064,30 +27065,90 @@ function aqBalMirror(tk) {
   if (!g || !c || !c.res[g.id] || !X || X.some(x => x == null)) { openChart(tk); return; }
   const G = g.series, M = _balMirrorCalc(G, X), m = c.res[g.id];
   const cum = a => { let p = 1; return [0].concat(a.map(r => (p *= 1 + r) - 1)); }; const cg = cum(G), cx = cum(X);   // 61점 (첫날 0%)
-  const W = 354, H = 196, N = cg.length - 1, sx = i => i * W / N;
-  let top = Math.max(...cg, ...cx), bot = Math.min(...cg, ...cx); const pad = (top - bot) * 0.08 || 0.01; top += pad; bot -= pad;
-  const sy = v => H - (v - bot) / (top - bot) * H, pts = a => a.map((v, i) => `${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join(' ');
   const lab = i => { const d = String(R.days[i]); return `${+d.slice(5, 7)}/${+d.slice(8, 10)}`; };
   const pc = v => `${v >= 0 ? '+' : '−'}${Math.abs(v * 100).toFixed(1)}%`;
-  const band = M.segs.map(z => `<rect x="${sx(z.i).toFixed(1)}" y="0" width="${(sx(z.j + 1) - sx(z.i)).toFixed(1)}" height="${H}" fill="rgba(86,156,214,0.13)"/>`).join('');
-  const dots = M.days.map(t => `<circle cx="${sx(t + 1).toFixed(1)}" cy="${sy(cx[t + 1]).toFixed(1)}" r="3.2" fill="#569cd6" stroke="#1c1c1f" stroke-width="1.5"/>`).join('');
-  const xl = [0, 20, 40, N].map((i, k) => `<text x="${sx(i).toFixed(1)}" y="216" font-size="10" fill="#8a8a8a" text-anchor="${k === 0 ? 'start' : k === 3 ? 'end' : 'middle'}">${lab(i)}</text>`).join('');
-  const zy = bot < 0 && top > 0 ? `<line x1="0" y1="${sy(0).toFixed(1)}" x2="${W}" y2="${sy(0).toFixed(1)}" stroke="#3a3a3e" stroke-width="1" stroke-dasharray="3 4"/>` : '';
-  const svg = `<svg id="balMrSvg" viewBox="0 0 ${W} 220" role="img" aria-label="60거래일 ${escapeAttr(g.name)} 그룹과 ${escapeAttr(displayName(tk))}">${band}${zy}
-    <polyline points="${pts(cg)}" fill="none" stroke="#a8a8a8" stroke-width="2" stroke-linejoin="round"/><polyline points="${pts(cx)}" fill="none" stroke="#569cd6" stroke-width="2.2" stroke-linejoin="round"/>${dots}${xl}
-    <text x="${W}" y="12" font-size="10" fill="#8a8a8a" text-anchor="end">${pc(top)}</text><text x="${W}" y="${H - 4}" font-size="10" fill="#8a8a8a" text-anchor="end">${pc(bot)}</text>
-    <g id="balMrX" style="display:none"><line id="balMrXl" y1="0" y2="${H}" stroke="#8a8a8a" stroke-width="1"/><circle id="balMrXg" r="4" fill="#a8a8a8" stroke="#1c1c1f" stroke-width="1.5"/><circle id="balMrXx" r="4.4" fill="#569cd6" stroke="#1c1c1f" stroke-width="1.5"/></g></svg>`;
   const segs = M.segs.slice().sort((a, b) => b.s - a.s).map(z => `<div class="bal-mr-z"><i></i><b>${lab(z.i)}~${lab(z.j + 1)}</b><span>${pc(z.rg)} → <em>${pc(z.rx)}</em></span></div>`).join('');
   const tile = (lb, n) => `<div class="bal-tile"><span>${lb}</span>${_balGrade(n)}${_balMeter(n, 'w')}</div>`;
   _mcSheet(`<div class="bal-mr"><div class="bal-mr-h"><div class="nm"><b>${escapeHtml(displayName(tk))}</b><span>${escapeHtml(displaySub(tk))}</span></div><button type="button" class="bal-mr-x" aria-label="닫기" onclick="aqMcSheetClose()">✕</button></div>
-    <div class="bal-mr-lg"><span><i style="background:#a8a8a8"></i>${escapeHtml(g.name)} 그룹</span><span><i style="background:#569cd6"></i>${escapeHtml(displayName(tk))}</span></div>
-    <div class="bal-mr-ch">${svg}<div class="bal-mr-tip" id="balMrTip"></div></div>
+    <div class="bal-mr-lg"><span><i style="background:#569cd6"></i>${escapeHtml(g.name)} 그룹</span><span><i style="background:#ffffff"></i>${escapeHtml(displayName(tk))}</span></div>
+    <div class="bal-mr-ch" style="height:232px"><canvas id="balMrCanvas"></canvas></div>
     <div class="bal-mr-seg">${segs}<div class="bal-mr-d"><i></i><span>반대로 움직인 날 <b>${M.days.length}일</b></span></div></div>
     <div class="bal-tiles${m.K != null ? ' t3' : ''}">${tile('빠질 때', _balLvD(m.D))}${tile('오를 때', _balLvC(m.C))}${m.K != null ? tile('급락일', _balLvD(m.K)) : ''}</div>
     <button type="button" class="mc-go" style="background:#3a3a3e;color:#fff" onclick="aqBalMirrorGo('${escapeAttr(tk)}')">종목 페이지 ›</button></div>`);
-  _balMrBind({ cg, cx, G, X, days: R.days, N, W, H, sx, sy, lab, pc, gName: g.name, tkName: displayName(tk) });
+  _balMrChart({ tk, cg, cx, G, X, days: R.days.slice(), M, pc, gName: g.name, tkName: displayName(tk), mem: g.mem || [] });
 }
-// v6.77: 데칼코마니 차트 — 손가락·마우스를 올린 날에 세로선 + 그룹·종목 누적(그날 하루) 표시
+// v7.03: 데칼코마니 차트 — 종목 차트와 같은 모양(Chart.js · 같은 선·축·툴팁) + 지금 가격을 다음 칸에 이어 그림(점선 · 깜빡이는 점)
+//   종목 = 종가 색(흰 선) · 그룹 = 파란 선 · 반대로 움직인 구간 = 옅은 띠 · 반대로 움직인 날 = 점. 그룹의 지금 값 = 그룹 종목들의 지금 가격을 비중대로
+const _balMr = { ch: null, S: null };
+function _balMrChart(S) {
+  const cv = document.getElementById('balMrCanvas'); if (!cv || typeof Chart === 'undefined') return;
+  try { if (_balMr.ch) _balMr.ch.destroy(); } catch (e) {}
+  const COL = { text: '#d4d4d4', textMute: '#9d9d9d', gridSoft: 'rgba(62,62,66,0.4)', close: '#ffffff', grp: '#569cd6', tip_bg: '#1e1e1e', tip_border: '#3e3e42', tip_title: '#ffffff', tip_body: '#d4d4d4' };
+  const N = S.cg.length - 1; const labels = S.days.slice(0, N + 1);
+  const dots = labels.map(() => null); S.M.days.forEach(t => { dots[t + 1] = +(S.cx[t + 1] * 100).toFixed(2); });
+  const ann = {}; S.M.segs.forEach((z, k) => { ann['seg' + k] = { type: 'box', xMin: labels[z.i], xMax: labels[Math.min(N, z.j + 1)], backgroundColor: 'rgba(86,156,214,0.13)', borderWidth: 0, drawTime: 'beforeDatasetsDraw' }; });
+  ann.zero = { type: 'line', yMin: 0, yMax: 0, borderColor: '#5a5a5e', borderWidth: 1, borderDash: [3, 4], drawTime: 'beforeDatasetsDraw' };
+  const sg = v => `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1)}%`;
+  const vline = { id: 'balMrV', afterDraw(ch) { const t = ch.tooltip, a = t && t.getActiveElements ? t.getActiveElements() : []; if (!a.length) return; const x = a[0].element.x, ar = ch.chartArea, c = ch.ctx; c.save(); c.strokeStyle = '#8a8a8a'; c.lineWidth = 1; c.beginPath(); c.moveTo(x, ar.top); c.lineTo(x, ar.bottom); c.stroke(); c.restore(); } };
+  const live = { id: 'balMrLive', afterDraw(ch) {
+    if (ch.$liveIdx == null || ch.$liveY == null) { _aqLiveDot(ch, null); return; }
+    const a = ch.chartArea, x = ch.scales.x.getPixelForValue(ch.$liveIdx), y = Math.max(a.top + 2, Math.min(a.bottom - 2, ch.scales.y.getPixelForValue(ch.$liveY)));
+    _aqLiveDot(ch, { x, y, up: !!ch.$liveUp, lab: ch.$liveLab || '' }); } };
+  const isLive = c => c.chart.$liveIdx != null && c.p1DataIndex === c.chart.$liveIdx;
+  _balMr.S = S;
+  _balMr.ch = new Chart(cv.getContext('2d'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { label: S.tkName, data: S.cx.map(v => +(v * 100).toFixed(2)), borderColor: COL.close, backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 3, pointBackgroundColor: COL.close, pointBorderWidth: 0, tension: 0.05, order: 2, spanGaps: true,
+        segment: { borderDash: c => isLive(c) ? [3, 3] : undefined, borderColor: c => isLive(c) ? (c.p1.parsed.y >= c.p0.parsed.y ? '#40c057' : '#ff6b6b') : undefined } },
+      { label: S.gName + ' 그룹', data: S.cg.map(v => +(v * 100).toFixed(2)), borderColor: COL.grp, backgroundColor: 'transparent', borderWidth: 1.6, pointRadius: 0, pointHoverRadius: 3, pointBackgroundColor: COL.grp, pointBorderWidth: 0, tension: 0.05, order: 3, spanGaps: true,
+        segment: { borderDash: c => isLive(c) ? [3, 3] : undefined } },
+      { label: '반대로 움직인 날', data: dots, showLine: false, pointRadius: 3.4, pointHoverRadius: 3.4, pointBackgroundColor: COL.grp, pointBorderColor: '#1c1c1f', pointBorderWidth: 1.5, pointHitRadius: 0, order: 1 },
+    ] },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false, layout: { padding: { right: 14 } },
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: COL.tip_bg, borderColor: COL.tip_border, borderWidth: 1, titleColor: COL.tip_title, bodyColor: COL.tip_body, padding: 10, titleFont: { size: 12 }, bodyFont: { size: 12 },
+          filter: it => it.datasetIndex < 2,
+          callbacks: { title: items => items[0] ? String(items[0].label) : '',
+            label: c => { const i = c.dataIndex, d = c.dataset.data, prev = i > 0 ? d[i - 1] : null; const day = prev != null && c.parsed.y != null ? ((1 + c.parsed.y / 100) / (1 + prev / 100) - 1) * 100 : null;
+              return `${c.dataset.label}: ${sg(c.parsed.y)}${day != null ? ` (그날 ${sg(day)})` : ''}`; } } },
+        annotation: { annotations: ann },
+      },
+      scales: {
+        x: { ticks: { color: COL.textMute, maxRotation: 0, autoSkip: true, maxTicksLimit: 6, font: { size: 10 }, callback(v) { const l = String(this.getLabelForValue(v)); return /^\d{4}-\d{2}-\d{2}$/.test(l) ? `${+l.slice(5, 7)}/${+l.slice(8, 10)}` : l; } }, grid: { color: COL.gridSoft } },
+        y: { position: 'left', ticks: { color: COL.text, font: { size: 10 }, callback: v => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v)}%` }, grid: { color: COL.gridSoft } },
+      },
+    },
+    plugins: [vline, live],
+  });
+  ['touchstart', 'touchmove'].forEach(t => cv.addEventListener(t, e => e.stopPropagation(), { passive: true }));   // 차트 위에서 문지를 때 시트 끌어내림이 같이 잡히지 않게
+  _balMrLive();
+}
+function _balMrLive() {   // 지금 가격을 다음 칸에 (1분마다 aqLiveApply가 부름) — 종목은 지금 가격, 그룹은 구성 종목의 지금 가격을 비중대로
+  const ch = _balMr.ch, S = _balMr.S; if (!ch || !S || !(ch.canvas && ch.canvas.isConnected)) { if (ch && !(ch.canvas && ch.canvas.isConnected)) { try { ch.destroy(); } catch (e) {} _balMr.ch = null; } return; }
+  const N = S.cg.length - 1, lastDay = String(S.days[N]).slice(0, 10), labs = ch.data.labels, dss = ch.data.datasets;
+  const closeOn = tk => { const f = findTickerSeries(tk); return f && f.rows ? _balSeries(f.rows)[lastDay] : null; };
+  const L = aqLiveGet(S.tk), c0 = closeOn(S.tk);
+  const on = !!(L && c0 > 0 && !(L.date && L.date <= lastDay));   // 그날 종가가 이미 있으면 붙이지 않음
+  if (ch.$liveIdx != null && !on) { labs.splice(ch.$liveIdx, 1); dss.forEach(ds => ds.data.splice(ch.$liveIdx, 1)); ch.$liveIdx = null; ch.$liveY = null; }
+  if (on) {
+    if (ch.$liveIdx == null) { labs.push(L.date || '지금'); dss.forEach(ds => ds.data.push(null)); ch.$liveIdx = labs.length - 1; }
+    else labs[ch.$liveIdx] = L.date || '지금';
+    const rx = L.p / c0 - 1; let w = 0, acc = 0, tot = 0;
+    (S.mem || []).forEach(m => { tot += m.pct; const Lm = aqLiveGet(m.tk), cm = closeOn(m.tk); if (Lm && cm > 0 && !(Lm.date && Lm.date <= lastDay)) { w += m.pct; acc += m.pct * (Lm.p / cm - 1); } });
+    const rg = tot > 0 && w >= tot * 0.5 ? acc / w : null;   // 그룹 비중의 절반 이상에 지금 가격이 있을 때만
+    const yx = ((1 + S.cx[N]) * (1 + rx) - 1) * 100;
+    dss[0].data[ch.$liveIdx] = +yx.toFixed(2); dss[1].data[ch.$liveIdx] = rg == null ? null : +(((1 + S.cg[N]) * (1 + rg) - 1) * 100).toFixed(2);
+    ch.$liveY = yx; ch.$liveUp = rx >= 0; ch.$liveLab = `${L.label || '지금'} ${S.pc(rx)}`;
+  }
+  try { ch.stop(); } catch (e) {}
+  try { ch.update('none'); } catch (e) {}
+  if (!on) _aqLiveDot(ch, null);
+}
+// v6.77: 계좌 차트(쏠림 계기판) — 손가락·마우스를 올린 날에 세로선 + 두 선 누적(그날 하루) 표시 (데칼코마니 차트는 v7.03부터 Chart.js)
 function _balMrBind(S) {
   const svg = document.getElementById('balMrSvg'), tip = document.getElementById('balMrTip'), gx = document.getElementById('balMrX'); if (!svg || !tip || !gx) return;
   const ln = document.getElementById('balMrXl'), cG = document.getElementById('balMrXg'), cX = document.getElementById('balMrXx');
