@@ -7,7 +7,11 @@
           설정에서 끄면(aq_wide=0) 예전처럼 pc.html 틀. 화면 규칙은 폭 430으로 계산(폰 화면 그대로) — matchMedia · CSS @media 둘 다 */
 (function(){
   var mm = window.matchMedia.bind(window); window.__aqMM = mm;
-  var Q = '(min-width: 900px) and (min-height: 600px) and (orientation: landscape)'; window.AQ_WIDE_Q = Q; window.AQ_WIDE_VW = 430;
+  // v7.04: 설정 › 넓은 화면 2단 = '세로에서도'(aq_wide='p')면 세로로 세운 태블릿에서도 2단 — 왼쪽 칸 폭은 화면에 맞춰 340~430 (좌우 반반)
+  var MODE = null; try { MODE = localStorage.getItem('aq_wide'); } catch (e) {}
+  var Q = MODE === 'p' ? '(min-width: 700px) and (min-height: 600px)' : '(min-width: 900px) and (min-height: 600px) and (orientation: landscape)'; window.AQ_WIDE_Q = Q;
+  function vw() { if (MODE !== 'p') return 430; var W = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0; return W > 0 ? Math.max(340, Math.min(430, Math.floor((W - 84) / 2))) : 430; }
+  window.aqWideVW = vw; window.AQ_WIDE_VW = vw();
   function want() { try { return window.self === window.top && localStorage.getItem('aq_wide') !== '0' && mm(Q).matches; } catch (e) { return false; } }
   window.aqWideWant = want; window.AQ_WIDE = want();
   try { if (window.self === window.top && !window.AQ_WIDE && mm('(min-width: 1025px)').matches) { window.stop(); location.replace('./pc.html' + location.search + location.hash); return; } } catch (e) {}
@@ -30,7 +34,7 @@
     if (window.AQ_WIDE) { var r = ev(q, window.AQ_WIDE_VW); if (r !== null) return { matches: r, media: String(q), onchange: null, addListener: function () {}, removeListener: function () {}, addEventListener: function () {}, removeEventListener: function () {}, dispatchEvent: function () { return false; } }; }
     return mm(q);
   };
-  if (window.AQ_WIDE) document.documentElement.classList.add('aq-wide');
+  if (window.AQ_WIDE) { document.documentElement.classList.add('aq-wide'); if (MODE === 'p') document.documentElement.style.setProperty('--aqC', window.AQ_WIDE_VW + 'px'); }
 })();</script>
 <!-- v2.55: HTTP cache 우회 — index.html이 GitHub Pages CDN cache 또는 브라우저 cache로 stale되는 것 방지 -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -83,7 +87,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.03';   // v7.03: 밸런스 데칼코마니 차트를 종목 차트와 같은 모양으로 + 지금 가격(종목 · 그룹)을 다음 칸에 · v7.02: 신호 자동 연계 · v7.01: 매수심사 리포트 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.04';   // v7.04: 넓은 화면 2단을 세로로 세운 태블릿에서도 (설정 › 화면 › 넓은 화면 2단 = 세로에서도) · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -9086,9 +9090,12 @@ html.aq-wide .aq-toast { left: calc(var(--aqR) + var(--aqC) / 2) !important; }
   if (window.AQ_WIDE) css(true);
   var t = null;
   function sync() {
-    var w = window.aqWideWant(); if (w === !!window.AQ_WIDE) return;
+    var w = window.aqWideWant();
+    if (w && window.AQ_WIDE && window.aqWideVW) { var nv = window.aqWideVW(); if (nv !== window.AQ_WIDE_VW) { window.AQ_WIDE_VW = nv; document.documentElement.style.setProperty('--aqC', nv + 'px'); css(true); try { window.dispatchEvent(new Event('resize')); } catch (e) {} } }   // v7.04: 돌리면 왼쪽 칸 폭 다시
+    if (w === !!window.AQ_WIDE) return;
     if (!w && window.self === window.top && window.__aqMM('(min-width: 1025px)').matches) { location.replace('./pc.html' + location.search + location.hash); return; }
-    window.AQ_WIDE = w; document.documentElement.classList.toggle('aq-wide', w); css(w);
+    window.AQ_WIDE = w; if (w && window.aqWideVW) { window.AQ_WIDE_VW = window.aqWideVW(); document.documentElement.style.setProperty('--aqC', window.AQ_WIDE_VW + 'px'); }
+    document.documentElement.classList.toggle('aq-wide', w); css(w);
     try { window.dispatchEvent(new Event('resize')); } catch (e) {}
   }
   window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(sync, 200); });
@@ -9119,9 +9126,10 @@ async function aqLinkToggle(sg, on) {
   if (!r || !r.ok) { aqToast((r && r.error) || '저장하지 못했어요'); _aqLink.on[sg] = !on; aqLinkRender(); return; }
   _aqLink.on = r.on || {}; var v = document.getElementById('setLinkVal'); if (v) { var n = Object.keys(_aqLink.on).filter(function (k) { return _aqLink.on[k]; }).length; v.textContent = n ? n + '개 켬' : '꺼짐'; }
 }
-function aqWideToggle() {
-  var on = aqWideOn(); try { localStorage.setItem('aq_wide', on ? '0' : '1'); } catch (e) {}
-  var t = window.top || window; try { t.location.replace(on ? './pc.html' : './'); } catch (e) { location.reload(); }
+function aqWideMode() { try { var v = localStorage.getItem('aq_wide'); return v === '0' ? '0' : v === 'p' ? 'p' : '1'; } catch (e) { return '1'; } }
+function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → 끔
+  var nx = { '1': 'p', 'p': '0', '0': '1' }[aqWideMode()]; try { localStorage.setItem('aq_wide', nx); } catch (e) {}
+  var t = window.top || window; try { t.location.replace(nx === '0' ? './pc.html' : './'); } catch (e) { location.reload(); }
 }
 </script>
 </head>
@@ -28888,7 +28896,7 @@ function aqSettingsRender() {
       <div class="sp-sub">${linked ? `토스 연결됨${br.last_sync ? ' · 마지막 동기화 ' + _opsFmtTimeSafe(br.last_sync) : ''}` : '토스 연결 안 됨'}</div></div>` : '<div class="sp-info"><div class="sp-name">로그인 필요</div></div>';
   const tv = document.getElementById('setTossVal'); if (tv) { tv.textContent = linked ? '연결됨' : br && br.status === 'pending' ? '키 저장됨' : '연결 안 됨'; tv.className = 'sr-val ' + (linked ? 'ok' : 'warn'); }
   const vv = document.getElementById('setVerVal'); if (vv) vv.textContent = 'v' + (window.AQ_PWA_VERSION || '');
-  try { const cap = aqWideCapable(); ['setWideT', 'setWideG'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = cap ? '' : 'none'; }); const wv = document.getElementById('setWideVal'); if (wv) wv.textContent = aqWideOn() ? '켬' : '끔'; } catch (e) {}   // v6.90
+  try { const cap = aqWideCapable(); ['setWideT', 'setWideG'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = cap ? '' : 'none'; }); const wv = document.getElementById('setWideVal'); if (wv) wv.textContent = { '1': '가로에서만', 'p': '세로에서도', '0': '끔' }[aqWideMode()]; } catch (e) {}   // v6.90 · v7.04
   const av = document.getElementById('setAtrVal'); if (av) { const a = aqDiscAtr(); av.textContent = a ? `${a}% 이상 제외` : '끔'; }
   aqSetStampSummary();
     if (u && u.role === 'admin') { try { aqLinkLoad(); } catch (e) {} }   // v7.02
