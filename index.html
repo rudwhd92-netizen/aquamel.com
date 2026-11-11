@@ -83,7 +83,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.01';   // v7.01: AI 매수심사 리포트에서 바로 승인 → 당일 지정가 주문 (AI 매니저와 같은 방식 · 모의 운영 / 주문 넣기) · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.02';   // v7.02: 설정 › 관리자 › 신호 자동 연계 — 켠 신호 유형은 발견에 뜨면 AI 보고서(없을 때) → AI 매수심사까지 확인 없이 (미국) · v7.01: 매수심사 리포트 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -9097,6 +9097,28 @@ html.aq-wide .aq-toast { left: calc(var(--aqR) + var(--aqC) / 2) !important; }
 /* 설정 › 넓은 화면 2단 켜기 · 끄기 (이 기기에 저장) */
 function aqWideCapable() { try { var a = Math.max(screen.width, screen.height), b = Math.min(screen.width, screen.height); return a >= 900 && b >= 600; } catch (e) { return false; } }
 function aqWideOn() { try { return localStorage.getItem('aq_wide') !== '0'; } catch (e) { return true; } }
+// v7.02: 신호 자동 연계 — 켠 신호 유형은 발견에 뜨면 AI 보고서(없거나 많이 낡았을 때) → AI 매수심사까지 확인 없이 (미국 · 주문은 리포트에서 승인)
+var _aqLink = { on: {}, signals: [], state: {} };
+async function aqLinkLoad() {
+  var r = null; try { r = await apiCall('autoLinkGet', {}); } catch (e) {}
+  if (r && r.ok) { _aqLink = { on: r.on || {}, signals: r.signals || [], state: r.state || {} }; }
+  var v = document.getElementById('setLinkVal'); if (v) { var n = Object.keys(_aqLink.on).filter(function (k) { return _aqLink.on[k]; }).length; v.textContent = n ? n + '개 켬' : '꺼짐'; }
+  return r && r.ok;
+}
+function aqLinkRender() {
+  var b = document.getElementById('setLinkBody'); if (!b) return;
+  b.innerHTML = (_aqLink.signals || []).map(function (sg) {
+    return '<div class="set-row nohover"><span class="sr-l">' + escapeHtml(sg) + '</span><label class="aq-switch" style="margin-left:auto"><input type="checkbox" ' + (_aqLink.on[sg] ? 'checked' : '') + ' onchange="aqLinkToggle(\'' + sg + '\', this.checked)"><span class="sl"></span></label></div>';
+  }).join('') || '<div class="set-row nohover"><span class="sr-l">불러오지 못했어요</span></div>';
+  var st = _aqLink.state || {}, d = st.done || {}, ks = Object.keys(d); var n = document.getElementById('setLinkNote');
+  if (n) n.innerHTML = '보유 종목 · 최근 14일 안에 심사한 종목 · 다시 볼 날짜 전 · 매수를 막아 둔 종목은 건너뛰어요.' + (ks.length ? '<br><br>' + escapeHtml(String(st.date || '').slice(5).replace('-', '/')) + ' 신호<br>' + ks.map(function (k) { return escapeHtml(k + ' · ' + d[k]); }).join('<br>') : '');
+}
+async function aqLinkOpen() { aqSetSheet('setLinkSheet', true); aqLinkRender(); await aqLinkLoad(); aqLinkRender(); }
+async function aqLinkToggle(sg, on) {
+  _aqLink.on[sg] = !!on; var r = null; try { r = await apiCall('autoLinkSet', { on: JSON.stringify(_aqLink.on) }); } catch (e) {}
+  if (!r || !r.ok) { aqToast((r && r.error) || '저장하지 못했어요'); _aqLink.on[sg] = !on; aqLinkRender(); return; }
+  _aqLink.on = r.on || {}; var v = document.getElementById('setLinkVal'); if (v) { var n = Object.keys(_aqLink.on).filter(function (k) { return _aqLink.on[k]; }).length; v.textContent = n ? n + '개 켬' : '꺼짐'; }
+}
 function aqWideToggle() {
   var on = aqWideOn(); try { localStorage.setItem('aq_wide', on ? '0' : '1'); } catch (e) {}
   var t = window.top || window; try { t.location.replace(on ? './pc.html' : './'); } catch (e) { location.reload(); }
@@ -9886,12 +9908,15 @@ function aqWideToggle() {
         <div class="set-grp-t" data-role-admin-tab>관리자</div>
         <div class="set-grp" data-role-admin-tab>
           <div class="set-row" onclick="aqSetAdmOpen()"><span class="sr-l">계정 관리</span><span class="sr-val" id="setAdmVal">—</span><span class="sr-chev">›</span></div>
+          <div class="set-row" onclick="aqLinkOpen()"><span class="sr-l">신호 자동 연계</span><span class="sr-val" id="setLinkVal">—</span><span class="sr-chev">›</span></div>
         <div class="set-row" onclick="aqSecOpen()"><span class="sr-l">보안 모니터링</span><span class="sr-val" id="setSecVal">—</span><span class="sr-chev">›</span></div>
         </div>
       </div>
     </section>
     <div class="ops-sheet-bg" id="setSecSheetBg" onclick="aqSetSheet('setSecSheet', false)"></div>
   <div class="ops-sheet aq-sec-sheet sec-sheet" id="setSecSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">보안 모니터링</div><div class="auto-sheet-scroll" id="setSecBody"></div></div>
+  <div class="ops-sheet-bg" id="setLinkSheetBg" onclick="aqSetSheet('setLinkSheet', false)"></div>
+    <div class="ops-sheet aq-sec-sheet" id="setLinkSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">신호 자동 연계 · 미국</div><div class="auto-sheet-scroll"><div class="set-grp" id="setLinkBody" style="margin-bottom:12px"></div><div id="setLinkNote" style="font-size:12px;opacity:.6;line-height:1.6;padding:0 4px 24px"></div></div></div>
   <div class="ops-sheet-bg" id="setAtrSheetBg" onclick="aqSetSheet('setAtrSheet', false)"></div>
     <div class="ops-sheet aq-sec-sheet" id="setAtrSheet"><div class="ops-sheet-grip"></div><div class="ops-sheet-title">발견 · ATR 기준</div><div class="set-grp" id="setAtrBody" style="margin-bottom:24px"></div></div>
   <div class="ops-sheet-bg" id="setTossSheetBg" onclick="aqSetSheet('setTossSheet', false)"></div>
@@ -28805,6 +28830,7 @@ function aqSettingsRender() {
   try { const cap = aqWideCapable(); ['setWideT', 'setWideG'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = cap ? '' : 'none'; }); const wv = document.getElementById('setWideVal'); if (wv) wv.textContent = aqWideOn() ? '켬' : '끔'; } catch (e) {}   // v6.90
   const av = document.getElementById('setAtrVal'); if (av) { const a = aqDiscAtr(); av.textContent = a ? `${a}% 이상 제외` : '끔'; }
   aqSetStampSummary();
+    if (u && u.role === 'admin') { try { aqLinkLoad(); } catch (e) {} }   // v7.02
     if (u && u.role === 'admin') apiCall('userList', {}).then(r => { const el = document.getElementById('setAdmVal'); if (el && r && r.ok) el.textContent = `${r.users.length}명`; }).catch(() => {});
     if (u && u.role === 'admin') { try { aqSecLoad(); } catch (e) {} }   // v5.79: 보안 상태 요약
   try { aqKrFlowLoad(true); } catch (e) {}   // v5.81: 한국 수급
