@@ -87,7 +87,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.06';   // v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.07';   // v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -30747,11 +30747,12 @@ function _mgMkSync() {   // 위에서 시장을 바꿨으면 매니저 상태를
   const m = _mgMkNow(); if (m === _mg.mk) return false;
   Object.assign(_mg, { mk: m, d: null, ts: 0, open: {}, f: 'all', all: false, px: {}, pxTs: 0, sc: {}, scTs: {} }); return true;
 }
+const _MG_OFF = { US: true, KR: true };   // v7.07: 새 구조가 완성될 때까지 AI 매니저 멈춤
 async function aqMgrRender(force) {
   const box = document.getElementById('mgrBody'); if (!box) return;
   if (_mgMkSync()) { force = true; box.innerHTML = '<div class="mg-empty">불러오는 중…</div>'; }
   if (!_mgAdm()) { box.innerHTML = '<div class="mg-empty">관리자 계좌 기준 기능이에요</div>'; return; }
-  if (_mg.mk === 'KR') { clearTimeout(_mg.poll); box.innerHTML = '<div class="mg-empty">개발 중이에요</div>'; return; }   // v7.06: 한국 AI 매니저는 멈춤 (다시 기획 중)
+  if (_MG_OFF[_mg.mk]) { clearTimeout(_mg.poll); box.innerHTML = '<div class="mg-empty">개발 중이에요</div>'; return; }   // v7.06 한국 · v7.07 미국: AI 매니저 멈춤 (다시 기획 중)
   if (force || !_mg.d || Date.now() - _mg.ts > 55e3) {
     const want = _mg.mk; let r = null; try { r = await apiCall('managerToday', { mkt: want }); } catch (e) {}
     try { r = _mgNoG(r); } catch (e) {}   // v6.95: 가이드 번호(G19 등)는 화면에 안 보임
@@ -30972,7 +30973,7 @@ async function aqMgrCardOk(tk) {
   aqMgrRender(true);
 }
 async function aqMgrStock(tk) {
-  if (_mg.mk === 'KR') { aqToast('한국 AI 매니저는 개발 중이에요'); return; }   // v7.06
+  if (_MG_OFF[_mg.mk]) { aqToast('AI 매니저는 개발 중이에요'); return; }   // v7.06 · v7.07
   document.getElementById('brSheet')?.remove();
   const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
   d.innerHTML = `<div class="br-bar"><div class="aq-uni-gripwrap"><div class="aq-uni-grip" aria-hidden="true"></div></div><button class="aq-uni-x" onclick="document.getElementById('brSheet').remove()">✕</button><span>AI 매니저 · ${escapeHtml(_mgTk(tk))}</span></div><div class="br-body" id="brSheetBody"><div class="auto-empty">불러오는 중…</div></div>`;
