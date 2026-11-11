@@ -83,7 +83,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.00';   // v7.00: 새 체계 — 매수심사는 아직 없는 종목만(보유 종목은 AI 매니저 의견으로) · 보고서 없으면 함께 받기 · AI 매니저 정할 것 · 포지션 카드(이탈선 · 목표 가격)
+window.AQ_PWA_VERSION = '7.01';   // v7.01: AI 매수심사 리포트에서 바로 승인 → 당일 지정가 주문 (AI 매니저와 같은 방식 · 모의 운영 / 주문 넣기) · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -30510,6 +30510,15 @@ function _brReport(rv) {
   h += `<div class="br-vc${_brv.liveX ? ' br-xp' : ''}"><div class="br-tl">${lamp('매수', 'g', '<path d="M12 23 Q20 31 28 23"/>')}${lamp('관망', 'y', '<path d="M13 26 L27 26"/>')}${lamp('금지', 'r', '<path d="M12 29 Q20 21 28 29"/>')}${_brv.liveX ? '<i class="br-hatch"></i>' : ''}</div>
     <div class="br-word ${cls}">${op || 'AI 의견 없음'}</div>${op && _P0 > 0 ? `<div class="br-basis2">${_brHM(rv.requested_at)} · ${_brPx(mk, _P0)} 기준${_brv.liveX ? ' · <span>지금은 유효하지 않아요</span>' : ''}</div>` : ''}<p class="br-vs">${op ? escapeHtml((ai && ai.summary) || '') : `AI 분석을 받지 못했어요 — ${escapeHtml(rv.ai_error || '이유 미상')}. 숫자 분석만 보여 드려요.`}</p>${key}</div>`;
   h += LV ? `<div id="brLiveBox">${_brLiveBar(LV, tk)}</div>` : '';   // v6.06: 유효 상태 바
+  try {   // v7.01: 승인 → 당일 지정가 주문 (AI 매니저와 같은 방식)
+    const OD = _brv.orders || []; const wk = OD.find(o => o.status === 'working'); const lastO = OD[0]; const p1 = st.step1;
+    const left = p1 ? (p1.qty || 0) - (p1.filled_qty || 0) : 0;
+    if (op === '매수' && _mgAdm() && p1 && ['planned', 'partial'].includes(p1.status) && left > 0 && !_brv.liveX) {
+      const g = wk && wk.legs && wk.legs[0]; const stW = { done: '체결', partial: '일부 체결', expired: '미체결 · 장 마감 취소', cancelled: '취소' };
+      const sub = wk ? `${wk.mode === 'paper' ? '모의 · ' : ''}지정가 ${_brPx(mk, g.price)} · 장 마감까지` : (lastO && stW[lastO.status] ? `지난 주문 ${lastO.mode === 'paper' ? '(모의) ' : ''}${stW[lastO.status]}` : '승인하면 당일 지정가 · 안 되면 장 마감에 취소');
+      h += `<div class="br-card" style="margin-top:12px"><div class="br-st"><span class="k">주문</span><span><b>${wk ? `${g.qty}주 주문 중` : `첫 진입 ${left}주`}</b><small>${escapeHtml(sub)}</small></span>${wk ? `<button class="mg-cx" onclick="aqBrOrderCancel(${wk.id}, ${rv.id})">취소</button>` : `<button class="mg-ok" onclick="aqBrOrderAsk(${rv.id})">승인</button>`}</div></div>`;
+    }
+  } catch (e) {}
   // ③ 할 일 (매수) / 매수로 바뀌면 (관망·금지, 접힘)
   if (X.step1) {
     const s1 = X.step1, s2 = X.step2 || {}, av = X.avg_after || {}; const mine = _brMyPos(tk);
@@ -30586,10 +30595,31 @@ function _brReport(rv) {
   return h;
 }
 function aqBrRender() { const el = document.getElementById('brSheetBody'); if (el && _brv.cur) el.innerHTML = _brReport(_brv.cur); }
+async function aqBrOrderAsk(rid) {   // v7.01: 지금 가격으로 지정가를 받아 와 승인 시트 (모의 운영 / 주문 넣기)
+  let q = null; try { q = await apiCall('buyReviewOrder', { id: rid, mode: 'quote' }); } catch (e) {}
+  if (!q || !q.ok) { aqToast((q && q.error) || '주문 값을 받지 못했어요'); return; }
+  const mk = q.market, nm = escapeHtml(displayName(q.ticker) || q.ticker); const M2 = v => mk === 'KR' ? `${Math.round(v).toLocaleString()}원` : `$${aqNum(Number(v), 2)}`;
+  const lines = [['지금', _brPx(mk, q.now)], ['계획 가격대', `${_brPx(mk, q.zone[0])} ~ ${_brPx(mk, q.zone[1])}`]];
+  if (q.stop) lines.push(['이탈선', `${_brPx(mk, q.stop)} · 닿으면 −${M2((q.price - q.stop) * q.qty)}`]);
+  lines.push(['유효', '오늘 장 마감까지']);
+  const warn = (q.above_zone ? '지금 가격이 계획 가격대 위라 가격대 위 끝에 걸어 둬요. ' : '') + (q.open ? '' : '지금은 정규장 시간이 아니에요. ') + '주문 넣기는 토스 실제 주문, 모의 운영은 지정가를 지나면 가상 체결로만 기록해요.';
+  _mcSheet(`<div class="mg-sh"><h3>승인<span>주문 1건</span></h3><div class="od"><span class="n">1</span><span><b>${nm} ${q.qty}주 <span class="buy">매수</span></b><small>지정가 ${_brPx(mk, q.price)}</small></span><span class="a">−${M2(q.amount)}</span></div><div style="margin-top:14px">${lines.map(([k, v]) => `<div class="ln"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div><div class="wn">${escapeHtml(warn)}</div><div class="bt bt3"><button class="c" onclick="aqMcSheetClose()">닫기</button><button class="c" id="mgPaper" ${q.open ? '' : 'disabled'} onclick="aqBrOrderGo(${rid}, 'paper')">모의 운영</button><button class="g" id="mgGo" ${q.open ? '' : 'disabled'} onclick="aqBrOrderGo(${rid}, 'live')">주문 넣기</button></div></div>`);
+}
+async function aqBrOrderGo(rid, mode) {
+  const b = document.getElementById(mode === 'live' ? 'mgGo' : 'mgPaper'), lab = b ? b.textContent : ''; document.querySelectorAll('#mgGo, #mgPaper').forEach(x => { x.disabled = true; }); if (b) b.textContent = '넣는 중…';
+  let r = null; try { r = await apiCall('buyReviewOrder', { id: rid, mode: mode === 'live' ? 'live' : 'paper' }); } catch (e) {}
+  if (!r || !r.ok) { document.querySelectorAll('#mgGo, #mgPaper').forEach(x => { x.disabled = false; }); if (b) b.textContent = lab; aqToast(r && r.error ? r.error : '주문하지 못했어요'); return; }
+  aqMcSheetClose(); aqToast(r.mode === 'live' ? '주문을 넣었어요' : '모의 주문을 넣었어요'); aqBrOpen(rid);
+}
+async function aqBrOrderCancel(iid, rid) {
+  if (!confirm('남은 주문을 취소할까요?\n체결된 것은 그대로 둬요.')) return;
+  let r = null; try { r = await apiCall('buyReviewOrderCancel', { id: iid }); } catch (e) {}
+  aqToast(r && r.ok ? '주문을 취소했어요' : ((r && r.error) || '취소하지 못했어요')); aqBrOpen(rid);
+}
 async function aqBrOpen(id) {
   let r = null; try { r = await apiCall('buyReviewGet', { id }); } catch (e) {}
   if (!r || !r.ok || !r.review) { aqToast('리포트를 불러오지 못했어요'); return; }
-  _brv.cur = r.review; _brv.plans = r.plans || []; _brv.active = r.active || null; _brv.more = false; document.getElementById('brSheet')?.remove();
+  _brv.cur = r.review; _brv.plans = r.plans || []; _brv.orders = r.orders || []; _brv.active = r.active || null; _brv.more = false; document.getElementById('brSheet')?.remove();
   const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
   d.innerHTML = `<div class="br-bar"><div class="aq-uni-gripwrap"><div class="aq-uni-grip" aria-hidden="true"></div></div><button class="aq-uni-x" onclick="document.getElementById('brSheet').remove()">✕</button><span>AI 매수심사 리포트</span></div><div class="br-body" id="brSheetBody"></div>`;
   document.body.appendChild(d); aqBrRender();
