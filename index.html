@@ -98,7 +98,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.13';   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.14';   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -1636,6 +1636,8 @@ body.modal-map-mode #chartModal .modal-report-banner, body.modal-map-mode #chart
 .sm2-rows { display: flex; flex-direction: column; } .sm2-rw { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; padding: 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,.07); color: var(--text-hi, #fff); font-family: inherit; font-size: 15px; text-align: left; cursor: pointer; } .sm2-rw:last-child { border-bottom: none; } .sm2-rw i { font-style: normal; color: var(--text-mute, #6a6a6a); font-size: 16px; flex: none; }
 .sm2-ul { display: flex; flex-direction: column; gap: 12px; font-size: 14.5px; line-height: 1.5; color: var(--text, #d4d4d4); } .sm2-ul div { display: flex; gap: 10px; word-break: keep-all; overflow-wrap: anywhere; } .sm2-ul div::before { content: ''; width: 5px; height: 5px; border-radius: 3px; background: var(--text-mute, #6a6a6a); margin-top: 9px; flex: none; }
 .sm2-hist { margin: 40px 4px 0; width: calc(100% - 8px); min-height: 56px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 500; color: var(--text-hi, #fff); cursor: pointer; } .sm2-hist i { font-style: normal; color: var(--text-mute, #6a6a6a); }
+.sm2-in { gap: 0 !important; scroll-margin-top: 80px; } .sm2-inh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; } .sm2-ed { border: none; background: none; color: var(--text-dim, #9d9d9d); font-size: 12.5px; font-family: inherit; padding: 6px 0 6px 12px; cursor: pointer; }
+.sm2-il { font-size: 15px; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; overflow-wrap: anywhere; } .sm2-il + .sm2-il { margin-top: 16px; } .sm2-il small { display: block; margin-top: 3px; font-size: 12px; color: var(--text-mute, #6a6a6a); } .sm2-il small a { color: inherit; text-decoration: underline; } .sm2-isrc { display: block; margin-top: 12px; font-size: 12px; color: var(--text-mute, #6a6a6a); }
 .sm2-dt { font-size: 24px; font-weight: 700; color: var(--text-hi, #fff); margin: 18px 0 28px; }
 .sm2-dc + .sm2-dc { margin-top: 40px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.07); }
 .sm2-l { font-size: 16px; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; overflow-wrap: anywhere; } .sm2-l + .sm2-l { margin-top: 22px; } .sm2-l small { display: block; margin-top: 4px; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .sm2-l small a { color: inherit; text-decoration: underline; }
@@ -17028,21 +17030,37 @@ function _smSrv(C) {   // 서버가 계산해 붙인 칸(글)에서 화면에 �
   const rl = f('계좌와의 관계'); if (rl && rl.v) o.rel = rl.v[0] || '';
   return o;
 }
+const _SM_ORDER = ['구조', '무엇을 따라가나', '무엇으로 버나', '사업 구성', '고객사', '장기 계약 · 수주', '경쟁사', '비중 큰 종목', '제품 가격을 움직이는 것', '가격을 움직이는 것', '공급을 움직이는 것', '생산 거점', '민감한 정책', '거시 · 정성', '최근 분기', '매번 확인할 숫자'];
+function _smInline(C, admin) {   // 글 칸 전부를 한 페이지에 — 칸 이름 · 줄 · 줄마다 출처(작게) · 검수 표시 · 관리자 고치기
+  const L = C.map((c, i) => [c, i]).filter(([c]) => !c.srv && !['한눈에', '매일 조사 목록'].includes(c.k) && (c.v || []).length);
+  const rank = k => { const j = _SM_ORDER.indexOf(k); return j < 0 ? 99 : j; };
+  L.sort((a, b) => rank(a[0].k) - rank(b[0].k));
+  return L.map(([c, i]) => { const anyLs = (c.ls || []).some(z => z && z.s && !_SM_NOSRC.includes(z.s));
+    const lines = (c.v || []).map((x, j) => { const z = c.ls && c.ls[j]; const ok = z && z.s && !_SM_NOSRC.includes(z.s); const src = !ok ? '' : /^https?:\/\//.test(z.u || '') ? `<a href="${escapeAttr(z.u)}" target="_blank" rel="noopener">${_smEsc(z.s)}</a>` : _smEsc(z.s);
+      return `<div class="sm2-il"><div>${_smEsc(x)}${_smCk(c, j, admin)}</div>${src ? `<small>${src}</small>` : ''}</div>`; }).join('');
+    return `<div class="sm2-sec sm2-in" id="smc-${i}"><div class="sm2-inh"><span class="sm2-lab">${_smEsc(c.k === '거시 · 정성' ? '민감한 흐름' : c.k)}</span>${admin ? `<button type="button" class="sm2-ed" onclick="aqMapEdit(${i})">고치기</button>` : ''}</div>${lines}${!anyLs && c.src ? `<small class="sm2-isrc">${_smEsc(c.src)}</small>` : ''}</div>`; }).join('');
+}
+function aqMapGo(key) {   // 시안의 묶음을 누르면 같은 페이지의 그 칸으로 내려감 (다른 화면을 열지 않음)
+  const r = _sm.d; if (!r || !r.map) return; const C = r.map.cells || []; const b = _SM_B[key]; if (!b) return;
+  const i = C.findIndex(x => b[1].includes(x.k) && !x.srv); const el = i >= 0 && document.getElementById('smc-' + i);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+window.aqMapGo = aqMapGo;
 function _smBody(r) {
   const M = r.map, C = M.cells || [], tk = _sm.tk || r.ticker || ''; const G = _smGlance(C), S = _smSrv(C); let h = '';
   const used = new Set(['한눈에', '거시 · 정성', '매일 조사 목록']); const has = k => C.some(x => x.k === k && !x.srv);
-  const box = (key, lab, tx, wide) => `<button type="button" class="sm2-card sm2-box${wide ? ' w' : ''}" onclick="aqMapDetail('${key}')"><span class="sm2-lab">${lab}</span><span class="sm2-tx">${wide ? _smEsc(tx) : String(tx).split(' · ').slice(0, 3).map(_smEsc).join('<br>')}</span></button>`;
-  if (G && G.cust && G.comp && G.policy && G.supply) {
-    h += `<div class="sm2-dg">${box('cust', '고객사', G.cust, 1)}<i class="sm2-ln"></i><div class="sm2-r3">${box('comp', '경쟁사', G.comp)}<div class="sm2-me"><b>${_smEsc(tk)}</b>${G.does ? `<small>${_smEsc(G.does)}</small>` : ''}</div>${box('policy', '정책', G.policy)}</div><i class="sm2-ln"></i>${box('supply', '공급 · 생산 거점', G.supply, 1)}</div>`;
+  const box = (key, lab, tx, wide) => `<button type="button" class="sm2-card sm2-box${wide ? ' w' : ''}" onclick="aqMapGo('${key}')"><span class="sm2-lab">${lab}</span><span class="sm2-tx">${wide ? _smEsc(tx) : String(tx).split(' · ').slice(0, 3).map(_smEsc).join('<br>')}</span></button>`;
+  if (G && G.cust && G.policy && G.supply) {   // v7.14: 경쟁사 이름이 공시에 없는 회사도 그림
+    h += `<div class="sm2-dg">${box('cust', '고객사', G.cust, 1)}<i class="sm2-ln"></i><div class="sm2-r3">${box('comp', '경쟁사', G.comp || '이름 없음')}<div class="sm2-me"><b>${_smEsc(tk)}</b>${G.does ? `<small>${_smEsc(G.does)}</small>` : ''}</div>${box('policy', '정책', G.policy)}</div><i class="sm2-ln"></i>${box('supply', '공급 · 생산 거점', G.supply, 1)}</div>`;
     ['고객사', '경쟁사', '민감한 정책', '공급을 움직이는 것', '생산 거점'].forEach(k => used.add(k));
   }
   if (G && G.mix.length && has('무엇으로 버나')) {
     const top = G.mix.slice(0, 3), rest = G.mix.slice(3).reduce((a, x) => a + x.p, 0); const segs = rest > 0 ? top.concat([{ n: '그 밖', p: rest }]) : top; const op = [1, .62, .3, .18];
-    h += `<button type="button" class="sm2-sec" onclick="aqMapDetail('earn')"><span class="sm2-lab">무엇으로 버나</span><span class="sm2-bar">${segs.map((x, i) => `<i style="flex:${x.p} 0 0;opacity:${op[i] || .18}"></i>`).join('')}</span><span class="sm2-leg">${segs.map(x => `<span>${_smEsc(x.n)} ${x.p}%</span>`).join('')}</span></button>`;
+    h += `<button type="button" class="sm2-sec" onclick="aqMapGo('earn')"><span class="sm2-lab">무엇으로 버나</span><span class="sm2-bar">${segs.map((x, i) => `<i style="flex:${x.p} 0 0;opacity:${op[i] || .18}"></i>`).join('')}</span><span class="sm2-leg">${segs.map(x => `<span>${_smEsc(x.n)} ${x.p}%</span>`).join('')}</span></button>`;
     used.add('무엇으로 버나'); used.add('사업 구성');
   }
   if (G && G.qv.length && has('최근 분기')) {
-    h += `<div class="sm2-sec"><span class="sm2-lab">최근 분기${G.qp ? ' · ' + _smEsc(G.qp) : ''}</span><div class="sm2-g2">${G.qv.slice(0, 2).map(x => `<button type="button" class="sm2-card sm2-tile" onclick="aqMapDetail('q')">${x.k ? `<span class="sm2-lab">${_smEsc(x.k)}</span>` : ''}<b>${_smEsc(x.v)}</b>${x.s ? `<small>${_smEsc(x.s)}</small>` : ''}</button>`).join('')}</div>${has('매번 확인할 숫자') ? `<div class="sm2-rows"><button type="button" class="sm2-rw" onclick="aqMapDetail('q')"><span>매번 확인할 숫자</span><i>›</i></button></div>` : ''}</div>`;
+    h += `<div class="sm2-sec"><span class="sm2-lab">최근 분기${G.qp ? ' · ' + _smEsc(G.qp) : ''}</span><div class="sm2-g2">${G.qv.slice(0, 2).map(x => `<button type="button" class="sm2-card sm2-tile" onclick="aqMapGo('q')">${x.k ? `<span class="sm2-lab">${_smEsc(x.k)}</span>` : ''}<b>${_smEsc(x.v)}</b>${x.s ? `<small>${_smEsc(x.s)}</small>` : ''}</button>`).join('')}</div>${has('매번 확인할 숫자') ? `<div class="sm2-rows"><button type="button" class="sm2-rw" onclick="aqMapGo('q')"><span>매번 확인할 숫자</span><i>›</i></button></div>` : ''}</div>`;
     used.add('최근 분기'); used.add('매번 확인할 숫자');
   }
   if (S.mq && S.mq.length) {
@@ -17053,10 +17071,7 @@ function _smBody(r) {
     if (S.left && S.left.length) h += `<div class="sm2-chips"><span>지수와 별개로 같이 움직임</span>${S.left.map(x => `<i>${_smEsc(x)}</i>`).join('')}</div>`;
     h += '</div>';
   }
-  const mc = C.find(x => x.k === '거시 · 정성' && !x.srv);
-  if (mc && (mc.v || []).length) h += `<div class="sm2-sec" style="gap:6px"><span class="sm2-lab">민감한 흐름</span><div class="sm2-rows">${mc.v.map(x => `<button type="button" class="sm2-rw" onclick="aqMapDetail('macro')"><span>${_smEsc(String(x).split(' — ')[0])}</span><i>›</i></button>`).join('')}</div></div>`;
-  const rest = C.map((c, i) => [c, i]).filter(([c]) => !c.srv && !used.has(c.k));
-  if (rest.length) h += `<div class="sm2-sec" style="gap:6px"><span class="sm2-lab">${used.has('고객사') ? '더 보기' : '지도'}</span><div class="sm2-rows">${rest.map(([c, i]) => `<button type="button" class="sm2-rw" onclick="aqMapDetail('c:${i}')"><span>${_smEsc(c.k)}</span><i>›</i></button>`).join('')}</div></div>`;
+  h += _smInline(C, r.admin);   // v7.13: 칸마다 누르면 다른 화면이 열리던 것을 없애고 한 페이지에 모두 펼침 (줄마다 출처 · 검수 표시)
   const dl = C.find(x => x.k === '매일 조사 목록' && !x.srv);
   if (dl && (dl.v || []).length) h += `<div class="sm2-sec"><span class="sm2-lab">매일 보는 것</span><div class="sm2-ul">${dl.v.map(x => `<div><span>${_smEsc(x)}</span></div>`).join('')}</div></div>`;
   if (S.earn || S.peers) {
