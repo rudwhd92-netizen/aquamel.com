@@ -98,7 +98,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.10';   // v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.11';   // v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) · v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -1603,6 +1603,11 @@ body.modal-map-mode #chartModal .modal-report-banner, body.modal-map-mode #chart
 .sm-v { font-size: 15px; line-height: 1.6; color: var(--text, #e8e8ea); word-break: keep-all; overflow-wrap: anywhere; }
 .sm-v div + div { margin-top: 5px; }
 .sm-src { font-size: 11.5px; color: var(--text-mute, #6b6b70); margin-top: 9px; }
+/* v7.11: 줄마다 검수 표시 — 원문과 다른 줄 · 확인 못 한 줄만 작게 (맞은 줄은 표시 없음) */
+.sm-ck { display: inline-block; margin-left: 8px; padding: 1px 7px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); font-size: 11px; line-height: 1.5; color: var(--text-mute, #8b8b90); white-space: nowrap; vertical-align: 1px; }
+.sm-ck.bad { border-color: rgba(220,220,170,.45); color: var(--warn, #dcdcaa); }
+.sm-ckn { font-size: 12px; line-height: 1.5; color: var(--text-mute, #6b6b70); margin-top: 2px; }
+[data-theme="light"] .sm-ck { border-color: rgba(0,0,0,.16); }
 .sm-empty { text-align: center; padding: 60px 12px 44px; color: var(--text-mute, #8b8b90); font-size: 14px; line-height: 1.7; }
 .sm-btn { height: 46px; padding: 0 22px; border: none; border-radius: 12px; background: #2a2a2e; color: #e8e8ea; font-size: 14.5px; font-weight: 600; cursor: pointer; }
 .sm-btn.pri { background: #e8e8ea; color: #121214; }
@@ -16960,11 +16965,21 @@ async function aqMapOpen(tk, quiet) {
   _sm.d = r; box.innerHTML = _smHtml(r);
   if (r.req && (r.req.status === 'queued' || r.req.status === 'requested')) _sm.poll = setTimeout(() => { if (document.body.classList.contains('modal-map-mode') && String(_state.openTicker || '').toUpperCase() === tk) aqMapOpen(tk, true); }, 60e3);
 }
+// v7.11: 줄마다 검수 표시 — 다른 작업이 출처 원문을 다시 열어 판정한 결과 (bad 원문과 다름 · unk 확인 못 함). 사유는 관리자에게만.
+function _smCk(c, j, admin) {
+  const k = c && c.ck && c.ck[j]; if (!k || (k.c !== 'bad' && k.c !== 'unk')) return '';
+  return `<span class="sm-ck ${k.c}">${k.c === 'bad' ? '원문과 다름' : '확인 못 함'}</span>${admin && k.n ? `<div class="sm-ckn">${_smEsc(k.n)}</div>` : ''}`;
+}
+function _smCkSum(n) {
+  if (!n) return '';
+  const a = []; if (n.bad) a.push(`원문과 다름 ${n.bad}`); if (n.unk) a.push(`확인 못 함 ${n.unk}`);
+  return `<span>· ${a.length ? a.join(' · ') : '모든 줄 확인'}</span>`;
+}
 function _smHtml(r) {
   if (r.unsupported) return '<div class="sm-empty">한국 종목은 준비 중이에요</div>';
   const busy = !!(r.req && (r.req.status === 'queued' || r.req.status === 'requested')); const M = r.map; let h = '';
   if (!M) {
-    if (busy) return `<div class="sm-empty">종목 지도를 만들고 있어요<div class="sm-cap">${r.req.status === 'queued' && r.req.ahead ? `앞에 ${r.req.ahead}개 · ` : ''}보통 5~10분</div></div>`;
+    if (busy) return `<div class="sm-empty">종목 지도를 만들고 있어요<div class="sm-cap">${r.req.status === 'queued' && r.req.ahead ? `앞에 ${r.req.ahead}개 · ` : ''}보통 10분</div></div>`;
     h = '<div class="sm-empty">아직 종목 지도가 없어요';
     if (r.req && r.req.status === 'failed') h += '<div class="sm-cap">지난 요청은 만들지 못했어요</div>';
     h += `<div style="margin-top:18px"><button class="sm-btn pri" ${r.can ? '' : 'disabled'} onclick="aqMapRequest()">종목 지도 만들기</button></div>`;
@@ -16972,8 +16987,8 @@ function _smHtml(r) {
     return h + '</div>';
   }
   const dt = M.asof ? String(M.asof).slice(5).replace('-', '/') : '';
-  h += `<div class="sm-head"><span class="sm-chip ${M.status === 'confirmed' ? 'ok' : ''}">${M.status === 'confirmed' ? '확정' : '초안'}</span>${dt ? `<span>${dt} 기준</span>` : ''}${busy ? '<span>· 다시 만드는 중</span>' : ''}</div>`;
-  h += (M.cells || []).map((c, i) => `<div class="sm-cell"${r.admin && !c.srv ? ` onclick="aqMapEdit(${i})" style="cursor:pointer"` : ''}><div class="sm-k">${_smEsc(c.k)}</div><div class="sm-v">${(c.v || []).map(x => `<div>${_smEsc(x)}</div>`).join('')}</div>${c.src ? `<div class="sm-src">${_smEsc(c.src)}</div>` : ''}</div>`).join('');
+  h += `<div class="sm-head"><span class="sm-chip ${M.status === 'confirmed' ? 'ok' : ''}">${M.status === 'confirmed' ? '확정' : '초안'}</span>${dt ? `<span>${dt} 기준</span>` : ''}${_smCkSum(M.ck)}${busy ? '<span>· 다시 만드는 중</span>' : ''}</div>`;
+  h += (M.cells || []).map((c, i) => `<div class="sm-cell"${r.admin && !c.srv ? ` onclick="aqMapEdit(${i})" style="cursor:pointer"` : ''}><div class="sm-k">${_smEsc(c.k)}</div><div class="sm-v">${(c.v || []).map((x, j) => `<div>${_smEsc(x)}${_smCk(c, j, r.admin)}</div>`).join('')}</div>${c.src ? `<div class="sm-src">${_smEsc(c.src)}</div>` : ''}</div>`).join('');
   if (r.admin) h += `<div style="display:flex;gap:10px;margin:22px 4px 0">${M.status !== 'confirmed' ? '<button class="sm-btn pri" style="flex:1" onclick="aqMapConfirm()">확정</button>' : ''}<button class="sm-btn" style="flex:1" ${busy || !r.can ? 'disabled' : ''} onclick="aqMapRequest()">다시 만들기</button></div>`;
   return h;
 }
