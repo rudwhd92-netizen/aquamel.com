@@ -98,7 +98,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.11';   // v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) · v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.12';   // v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -1618,6 +1618,28 @@ body.modal-map-mode #chartModal .modal-report-banner, body.modal-map-mode #chart
 [data-theme="light"] .sm-btn.pri { background: #222; color: #fff; }
 [data-theme="light"] .sm-chip.ok { background: rgba(13,148,136,.12); color: #0d9488; }
 [data-theme="light"] .sm-ta { background: #fff; color: #222; border-color: rgba(0,0,0,.12); }
+/* v7.12: 종목 지도 — 시안 모양 (관계도 · 막대 · 큰 숫자 · 한 줄씩 눌러 상세) */
+.sm2-card { background: rgba(255,255,255,.04); border-radius: 16px; padding: 16px 18px; border: none; color: inherit; font-family: inherit; text-align: left; }
+.sm2-lab { display: block; font-size: 12px; color: var(--text-dim, #9d9d9d); }
+.sm2-dg { margin: 22px 4px 0; display: flex; flex-direction: column; align-items: center; }
+.sm2-box { display: flex; flex-direction: column; gap: 8px; cursor: pointer; min-width: 0; } .sm2-box.w { width: 100%; }
+.sm2-tx { font-size: 14px; font-weight: 500; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; overflow-wrap: anywhere; } .sm2-box.w .sm2-tx { font-size: 15px; line-height: 1.5; }
+.sm2-ln { width: 2px; height: 16px; background: rgba(255,255,255,.14); }
+.sm2-r3 { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: stretch; } .sm2-r3 .sm2-box { padding: 16px 14px; }
+.sm2-me { border-radius: 16px; border: 1.5px solid #5eead4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px 6px; } .sm2-me b { font-size: 20px; color: var(--text-hi, #fff); } .sm2-me small { font-size: 11.5px; color: var(--text-dim, #9d9d9d); text-align: center; line-height: 1.4; word-break: keep-all; }
+.sm2-sec { margin: 40px 4px 0; display: flex; flex-direction: column; gap: 14px; } button.sm2-sec { width: calc(100% - 8px); background: none; border: none; padding: 0; color: inherit; font-family: inherit; text-align: left; cursor: pointer; }
+.sm2-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 3px; color: var(--text-hi, #fff); } .sm2-bar i { background: currentColor; min-width: 4px; }
+.sm2-leg { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; font-size: 14px; color: var(--text, #d4d4d4); } .sm2-leg span:first-child { color: var(--text-hi, #fff); font-weight: 500; }
+.sm2-g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .sm2-tile { display: flex; flex-direction: column; gap: 8px; padding: 18px 16px; min-width: 0; } .sm2-tile b { font-size: 18px; color: var(--text-hi, #fff); } .sm2-tile small { font-size: 12.5px; color: var(--text-dim, #9d9d9d); line-height: 1.5; } .sm2-tile em { font-style: normal; font-size: 14px; font-weight: 500; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; }
+.sm2-big { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 20px 18px; } .sm2-big span { font-size: 14px; color: var(--text, #d4d4d4); } .sm2-big b { font-size: 26px; color: #5eead4; white-space: nowrap; }
+.sm2-chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .sm2-chips i { font-style: normal; color: var(--text, #d4d4d4); background: rgba(255,255,255,.06); padding: 4px 10px; border-radius: 999px; }
+.sm2-rows { display: flex; flex-direction: column; } .sm2-rw { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; padding: 0; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,.07); color: var(--text-hi, #fff); font-family: inherit; font-size: 15px; text-align: left; cursor: pointer; } .sm2-rw:last-child { border-bottom: none; } .sm2-rw i { font-style: normal; color: var(--text-mute, #6a6a6a); font-size: 16px; flex: none; }
+.sm2-ul { display: flex; flex-direction: column; gap: 12px; font-size: 14.5px; line-height: 1.5; color: var(--text, #d4d4d4); } .sm2-ul div { display: flex; gap: 10px; word-break: keep-all; overflow-wrap: anywhere; } .sm2-ul div::before { content: ''; width: 5px; height: 5px; border-radius: 3px; background: var(--text-mute, #6a6a6a); margin-top: 9px; flex: none; }
+.sm2-hist { margin: 40px 4px 0; width: calc(100% - 8px); min-height: 56px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 500; color: var(--text-hi, #fff); cursor: pointer; } .sm2-hist i { font-style: normal; color: var(--text-mute, #6a6a6a); }
+.sm2-dt { font-size: 24px; font-weight: 700; color: var(--text-hi, #fff); margin: 18px 0 28px; }
+.sm2-dc + .sm2-dc { margin-top: 40px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.07); }
+.sm2-l { font-size: 16px; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; overflow-wrap: anywhere; } .sm2-l + .sm2-l { margin-top: 22px; } .sm2-l small { display: block; margin-top: 4px; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .sm2-l small a { color: inherit; text-decoration: underline; }
+[data-theme="light"] .sm2-card { background: rgba(0,0,0,.045); } [data-theme="light"] .sm2-ln { background: rgba(0,0,0,.18); } [data-theme="light"] .sm2-rw, [data-theme="light"] .sm2-dc + .sm2-dc { border-color: rgba(0,0,0,.08); } [data-theme="light"] .sm2-chips i { background: rgba(0,0,0,.06); } [data-theme="light"] .sm2-me { border-color: #0d9488; } [data-theme="light"] .sm2-big b { color: #0d9488; }
 body.modal-pos-mode #positionPanel { display: block; }
 body.modal-pos-mode #chartModal .chart-wrap,
 body.modal-pos-mode #chartModal .modal-filter-block,
@@ -16975,6 +16997,82 @@ function _smCkSum(n) {
   const a = []; if (n.bad) a.push(`원문과 다름 ${n.bad}`); if (n.unk) a.push(`확인 못 함 ${n.unk}`);
   return `<span>· ${a.length ? a.join(' · ') : '모든 줄 확인'}</span>`;
 }
+// v7.12: 종목 지도 — 시안 모양. 묶음을 누르면 상세(줄마다 출처 · 검수 표시 · 관리자 고치기).
+//   관계도 · 매출 구성 막대 · 최근 분기 칸은 지도의 '한눈에' 칸(짧은 말)이 있을 때만 그리고, 없으면 그 칸들은 '더 보기' 줄로 나온다.
+const _SM_B = { cust: ['고객사', ['고객사']], comp: ['경쟁사', ['경쟁사']], policy: ['정책', ['민감한 정책']], supply: ['공급 · 생산 거점', ['공급을 움직이는 것', '생산 거점']], earn: ['무엇으로 버나', ['무엇으로 버나', '사업 구성']], q: ['최근 분기', ['최근 분기', '매번 확인할 숫자']], macro: ['민감한 흐름', ['거시 · 정성']] };
+const _SM_NOSRC = ['목록', '정리', '요약'];
+function _smGlance(C) {
+  const c = C.find(x => x.k === '한눈에' && !x.srv); if (!c) return null; const g = {};
+  (c.v || []).forEach(s => { const i = String(s).indexOf(':'); if (i > 0) g[s.slice(0, i).trim()] = s.slice(i + 1).trim(); });
+  const mix = (g['매출 구성'] || '').split(' · ').map(t => { const m = t.trim().match(/^(.+?)\s*([\d.]+)\s*%?$/); return m ? { n: m[1].trim(), p: +m[2] } : null; }).filter(x => x && x.p > 0);
+  const qs = (g['최근 분기'] || '').split(' / ').map(t => t.trim()).filter(Boolean);
+  const qv = qs.slice(1).map(t => { const m = t.match(/^(.+?)\s+([-+−]?[\d.,]+.*?)(?:\s*\((.+)\))?$/); return m ? { k: m[1], v: m[2].trim(), s: m[3] || '' } : { k: '', v: t, s: '' }; });
+  return { does: g['하는 일'] || '', cust: g['고객사'] || '', comp: g['경쟁사'] || '', policy: g['정책'] || '', supply: g['공급'] || '', mix, qp: qs[0] || '', qv };
+}
+function _smSrv(C) {   // 서버가 계산해 붙인 칸(글)에서 화면에 쓸 값만 뽑는다
+  const f = k => C.find(x => x.srv && x.k === k); const o = {}; const base = c => ((c.src || '').match(/· (\S+ 기준)/) || [])[1] || '';
+  const e = f('다음 실적'); if (e && e.v && e.v[0]) { const a = String(e.v[0]).split(' · '); o.earn = { d: /^\d{4}-\d{2}-\d{2}$/.test(a[0]) ? a[0].slice(5).replace('-', '/') : a[0], n: a[1] || '', base: base(e) }; }
+  const p = f('같이 움직이는 종목'); if (p && p.v && p.v[0]) o.peers = { L: String(p.v[0]).split(' · ').map(t => t.trim().split(' ')[0]).filter(Boolean), base: base(p) };
+  const m = f('거시 · 정량'); if (m) { const L = m.v || []; o.mq = L; o.mbase = base(m); const b = String(L[0] || '').match(/^(.+?) 1%에 약 ([\d.]+)%/); if (b) o.beta = { name: b[1], v: b[2] };
+    const w = L.find(s => /직접 관계 없음:/.test(s)); if (w) o.none = w.split(':')[1].split(' · ').map(s => s.trim()).filter(Boolean);
+    const st = L.find(s => /남는 관계:/.test(s)); if (st) o.left = st.split(':')[1].split(' · ').map(s => s.trim()).filter(Boolean); }
+  const rl = f('계좌와의 관계'); if (rl && rl.v) o.rel = rl.v[0] || '';
+  return o;
+}
+function _smBody(r) {
+  const M = r.map, C = M.cells || [], tk = _sm.tk || r.ticker || ''; const G = _smGlance(C), S = _smSrv(C); let h = '';
+  const used = new Set(['한눈에', '거시 · 정성', '매일 조사 목록']); const has = k => C.some(x => x.k === k && !x.srv);
+  const box = (key, lab, tx, wide) => `<button type="button" class="sm2-card sm2-box${wide ? ' w' : ''}" onclick="aqMapDetail('${key}')"><span class="sm2-lab">${lab}</span><span class="sm2-tx">${wide ? _smEsc(tx) : String(tx).split(' · ').slice(0, 3).map(_smEsc).join('<br>')}</span></button>`;
+  if (G && G.cust && G.comp && G.policy && G.supply) {
+    h += `<div class="sm2-dg">${box('cust', '고객사', G.cust, 1)}<i class="sm2-ln"></i><div class="sm2-r3">${box('comp', '경쟁사', G.comp)}<div class="sm2-me"><b>${_smEsc(tk)}</b>${G.does ? `<small>${_smEsc(G.does)}</small>` : ''}</div>${box('policy', '정책', G.policy)}</div><i class="sm2-ln"></i>${box('supply', '공급 · 생산 거점', G.supply, 1)}</div>`;
+    ['고객사', '경쟁사', '민감한 정책', '공급을 움직이는 것', '생산 거점'].forEach(k => used.add(k));
+  }
+  if (G && G.mix.length && has('무엇으로 버나')) {
+    const top = G.mix.slice(0, 3), rest = G.mix.slice(3).reduce((a, x) => a + x.p, 0); const segs = rest > 0 ? top.concat([{ n: '그 밖', p: rest }]) : top; const op = [1, .62, .3, .18];
+    h += `<button type="button" class="sm2-sec" onclick="aqMapDetail('earn')"><span class="sm2-lab">무엇으로 버나</span><span class="sm2-bar">${segs.map((x, i) => `<i style="flex:${x.p} 0 0;opacity:${op[i] || .18}"></i>`).join('')}</span><span class="sm2-leg">${segs.map(x => `<span>${_smEsc(x.n)} ${x.p}%</span>`).join('')}</span></button>`;
+    used.add('무엇으로 버나'); used.add('사업 구성');
+  }
+  if (G && G.qv.length && has('최근 분기')) {
+    h += `<div class="sm2-sec"><span class="sm2-lab">최근 분기${G.qp ? ' · ' + _smEsc(G.qp) : ''}</span><div class="sm2-g2">${G.qv.slice(0, 2).map(x => `<button type="button" class="sm2-card sm2-tile" onclick="aqMapDetail('q')">${x.k ? `<span class="sm2-lab">${_smEsc(x.k)}</span>` : ''}<b>${_smEsc(x.v)}</b>${x.s ? `<small>${_smEsc(x.s)}</small>` : ''}</button>`).join('')}</div>${has('매번 확인할 숫자') ? `<div class="sm2-rows"><button type="button" class="sm2-rw" onclick="aqMapDetail('q')"><span>매번 확인할 숫자</span><i>›</i></button></div>` : ''}</div>`;
+    used.add('최근 분기'); used.add('매번 확인할 숫자');
+  }
+  if (S.mq && S.mq.length) {
+    h += `<div class="sm2-sec"><span class="sm2-lab">주가가 따라가는 것${S.mbase ? ' · ' + _smEsc(S.mbase) : ''}</span>`;
+    if (S.beta) h += `<div class="sm2-card sm2-big"><span>${_smEsc(S.beta.name)} 1% 움직이면</span><b>${_smEsc(S.beta.v)}%</b></div>`;
+    else h += `<div class="sm2-card">${S.mq.map(x => `<div style="font-size:14px;line-height:1.6">${_smEsc(x)}</div>`).join('')}</div>`;
+    if (S.none && S.none.length) h += `<div class="sm2-chips"><span>직접 영향 없음</span>${S.none.map(x => `<i>${_smEsc(x)}</i>`).join('')}</div>`;
+    if (S.left && S.left.length) h += `<div class="sm2-chips"><span>지수와 별개로 같이 움직임</span>${S.left.map(x => `<i>${_smEsc(x)}</i>`).join('')}</div>`;
+    h += '</div>';
+  }
+  const mc = C.find(x => x.k === '거시 · 정성' && !x.srv);
+  if (mc && (mc.v || []).length) h += `<div class="sm2-sec" style="gap:6px"><span class="sm2-lab">민감한 흐름</span><div class="sm2-rows">${mc.v.map(x => `<button type="button" class="sm2-rw" onclick="aqMapDetail('macro')"><span>${_smEsc(String(x).split(' — ')[0])}</span><i>›</i></button>`).join('')}</div></div>`;
+  const rest = C.map((c, i) => [c, i]).filter(([c]) => !c.srv && !used.has(c.k));
+  if (rest.length) h += `<div class="sm2-sec" style="gap:6px"><span class="sm2-lab">${used.has('고객사') ? '더 보기' : '지도'}</span><div class="sm2-rows">${rest.map(([c, i]) => `<button type="button" class="sm2-rw" onclick="aqMapDetail('c:${i}')"><span>${_smEsc(c.k)}</span><i>›</i></button>`).join('')}</div></div>`;
+  const dl = C.find(x => x.k === '매일 조사 목록' && !x.srv);
+  if (dl && (dl.v || []).length) h += `<div class="sm2-sec"><span class="sm2-lab">매일 보는 것</span><div class="sm2-ul">${dl.v.map(x => `<div><span>${_smEsc(x)}</span></div>`).join('')}</div></div>`;
+  if (S.earn || S.peers) {
+    const nm = t => { try { return displayName(t) || t; } catch (e) { return t; } };
+    h += `<div class="sm2-sec"><div class="sm2-g2">${S.earn ? `<div class="sm2-card sm2-tile"><span class="sm2-lab">다음 실적</span><b>${_smEsc(S.earn.d)}</b><small>${_smEsc([S.earn.n, S.earn.base].filter(Boolean).join(' · '))}</small></div>` : ''}${S.peers ? `<div class="sm2-card sm2-tile"><span class="sm2-lab">같이 움직이는 종목</span><em>${S.peers.L.slice(0, 3).map(t => _smEsc(nm(t))).join('<br>')}</em>${S.peers.base ? `<small>${_smEsc(S.peers.base)}</small>` : ''}</div>` : ''}</div>`;
+    if (S.rel) h += `<div class="sm2-card sm2-tile"><span class="sm2-lab">계좌와의 관계 · 관리자만</span><em>${_smEsc(S.rel)}</em></div>`;
+    h += '</div>';
+  }
+  h += `<button type="button" class="sm2-card sm2-hist" onclick="aqHistOpen('${escapeAttr(tk)}')"><span>크게 움직였을 때</span><i>›</i></button>`;
+  return h;
+}
+function aqMapDetail(key) {
+  const r = _sm.d; if (!r || !r.map) return; const C = r.map.cells || []; let title, names; key = String(key || '');
+  if (key.startsWith('c:')) { const c = C[+key.slice(2)]; if (!c) return; title = c.k; names = [c.k]; } else { const b = _SM_B[key]; if (!b) return; title = b[0]; names = b[1]; }
+  const L = names.map(n => C.findIndex(x => x.k === n && !x.srv)).filter(i => i >= 0); if (!L.length) return;
+  const body = L.map(i => { const c = C[i]; const anyLs = (c.ls || []).some(s => s && s.s && !_SM_NOSRC.includes(s.s));
+    const lines = (c.v || []).map((x, j) => { const s = c.ls && c.ls[j]; const ok = s && s.s && !_SM_NOSRC.includes(s.s); const src = !ok ? '' : /^https?:\/\//.test(s.u || '') ? `<a href="${escapeAttr(s.u)}" target="_blank" rel="noopener">${_smEsc(s.s)}</a>` : _smEsc(s.s);
+      return `<div class="sm2-l"><div>${_smEsc(x)}${_smCk(c, j, r.admin)}</div>${src ? `<small>${src}</small>` : ''}</div>`; }).join('');
+    return `<div class="sm2-dc">${L.length > 1 ? `<div class="sm2-lab" style="margin-bottom:14px">${_smEsc(c.k)}</div>` : ''}${lines}${!anyLs && c.src ? `<div class="sm-src" style="margin-top:22px">${_smEsc(c.src)}</div>` : ''}${r.admin ? `<button type="button" class="sm-btn" style="width:100%;margin-top:26px" onclick="document.getElementById('brSheet')?.remove(); aqMapEdit(${i})">고치기</button>` : ''}</div>`; }).join('');
+  document.getElementById('brSheet')?.remove();
+  const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
+  d.innerHTML = `<div class="br-bar"><div class="aq-uni-gripwrap"><div class="aq-uni-grip" aria-hidden="true"></div></div><button class="aq-uni-x" onclick="document.getElementById('brSheet').remove()">✕</button><span>${_smEsc(_sm.tk || '')} · 종목 지도</span></div><div class="br-body"><div class="sm2-dt">${_smEsc(title)}</div>${body}</div>`;
+  document.body.appendChild(d);
+}
+window.aqMapDetail = aqMapDetail;
 function _smHtml(r) {
   if (r.unsupported) return '<div class="sm-empty">한국 종목은 준비 중이에요</div>';
   const busy = !!(r.req && (r.req.status === 'queued' || r.req.status === 'requested')); const M = r.map; let h = '';
@@ -16988,7 +17086,7 @@ function _smHtml(r) {
   }
   const dt = M.asof ? String(M.asof).slice(5).replace('-', '/') : '';
   h += `<div class="sm-head"><span class="sm-chip ${M.status === 'confirmed' ? 'ok' : ''}">${M.status === 'confirmed' ? '확정' : '초안'}</span>${dt ? `<span>${dt} 기준</span>` : ''}${_smCkSum(M.ck)}${busy ? '<span>· 다시 만드는 중</span>' : ''}</div>`;
-  h += (M.cells || []).map((c, i) => `<div class="sm-cell"${r.admin && !c.srv ? ` onclick="aqMapEdit(${i})" style="cursor:pointer"` : ''}><div class="sm-k">${_smEsc(c.k)}</div><div class="sm-v">${(c.v || []).map((x, j) => `<div>${_smEsc(x)}${_smCk(c, j, r.admin)}</div>`).join('')}</div>${c.src ? `<div class="sm-src">${_smEsc(c.src)}</div>` : ''}</div>`).join('');
+  h += _smBody(r);   // v7.12: 시안 모양
   if (r.admin) h += `<div style="display:flex;gap:10px;margin:22px 4px 0">${M.status !== 'confirmed' ? '<button class="sm-btn pri" style="flex:1" onclick="aqMapConfirm()">확정</button>' : ''}<button class="sm-btn" style="flex:1" ${busy || !r.can ? 'disabled' : ''} onclick="aqMapRequest()">다시 만들기</button></div>`;
   return h;
 }
