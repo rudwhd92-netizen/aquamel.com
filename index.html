@@ -98,7 +98,7 @@ try {
 // v2.60: PWA 버전 단일 상수 — splash + SW register + sw.js CACHE_NAME 자동 동기화
 //   향후 PWA 버전 올릴 때 여기 한 줄만 변경하면 모든 곳 자동 갱신
 // ============================================================================
-window.AQ_PWA_VERSION = '7.12';   // v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.13';   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -1639,6 +1639,15 @@ body.modal-map-mode #chartModal .modal-report-banner, body.modal-map-mode #chart
 .sm2-dt { font-size: 24px; font-weight: 700; color: var(--text-hi, #fff); margin: 18px 0 28px; }
 .sm2-dc + .sm2-dc { margin-top: 40px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.07); }
 .sm2-l { font-size: 16px; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; overflow-wrap: anywhere; } .sm2-l + .sm2-l { margin-top: 22px; } .sm2-l small { display: block; margin-top: 4px; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .sm2-l small a { color: inherit; text-decoration: underline; }
+/* v7.13: AI 매니저 › 거시 판단 카드 */
+.mj { margin: 6px 4px 0; display: flex; flex-direction: column; gap: 12px; }
+.mj-hd { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .mj-hd b { font-size: 15px; font-weight: 700; color: var(--text-hi, #fff); margin-right: 2px; }
+.mj-top { display: flex; flex-direction: column; gap: 10px; width: 100%; cursor: pointer; padding: 20px 18px; }
+.mj-v { font-size: 26px; font-weight: 700; color: var(--text-hi, #fff); } .mj-v.up { color: #5eead4; } .mj-v.dn { color: #f0a4a4; }
+.mj-why { font-size: 15px; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; overflow-wrap: anywhere; }
+.mj .sm2-tile { cursor: pointer; } .mj .sm2-tile b { font-size: 17px; } .mj-dn { color: #f0a4a4 !important; } .mj-up { color: #5eead4 !important; }
+.mj-more { margin: 14px 0 0; width: 100%; } .mj-list { margin-top: 6px; } .mj-sub { white-space: normal !important; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } .mj-w { font-size: 13px; font-weight: 700; color: var(--text-hi, #fff); white-space: nowrap; } .mj-w.up { color: #5eead4; } .mj-w.dn { color: #f0a4a4; } .mj-dh { display: flex; flex-direction: column; gap: 10px; margin-bottom: 34px; } [data-theme="light"] .mj-w.up { color: #0f9d8a; } [data-theme="light"] .mj-w.dn { color: #c24848; } .mj-off { padding: 26px 6px 6px; color: var(--text-mute); font-size: 13px; text-align: center; }
+[data-theme="light"] .mj-v.up, [data-theme="light"] .mj-up { color: #0f9d8a !important; } [data-theme="light"] .mj-v.dn, [data-theme="light"] .mj-dn { color: #c24848 !important; }
 [data-theme="light"] .sm2-card { background: rgba(0,0,0,.045); } [data-theme="light"] .sm2-ln { background: rgba(0,0,0,.18); } [data-theme="light"] .sm2-rw, [data-theme="light"] .sm2-dc + .sm2-dc { border-color: rgba(0,0,0,.08); } [data-theme="light"] .sm2-chips i { background: rgba(0,0,0,.06); } [data-theme="light"] .sm2-me { border-color: #0d9488; } [data-theme="light"] .sm2-big b { color: #0d9488; }
 body.modal-pos-mode #positionPanel { display: block; }
 body.modal-pos-mode #chartModal .chart-wrap,
@@ -17085,9 +17094,9 @@ function _smHtml(r) {
     return h + '</div>';
   }
   const dt = M.asof ? String(M.asof).slice(5).replace('-', '/') : '';
-  h += `<div class="sm-head"><span class="sm-chip ${M.status === 'confirmed' ? 'ok' : ''}">${M.status === 'confirmed' ? '확정' : '초안'}</span>${dt ? `<span>${dt} 기준</span>` : ''}${_smCkSum(M.ck)}${busy ? '<span>· 다시 만드는 중</span>' : ''}</div>`;
+  h += `<div class="sm-head">${dt ? `<span>${dt} 기준</span>` : ''}${_smCkSum(M.ck)}${busy ? '<span>· 다시 만드는 중</span>' : ''}</div>`;
   h += _smBody(r);   // v7.12: 시안 모양
-  if (r.admin) h += `<div style="display:flex;gap:10px;margin:22px 4px 0">${M.status !== 'confirmed' ? '<button class="sm-btn pri" style="flex:1" onclick="aqMapConfirm()">확정</button>' : ''}<button class="sm-btn" style="flex:1" ${busy || !r.can ? 'disabled' : ''} onclick="aqMapRequest()">다시 만들기</button></div>`;
+  if (r.admin) h += `<div style="display:flex;gap:10px;margin:22px 4px 0"><button class="sm-btn" style="flex:1" ${busy || !r.can ? 'disabled' : ''} onclick="aqMapRequest()">다시 만들기</button></div>`;
   return h;
 }
 async function aqMapRequest() {
@@ -30981,12 +30990,83 @@ function _mgMkSync() {   // 위에서 시장을 바꿨으면 매니저 상태를
   const m = _mgMkNow(); if (m === _mg.mk) return false;
   Object.assign(_mg, { mk: m, d: null, ts: 0, open: {}, f: 'all', all: false, px: {}, pxTs: 0, sc: {}, scTs: {} }); return true;
 }
+// v7.13: 거시 판단 (AI 매니저 · 미국) — 종목 지도에서 출발해 종목마다 오늘 날씨(우호 · 중립 · 비우호). 정량은 서버, 정성은 AI(흐름별 소식), 따로 검수.
+//   화면: 시장 지표 4칸 · 날씨 개수 · 종목 줄(날씨 · 한 줄 이유) → 누르면 그 종목의 근거(줄마다 출처 · 검수 표시)와 기댄 흐름의 소식
+const _mj = { d: null, ts: 0, f: 'all' };
+const _MJ_Q = [['나스닥 100', 'pt'], ['미 10년 금리', 'yld'], ['유가', 'usd'], ['금', 'usd']];
+const _MJ_W = ['비우호', '중립', '우호'];
+function _mjVal(r) {
+  if (!r || r.miss) return ['—', ''];
+  const f = (v, n) => Number(v).toLocaleString('en-US', { minimumFractionDigits: n, maximumFractionDigits: n });
+  if (r.kind === 'yld') return [f(r.close, 2) + '%', r.bp1 == null ? '' : `하루 ${r.bp1 > 0 ? '+' : ''}${f(r.bp1, 1)}bp`];
+  return [(r.kind === 'usd' ? '$' : '') + f(r.close, r.close >= 1000 ? 0 : 2), r.d1 == null ? '' : `하루 ${r.d1 > 0 ? '+' : ''}${f(r.d1, 2)}%`];
+}
+function _mjNm(t, nm) { let d = ''; try { d = displayName(t) || ''; } catch (e) {} return d && d !== t ? d : (nm || t); }
+function _mjWc(w) { return w === '우호' ? 'up' : w === '비우호' ? 'dn' : ''; }
+function _mjHtml() {
+  const R = _mj.d; if (!R) return '<div class="mg-empty">불러오는 중…</div>';
+  const L = R.last, N = R.now; let h = '<div class="mj">';
+  const busy = N && ['starting', 'requested', 'review'].includes(N.status);
+  if (!L) return h + `<div class="mg-empty">${busy ? '오늘 거시 판단을 쓰는 중이에요' : N && N.status === 'failed' ? '오늘 거시 판단을 만들지 못했어요' : '아직 거시 판단이 없어요'}<div class="sm-cap">매 미국 거래일 한국 20:40(여름 19:40)</div></div></div>`;
+  const S = L.stocks || {}, tks = Object.keys(S), cnt = w => tks.filter(t => S[t].w === w).length;
+  h += `<div class="mj-hd"><b>거시</b><span>${_smEsc(String(L.d).slice(5).replace('-', '/'))} 판단</span>${_smCkSum(L.ck)}${busy ? '<span>· 오늘 것 쓰는 중</span>' : N && N.status === 'failed' ? '<span>· 오늘 것 못 만듦</span>' : ''}</div>`;
+  const rows = ((L.quant && L.quant.rows) || []);
+  h += '<div class="sm2-g2">' + _MJ_Q.map(([k]) => { const r = rows.find(x => x.name === k); const [a, b] = _mjVal(r); const dn = k === '나스닥 100' && /하루 -/.test(b), up = k === '나스닥 100' && /하루 \+/.test(b);   // 색은 지수에만 (금리 · 유가 · 금은 방향이 좋고 나쁨이 아님)
+    return `<div class="sm2-card sm2-tile"><small>${_smEsc(k)}</small><b>${_smEsc(a)}</b>${b ? `<small class="${dn ? 'mj-dn' : up ? 'mj-up' : ''}">${_smEsc(b)}</small>` : ''}</div>`; }).join('') + '</div>';
+  const f = _mj.f;
+  h += `<div class="mg-chips">${[['all', '전체', tks.length], ..._MJ_W.map(w => [w, w, cnt(w)])].map(([k, t, n]) => `<button type="button" class="${f === k ? 'on' : ''}" onclick="_mjF('${k}')">${t}<em>${n}</em></button>`).join('')}</div>`;
+  h += '<div class="mj-list">' + tks.filter(t => f === 'all' || S[t].w === f).map(t => { const x = S[t];
+    return `<div class="mg-row" onclick="aqMacroDetail('${escapeAttr(t)}')"><span class="lg">${_mgLogo(t)}</span><span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span class="nm">${escapeHtml(_mjNm(t, x.nm))}${x.held ? '' : '<i>관심</i>'}</span><span class="sub mj-sub">${_smEsc(x.why || '')}</span></span><span class="mj-w ${_mjWc(x.w)}">${_smEsc(x.w || '—')}</span></div>`; }).join('') + '</div>';
+  h += `<button type="button" class="sm2-card sm2-hist mj-more" onclick="aqMacroDetail()"><span>오늘 소식 전체</span><i>›</i></button>`;
+  return h + '</div>';
+}
+function _mjF(k) { _mj.f = k; const b = document.getElementById('mgrBody'); if (b) b.innerHTML = _mjHtml() + '<div class="mj-off">종목 판단은 개발 중이에요</div>'; }
+window._mjF = _mjF;
+async function _mjLoad(force) {
+  if (!force && _mj.d && Date.now() - _mj.ts < 55e3) return;
+  let r = null; try { r = await apiCall('macroJudgeGet', {}); } catch (e) {}
+  if (r && r.ok) { _mj.d = r; _mj.ts = Date.now(); }
+}
+function _mjLines(c, adm, skip) {
+  return (c.v || []).map((x, j) => { if (j < (skip || 0)) return ''; const s = c.ls && c.ls[j]; const ok = s && s.s && !_SM_NOSRC.includes(s.s) && s.s !== '판단';
+    const src = !ok ? '' : /^https?:\/\//.test(s.u || '') ? `<a href="${escapeAttr(s.u)}" target="_blank" rel="noopener">${_smEsc(s.s)}</a>` : _smEsc(s.s);
+    return `<div class="sm2-l"><div>${_smEsc(x)}${_smCk(c, j, adm)}</div>${src ? `<small>${src}</small>` : ''}</div>`; }).join('');
+}
+function aqMacroDetail(tk) {
+  const L = _mj.d && _mj.d.last; if (!L) return; const C = L.cells || []; const adm = _mgAdm();
+  const flows = C.filter(x => x.k.startsWith('흐름 · ')); let title, body = '';
+  if (tk) {
+    const c = C.find(x => x.k === '종목 · ' + tk), x = (L.stocks || {})[tk] || {}; if (!c) return;
+    title = _mjNm(tk, x.nm);
+    body += `<div class="mj-dh"><span class="mj-v ${_mjWc(x.w)}">${_smEsc(x.w || '—')}</span><span class="mj-why">${_smEsc(x.why || '')}</span>${_smCk(c, 0, adm)}${x.map ? '' : '<span class="sm-ck unk">지도 없음</span>'}</div>`;
+    body += `<div class="sm2-dc">${_mjLines(c, adm, 1)}</div>`;
+    const used = [...new Set((c.ls || []).map(s => s && s.s && (s.s.match(/^지도(?: 밖)? · (.+)$/) || [])[1]).filter(Boolean))];
+    const F = used.map(n => flows.find(f => f.k === '흐름 · ' + n)).filter(Boolean);
+    if (F.length) body += `<div class="sm2-lab" style="margin:40px 0 0">기댄 소식</div>` + F.map(f => `<div class="sm2-dc"><div class="sm2-lab" style="margin-bottom:14px">${_smEsc(f.k.slice(5))}</div>${_mjLines(f, adm)}</div>`).join('');
+  } else {
+    title = '오늘 소식';
+    body = flows.map(f => `<div class="sm2-dc"><div class="sm2-lab" style="margin-bottom:14px">${_smEsc(f.k.slice(5))}</div>${_mjLines(f, adm)}</div>`).join('') || '<div class="mg-empty">소식이 없어요</div>';
+  }
+  document.getElementById('brSheet')?.remove();
+  const d = document.createElement('div'); d.id = 'brSheet'; d.className = 'br-sheet';
+  d.innerHTML = `<div class="br-bar"><div class="aq-uni-gripwrap"><div class="aq-uni-grip" aria-hidden="true"></div></div><button class="aq-uni-x" onclick="document.getElementById('brSheet').remove()">✕</button><span>거시 판단 · ${_smEsc(String(L.d).slice(5).replace('-', '/'))}</span></div><div class="br-body"><div class="sm2-dt">${_smEsc(title)}</div>${body}<div class="br-lim" style="margin-top:34px">오늘 거시 환경 판단이에요 — 가격 예측이 아니에요</div></div>`;
+  document.body.appendChild(d);
+}
+window.aqMacroDetail = aqMacroDetail;
 const _MG_OFF = { US: true, KR: true };   // v7.07: 새 구조가 완성될 때까지 AI 매니저 멈춤
 async function aqMgrRender(force) {
   const box = document.getElementById('mgrBody'); if (!box) return;
   if (_mgMkSync()) { force = true; box.innerHTML = '<div class="mg-empty">불러오는 중…</div>'; }
   if (!_mgAdm()) { box.innerHTML = '<div class="mg-empty">관리자 계좌 기준 기능이에요</div>'; return; }
-  if (_MG_OFF[_mg.mk]) { clearTimeout(_mg.poll); box.innerHTML = '<div class="mg-empty">개발 중이에요</div>'; return; }   // v7.06 한국 · v7.07 미국: AI 매니저 멈춤 (다시 기획 중)
+  if (_MG_OFF[_mg.mk]) {   // v7.06 한국 · v7.07 미국: AI 매니저 멈춤 (다시 기획 중) · v7.13: 미국은 거시 판단부터 보임
+    clearTimeout(_mg.poll);
+    if (_mg.mk !== 'US') { box.innerHTML = '<div class="mg-empty">개발 중이에요</div>'; return; }
+    if (!_mj.d) box.innerHTML = '<div class="mg-empty">불러오는 중…</div>';
+    await _mjLoad(force); if (_mg.mk !== 'US') return;
+    box.innerHTML = (_mj.d ? _mjHtml() : '<div class="mg-empty">거시 판단을 불러오지 못했어요</div>') + '<div class="mj-off">종목 판단은 개발 중이에요</div>';
+    const N = _mj.d && _mj.d.now; if (N && ['starting', 'requested', 'review'].includes(N.status)) _mg.poll = setTimeout(() => aqMgrRender(true), 60e3);
+    return;
+  }
   if (force || !_mg.d || Date.now() - _mg.ts > 55e3) {
     const want = _mg.mk; let r = null; try { r = await apiCall('managerToday', { mkt: want }); } catch (e) {}
     try { r = _mgNoG(r); } catch (e) {}   // v6.95: 가이드 번호(G19 등)는 화면에 안 보임
