@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '7.37';   // v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.38';   // v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -3218,6 +3218,9 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
   body[data-mtab="schedule"] section.card[data-mtab~="schedule"] { display: block !important; }
   body[data-mtab="schedule"] #scheduleCard { display: block !important; }
   body[data-mtab="schedule"] #majorEventsCard { display: block !important; }
+  /* v7.38: 일정 › 월간 일정(주요 이벤트 · 달력 · AI 가이드) | AI 비서 */
+  body[data-mtab="schedule"][data-ssub="assist"] section.card[data-mtab~="schedule"]:not(#schedSubtabs):not(#assistCard) { display: none !important; }
+  body[data-mtab="schedule"]:not([data-ssub="assist"]) #assistCard { display: none !important; }
 }
 
 /* ============ v2.46: CALENDAR ============ */
@@ -4327,8 +4330,8 @@ body:not([data-role="admin"]) .xtab-btn[data-btab="audit"] { display: none !impo
 /* v5.53 */
 :root:not([data-theme="light"]) { --bg: #161618; --tab-bar-bg: #0e0e10; }
 html:not([data-theme="light"]) body { background: #161618; }
-.mtab-btn[data-mtab="auto"] .mtab-icon { color: #fcc419; }
-.mtab-btn[data-mtab="auto"].active .mtab-icon { color: #ffd43b; } .mtab-btn[data-mtab="auto"].active .mtab-icon path { fill: #ffd43b; fill-opacity: .9; }
+.mtab-btn[data-mtab="ai"] .mtab-icon { color: #fcc419; }
+.mtab-btn[data-mtab="ai"].active .mtab-icon { color: #ffd43b; } .mtab-btn[data-mtab="ai"].active .mtab-icon path { fill: #ffd43b; fill-opacity: .9; }
 .pc-tab-btn[data-pc-tab="auto"] svg { color: #fcc419; }
 #modalSubtitle .ms-earn.pre { color: #ffa94d; border-color: rgba(255,169,77,.45); } #modalSubtitle .ms-earn.day { color: #0b0b0d; background: #fcc419; border-color: #fcc419; font-weight: 800; } #modalSubtitle .ms-earn.post { color: var(--text-mute); }
 .mac-asof { font-size: 11.5px; color: var(--text-mute); margin: -2px 2px 10px; } .mac-gt { font-size: 12px; font-weight: 600; color: var(--text-mute); margin: 12px 4px 6px; }
@@ -4380,7 +4383,7 @@ body:not([data-role="admin"]) #aiSubtabs .xtab-btn[data-atab="manager"] { displa
 .gd-det { margin-top: 10px !important; padding: 12px 14px !important; } .gd-det > div + div { margin-top: 8px !important; }
 .gd-det .gd-rec { color: var(--text-hi); font-weight: 600; } .gd-det .gd-rec b { color: #63e6be; }
 .gd-sub { margin-bottom: 5px !important; } .gd-tt { line-height: 1.45 !important; }
-body[data-mtab="auto"][data-atab="guide"] footer, body[data-mtab="auto"][data-atab="assist"] footer { display: none !important; }
+body[data-mtab="auto"][data-atab="guide"] footer, body[data-mtab="auto"][data-atab="assist"] footer, body[data-mtab="schedule"] footer { display: none !important; }
 /* v6.49: AI 비서 탭 배지 · AI 리포트 [기업 분석 | 매매 분석] */
 #aiSubtabs .xtab-btn em { font-style: normal; display: inline-block; min-width: 16px; height: 16px; line-height: 16px; padding: 0 4px; margin-left: 4px; border-radius: 8px; background: #569cd6; color: #06101f; font-size: 10.5px; font-weight: 800; vertical-align: 1px; box-sizing: border-box; }
 .rpt-togw:empty { display: none; } .rpt-togw { padding: 0; } .rpt-togw .gd-top { margin: 4px 0 18px; }
@@ -9692,15 +9695,15 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
 
   <!-- v2.01 Phase 2: 분석 페이지 — 정량 보고서 등록된 종목 그리드 -->
   <!-- v3.32: 종목 비교 분석 (US 유니버스 최대 3개 — 리베이스 차트 + 멀티 헥사곤) -->
-  <section class="card mobile-only explore-subtabs" id="watchSubtabs" data-mtab="sector"><div class="xtab-row"><button class="xtab-btn" data-wsub="sim" onclick="aqWatchSubClick('sim')">모의 매수</button><button class="xtab-btn" data-wsub="cmp" onclick="aqWatchSubClick('cmp')">비교 분석</button></div></section>
-  <section class="card" id="watchBoardCard" data-mtab="sector"><div class="card-header"><h2>모의 매수</h2><span class="dash-meta" id="aqSimMeta"></span></div>
+  <section class="card mobile-only explore-subtabs" id="watchSubtabs" data-mtab="retired" style="display:none !important"><div class="xtab-row"><button class="xtab-btn" data-wsub="sim" onclick="aqWatchSubClick('sim')">모의 매수</button><button class="xtab-btn" data-wsub="cmp" onclick="aqWatchSubClick('cmp')">비교 분석</button></div></section>
+  <section class="card" id="watchBoardCard" data-mtab="auto" data-atab="sim"><div class="card-header"><h2>모의 매수</h2><span class="dash-meta" id="aqSimMeta"></span></div>
       <div class="card-body">
         <div class="aq-sim-summary" id="aqSimSummary"></div>
         <div class="dash-holdings-body" id="aqSimList"></div>
         <button class="watch-add-btn" onclick="openWatchSearch('short')">+ 종목 추가 (1주 모의매수)</button>
       </div>
     </section>
-    <section class="card" id="compareCard" data-mtab="sector" style="display:none;">
+    <section class="card" id="compareCard" data-mtab="auto" data-atab="cmp">
     <div class="card-header"><h2>종목 비교 분석</h2></div>
     <div class="card-body">
       <div class="cmp-picker">
@@ -9854,12 +9857,7 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
 
     <!-- v4.76: 자동 페이지 (요건 구체화 예정 — 우선 신호 선택만) -->
     <section class="card mobile-only explore-subtabs" id="aiSubtabs" data-mtab="auto">
-      <div class="xtab-row">
-        <button class="xtab-btn active" data-atab="brief" onclick="setAiSubtab('brief')">AI 브리핑</button>
-        <button class="xtab-btn" data-atab="guide" onclick="setAiSubtab('guide')">AI 가이드<em id="asgBadge" style="display:none"></em></button>
-        <button class="xtab-btn" data-atab="manager" onclick="setAiSubtab('manager')">AI 매니저</button>
-        <button class="xtab-btn" data-atab="report" onclick="aqRptGo()">AI 리포트</button>
-      </div>
+      <div class="xtab-row" id="aiSubRow"></div>   <!-- v7.38: 연구 · AI · 뉴스 메뉴마다 setAiSubtab이 그림 -->
     </section>
     <section class="card" id="closeCard" data-mtab="retired" style="display:none !important">
       <div class="card-header bf-head"><span class="bf-date" id="closeDate"></span></div>
@@ -9872,12 +9870,6 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
     <section class="card" id="briefCard" data-mtab="auto" data-atab="brief">
       <div class="card-header bf-head"><span class="br-toggle" id="briefToggle"></span><span class="bf-date" id="briefDate"></span><button class="bf-dismiss" id="briefDismissBtn" onclick="aqBriefDismiss()">그만 보기</button></div>
       <div class="card-body"><div id="briefBody"><div class="auto-empty">불러오는 중…</div></div></div>
-    </section>
-    <section class="card" id="guideCard" data-mtab="auto" data-atab="guide">
-      <div class="card-body"><div id="guideBody"><div class="auto-empty">불러오는 중…</div></div></div>
-    </section>
-    <section class="card" id="assistCard" data-mtab="auto" data-atab="guide">
-      <div class="card-body"><div class="asg-mod-h"><b>비서</b></div><div id="assistBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="managerCard" data-mtab="auto" data-atab="manager">
       <div class="card-body"><div id="mgrBody"><div class="auto-empty">불러오는 중…</div></div></div>
@@ -9908,6 +9900,10 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
       </div>
     </div>
   </section>
+    <section class="card" id="mapListCard" data-mtab="auto" data-atab="maps">   <!-- v7.38: 연구 › 종목 지도 -->
+      <div class="card-header"><h2>종목 지도</h2></div>
+      <div class="card-body"><div id="mapListBody"><div class="buy-points-empty">불러오는 중…</div></div></div>
+    </section>
     <section class="card" id="reviewCard" data-mtab="auto" data-atab="review">
       <div class="card-body"><div class="rpt-togw"></div><div id="reviewBody"><div class="auto-empty">불러오는 중…</div></div></div>
     </section>
@@ -10367,6 +10363,7 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
 
   <!-- ============ v2.46: CALENDAR / 일정 ============ -->
   <!-- v2.53: 주요 이벤트 — 5일 이내 임박 이벤트 가로 스크롤 (매수 포인트와 동일 UI) -->
+  <section class="card mobile-only explore-subtabs" id="schedSubtabs" data-mtab="schedule"><div class="xtab-row"><button class="xtab-btn active" data-ssub="month" onclick="aqSchedSub('month')">월간 일정</button><button class="xtab-btn" data-ssub="assist" onclick="aqSchedSub('assist')">AI 비서<em id="asgBadge" style="display:none"></em></button></div></section>   <!-- v7.38 -->
   <section class="card" id="majorEventsCard" data-mtab="schedule" style="display:none;">
     <div class="card-header">
       <h2>주요 이벤트</h2>
@@ -10438,6 +10435,13 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
       </div>
     </div>
   </section>
+  <!-- v7.38: AI 가이드(달력 아래) · AI 비서 — AI 탭에서 옮김 -->
+  <section class="card" id="guideCard" data-mtab="schedule">
+    <div class="card-body"><div id="guideBody"><div class="auto-empty">불러오는 중…</div></div></div>
+  </section>
+  <section class="card" id="assistCard" data-mtab="schedule">
+    <div class="card-body"><div class="asg-mod-h"><b>비서</b></div><div id="assistBody"><div class="auto-empty">불러오는 중…</div></div></div>
+  </section>
 
   <!-- v2.46: 일정 등록/편집 모달 -->
   <div class="cal-modal-backdrop aq-uni-back" id="calModalBackdrop" onclick="if(event.target===this) aqCalendarCloseModal()">
@@ -10497,16 +10501,21 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
       </svg>
       <span class="mtab-label">탐색</span>
     </button>
-    <!-- v3.84: 섹터 — 햄버거에서 하단 탭(탐색↔관심)으로 이동 -->
-    <button class="mtab-btn" data-mtab="sector" onclick="switchMobileTab('sector')" aria-label="관심">
-      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-      <span class="mtab-label">관심</span>
+    <!-- v7.38: 관심 → 연구 (AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) -->
+    <button class="mtab-btn" data-mtab="research" onclick="switchMobileTab('research')" aria-label="연구">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+      <span class="mtab-label">연구</span>
     </button>
     <!-- v3.85: 관심 탭 삭제 — 관심 종목은 자산 서브탭(좌측)으로 이동 -->
     <!-- v2.92: 4번째 — 일정 -->
-    <button class="mtab-btn" data-mtab="auto" onclick="switchMobileTab('auto')" aria-label="AI">
+    <button class="mtab-btn" data-mtab="ai" onclick="switchMobileTab('ai')" aria-label="AI">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3l1.6 4.4L16 9l-4.4 1.6L10 15l-1.6-4.4L4 9l4.4-1.6z"/><path d="M18 13l.8 2.2L21 16l-2.2.8L18 19l-.8-2.2L15 16l2.2-.8z"/></svg>
       <span class="mtab-label">AI</span>
+    </button>
+    <!-- v7.38: 뉴스 (AI 브리핑 · 주간 이슈) -->
+    <button class="mtab-btn" data-mtab="news" onclick="switchMobileTab('news')" aria-label="뉴스">
+      <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v10a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5M8 17h3"/></svg>
+      <span class="mtab-label">뉴스</span>
     </button>
     <button class="mtab-btn" data-mtab="schedule" onclick="switchMobileTab('schedule')" aria-label="일정">
       <svg class="mtab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -13520,6 +13529,10 @@ function _renderSelectedSection() {
   const list = document.getElementById('calSelectedList');
   if (!section || !label || !list) return;
   if (!aqCal.selected) { section.style.display = 'none'; return; }
+  if (typeof _gdAdm === 'function' && _gdAdm() && document.body.getAttribute('data-mtab') === 'schedule') {   // v7.38: 일정 탭 — 그날 목록은 아래 AI 가이드 안에 시간순으로 합쳐 보여 줌
+    section.style.display = 'none'; try { aqTLEnsureJobs(aqCal.selected); } catch (e) {}
+    _gd.sel = aqCal.selected; clearTimeout(_gd._calT); _gd._calT = setTimeout(() => { try { aqGuideRender(); } catch (e) {} }, 0); return;
+  }
   section.style.display = '';
   const dt = new Date(aqCal.selected);
   const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
@@ -14579,7 +14592,7 @@ function setMarket(mkt) {
     }
   } catch (e) { console.warn('[setMarket/activeTab]', e); }
 
-  try { if (document.body.getAttribute('data-mtab') === 'auto' && document.body.getAttribute('data-atab') === 'guide' && typeof aqGuideRender === 'function') aqGuideRender(); } catch (e) {}   // v6.19: AI 가이드 시장별 · v6.61: AI 비서도
+  try { if (document.body.getAttribute('data-mtab') === 'schedule' && typeof aqGuideRender === 'function') aqGuideRender(); } catch (e) {}   // v7.38: 일정 탭   // v6.19: AI 가이드 시장별 · v6.61: AI 비서도
   // v2.31/v2.32: 시장 전환 후 vshape 토글 표시 갱신 (KR이면 숨김)
   try {
     if (typeof syncVshapeToggleUI === 'function') syncVshapeToggleUI();
@@ -25756,17 +25769,26 @@ window.openMoDrawer = openMoDrawer;
 window.closeMoDrawer = closeMoDrawer;
 window.moDrawerNav = moDrawerNav;
 
+// v7.38: 연구 · AI · 뉴스 메뉴는 모두 AI 탭(data-mtab=auto) 위에서 서브탭 묶음만 다름
+const _AQ_AGRP = { report: 'research', maps: 'research', sim: 'research', cmp: 'research', manager: 'ai', review: 'ai', brief: 'news', macro: 'news' };
+function _aqAgrpDef(g) { const adm = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); return g === 'research' ? 'report' : g === 'news' ? 'brief' : (adm ? 'manager' : 'review'); }
+function _aqNavKey() { const m = document.body.getAttribute('data-mtab'); if (m !== 'auto') return m; return _AQ_AGRP[document.body.getAttribute('data-atab')] || 'news'; }
+function _aqNavPaint() { const k = _aqNavKey(); document.querySelectorAll('.mtab-btn').forEach(b => b.classList.toggle('active', b.dataset.mtab === k)); }
 function switchMobileTab(tab) {
   try { aqReleaseScroll(); } catch (e) {}   // v6.22
+  if (tab === 'research' || tab === 'news' || tab === 'ai' || tab === 'sector') {   // v7.38: 메뉴 → 그 묶음의 마지막 서브탭 (관심 예전 링크 = 모의 매수)
+    const g = tab === 'sector' ? 'research' : tab; let x = tab === 'sector' ? 'sim' : null;
+    if (!x) { try { x = localStorage.getItem('aq_agrp_' + g); } catch (e) {} }
+    if (!x || _AQ_AGRP[x] !== g) x = _aqAgrpDef(g);
+    document.body.setAttribute('data-atab', x); tab = 'auto';
+  }
   // v2.66: todo 활성화 — 칸반 빌드 (이전엔 'todo' return)
   document.body.setAttribute('data-mtab', tab);
   if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
   if (tab === 'engine') { try { aqAutoEnter(); } catch (e) {} }   // v5.99: 자동 (햄버거)
   if (tab === 'auto') { try { setAiSubtab(document.body.getAttribute('data-atab') || 'brief'); } catch (e) {} }
   if (tab === 'settings') { try { aqSettingsRender(); } catch (e) {} }
-  document.querySelectorAll('.mtab-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.mtab === tab);
-  });
+  _aqNavPaint();   // v7.38
   // 탭별 lazy 렌더링
   if (tab === 'discover') {
     buildBuyPointsCard();
@@ -25775,6 +25797,7 @@ function switchMobileTab(tab) {
   } else if (tab === 'explore') {
     if (typeof setExploreSubtab === 'function') setExploreSubtab(document.body.getAttribute('data-xtab') || 'signals');
   } else if (tab === 'schedule') {
+    try { aqSchedSub(document.body.getAttribute('data-ssub') || 'month', true); } catch (e) {}   // v7.38: 월간 일정 · AI 비서
     // v2.46: 캘린더 렌더
     try { aqCalendarRender(); } catch (e) {}
     // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
@@ -26185,6 +26208,20 @@ function aqDiscoverItems() {
     } catch (e) { console.warn('[discover] KR flow streak', e); }
   }
 
+  // v7.38: 밸런스 종목 — 목록 기본 정렬(주력 그룹 · 좋은 순) 상위 5 가운데 RSI(14) 35 미만 또는 최근 3개월 종가 중 지금 종가가 아래 20% 안
+  try {
+    const R = (typeof _balGet === 'function') ? _balGet() : null;
+    if (R && !R.err && R.groups && R.groups.length && R.mkt === market) {
+      const gid = (R.groups.find(g => g.id === 'main') || R.groups[0]).id;
+      R.cands.filter(c => c.res[gid]).sort(_balCmp(gid, 'bal')).slice(0, 5).forEach(c => {
+        const f = findTickerSeries(c.tk); if (!f || !f.rows || f.rows.length < 20) return;
+        const cl = f.rows.map(r => Number(r.Close)).filter(v => v > 0); if (cl.length < 20) return; const last = cl[cl.length - 1];
+        const rsi = calcRSI(cl); const rv = rsi[rsi.length - 1];
+        const w = sampleTimeframe(f.rows, '3M').map(r => Number(r.Close)).filter(v => v > 0); const low20 = w.length >= 20 && w.filter(v => v < last).length / w.length <= 0.2;
+        if ((rv != null && rv < 35) || low20) { const it = ensure(c.tk, todayStr); it.balance = true; addType(it, '밸런스'); }
+      });
+    }
+  } catch (e) { console.warn('[discover] 밸런스', e); }
   // v6.74: 보고서만 있고 신호 없는 종목은 넣지 않음(v4.11 보고서 노출 없앰) · v6.76: 신호 있는 종목은 보고서가 있어도 그대로 · 미국은 최근 종가 $10 이하 또는 ATR(14)/종가 설정값 이상 빼기
   Object.keys(merged).forEach(tk => { if (_aqDiscExcluded(tk, market)) delete merged[tk]; });
 
@@ -26220,7 +26257,9 @@ function aqDiscoverItems() {
   const _statMap = {};
   (Array.isArray(_state.tickerStatsUS) ? _state.tickerStatsUS : []).forEach(x => { if (x && x.ticker) _statMap[String(x.ticker).toUpperCase()] = x; });
   const _rate = it => { const x = _statMap[String(it.ticker || '').toUpperCase()]; return (x && x.judged >= 3 && x.rate != null) ? Number(x.rate) : 0.5; };
+  const _cat = it => it.insider ? 0 : (it.types || []).some(t => t !== '밸런스' && t !== '내부자') ? 1 : 2;   // v7.38: 내부자 매수 > 시그널 > 밸런스
   items.sort((a, b) => {
+    const kc = _cat(a) - _cat(b); if (kc !== 0) return kc;
     const dc = (b.date || '').localeCompare(a.date || '');   // ① 최신일 desc
     if (dc !== 0) return dc;
     const hc = _held(a) - _held(b);                          // ② 보유 우선
@@ -26556,6 +26595,7 @@ function _aqFeedItemHtml(it, C) {
     const tka = escapeAttr(tk);
     const _why = (it.types || []).slice(0, 3).map(t => {
       if (t === '내부자') return '<b>내부자 매수</b>';
+      if (t === '밸런스') return '<b>밸런스 종목</b>';
       if (/^(외국인|기관) \d+일$/.test(t)) return '<b>' + escapeHtml(t) + ' 연속</b>';
       return '<b>' + escapeHtml(t) + '</b>';
     });
@@ -29428,21 +29468,49 @@ function setAiSubtab(x) { aqHoldScroll();
   const _kr = getCurrentMarket() === 'KR';
   if (x === 'pre' || x === 'close') { _brMode(); _br.mode = x === 'pre' ? 'pre' : 'post'; x = 'brief'; }   // v5.55: 장전·장후는 AI 브리핑 안 토글
   if (x === 'auto') { if (isAdmin) { aqGoEngine(); return; } x = 'brief'; }   // v5.99: 자동매매는 햄버거 '자동'으로 이동 (예전 링크 호환)
-  let _toAsg = false; if (x === 'assist') { x = 'guide'; _toAsg = true; }   // v6.82: AI 비서 → AI 가이드 아래 '비서' 모듈
-  const allowed = ['brief', 'guide', 'manager', 'report', 'review', 'macro'];   // v6.49: AI 비서 · AI 리포트(report=기업 분석, review=매매 분석) · v6.54: macro=거시 분석
+  if (x === 'guide' || x === 'assist') { switchMobileTab('schedule'); aqSchedSub(x === 'assist' ? 'assist' : 'month'); return; }   // v7.38: AI 가이드 · 비서 → 일정 탭
+  const allowed = ['brief', 'manager', 'report', 'review', 'macro', 'maps', 'sim', 'cmp'];   // v7.38: 연구(report · maps · sim · cmp) · AI(manager · review) · 뉴스(brief · macro)
   if (!allowed.includes(x)) x = 'brief';
-  if (x === 'manager' && !isAdmin) x = 'brief';   // v6.82: AI 매니저는 관리자 계좌 기준
+  if (x === 'manager' && !isAdmin) x = 'review';   // v6.82: AI 매니저는 관리자 계좌 기준
   document.body.setAttribute('data-atab', x);
-  document.querySelectorAll('#aiSubtabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.atab === (x === 'review' || x === 'macro' ? 'report' : x)));
-  if (x === 'report' || x === 'review' || x === 'macro') { try { localStorage.setItem('aq_rpt_mode', x); } catch (e) {} }
-  try { const tg = `<div class="gd-top"><span class="gd-tog"><button class="${x === 'macro' ? 'on' : ''}" onclick="setAiSubtab('macro')">거시 분석</button><button class="${x === 'report' ? 'on' : ''}" onclick="setAiSubtab('report')">기업 분석</button><button class="${x === 'review' ? 'on' : ''}" onclick="setAiSubtab('review')">매매 분석</button></span></div>`; document.querySelectorAll('.rpt-togw').forEach(el => { el.innerHTML = tg; }); } catch (e) {}   // v6.54: [거시 분석 | 기업 분석 | 매매 분석(관리자)]
+  try {   // v7.38: 메뉴 묶음별 서브탭
+    const g = _AQ_AGRP[x]; localStorage.setItem('aq_agrp_' + g, x);
+    const T = { research: [['report', 'AI 리포트'], ['maps', '종목 지도'], ['sim', '모의 매수'], ['cmp', '비교 분석']], ai: (isAdmin ? [['manager', 'AI 매니저']] : []).concat([['review', 'AI 매수분석']]), news: [['brief', 'AI 브리핑'], ['macro', '주간 이슈']] }[g];
+    const row = document.getElementById('aiSubRow'); if (row) row.innerHTML = T.map(([v, t]) => `<button class="xtab-btn${v === x ? ' active' : ''}" data-atab="${v}" onclick="setAiSubtab('${v}')">${t}</button>`).join('');
+    _aqNavPaint();
+  } catch (e) {}
+  try { document.querySelectorAll('.rpt-togw').forEach(el => { el.innerHTML = ''; }); } catch (e) {}   // v7.38: 거시 · 기업 · 매매 분석 토글 없앰 (각각 뉴스 · 연구 · AI 메뉴로)
+  if (0) try { const tg = `<div class="gd-top"><span class="gd-tog"><button class="${x === 'macro' ? 'on' : ''}" onclick="setAiSubtab('macro')">거시 분석</button><button class="${x === 'report' ? 'on' : ''}" onclick="setAiSubtab('report')">기업 분석</button><button class="${x === 'review' ? 'on' : ''}" onclick="setAiSubtab('review')">매매 분석</button></span></div>`; document.querySelectorAll('.rpt-togw').forEach(el => { el.innerHTML = tg; }); } catch (e) {}   // v6.54: [거시 분석 | 기업 분석 | 매매 분석(관리자)]
   try { if (isAdmin) _bnLoad(); } catch (e) {}
   try { aqAsgBadge(); } catch (e) {}
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
   try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
-  try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'guide') aqGuideRender().then(() => { if (_toAsg) { try { document.getElementById('assistCard').scrollIntoView({ block: 'start' }); } catch (e) {} } }); else if (x === 'manager') aqMgrRender(); else if (x === 'macro') aqMacroRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  try { if (x === 'sim') { aqWatchSub('sim'); if (typeof buildWatchKanban === 'function') buildWatchKanban(); } else if (x === 'cmp') { aqWatchSub('cmp'); if (typeof buildCompare === 'function') buildCompare(); } else if (x === 'maps') aqMapListRender(); } catch (e) { console.warn('[연구]', e); }   // v7.38
+  try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'manager') aqMgrRender(); else if (x === 'macro') aqMacroRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
+// v7.38: 일정 › 월간 일정 | AI 비서
+function aqSchedSub(t, quiet) {
+  t = t === 'assist' ? 'assist' : 'month'; document.body.setAttribute('data-ssub', t);
+  try { if (!aqCal.selected && typeof _gdAdm === 'function' && _gdAdm()) aqCal.selected = _kstToday(); } catch (e) {}   // 달력 기본 = 오늘
+  document.querySelectorAll('#schedSubtabs [data-ssub]').forEach(b => b.classList.toggle('active', b.dataset.ssub === t));
+  if (!quiet) window.scrollTo({ top: 0, behavior: 'instant' });
+  try { aqGuideRender(); } catch (e) {}
+}
+window.aqSchedSub = aqSchedSub;
+// v7.38: 연구 › 종목 지도 — 지도가 있는 종목 (이 시장) · 누르면 종목 페이지의 종목 지도 탭
+async function aqMapListRender() {
+  const box = document.getElementById('mapListBody'); if (!box) return;
+  let r = null; try { r = await apiCall('stockMapList', {}); } catch (e) {}
+  if (!r || !r.ok) { box.innerHTML = `<div class="buy-points-empty">${r && r.error === 'login required' ? '로그인하면 볼 수 있어요' : '불러오지 못했어요'}</div>`; return; }
+  const mk = getCurrentMarket(); const items = (r.items || []).filter(x => (/^\d{6}$/.test(x.ticker) ? 'KR' : 'US') === mk);
+  if (!items.length) { box.innerHTML = '<div class="buy-points-empty">아직 종목 지도가 없어요</div>'; return; }
+  box.innerHTML = items.map(x => { const tk = x.ticker; const sec = (typeof getSectorForTicker === 'function' ? getSectorForTicker(tk) : '') || ''; const layerFile = layerFileName(SECTOR_TO_LAYER[sec] || '기타'); const tkFile = tickerFileName(tk);
+    const logoHtml = tkFile ? `<img class="ia-logo" src="./logos/tickers/${encodeURIComponent(tkFile)}.png" onerror="handleLogoError(this, '${escapeAttr(layerFile)}')" alt="" loading="lazy">` : `<img class="ia-logo" src="./flags/${mk}.png" style="opacity:0.55" onerror="this.style.visibility='hidden'" alt="" loading="lazy">`;
+    return `<div class="insider-archive-item ml-row" data-ticker="${escapeAttr(tk)}">${aqWrapLogo(logoHtml, tk)}<div class="ia-info"><div class="ia-ticker">${escapeHtml(displayName(tk))}</div><div class="ia-company">${escapeHtml(displaySub(tk))}</div><div class="ia-sector">${escapeHtml(aqStripSectorEmoji(sec))}</div></div></div>`; }).join('');
+  box.querySelectorAll('.ml-row').forEach(el => { el.onclick = () => { const tk = el.dataset.ticker; Promise.resolve(openChart(tk)).then(() => setTimeout(() => { try { aqSetModalView('map'); } catch (e) {} }, 150)); }; });
+}
+window.aqMapListRender = aqMapListRender;
 function aqRptGo() {   // v6.49: AI 리포트 탭 — 마지막에 본 쪽(기업 분석·매매 분석)으로
   const isAdmin = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin');
   let m = 'macro'; try { const s = localStorage.getItem('aq_rpt_mode'); m = s === 'review' ? (isAdmin ? 'review' : 'report') : s === 'report' ? 'report' : 'macro'; } catch (e) {}   // v6.54: 처음엔 거시 분석
@@ -29776,7 +29844,7 @@ async function _bnLoad(force) {
   _bn.busy = true; let r = null; try { r = await apiCall('brainHome', { days: 21 }); } catch (e) {} _bn.busy = false;
   if (!(r && r.ok)) return; _bn.d = r; _bn.ts = Date.now();
   try { aqAsgBadge(); } catch (e) {}
-  if (_gdIsAsg() && document.body.getAttribute('data-mtab') === 'auto') { aqHoldScroll(); aqGuideRender(); }
+  if (_gdIsAsg()) { aqHoldScroll(); aqGuideRender(); }
 }
 // v6.61: AI 비서의 주간 점검 칸도 시장별로 — 대상이 'US …'·환전·자동매매면 미국, 'KR …'이면 한국, 포트폴리오·그 밖은 양쪽
 function _bnMk(t) { t = String(t || '').trim(); if (/^KR\b/i.test(t)) return 'KR'; if (/^US\b/i.test(t) || /^(환전|자동매매)/.test(t)) return 'US'; return ''; }
@@ -31953,6 +32021,8 @@ Object.assign(window, { aqFollowToggle, aqGlTk, aqGlFlt, aqGlQ, aqRvScoreSheet, 
 // ---- AI 매매심사 (모바일) ----
 function _rvGlossy(box, R, all, mk, held, watch) {
   aqFollowLoad().then(f => { if (f && !_rv._flPainted) { _rv._flPainted = true; aqReviewRender(); } });
+  all = (all || []).filter(x => x.kind !== 'sell');   // v7.38: AI 매수분석 — 매도심사는 뺌 (매도는 AI 매니저가 매일 판단)
+  if (_gl.rv && _gl.rv.flt === 'sell') _gl.rv.flt = 'all';
   const today = _kstToday(); const items = all.slice();
   const info = items.map(it => {
     const tk = String(it.ticker || '').toUpperCase(); const kind = it.kind === 'sell' ? 'sell' : 'buy';
@@ -31965,7 +32035,7 @@ function _rvGlossy(box, R, all, mk, held, watch) {
   });
   const nTodo = info.filter(x => x.todo).length;
   let h = `<div class="gl-wrap">` + _glStage('rv', '매매 분석', all.length, info.filter(x => x.it.status === 'done' || x.busy).map(x => ({ tk: x.tk, cls: x.busy ? 'n' : _glOpCls(x.it.opinion), op: x.busy ? '심사 중' : (x.it.opinion || ''), todo: x.todo, todoCls: x.rcDue || x.rcSoon ? 'b' : '', at: x.at })), { new: '최신순', recheck: '재심사 임박', expired: '만료 먼저' }[_rv.sort] || '최신순', 'aqRvSortNext()', mk)
-    + _glPills('rv', nTodo, ['매도', 'sell']);
+    + _glPills('rv', nTodo);
   let list = _gl.rv.flt === 'sell' ? info.filter(x => x.kind === 'sell') : info.filter(x => _glMatch('rv', x.tk, held, watch, x.todo));
   const tms = x => x.at;
   if (_rv.sort === 'expired') list.sort((a, b) => (b.exp ? 1 : 0) - (a.exp ? 1 : 0) || (b.stale ? 1 : 0) - (a.stale ? 1 : 0) || tms(b) - tms(a));
@@ -32179,7 +32249,7 @@ function _gdForDay(day) {   // 그날 문서(오전·오후) 우선, 없으면 �
   }
   return { items: items.filter(x => _gdVis(_gdMktOf(x.target))).sort((a, b) => _gdMin(a.time) - _gdMin(b.time)), src, meta };
 }
-function _gdIsAsg() { return document.body.getAttribute('data-atab') === 'guide'; }   // v6.82: 비서는 AI 가이드 탭 아래 모듈   // v6.49: 내 지침 → AI 비서 탭
+function _gdIsAsg() { return document.body.getAttribute('data-mtab') === 'schedule'; }   // v7.38: AI 가이드 · 비서는 일정 탭   // v6.82: 비서는 AI 가이드 탭 아래 모듈   // v6.49: 내 지침 → AI 비서 탭
 function _gdAdm() { return document.body.getAttribute('data-role') === 'admin' || !!(typeof _aqAuth !== 'undefined' && _aqAuth.user && _aqAuth.user.role === 'admin'); }
 function aqAsgBadge() { const el = document.getElementById('asgBadge'); if (!el) return; let n = 0; try { n = _gmDecCount(); } catch (e) {} el.textContent = n || ''; el.style.display = n ? '' : 'none'; }
 async function aqGuideRender() {   // v6.82: AI 가이드(관리자) + 아래 비서 모듈(모두)
@@ -32211,10 +32281,24 @@ async function _aqGuideRenderPart(asg) {
   const summ = `<div class="gd-sum"><b>${sd.getMonth() + 1}/${sd.getDate()} (${'일월화수목금토'[sd.getDay()]})</b> · ${kind}${live.length ? ` · 가이드 ${live.length}개 — ${Object.entries(cnt).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(', ')}` : ''}</div>`;
   const srcTxt = !g.meta ? '' : g.meta.kind === 'pre' ? `${g.meta.from}에 쓴 예고 · 그날 아침에 다시 정리돼요` : [g.meta.am ? `아침 ${g.meta.am} 작성` : '', g.meta.amEdit ? `${g.meta.amEdit} 수정됨` : '', g.meta.pm ? `저녁 ${g.meta.pm} ${g.meta.am ? '갱신' : '작성'}` : '', g.meta.pmEdit ? `${g.meta.pmEdit} 수정됨` : ''].filter(Boolean).join(' · ');
   let tl = ''; let prevT = '';
-  if (!g.items.length) tl = `<div class="gd-empty">${(_gd.docs || []).length ? '이 날은 확인할 것이 없어요.' : 'AI 가이드는 매일 아침 7시 30분, 저녁 8시 45분쯤 올라와요.'}</div>`;
+  // v7.38: 일정 탭 — 그날 달력 일정(체결 · 보유 종목 실적 · 내 일정 · 보고서 점검)을 같은 시간 줄에 끼워 넣음
+  let _tlv = []; if (_gdIsAsg() && typeof aqTLEventsFor === 'function') { try { _tlv = aqTLEventsFor(sel) || []; } catch (e) { _tlv = []; } }
+  const _M = g.items.map(x => ({ x })).concat(_tlv.map(ev => ({ ev }))); const _mm = m => m.x ? _gdMin(m.x.time) : (m.ev.time ? _gdMin(m.ev.time) : 9999);
+  _M.sort((a, b) => _mm(a) - _mm(b));
+  if (!_M.length) tl = `<div class="gd-empty">${(_gd.docs || []).length ? '이 날은 확인할 것이 없어요.' : 'AI 가이드는 매일 아침 7시 30분, 저녁 8시 45분쯤 올라와요.'}</div>`;
   else {
     const nowMin = (() => { const k = new Date(Date.now() + 9 * 3600e3); return k.getUTCHours() * 60 + k.getUTCMinutes(); })(); let nowDone = sel !== today;
-    g.items.forEach((x, i) => {
+    _M.forEach((m, i) => {
+      if (m.ev) { const ev = m.ev; const em = ev.time ? _gdMin(ev.time) : 9999;
+        if (!nowDone && em < 9999 && em > nowMin) { nowDone = true; tl += `<div class="gd-now"><span>지금 ${String(Math.floor(nowMin / 60)).padStart(2, '0')}:${String(nowMin % 60).padStart(2, '0')}</span></div>`; }
+        const tKey = String(ev.time || ''); const showT = tKey !== prevT; prevT = tKey;
+        tl += `<div class="gd-it ${ev.done ? 'done' : ''} ${i === _M.length - 1 ? 'last' : ''}">
+        <div class="gd-tm">${showT ? escapeHtml(ev.time || '') : ''}</div>
+        <div class="gd-rail"><span class="gd-ic logo" style="--c:${_GD_C.ev}">${ev.ticker ? aqLogoHtml(ev.ticker, '', 'gd-logo') : _aqTLLogo(ev)}</span></div>
+        <div class="gd-body" ${ev.ticker ? `onclick="openChart('${escapeAttr(ev.ticker)}')"` : ''}><div class="gd-sub">${escapeHtml(ev.status || '')}</div><div class="gd-tt">${escapeHtml(ev.title || '')}${ev.sub === 'buy' ? ' ▲' : ev.sub === 'sell' ? ' ▼' : ''}</div>${ev.detail ? `<div class="gd-sub">${escapeHtml(ev.detail)}</div>` : ''}</div>
+        <span aria-hidden="true"></span></div>`;
+        return; }
+      const x = m.x;
       if (!nowDone && _gdMin(x.time) > nowMin) { nowDone = true; const nxt = _gdMin(x.time) - nowMin; tl += `<div class="gd-now"><span>지금 ${String(Math.floor(nowMin / 60)).padStart(2, '0')}:${String(nowMin % 60).padStart(2, '0')} · 다음 가이드까지 ${Math.floor(nxt / 60) ? Math.floor(nxt / 60) + '시간 ' : ''}${nxt % 60}분</span></div>`; }
       const key = _gdKey(sel, x); const fol = _gdAccLive(key); const done = _gd.seen.has(key); const [ic, col] = _gdScene(x.scene); const passed = false;   // v6.11: ○ = 확인, '따르기'는 따로
       _gd.items[key] = Object.assign({}, x, { date: sel });
@@ -32226,7 +32310,7 @@ async function _aqGuideRenderPart(asg) {
       const isOpen = _gd.open[key];
       const f = x.f || {}; const det = isOpen ? `<div class="gd-det">${['이유', '상황', '추천', '확인할 것', '다시 볼 때', '행동 후보', '갱신 사유', '철회 사유'].filter(k => f[k]).map(k => `<div class="${k === '추천' ? 'gd-rec' : ''}"><b>${k}</b> ${escapeHtml(f[k])}</div>`).join('')}${x.orig ? `<details class="gd-orig"><summary>오전 원문</summary><div>${escapeHtml(x.orig.title)}</div>${['상황', '확인할 것', '행동 후보'].filter(k => x.orig.f[k]).map(k => `<div><b>${k}</b> ${escapeHtml(x.orig.f[k])}</div>`).join('')}</details>` : ''}</div>` : '';
       let after = ''; if (tk && sel < today) { try { const f2 = findTickerSeries(tk); const rr = f2 && f2.rows; if (rr && rr.length) { const base = rr.filter(r => String(r.Date).slice(0, 10) < sel).pop(); const last = rr[rr.length - 1]; if (base && Number(base.Close) > 0) { const v = (Number(last.Close) / Number(base.Close) - 1) * 100; after = `<span class="gd-after ${v >= 0 ? 'up' : 'down'}">이후 ${aqSg(v)}${Math.abs(v).toFixed(1)}%</span>`; } } } catch (e) {} }
-      tl += `<div class="gd-it ${x.status === '철회' ? 'off' : ''} ${passed ? 'past' : ''} ${done ? 'done' : ''} ${i === g.items.length - 1 ? 'last' : ''}">
+      tl += `<div class="gd-it ${x.status === '철회' ? 'off' : ''} ${passed ? 'past' : ''} ${done ? 'done' : ''} ${i === _M.length - 1 ? 'last' : ''}">
         <div class="gd-tm">${showT ? `${/다음 날/.test(x.time) ? '<small>다음 날</small>' : ''}${tparts.map(escapeHtml).join('<br>')}` : ''}</div>
         <div class="gd-rail">${circle}</div>
         <div class="gd-body" onclick="aqGuideToggle('${escapeAttr(key)}')"><div class="gd-sub">${tk ? `<span class="gd-tk" onclick="event.stopPropagation(); openChart('${escapeAttr(tk)}')">${escapeHtml(displayName(tk) || tk)}</span> · ` : escapeHtml(x.target) + ' · '}${escapeHtml(String(x.scene).split('·')[0].trim())}${tags}</div><div class="gd-tt">${escapeHtml(x.title)}${after}<span class="gd-chev">${isOpen ? '▴' : '▾'}</span></div>${x.status === '철회' ? '' : `<div class="gd-folrow">${fol ? `<button class="gd-fol on" onclick="event.stopPropagation(); aqGdOpenMine(${fol.id})">따르는 중</button>` : `<button class="gd-fol" onclick="event.stopPropagation(); aqGuideCheck('${escapeAttr(key)}')">따르기</button>`}</div>`}${det}</div>
@@ -32238,7 +32322,7 @@ async function _aqGuideRenderPart(asg) {
   box.innerHTML = `${_gdTopHtml()}<div class="gd-strip">${strip}</div><div class="gd-runrow">${srcTxt ? `<div class="gd-src">${escapeHtml(srcTxt)}</div>` : '<div class="gd-src"></div>'}<span id="gdRun" class="gd-run"></span></div>${warn}${legend}<div class="gd-tl">${tl}</div>`;   // v6.11: 진행 중인 가이드는 '내 지침'으로
   try { aqGdRunRefresh(); } catch (e) {}   // v6.09
 }
-function aqGuideSel(d) { _gd.sel = d; aqGuideRender(); }
+function aqGuideSel(d) { _gd.sel = d; if (document.body.getAttribute('data-mtab') === 'schedule' && typeof aqCalendarSelectDate === 'function') { aqCalendarSelectDate(d); return; } aqGuideRender(); }   // v7.38: 일정 탭 — 달력도 같은 날로
 // v6.10: AI 가이드 '지금 고치기' — 오늘 마지막 가이드(저녁 문서가 있으면 저녁)를 지금 기준으로 고침 · 별도 'AI 가이드 수정' 작업 · 보통 5~15분 · 하루 10번
 const _gdr = { st: null, ts: 0, poll: null };
 function _gdrBusy(x) { return !!x && (x.status === 'running' || x.ai_status === 'requested'); }
