@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '7.51';   // v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.52';   // v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -1661,6 +1661,36 @@ body.modal-map-mode #chartModal .modal-report-banner, body.modal-map-mode #chart
 .sm2-l { font-size: 16px; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; overflow-wrap: anywhere; } .sm2-l + .sm2-l { margin-top: 22px; } .sm2-l small { display: block; margin-top: 4px; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .sm2-l small a { color: inherit; text-decoration: underline; }
 /* v7.13: AI 매니저 › 거시 판단 카드 */
 .mj { margin: 6px 4px 0; display: flex; flex-direction: column; gap: 12px; }
+/* v7.52: 뉴스 › 기관 13F */
+#f13Card .card-body { padding: 0 0 40px; }
+.f13-h { margin: 22px 4px 18px; display: flex; flex-direction: column; gap: 6px; } .f13-h h2 { margin: 0; font-size: 18px; font-weight: 800; color: #fff; } .f13-h span { font-size: 12.5px; color: #8a8a8a; }
+.f13-list { display: flex; flex-direction: column; gap: 12px; }
+.f13-c { background: rgba(255,255,255,.04); border-radius: 16px; padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; cursor: pointer; }
+.f13-top { display: flex; align-items: center; gap: 12px; } .f13-top > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .f13-top b { font-size: 15.5px; color: #fff; } .f13-top span { font-size: 12px; color: #8a8a8a; }
+.f13-lg { width: 40px; height: 40px; flex: none; border-radius: 50%; background: #2d2d30; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #b8b8b8; } .f13-lg.big { width: 44px; height: 44px; font-size: 11.5px; }
+.f13-mine { font-size: 11.5px; color: #e4e4e4; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.f13-k { font-size: 11.5px; color: #8a8a8a; } .f13-dir { display: flex; flex-direction: column; gap: 6px; } .f13-dir p { margin: 0; font-size: 15px; line-height: 1.6; color: #fff; word-break: keep-all; overflow-wrap: anywhere; } .f13-dir p.wait { color: #8a8a8a; font-size: 13.5px; }
+.f13-ev { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.06); }
+.f13-er { display: grid; grid-template-columns: minmax(0,1fr) 40px 74px; align-items: center; gap: 10px; font-size: 13px; min-height: 26px; } .f13-er > span:first-child { color: #b8b8b8; }
+.f13-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; } .f13-bars i { width: 7px; border-radius: 2px; background: rgba(255,255,255,.22); }
+.f13-v { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; } .f13-v b { font-size: 13.5px; color: #fff; font-weight: 600; } .f13-v small { font-size: 11.5px; color: #8a8a8a; } .f13-v small.up { color: #5eead4; } .f13-v small.dn { color: #f0a4a4; }
+.f13-cnt { font-size: 12px; color: #6a6a6a; }
+.f13-back { width: 44px; height: 44px; display: flex; align-items: center; color: #9d9d9d; background: none; border: 0; padding: 0; cursor: pointer; margin-top: 6px; }
+.f13-dh { display: flex; align-items: center; gap: 12px; margin: 6px 4px 0; } .f13-dh > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; } .f13-dh b { font-size: 19px; color: #fff; } .f13-dh span { font-size: 12.5px; color: #8a8a8a; }
+.f13-qs { display: flex; gap: 8px; margin: 24px 4px 0; flex-wrap: wrap; } .f13-qs button { font-size: 12.5px; padding: 7px 12px; border-radius: 999px; color: #8a8a8a; border: 1px solid rgba(255,255,255,.08); background: none; cursor: pointer; } .f13-qs button.on { background: rgba(255,255,255,.12); color: #fff; font-weight: 700; border-color: transparent; }
+.f13-num { margin: 24px 4px 0; background: rgba(255,255,255,.04); border-radius: 16px; padding: 16px; display: grid; text-align: center; gap: 6px; } .f13-num > div { display: flex; flex-direction: column; gap: 4px; } .f13-num b { font-size: 18px; color: #e4e4e4; } .f13-num b.up { color: #5eead4; } .f13-num b.dn { color: #f0a4a4; } .f13-num span { font-size: 11.5px; color: #8a8a8a; }
+.f13-sec { margin: 36px 4px 0; display: flex; flex-direction: column; } .f13-sec.near { margin-top: 20px; } .f13-st { font-size: 12px; color: #9d9d9d; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; } .f13-st.sp { justify-content: space-between; } .f13-st small { font-size: 11.5px; color: #6a6a6a; }
+.f13-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; } .f13-dot.up { background: #5eead4; } .f13-dot.dn { background: #f0a4a4; }
+.f13-grp { display: flex; flex-direction: column; padding: 10px 0 6px; border-top: 1px solid rgba(255,255,255,.06); } .f13-grp > .f13-st { font-size: 12.5px; color: #8a8a8a; margin-bottom: 4px; }
+.f13-row { display: flex; align-items: center; justify-content: space-between; min-height: 40px; gap: 10px; } .f13-row.bd { min-height: 48px; border-top: 1px solid rgba(255,255,255,.06); }
+.f13-tk { font-size: 15px; color: #fff; display: flex; align-items: center; gap: 8px; } .f13-tk i { width: 6px; height: 6px; border-radius: 50%; background: #fff; display: inline-block; }
+.f13-rv { font-size: 13px; color: #b8b8b8; text-align: right; } .f13-sub { font-size: 11.5px; color: #8a8a8a; } .f13-row > div { display: flex; flex-direction: column; gap: 2px; }
+.f13-box { margin: 36px 4px 0; background: rgba(255,255,255,.04); border-radius: 16px; padding: 20px 16px; display: flex; flex-direction: column; gap: 18px; } .f13-box .f13-dir p { font-size: 15.5px; line-height: 1.65; } .f13-box .f13-ev { padding-top: 14px; gap: 9px; }
+.f13-say { display: flex; flex-direction: column; gap: 6px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); } .f13-say p { margin: 0; font-size: 14px; line-height: 1.6; color: #e4e4e4; word-break: keep-all; overflow-wrap: anywhere; } .f13-say small, .f13-say small a { font-size: 11.5px; color: #6a6a6a; }
+.f13-pty { margin: 18px 4px 0; display: flex; flex-direction: column; gap: 8px; } .f13-pty > div:first-child { display: flex; height: 10px; border-radius: 5px; overflow: hidden; gap: 3px; } .f13-pty > div:last-child { display: flex; justify-content: space-between; font-size: 12px; color: #9d9d9d; }
+.f13-t10 { display: grid; grid-template-columns: 22px minmax(0,1fr) 56px 64px; align-items: center; gap: 8px; min-height: 46px; border-top: 1px solid rgba(255,255,255,.06); } .f13-t10 > span:first-child { font-size: 12px; color: #6a6a6a; } .f13-t10 .f13-rv { color: #d4d4d4; }
+.f13-t10 .f13-bars { gap: 4px; height: 22px; justify-content: flex-end; } .f13-t10 .f13-bars i { width: 9px; background: rgba(255,255,255,.28); } .f13-t10 .f13-bars i.on { background: #fff; }
+.f13-note { display: flex; flex-direction: column; gap: 3px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.06); } .f13-note > span:first-child { font-size: 14.5px; color: #fff; }
 .mj-hd { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .mj-hd b { font-size: 15px; font-weight: 700; color: var(--text-hi, #fff); margin-right: 2px; }
 .mj-top { display: flex; flex-direction: column; gap: 10px; width: 100%; cursor: pointer; padding: 20px 18px; }
 .insider-archive-item.ml-row { grid-template-columns: 42px minmax(0, 1fr) 92px; }   /* v7.43: 연구 › 종목 지도 오른쪽 */
@@ -9872,6 +9902,9 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
     </section>
     <section class="card" id="macroCard" data-mtab="auto" data-atab="macro">
       <div class="card-body"><div class="rpt-togw"></div><div id="macroBody"><div class="auto-empty">불러오는 중…</div></div></div>
+    </section>
+    <section class="card" id="f13Card" data-mtab="auto" data-atab="f13">   <!-- v7.52: 뉴스 › 기관 13F -->
+      <div class="card-body"><div id="f13Box"><div class="mg-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="analysisCard" data-mtab="auto" data-atab="report">
     <div class="card-header">
@@ -25843,7 +25876,7 @@ window.closeMoDrawer = closeMoDrawer;
 window.moDrawerNav = moDrawerNav;
 
 // v7.38: 연구 · AI · 뉴스 메뉴는 모두 AI 탭(data-mtab=auto) 위에서 서브탭 묶음만 다름
-const _AQ_AGRP = { report: 'research', maps: 'research', sim: 'research', cmp: 'research', manager: 'ai', review: 'ai', brief: 'news', wx: 'news', macro: 'news' };
+const _AQ_AGRP = { report: 'research', maps: 'research', sim: 'research', cmp: 'research', manager: 'ai', review: 'ai', brief: 'news', wx: 'news', macro: 'news', f13: 'news' };
 function _aqAgrpDef(g) { const adm = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); return g === 'research' ? 'report' : g === 'news' ? 'brief' : (adm ? 'manager' : 'review'); }
 function _aqNavKey() { const m = document.body.getAttribute('data-mtab'); if (m !== 'auto') return m; return _AQ_AGRP[document.body.getAttribute('data-atab')] || 'news'; }
 function _aqNavPaint() { const k = _aqNavKey(); document.querySelectorAll('.mtab-btn').forEach(b => b.classList.toggle('active', b.dataset.mtab === k)); }
@@ -29555,14 +29588,14 @@ function setAiSubtab(x) { aqHoldScroll();
   if (x === 'pre' || x === 'close') { _brMode(); _br.mode = x === 'pre' ? 'pre' : 'post'; x = 'brief'; }   // v5.55: 장전·장후는 AI 브리핑 안 토글
   if (x === 'auto') { if (isAdmin) { aqGoEngine(); return; } x = 'brief'; }   // v5.99: 자동매매는 햄버거 '자동'으로 이동 (예전 링크 호환)
   if (x === 'guide' || x === 'assist') { switchMobileTab('schedule'); aqSchedSub(x === 'assist' ? 'assist' : 'week'); return; }   // v7.38: AI 가이드 · 비서 → 일정 탭 · v7.44: 가이드는 주간 일정
-  const allowed = ['brief', 'manager', 'report', 'review', 'macro', 'maps', 'sim', 'cmp', 'wx'];   // v7.38: 연구(report · maps · sim · cmp) · AI(manager · review) · 뉴스(brief · macro)
+  const allowed = ['brief', 'manager', 'report', 'review', 'macro', 'maps', 'sim', 'cmp', 'wx', 'f13'];   // v7.38: 연구(report · maps · sim · cmp) · AI(manager · review) · 뉴스(brief · macro)
   if (!allowed.includes(x)) x = 'brief';
   if (x === 'manager' && !isAdmin) x = 'review';
   if (x === 'wx' && !isAdmin) x = 'brief';   // v7.42: 거시 날씨는 관리자 계좌 종목 기준   // v6.82: AI 매니저는 관리자 계좌 기준
   document.body.setAttribute('data-atab', x);
   try {   // v7.38: 메뉴 묶음별 서브탭
     const g = _AQ_AGRP[x]; localStorage.setItem('aq_agrp_' + g, x);
-    const T = { research: [['report', 'AI 리포트'], ['maps', '종목 지도'], ['sim', '모의 매수'], ['cmp', '비교 분석']], ai: (isAdmin ? [['manager', 'AI 매니저']] : []).concat([['review', 'AI 매수분석']]), news: [['brief', 'AI 브리핑']].concat(isAdmin ? [['wx', '거시 날씨']] : []).concat([['macro', '주간 이슈']]) }[g];
+    const T = { research: [['report', 'AI 리포트'], ['maps', '종목 지도'], ['sim', '모의 매수'], ['cmp', '비교 분석']], ai: (isAdmin ? [['manager', 'AI 매니저']] : []).concat([['review', 'AI 매수분석']]), news: [['brief', 'AI 브리핑']].concat(isAdmin ? [['wx', '거시 날씨']] : []).concat([['macro', '주간 이슈'], ['f13', '기관 13F']]) }[g];
     const row = document.getElementById('aiSubRow'); if (row) row.innerHTML = T.map(([v, t]) => `<button class="xtab-btn${v === x ? ' active' : ''}" data-atab="${v}" onclick="setAiSubtab('${v}')">${t}</button>`).join('');
     _aqNavPaint();
   } catch (e) {}
@@ -29573,7 +29606,7 @@ function setAiSubtab(x) { aqHoldScroll();
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
   try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
   try { if (x === 'sim') { aqWatchSub('sim'); if (typeof buildWatchKanban === 'function') buildWatchKanban(); } else if (x === 'cmp') { aqWatchSub('cmp'); if (typeof buildCompare === 'function') buildCompare(); } else if (x === 'maps') aqMapListRender(); else if (x === 'wx') { if (getCurrentMarket() === 'KR') { const b0 = document.getElementById('mjBox'); if (b0) b0.innerHTML = '<div class="mg-empty">거시 날씨는 미국 종목만 있어요</div>'; } else _mjLoad(true).then(() => { const b = document.getElementById('mjBox'); if (b && document.body.getAttribute('data-atab') === 'wx' && getCurrentMarket() !== 'KR') b.innerHTML = _mjHtml(); }); } } catch (e) { console.warn('[연구]', e); }   // v7.38
-  try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'manager') aqMgrRender(); else if (x === 'macro') aqMacroRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
+  try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'manager') aqMgrRender(); else if (x === 'macro') aqMacroRender(); else if (x === 'f13') aqF13Render(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
 // v7.38: 일정 › 월간 일정 | AI 비서
@@ -31288,6 +31321,86 @@ function _mjHtml() {
 }
 function _mjF(k) { _mj.f = k; const x = document.getElementById('mjBox'); if (x) { x.innerHTML = _mjHtml(); return; } const b = document.getElementById('mgrBody'); if (b && _MG_OFF[_mg.mk]) b.innerHTML = _mjHtml() + '<div class="mj-off">종목 판단은 개발 중이에요</div>'; }   // v7.26: 날씨 칩은 거시 목록만 다시 그림 (오늘 할 일 · 의견은 그대로)
 window._mjF = _mjF;
+// v7.52: 뉴스 › 기관 13F — 카드(방향 · 근거 4분기 · 이번 분기 개수) · 누르면 기관 상세 (server f13Get · jobs/inst13f.py)
+const _f13 = { key: null, q: null, list: null, ts: 0 };
+const _F13LG = { m1067983: 'BRK', m1536411: 'DFO', m1656456: 'APP', m1135730: 'CTU', m1336528: 'PSH', congress: '의회' };
+const _f13Q = p => { const m = /^(\d{4})-(\d{2})/.exec(p || ''); return m ? m[1].slice(2) + 'Q' + Math.ceil(+m[2] / 3) : (p || ''); };
+const _f13E = s => escapeHtml(String(s == null ? '' : s));
+function _f13Ev(e) {
+  const v = (e.vals || []).map(Number), u = e.u, n = v.length; if (!n) return '';
+  const mx = Math.max.apply(null, v.map(Math.abs).concat([1e-9])), last = v[n - 1], prev = n > 1 ? v[n - 2] : last;
+  let d = u === 'usd' ? (prev ? (last / prev - 1) * 100 : 0) : last - prev; d = Math.round(d * 10) / 10;
+  const fv = u === 'usd' ? '$' + (Math.round(last * 10) / 10) + 'B' : u === 'n' ? String(Math.round(last)) : (Math.round(last * 10) / 10) + '%';
+  const dt = d === 0 ? '그대로' : (d > 0 ? '+' : '−') + Math.abs(d) + (u === 'n' ? '' : u === 'usd' ? '%' : '%p');
+  const UP = '#5eead4', DN = '#f0a4a4';
+  const bars = v.map((x, j) => `<i style="height:${Math.max(2, Math.round(Math.abs(x) / mx * 20))}px${j === n - 1 ? ';background:' + (d >= 0 ? UP : DN) : ''}"></i>`).join('');
+  return `<div class="f13-er"><span>${_f13E(e.k)}</span><span class="f13-bars">${bars}</span><span class="f13-v"><b>${fv}</b><small class="${d > 0 ? 'up' : d < 0 ? 'dn' : ''}">${dt}</small></span></div>`;
+}
+const _f13Mine = (tk, mine) => (mine || []).includes(tk) ? '<i></i>' : '';
+const _f13Amt = (lo, hi) => { const f = x => x >= 1e6 ? '$' + (Math.round(x / 1e5) / 10) + 'M' : x >= 1e3 ? '$' + Math.round(x / 1e3) + 'K' : '$' + Math.round(x); return f(lo) + '~' + f(hi).slice(1); };
+const _f13D = s => { const m = /^\d{4}-(\d{2})-(\d{2})/.exec(s || ''); return m ? m[1] + '/' + m[2] : ''; };
+const _f13Own = c => { c = String(c || ''); return /^S(P|pouse)/i.test(c) ? '배우자' : /^J/i.test(c) ? '공동' : /^(DC|D|child)/i.test(c) ? '자녀' : '본인'; };
+function _f13Dir(dir, say) {
+  const d = dir && dir.dir ? `<p>${_f13E(dir.dir)}</p>` : '<p class="wait">방향을 쓰는 중이에요</p>';
+  return d;
+}
+function _f13List(r) {
+  const cards = r.cards || [];
+  if (!cards.length) return '<div class="mg-empty">첫 수집 중이에요 · 매일 10:00 뒤 한 번 모아요</div>';
+  const per = cards.find(c => c.key !== 'congress') || cards[0];
+  const m = /^\d{4}-(\d{2})-(\d{2})/.exec(per.period || '');
+  const head = `<div class="f13-h"><h2>기관 13F</h2><span>${m ? Math.ceil(+m[1] / 3) + '분기 · ' + (+m[1]) + '/' + (+m[2]) + ' 기준 · ' : ''}막대 = 최근 4분기</span></div>`;
+  return head + '<div class="f13-list">' + cards.map(c => `<div class="f13-c" onclick="aqF13Open('${c.key}')">
+    <div class="f13-top"><span class="f13-lg">${_F13LG[c.key] || ''}</span><div><b>${_f13E(c.nm)}</b><span>${_f13E(c.who)}</span></div>${c.mine ? `<span class="f13-mine">내 종목 ${c.mine}</span>` : ''}</div>
+    <div class="f13-dir"><span class="f13-k">방향</span>${c.card ? `<p>${_f13E(c.card)}</p>` : '<p class="wait">방향을 쓰는 중이에요</p>'}</div>
+    ${(c.ev || []).length ? `<div class="f13-ev">${c.ev.map(_f13Ev).join('')}</div>` : ''}
+    <span class="f13-cnt">${_f13E(c.cnt)}</span></div>`).join('') + '</div>';
+}
+function _f13Detail(r) {
+  const back = `<button class="f13-back" aria-label="뒤로" onclick="aqF13Open(null)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"></path></svg></button>`;
+  const qs = `<div class="f13-qs">${(r.qs || []).map(q => `<button class="${q === r.q ? 'on' : ''}" onclick="aqF13Q('${q}')">${_f13Q(q)}</button>`).join('')}</div>`;
+  const ev = (r.ev || []).length ? `<div class="f13-ev"><span class="f13-k">근거</span>${r.ev.map(_f13Ev).join('')}</div>` : '';
+  const dir = r.dir || {};
+  let say = '';
+  if (r.key !== 'congress' && dir.dir) {
+    const s = dir.say;
+    say = `<div class="f13-say"><span class="f13-k">기관의 말</span>` + (s && s.t ? `<p>${_f13E(s.t)}</p>${s.u || s.s ? `<small>${s.u ? `<a href="${escapeAttr(s.u)}" target="_blank" rel="noopener">${_f13E(s.s || '출처')}</a>` : _f13E(s.s)}</small>` : ''}` : '<p class="wait" style="color:#8a8a8a;font-size:13.5px">이번 분기에 찾은 공개 발언이 없어요</p>') + '</div>';
+  }
+  const box = `<div class="f13-box"><div class="f13-dir"><span class="f13-k">방향</span>${_f13Dir(dir)}</div>${ev}${say}</div>`;
+  if (r.key === 'congress') {
+    const o = r.o || {}; const pt = o.party || {}; const D = pt.D || pt.Democrat || 0, R = pt.R || pt.Republican || 0;
+    const L = (k, cls, rows) => rows.length ? `<div class="f13-sec"><span class="f13-st"><i class="f13-dot ${cls}"></i>${k}</span>${rows.map(x => `<div class="f13-row bd"><div><span class="f13-tk">${_f13E(x.tk)}${_f13Mine(x.tk, r.mine)}</span><span class="f13-sub">${x.n}건 · 의원 ${x.m}명</span></div><span class="f13-rv">${_f13Amt(x.lo, x.hi)}</span></div>`).join('')}</div>` : '';
+    const notes = (o.notable || []).length ? `<div class="f13-sec"><span class="f13-st">눈에 띄는 거래</span>${o.notable.map(n => `<div class="f13-note"><span>${_f13E(n.who)} · ${_f13E(n.tk)} ${n.side === 'buy' ? '매수' : '매도'}</span><span class="f13-sub">${_f13Amt(n.lo, n.hi)} · 거래 ${_f13D(n.td)} → 공시 ${_f13D(n.fd)} · ${_f13Own(n.own)}</span></div>`).join('')}</div>` : '';
+    return back + `<div class="f13-dh"><span class="f13-lg big"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M2 10l10-6 10 6z"></path></svg></span><div><b>의회</b><span>상 · 하원 의원 거래 · 공시일 기준</span></div></div>` + qs
+      + `<div class="f13-num" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div><b class="up">${o.buy || 0}</b><span>매수 건</span></div><div><b class="dn">${o.sell || 0}</b><span>매도 건</span></div><div><b>${o.members || 0}</b><span>의원</span></div></div>`
+      + (D + R ? `<div class="f13-pty"><div><i style="flex:${D} 0 0;background:#e4e4e4"></i><i style="flex:${R} 0 0;background:#5a5a5e"></i></div><div><span>매수 중 민주 ${D}%</span><span>공화 ${R}%</span></div></div>` : '')
+      + L('많이 산 종목', 'up', o.top_buy || []) + L('많이 판 종목', 'dn', (o.top_sell || []).slice(0, 5)) + box + notes;
+  }
+  const c = r.cnt || [0, 0, 0, 0];
+  const G = (k, cls, rows, fv) => rows.length ? `<div class="f13-grp"><span class="f13-st"><i class="f13-dot ${cls}"></i>${k}</span>${rows.map(x => `<div class="f13-row"><span class="f13-tk">${_f13E(x.tk)}${_f13Mine(x.tk, r.mine)}</span><span class="f13-rv">${fv(x)}</span></div>`).join('')}</div>` : '';
+  const pct = v => (Math.round(v * 10) / 10).toFixed(1) + '%';
+  const sg = v => (v > 0 ? '+' : '−') + Math.abs(Math.round(v)) + '%';
+  const acts = G('새로 삼', 'up', r.new || [], x => '비중 ' + pct(x.w)) + G('다 팖', 'dn', r.exit || [], x => '직전 비중 ' + pct(x.w0)) + G('크게 늘림', 'up', r.up || [], x => '주식 수 ' + sg(x.chg)) + G('크게 줄임', 'dn', r.down || [], x => '주식 수 ' + sg(x.chg));
+  const qn = /^\d{4}-(\d{2})/.exec(r.q || ''); const mx = Math.max.apply(null, (r.top || []).flatMap(t => t.hist || []).concat([1e-9]));
+  const top = (r.top || []).length ? `<div class="f13-sec"><span class="f13-st sp"><span>비중 상위 10</span><small>막대 = 최근 4분기 비중</small></span>${r.top.map((t, i) => `<div class="f13-t10"><span>${i + 1}</span><span class="f13-tk">${_f13E(t.tk)}${_f13Mine(t.tk, r.mine)}</span><span class="f13-rv">${pct(t.w)}</span><span class="f13-bars">${(t.hist || []).map((v, j, a) => `<i class="${j === a.length - 1 ? 'on' : ''}" style="height:${Math.max(2, Math.round(v / mx * 22))}px"></i>`).join('')}</span></div>`).join('')}</div>` : '';
+  return back + `<div class="f13-dh"><span class="f13-lg big">${_F13LG[r.key] || ''}</span><div><b>${_f13E(r.nm)}</b><span>${_f13E(r.who)} · 보유 ${r.n || 0}종목 · 신고 총액 $${(Math.round((r.total || 0) / 1e8) / 10)}B</span></div></div>` + qs
+    + `<div class="f13-num" style="grid-template-columns:repeat(4,minmax(0,1fr))"><div><b class="up">${c[0]}</b><span>새로 삼</span></div><div><b class="dn">${c[1]}</b><span>다 팖</span></div><div><b>${c[2]}</b><span>늘림</span></div><div><b>${c[3]}</b><span>줄임</span></div></div>`
+    + (acts ? `<div class="f13-sec near"><span class="f13-st" style="margin-bottom:6px">${qn ? Math.ceil(+qn[1] / 3) + '분기에 ' : ''}한 일</span>${acts}</div>` : '') + box + top;
+}
+async function aqF13Render() {
+  const box = document.getElementById('f13Box'); if (!box) return;
+  if (getCurrentMarket() === 'KR') { box.innerHTML = '<div class="mg-empty">기관 13F는 미국 시장만 있어요</div>'; return; }
+  const k = _f13.key, q = _f13.q;
+  if (!k && _f13.list && Date.now() - _f13.ts < 60e3) { box.innerHTML = _f13List(_f13.list); return; }
+  if (!box.innerHTML.trim() || k) box.innerHTML = '<div class="mg-empty">불러오는 중…</div>';
+  let r = null; try { r = await apiCall('f13Get', k ? { key: k, q: q || '' } : {}); } catch (e) {}
+  if (_f13.key !== k || _f13.q !== q || document.body.getAttribute('data-atab') !== 'f13') return;
+  if (!r || !r.ok) { box.innerHTML = `<div class="mg-empty">${_f13E((r && r.error) || '불러오지 못했어요')}</div>`; return; }
+  if (!k) { _f13.list = r; _f13.ts = Date.now(); box.innerHTML = _f13List(r); } else box.innerHTML = _f13Detail(r);
+}
+function aqF13Open(k) { _f13.key = k || null; _f13.q = null; aqF13Render(); try { window.scrollTo({ top: 0, behavior: 'instant' }); } catch (e) {} }
+function aqF13Q(q) { _f13.q = q; aqF13Render(); }
+Object.assign(window, { aqF13Render, aqF13Open, aqF13Q });
 async function _mjLoad(force) {
   if (!force && _mj.d && Date.now() - _mj.ts < 55e3) return;
   let r = null; try { r = await apiCall('macroJudgeGet', {}); } catch (e) {}
