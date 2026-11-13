@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '7.41';   // v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.42';   // v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -1657,6 +1657,7 @@ body.modal-map-mode #chartModal .modal-report-banner, body.modal-map-mode #chart
 .mj { margin: 6px 4px 0; display: flex; flex-direction: column; gap: 12px; }
 .mj-hd { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .mj-hd b { font-size: 15px; font-weight: 700; color: var(--text-hi, #fff); margin-right: 2px; }
 .mj-top { display: flex; flex-direction: column; gap: 10px; width: 100%; cursor: pointer; padding: 20px 18px; }
+.mj-ci, .mj-w svg, .mj-v svg { display: inline-block; vertical-align: middle; } .mj-ci.up { color: #5eead4; } .mj-ci.dn { color: #f0a4a4; }   /* v7.42: 거시 날씨 아이콘 */
 .mj-v { font-size: 26px; font-weight: 700; color: var(--text-hi, #fff); } .mj-v.up { color: #5eead4; } .mj-v.dn { color: #f0a4a4; }
 .mj-why { font-size: 15px; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; overflow-wrap: anywhere; }
 .mj .sm2-tile { cursor: pointer; } .mj .sm2-tile b { font-size: 17px; } .mj-dn { color: #f0a4a4 !important; } .mj-up { color: #5eead4 !important; }
@@ -9854,6 +9855,9 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
     </section>
     <section class="card" id="managerCard" data-mtab="auto" data-atab="manager">
       <div class="card-body"><div id="mgrBody"><div class="auto-empty">불러오는 중…</div></div></div>
+    </section>
+    <section class="card" id="macroWxCard" data-mtab="auto" data-atab="wx">   <!-- v7.42: 뉴스 › 거시 날씨 (AI 매니저에서 옮김) -->
+      <div class="card-body"><div id="mjBox"><div class="mg-empty">불러오는 중…</div></div></div>
     </section>
     <section class="card" id="macroCard" data-mtab="auto" data-atab="macro">
       <div class="card-body"><div class="rpt-togw"></div><div id="macroBody"><div class="auto-empty">불러오는 중…</div></div></div>
@@ -25770,7 +25774,7 @@ window.closeMoDrawer = closeMoDrawer;
 window.moDrawerNav = moDrawerNav;
 
 // v7.38: 연구 · AI · 뉴스 메뉴는 모두 AI 탭(data-mtab=auto) 위에서 서브탭 묶음만 다름
-const _AQ_AGRP = { report: 'research', maps: 'research', sim: 'research', cmp: 'research', manager: 'ai', review: 'ai', brief: 'news', macro: 'news' };
+const _AQ_AGRP = { report: 'research', maps: 'research', sim: 'research', cmp: 'research', manager: 'ai', review: 'ai', brief: 'news', wx: 'news', macro: 'news' };
 function _aqAgrpDef(g) { const adm = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); return g === 'research' ? 'report' : g === 'news' ? 'brief' : (adm ? 'manager' : 'review'); }
 function _aqNavKey() { const m = document.body.getAttribute('data-mtab'); if (m !== 'auto') return m; return _AQ_AGRP[document.body.getAttribute('data-atab')] || 'news'; }
 function _aqNavPaint() { const k = _aqNavKey(); document.querySelectorAll('.mtab-btn').forEach(b => b.classList.toggle('active', b.dataset.mtab === k)); }
@@ -29469,13 +29473,14 @@ function setAiSubtab(x) { aqHoldScroll();
   if (x === 'pre' || x === 'close') { _brMode(); _br.mode = x === 'pre' ? 'pre' : 'post'; x = 'brief'; }   // v5.55: 장전·장후는 AI 브리핑 안 토글
   if (x === 'auto') { if (isAdmin) { aqGoEngine(); return; } x = 'brief'; }   // v5.99: 자동매매는 햄버거 '자동'으로 이동 (예전 링크 호환)
   if (x === 'guide' || x === 'assist') { switchMobileTab('schedule'); aqSchedSub(x === 'assist' ? 'assist' : 'month'); return; }   // v7.38: AI 가이드 · 비서 → 일정 탭
-  const allowed = ['brief', 'manager', 'report', 'review', 'macro', 'maps', 'sim', 'cmp'];   // v7.38: 연구(report · maps · sim · cmp) · AI(manager · review) · 뉴스(brief · macro)
+  const allowed = ['brief', 'manager', 'report', 'review', 'macro', 'maps', 'sim', 'cmp', 'wx'];   // v7.38: 연구(report · maps · sim · cmp) · AI(manager · review) · 뉴스(brief · macro)
   if (!allowed.includes(x)) x = 'brief';
-  if (x === 'manager' && !isAdmin) x = 'review';   // v6.82: AI 매니저는 관리자 계좌 기준
+  if (x === 'manager' && !isAdmin) x = 'review';
+  if (x === 'wx' && !isAdmin) x = 'brief';   // v7.42: 거시 날씨는 관리자 계좌 종목 기준   // v6.82: AI 매니저는 관리자 계좌 기준
   document.body.setAttribute('data-atab', x);
   try {   // v7.38: 메뉴 묶음별 서브탭
     const g = _AQ_AGRP[x]; localStorage.setItem('aq_agrp_' + g, x);
-    const T = { research: [['report', 'AI 리포트'], ['maps', '종목 지도'], ['sim', '모의 매수'], ['cmp', '비교 분석']], ai: (isAdmin ? [['manager', 'AI 매니저']] : []).concat([['review', 'AI 매수분석']]), news: [['brief', 'AI 브리핑'], ['macro', '주간 이슈']] }[g];
+    const T = { research: [['report', 'AI 리포트'], ['maps', '종목 지도'], ['sim', '모의 매수'], ['cmp', '비교 분석']], ai: (isAdmin ? [['manager', 'AI 매니저']] : []).concat([['review', 'AI 매수분석']]), news: [['brief', 'AI 브리핑']].concat(isAdmin ? [['wx', '거시 날씨']] : []).concat([['macro', '주간 이슈']]) }[g];
     const row = document.getElementById('aiSubRow'); if (row) row.innerHTML = T.map(([v, t]) => `<button class="xtab-btn${v === x ? ' active' : ''}" data-atab="${v}" onclick="setAiSubtab('${v}')">${t}</button>`).join('');
     _aqNavPaint();
   } catch (e) {}
@@ -29485,7 +29490,7 @@ function setAiSubtab(x) { aqHoldScroll();
   try { aqAsgBadge(); } catch (e) {}
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
   try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
-  try { if (x === 'sim') { aqWatchSub('sim'); if (typeof buildWatchKanban === 'function') buildWatchKanban(); } else if (x === 'cmp') { aqWatchSub('cmp'); if (typeof buildCompare === 'function') buildCompare(); } else if (x === 'maps') aqMapListRender(); } catch (e) { console.warn('[연구]', e); }   // v7.38
+  try { if (x === 'sim') { aqWatchSub('sim'); if (typeof buildWatchKanban === 'function') buildWatchKanban(); } else if (x === 'cmp') { aqWatchSub('cmp'); if (typeof buildCompare === 'function') buildCompare(); } else if (x === 'maps') aqMapListRender(); else if (x === 'wx') { if (getCurrentMarket() === 'KR') { const b0 = document.getElementById('mjBox'); if (b0) b0.innerHTML = '<div class="mg-empty">거시 날씨는 미국 종목만 있어요</div>'; } else _mjLoad(true).then(() => { const b = document.getElementById('mjBox'); if (b && document.body.getAttribute('data-atab') === 'wx' && getCurrentMarket() !== 'KR') b.innerHTML = _mjHtml(); }); } } catch (e) { console.warn('[연구]', e); }   // v7.38
   try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'manager') aqMgrRender(); else if (x === 'macro') aqMacroRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
@@ -31168,6 +31173,13 @@ function _mjVal(r) {
 }
 function _mjNm(t, nm) { let d = ''; try { d = displayName(t) || ''; } catch (e) {} return d && d !== t ? d : (nm || t); }
 function _mjWc(w) { return w === '우호' ? 'up' : w === '비우호' ? 'dn' : ''; }
+function _mjIc(w, sz) {   // v7.42: 우호 = 해 · 중립 = 구름 · 비우호 = 비
+  sz = sz || 22; const a = `width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${_smEsc(w || '')}"`;
+  if (w === '우호') return `<svg ${a}><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>`;
+  if (w === '비우호') return `<svg ${a}><path d="M7 15.5a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 17.8 8a4 4 0 0 1-.3 7.5"/><path d="M8.5 18l-1 2.5M12.5 18l-1 2.5M16.5 18l-1 2.5"/></svg>`;
+  if (w === '중립') return `<svg ${a}><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 17.8 10.5 4 4 0 0 1 17 18z"/></svg>`;
+  return _smEsc(w || '—');
+}
 function _mjHtml() {
   const R = _mj.d; if (!R) return '<div class="mg-empty">불러오는 중…</div>';
   const L = R.last, N = R.now; let h = '<div class="mj">';
@@ -31179,9 +31191,9 @@ function _mjHtml() {
   h += '<div class="sm2-g2">' + _MJ_Q.map(([k]) => { const r = rows.find(x => x.name === k); const [a, b] = _mjVal(r); const dn = k === '나스닥 100' && /하루 -/.test(b), up = k === '나스닥 100' && /하루 \+/.test(b);   // 색은 지수에만 (금리 · 유가 · 금은 방향이 좋고 나쁨이 아님)
     return `<div class="sm2-card sm2-tile"><small>${_smEsc(k)}</small><b>${_smEsc(a)}</b>${b ? `<small class="${dn ? 'mj-dn' : up ? 'mj-up' : ''}">${_smEsc(b)}</small>` : ''}</div>`; }).join('') + '</div>';
   const f = _mj.f;
-  h += `<div class="mg-chips">${[['all', '전체', tks.length], ..._MJ_W.map(w => [w, w, cnt(w)])].map(([k, t, n]) => `<button type="button" class="${f === k ? 'on' : ''}" onclick="_mjF('${k}')">${t}<em>${n}</em></button>`).join('')}</div>`;
+  h += `<div class="mg-chips">${[['all', '전체', tks.length], ..._MJ_W.map(w => [w, w, cnt(w)])].map(([k, t, n]) => `<button type="button" class="${f === k ? 'on' : ''}" onclick="_mjF('${k}')" aria-label="${t}">${k === 'all' ? t : `<span class="mj-ci ${_mjWc(k)}">${_mjIc(k, 16)}</span>`}<em>${n}</em></button>`).join('')}</div>`;
   h += '<div class="mj-list">' + tks.filter(t => f === 'all' || S[t].w === f).map(t => { const x = S[t];
-    return `<div class="mg-row" onclick="aqMacroDetail('${escapeAttr(t)}')"><span class="lg">${_mgLogo(t)}</span><span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span class="nm">${escapeHtml(_mjNm(t, x.nm))}${x.held ? '' : '<i>관심</i>'}</span><span class="sub mj-sub">${_smEsc(x.why || '')}</span></span><span class="mj-w ${_mjWc(x.w)}">${_smEsc(x.w || '—')}</span></div>`; }).join('') + '</div>';
+    return `<div class="mg-row" onclick="aqMacroDetail('${escapeAttr(t)}')"><span class="lg">${_mgLogo(t)}</span><span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span class="nm">${escapeHtml(_mjNm(t, x.nm))}${x.held ? '' : '<i>관심</i>'}</span><span class="sub mj-sub">${_smEsc(x.why || '')}</span></span><span class="mj-w ${_mjWc(x.w)}">${_mjIc(x.w)}</span></div>`; }).join('') + '</div>';
   h += `<button type="button" class="sm2-card sm2-hist mj-more" onclick="aqMacroDetail()"><span>오늘 소식 전체</span><i>›</i></button>`;
   return h + '</div>';
 }
@@ -31203,7 +31215,7 @@ function aqMacroDetail(tk) {
   if (tk) {
     const c = C.find(x => x.k === '종목 · ' + tk), x = (L.stocks || {})[tk] || {}; if (!c) return;
     title = _mjNm(tk, x.nm);
-    body += `<div class="mj-dh"><span class="mj-v ${_mjWc(x.w)}">${_smEsc(x.w || '—')}</span><span class="mj-why">${_smEsc(x.why || '')}</span>${_smCk(c, 0, adm)}${x.map ? '' : '<span class="sm-ck unk">지도 없음</span>'}</div>`;
+    body += `<div class="mj-dh"><span class="mj-v ${_mjWc(x.w)}">${_mjIc(x.w, 34)}</span><span class="mj-why">${_smEsc(x.why || '')}</span>${_smCk(c, 0, adm)}${x.map ? '' : '<span class="sm-ck unk">지도 없음</span>'}</div>`;
     body += `<div class="sm2-dc">${_mjLines(c, adm, 1)}</div>`;
     const used = [...new Set((c.ls || []).map(s => s && s.s && (s.s.match(/^지도(?: 밖)? · (.+)$/) || [])[1]).filter(Boolean))];
     const F = used.map(n => flows.find(f => f.k === '흐름 · ' + n)).filter(Boolean);
@@ -31262,8 +31274,7 @@ function _mgBox() {   // v7.16: 미국 — 새 체계 결과(없으면 진행 �
   const D = _mg.d, R = D && D.run; const v3 = !!(R && R.v3);
   let h = _mg3Status() || (!v3 ? '<div class="mg-empty">아직 새 체계 판단이 없어요 · 미국 거래일 23:00(여름 22:00)에 제안이 와요</div>' : '');
   if (v3) h += _mgHtml();
-  if (_mj.d) h += `<div class="mg-op" style="margin-top:22px"><div class="h"><b>오늘 거시 날씨</b></div></div><div id="mjBox">${_mjHtml()}</div>`;
-  return h;
+  return h;   // v7.42: 오늘 거시 날씨는 뉴스 › 거시 날씨로 옮김
 }
 function _mgPoll() {
   clearTimeout(_mg.poll); const D = _mg.d; if (!D) return;
