@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '7.54';   // v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '7.55';   // v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -5032,6 +5032,31 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .mg3-cs { display: flex; flex-direction: column; gap: 8px; padding: 14px 0; border-top: 1px solid rgba(255,255,255,.06); } .mg3-cs > div { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; } .mg3-cs > div span { font-size: 14px; color: #fff; } .mg3-cs > div small { font-size: 12.5px; color: #9d9d9d; text-align: right; }
 .mg3-cs .st { display: flex; height: 8px; border-radius: 4px; overflow: hidden; gap: 2px; } .mg3-cs .st i { display: block; height: 8px; }
 .mg3 .lg, .mg3-fl .lg { border-radius: 50%; overflow: hidden; background: #fff; display: inline-flex; align-items: center; justify-content: center; } .mg3 .lg img, .mg3-fl .lg img { width: 100%; height: 100%; object-fit: cover; }
+/* v7.55: 리포트 결정 과정 (매수심사 · AI 매니저) */
+.rp3-path { background: var(--card, #222225); border-radius: 18px; padding: 6px 14px; display: flex; flex-direction: column; }
+.rp3-ps { font: inherit; display: grid; grid-template-columns: 20px minmax(0, 1fr) auto 12px; align-items: center; gap: 10px; min-height: 52px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; color: inherit; }
+.rp3-ps .ln { display: flex; flex-direction: column; align-items: center; align-self: stretch; } .rp3-ps .ln i { width: 1.5px; flex: 1; background: rgba(255,255,255,.14); } .rp3-ps .ln i.x { background: transparent; } .rp3-ps .ln i.dt { width: 10px; height: 10px; flex: none; border-radius: 50%; background: #8a8a8a; }
+.rp3-ps .k { font-size: 13.5px; color: #b8b8b8; } .rp3-ps b { font-size: 14px; font-weight: 500; color: #fff; text-align: right; } .rp3-ps.fin b { font-weight: 700; } .rp3-ps em { font-style: normal; font-size: 13px; color: #6a6a6a; }
+.rp3-per { background: var(--card, #222225); border-radius: 18px; padding: 18px 16px; font-size: 16px; line-height: 1.75; color: #fff; word-break: keep-all; overflow-wrap: anywhere; }
+.rp3-cap { font-size: 12px; color: #8a8a8a; margin: -4px 2px 10px; }
+.rp3-qs { display: flex; flex-direction: column; gap: 10px; } .rp3-qc { background: var(--card, #222225); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.rp3-qc .t { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; } .rp3-qc .t b { font-size: 15px; line-height: 1.5; color: #fff; font-weight: 600; } .rp3-qc p { margin: 0; font-size: 14px; line-height: 1.6; color: #d4d4d4; } .rp3-qc small { font-size: 11.5px; color: #6a6a6a; }
+.rp3-qc .ch { font-size: 11.5px; white-space: nowrap; border-radius: 999px; padding: 4px 10px; border: 1px solid rgba(255,255,255,.14); color: #9d9d9d; } .rp3-qc .ch.u { color: #69db7c; border-color: #2b6b3f; } .rp3-qc .ch.d { color: #f0a4a4; border-color: #5c2b2b; }
+.rp3-wc { background: var(--card, #222225); border-radius: 18px; padding: 18px 16px 6px; display: flex; flex-direction: column; }
+.rp3-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 2px; } .rp3-bar i { display: block; height: 12px; } .rp3-bl { display: flex; justify-content: space-between; font-size: 12.5px; margin: 8px 0 12px; }
+.rp3-g { border-top: 1px solid rgba(255,255,255,.06); } .rp3-g .hd { font: inherit; width: 100%; display: flex; align-items: center; gap: 10px; min-height: 50px; background: none; border: 0; padding: 0; cursor: pointer; color: inherit; }
+.rp3-g .hd > span:first-child { flex: 1; text-align: left; font-size: 14.5px; color: #fff; } .rp3-g .ds { display: flex; gap: 4px; } .rp3-g .ds i { width: 9px; height: 9px; border-radius: 50%; display: block; } .rp3-g .hd em { font-style: normal; width: 14px; font-size: 12px; color: #6a6a6a; } .rp3-g .hd em::after { content: '▾'; } .rp3-g.open .hd em::after { content: '▴'; }
+.rp3-g .bd { display: none; padding: 0 0 10px; } .rp3-g.open .bd { display: block; }
+.rp3-g .it { display: grid; grid-template-columns: 16px 80px minmax(0, 1fr); gap: 8px; padding: 8px 0; align-items: start; } .rp3-g .it b { font-size: 13px; } .rp3-g .it span { font-size: 12.5px; color: #8a8a8a; padding-top: 1px; } .rp3-g .it p { margin: 0; font-size: 13.5px; line-height: 1.55; color: #e4e4e4; overflow-wrap: anywhere; }
+.rp3-js { display: flex; flex-direction: column; gap: 8px; } .rp3-jc { background: var(--card, #222225); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.rp3-jc .t { display: flex; align-items: center; gap: 10px; } .rp3-jc .rp3-w { width: 26px; height: 26px; border-radius: 50%; background: #2d2d31; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #e4e4e4; } .rp3-jc .t b { font-size: 15px; } .rp3-jc .t small { font-size: 12px; color: #8a8a8a; } .rp3-jc .t em { margin-left: auto; font-style: normal; font-size: 11.5px; color: #e4e4e4; }
+.rp3-jc p { margin: 0; font-size: 13.5px; line-height: 1.6; color: #d4d4d4; } .rp3-jc .rp3-tl { font-size: 12px; color: #8a8a8a; }
+.rp3-opp { display: flex; flex-direction: column; gap: 6px; padding: 12px 2px; border-top: 1px solid var(--line, rgba(255,255,255,.06)); } .rp3-opp > small { font-size: 12.5px; color: #f0a4a4; } .rp3-opp > small.s { color: #6a6a6a; font-size: 11.5px; } .rp3-opp p { margin: 0; font-size: 14px; line-height: 1.6; color: #fff; }
+.rp3-opp .ans { margin-top: 4px; padding: 12px 14px; border-radius: 12px; background: #2a2a2e; display: flex; flex-direction: column; gap: 4px; } .rp3-opp .ans small { font-size: 12px; color: #8a8a8a; } .rp3-opp .ans p { font-size: 13.5px; color: #e4e4e4; }
+.rp3-chg { margin-top: 10px; border-radius: 12px; background: #2a2a2e; padding: 10px 12px; text-align: left; } .rp3-chg small { display: block; font-size: 12px; color: #8a8a8a; } .rp3-chg p { margin: 3px 0 0; font-size: 13.5px; color: #e4e4e4; line-height: 1.5; }
+.rp3-gb { display: flex; flex-direction: column; gap: 8px; padding: 10px 2px; } .rp3-gb > div { display: grid; grid-template-columns: 78px minmax(0, 1fr) 40px; align-items: center; gap: 10px; font-size: 12.5px; } .rp3-gb span { color: #8a8a8a; } .rp3-gb i { height: 10px; background: rgba(255,255,255,.08); border-radius: 3px; overflow: hidden; display: flex; } .rp3-gb i b { display: block; height: 10px; } .rp3-gb em { font-style: normal; color: #e4e4e4; text-align: right; }
+.rp3-pr { display: flex; align-items: center; gap: 12px; padding: 12px 2px; border-top: 1px solid var(--line, rgba(255,255,255,.06)); } .rp3-pr:first-child { border-top: 0; } .rp3-pr > span { display: flex; flex-direction: column; gap: 3px; min-width: 0; } .rp3-pr > span:first-child { flex: 1; } .rp3-pr b { font-size: 14px; color: #fff; font-weight: 500; } .rp3-pr small { font-size: 12px; color: #8a8a8a; overflow-wrap: anywhere; } .rp3-pr .r { align-items: flex-end; }
+.rp3-bt { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 8px; margin-top: 26px; } .rp3-bt button { font: inherit; height: 52px; border-radius: 14px; border: 1px solid rgba(255,255,255,.12); background: none; color: #fff; font-size: 15px; cursor: pointer; } .rp3-bt button:first-child { color: #b8b8b8; } .rp3-bt button.g { background: #e4e4e4 !important; color: #18181b !important; font-weight: 700; border: 0; }
 .mg-sh h3 { margin: 18px 0 0; display: flex; align-items: baseline; justify-content: space-between; font-size: 18px; color: #fff; } .mg-sh h3 span { font-size: 12px; font-weight: 500; color: var(--text-dim); }
 .mg-sh .od { margin-top: 8px; padding: 14px; border-radius: 12px; background: rgba(0,0,0,.25); display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; align-items: center; } .mg-sh .od .n { font-size: 12px; font-weight: 700; color: var(--text-mute); } .mg-sh .od b { font-size: 14.5px; color: #fff; } .mg-sh .od small { display: block; margin-top: 3px; font-size: 12px; color: var(--text-dim); } .mg-sh .od .a { font-size: 14px; font-weight: 700; color: #e8e8e8; font-variant-numeric: tabular-nums; }
 .mg-sh .od .sell { color: #ff8787; } .mg-sh .od .buy { color: #69db7c; }
@@ -31212,7 +31237,17 @@ function _brReport(rv) {
   const NEWV = !!(ai && (ai.v2 || ai['표']));   // v7.33: 새 체계 심사 — 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간은 보이지 않음 (2026-11-12 합의)
   let I16 = '', ORD = '';   // v7.34: 16항목은 '자세히 보기' 첫 줄로 접고, 주문 승인은 '할 일' 칸 안으로
   try {   // v7.24: 새 체계 — 판단 셋의 표 · 검수 · 18항목
-    if (ai && (ai['표'] || ai['검수'] || ai['18'])) {
+    if (_rp3Has(ai)) {   // v7.55: 결정 과정 — 결론까지 온 길 · 설득 · 고민 · 저울 · 판단 셋 · 검수
+      const Wd = _rp3Words('buy', 1), SD = ai['쪽'] || {}, C = _rp3Cnt(SD), G = ai['고민'] || [], RV = ai['검수'] || {};
+      const P = [];
+      if (G.length) P.push(['무엇을 고민했나', `질문 ${G.length} · 사는 쪽 ${G.filter(g => g.side === 'u').length}`, 'rp3-q']);
+      if (C.u + C.n + C.d) P.push(['무엇을 저울질했나', `사는 쪽 ${C.u} · 반대 ${C.d}`, 'rp3-w']);
+      if (ai['표']) P.push(['판단 셋', `${ai['표']}${ai['따른 판단'] ? ` · ${ai['따른 판단']}를 따름` : ''}`, 'rp3-j']);
+      if (RV.c) P.push(['검수', `${{ ok: '맞음', bad: '틀림', unk: '확인 못 함', none: '안 옴' }[RV.c] || '—'}${(RV.opp2 || RV.opp || []).length ? ` · 반대 사실 ${(RV.opp2 || RV.opp).length}` : ''}`, 'rp3-r']);
+      P.push(['결론', `${op || '—'}${op === '매수' && ai.q1 ? ` · 첫 진입 ${ai.q1}주` : ''}`, 'rp3-p']);
+      h += _rp3Path(P, op === '매수' ? _RP3C.u : op === '금지' ? _RP3C.d : '#ffd43b');
+      h += _rp3Per(ai['설득'], `왜 ${op || '이 의견'}인가`) + _rp3Q(G, Wd) + _rp3W(ai['18'] || {}, SD, Wd, ai['따른 판단']) + _rp3Set(ai['셋'], ai['결론 셋'], ai['따른 판단'], ai['표'], Wd, '주') + _rp3Rev(RV, `그래도 ${op || '이 의견'}인 까닭`);
+    } else if (ai && (ai['표'] || ai['검수'] || ai['18'])) {
       const RV = ai['검수'] || {}; const C3 = ai['결론 셋'] || {}; const I = ai['18'] || {};
       h += `<div class="br-sec">판단 셋 · 검수</div><div class="br-card"><div class="br-ln"><span>표</span><b>${escapeHtml(ai['표'] || '—')}${ai['따른 판단'] ? ` · ${escapeHtml(ai['따른 판단'])}를 따름` : ''}${Object.keys(C3).length ? ` · ${Object.entries(C3).map(([w, o]) => `${w} ${o}`).join(' · ')}` : ''}</b></div><div class="br-ln"><span>검수</span><b>${escapeHtml({ ok: '맞음', bad: '틀림', unk: '확인 못 함', none: '검수가 오지 않음' }[RV.c] || '—')}${RV.why ? ' — ' + escapeHtml(RV.why) : ''}</b></div>${(RV.opp || []).map(x => `<div class="br-ln"><span>반대 사실</span><b style="font-weight:400">${escapeHtml(x)}</b></div>`).join('')}</div>`;
       if (typeof _MG18 !== 'undefined') _MG18.forEach(([g, ks]) => { const L = ks.filter(k => I[k]); if (L.length) I16 += `<div class="br-sec">${g}</div><div class="br-card">${L.map(k => `<div class="br-ln"><span>${escapeHtml(k)}</span><b style="font-weight:400">${escapeHtml(I[k])}</b></div>`).join('')}</div>`; });
@@ -31271,13 +31306,13 @@ function _brReport(rv) {
   if (sm && bs && !NEWV) reasons.push(['📊', `비슷했던 ${sm.n}번은 20일 뒤 보통 <b class="${_brC(sm.median)}">${_brPf(sm.median)}</b> (평소 ${_brPf(bs.median)})${sh5 && sh10 ? `<small class="br-rsub">5일 뒤 <b class="${_brC(sh5.median)}">${_brPf(sh5.median)}</b> · 10일 뒤 <b class="${_brC(sh10.median)}">${_brPf(sh10.median)}</b>${sh5.median < 0 && sm.median > 0 ? ' — 초반엔 한 번 더 눌렸어요' : ''}</small>` : ''}`, 'brD1']);
   if (rp) reasons.push(['📍', `${rp}${near ? `, ${near}` : ''}`, 'brD3']);
   const al = _brAiLine(ai); if (al) reasons.push(['🔍', escapeHtml(al), 'brD2']);
-  if (reasons.length) h += `<div class="br-sec">이유</div><div class="br-card">${reasons.map(([i, t, id]) => `<div class="br-rs" onclick="aqBrGo('${id}')"><i>${i}</i><span>${t}</span><em>›</em></div>`).join('')}</div>`;
+  if (reasons.length && !_rp3Has(ai)) h += `<div class="br-sec">이유</div><div class="br-card">${reasons.map(([i, t, id]) => `<div class="br-rs" onclick="aqBrGo('${id}')"><i>${i}</i><span>${t}</span><em>›</em></div>`).join('')}</div>`;
   // ⑤ 틀린 조건
   const inv = ai && ai.invalid ? String(ai.invalid).split('\n').map(x => x.replace(/^[-*•·\s]+/, '').trim()).filter(Boolean) : ((Lv.support || [])[0] ? [`${_brPxS(mk, Lv.support[0][0])} 지지가 깨짐`] : []);
   if (inv.length) h += `<div class="br-sec">이렇게 되면 이 판단은 틀린 것</div><div class="br-wr">${inv.map(x => `<div>· ${escapeHtml(x)}</div>`).join('')}</div>`;
   // ⑥ 자세히 보기 (접힘)
   h += `<div class="br-sec">자세히 보기</div>`;
-  if (NEWV && I16) h += `<details class="br-d" id="brD16"><summary><span class="t">판단 16항목</span><span class="s">판단 셋이 본 것</span><span class="c">▾</span></summary><div class="br-db">${I16}</div></details>`;   // v7.34
+  if (NEWV && I16 && !_rp3Has(ai)) h += `<details class="br-d" id="brD16"><summary><span class="t">판단 16항목</span><span class="s">판단 셋이 본 것</span><span class="c">▾</span></summary><div class="br-db">${I16}</div></details>`;   // v7.34
   if (sm && bs && !NEWV) {
     const per = S.periods || []; const shown = _brv.more ? per : per.slice(0, 4); const now = S.now || {};
     h += `<details class="br-d" id="brD1"><summary><span class="t">📊 비슷했던 구간</span><span class="s">${sm.n}번 · 보통 ${_brPf(sm.median)}</span><span class="c">▾</span></summary><div class="br-db">
@@ -32207,35 +32242,137 @@ async function aqMgrStock(tk) {
   _mg.st = r; body.innerHTML = _mgStockHtml(r);
 }
 const _MG18 = [['오늘 움직임', ['오늘 움직임', '성격']], ['기업', ['산 이유', '가격 수준', '가치사슬 신호', '일정']], ['내 계좌', ['내 위치', '계좌 전체', '팔 때 비용', '대안']], ['바깥 환경', ['거시', '정책', '원자재 · 업황', '과거와 겹침']], ['차트 · 수급', ['추세와 지지', '매물대', '과열 · 침체', '수급']]];
-function _mgStockHtml3(r) {   // v7.16: 새 체계 — 결론 · 판단 셋의 표 · 한 마디 · 판단 과정 · 검수 · 반대 사실 · 18항목
+// ---------- v7.55: 리포트 '결정 과정' — 결론까지 온 길 · 설득 · 고민 · 저울(18항목 쪽) · 판단 셋 · 검수 (매수심사 · AI 매니저 공통) ----------
+const _RP3C = { u: '#69db7c', n: '#9d9d9d', d: '#f0a4a4' };
+const _rp3E = s => escapeHtml(String(s == null ? '' : s));
+function aqRp3Go(id) { try { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} }
+function aqRp3Tg(i) { const el = document.getElementById('rp3g' + i); if (el) el.classList.toggle('open'); }
+function _rp3Has(ai) { return !!(ai && (ai['고민'] || ai['쪽'] || ai['설득'] || ai['셋'])); }
+// W = { u, n, d } 쪽 이름 · order = 막대 순서 (결론 쪽 먼저)
+function _rp3Words(kind, dir) {
+  if (kind === 'buy') return { W: { u: '사는 쪽', n: '중립', d: '반대' }, order: ['u', 'n', 'd'] };
+  if (dir < 0) return { W: { u: '지키는 쪽', n: '그대로', d: '파는 쪽' }, order: ['d', 'n', 'u'] };
+  return { W: { u: '사는 쪽', n: '그대로', d: '파는 쪽' }, order: ['u', 'n', 'd'] };
+}
+function _rp3Cnt(sd) { const v = Object.values(sd || {}); return { u: v.filter(x => x === 'u').length, n: v.filter(x => x === 'n').length, d: v.filter(x => x === 'd').length }; }
+function _rp3Path(P, fin) {
+  return `<div class="br-sec">결론까지 온 길</div><div class="rp3-path">${P.map(([k, v, id], i) => `<button type="button" class="rp3-ps${i === P.length - 1 ? ' fin' : ''}" onclick="aqRp3Go('${id}')"><span class="ln"><i class="u${i ? '' : ' x'}"></i><i class="dt" style="${i === P.length - 1 ? `background:${fin}` : ''}"></i><i class="d${i < P.length - 1 ? '' : ' x'}"></i></span><span class="k">${_rp3E(k)}</span><b style="${i === P.length - 1 ? `color:${fin}` : ''}">${_rp3E(v)}</b><em>›</em></button>`).join('')}</div>`;
+}
+function _rp3Per(t, title) { return t ? `<div class="br-sec" id="rp3-p">${_rp3E(title)}</div><div class="rp3-per">${_rp3E(t)}</div>` : ''; }
+function _rp3Q(G, Wd) {
+  if (!G || !G.length) return '';
+  return `<div class="br-sec" id="rp3-q">무엇을 고민했나</div><div class="rp3-cap">결론을 가른 질문 ${G.length}</div><div class="rp3-qs">${G.map(g => `<div class="rp3-qc"><div class="t"><b>${_rp3E(g.q)}</b>${g.side ? `<span class="ch ${g.side}">${_rp3E(Wd.W[g.side])}</span>` : ''}</div><p>${_rp3E(g.a)}</p>${g.src ? `<small>${_rp3E(g.src)}</small>` : ''}</div>`).join('')}</div>`;
+}
+function _rp3W(I, SD, Wd, follow) {
+  if (!I || !Object.keys(I).length) return '';
+  const C = _rp3Cnt(SD); const tot = C.u + C.n + C.d;
+  let h = `<div class="br-sec" id="rp3-w">무엇을 저울질했나</div><div class="rp3-cap">항목마다 어느 쪽을 가리키나${follow ? ` · 따른 판단(${_rp3E(follow)}) 기준` : ''}</div><div class="rp3-wc">`;
+  if (tot) h += `<div class="rp3-bar">${Wd.order.map(k => C[k] ? `<i style="flex:${C[k]} 0 0;background:${k === 'n' ? '#5a5a5e' : _RP3C[k]}"></i>` : '').join('')}</div><div class="rp3-bl">${Wd.order.map(k => `<span style="color:${_RP3C[k]}">${Wd.W[k]} ${C[k]}</span>`).join('')}</div>`;
+  const groups = (typeof _MG18 !== 'undefined' ? _MG18 : []);
+  groups.forEach(([g, ks], gi) => { const L = ks.filter(k => I[k]); if (!L.length) return;
+    h += `<div class="rp3-g" id="rp3g${gi}"><button type="button" class="hd" onclick="aqRp3Tg(${gi})"><span>${_rp3E(g)}</span><span class="ds">${L.map(k => `<i style="background:${_RP3C[SD && SD[k]] || '#3f3f46'}"></i>`).join('')}</span><em></em></button><div class="bd">${L.map(k => { const s = SD && SD[k];
+      return `<div class="it"><b style="color:${_RP3C[s] || '#6a6a6a'}">${s === 'u' ? '↑' : s === 'd' ? '↓' : s === 'n' ? '→' : '·'}</b><span>${_rp3E(k)}</span><p>${_rp3E(typeof _mgTx === 'function' ? _mgTx(I[k]) : I[k])}</p></div>`; }).join('')}</div></div>`; });
+  return h + '</div>';
+}
+function _rp3Set(SET, C3, follow, votes, Wd, unit) {
+  const ws = ['A', 'B', 'C'].filter(w => (SET && SET[w]) || (C3 && C3[w])); if (!ws.length) return '';
+  const opC = op => /매도|금지/.test(op || '') ? _RP3C.d : /매수/.test(op || '') ? _RP3C.u : _RP3C.n;
+  let h = `<div class="br-sec" id="rp3-j">판단 셋은 어떻게 갈렸나</div><div class="rp3-cap">같은 자료로 따로 판단${votes ? ` · ${_rp3E(votes)}` : ''}</div><div class="rp3-js">`;
+  ws.forEach(w => { const x = (SET && SET[w]) || { op: C3[w] }; const on = w === follow; const t = x.tilt;
+    const tl = t && (t[0] + t[1] + t[2]) ? Wd.order.map(k => `${Wd.W[k]} ${t[{ u: 0, n: 1, d: 2 }[k]]}`).join(' · ') : '';
+    h += `<div class="rp3-jc${on ? ' on' : ''}" style="${on ? `box-shadow:inset 0 0 0 1.5px ${opC(x.op)}99` : ''}"><div class="t"><span class="rp3-w">${w}</span><b style="color:${opC(x.op)}">${_rp3E(x.op || '—')}</b>${x.qty ? `<small>${x.qty}${unit}</small>` : ''}${on ? '<em>따름</em>' : ''}</div>${x.one ? `<p>${_rp3E(typeof _mgTx === 'function' ? _mgTx(x.one) : x.one)}</p>` : ''}${tl ? `<small class="rp3-tl">${tl}</small>` : ''}</div>`; });
+  return h + '</div>';
+}
+function _rp3Rev(RV, why) {
+  if (!RV || !RV.c) return '';
+  const w = { ok: '맞음', bad: '틀림', unk: '확인 못 한 근거 있음', none: '검수가 오지 않음' }[RV.c] || '—';
+  let h = `<div class="br-sec" id="rp3-r">검수가 확인한 것</div><div class="br-card"><div class="br-ln"><span>결과</span><b>${_rp3E(w)}${RV.why ? ' — ' + _rp3E(RV.why) : ''}</b></div>`;
+  if (RV.chk) h += `<div class="br-ln"><span>확인</span><b style="font-weight:400">${_rp3E(RV.chk)}</b></div>`;
+  const O = (RV.opp2 && RV.opp2.length) ? RV.opp2 : (RV.opp || []).map(t => ({ t }));
+  O.forEach(o => { h += `<div class="rp3-opp"><small>빠뜨린 반대 사실</small><p>${_rp3E(o.t)}</p>${o.s ? `<small class="s">${_rp3E(o.s)}</small>` : ''}${o.ans ? `<div class="ans"><small>${_rp3E(why)}</small><p>${_rp3E(o.ans)}</p></div>` : ''}</div>`; });
+  return h + '</div>';
+}
+function _rp3Lamps(dir) {
+  const L = [[1, 'M12 19V5M6 11l6-6 6 6', '늘림'], [0, 'M5 12h14', '그대로'], [-1, 'M12 5v14M6 13l6 6 6-6', '줄임']];
+  return `<div class="br-tl">${L.map(([d, p, t]) => `<span class="br-lamp ${d > 0 ? 'g' : d < 0 ? 'r' : 'y'}${d === dir ? ' on' : ''}" aria-label="${t}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><path d="${p}"/></svg></span>`).join('')}</div>`;
+}
+Object.assign(window, { aqRp3Go, aqRp3Tg });
+function _rp3GrpN(tk, legs) {   // 이 주문을 하면 그 종목 묶음 비중 (지금 → 뒤)
+  try {
+    const D = _mg.d, R = (D && D.run) || {}, G = R.groups; if (!G || !legs || !legs.length) return null;
+    const j = G.findIndex(g => (g.tks || []).includes(tk)); if (j < 0 || G[j].k === '그 밖') return null;
+    const S = D.stocks || {}; let tot = R.cash || 0; const mv = {};
+    Object.entries(S).forEach(([t, s]) => { if (s.held && s.qty && s.now) { mv[t] = s.qty * s.now; tot += mv[t]; } });
+    if (!tot) return null;
+    const gw = m => (G[j].tks || []).reduce((a, t) => a + (m[t] || 0), 0); const m1 = Object.assign({}, mv);
+    legs.forEach(g => { const a = g.qty * g.price; m1[g.tk] = Math.max(0, (m1[g.tk] || 0) + (g.side === 'BUY' ? a : -a)); });
+    return { k: G[j].k, tks: G[j].tks, a: Math.round(gw(mv) / tot * 100), b: Math.round(gw(m1) / tot * 100) };
+  } catch (e) { return null; }
+}
+function _rp3Past(tk) {
+  const T = _mg.tr; if (!T) return `<div id="rp3Past"></div>`;
+  const R = (T.rows || []).filter(r => r.tk === tk && r.item).slice(0, 5); if (!R.length) return `<div id="rp3Past"></div>`;
+  return `<div id="rp3Past"><div class="br-sec">이 종목 지난 제안</div><div class="br-card">${R.map(r => { const x = r.res || {};
+    return `<div class="rp3-pr"><span><b>${_brMD(r.d)} · ${_rp3E(r.op || '')}${r.votes ? ' · ' + _rp3E(r.votes) : ''}</b><small>${_rp3E(r.btn || '버튼 전')}${r.reason ? ' · ' + _rp3E(r.reason) : ''}</small></span><span class="r"><b>${x.n ? `${x.ret >= 0 ? '+' : ''}${x.ret}%` : '—'}</b><small>${x.n || 0}/20일${r.verdict ? ' · ' + _rp3E(r.verdict) : ''}</small></span></div>`; }).join('')}</div></div>`;
+}
+async function aqRp3Act(id, a) {
+  document.getElementById('brSheet')?.remove();
+  await aqMgr3Flow(id);
+  setTimeout(() => { if (a === 'r') aqMgr3Reject(id); else if (a === 'p') aqMgr3Paper(id); else aqMgr3Ask(id); }, 60);
+}
+function _mgStockHtml3(r) {   // v7.16 · v7.55: 매수심사 리포트와 같은 틀 — 신호등(늘림 · 그대로 · 줄임) · 결론까지 온 길 · 설득 · 고민 · 저울 · 판단 셋 · 검수 · 계좌 전체 · 00:00 · 지난 제안
   const S = r.data || {}, A = r.ai || {}, op = r.opinion, tk = S.ticker || '', mk = _mg.mk; const pos = S.pos || null; const now = S.now || (S.quant || {}).close;
   const ret = pos && pos.avg && now ? (now / pos.avg - 1) * 100 : null; const nm = escapeHtml(displayName(tk) || S.name || tk);
   const RV = A['검수'] || {}; const st = A['상태'] || '';
-  const cls = { '분할 매도': 'r', '절반 매도': 'r', '전량 매도': 'r', '보유': 'y', '대기': 'y', '보류': 'y', '추가 매수': 'g', '분할 매수': 'g' };
-  let h = `<div class="br-head"><b>${nm} · AI 매니저</b><small>${r.requested_at ? _brHM(r.requested_at) + ' 판단' : ''}</small></div>`;
-  h += `<div class="br-vc"><div class="br-word ${cls[op] || ''}">${escapeHtml(op || 'AI 의견 없음')}</div>${now ? `<div class="br-basis2">${_brPx(mk, now)} 기준${pos ? ` · 보유 ${aqNum(pos.qty, 0)}주 · ${_brP(ret)}` : ' · 관심'}</div>` : ''}<p class="br-vs">${escapeHtml(A['한 마디'] || '')}</p></div>`;
-  const VO = A.votes || {}, C3 = A['결론 셋'] || {};
-  h += `<div class="br-sec">판단 셋</div><div class="br-card"><div class="br-ln"><span>표</span><b>${escapeHtml(A['표'] || '—')}${A['따른 판단'] ? ` · ${escapeHtml(A['따른 판단'])}를 따름` : st === '홀딩' ? ' · 방향이 갈려 그대로 둠' : ''}</b></div>${['A', 'B', 'C'].filter(w => C3[w] || VO[w]).map(w => `<div class="br-ln"><span>${w}</span><b>${escapeHtml(C3[w] || '')}${VO[w] ? ` · ${escapeHtml(VO[w])}` : ''}</b></div>`).join('')}</div>`;
-  const rvw = { ok: '맞음', bad: '틀림', unk: '못 연 근거 있음', none: '검수가 오지 않음' }[RV.c] || '—';
-  h += `<div class="br-sec">검수</div><div class="br-card"><div class="br-ln"><span>결과</span><b>${escapeHtml(rvw)}${st === '보류' ? ' · 보류 (주문 안 냄)' : ''}</b></div>${RV.why ? `<div class="br-ln"><span>이유</span><b>${escapeHtml(_mgTx(RV.why))}</b></div>` : ''}${(RV.opp || []).map(x => `<div class="br-ln"><span>반대 사실</span><b>${escapeHtml(_mgTx(x))}</b></div>`).join('')}</div>`;
-  const OR = A['주문 원래'] || [];
-  if (OR.length) h += `<div class="br-sec">주문</div><div class="br-card">${OR.map(g => `<div class="br-ln"><span>${g.side === 'SELL' ? '매도' : '매수'}</span><b>${g.qty}주 · 지정가 ${_brPx(mk, g.price)}</b></div>`).join('')}</div>`;
-  if (A['계좌 종합']) h += `<div class="br-sec">계좌 종합</div><div class="br-card"><div class="br-ln"><span>처리</span><b>${escapeHtml(A['계좌 종합']['처리'] || '그대로')}</b></div>${A['계좌 종합']['이유'] ? `<div class="br-ln"><span>이유</span><b style="font-weight:400">${escapeHtml(_mgTx(A['계좌 종합']['이유']))}</b></div>` : ''}</div>`;   // v7.25
-  if (A['00:00 처리'] && !A['다시 판단']) h += `<div class="br-sec">00:00 확인</div><div class="br-card"><div class="br-ln"><b style="font-weight:400">${escapeHtml(A['00:00 처리'])}</b></div></div>`;
-  const RJ = A['다시 판단'];
-  if (RJ) h += `<div class="br-sec">00:00 다시 판단</div><div class="br-card"><div class="br-ln"><span>결론</span><b>${escapeHtml(RJ['결론'] || '')} · ${escapeHtml(RJ['표'] || '—')}</b></div>${(RJ['바뀐 것'] || []).map(x => `<div class="br-ln"><span>바뀐 것</span><b style="font-weight:400">${escapeHtml(x)}</b></div>`).join('')}${RJ['한 마디'] ? `<div class="br-ln"><span>한 마디</span><b style="font-weight:400">${escapeHtml(RJ['한 마디'])}</b></div>` : ''}<div class="br-ln"><span>검수</span><b>${escapeHtml({ ok: '맞음', bad: '틀림', unk: '못 연 근거 있음', none: '검수가 오지 않음' }[(RJ['검수'] || {}).c] || '—')}${(RJ['검수'] || {}).why ? ' — ' + escapeHtml(RJ['검수'].why) : ''}</b></div><div class="br-ln"><span>처리</span><b style="font-weight:400">${escapeHtml(RJ['처리'] || A['00:00 처리'] || '')}</b></div>${RJ['판단 과정'] ? `<div class="br-ln"><b style="font-weight:400">${escapeHtml(_mgTx(RJ['판단 과정']))}</b></div>` : ''}</div>`;
+  const dir = /매도/.test(op || '') ? -1 : /매수/.test(op || '') ? 1 : 0;
+  const cls = dir < 0 ? 'r' : dir > 0 ? 'g' : 'y'; const fin = dir < 0 ? _RP3C.d : dir > 0 ? _RP3C.u : '#ffd43b';
+  const Wd = _rp3Words('mgr', dir), SD = A['쪽'] || {}, C = _rp3Cnt(SD), G = A['고민'] || [];
   const EV = (A['근거'] || {})['조사'] || []; const MW = ((_mj.d && _mj.d.last && _mj.d.last.stocks) || {})[tk];
-  if (EV.length || MW) {   // v7.16: 근거 — 오늘 매일 조사 기록(출처 · 검수) · 거시 날씨
-    const ckw = { bad: ' · 원문과 다름', unk: ' · 확인 못 함' };
-    h += `<div class="br-sec">근거 · 오늘 조사</div><div class="br-card">${MW && MW.w ? `<div class="br-ln"><span>거시 날씨</span><b style="font-weight:400">${escapeHtml(MW.w)}${MW.why ? ' — ' + escapeHtml(MW.why) : ''}</b></div>` : ''}${EV.map(x => `<div class="br-ln"><b style="font-weight:400">${escapeHtml(x.t || '')}${x.s ? `<small style="display:block;color:var(--text-mute);margin-top:3px">${/^https?:\/\//.test(x.u || '') ? `<a href="${escapeAttr(x.u)}" target="_blank" rel="noopener">${escapeHtml(x.s)}</a>` : escapeHtml(x.s)}${escapeHtml(ckw[x.c] || '')}</small>` : ''}</b></div>`).join('')}</div>`;
+  const it = ((_mg.d && _mg.d.items) || []).find(i => i.status !== 'invalid' && (i.legs || []).some(g => g.tk === tk));
+  const legs = it ? it.legs : (A['주문 원래'] || []); const g0 = legs.find(x => x.tk === tk) || legs[0];
+  const GN = _rp3GrpN(tk, legs);
+  let h = `<div class="br-head"><b>${nm} · AI 매니저</b><small>${r.requested_at ? _brHM(r.requested_at) + ' 판단' : ''}${A['다시 판단'] ? ' · 00:00 다시 판단' : ''}</small></div>`;
+  let key = '';
+  if (g0) { const sell = g0.side === 'SELL'; const prof = sell && pos && pos.avg ? (g0.price - pos.avg) * g0.qty : null;
+    const sub = [prof != null ? `확정 수익 ${prof >= 0 ? '+' : '−'}${_mgM(Math.abs(prof))}` : '', GN ? `${GN.k} 묶음 ${GN.a} → ${GN.b}%` : '', MW && MW.w ? `거시 ${MW.w}` : ''].filter(Boolean).join(' · ');
+    key = `<div class="br-key ${sell ? 'r' : 'g'}">${g0.qty}주 ${sell ? '매도' : pos ? '추가매수' : '매수'} · 지정가 ${_brPx(mk, g0.price)}${legs.length > 1 ? ` · 세트 ${legs.length}건` : ''}${sub ? `<small>${_rp3E(sub)}</small>` : ''}</div>`; }
+  const chg = A['어제'] ? `<div class="rp3-chg"><small>어제 ${_rp3E(A['어제'])} → 오늘 ${_rp3E(op)}</small>${A['바뀐 것'] ? `<p>${_rp3E(_mgTx(A['바뀐 것']))}</p>` : ''}</div>` : '';
+  h += `<div class="br-vc">${_rp3Lamps(dir)}<div class="br-word ${cls}">${escapeHtml(op || 'AI 의견 없음')}</div>${now ? `<div class="br-basis2">${_brPx(mk, now)} 기준${pos ? ` · 보유 ${aqNum(pos.qty, 0)}주 · ${_brP(ret)}` : ' · 관심'}</div>` : ''}<p class="br-vs">${escapeHtml(_mgTx(A['한 마디'] || ''))}</p>${key}${chg}</div>`;
+  const RJ = A['다시 판단']; const P = [];
+  const o0 = Wd.order[0], o2 = Wd.order[2];
+  if (G.length) P.push(['무엇을 고민했나', `질문 ${G.length} · ${Wd.W[o0]} ${G.filter(g => g.side === o0).length}`, 'rp3-q']);
+  if (C.u + C.n + C.d) P.push(['무엇을 저울질했나', `${Wd.W[o0]} ${C[o0]} · ${Wd.W[o2]} ${C[o2]}`, 'rp3-w']);
+  if (A['표']) P.push(['판단 셋', `${A['표']}${A['따른 판단'] ? ` · ${A['따른 판단']}를 따름` : st === '홀딩' ? ' · 갈려 그대로' : ''}`, 'rp3-j']);
+  if (RV.c) P.push(['검수', `${{ ok: '맞음', bad: '틀림', unk: '확인 못 함', none: '안 옴' }[RV.c] || '—'}${(RV.opp2 || RV.opp || []).length ? ` · 반대 사실 ${(RV.opp2 || RV.opp).length}` : ''}`, 'rp3-r']);
+  if (A['계좌 종합']) P.push(['계좌 전체', `${A['계좌 종합']['처리'] || '그대로'}`, 'rp3-a']);
+  if (RJ || A['00:00 처리']) P.push(['00:00 확인', RJ ? `다시 판단 · ${RJ['결론'] || ''}` : '확인함', 'rp3-z']);
+  P.push(['결론', g0 ? `${op} ${g0.qty}주` : (op || '—'), 'rp3-p']);
+  if (P.length > 1) h += _rp3Path(P, fin);
+  h += _rp3Per(_mgTx(A['설득'] || A['판단 과정'] || ''), `왜 ${op || '이 의견'}인가`) + _rp3Q(G, Wd) + _rp3W(A['18'] || {}, SD, Wd, A['따른 판단'])
+    + _rp3Set(A['셋'], A['결론 셋'], A['따른 판단'], A['표'], Wd, '주') + _rp3Rev(RV, `그래도 ${op || '이 의견'}인 까닭`);
+  if (st === '보류') h += `<div class="br-wr"><div>· 검수 결과로 보류 — 주문을 내지 않고 00:00에 다시 판단해요</div></div>`;
+  if (A['계좌 종합'] || GN) {
+    const AC = A['계좌 종합'] || {};
+    h += `<div class="br-sec" id="rp3-a">계좌 전체로 다시 봄</div><div class="br-card">${A['계좌 종합'] ? `<div class="br-ln"><span>처리</span><b>${_rp3E(AC['처리'] || '그대로')}</b></div>` : ''}`
+      + (GN ? `<div class="rp3-gb"><div><span>${_rp3E(GN.k)} 지금</span><i><b style="width:${Math.min(100, GN.a)}%;background:#a1a1aa"></b></i><em>${GN.a}%</em></div><div><span>${g0 && g0.side === 'SELL' ? '판 뒤' : '산 뒤'}</span><i><b style="width:${Math.min(100, GN.b)}%;background:#f4f4f5"></b></i><em style="color:#fff;font-weight:700">${GN.b}%</em></div></div>` : '')
+      + (AC['이유'] ? `<div class="br-ln"><b style="font-weight:400">${_rp3E(_mgTx(AC['이유']))}</b></div>` : '') + '</div>';
   }
-  if (A['판단 과정']) h += `<div class="br-sec">판단 과정</div><div class="br-card"><div class="br-ln"><b style="font-weight:400">${escapeHtml(_mgTx(A['판단 과정']))}</b></div></div>`;
-  const I = A['18'] || {};
-  _MG18.forEach(([g, ks]) => { const L = ks.filter(k => I[k]); if (!L.length) return;
-    h += `<div class="br-sec">${g}</div><div class="br-card">${L.map(k => `<div class="br-ln"><span>${escapeHtml(k)}</span><b style="font-weight:400">${escapeHtml(_mgTx(I[k]))}</b></div>`).join('')}</div>`; });
+  if (RJ || A['00:00 처리']) {
+    h += `<div class="br-sec" id="rp3-z">00:00 확인</div><div class="br-card">${A['00:00 처리'] ? `<div class="br-ln"><span>걸린 것</span><b style="font-weight:400">${_rp3E(A['00:00 처리'])}</b></div>` : ''}`
+      + (RJ ? `<div class="br-ln"><span>다시 판단</span><b>${_rp3E(RJ['결론'] || '')}${RJ['표'] ? ' · ' + _rp3E(RJ['표']) : ''}</b></div>${(RJ['바뀐 것'] || []).map(x => `<div class="br-ln"><span>바뀐 것</span><b style="font-weight:400">${_rp3E(x)}</b></div>`).join('')}${RJ['한 마디'] ? `<div class="br-ln"><span>한 마디</span><b style="font-weight:400">${_rp3E(RJ['한 마디'])}</b></div>` : ''}` : '') + '</div>';
+  }
+  if (!_mg.tr) setTimeout(() => _mgTrackLoad().then(() => { const b = document.getElementById('rp3Past'); if (b) b.outerHTML = _rp3Past(tk); }), 0);
+  h += _rp3Past(tk);
+  const more = [];
+  if (EV.length || MW) { const ckw = { bad: ' · 원문과 다름', unk: ' · 확인 못 함' };
+    more.push(['근거 · 오늘 조사', `${EV.length}줄`, `${MW && MW.w ? `<div class="br-ln"><span>거시 날씨</span><b style="font-weight:400">${escapeHtml(MW.w)}${MW.why ? ' — ' + escapeHtml(MW.why) : ''}</b></div>` : ''}${EV.map(x => `<div class="br-ln"><b style="font-weight:400">${escapeHtml(x.t || '')}${x.s ? `<small style="display:block;color:var(--text-mute);margin-top:3px">${/^https?:\/\//.test(x.u || '') ? `<a href="${escapeAttr(x.u)}" target="_blank" rel="noopener">${escapeHtml(x.s)}</a>` : escapeHtml(x.s)}${escapeHtml(ckw[x.c] || '')}</small>` : ''}</b></div>`).join('')}`]); }
+  if (A['설득'] && A['판단 과정']) more.push(['판단 과정 원문', `판단 ${_rp3E(A['따른 판단'] || '')}`, `<div class="br-ln"><b style="font-weight:400">${escapeHtml(_mgTx(A['판단 과정']))}</b></div>`]);
+  if (more.length) h += `<div class="br-sec">자세히 보기</div>` + more.map(([t, s, body]) => `<details class="br-d"><summary><span class="t">${t}</span><span class="s">${s}</span><span class="c">▾</span></summary><div class="br-db">${body}</div></details>`).join('');
+  if (it && it.status === 'proposed') h += `<div class="rp3-bt"><button onclick="aqRp3Act(${it.id}, 'r')">거부</button><button onclick="aqRp3Act(${it.id}, 'p')">모의</button><button class="g" onclick="aqRp3Act(${it.id}, 'a')">승인</button></div>`;
   h += '<div class="br-lim" style="margin-top:28px">가격 예측이 아니에요 · 오늘 하루 지정가 제안이에요</div>';
   return h;
 }
+Object.assign(window, { aqRp3Act });
 function _mgStockHtml(r) {
   if (r && r.ai && r.ai['18']) return _mgStockHtml3(r);   // v7.16
   const S = r.data || {}, A = r.ai || {}, op = r.opinion, tk = S.ticker, mk = _mg.mk; const Q = S.quant || {}, SM = S.similar || {}; const pos = S.pos || null; const now = S.now || Q.close;
