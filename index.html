@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '8.16';   // v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '8.17';   // v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -327,7 +327,7 @@ button, .btn, [role="button"], .clickable {
   transition: transform var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out), opacity var(--t-fast) var(--ease-out);
 }
 /* 탭/active 시 살짝 눌리는 효과 (전역) — 단 모달 닫기/토스/보고서 등 특수 버튼은 예외 */
-button:not(.modal-close):not(.modal-toss):not(.modal-report):not(.modal-bottom-close):not(.theme-toggle):not(.hero-refresh):not(.mtab-btn):not(.pc-tab-btn):active,
+button:not(.modal-close):not(.modal-toss):not(.modal-report):not(.modal-bottom-close):not(.theme-toggle):not(.hero-refresh):not(.mtab-btn):active,
 .btn:active,
 .clickable:active {
   transform: scale(0.97);
@@ -428,27 +428,6 @@ section.card {
 }
 .mtab-btn.active .mtab-icon {
   transform: translateY(-1px);
-}
-
-/* (3) PC 활성 탭 — 좌측 vertical indicator 슬라이드 */
-.pc-sidebar .pc-tab-btn {
-  position: relative;
-}
-.pc-sidebar .pc-tab-btn::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 50%;
-  width: 3px; height: 24px;
-  background: var(--accent);
-  border-radius: 0 4px 4px 0;
-  transform: translateY(-50%) scaleY(0);
-  opacity: 0;
-  transition: transform 0.32s var(--ease-out), opacity 0.16s var(--ease-out);
-  pointer-events: none;
-}
-.pc-sidebar .pc-tab-btn.active::before {
-  transform: translateY(-50%) scaleY(1);
-  opacity: 1;
 }
 
 /* v2.11/v2.18/v2.19: 대시보드 카드만 배경 + 프레임 복원 (다른 카드는 transparent 유지) */
@@ -623,24 +602,13 @@ section.card {
 @media (min-width: 1025px) { .aq-toast { bottom: 40px; } }
 [data-theme="light"] .aq-toast { background: rgba(45,35,15,0.92); color: #fff; }
 
-/* v2.44: PC 사이드바 영역 구분선 */
-.pc-sidebar .pc-sidebar-divider {
-  width: 32px;
-  height: 1px;
-  margin: 8px 0;
-  background: rgba(255,255,255,0.15);
-  align-self: center;
-}
-[data-theme="light"] .pc-sidebar .pc-sidebar-divider { background: rgba(0,0,0,0.12); }
 
 /* v2.44: disabled 메뉴 — 시각적 약화 + 커서 변경 */
-.pc-tab-btn.disabled,
 .mtab-btn.disabled,
 .mo-drawer-item.disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
-.pc-tab-btn.disabled:hover,
 .mtab-btn.disabled:hover { color: inherit !important; }
 
 /* v2.44: MO 상단 1열 (검색 + 햄버거) — 모바일 전용 */
@@ -3173,47 +3141,6 @@ html.aq-wide .br-sheet.ppv-full, .br-sheet.ppv-full { left: 0 !important; right:
 .modal-content .modal-report.aq-story img,
 .modal-content .modal-report.aq-story svg { position: relative; z-index: 2; }
 
-/* ============ v1.57 PC 사이드바 + 사이드 패널 (PC만, 모바일은 display:none) ============ */
-/* v1.58: data-pc-tab 단일 속성을 data-pc-page + data-pc-panel 두 속성으로 분리
-   - data-pc-page: "main" | "board" | "my" (메인 콘텐츠 영역 전환)
-   - data-pc-panel: "" | "discover" | "explore" (우측 사이드 패널 토글)
-   페이지 전환과 패널 토글이 독립적으로 동작 */
-.pc-sidebar {
-  display: none;  /* 모바일은 안 보임 (아래 @media에서 켜짐) */
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
-  width: 64px;
-  background: var(--tab-bar-bg);
-  z-index: 90;
-  flex-direction: column;
-  padding: 16px 0;
-  gap: 6px;
-  border-left: 1px solid rgba(255,255,255,0.04);
-}
-[data-theme="light"] .pc-sidebar { border-left-color: rgba(0,0,0,0.06); }
-
-.pc-sidebar .pc-tab-btn {
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 5px;
-  background: none; border: none;
-  width: 100%; padding: 12px 4px;
-  color: rgba(255, 255, 255, 0.42);
-  cursor: pointer;
-  font-family: inherit;
-  transition: color 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.pc-sidebar .pc-tab-btn:hover { color: rgba(255, 255, 255, 0.7); }
-.pc-sidebar .pc-tab-btn.active { color: #ffffff; }
-.pc-sidebar .pc-tab-icon { width: 22px; height: 22px; }
-.pc-sidebar .pc-tab-label { font-size: 11px; font-weight: 500; }
-.pc-sidebar .pc-tab-btn.active .pc-tab-label { font-weight: 700; }
-
-/* v2.59: PC 사이드바 — 설정 버튼은 맨 아래로 밀기 (flex auto) */
-.pc-sidebar .pc-tab-btn[data-pc-tab="engine"] { margin-top: auto; }   /* v5.99: 자동 → 운영 → AI → 설정 (하단 그룹) */   /* v4.78: 로그 제거 → 운영부터 하단 그룹 */
-.pc-sidebar .pc-sidebar-divider.bottom { margin-top: auto; margin-bottom: 6px; }
-
 /* v2.59: MO drawer 분리선 (마이 ↔ 설정 사이) */
 .mo-drawer-list .mo-drawer-divider {
   height: 1px;
@@ -3221,159 +3148,6 @@ html.aq-wide .br-sheet.ppv-full, .br-sheet.ppv-full { left: 0 !important; right:
   margin: 8px 14px;
 }
 [data-theme="light"] .mo-drawer-list .mo-drawer-divider { background: rgba(0,0,0,0.06); }
-
-[data-theme="light"] .pc-sidebar .pc-tab-btn { color: rgba(58, 50, 32, 0.5); }
-[data-theme="light"] .pc-sidebar .pc-tab-btn:hover { color: rgba(58, 50, 32, 0.8); }
-[data-theme="light"] .pc-sidebar .pc-tab-btn.active { color: var(--text-hi); }
-
-/* v1.58: 사이드 패널 — 항상 DOM에 있고 transform으로 슬라이드 인/아웃 */
-.pc-side-panel {
-  position: fixed;
-  top: 0; right: 64px;  /* 사이드바 폭만큼 안쪽 */
-  bottom: 0;
-  width: 420px;
-  background: var(--bg);
-  border-left: 1px solid rgba(255,255,255,0.06);
-  z-index: 80;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 56px 16px 32px;
-  box-sizing: border-box;
-  /* 디폴트: 화면 우측 밖으로 숨겨둠 (사이드바 폭 + 자기 폭만큼 우측으로) */
-  transform: translateX(calc(100% + 64px));
-  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-}
-[data-theme="light"] .pc-side-panel { border-left-color: rgba(0,0,0,0.08); }
-.pc-side-panel::-webkit-scrollbar { width: 6px; }
-.pc-side-panel::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 3px; }
-
-.pc-panel-content { display: none; }
-body[data-pc-panel="discover"] #pcPanelDiscover { display: block; }
-body[data-pc-panel="explore"] #pcPanelExplore { display: block; }
-body[data-pc-panel="analysis"] #pcPanelAnalysis { display: block; }
-body[data-pc-panel="todo"] #pcPanelTodo { display: block; }
-body[data-pc-panel="watch"] #pcPanelWatch { display: block; }
-
-/* v2.90: 사이드 패널 안 To-Do 칸반은 MO처럼 단일 세로 컬럼 (좁은 폭에 4열 그리드 부적합) */
-.pc-side-panel .todo-board { grid-template-columns: 1fr; gap: 12px; overflow-x: visible; }
-
-/* 사이드 패널 안 카드 — mobile-only 강제 표시 */
-.pc-side-panel section.card { margin-bottom: 14px; }
-/* v3.96: PC 탐색 — 서브탭바 아래 간격 확대(#6) */
-.pc-side-panel section.card.explore-subtabs { margin-bottom: 40px; }
-.pc-side-panel section.card.mobile-only { display: block !important; }
-/* v3.14: PC 탐색 서브탭 — 활성 서브탭 카드만 */
-.pc-side-panel section.card[data-xtab] { display: none !important; }
-body[data-xtab="report"]   .pc-side-panel section.card[data-xtab="report"],
-body[data-xtab="signals"]  .pc-side-panel section.card[data-xtab="signals"],
-body[data-xtab="insider"]  .pc-side-panel section.card[data-xtab="insider"],
-body[data-xtab="shorting"] .pc-side-panel section.card[data-xtab="shorting"],
-body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { display: block !important; }
-
-/* PC 전용 표시 컨트롤 */
-@media (min-width: 1025px) {
-  .pc-sidebar { display: flex; }
-  /* v2.64: PC에서는 mo-drawer 안 씀 — transform translateX(-100%) 상태에서도 box-shadow + 일부 잔상 보이는 문제 차단 */
-  .mo-drawer, .mo-drawer-backdrop { display: none !important; }
-  /* 메인 컨테이너 — 정상: 사이드바 폭(64) + 살짝 여백(20) */
-  .container {
-    padding-right: calc(64px + 20px);
-    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  /* v1.58: 사이드 패널 열림 시 슬라이드 인 */
-  body[data-pc-panel="discover"] .pc-side-panel,
-  body[data-pc-panel="explore"] .pc-side-panel,
-  body[data-pc-panel="analysis"] .pc-side-panel,
-  body[data-pc-panel="todo"] .pc-side-panel,
-  body[data-pc-panel="watch"] .pc-side-panel { transform: translateX(0); }
-
-  /* v1.62: 사이드 패널 열림 시 메인 콘텐츠 왼쪽 이동 — 가로 폭 유지!
-     v2.61: 큰 모니터에서 좌우 여백 균등화
-     공식: translateX(min(0, max((1500-vw)/2, -242)))
-       · -242 = (sidebar 64 + panel 420) / 2 — panel이 차지하는 영역의 절반만큼만 좌측 이동
-       · vw > 1984: -242 고정 (좌측 여백 = 우측 여백, panel과 container 사이 여백도 동일)
-       · vw 1500~1984: (1500-vw)/2 (현재 동작 — 좌측 여백 0, panel과 살짝 겹침)
-       · vw < 1500: 0 (이동 X — 좌측 잘림 방지) */
-  body[data-pc-panel="discover"] .container,
-  body[data-pc-panel="explore"] .container,
-  body[data-pc-panel="analysis"] .container,
-  body[data-pc-panel="todo"] .container,
-  body[data-pc-panel="watch"] .container {
-    transform: translateX(min(0px, max(calc((1500px - 100vw) / 2), calc(-1 * (64px + 420px) / 2))));
-  }
-
-  /* v1.63: 차트 모달도 사이드 패널 열렸을 때 가용 영역(좌측)만 차지 → 모달이 사이드 패널에 안 가려짐
-     overlay 폭 자체를 줄이면 안의 modal-content가 자연스럽게 가용 영역 안에서 가운데 정렬됨 */
-  .modal-overlay { transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
-  body[data-pc-panel="discover"] .modal-overlay,
-  body[data-pc-panel="explore"] .modal-overlay,
-  body[data-pc-panel="analysis"] .modal-overlay,
-  body[data-pc-panel="todo"] .modal-overlay,
-  body[data-pc-panel="watch"] .modal-overlay {
-    width: calc(100vw - 64px - 420px);
-  }
-
-  /* === 페이지 전환 === */
-  /* 메인 페이지: AQUAMEL Dashboard와 보유주식 입력, 데이터 관리 숨김 (각자 별도 페이지에 있음) */
-  body[data-pc-page="main"] #dashboardCard,
-  body[data-pc-page="main"] #myPortfolioCard,
-  body[data-pc-page="main"] #dataManagementCard { display: none !important; }
-
-  /* 보드 페이지: dashboardCard만 표시 (다른 메인 카드 모두 숨김) */
-  body[data-pc-page="board"] .container > section.card { display: none !important; }
-  body[data-pc-page="board"] #dashboardCard { display: block !important; }
-
-  /* 마이 페이지: myPortfolioCard만 표시 + 시트 영역 크게 */
-  body[data-pc-page="my"] .container > section.card { display: none !important; }
-  body[data-pc-page="my"] #myPortfolioCard { display: block !important; }
-  body[data-pc-page="my"] .sheet-wrap { max-height: calc(100vh - 280px) !important; }
-
-  /* v2.59: 설정 페이지 — dataManagementCard만 표시 (마이에서 분리) */
-  /* v2.68: hero는 항상 상단에 노출 — hide 룰 제거 */
-  body[data-pc-page="settings"] .container > section.card { display: none !important; }
-  body[data-pc-page="settings"] #dataManagementCard { display: block !important; }
-  body[data-pc-page="board"] #aqAccountCard { display: block !important; }
-  body[data-pc-page="board"][data-broker="linked"] #boardAuditCard, body[data-pc-page="board"][data-broker="linked"] #aqStatsCard { display: block !important; }
-  body[data-pc-page="board"] #aqTossGateCard { display: block !important; }
-  body[data-pc-page="board"]:not([data-broker="linked"]) .container > section.card:not(#aqTossGateCard):not(#aqAccountCard) { display: none !important; }
-  /* v4.76: 운영 / 자동 페이지 (PC) */
-  body[data-pc-page="main"] section.card[data-mtab~="ops"], body[data-pc-page="main"] section.card[data-mtab~="auto"], body[data-pc-page="main"] section.card[data-mtab~="engine"] { display: none !important; }
-  body[data-pc-page="engine"] .container > section.card { display: none !important; }
-  body[data-pc-page="engine"] section.card[data-mtab~="engine"] { display: block !important; }
-  body[data-pc-page="ops"] .container > section.card { display: none !important; }
-  body[data-pc-page="ops"] section.card[data-mtab~="ops"] { display: block !important; }
-  body[data-pc-page="auto"] .container > section.card { display: none !important; }
-  body[data-pc-page="auto"] section.card[data-mtab~="auto"] { display: block !important; }
-
-
-  /* v2.66/v2.90: To-Do는 중앙 페이지 → 사이드 패널로 전환 (data-pc-panel="todo"). 페이지 규칙 제거. */
-
-  /* v2.46: 일정 페이지 — scheduleCard만 표시 */
-  body[data-pc-page="schedule"] .container > section.card { display: none !important; }
-  body[data-pc-page="schedule"] #scheduleCard { display: block !important; }
-  body[data-pc-page="schedule"] #majorEventsCard { display: block !important; }
-}
-
-/* ===== v4.07: 태블릿(641~1024px) 최적화 ===== */
-@media (min-width: 1025px) and (max-width: 1024px) {
-  /* ② 사이드 패널 열림 → 뒷배경 블러 (패널/사이드바는 위에 선명) */
-  body[data-pc-panel="discover"] #pcPanelBackdrop,
-  body[data-pc-panel="explore"] #pcPanelBackdrop,
-  body[data-pc-panel="analysis"] #pcPanelBackdrop,
-  body[data-pc-panel="todo"] #pcPanelBackdrop,
-  body[data-pc-panel="watch"] #pcPanelBackdrop { display: block; }
-
-  /* ③ 패널 열려 있어도 종목 모달은 전체폭 (좁힘 무효화) + 배경 전체 블러 */
-  body[data-pc-panel="discover"] .modal-overlay,
-  body[data-pc-panel="explore"] .modal-overlay,
-  body[data-pc-panel="analysis"] .modal-overlay,
-  body[data-pc-panel="todo"] .modal-overlay,
-  body[data-pc-panel="watch"] .modal-overlay { width: 100vw; }
-  .modal-overlay { background: rgba(0,0,0,0.55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-}
-/* ② 패널 백드롭 (기본 숨김 — 위 태블릿 미디어쿼리에서만 노출) */
-#pcPanelBackdrop { display: none; position: fixed; inset: 0; z-index: 78; background: rgba(0,0,0,0.4); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
 
 /* v2.46: MO 일정 탭 — scheduleCard만 표시 */
 @media (max-width: 1024px) {
@@ -3900,7 +3674,7 @@ body[data-xtab="all"]      .pc-side-panel section.card[data-xtab="all"] { displa
 .aq-admin-table { width: 100%; border-collapse: collapse; font-size: 12px; } .aq-admin-table th, .aq-admin-table td { padding: 7px 6px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
 .aq-admin-table th { font-size: 10px; color: var(--text-mute); text-transform: uppercase; }
 .aq-admin-table code { font-weight: 800; color: #63e6be; letter-spacing: .5px; }
-body:not([data-role="admin"]) [data-pc-tab="ops"], body:not([data-role="admin"]) [data-pc-tab="engine"], body:not([data-role="admin"]) .mo-drawer-item[data-role-admin] { display: none !important; }
+body:not([data-role="admin"]) .mo-drawer-item[data-role-admin] { display: none !important; }
 /* v5.01: 모의매수 */
 .aq-sim-summary { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-mute); padding: 4px 2px 10px; }
 .aq-sim-summary b { color: var(--text-hi); }
@@ -4343,7 +4117,7 @@ html[data-market="KR"] #insiderModeToggle { display: none !important; }
 .cmp-flow .kf-h { font-size: 11px; color: var(--text-mute); } .cmp-flow .kf-c { text-align: right; } .cmp-flow .up { color: #40c057; } .cmp-flow .down { color: #ff6b6b; }
 /* v5.38: AI 탭 (AI 보고서 / 자동매수) · 탐색 종목 리스트 */
 body[data-mtab="explore"][data-xtab="list"] section.card[data-xtab="list"] { display: block !important; }
-body[data-mtab="explore"][data-xtab="balance"] section.card[data-xtab="balance"], body[data-xtab="balance"] .pc-side-panel section.card[data-xtab="balance"] { display: block !important; }   /* v6.64 */
+body[data-mtab="explore"][data-xtab="balance"] section.card[data-xtab="balance"] { display: block !important; }   /* v6.64 */
 .bal-h2 { display: flex; align-items: center; gap: 2px; }
 .bal-help { width: 32px; height: 32px; border: none; background: none; color: var(--text-mute); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
 .bal-sum { margin: 4px 0 0; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,.035); cursor: pointer; -webkit-tap-highlight-color: transparent; }
@@ -4401,7 +4175,6 @@ body[data-mtab="explore"][data-xtab="balance"] section.card[data-xtab="balance"]
 body[data-mtab="auto"] section.card[data-atab] { display: none !important; }
 body[data-mtab="auto"][data-atab="report"] section.card[data-atab="report"],
 body[data-mtab="auto"][data-atab="review"] section.card[data-atab="review"] { display: block !important; }
-body[data-pc-page="auto"] section.card[data-atab="report"] { display: block !important; }
 /* v7.05: 매매 분석은 일반 사용자도 읽기 (v5.99의 관리자 전용 숨김을 뺌) */
 /* v5.41: 자동운영 진행 중 */
 .eng-hold-h { margin-top: 22px; }
@@ -4497,7 +4270,6 @@ html:not([data-theme="light"]) body { background: #161618; }
 .mtab-btn[data-mtab="ai"] .mtab-icon { color: #fcc419; }
 .mtab-btn[data-mtab="research"] .fl-liq { fill: currentColor; fill-opacity: .35; } .mtab-btn[data-mtab="research"] .fl-bub { fill: currentColor; fill-opacity: .8; } .mtab-btn[data-mtab="research"].active .fl-liq { fill-opacity: .55; }   /* v7.41: 연구 플라스크 — 액체 · 기포는 아이콘과 같은 색(색은 AI 메뉴만) */
 .mtab-btn[data-mtab="ai"].active .mtab-icon { color: #ffd43b; } .mtab-btn[data-mtab="ai"].active .mtab-icon path { fill: #ffd43b; fill-opacity: .9; }
-.pc-tab-btn[data-pc-tab="auto"] svg { color: #fcc419; }
 #modalSubtitle .ms-earn.pre { color: #ffa94d; border-color: rgba(255,169,77,.45); } #modalSubtitle .ms-earn.day { color: #0b0b0d; background: #fcc419; border-color: #fcc419; font-weight: 800; } #modalSubtitle .ms-earn.post { color: var(--text-mute); }
 .mac-asof { font-size: 11.5px; color: var(--text-mute); margin: -2px 2px 10px; } .mac-gt { font-size: 12px; font-weight: 600; color: var(--text-mute); margin: 12px 4px 6px; }
 .mac-grp { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; } .mac-r { display: flex; align-items: center; gap: 10px; padding: 11px 14px; font-size: 14px; } .mac-r + .mac-r { border-top: 1px solid var(--line); }
@@ -5518,7 +5290,6 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .major-event-item .bp-ret { color: #5c7cfa; }   /* D-N 컬러: 파랑 */
 
 /* v2.53: PC 사이드 패널의 매수 포인트 카드 다음에 여백 — 누적 시그널과 분리감 */
-.pc-side-panel section.card#buyPointsCard { margin-bottom: 36px; }
 .stock-list-sort {
   position: relative;
   margin-left: auto;
@@ -9015,10 +8786,9 @@ table.combo-eval tbody td .nodata {
 
 /* v5.99: 자동 페이지 (햄버거·PC) — 관리자 전용 · 미국만 */
 #engineKrNote { display: none !important; }
-html[data-market="KR"] body[data-mtab="engine"] #engineKrNote, html[data-market="KR"] body[data-pc-page="engine"] #engineKrNote { display: block !important; }
+html[data-market="KR"] body[data-mtab="engine"] #engineKrNote { display: block !important; }
 html[data-market="KR"] #autoSignalCard, html[data-market="KR"] #autoBlacklistCard { display: none !important; }
 body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #autoBlacklistCard { display: none !important; }
-.pc-sidebar .pc-tab-btn[data-pc-tab="ops"] { margin-top: 0; }
 /* v5.99: AI 브리핑 장후 상단 — 내 계좌·지수 3칸 + 평가·실현손익 2칸 */
 .ba-row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 10px 0 8px; } .ba-row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 6px; }
 .ba-tl { background: rgba(255,255,255,.06); border-radius: 14px; padding: 11px 10px 12px; min-width: 0; } .ba-tl span { display: block; font-size: 12px; color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -10664,7 +10434,7 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
   </section>
 
   <!-- ============ v2.86 MOBILE-ONLY: 내부자 누적 리스트 (발견 탭 — 누적 시그널 하단) ============ -->
-  <!-- Form 4 모든 일반주(ADR 포함) 거래 이력. 누적 시그널과 동일 UX (10개 + 더보기). PC는 relocateCardsForPC가 사이드 패널로 이동. -->
+  <!-- Form 4 모든 일반주(ADR 포함) 거래 이력. 누적 시그널과 동일 UX (10개 + 더보기). -->
   <section class="card mobile-only" id="buybackCard" data-mtab="retired" style="display:none !important">
       <div class="card-header"><h2>회사 자사주 매입</h2></div>
       <div class="card-body"><div class="ia-note" style="font-size:11px;color:var(--text-mute);margin:-4px 0 8px">분기 합계 · SEC 공시 기준 (분기 종료 약 40일 뒤 반영)</div><div class="dash-holdings-body" id="buybackList"></div></div>
@@ -11144,87 +10914,6 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
   </footer>
 </div>
 
-<!-- v1.57 PC 사이드 패널 — 발견/탐색 클릭 시 표시 (모바일에선 display:none) -->
-<div id="pcPanelBackdrop" onclick="document.body.removeAttribute('data-pc-panel');try{updatePCSidebarActive();}catch(e){}"></div>
-<aside class="pc-side-panel" id="pcSidePanel" aria-label="PC 사이드 패널">
-  <div class="pc-panel-content" id="pcPanelDiscover" data-pc-tab="discover">
-    <!-- buyPointsCard + archiveMobileCard 가 JS로 여기로 이동 -->
-  </div>
-  <div class="pc-panel-content" id="pcPanelExplore" data-pc-tab="explore">
-    <!-- stockListCard 가 JS로 여기로 이동 -->
-  </div>
-  <!-- v2.03 Phase 2 재작업: 분석 사이드 패널 (탐색과 동일 UI) — analysisCard가 PC에선 여기로 이동 -->
-  <div class="pc-panel-content" id="pcPanelAnalysis" data-pc-tab="analysis">
-    <!-- analysisCard 가 JS로 여기로 이동 -->
-  </div>
-  <!-- v2.90: To-Do 사이드 패널 (분석과 동일 UI) — todoBoardCard가 PC에선 여기로 이동 -->
-  <div class="pc-panel-content" id="pcPanelTodo" data-pc-tab="todo">
-    <!-- todoBoardCard 가 JS로 여기로 이동 -->
-  </div>
-  <!-- v2.92: 관심 사이드 패널 — watchBoardCard가 PC에선 여기로 이동 -->
-  <div class="pc-panel-content" id="pcPanelWatch" data-pc-tab="watch">
-    <!-- watchBoardCard 가 JS로 여기로 이동 -->
-  </div>
-</aside>
-
-<!-- v1.57 PC 우측 세로 사이드바 — 5개 메뉴 (모바일에선 display:none) -->
-<nav class="pc-sidebar" id="pcSidebar" aria-label="PC 네비게이션">
-  <!-- v2.44: 영역 1 — 화면 전체 교체 탭 (메인 / 일정 / 보드 / 마이) -->
-  <button class="pc-tab-btn active" data-pc-tab="main" onclick="setPCTab('main')" aria-label="메인">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8M5 10v10h14V10"/></svg>
-    <span class="pc-tab-label">메인</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="schedule" onclick="setPCTab('schedule')" aria-label="일정">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>
-    <span class="pc-tab-label">일정</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="board" onclick="setPCTab('board')" aria-label="보드">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v9h9"/></svg>
-    <span class="pc-tab-label">보드</span>
-  </button>
-
-  <!-- v2.44: 영역 구분선 -->
-  <div class="pc-sidebar-divider" aria-hidden="true"></div>
-
-  <!-- v2.44: 영역 2 — 사이드 패널 (메인 화면 위에 공존, 발견/탐색/분석/To-Do) -->
-  <button class="pc-tab-btn" data-pc-tab="discover" onclick="setPCTab('discover')" aria-label="발견">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>
-    <span class="pc-tab-label">발견</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="explore" onclick="setPCTab('explore')" aria-label="탐색">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M16 8l-3 5-5 3 3-5z"/></svg>
-    <span class="pc-tab-label">탐색</span>
-  </button>
-  <!-- v2.92: 관심 (하트) — 탐색과 분석 사이. 사이드 패널 슬라이드. -->
-  <button class="pc-tab-btn" data-pc-tab="watch" onclick="setPCTab('watch')" aria-label="관심">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    <span class="pc-tab-label">관심</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="analysis" onclick="setPCTab('analysis')" aria-label="분석">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16V8m4 8v-4m4 4V4m4 12V10"/></svg>
-    <span class="pc-tab-label">분석</span>
-  </button>
-  
-
-  <!-- v3.99: 로그 — 설정 바로 위 (하단 그룹) -->
-  <!-- v2.59: 설정 — 사이드바 맨 아래 (margin-top: auto) -->
-  <button class="pc-tab-btn" data-pc-tab="engine" onclick="setPCTab('engine')" aria-label="자동">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><circle cx="12" cy="19.6" r="1.1" fill="currentColor" stroke="none"/></svg>
-    <span class="pc-tab-label">자동</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="ops" onclick="setPCTab('ops')" aria-label="운영">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
-    <span class="pc-tab-label">운영</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="auto" onclick="setPCTab('auto')" aria-label="AI">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="5"/></svg>
-    <span class="pc-tab-label">AI</span>
-  </button>
-  <button class="pc-tab-btn" data-pc-tab="settings" onclick="setPCTab('settings')" aria-label="설정">
-    <svg class="pc-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    <span class="pc-tab-label">설정</span>
-  </button>
-</nav>
 
 <script>
 // ============================================================================
@@ -16271,9 +15960,8 @@ async function fetchReportsIndex() {
       try { if (typeof buildStockList === 'function') buildStockList(); } catch (e) {}
       // v2.01 Phase 2: 분석 페이지가 현재 보이고 있으면 그리드 재빌드
       const mtab = document.body.getAttribute('data-mtab');
-      const pcPage = document.body.getAttribute('data-pc-page');
       const atab = document.body.getAttribute('data-atab');
-      if (mtab === 'analysis' || pcPage === 'analysis' || ((mtab === 'auto' || pcPage === 'auto') && atab === 'report')) {   // v6.46: AI 보고서 탭이 열려 있으면 바로 다시 그림
+      if (mtab === 'analysis' || (mtab === 'auto' && atab === 'report')) {   // v6.46: AI 보고서 탭이 열려 있으면 바로 다시 그림
         if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid();
       }
     } else {
@@ -23148,16 +22836,6 @@ function applyFilterAndRender() {
     if (_mt === 'discover') buildBuyPointsCard();
     if (_mt === 'explore') buildArchiveMobileList();
   }
-  // v1.57: PC 사이드 패널이 열려 있으면 같이 재빌드 (v1.58: data-pc-panel 기준)
-  if (isPCViewport && isPCViewport()) {
-    const pcPanel = document.body.getAttribute('data-pc-panel');
-    if (pcPanel === 'discover') {
-      if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard();
-    } else if (pcPanel === 'explore') {
-      if (typeof buildStockList === 'function') buildStockList();
-      if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
-    }
-  }
 }
 
 // ============================================================================
@@ -25754,11 +25432,7 @@ function _aqRouteTodoCard(todo) {
     if (targetDate) {
       console.log('[ROUTE] → 일정 페이지', ticker, whenLabel, '→', targetDate);
       // 일정 페이지 진입
-      if (isMobile) {
-        if (typeof switchMobileTab === 'function') switchMobileTab('schedule');
-      } else {
-        if (typeof setPCTab === 'function') setPCTab('schedule');
-      }
+      if (typeof switchMobileTab === 'function') switchMobileTab('schedule');
       // 캘린더 render 후 해당 일자 선택 + 셀로 스크롤
       setTimeout(() => {
         if (typeof aqCalendarSelectDate === 'function') {
@@ -26677,9 +26351,8 @@ window.addEventListener('DOMContentLoaded', () => {
   if (window.AqTodoStore && typeof AqTodoStore.subscribe === 'function') {
     AqTodoStore.subscribe((evt) => {
       // 칸반 보드 재렌더
-      const pcPanel = document.body.getAttribute('data-pc-panel');  // v2.90: todo는 페이지→패널
       const mtab = document.body.getAttribute('data-mtab');
-      if (pcPanel === 'todo' || mtab === 'todo') {
+      if (mtab === 'todo') {
         try { buildTodoKanban(); } catch (e) {}
       }
       // v2.69: 마퀴 즉시 갱신 — 시점형 임박 todo는 실시간 분류라 추가/삭제 시 바로 반영
@@ -26731,8 +26404,6 @@ window.addEventListener('DOMContentLoaded', () => {
   if (isMobileViewport()) document.body.classList.add('simple-mode');
   // v1.44: 모바일 탭 시스템 초기화 (디폴트 발견 탭)
   initMobileTabs();
-  // v1.57: PC 탭 시스템 초기화 (디폴트 메인 탭)
-  initPCTabs();
   // v1.26: 백엔드 URL 미설정 안내 → splash 에러로 처리 (autoLoadData 진입 시점)
   // v1.71: lsKey를 함수로 전달 — 시장 변경 시 자동 갱신
   portfolioSheet = new SpreadsheetTable('portfolioSheetMount', PORTFOLIO_COLS, lsKeyPF,     portfolioSummary, autoFillSector);
@@ -27031,101 +26702,6 @@ function initMobileTabs() {
   switchMobileTab(document.body.getAttribute('data-mtab') || 'discover');
 }
 
-// ============================================================================
-// v1.57 PC 사이드바 + 사이드 패널
-// v1.58: page/panel 분리 — 페이지 전환과 패널 토글이 독립 동작
-//   page: "main" | "board" | "my" (메인/보드/마이 클릭 → 페이지 교체, 패널은 닫힘)
-//   panel: ""/null | "discover" | "explore" (발견/탐색 클릭 → 페이지 유지, 패널 토글)
-// ============================================================================
-function isPCViewport() { return window.matchMedia('(min-width: 1025px)').matches; }
-
-// 페이지 전환 (메인 / 보드 / 마이) — 사이드 패널은 닫음
-function setPCPage(page) {
-  document.body.setAttribute('data-pc-page', page);
-  document.body.removeAttribute('data-pc-panel');  // 페이지 전환 시 패널 닫기
-  updatePCSidebarActive();
-  window.scrollTo({ top: 0, behavior: 'instant' });
-  // v2.11: 페이지 전환 시 카드 enter 애니메이션 재실행
-  rerunCardAnimations();
-}
-
-// 사이드 패널 토글 (발견 / 탐색) — 페이지는 유지
-function togglePCPanel(panel) {
-  const current = document.body.getAttribute('data-pc-panel');
-  if (current === panel) {
-    // 같은 패널 다시 클릭 → 닫기
-    document.body.removeAttribute('data-pc-panel');
-  } else {
-    document.body.setAttribute('data-pc-panel', panel);
-    // 패널 콘텐츠 빌드
-    if (panel === 'discover') {
-      if (typeof buildBuyPointsCard === 'function') buildBuyPointsCard();
-      _archiveMobileShown = 10;
-      if (typeof buildArchiveMobileList === 'function') buildArchiveMobileList();
-    } else if (panel === 'explore') {
-      if (typeof buildStockList === 'function') buildStockList();
-    }
-    // 패널 스크롤 맨 위로
-    const panelEl = document.getElementById('pcSidePanel');
-    if (panelEl) panelEl.scrollTop = 0;
-  }
-  updatePCSidebarActive();
-}
-
-// 사이드바 버튼 active 상태 갱신 — 현재 페이지 버튼 + (있다면) 현재 패널 버튼 둘 다
-function updatePCSidebarActive() {
-  const page = document.body.getAttribute('data-pc-page') || 'main';
-  const panel = document.body.getAttribute('data-pc-panel') || '';
-  document.querySelectorAll('.pc-tab-btn').forEach(b => {
-    const t = b.dataset.pcTab;
-    const isActive = (t === page) || (t === panel);
-    b.classList.toggle('active', isActive);
-  });
-}
-
-// 사이드바 버튼 클릭 핸들러 — 어떤 버튼인지에 따라 page/panel 분기
-function setPCTab(tab) {
-  // v2.66/v2.90: To-Do는 사이드 패널로 전환 — 페이지 그룹에서 제외
-  if (tab === 'main' || tab === 'board' || tab === 'my' || tab === 'schedule' || tab === 'settings' || tab === 'ops' || tab === 'auto' || tab === 'engine') {
-    setPCPage(tab);
-    if (tab === 'ops') { try { aqOpsEnter(); } catch (e) {} }
-    if (tab === 'engine') { try { aqAutoEnter(); } catch (e) {} }   // v5.99
-    if (tab === 'auto') { try { setAiSubtab(document.body.getAttribute('data-atab') || 'brief'); } catch (e) {} }
-  if (tab === 'settings') { try { aqSettingsRender(); } catch (e) {} }
-    // v2.59: 설정 페이지 진입 시 데이터 시점 표시 갱신 (v2.58에서 마이 페이지였던 것)
-    if (tab === 'settings') {
-      try { if (typeof _aqUpdateDataMetaUI === 'function') _aqUpdateDataMetaUI(); } catch (e) {}
-    }
-    // 일정 페이지 진입 시 캘린더 렌더 (DOM 준비된 후)
-    if (tab === 'schedule') {
-      try { aqCalendarRender(); } catch (e) {}
-      // v2.52: 시트 일정 fetch (캐시 6시간) — 메인 로딩에서 분리, 캘린더 진입 시점에만
-      try { if (typeof fetchSheetCalendar === 'function') fetchSheetCalendar(false); } catch (e) {}
-      // v2.53: 필터 chip 상태 + 주요 이벤트 카드 렌더
-      // v2.54: lazy filter load
-      try {
-        if (typeof aqCalLoadFilters === 'function') aqCalLoadFilters();
-        if (typeof _aqCalRefreshHoldings === 'function') _aqCalRefreshHoldings();
-        document.querySelectorAll('.cal-filter-chip').forEach(c => {
-          const k = c.dataset.filter;
-          if (k in aqCalFilters) c.classList.toggle('off', !aqCalFilters[k]);
-        });
-        if (typeof renderMajorEventsCard === 'function') renderMajorEventsCard();
-      } catch (e) {}
-    }
-  } else if (tab === 'discover' || tab === 'explore' || tab === 'analysis' || tab === 'todo' || tab === 'watch') {
-    // v2.03: analysis도 사이드 패널 (탐색과 동일 UI/UX). v2.90: todo. v2.92: watch.
-    togglePCPanel(tab);
-    if (tab === 'analysis') {
-      try { const _ac = document.getElementById('analysisCard'), _an = document.getElementById('pcPanelAnalysis'); if (_ac && _an && _ac.parentElement !== _an) { _an.appendChild(_ac); _ac.style.display = ''; } } catch (e) {}
-      buildAnalysisGrid();
-    }
-    if (tab === 'todo') { try { if (typeof buildTodoKanban === 'function') buildTodoKanban(); } catch (e) {} }
-    if (tab === 'watch') { try { if (typeof buildWatchKanban === 'function') buildWatchKanban(); } catch (e) {} }
-  }
-}
-
-// PC에서는 모바일 전용 카드(buyPoints/archiveMobile/stockList)를 사이드 패널 안으로 DOM 이동
 function setBoardSubtab(x) { aqHoldScroll();
   if (!x || x === 'watch' || x === 'account' || x === 'audit') x = 'live';   // v5.22: 관심은 하단 탭으로 · v6.96: 감사 보고서 없앰 · 첫 탭 = 실시간 현황
   document.body.setAttribute('data-btab', x);
@@ -27202,78 +26778,12 @@ function setExploreSubtab(x) { aqHoldScroll();
     else if (x === 'balance') { try { aqBalRender(); } catch (e) { console.warn('밸런스 종목', e); } }
     else if (x === 'shorting') { if (_isKR) { if (typeof buildKrFlow === 'function') buildKrFlow('inst'); } else if (typeof buildShortingList === 'function') buildShortingList(); }
     else if (x === 'report') {
-      try {
-        if (typeof isPCViewport === 'function' && isPCViewport()) {
-          const _ac = document.getElementById('analysisCard'), _ep = document.getElementById('pcPanelExplore');
-          if (_ac && _ep && _ac.parentElement !== _ep) { _ep.appendChild(_ac); _ac.style.display = ''; }
-        }
-      } catch (e) {}
       try { if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
     }
   } catch (e) {}
 }
 window.setExploreSubtab = setExploreSubtab;
 
-function relocateCardsForPC() {
-  if (!isPCViewport()) return;
-  const discoverPanel = document.getElementById('pcPanelDiscover');
-  const explorePanel = document.getElementById('pcPanelExplore');
-  const analysisPanel = document.getElementById('pcPanelAnalysis');
-  if (!document.body.getAttribute('data-xtab')) document.body.setAttribute('data-xtab', 'signals');
-  if (discoverPanel) {
-    const bp = document.getElementById('buyPointsCard');
-    if (bp && bp.parentElement !== discoverPanel) discoverPanel.appendChild(bp);
-    const fc = document.getElementById('feedCard');
-    if (fc && fc.parentElement !== discoverPanel) discoverPanel.appendChild(fc);
-  }
-  if (explorePanel) {
-    // v3.14: 탐색 서브탭 — 서브탭바 + (시그널필터+누적시그널) + 내부자 + 공매도 + 전체리스트 순
-    ['exploreSubtabs', 'archiveMobileCard', 'filterCard', 'insiderArchiveCard', 'shortingCard', 'balanceCard', 'stockListCard'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el && el.parentElement !== explorePanel) explorePanel.appendChild(el);
-    });
-  }
-  // v2.03 Phase 2: analysisCard도 PC에선 사이드 패널 안으로 이동 (탐색과 동일 UX)
-  if (analysisPanel) {
-    const cc = document.getElementById('compareCard');
-    if (cc && cc.parentElement !== analysisPanel) { analysisPanel.appendChild(cc); cc.style.display = ''; }
-    const ac = document.getElementById('analysisCard');
-    if (ac && ac.parentElement !== analysisPanel) {
-      analysisPanel.appendChild(ac);
-      // PC 사이드 패널 안에서는 카드 force-display
-      ac.style.display = '';
-    }
-  }
-  // v2.90: To-Do 칸반도 PC에선 사이드 패널 안으로 이동 (분석과 동일 UX)
-  const todoPanel = document.getElementById('pcPanelTodo');
-  if (todoPanel) {
-    const tc = document.getElementById('todoBoardCard');
-    if (tc && tc.parentElement !== todoPanel) {
-      todoPanel.appendChild(tc);
-      tc.style.display = '';
-    }
-  }
-  // v2.92: 관심 칸반도 PC에선 사이드 패널 안으로 이동
-  const watchPanel = document.getElementById('pcPanelWatch');
-  if (watchPanel) {
-    const wc = document.getElementById('watchBoardCard');
-    if (wc && wc.parentElement !== watchPanel) {
-      watchPanel.appendChild(wc);
-      wc.style.display = '';
-    }
-  }
-}
-
-function initPCTabs() {
-  if (!isPCViewport()) return;
-  relocateCardsForPC();
-  if (!document.body.getAttribute('data-pc-page')) {
-    document.body.setAttribute('data-pc-page', 'main');
-  }
-  updatePCSidebarActive();
-}
-
-window.setPCTab = setPCTab;
 
 // ============================================================================
 // v1.44 / v2.85: 내부자 매수 카드 (발견 탭 상단)
@@ -30473,7 +29983,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // v5.22: 토스 연동 화면으로 이동 (MO 마이 / PC 보드)
 function aqGoTossGate() {
-  try { if (typeof isPCViewport === 'function' && isPCViewport()) setPCTab('board'); else switchMobileTab('board'); } catch (e) {}
+  try { switchMobileTab('board'); } catch (e) {}
   setTimeout(() => { const g = document.getElementById('aqTossGateCard'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
 }
 window.aqGoTossGate = aqGoTossGate;
@@ -30830,7 +30340,7 @@ function setAiSubtab(x) { aqHoldScroll();
   try { if (isAdmin) _bnLoad(); } catch (e) {}
   try { aqAsgBadge(); } catch (e) {}
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
-  try { if (!(typeof isPCViewport === 'function' && isPCViewport())) document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
+  try { document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
   try { if (x === 'sim') { aqWatchSub('sim'); if (typeof buildWatchKanban === 'function') buildWatchKanban(); } else if (x === 'cmp') { aqWatchSub('cmp'); if (typeof buildCompare === 'function') buildCompare(); } else if (x === 'maps') aqMapListRender(); else if (x === 'wx') { if (getCurrentMarket() === 'KR') { const b0 = document.getElementById('mjBox'); if (b0) b0.innerHTML = '<div class="mg-empty">거시 날씨는 미국 종목만 있어요</div>'; } else _mjLoad(true).then(() => { const b = document.getElementById('mjBox'); if (b && document.body.getAttribute('data-atab') === 'wx' && getCurrentMarket() !== 'KR') b.innerHTML = _mjHtml(); }); } } catch (e) { console.warn('[연구]', e); }   // v7.38
   try { if (x === 'review') aqReviewRender(); else if (x === 'brief') aqDailyBriefRender(); else if (x === 'manager') aqMgrRender(); else if (x === 'macro') aqMacroRender(); else if (x === 'f13') aqF13Render(); else if (x === 'fc') aqFcRender(); else if (typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
@@ -31290,7 +30800,7 @@ async function aqBnHypoSet(id, s) {
 }
 Object.assign(window, { aqMacroRender, aqMcOpen, aqMcBack, aqMcGo, aqMcDecide, aqMcTopic, aqMcTpMode, aqMcTopicSave, aqMcTopicCancel, aqMcSheetClose, aqMcPhoto, aqMcPhotoFile, aqMcPhotoSave, aqMcPhotoClear, aqBnReact, aqBnGap, aqBnHypoSet, _mcTpCount, _mcTpEx, _mcSheet, _mcPhotoHtml, _mcPhotoDraw, _mc, _bn });
 // v5.99: 자동 페이지로 이동 (모바일 = 햄버거 '자동', PC = 사이드바 '자동')
-function aqGoEngine() { try { if (typeof isPCViewport === 'function' && isPCViewport()) setPCTab('engine'); else switchMobileTab('engine'); } catch (e) {} }
+function aqGoEngine() { try { switchMobileTab('engine'); } catch (e) {} }
 window.aqGoEngine = aqGoEngine;
 // AI 탭을 떠나면 직접 지정한 표시 상태를 지워 다른 탭에 카드가 남지 않게
 (function () { const _o = window.switchMobileTab; if (typeof _o !== 'function') return;
