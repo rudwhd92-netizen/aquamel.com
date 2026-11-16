@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '8.35';   // v8.35: 한국 종목은 어디서든 코드(006600 등) 대신 종목명 — 화면에 뜨는 글자 전부 · v8.34: AI 매수심사 영역 비공개(AQ_BUYREVIEW_ON) — 매수분석 탭 · 심사 요청 · 리포트 · 다시 볼 날 · 마감 알림 숨김 · 선제안 '받기'는 관심 종목에 넣고 바로 맞춤 · 규칙형 알림 숨김(AQ_RULE_UI_ON) — 급락장 플레이북 · 급락 기준 · 추세 이탈 카드 · 장중 급변 알림 · 관심 종목 줄에 AI 매니저 결론 한 줄(누르면 판단 근거) · v8.33: 2·3차 교체(시안 승인 11/16) — 확인 · 입력창은 앱 안 시트(브라우저 창 없앰) · 알림은 아래에 쌓임(누르면 펼침 · ×로 치움) · AI 매니저 되돌리기 남은 초 · 하루 흐름 · 오늘 밤 단계 표시(체크 · 지금 단계 빛) · 접이식 칸 부드럽게 · 보고서 읽어 줄 때 읽는 줄 표시 · 차트를 끌면 그 날 가격 · 지금 가격 숫자 굴러가며 바뀜 · 신호 필터는 버튼에서 펼침 · 메뉴 펼침 · 상세 스위치 · 설정 체크는 스위치 · 인사이트 · PPT 쪽 점 · 하단 메뉴 선택 바탕 미끄럼 · v8.32: 종목 페이지 '오늘의 주요 뉴스'를 밸런스처럼 카드 안에(안쪽 여백 18 · 카드 사이 10) · v8.31: 부품 정리(시안 승인 11/16) — 토큰(글자 흐림 #85858a · 강조 옅음 · 모서리 16 · 움직임 120/200/320ms) · 돈이 나가는 버튼은 길게 눌러 확정(주문 넣기 · 승인 · 모두 승인 · 조건부 승인) · 기다리는 글자에 옅은 빛 · 받기 · 매수심사 요청 · 지도 만들기 버튼은 눌림 → 처리 중 → 요청됨 · 3M/6M/1Y · 예보 거르기 · 심사 탭은 선택 배경이 미끄러지듯 · 휴대폰 '동작 줄이기'면 움직임 없음 · v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '8.36';   // v8.36: 통합 성적 화면(AI 매니저 › AI 신뢰 기록 아래 · 관리자) — 한눈에 · AI 매니저 · 예보 종결 · 목록 · 한 건 · 처음 4주(첫 결과까지 n거래일) · 끝난 것 10건 미만은 건수 · AI 예보 카드는 반영 숫자 · 방어 · 역이용 · 인버스가 없으면 그 칸을 그리지 않음 · v8.35: 한국 종목은 어디서든 코드(006600 등) 대신 종목명 — 화면에 뜨는 글자 전부 · v8.34: AI 매수심사 영역 비공개(AQ_BUYREVIEW_ON) — 매수분석 탭 · 심사 요청 · 리포트 · 다시 볼 날 · 마감 알림 숨김 · 선제안 '받기'는 관심 종목에 넣고 바로 맞춤 · 규칙형 알림 숨김(AQ_RULE_UI_ON) — 급락장 플레이북 · 급락 기준 · 추세 이탈 카드 · 장중 급변 알림 · 관심 종목 줄에 AI 매니저 결론 한 줄(누르면 판단 근거) · v8.33: 2·3차 교체(시안 승인 11/16) — 확인 · 입력창은 앱 안 시트(브라우저 창 없앰) · 알림은 아래에 쌓임(누르면 펼침 · ×로 치움) · AI 매니저 되돌리기 남은 초 · 하루 흐름 · 오늘 밤 단계 표시(체크 · 지금 단계 빛) · 접이식 칸 부드럽게 · 보고서 읽어 줄 때 읽는 줄 표시 · 차트를 끌면 그 날 가격 · 지금 가격 숫자 굴러가며 바뀜 · 신호 필터는 버튼에서 펼침 · 메뉴 펼침 · 상세 스위치 · 설정 체크는 스위치 · 인사이트 · PPT 쪽 점 · 하단 메뉴 선택 바탕 미끄럼 · v8.32: 종목 페이지 '오늘의 주요 뉴스'를 밸런스처럼 카드 안에(안쪽 여백 18 · 카드 사이 10) · v8.31: 부품 정리(시안 승인 11/16) — 토큰(글자 흐림 #85858a · 강조 옅음 · 모서리 16 · 움직임 120/200/320ms) · 돈이 나가는 버튼은 길게 눌러 확정(주문 넣기 · 승인 · 모두 승인 · 조건부 승인) · 기다리는 글자에 옅은 빛 · 받기 · 매수심사 요청 · 지도 만들기 버튼은 눌림 → 처리 중 → 요청됨 · 3M/6M/1Y · 예보 거르기 · 심사 탭은 선택 배경이 미끄러지듯 · 휴대폰 '동작 줄이기'면 움직임 없음 · v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -5109,6 +5109,52 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .mg3-sh .ln { display: flex; justify-content: space-between; align-items: center; min-height: 48px; border-top: 1px solid rgba(255,255,255,.07); font-size: 14px; } .mg3-sh .ln span { color: #9d9d9d; } .mg3-sh .ln b { font-size: 15px; color: #fff; font-weight: 500; text-align: right; } .mg3-sh .lns { margin-top: 20px; border-bottom: 1px solid rgba(255,255,255,.07); }
 .mg3-sh .sw { display: flex; align-items: center; gap: 14px; min-height: 64px; margin-top: 6px; cursor: pointer; } .mg3-sh .sw > span { flex: 1; display: flex; flex-direction: column; gap: 3px; } .mg3-sh .sw b { font-size: 15px; color: #fff; font-weight: 500; } .mg3-sh .sw small { font-size: 12.5px; color: #8a8a8a; }
 .mg3-sh .sw input { appearance: none; -webkit-appearance: none; width: 50px; height: 30px; border-radius: 15px; background: rgba(255,255,255,.14); position: relative; cursor: pointer; margin: 0; flex: none; } .mg3-sh .sw input::after { content: ''; position: absolute; left: 3px; top: 3px; width: 24px; height: 24px; border-radius: 50%; background: #d4d4d4; transition: left .15s; } .mg3-sh .sw input:checked { background: #e4e4e4; } .mg3-sh .sw input:checked::after { left: 23px; background: #18181b; }
+/* 2026-11-16 (본부장님: "다 지금 만들어 … 지금 적용해 다") 통합 성적 — 시안(한눈에 · AI 매니저 · 예보 종결 · 목록 · 한 건 · 처음 4주) · mg3 부품(mg3-fl · mg3-c · mg3-imp · mg3-row · who) 위에 이 화면에만 쓰는 몇 가지 */
+.mg3-sc { max-width: 560px; margin: 0 auto; box-sizing: border-box; padding: 0 18px 48px; display: flex; flex-direction: column; color: #fff; font-variant-numeric: tabular-nums; }
+.mg3-sc .nv { display: flex; align-items: center; height: 56px; gap: 4px; margin-left: -10px; } .mg3-sc .nv button { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #9d9d9d; background: none; border: 0; cursor: pointer; } .mg3-sc .nv b { font-size: 17px; font-weight: 700; color: #fff; }
+.mg3-sc .kv { margin: 20px 4px 0; display: flex; justify-content: space-between; align-items: baseline; } .mg3-sc .kv span { font-size: 13px; color: #9d9d9d; } .mg3-sc .kv small { font-size: 12.5px; color: #8a8a8a; }
+.mg3-sc .ct { margin: 10px 4px 0; display: flex; gap: 18px; align-items: baseline; font-size: 15px; color: #e4e4e4; } .mg3-sc .ct b { font-size: 20px; color: #fff; font-weight: 800; margin-left: 4px; }
+.mg3-sc .ct.e { margin-top: 12px; font-size: 13px; color: #9d9d9d; } .mg3-sc .ct.e b { font-size: 13px; font-weight: 700; }
+.mg3-sc .hero { margin: 6px 4px 0; font-size: 30px; font-weight: 800; line-height: 1.15; color: #fff; }
+.mg3-sc .t20 { display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 3px; margin: 16px 4px 0; } .mg3-sc .t20 i { display: block; height: 8px; border-radius: 2px; background: rgba(255,255,255,.1); } .mg3-sc .t20 i.on { background: #d4d4d8; }
+.mg3-sc .cds { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; } .mg3-sc .cds .mg3-c { padding: 20px 18px; cursor: pointer; }
+.mg3-sc .cds .hd { margin-bottom: 0; align-items: center; } .mg3-sc .cds .hd span { display: flex; align-items: center; gap: 6px; }
+.mg3-sc .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; } .mg3-sc .two > div { display: flex; flex-direction: column; gap: 4px; } .mg3-sc .two b { font-size: 28px; font-weight: 800; line-height: 1.1; color: #fff; } .mg3-sc .two small { font-size: 12px; color: #8a8a8a; }
+.mg3-sc .two.e { margin-top: 16px; } .mg3-sc .two.e b { font-size: 22px; font-weight: 700; line-height: 1.2; }
+.mg3-sc .dim { color: #8a8a8a !important; } .mg3-sc .soft { color: #b8b8b8 !important; }
+.mg3-sc .pb { height: 4px; border-radius: 2px; background: rgba(255,255,255,.08); margin-top: 16px; display: flex; } .mg3-sc .pb i { display: block; height: 4px; border-radius: 2px; background: #d4d4d8; }
+.mg3-sc .lk { font: inherit; align-self: center; margin-top: 18px; font-size: 13px; color: #9d9d9d; background: none; border: 0; padding: 12px 16px; cursor: pointer; }
+.mg3-sc .big { margin: 22px 4px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .mg3-sc .big > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; } .mg3-sc .big small { font-size: 12.5px; color: #8a8a8a; } .mg3-sc .big b { font-size: 34px; font-weight: 800; line-height: 1.1; color: #fff; } .mg3-sc .big.e b { font-size: 30px; line-height: 1.15; }
+.mg3-sc .mg3-imp { background: rgba(255,255,255,.05); }
+.mg3-sc .se { margin: 40px 4px 0; display: flex; flex-direction: column; } .mg3-sc .se.s { margin-top: 36px; } .mg3-sc .se > .h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; font-size: 13px; font-weight: 700; color: #fff; } .mg3-sc .se > .h small { font-size: 11.5px; color: #8a8a8a; font-weight: 400; } .mg3-sc .se > .h.t { margin-bottom: 8px; }
+.mg3-sc .tri { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } .mg3-sc .tri.d2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mg3-sc .tri > div { background: rgba(255,255,255,.05); border-radius: 16px; padding: 16px 14px; display: flex; flex-direction: column; gap: 6px; } .mg3-sc .tri span { font-size: 13px; color: #9d9d9d; } .mg3-sc .tri b { font-size: 22px; font-weight: 800; color: #fff; } .mg3-sc .tri small { font-size: 12px; color: #b8b8b8; } .mg3-sc .tri.d2 small { color: #8a8a8a; }
+.mg3-sc .tri.o > div { background: none; border: 1px dashed rgba(255,255,255,.14); padding: 15px 13px; } .mg3-sc .tri.o b { color: #8a8a8a; }
+.mg3-sc .spl { margin-top: 22px; display: flex; justify-content: space-between; align-items: baseline; } .mg3-sc .spl span { font-size: 13.5px; color: #e4e4e4; } .mg3-sc .spl small { font-size: 12.5px; color: #9d9d9d; }
+.mg3-sc .sb { display: flex; height: 10px; gap: 2px; border-radius: 5px; overflow: hidden; } .mg3-sc .sb i { display: block; min-width: 2px; } .mg3-sc .sbl { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #8a8a8a; }
+.mg3-sc .tb > div { display: grid; grid-template-columns: minmax(0, 1fr) 44px 56px 70px; gap: 8px; align-items: center; min-height: 48px; border-top: 1px solid rgba(255,255,255,.06); font-size: 14px; text-align: right; color: #fff; } .mg3-sc .tb.c3 > div { grid-template-columns: minmax(0, 1fr) 44px 56px; }
+.mg3-sc .tb > div:first-child { min-height: 0; padding: 6px 0; border-top: 0; font-size: 11.5px; color: #8a8a8a !important; } .mg3-sc .tb > div:first-child > span { color: #8a8a8a !important; }
+.mg3-sc .tb > div > span:first-child { text-align: left; color: #e4e4e4; display: flex; align-items: center; gap: 8px; min-width: 0; } .mg3-sc .tb > div > span:nth-child(2) { color: #9d9d9d; } .mg3-sc .tb b { font-weight: 600; } .mg3-sc .tb.c3 { margin-top: 16px; } .mg3-sc .tb .sw { width: 10px; height: 10px; border-radius: 3px; display: block; flex: none; }
+.mg3-sc .mo { display: grid; gap: 14px; align-items: end; } .mg3-sc .mo > div { display: flex; flex-direction: column; align-items: center; gap: 6px; } .mg3-sc .mo span { font-size: 12.5px; color: #e4e4e4; } .mg3-sc .mo i { display: block; width: 28px; background: #d4d4d8; }
+.mg3-sc .mo.p > div { justify-content: flex-end; } .mg3-sc .mo.p i { border-radius: 4px 4px 0 0; } .mg3-sc .mo.n { align-items: start; } .mg3-sc .mo.n > div { justify-content: flex-start; } .mg3-sc .mo.n i { border-radius: 0 0 4px 4px; background: rgba(255,255,255,.3); }
+.mg3-sc .mo.p { border-bottom: 1px solid rgba(255,255,255,.25); } .mg3-sc .mol { display: grid; gap: 14px; text-align: center; margin-top: 10px; } .mg3-sc .mol > div { display: flex; flex-direction: column; gap: 3px; } .mg3-sc .mol span { font-size: 13px; color: #e4e4e4; } .mg3-sc .mol small { font-size: 11.5px; color: #8a8a8a; }
+.mg3-sc .bs { position: relative; height: 22px; margin-top: 4px; } .mg3-sc .bs .l { position: absolute; left: 0; right: 0; top: 4px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.1); } .mg3-sc .bs .m { position: absolute; left: 33.5%; top: 1px; width: 1px; height: 10px; background: rgba(255,255,255,.35); } .mg3-sc .bs .d { position: absolute; top: 1px; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: #fff; } .mg3-sc .bs span { position: absolute; top: 13px; font-size: 10.5px; color: #8a8a8a; white-space: nowrap; }
+.mg3-sc svg { display: block; width: 100%; height: auto; overflow: visible; }
+.mg3-sc .cal { display: grid; grid-template-columns: 30px repeat(var(--n), minmax(0, 1fr)); margin-top: 8px; text-align: center; font-size: 12px; color: #fff; } .mg3-sc .cal span.k { text-align: left; color: #8a8a8a; } .mg3-sc .cal span.c { color: #8a8a8a; margin-top: 6px; }
+.mg3-sc .chs { display: flex; gap: 8px; margin-top: 14px; overflow-x: auto; scrollbar-width: none; } .mg3-sc .chs::-webkit-scrollbar { display: none; } .mg3-sc .chs button { font: inherit; font-size: 13px; height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); background: none; color: #d4d4d4; white-space: nowrap; cursor: pointer; flex: none; } .mg3-sc .chs button.on { background: #f4f4f5; border-color: #f4f4f5; color: #111; font-weight: 700; }
+.mg3-sc .lh { display: flex; justify-content: space-between; align-items: baseline; margin: 32px 4px 6px; } .mg3-sc .lh.n { margin-top: 28px; } .mg3-sc .lh b { font-size: 13px; font-weight: 700; color: #fff; } .mg3-sc .lh small { font-size: 12px; color: #8a8a8a; }
+.mg3-sc .mg3-row { min-height: 68px; } .mg3-sc .mg3-row .ic { font-size: 13px; font-weight: 700; } .mg3-sc .mg3-row .tx b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mg3-sc .rt { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: none; } .mg3-sc .rt.d { flex-direction: row; align-items: center; gap: 10px; } .mg3-sc .rt b { font-size: 14.5px; font-weight: 600; color: #fff; }
+.mg3-sc .pg2 { display: flex; align-items: center; gap: 6px; } .mg3-sc .pg2 > span { width: 44px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.1); display: flex; } .mg3-sc .pg2 i, .mg3-sc .er i { display: block; height: 3px; border-radius: 2px; background: #d4d4d8; } .mg3-sc .pg2 small { font-size: 11.5px; color: #9d9d9d; width: 34px; text-align: right; }
+.mg3-sc .er { display: grid; grid-template-columns: minmax(0, 1fr) 96px 64px; gap: 12px; align-items: center; min-height: 54px; border-top: 1px solid rgba(255,255,255,.06); cursor: pointer; } .mg3-sc .er > span:first-child { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .mg3-sc .er > span:first-child b { font-size: 15px; font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .mg3-sc .er small { font-size: 11.5px; color: #8a8a8a; }
+.mg3-sc .er .p { display: flex; align-items: center; gap: 8px; } .mg3-sc .er .p > span { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.1); display: flex; } .mg3-sc .er .p small { color: #9d9d9d; width: 32px; text-align: right; } .mg3-sc .er > b { font-size: 14px; font-weight: 600; text-align: right; color: #d4d4d4; }
+.mg3-sc .dt { display: block; width: 8px; height: 8px; border-radius: 50%; flex: none; } .mg3-sc .dt.h { background: #5eead4; } .mg3-sc .dt.m { background: #f0a4a4; } .mg3-sc .dt.o { box-shadow: inset 0 0 0 1.5px #8a8a8a; }
+.mg3-sc .more2 { font: inherit; align-self: center; margin-top: 4px; font-size: 12.5px; color: #9d9d9d; background: none; border: 0; padding: 12px 16px; cursor: pointer; }
+.mg3-sc.dl { padding: 0 22px 48px; } .mg3-sc.dl .nv { margin-left: -14px; } .mg3-sc .who { margin-top: 10px; } .mg3-sc .who .av { width: 44px; height: 44px; flex: none; border-radius: 50%; background: rgba(255,255,255,.08); color: #d4d4d4; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; }
+.mg3-sc .eg { margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; } .mg3-sc .eg > div { display: flex; flex-direction: column; gap: 6px; } .mg3-sc .eg small { font-size: 12.5px; color: #8a8a8a; } .mg3-sc .eg b { font-size: 34px; font-weight: 800; line-height: 1.1; color: #fff; } .mg3-sc .eg > div.r { align-items: flex-end; gap: 8px; padding-bottom: 4px; } .mg3-sc .eg > div.r span { font-size: 14px; color: #e4e4e4; } .mg3-sc .eg .tr { width: 96px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.1); display: flex; } .mg3-sc .eg .tr i { display: block; height: 4px; border-radius: 2px; background: #d4d4d8; }
+.mg3-sc .ch { margin-top: 36px; }
+.mg3-sc .dr { display: flex; flex-direction: column; margin-top: 30px; } .mg3-sc .dr > div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; align-items: center; min-height: 54px; border-top: 1px solid rgba(255,255,255,.06); } .mg3-sc .dr > div:last-child { border-bottom: 1px solid rgba(255,255,255,.06); } .mg3-sc .dr > div > small { font-size: 12.5px; color: #8a8a8a; } .mg3-sc .dr > div > span { font-size: 15px; color: #fff; overflow-wrap: anywhere; } .mg3-sc .dr > div > span small { font-size: 12.5px; color: #8a8a8a; margin-left: 6px; }
+.mg3-sc .vt { display: flex; gap: 6px; flex-wrap: wrap; } .mg3-sc .vt span { font-size: 12.5px; color: #e4e4e4; background: rgba(255,255,255,.06); border-radius: 999px; padding: 6px 12px; } .mg3-sc .vt span.o { background: none; color: #9d9d9d; border: 1px solid rgba(255,255,255,.12); padding: 5px 11px; }
+.mg3-sc .fe { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 26px; font-size: 12.5px; color: #8a8a8a; }
 .mg3-sh label.q { font-size: 13px; color: #9d9d9d; margin-top: 24px; } .mg3-sh input.in { font: inherit; font-size: 16px; color: #fff; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.22); border-radius: 14px; height: 54px; padding: 0 16px; margin-top: 10px; outline: none; }
 .mg3-sh .ch { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; } .mg3-sh .ch button { font: inherit; font-size: 13px; color: #d4d4d4; background: none; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: 8px 14px; cursor: pointer; text-align: left; } .mg3-sh .wn { font-size: 12.5px; color: #8a8a8a; margin-top: 14px; line-height: 1.55; }
 .mg3-sh .bt { display: grid; grid-template-columns: 1fr 1.6fr; gap: 8px; margin-top: 22px; } .mg3-sh .bt button:first-child { color: #b8b8b8; }
@@ -30426,6 +30472,7 @@ const _UNI_DYN = [
   { id: 'mcSheet', panel: r => r.firstElementChild, close: () => window.aqMcSheetClose && aqMcSheetClose() },   // v6.54: 거시 분석 주제 넣기 · 표지 사진 · 놓친 것
   { id: 'mg3Fl', page: true, panel: r => r, close: () => window.aqMgr3Close && aqMgr3Close() },   // v7.66: AI 매니저 하나씩 결정(승인 페이지) — 아래로 쓸어 닫기 · 뒤로가기
   { id: 'mg3Sh', panel: r => r.firstElementChild, close: () => { const e = document.getElementById('mg3Sh'); if (e) e.remove(); } },   // v7.66: 승인 · 거부 확인 시트
+  { id: 'scFl', page: true, panel: r => r, close: () => window.aqScClose && aqScClose() },   // 2026-11-16: 통합 성적 — 아래로 쓸어 닫기 · 뒤로가기
 ];
 _UNI_DYN.forEach(d => AQ_SHEETS.push({ id: d.id, dyn: true, root: () => document.getElementById(d.id), panel: d.panel, isOpen: r => !!r, close: d.close, full: false }));
 function _uniDynOpen(d, root) {
@@ -32915,10 +32962,12 @@ function aqFcOpen(i) {
     const P = c.pre || []; const opw = o => !o ? '심사 대기' : o;
     h += `<div class="fc-h">덕 볼 후보</div><div class="fc-tks">${P.length ? P.map(x => `<div class="it" onclick="openChart('${escapeAttr(x.tk)}')" style="cursor:pointer"><span class="lg">${_mgLogo(x.tk)}</span><b>${_fcE(x.tk)}</b><span style="width:auto">20일 ${x.r20 != null ? (x.r20 >= 0 ? '+' : '') + x.r20 + '%' : '—'}</span><em class="${x.op === '매수' ? 'g' : ''}" style="width:auto;min-width:62px">${_fcE(opw(x.op))}</em></div>`).join('') : ''}${!P.length ? `<div class="nt" style="padding-top:12px">${_fcE((c.out_tks || []).join(' · '))} — 조건(덕 볼 확률 60%+ · 반영 50% 이하 · 2~14일 앞)${AQ_BUYREVIEW_ON ? '에 맞으면 매수심사' : ''}</div>` : '<div class="nt">크기는 첫 진입 한도의 절반 · 빗나가면 다음 날 정리 후보</div>'}</div>`;
   }
-  if (D.admin && (c.def || c.use || c.inv)) {
-    h += `<div class="fc-h">할 일</div><div class="fc-do">${c.def ? `<div class="r"><small>방어</small><p>${_fcE(c.def)}</p>${A && A.cut ? `<i>1% 한도 안으로 약 $${A.cut.toLocaleString()} 덜기</i>` : ''}</div>` : ''}${c.use ? `<div class="g"><small>역이용</small><p>${_fcE(c.use)}</p></div>` : ''}${c.inv && !/^없음/.test(c.inv) ? `<div><small>인버스 · 제안만</small><p>${_fcE(c.inv)}</p></div>` : ''}</div>`;
+  const _fcV = v => v != null && String(v).trim() !== '';   // 2026-11-16 (본부장님: "다 지금 만들어 … 지금 적용해 다"): 뉴욕 11/17 판부터 방어 · 역이용 · 인버스 줄과 반영 숫자가 없음 — 없으면 그 칸을 그리지 않음
+  if (D.admin && (_fcV(c.def) || _fcV(c.use) || (_fcV(c.inv) && !/^없음/.test(c.inv)))) {
+    h += `<div class="fc-h">할 일</div><div class="fc-do">${_fcV(c.def) ? `<div class="r"><small>방어</small><p>${_fcE(c.def)}</p>${A && A.cut ? `<i>1% 한도 안으로 약 $${A.cut.toLocaleString()} 덜기</i>` : ''}</div>` : ''}${_fcV(c.use) ? `<div class="g"><small>역이용</small><p>${_fcE(c.use)}</p></div>` : ''}${_fcV(c.inv) && !/^없음/.test(c.inv) ? `<div><small>인버스 · 제안만</small><p>${_fcE(c.inv)}</p></div>` : ''}</div>`;
   }
-  if (c.ref) h += `<div class="fc-h">이미 들어간 정도</div><div class="fc-pnl">${c.ref_pct != null ? `<div class="fc-mt"><i style="width:${c.ref_pct}%"></i></div><div class="fc-ml"><span>안 들어감</span><span>다 들어감</span></div>` : ''}<div class="fc-tx" style="${c.ref_pct != null ? '' : 'margin-top:0'}">${_fcE(String(c.ref).replace(/^\s*\d{1,3}\s*%\s*[—\-·]?\s*/, ''))}</div></div>`;
+  const _rfT = _fcV(c.ref) ? String(c.ref).replace(/^\s*\d{1,3}\s*%\s*[—\-·]?\s*/, '') : '', _rfN = _fcV(c.ref) && c.ref_pct != null && c.ref_pct !== '' && isFinite(+c.ref_pct);   // 숫자가 없으면 막대 없음 · 글도 없으면 칸 없음
+  if (_rfN || _rfT.trim()) h += `<div class="fc-h">이미 들어간 정도</div><div class="fc-pnl">${_rfN ? `<div class="fc-mt"><i style="width:${c.ref_pct}%"></i></div><div class="fc-ml"><span>안 들어감</span><span>다 들어감</span></div>` : ''}<div class="fc-tx" style="${_rfN ? '' : 'margin-top:0'}">${_fcE(_rfT)}</div></div>`;
   if (c.watch) h += `<div class="fc-h">지켜볼 것</div><div class="fc-tx">${_fcE(c.watch)}</div>`;
   if (c.res) h += `<div class="fc-h">결과</div><div class="fc-tx">${_fcE(c.res)}</div>`;
   if (D.admin && (c.mgr || []).length) h += `<div class="fc-chips" style="margin-top:40px">${c.mgr.map(m => `<button type="button" onclick="${m.status === 'proposed' ? `aqMgr3Flow(${+m.id})` : `aqMgrStock('${escapeAttr(m.tk)}')`}">AI 매니저 · ${_fcE(m.tk)} ${_fcE(m.qty)}주 ${m.side === 'SELL' ? '매도' : '매수'}</button>`).join('')}</div>`;
@@ -33296,10 +33345,10 @@ function _mg3TrustCard() {
 function _mg3Html() {
   const D = _mg.d, R = D && D.run;
   let h = '<div class="mg3">' + _mg3Pre() + _mg3Tl();
-  if (_mg3Pending()) return h + _mg3Wait() + _mg3TrustCard() + '</div>';
+  if (_mg3Pending()) return h + _mg3Wait() + _mg3TrustCard() + _scEnt() + '</div>';
   const G = _mg3G(); if (G && G.status === 'failed') h += `<div class="mg-empty">오늘 판단을 끝내지 못했어요${G.error ? ' — ' + _mg3E(G.error) : ''}</div>`;
-  if (!R || !R.v3) return h + '<div class="mg-empty">아직 새 체계 판단이 없어요 · 미국 거래일 23:00(여름 22:00)에 제안이 와요</div>' + _mg3TrustCard() + '</div>';
-  return h + _mg3Hero() + _mg3Hy() + _mg3Queue() + _mg3Ask() + _mg3Ops() + _mg3TrustCard() + '</div>';
+  if (!R || !R.v3) return h + '<div class="mg-empty">아직 새 체계 판단이 없어요 · 미국 거래일 23:00(여름 22:00)에 제안이 와요</div>' + _mg3TrustCard() + _scEnt() + '</div>';
+  return h + _mg3Hero() + _mg3Hy() + _mg3Queue() + _mg3Ask() + _mg3Ops() + _mg3TrustCard() + _scEnt() + '</div>';   // 2026-11-16: 통합 성적 줄(관리자 · 서버에 있을 때만)
 }
 // v8.30: 오늘의 전제(예보 종결) 한 줄 — 서버 G.premise가 있을 때만 · 제안 · 종목 판단의 '전제와의 관계'
 function _mg3Pre() {
@@ -33797,6 +33846,299 @@ async function aqMgrCancel(id) {
   let r = null; try { r = await apiCall('managerCancel', { id }); } catch (e) {}
   aqMcSheetClose(); aqToast(r && r.ok ? '취소했어요' : (r && r.error) || '취소하지 못했어요'); aqHoldScroll(); aqMgrRender(true);
 }
+// ---------- 2026-11-16 (본부장님: "다 지금 만들어 … 지금 적용해 다") 통합 성적 화면 ----------
+// 서버 scoreGet(관리자) — AI 매니저 · 선제안 · 예보 종결 · 장중 주시를 '20거래일 · 나스닥 종합 대비' 한 잣대로 (jobs/score.py)
+// 들어가는 줄은 AI 신뢰 기록 아래 하나 — 서버가 아직 없거나 실패하면 줄 자체를 숨김(알림 없음) · 끝난 것이 10건 미만이면 % 대신 건수 · 끝난 것이 모두 합쳐 10건 미만이면 '처음 4주' 모양
+// 한눈에 → 출처(AI 매니저 · 예보 종결 상세 / 선제안 · 장중 주시는 목록) → 목록 → 한 건 · 쓸어내리면 닫힘(mg3Fl과 같은 페이지)
+const _sc = { d: null, ts: 0, bad: false, busy: null, st: [], f: 'all', more: false };
+const _SC_SRC = ['mgr', 'lead', 'fc', 'watch'];
+const _SC_NM = { mgr: 'AI 매니저', lead: '선제안', fc: '예보 종결', watch: '장중 주시' };
+const _SC_LN = { mgr: 'AI 매니저', lead: '선제안', fc: '예보', watch: '장중 주시' };
+const _SC_N = 20, _SC_MIN = 10;
+const _SC_BK = 'M15 18l-6-6 6-6', _SC_GO = 'M9 6l6 6-6 6';
+const _scE = s => escapeHtml(String(s == null ? '' : s));
+const _scMD = d => d ? `${String(d).slice(5, 7)}.${String(d).slice(8, 10)}` : '';
+const _scNum = v => v != null && v !== '' && isFinite(+v);
+function _scP(v, u) { if (!_scNum(v)) return '—'; const r = Math.round(+v * 10) / 10; return (r > 0 ? '+' : r < 0 ? '−' : '') + Math.abs(r).toFixed(1) + (u == null ? '%p' : u); }   // 방향을 맞춘 값 — 맞으면 +
+function _scHit(s) { if (!s || !s.n_done) return '—'; return s.n_done >= _SC_MIN && s.hit != null ? `${s.hit}%` : `${s.n_hit || 0} / ${s.n_done}`; }
+function _scPct(a, b) { return b ? Math.round(a / b * 100) : 0; }
+function _scSv(svg, sz) { return `<svg aria-hidden="true" width="${sz || 22}" height="${sz || 22}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:${sz || 22}px;height:${sz || 22}px"><path d="${svg}"></path></svg>`; }
+function _scName(r) { if (!r) return ''; if (r.src === 'fc') return '나스닥'; try { return _mgTk(r.tk) || String(r.tk || ''); } catch (e) { return String(r.tk || ''); } }   // 한국은 종목명
+function _scIni(nm) { const s = String(nm || ''); const m = /^[A-Z]{2}(?=[^A-Za-z]|$)/.exec(s); return m && s.length > 2 ? m[0] : s.slice(0, 1); }
+function _scSum(R) { return (R && R.summary && typeof R.summary === 'object') ? R.summary : {}; }
+function _scS(R, s) { const x = (_scSum(R).src || {})[s]; return x && typeof x === 'object' ? x : null; }
+function _scItems(R) { return ((R && Array.isArray(R.items)) ? R.items : []).filter(r => r && r.status !== 'void' && _SC_SRC.includes(r.src)); }
+function _scTot(R) { let o = 0, d = 0; _SC_SRC.forEach(s => { const x = _scS(R, s); if (x) { o += +x.n_open || 0; d += +x.n_done || 0; } }); return { o, d }; }
+function _scEarly(R) { return _scTot(R).d < _SC_MIN; }
+function _scFirst(L) {   // 진행 중 가운데 가장 많이 찬 것 — 첫 결과까지 남은 거래일 (so_far.n이 없으면 셀 수 없으니 null)
+  let b = null;
+  (L || []).filter(r => r.status === 'open').forEach(r => { const n = r.so_far && _scNum(r.so_far.n) ? Math.min(_SC_N, +r.so_far.n) : null; if (n == null) return; if (!b || n > b.n || (n === b.n && String(r.due || '') < String(b.due || ''))) b = { n, due: r.due || '' }; });
+  return b ? { n: b.n, left: Math.max(0, _SC_N - b.n), due: b.due } : null;
+}
+function _scDue(L) { const D = (L || []).filter(r => r.status === 'open' && r.due).map(r => String(r.due)).sort(); return D[0] || ''; }
+function _scSide(r) {
+  if (r.src === 'fc') { const v = r.conclusion || r.side || ''; const p = (r.p || {})[v]; return `${v}${_scNum(p) ? ' ' + Math.round(+p) + '%' : ''}`; }
+  if (r.src === 'mgr' && r.op) return r.op;
+  return r.side === 'down' ? '매도' : '매수';
+}
+function _scEdge(r) { if (r.src === 'fc') { const v = r.status === 'done' ? r.ret : (r.so_far || {}).ret; return _scP(v, '%'); } return _scP(r.status === 'done' ? r.edge : (r.so_far || {}).edge); }
+function _scDays(r) { if (r.status === 'done') return _SC_N; const n = (r.so_far || {}).n; return _scNum(n) ? Math.min(_SC_N, +n) : 0; }
+const _scBtnNm = b => ({ '대기 중': '못 봄' }[b] || b);
+// ---------- 불러오기 · 들어가는 줄 ----------
+async function _scLoad(force) {
+  if (!force && _sc.d && Date.now() - _sc.ts < 300e3) return _sc.d;
+  if (_sc.busy) return _sc.busy;
+  _sc.busy = (async () => {
+    let r = null; try { r = await apiCall('scoreGet', {}); } catch (e) { r = null; }
+    if (r && r.ok && r.summary && typeof r.summary === 'object') { _sc.d = { summary: r.summary, items: Array.isArray(r.items) ? r.items : [] }; _sc.ts = Date.now(); _sc.bad = false; }
+    else if (!_sc.d) _sc.bad = true;   // 예전 서버(액션 없음) · 아직 첫 계산 전 · 실패 — 줄을 숨김
+    _sc.busy = null; _scEntPaint(); return _sc.d;
+  })();
+  return _sc.busy;
+}
+function _scEntBtn() { return _sc.d && !_sc.bad ? `<button class="mg3-sub" onclick="aqScOpen()">통합 성적</button>` : ''; }
+function _scEnt() {
+  try { if (!_mgAdm()) return ''; } catch (e) { return ''; }
+  if (!_sc.d && !_sc.bad && !_sc.busy) setTimeout(() => _scLoad(), 0);
+  return `<div id="scEnt" style="display:flex;flex-direction:column">${_scEntBtn()}</div>`;
+}
+function _scEntPaint() { const e = typeof document !== 'undefined' && document.getElementById('scEnt'); if (e) e.innerHTML = _scEntBtn(); }
+// ---------- 페이지 ----------
+function aqScOpen(v, a) {
+  try { if (!_mgAdm() || !_sc.d) return; } catch (e) { return; }
+  let el = document.getElementById('scFl');
+  if (!el) { el = document.createElement('div'); el.id = 'scFl'; el.className = 'mg3-fl'; document.body.appendChild(el); _sc.st = []; _sc.f = 'all'; _sc.more = false; }
+  aqScGo(v || 'main', a);
+  if (Date.now() - _sc.ts > 300e3) _scLoad(true).then(() => { if (document.getElementById('scFl')) _scPaint(); });
+}
+function aqScGo(v, a) {
+  const el = document.getElementById('scFl'); if (!el) return;
+  if (_sc.st.length) _sc.st[_sc.st.length - 1].y = el.scrollTop;
+  if (v === 'list') { _sc.f = a || 'all'; _sc.more = false; }
+  _sc.st.push({ v, a, y: 0 }); _scPaint(); el.scrollTop = 0;
+}
+function aqScBack() {
+  const el = document.getElementById('scFl'); if (!el) return;
+  _sc.st.pop(); if (!_sc.st.length) { aqScClose(); return; }
+  const t = _sc.st[_sc.st.length - 1]; if (t.v === 'list') _sc.f = t.a || 'all';
+  _scPaint(); el.scrollTop = t.y || 0;
+}
+function aqScClose() { document.getElementById('scFl')?.remove(); _sc.st = []; }
+function aqScF(f) { _sc.f = f; _sc.more = false; const t = _sc.st[_sc.st.length - 1]; if (t && t.v === 'list') t.a = f; _scPaint(); }
+function aqScMore() { _sc.more = true; _scPaint(); }
+function _scPaint() {
+  const el = document.getElementById('scFl'); if (!el) return; const t = _sc.st[_sc.st.length - 1] || { v: 'main' };
+  el.innerHTML = `<div class="aq-uni-gripwrap"><div class="aq-uni-grip" aria-hidden="true" style="margin:8px auto 0"></div></div>${_scHtml(t.v, t.a, _sc.d)}`;
+}
+function _scHtml(v, a, R) {   // 화면 하나 (그리기만 — 시험은 이것을 부름)
+  try {
+    if (v === 'mgr') return _scMgr(R);
+    if (v === 'fc') return _scFc(R);
+    if (v === 'list') return _scList(R, a || 'all');
+    if (v === 'item') return _scItem(R, a);
+    return _scMain(R);
+  } catch (e) { return `<div class="mg3-sc">${_scNv('통합 성적')}<div class="mg-empty">보여 주지 못했어요</div></div>`; }
+}
+const _scNv = t => `<div class="nv"><button aria-label="뒤로" onclick="aqScBack()">${_scSv(_SC_BK)}</button>${t ? `<b>${_scE(t)}</b>` : ''}</div>`;
+// ---------- ① 한눈에 ----------
+function _scCard(R, s, early) {
+  const x = _scS(R, s); if (!x || !((+x.n_open || 0) + (+x.n_done || 0))) return '';
+  const L = _scItems(R).filter(r => r.src === s); const nd = +x.n_done || 0; const go = s === 'mgr' || s === 'fc' ? `aqScGo('${s}')` : `aqScGo('list','${s}')`;
+  let body;
+  if (!nd) {   // 아직 끝난 것이 없음 — 첫 결과 날 · 진행 중 지금
+    const d = _scDue(L);
+    body = `<div class="two e"><div><b class="dim">${d ? _scMD(d) : '—'}</b><small>첫 결과</small></div><div><b class="soft">${s === 'fc' ? '—' : _scP(x.open_mean)}</b><small>${s === 'fc' ? 'Brier' : '진행 중 지금'}</small></div></div>`;
+  } else if (early || nd < _SC_MIN) {
+    body = `<div class="two e"><div><b>${_scHit(x)}</b><small>맞음</small></div><div><b>${s === 'fc' ? (_scNum(x.brier) ? (+x.brier).toFixed(2) : '—') : _scP(x.mean)}</b><small>${s === 'fc' ? 'Brier' : '나스닥 대비 평균'}</small></div></div>`;
+  } else {
+    body = `<div class="two"><div><b>${_scHit(x)}</b><small>맞음 · 끝남 ${nd}</small></div><div><b>${s === 'fc' ? (_scNum(x.brier) ? (+x.brier).toFixed(2) : '—') : _scP(x.mean)}</b><small>${s === 'fc' ? 'Brier · 0 최고 · 2 최악' : '나스닥 대비 평균'}</small></div></div><div class="pb"><i style="width:${Math.max(0, Math.min(100, +x.hit || 0))}%"></i></div>`;
+  }
+  return `<div class="mg3-c" onclick="${go}"><div class="hd"><b>${_SC_NM[s]}</b><span>진행 ${+x.n_open || 0}${_scSv(_SC_GO, 16)}</span></div>${body}</div>`;
+}
+function _scMain(R) {
+  const S = _scSum(R), T = _scTot(R), early = _scEarly(R), L = _scItems(R);
+  let h = `<div class="mg3-sc">${_scNv('통합 성적')}`;
+  if (early) {
+    const F = _scFirst(L);
+    if (F) h += `<div class="kv"><span>첫 결과까지</span><small>${_scMD(F.due)}</small></div><b class="hero">${F.left}거래일</b><div class="t20">${Array.from({ length: _SC_N }, (_, i) => `<i class="${i < F.n ? 'on' : ''}"></i>`).join('')}</div>`;
+    h += `<div class="ct e"><span>진행 중 <b>${T.o}</b></span><span>끝남 <b>${T.d}</b></span></div>`;
+  } else {
+    h += `<div class="kv"><span>20거래일 · 나스닥 대비</span><small>${S.asof ? _scMD(S.asof) + ' 기준' : ''}</small></div><div class="ct"><span>끝남<b>${T.d}</b></span><span>진행 중<b>${T.o}</b></span></div>`;
+  }
+  const C = _SC_SRC.map(s => _scCard(R, s, early)).join('');
+  h += C ? `<div class="cds">${C}</div><button class="lk" onclick="aqScGo('list','all')">전체 목록</button>` : '<div class="mg-empty" style="margin-top:28px">아직 기록이 없어요</div>';
+  return h + '</div>';
+}
+// ---------- ② AI 매니저 ----------
+function _scTb(G, order, nm, c3) {
+  const E = Object.entries(G || {}).filter(([k, a]) => a && (+a.n_done || 0) > 0);
+  if (!E.length) return '';
+  E.sort((x, y) => { const i = order.indexOf(x[0]), j = order.indexOf(y[0]); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j) || y[1].n_done - x[1].n_done; });
+  return `<div class="tb${c3 ? ' c3' : ''}"><div><span></span><span>건</span><span>맞음</span>${c3 ? '' : '<span>평균</span>'}</div>${E.map(([k, a]) => `<div><span>${_scE(nm ? nm(k) : k)}</span><span>${a.n_done}</span><span>${_scHit(a)}</span>${c3 ? '' : `<b>${_scP(a.mean)}</b>`}</div>`).join('')}</div>`;
+}
+function _scMonths(M) {
+  const E = Object.entries(M || {}).filter(([k, a]) => a && (+a.n_done || 0) > 0 && _scNum(a.mean)).sort((x, y) => x[0] < y[0] ? -1 : 1).slice(-6);
+  if (!E.length) return '';
+  const k = E.length, cols = `grid-template-columns:repeat(${k},minmax(0,1fr))`;
+  const mp = Math.max(0, ...E.map(e => +e[1].mean)), mn = Math.max(0, ...E.map(e => -e[1].mean)), mx = Math.max(mp, mn) || 1;
+  const hp = mn ? Math.max(40, Math.round(120 * mp / (mp + mn))) : 120, hn = mn ? 120 - hp + 30 : 0;
+  const bar = (v, H) => Math.max(3, Math.round(Math.abs(v) / mx * (H - 28)));
+  const lab = v => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(Math.round(v * 10) / 10).toFixed(1)}`;
+  let h = `<div class="mo p" style="${cols};height:${hp}px">${E.map(([m, a]) => +a.mean > 0 ? `<div><span>${lab(+a.mean)}</span><i style="height:${bar(+a.mean, hp)}px"></i></div>` : '<div></div>').join('')}</div>`;
+  if (mn) h += `<div class="mo n" style="${cols};height:${hn}px">${E.map(([m, a]) => +a.mean < 0 ? `<div><i style="height:${bar(+a.mean, hp)}px"></i><span>${lab(+a.mean)}</span></div>` : '<div></div>').join('')}</div>`;
+  h += `<div class="mol" style="${cols}">${E.map(([m, a]) => `<div><span>${parseInt(m.slice(5, 7), 10)}월</span><small>${a.n_done}건 · ${_scHit(a)}</small></div>`).join('')}</div>`;
+  return h;
+}
+function _scOpenRows(L) {
+  return L.map(r => { const n = _scDays(r); return `<div class="er" data-id="${escapeAttr(r.id)}" onclick="aqScGo('item', this.dataset.id)"><span><b>${_scE(_scName(r))}</b><small>${_scE(_scSide(r))} · ${_scMD(r.d0)}</small></span><span class="p"><span><i style="width:${n / _SC_N * 100}%"></i></span><small>${n}/${_SC_N}</small></span><b>${_scEdge(r)}</b></div>`; }).join('');
+}
+function _scMgr(R) {
+  const x = _scS(R, 'mgr') || {}; const nd = +x.n_done || 0; const L = _scItems(R).filter(r => r.src === 'mgr');
+  let h = `<div class="mg3-sc">${_scNv('AI 매니저')}`;
+  if (!nd) {
+    const d = _scDue(L);
+    h += `<div class="big e"><div><small>첫 결과</small><b>${d ? _scMD(d) : '—'}</b></div><div><small>진행 중 지금</small><b class="soft">${_scP(x.open_mean)}</b></div></div>`;
+  } else {
+    h += `<div class="big"><div><small>맞음</small><b>${_scHit(x)}</b></div><div><small>나스닥 대비 평균</small><b>${_scP(x.mean)}</b></div></div>`;
+    h += `<div class="mg3-imp"><div><small>중앙값</small><b>${_scP(x.median)}</b></div><div><small>끝남 · 진행</small><b>${nd} · ${+x.n_open || 0}</b></div><div><small>진행 중 지금</small><b class="soft">${_scP(x.open_mean)}</b></div></div>`;
+  }
+  const J = x.by_judge || {}, O = J.own || {};
+  if (nd >= _SC_MIN) {
+    h += `<div class="se"><div class="h">판단 A · B · C</div><div class="tri">${['A', 'B', 'C'].map(w => { const a = O[w] || {}; return `<div><span>${w}</span><b>${_scHit(a)}</b><small>${_scP(a.mean)}</small></div>`; }).join('')}</div>`;
+    const sp = J.split || {}; const n = +sp.n || 0, mj = +sp.majority_right || 0, mi = +sp.minority_right || 0;
+    if (n) h += `<div class="spl"><span>표가 갈린 ${n}건</span><small>다수 ${mj} · 소수 ${mi}</small></div><div class="sb" style="margin-top:10px"><i style="flex:${mj || 0.0001};background:#d4d4d8"></i><i style="flex:${mi || 0.0001};background:rgba(255,255,255,.18)"></i></div><div class="sbl"><span>다수가 맞음 ${_scPct(mj, n)}%</span><span>소수가 맞음 ${_scPct(mi, n)}%</span></div>`;
+    h += '</div>';
+  } else {
+    h += `<div class="se" style="margin-top:34px"><div class="h"><span>판단 A · B · C</span><small>끝남 ${_SC_MIN}건부터</small></div><div class="tri o">${['A', 'B', 'C'].map(w => `<div><span>${w}</span><b>${Math.min(_SC_MIN, nd)} / ${_SC_MIN}</b></div>`).join('')}</div></div>`;
+  }
+  const T = [['앞 근거', _scTb(x.by_fwd, ['있음', '없음', '기록 없음'])], ['예보와의 관계', _scTb(x.by_rel, ['따름', '어긋남', '무관'])], ['내 처리', _scTb(x.by_btn, ['승인', '모의', '맡기기', '거부', '대기 중', '제안 아님'], _scBtnNm)]];
+  T.forEach(([t, b], i) => { if (b) h += `<div class="se${i ? ' s' : ''}" style="${i ? '' : 'margin-top:44px'}"><div class="h t">${t}</div>${b}</div>`; });
+  const M = _scMonths(x.by_month);
+  if (M) h += `<div class="se"><div class="h" style="margin-bottom:18px"><span>달마다</span><small>제안한 달 · 평균</small></div>${M}</div>`;
+  if (!nd) { const O2 = L.filter(r => r.status === 'open'); if (O2.length) h += `<div class="lh" style="margin-top:36px"><b>진행 중</b><small>${O2.length}</small></div>${_scOpenRows(O2)}`; }
+  else h += `<button class="lk" style="margin-top:34px" onclick="aqScGo('list','mgr')">AI 매니저 목록</button>`;
+  return h + '</div>';
+}
+// ---------- ③ 예보 종결 ----------
+function _scCal(B) {
+  const P = (B || []).filter(b => b && (+b.n || 0) > 0 && _scNum(b.p) && _scNum(b.obs)); if (!P.length) return '';
+  const vs = P.flatMap(b => [+b.p, +b.obs]); let lo = Math.max(0, Math.floor(Math.min(...vs) / 10) * 10); const hi = Math.min(100, Math.max(lo + 50, Math.ceil(Math.max(...vs) / 10) * 10));
+  if (hi - lo < 50) lo = Math.max(0, hi - 50);
+  const X0 = 36, X1 = 326, Y0 = 192, Y1 = 12; const sx = v => X0 + (v - lo) / (hi - lo) * (X1 - X0), sy = v => Y0 - (v - lo) / (hi - lo) * (Y0 - Y1);
+  const tk = []; for (let t = Math.ceil(lo / 20) * 20; t <= hi - 5; t += 20) tk.push(t);
+  const mxn = Math.max(...P.map(b => +b.n)); const f1 = v => Math.round(v * 10) / 10;
+  let s = `<svg viewBox="0 0 346 226" role="img" aria-label="말한 확률 ${P.map(b => Math.round(b.p)).join('·')}%일 때 실제 ${P.map(b => Math.round(b.obs)).join('·')}%">`;
+  s += tk.map((t, i) => `<line x1="${X0}" y1="${f1(sy(t))}" x2="${X1}" y2="${f1(sy(t))}" stroke="rgba(255,255,255,${i ? '.06' : '.12'})" stroke-width="1"></line><text x="28" y="${f1(sy(t) + 4)}" text-anchor="end" font-size="11" fill="#8a8a8a">${t}</text>`).join('');
+  s += `<line x1="${X0}" y1="${Y0}" x2="${X1}" y2="${Y1}" stroke="rgba(255,255,255,.4)" stroke-width="1" stroke-dasharray="4 4"></line>`;
+  if (P.length > 1) s += `<polyline points="${P.map(b => `${f1(sx(+b.p))},${f1(sy(+b.obs))}`).join(' ')}" fill="none" stroke="#e4e4e4" stroke-width="1.5"></polyline>`;
+  s += P.map(b => `<circle cx="${f1(sx(+b.p))}" cy="${f1(sy(+b.obs))}" r="${f1(3.5 + 2.5 * Math.sqrt(+b.n / mxn))}" fill="#fff"></circle><text x="${f1(sx(+b.p))}" y="214" text-anchor="middle" font-size="11.5" fill="#b8b8b8">${Math.round(+b.p)}</text>`).join('') + '</svg>';
+  return `${s}<div class="cal" style="--n:${P.length}"><span class="k">실제</span>${P.map(b => `<span>${Math.round(+b.obs)}</span>`).join('')}<span class="k c">건</span>${P.map(b => `<span class="c">${b.n}</span>`).join('')}</div>`;
+}
+function _scFc(R) {
+  const x = _scS(R, 'fc') || {}; const nd = +x.n_done || 0; const L = _scItems(R).filter(r => r.src === 'fc');
+  const br = _scNum(x.brier) ? +x.brier : null;
+  let h = `<div class="mg3-sc">${_scNv('예보 종결')}`;
+  const left = !nd ? `<small>첫 결과</small><b>${_scDue(L) ? _scMD(_scDue(L)) : '—'}</b><small>진행 ${+x.n_open || 0}</small>`
+    : nd >= _SC_MIN ? `<small>맞음</small><b>${_scHit(x)}</b><small>${x.n_hit || 0} / ${nd} · 진행 ${+x.n_open || 0}</small>` : `<small>맞음</small><b>${_scHit(x)}</b><small>진행 ${+x.n_open || 0}</small>`;
+  h += `<div class="big${nd ? '' : ' e'}"><div>${left}</div><div><small>Brier</small><b>${br == null ? '—' : br.toFixed(2)}</b><div class="bs"><div class="l"></div><div class="m"></div>${br == null ? '' : `<div class="d" style="left:${Math.max(0, Math.min(100, br / 2 * 100)).toFixed(1)}%"></div>`}<span style="left:0">0</span><span style="left:33.5%;transform:translateX(-50%)">찍기 0.67</span><span style="right:0">2</span></div></div></div>`;
+  const C = _scCal(x.calib);
+  if (C) h += `<div class="se" style="margin-top:44px"><div class="h" style="margin-bottom:12px"><span>말한 확률 vs 실제</span><small style="display:flex;align-items:center;gap:6px"><i style="display:block;width:14px;border-top:1px dashed rgba(255,255,255,.4)"></i>딱 맞음</small></div>${C}</div>`;
+  const V = x.by_verdict || {}, VC = { '오름': '#d4d4d8', '내림': '#8a8a8a', '다지기': 'rgba(255,255,255,.22)' };
+  const VE = ['오름', '내림', '다지기'].filter(k => V[k] && (+V[k].n || 0) > 0);
+  if (VE.length) h += `<div class="se" style="margin-top:44px"><div class="h">결론별</div><div class="sb">${VE.map(k => `<i style="flex:${+V[k].n};background:${VC[k]}"></i>`).join('')}</div><div class="tb c3"><div><span></span><span>건</span><span>맞음</span></div>${VE.map(k => { const a = V[k]; return `<div><span><i class="sw" style="background:${VC[k]}"></i>${k}</span><span>${a.n}</span><b>${_scHit({ n_done: +a.n, n_hit: +a.hit || 0, hit: _scPct(+a.hit || 0, +a.n) })}</b></div>`; }).join('')}</div></div>`;
+  const SL = { '아침': { n: 0, hit: 0 }, '저녁': { n: 0, hit: 0 } };
+  Object.entries(x.by_slot || {}).forEach(([k, a]) => { const hr = parseInt(String(k).slice(0, 2), 10); if (!isFinite(hr) || !a) return; const z = SL[hr < 12 ? '아침' : '저녁']; z.n += +a.n || 0; z.hit += +a.hit || 0; });
+  const SE = Object.entries(SL).filter(([k, a]) => a.n > 0);
+  if (SE.length) h += `<div class="se s"><div class="h">아침 · 저녁</div><div class="tri d2">${SE.map(([k, a]) => a.n >= _SC_MIN ? `<div><span>${k}</span><b>${_scPct(a.hit, a.n)}%</b><small>${a.hit} / ${a.n}</small></div>` : `<div><span>${k}</span><b>${a.hit} / ${a.n}</b></div>`).join('')}</div></div>`;
+  if (!nd) { const O2 = L.filter(r => r.status === 'open'); if (O2.length) h += `<div class="lh" style="margin-top:36px"><b>진행 중</b><small>${O2.length}</small></div>${_scOpenRows(O2)}`; }
+  else h += `<button class="lk" style="margin-top:30px" onclick="aqScGo('list','fc')">예보 목록</button>`;
+  return h + '</div>';
+}
+// ---------- ④ 목록 ----------
+function _scRow(r) {
+  const nm = _scName(r), n = _scDays(r), done = r.status === 'done';
+  const rt = done ? `<span class="rt d"><b>${_scEdge(r)}</b>${r.hit === true ? '<i class="dt h" role="img" aria-label="맞음"></i>' : r.hit === false ? '<i class="dt m" role="img" aria-label="틀림"></i>' : ''}</span>`
+    : `<span class="rt"><b>${_scEdge(r)}</b><span class="pg2"><span><i style="width:${n / _SC_N * 100}%"></i></span><small>${n}/${_SC_N}</small></span></span>`;
+  return `<div class="mg3-row" data-id="${escapeAttr(r.id)}" onclick="aqScGo('item', this.dataset.id)"><span class="ic">${_scE(_scIni(nm))}</span><span class="tx"><b>${_scE(nm)}</b><span>${_SC_LN[r.src]} · ${_scE(_scSide(r))} · ${_scMD(r.d0)}</span></span>${rt}</div>`;
+}
+function _scList(R, f) {
+  f = _SC_SRC.includes(f) ? f : 'all';
+  const L = _scItems(R).filter(r => f === 'all' || r.src === f); const O = L.filter(r => r.status === 'open'), D = L.filter(r => r.status === 'done');
+  const S = f === 'all' ? null : _scS(R, f), T = f === 'all' ? _scTot(R) : null;
+  const no = T ? Math.max(T.o, O.length) : S ? Math.max(+S.n_open || 0, O.length) : O.length, ndn = T ? Math.max(T.d, D.length) : S ? Math.max(+S.n_done || 0, D.length) : D.length;
+  let h = `<div class="mg3-sc">${_scNv('목록')}<div class="chs">${[['all', '전체']].concat(_SC_SRC.map(s => [s, _SC_LN[s]])).map(([k, l]) => `<button class="${f === k ? 'on' : ''}" onclick="aqScF('${k}')">${l}</button>`).join('')}</div>`;
+  if (!L.length) return h + '<div class="mg-empty" style="margin-top:28px">아직 기록이 없어요</div></div>';
+  if (O.length) { const sh = _sc.more ? O : O.slice(0, 6); h += `<div class="lh"><b>진행 중</b><small>${no}</small></div>${sh.map(_scRow).join('')}${O.length > sh.length ? '<button class="more2" onclick="aqScMore()">더 보기</button>' : ''}`; }
+  if (D.length) h += `<div class="lh n"><b>끝남</b><small>${ndn}</small></div>${D.map(_scRow).join('')}`;
+  return h + '</div>';
+}
+// ---------- ⑤ 한 건 ----------
+function _scAmt(v, tk) {
+  if (!_scNum(v)) return ''; const n = +v, sg = n > 0 ? '+' : n < 0 ? '−' : '', a = Math.abs(n);
+  let kr = false; try { kr = aqIsKR(tk); } catch (e) {}
+  if (kr) return a >= 1e4 ? `${sg}${aqNum(Math.round(a / 1e4), 0)}만원` : `${sg}${aqNum(Math.round(a), 0)}원`;
+  return `${sg}$${aqNum(Math.round(a), 0)}`;
+}
+function _scLine(n, v, u) {   // 20거래일 축 위에 '지금까지' — 서버가 날마다 값을 주지 않아 출발(0)과 지금 점만
+  const X = i => 20 + (Math.max(1, i) - 1) / (_SC_N - 1) * 306, f1 = z => Math.round(z * 10) / 10;
+  const has = n > 0 && _scNum(v); const m = has ? Math.max(1, Math.abs(+v)) * 1.3 : 1; const Y = z => 85 - z / m * 58;
+  const xn = has ? X(n) : 20, y0 = f1(Y(0));
+  let s = `<svg viewBox="0 0 346 184" role="img" aria-label="${_SC_N}거래일 중 ${n}일째${has ? ' · 지금 ' + _scP(v, u) : ''}">`;
+  if (has) s += `<line x1="20" y1="${y0}" x2="${f1(xn)}" y2="${y0}" stroke="rgba(255,255,255,.25)" stroke-width="1"></line>`;
+  if (xn < 326) s += `<line x1="${f1(xn)}" y1="${y0}" x2="326" y2="${y0}" stroke="rgba(255,255,255,.25)" stroke-width="1" stroke-dasharray="3 5"></line>`;
+  if (has) {
+    const yv = f1(Y(+v)), up = +v >= 0;
+    s += `<line x1="20" y1="${y0}" x2="${f1(xn)}" y2="${yv}" stroke="#e4e4e4" stroke-width="2" stroke-linecap="round"></line><circle cx="20" cy="${y0}" r="4" fill="none" stroke="#fff" stroke-width="1.5"></circle><circle cx="${f1(xn)}" cy="${yv}" r="5" fill="#fff" stroke="#18181b" stroke-width="2"></circle>`;
+    s += `<text x="${f1(Math.min(300, Math.max(40, xn)))}" y="${f1(up ? yv - 12 : yv + 22)}" text-anchor="middle" font-size="11.5" fill="#e4e4e4">${n >= _SC_N ? '끝' : '지금'} ${_scP(v, u).replace(/%p?$/, '')}</text>`;
+  }
+  s += `<text x="20" y="176" text-anchor="middle" font-size="11" fill="#8a8a8a">1</text>${has && n > 1 && n < _SC_N ? `<text x="${f1(xn)}" y="176" text-anchor="middle" font-size="11" fill="#e4e4e4">${n}</text>` : ''}<text x="326" y="176" text-anchor="middle" font-size="11" fill="${n >= _SC_N ? '#e4e4e4' : '#8a8a8a'}">${_SC_N}</text></svg>`;
+  return s;
+}
+function _scItem(R, id) {
+  const r = _scItems(R).find(z => z.id === id);
+  if (!r) return `<div class="mg3-sc dl">${_scNv('')}<div class="mg-empty">기록을 찾지 못했어요</div></div>`;
+  const nm = _scName(r), n = _scDays(r), done = r.status === 'done', sf = r.so_far || {};
+  let adm = false; try { adm = _mgAdm(); } catch (e) {}
+  let h = `<div class="mg3-sc dl">${_scNv('')}<div class="who"><span class="av">${_scE(_scIni(nm))}</span><div><small>${_SC_NM[r.src]} · ${_scE(_scSide(r))} · ${_scMD(r.d0)}</small><b>${_scE(nm)}</b></div></div>`;
+  const ret = done ? r.ret : sf.ret, bench = done ? r.bench : sf.bench;
+  const prog = `<div class="r"><span>${n} / ${_SC_N}</span><span class="tr"><i style="width:${n / _SC_N * 100}%"></i></span></div>`;
+  if (r.src === 'fc') {
+    h += `<div class="eg"><div><small>나스닥</small><b>${_scP(ret, '%')}</b></div>${prog}</div>`;
+    h += `<div class="ch">${_scLine(n, ret, '%')}</div>`;
+    const P = r.p || {}; const pl = ['오름', '내림', '다지기'].filter(k => _scNum(P[k])).map(k => `${k} ${Math.round(+P[k])}`).join(' · ');
+    const rows = [['결론', `${_scE(r.conclusion || '')}${_scNum(P[r.conclusion]) ? `<small>${Math.round(+P[r.conclusion])}%</small>` : ''}`]];
+    if (pl) rows.push(['확률', _scE(pl)]);
+    if (done && r.outcome) rows.push(['실제', _scE(r.outcome)]); else if (sf.outcome) rows.push(['지금이면', _scE(sf.outcome)]);
+    if (done && _scNum(r.brier)) rows.push(['Brier', (+r.brier).toFixed(2)]);
+    h += `<div class="dr">${rows.map(([k, v]) => `<div><small>${k}</small><span>${v}</span></div>`).join('')}</div>`;
+  } else {
+    const ed = done ? r.edge : sf.edge;
+    h += `<div class="eg"><div><small>나스닥 대비</small><b>${_scP(ed)}</b></div>${prog}</div>`;
+    const imp = [[nm, _scP(ret, '%')], ['나스닥', _scP(bench, '%')]]; if (adm && _scNum(r.pnl)) imp.push(['금액', _scAmt(r.pnl, r.tk), 1]);
+    h += `<div class="mg3-imp" style="margin-top:22px;grid-template-columns:repeat(${imp.length},minmax(0,1fr))">${imp.map(([k, v, s]) => `<div><small>${_scE(k)}</small><b${s ? ' class="soft"' : ''}>${_scE(v)}</b></div>`).join('')}</div>`;
+    h += `<div class="ch">${_scLine(n, ed)}</div>`;
+    const rows = [];
+    if (r.src === 'mgr') {
+      const J = r.judges || {}, ks = ['A', 'B', 'C'].filter(w => J[w] != null);
+      if (ks.length) {
+        const vs = ks.map(w => J[w]); const maj = vs.slice().sort((a, b) => vs.filter(z => z === b).length - vs.filter(z => z === a).length)[0];
+        const wd = k => (r.held ? { 1: '늘림', 0: '그대로', '-1': '줄임' } : { 1: '매수', 0: '그대로', '-1': '매도' })[String(k)] || String(k);
+        rows.push(['판단', `<span class="vt">${ks.map(w => `<span class="${J[w] === maj ? '' : 'o'}">${w} ${_scE(wd(J[w]))}</span>`).join('')}</span>`]);
+      }
+      if (r.btn) rows.push(['내 처리', _scE(_scBtnNm(r.btn))]);
+      if (r.rel) rows.push(['예보와', _scE(r.rel)]);
+      if (r.fwd) rows.push(['앞 근거', _scE(r.fwd)]);
+    } else if (r.src === 'lead' && r.kind) rows.push(['경로', _scE(r.kind)]);
+    else if (r.src === 'watch' && r.base_kind) rows.push(['기준', _scE(r.base_kind)]);
+    if (_scNum(r.hi)) rows.push(['최고', _scP(r.hi, '%')]);
+    if (_scNum(r.lo)) rows.push(['최저', _scP(r.lo, '%')]);
+    if (rows.length) h += `<div class="dr">${rows.map(([k, v]) => `<div><small>${k}</small><span>${v}</span></div>`).join('')}</div>`;
+  }
+  const dc = done ? (r.hit === true ? 'h' : r.hit === false ? 'm' : 'o') : 'o';
+  if (r.due) h += `<div class="fe"><i class="dt ${dc}"${done && r.hit != null ? ` role="img" aria-label="${r.hit ? '맞음' : '틀림'}"` : ''}></i>결과 ${_scMD(r.due)}</div>`;
+  return h + '</div>';
+}
+Object.assign(window, { aqScOpen, aqScGo, aqScBack, aqScClose, aqScF, aqScMore });
 // ---------- 종목 상세 (매수심사 리포트와 같은 틀) ----------
 function aqMgrStockFrom(tk) { _mg.mk = /^\d[0-9A-Z]{5}$/.test(String(tk)) ? 'KR' : 'US'; aqMgrStock(tk); }   // v7.00: 종목 페이지에서 바로
 async function aqMgrDecide(id) {   // v7.00: 정할 것 — 받기 = 승인 → 바로 시작
