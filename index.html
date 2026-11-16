@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '8.32';   // v8.32: 종목 페이지 '오늘의 주요 뉴스'를 밸런스처럼 카드 안에(안쪽 여백 18 · 카드 사이 10) · v8.31: 부품 정리(시안 승인 11/16) — 토큰(글자 흐림 #85858a · 강조 옅음 · 모서리 16 · 움직임 120/200/320ms) · 돈이 나가는 버튼은 길게 눌러 확정(주문 넣기 · 승인 · 모두 승인 · 조건부 승인) · 기다리는 글자에 옅은 빛 · 받기 · 매수심사 요청 · 지도 만들기 버튼은 눌림 → 처리 중 → 요청됨 · 3M/6M/1Y · 예보 거르기 · 심사 탭은 선택 배경이 미끄러지듯 · 휴대폰 '동작 줄이기'면 움직임 없음 · v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '8.33';   // v8.33: 2·3차 교체(시안 승인 11/16) — 확인 · 입력창은 앱 안 시트(브라우저 창 없앰) · 알림은 아래에 쌓임(누르면 펼침 · ×로 치움) · AI 매니저 되돌리기 남은 초 · 하루 흐름 · 오늘 밤 단계 표시(체크 · 지금 단계 빛) · 접이식 칸 부드럽게 · 보고서 읽어 줄 때 읽는 줄 표시 · 차트를 끌면 그 날 가격 · 지금 가격 숫자 굴러가며 바뀜 · 신호 필터는 버튼에서 펼침 · 메뉴 펼침 · 상세 스위치 · 설정 체크는 스위치 · 인사이트 · PPT 쪽 점 · 하단 메뉴 선택 바탕 미끄럼 · v8.32: 종목 페이지 '오늘의 주요 뉴스'를 밸런스처럼 카드 안에(안쪽 여백 18 · 카드 사이 10) · v8.31: 부품 정리(시안 승인 11/16) — 토큰(글자 흐림 #85858a · 강조 옅음 · 모서리 16 · 움직임 120/200/320ms) · 돈이 나가는 버튼은 길게 눌러 확정(주문 넣기 · 승인 · 모두 승인 · 조건부 승인) · 기다리는 글자에 옅은 빛 · 받기 · 매수심사 요청 · 지도 만들기 버튼은 눌림 → 처리 중 → 요청됨 · 3M/6M/1Y · 예보 거르기 · 심사 탭은 선택 배경이 미끄러지듯 · 휴대폰 '동작 줄이기'면 움직임 없음 · v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -2874,6 +2874,95 @@ html.aq-wide .br-sheet.ppv-full, .br-sheet.ppv-full { left: 0 !important; right:
 .aq-seg-ind { position: absolute; top: 0; left: 0; z-index: 0; pointer-events: none; transition: transform var(--t-base) var(--ease-out), width var(--t-base) var(--ease-out), height var(--t-base) var(--ease-out); }
 .aq-seg-on > button { position: relative; z-index: 1; }
 .aq-seg-on > button.active, .aq-seg-on > button.on { background: transparent !important; box-shadow: none !important; }
+/* ============ v8.33: 2·3차 교체 ============ */
+.aq-dlg-bg { position: fixed; inset: 0; z-index: 100010; background: rgba(0,0,0,.5); opacity: 0; transition: opacity var(--t-base) var(--ease-out); }
+.aq-dlg-bg.on { opacity: 1; }
+.aq-dlg { position: fixed; left: 0; right: 0; bottom: 0; z-index: 100011; max-width: 560px; margin: 0 auto; box-sizing: border-box; background: var(--panel, #1c1c1f); border-radius: 16px 16px 0 0; padding: 12px 24px calc(28px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 22px; transform: translateY(105%); transition: transform var(--t-slow) var(--ease-out); box-shadow: 0 -10px 30px rgba(0,0,0,.4); }
+.aq-dlg.on { transform: translateY(0); }
+.aq-dlg button:focus { outline: none; } .aq-dlg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.aq-dlg-grip { width: 36px; height: 4px; border-radius: 999px; background: rgba(127,127,127,.35); align-self: center; }
+.aq-dlg-t { font-size: 18px; font-weight: 600; color: var(--text-hi); line-height: 1.45; word-break: keep-all; padding-top: 6px; white-space: pre-line; }
+.aq-dlg-b { font-size: 13px; line-height: 1.65; color: var(--text-dim); white-space: pre-line; word-break: keep-all; margin-top: 8px; max-height: 40vh; overflow: auto; }
+.aq-dlg-bt { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.aq-dlg-bt button { height: 52px; border: 0; border-radius: 999px; font: inherit; font-size: 15px; cursor: pointer; background: rgba(127,127,127,.16); color: var(--text); }
+.aq-dlg-bt .ok { background: var(--accent-deep); color: #fff; font-weight: 600; }
+.aq-dlg-bt .ok.danger { background: #3a2422; color: #f0a08d; }
+[data-theme="light"] .aq-dlg-bt .ok.danger { background: #f6dcd6; color: #a3382a; }
+.aq-dlg-f { position: relative; background: var(--bg, #161618); border-radius: 16px; padding: 14px 16px; }
+.aq-dlg-f input, .aq-dlg-f textarea { display: block; width: 100%; box-sizing: border-box; border: 0; outline: none; background: transparent; color: var(--text-hi); font: inherit; font-size: 16px; line-height: 1.6; padding: 0; resize: none; position: relative; }
+.aq-dlg-f.ghost textarea { padding-bottom: 36px; }
+.aq-dlg-gh { position: absolute; left: 16px; right: 16px; top: 14px; font-size: 16px; line-height: 1.6; color: var(--text-mute); opacity: .75; pointer-events: none; white-space: pre-wrap; word-break: keep-all; }
+.aq-dlg-take { position: absolute; right: 10px; bottom: 10px; height: 32px; padding: 0 14px; border: 0; border-radius: 999px; background: rgba(127,127,127,.2); color: var(--text); font: inherit; font-size: 12px; cursor: pointer; }
+#aqTs { position: fixed; left: 16px; right: 16px; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); z-index: 100020; max-width: 480px; margin: 0 auto; height: 0; pointer-events: none; }
+@media (min-width: 1025px) { #aqTs { bottom: 40px; } }
+.aq-ts { position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; min-height: 52px; padding: 8px 4px 8px 18px; border-radius: 16px; background: #2a2a2e; color: #f2f2f2; box-shadow: 0 8px 24px rgba(0,0,0,.35); display: flex; align-items: center; gap: 6px; pointer-events: auto; transform-origin: 50% 100%; transition: transform var(--t-slow) var(--ease-out), opacity var(--t-base); opacity: 0; transform: translateY(16px) scale(.98); }
+[data-theme="light"] .aq-ts { background: rgba(45,35,15,.95); color: #fff; }
+.aq-ts .tx { flex: 1; min-width: 0; font-size: 13.5px; line-height: 1.5; white-space: pre-line; word-break: keep-all; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+#aqTs.open .aq-ts .tx { -webkit-line-clamp: 14; }
+.aq-ts .x { width: 40px; height: 40px; flex: none; border: 0; background: transparent; color: rgba(255,255,255,.55); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.mg3-ud button .n { display: inline-block; min-width: 1em; margin-left: 4px; font-variant-numeric: tabular-nums; opacity: .7; }
+@keyframes aqRing { 0% { box-shadow: 0 0 0 0 rgba(86,156,214,.45); } 100% { box-shadow: 0 0 0 8px rgba(86,156,214,0); } }
+.mg3-steps > div { position: relative; border-top: 0 !important; gap: 16px; min-height: 48px; }
+.mg3-steps > div::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: rgba(127,127,127,.22); }
+.mg3-steps > div:first-child::before { top: 50%; } .mg3-steps > div:last-child::before { bottom: 50%; }
+.mg3-steps > div:first-child:last-child::before { display: none; }
+.mg3-steps > div.done::before { background: var(--accent); }
+.mg3-steps > div.cur::before { background: linear-gradient(var(--accent) 50%, rgba(127,127,127,.22) 50%); }
+.mg3-steps i { position: relative; z-index: 1; width: 16px !important; height: 16px !important; border: 2px solid rgba(127,127,127,.38) !important; background: #1d1d20 !important; }
+[data-theme="light"] .mg3-steps i { background: var(--panel) !important; }
+.mg3-steps .done i { background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23161618' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 10px no-repeat !important; border: 0 !important; }
+.mg3-steps .cur i { border-color: var(--accent) !important; animation: aqRing 1.6s var(--ease-out) infinite; }
+.mg3-tl .ln i { background: var(--accent) !important; transition: width var(--t-slow) var(--ease-out); }
+.mg3-tl .done .dt { background: var(--accent) !important; border: 0 !important; }
+.mg3-tl .cur .dt { background: #1d1d20 !important; border: 2px solid var(--accent) !important; box-shadow: none !important; animation: aqRing 1.6s var(--ease-out) infinite; }
+@supports selector(::details-content) {
+  :root { interpolate-size: allow-keywords; }
+  details::details-content { height: 0; overflow: clip; transition: height var(--t-slow) var(--ease-out), content-visibility var(--t-slow) allow-discrete; }
+  details[open]::details-content { height: auto; }
+}
+.aq-ra { background: var(--accent-soft) !important; box-shadow: 0 0 0 4px var(--accent-soft); border-radius: 6px; color: var(--text-hi) !important; transition: background var(--t-base), box-shadow var(--t-base); }
+.aq-rl { position: relative; display: inline-block; clip-path: inset(0); line-height: 1.2; vertical-align: baseline; }
+.aq-rl-ph { visibility: hidden; }
+.aq-rl-c { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; transition: transform .42s var(--ease-out); }
+.aq-rl-c > span { display: block; height: 1.2em; line-height: 1.2; }
+#aqSigSheet.aq-pop { left: auto; right: var(--pr); top: var(--pt); bottom: auto; width: min(320px, calc(100vw - 24px)); max-height: min(60vh, 520px); overflow: auto; border-radius: 16px; padding: 12px 16px 14px; box-shadow: 0 12px 32px rgba(0,0,0,.45); transform-origin: 100% 0; transition: transform var(--t-base) var(--ease-out), opacity .12s; }
+#aqSigSheet.aq-pop.up { top: auto; bottom: var(--pb); transform-origin: 100% 100%; }
+#aqSigSheet.aq-pop .ops-sheet-grip { display: none; }
+@starting-style { #aqSigSheet.aq-pop.open { transform: scale(.92); opacity: 0; } }
+#aqSigSheetBg.aq-pop-bg { background: transparent; }
+@keyframes aqPopIn { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
+.col-menu, .dash-context-menu { animation: aqPopIn var(--t-base) var(--ease-out); transform-origin: top left; }
+.aq-switch { width: 44px !important; height: 26px !important; }
+.aq-switch .sl { background: #3a3a3f; transition: background var(--t-base) var(--ease-out) !important; }
+.aq-switch .sl:before { width: 22px !important; height: 22px !important; left: 2px !important; top: 2px !important; background: #f2f2f2 !important; transition: transform var(--t-base) var(--ease-out) !important; }
+.aq-switch input:checked + .sl { background: var(--accent-deep); }
+.aq-switch input:checked + .sl:before { transform: translateX(18px) !important; }
+.aq-switch.eng-switch input:checked + .sl { background: #e03131; }
+input.aq-sw { appearance: none; -webkit-appearance: none; position: relative; width: 44px; height: 26px; border-radius: 999px; background: #3a3a3f; margin: 0; cursor: pointer; flex: none; vertical-align: middle; transition: background var(--t-base) var(--ease-out); accent-color: auto; }
+input.aq-sw::before { content: ''; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: #f2f2f2; transition: transform var(--t-base) var(--ease-out); }
+input.aq-sw:checked { background: var(--accent-deep); }
+input.aq-sw:checked::before { transform: translateX(18px); }
+.chart-mode-toggle.aq-mode-sw { gap: 8px; align-items: center; }
+.chart-mode-toggle.aq-mode-sw.active { background: rgba(45,45,48,0.92); color: var(--text-hi); border-color: var(--line-2); }
+[data-theme="light"] .chart-mode-toggle.aq-mode-sw.active { background: rgba(243,237,221,0.92); }
+.aq-mode-sw .tr { position: relative; width: 30px; height: 18px; border-radius: 999px; background: #3a3a3f; flex: none; transition: background var(--t-base) var(--ease-out); }
+.aq-mode-sw .tr::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #f2f2f2; transition: transform var(--t-base) var(--ease-out); }
+.aq-mode-sw.active .tr { background: var(--accent-deep); }
+.aq-mode-sw.active .tr::after { transform: translateX(12px); }
+.aq-dots { display: flex; justify-content: center; gap: 2px; padding: 6px 0 2px; }
+.aq-dots button { width: 22px; height: 22px; border: 0; padding: 0; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.aq-dots i { display: block; width: 6px; height: 6px; border-radius: 999px; background: rgba(127,127,127,.4); transition: width var(--t-base) var(--ease-out), background var(--t-base); }
+.aq-dots .on i { width: 20px; background: var(--text-hi); }
+.mobile-tab-bar { position: fixed; }
+.mobile-tab-bar > .aq-seg-ind { background: rgba(255,255,255,.08) !important; border-radius: 20px !important; box-shadow: none !important; }
+[data-theme="light"] .mobile-tab-bar > .aq-seg-ind { background: rgba(0,0,0,.06) !important; }
+.mobile-tab-bar.aq-seg-on .mtab-btn::before { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .aq-dlg, .aq-dlg-bg, .aq-ts, .aq-rl-c, .aq-dots i, .mg3-tl .ln i { transition: none !important; }
+  .mg3-steps .cur i, .mg3-tl .cur .dt { animation: none; }
+  details::details-content { transition: none !important; }
+  .col-menu, .dash-context-menu { animation: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .aq-think { animation: none; background: none; color: var(--text-dim) !important; }
   .aq-ld::before { animation-duration: 2.4s; }
@@ -3644,7 +3733,7 @@ html.aq-wide .br-sheet.ppv-full, .br-sheet.ppv-full { left: 0 !important; right:
   font-size: 13px;
   color: var(--text-mid);
 }
-.cal-modal-toggle input {
+.cal-modal-toggle input:not(.aq-sw) {
   width: 18px;
   height: 18px;
   accent-color: #5c7cfa;
@@ -9933,7 +10022,7 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
         </div>
         <div class="data-mgmt-row">
           <div class="label">타점 과다 종목 숨김<div style="font-size:11px;color:var(--text-mute);margin-top:3px;font-weight:400;">발견·탐색에서 최근 3개월 V1+V2 타점 상위 10% 종목 제외 (단, 최근 30일 내 내부자 매수 있으면 예외)</div></div>
-          <div class="value"><input type="checkbox" id="aqExclOverSig" checked onchange="aqSetExcludeOverSignaled(this.checked)" style="width:20px;height:20px;accent-color:var(--accent,#5c7cfa);cursor:pointer;"></div>
+          <div class="value"><input type="checkbox" class="aq-sw" id="aqExclOverSig" checked onchange="aqSetExcludeOverSignaled(this.checked)"></div>
         </div>
       </div>
       <div class="data-mgmt-actions">
@@ -9968,9 +10057,9 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
           <div class="ops-chips" id="opsChips_us"></div>
           <div class="ops-dow" id="opsDow_us"></div>
           <div class="ops-cond" id="opsCond_us">
-            <label><input type="checkbox" data-cond="skipHoliday" onchange="aqOpsChanged('us')"> 휴장일 건너뜀</label>
-            <label><input type="checkbox" data-cond="stopOnFail" onchange="aqOpsChanged('us')"> 실패 시 연속 중단</label>
-            <label><input type="checkbox" data-cond="catchUp" onchange="aqOpsChanged('us')"> 밀린 실행 보충</label>
+            <label><input type="checkbox" class="aq-sw" data-cond="skipHoliday" onchange="aqOpsChanged('us')"> 휴장일 건너뜀</label>
+            <label><input type="checkbox" class="aq-sw" data-cond="stopOnFail" onchange="aqOpsChanged('us')"> 실패 시 연속 중단</label>
+            <label><input type="checkbox" class="aq-sw" data-cond="catchUp" onchange="aqOpsChanged('us')"> 밀린 실행 보충</label>
           </div>
         </div>
         <div class="ops-table-wrap ops-pc">
@@ -9997,9 +10086,9 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
           <div class="ops-chips" id="opsChips_kr"></div>
           <div class="ops-dow" id="opsDow_kr"></div>
           <div class="ops-cond" id="opsCond_kr">
-            <label><input type="checkbox" data-cond="skipHoliday" onchange="aqOpsChanged('kr')"> 휴장일 건너뜀</label>
-            <label><input type="checkbox" data-cond="stopOnFail" onchange="aqOpsChanged('kr')"> 실패 시 연속 중단</label>
-            <label><input type="checkbox" data-cond="catchUp" onchange="aqOpsChanged('kr')"> 밀린 실행 보충</label>
+            <label><input type="checkbox" class="aq-sw" data-cond="skipHoliday" onchange="aqOpsChanged('kr')"> 휴장일 건너뜀</label>
+            <label><input type="checkbox" class="aq-sw" data-cond="stopOnFail" onchange="aqOpsChanged('kr')"> 실패 시 연속 중단</label>
+            <label><input type="checkbox" class="aq-sw" data-cond="catchUp" onchange="aqOpsChanged('kr')"> 밀린 실행 보충</label>
           </div>
         </div>
         <div class="ops-table-wrap ops-pc">
@@ -10204,7 +10293,7 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
           <div class="set-row" onclick="aqSetStampSummary(); aqSetSheet('setStampSheet', true)"><span class="sr-l">데이터 상태</span><span class="sr-val" id="setStampVal">확인 중…</span><span class="sr-chev">›</span></div>
           <div class="set-row" onclick="aqKrFlowShow()"><span class="sr-l">한국 수급</span><span class="sr-val" id="setKrFlowVal">확인 중…</span><span class="sr-chev">›</span></div>
           <div class="set-row" onclick="aqSetRefresh()"><span class="sr-l">새로고침</span></div>
-          <div class="set-row" onclick="if (confirm('캐시를 지우고 데이터를 처음부터 다시 받을까요?')) aqClearAllCachesAndReload()"><span class="sr-l">캐시 지우고 다시 받기</span></div>
+          <div class="set-row" onclick="aqConfirm('캐시를 지우고 데이터를 처음부터 다시 받을까요?').then(ok => { if (ok) aqClearAllCachesAndReload(true); })"><span class="sr-l">캐시 지우고 다시 받기</span></div>
           <div class="set-row nohover"><span class="sr-l">앱 버전</span><span class="sr-val" id="setVerVal">—</span></div>
         </div>
         <div class="set-grp-t" id="setWideT" style="display:none">화면</div>
@@ -10684,7 +10773,7 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
       </div>
       <div class="cal-modal-field">
         <label class="cal-modal-toggle">
-          <input type="checkbox" id="calInputAllDay" onchange="aqCalendarToggleAllDay()">
+          <input type="checkbox" class="aq-sw" id="calInputAllDay" onchange="aqCalendarToggleAllDay()">
           <span>종일</span>
         </label>
       </div>
@@ -10953,7 +11042,7 @@ function aqWideToggle() {   // v7.04: 가로에서만 → 세로에서도 → �
         <!-- v3.48: 상세보기 + tf 토글을 우하단 한 줄로 묶음 (겹침 방지) -->
         <div class="chart-ctrl-br">
         <button class="chart-filter-pill" id="modalFilterPill" onclick="aqSigSheetOpen()"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg><span id="modalFilterPillTxt">필터</span></button>
-          <button class="chart-mode-toggle" id="modeToggleBtn" onclick="toggleChartMode()">🔬 상세보기</button>
+          <button class="chart-mode-toggle aq-mode-sw" id="modeToggleBtn" role="switch" aria-checked="false" onclick="toggleChartMode()"><span class="lb">상세</span><span class="tr" aria-hidden="true"></span></button>
         <!-- v2.10: 타임프레임 세그먼트 (3M/6M/1Y) -->
         <div class="tf-toggle" data-target="modal">
           <button data-tf="3M" class="active" onclick="setChartTimeframe('modal','3M')">3M</button>
@@ -11935,8 +12024,8 @@ class SpreadsheetTable {
     });
   }
 
-  clearAll() {
-    if (!confirm('전체 데이터를 삭제할까요? 이 작업은 되돌릴 수 없습니다.')) return;
+  async clearAll() {
+    if (!await aqConfirm('전체 데이터를 삭제할까요? 이 작업은 되돌릴 수 없습니다.')) return;
     this.data = [this.emptyRow()];
     this.sortKey = null;
     this.colFilters = {};
@@ -12485,19 +12574,107 @@ function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;'
 function escapeAttr(s) { return escapeHtml(s); }
 
 // v2.44: 토스트 알림 (disabled 메뉴 클릭 시 "준비 중" 등)
+// ---------- v8.33: 2·3차 교체 — 확인 · 입력 시트 · 알림 쌓기 · 펼치기 · 숫자 굴러가기 · 차트 훑기 · 읽는 줄 · 쪽 점 ----------
+const _aqRM = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+function _aqDlg(build) {
+  return new Promise(res => {
+    const bg = document.createElement('div'); bg.className = 'aq-dlg-bg';
+    const d = document.createElement('div'); d.className = 'aq-dlg'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true');
+    let done = false;
+    const fin = v => { if (done) return; done = true; bg.classList.remove('on'); d.classList.remove('on'); document.removeEventListener('keydown', key, true); setTimeout(() => { bg.remove(); d.remove(); }, _aqRM() ? 0 : 320); res(v); };
+    const key = e => { if (e.key === 'Escape') { e.preventDefault(); fin(d._cancel ? d._cancel() : false); } else if (e.key === 'Enter' && !e.shiftKey && !(e.target && e.target.tagName === 'TEXTAREA')) { e.preventDefault(); fin(d._ok ? d._ok() : true); } };
+    build(d, fin);
+    bg.addEventListener('click', () => fin(d._cancel ? d._cancel() : false));
+    document.body.appendChild(bg); document.body.appendChild(d); document.addEventListener('keydown', key, true);
+    void d.offsetWidth; bg.classList.add('on'); d.classList.add('on');
+    setTimeout(() => { const f = d.querySelector('input, textarea') || d.querySelector('.ok'); try { f && f.focus({ preventScroll: true }); } catch (e) {} }, 60);
+  });
+}
+function _aqDlgHead(msg) {
+  const L = String(msg == null ? '' : msg).split('\n'); const t = L.shift(); const b = L.join('\n').replace(/^\n+/, '').trim();
+  return `<div class="aq-dlg-grip"></div><div><div class="aq-dlg-t">${escapeHtml(t)}</div>${b ? `<div class="aq-dlg-b">${escapeHtml(b)}</div>` : ''}</div>`;
+}
+function aqConfirm(msg, opts) {
+  opts = opts || {};
+  const danger = opts.danger != null ? opts.danger : /삭제|취소|중단|해제|그만|로그아웃|비활성|지울|지우|뺄까|비우고|끌까/.test(String(msg || '').split('\n')[0]);
+  return _aqDlg((d, fin) => {
+    d.innerHTML = _aqDlgHead(msg) + `<div class="aq-dlg-bt"><button type="button" class="no">${escapeHtml(opts.cancel || '돌아가기')}</button><button type="button" class="ok${danger ? ' danger' : ''}">${escapeHtml(opts.ok || '확인')}</button></div>`;
+    d._ok = () => true; d._cancel = () => false;
+    d.querySelector('.no').onclick = () => fin(false); d.querySelector('.ok').onclick = () => fin(true);
+  });
+}
+function aqPrompt(msg, def, opts) {
+  opts = opts || {}; def = def == null ? '' : String(def);
+  const ghost = !!(opts.ghost && def);
+  return _aqDlg((d, fin) => {
+    const multi = !!opts.multi, typ = opts.type || 'text';
+    const fld = multi ? `<textarea rows="3"></textarea>` : `<input type="${typ}" ${opts.inputmode ? `inputmode="${opts.inputmode}"` : ''} autocomplete="${typ === 'password' ? 'current-password' : 'off'}">`;
+    d.innerHTML = _aqDlgHead(msg) + `<div class="aq-dlg-f${ghost ? ' ghost' : ''}">${ghost ? `<div class="aq-dlg-gh">${escapeHtml(def)}</div>` : ''}${fld}${ghost ? `<button type="button" class="aq-dlg-take">추천 넣기</button>` : ''}</div>`
+      + `<div class="aq-dlg-bt"><button type="button" class="no">${escapeHtml(opts.cancel || '취소')}</button><button type="button" class="ok">${escapeHtml(opts.ok || '확인')}</button></div>`;
+    const inp = d.querySelector('input, textarea'); if (!ghost) inp.value = def;
+    const gh = d.querySelector('.aq-dlg-gh'), tk = d.querySelector('.aq-dlg-take');
+    const sync = () => { const e = !inp.value; if (gh) gh.style.display = e ? '' : 'none'; if (tk) tk.style.display = e ? '' : 'none'; };
+    inp.addEventListener('input', sync);
+    if (tk) tk.onclick = () => { inp.value = def; sync(); try { inp.focus(); } catch (e) {} };
+    d._ok = () => inp.value; d._cancel = () => null;
+    d.querySelector('.no').onclick = () => fin(null); d.querySelector('.ok').onclick = () => fin(inp.value);
+    if (!ghost && def && inp.select) setTimeout(() => { try { inp.select(); } catch (e) {} }, 80);
+  });
+}
+window.aqConfirm = aqConfirm; window.aqPrompt = aqPrompt;
+window.alert = function (m) { try { aqToast(String(m == null ? '' : m), Math.min(9000, Math.max(4000, String(m || '').length * 70))); } catch (e) {} };
+
+// 접이식 칸 — 높이가 부드럽게
+function _aqAnimH(b, closing, apply) {
+  if (!b || _aqRM() || !b.isConnected) { apply(); return; }
+  clearTimeout(b._aqT); const clr = () => { b.style.height = ''; b.style.overflow = ''; b.style.transition = ''; b.style.opacity = ''; };
+  const tr = 'height .32s cubic-bezier(0.22, 1, 0.36, 1), opacity .2s';
+  if (closing) {
+    const h = b.offsetHeight; b.style.overflow = 'hidden'; b.style.transition = 'none'; b.style.height = h + 'px'; void b.offsetHeight;
+    b.style.transition = tr; b.style.height = '0px'; b.style.opacity = '0';
+    b._aqT = setTimeout(() => { apply(); clr(); }, 330);
+  } else {
+    apply(); const h = b.scrollHeight; b.style.overflow = 'hidden'; b.style.transition = 'none'; b.style.height = '0px'; b.style.opacity = '0'; void b.offsetHeight;
+    b.style.transition = tr; b.style.height = h + 'px'; b.style.opacity = '1';
+    b._aqT = setTimeout(clr, 330);
+  }
+}
+
+// 숫자 굴러가기 — 바뀐 자리 숫자만 위아래로
+function _aqRollHtml(t) { return t.split('').map(ch => /\d/.test(ch) ? `<span class="aq-rl" data-d="${ch}"><span class="aq-rl-ph">${ch}</span><span class="aq-rl-c" style="transform:translateY(${-Number(ch) * 1.2}em)" aria-hidden="true"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></span></span>` : escapeHtml(ch)).join(''); }
+function aqRoll(el, text) {
+  if (!el) return; text = String(text == null ? '' : text);
+  if (el._aqRoll === text) return;
+  const prev = el._aqRoll; el._aqRoll = text; el.setAttribute('aria-label', text);
+  const shape = x => String(x).replace(/\d/g, '0');
+  if (prev == null || _aqRM() || shape(prev) !== shape(text) || el.querySelectorAll('.aq-rl').length !== (text.match(/\d/g) || []).length) { el.innerHTML = _aqRollHtml(text); return; }
+  const ds = text.match(/\d/g) || []; el.querySelectorAll('.aq-rl').forEach((c, i) => { const d = ds[i]; if (c.dataset.d === d) return; c.dataset.d = d; c.firstChild.textContent = d; c.lastChild.style.transform = `translateY(${-Number(d) * 1.2}em)`; });
+}
+window.aqRoll = aqRoll;
+
+// 알림 쌓기 — 새 알림이 앞, 앞선 알림은 뒤에 작게 · 누르면 펼침 · ×로 치움
+const _aqTs = { list: [], open: false };
+function _aqTsBox() { let b = document.getElementById('aqTs'); if (!b) { b = document.createElement('div'); b.id = 'aqTs'; b.setAttribute('role', 'status'); b.setAttribute('aria-live', 'polite'); document.body.appendChild(b); } return b; }
+function _aqTsLay() {
+  const box = document.getElementById('aqTs'); if (!box) return; box.classList.toggle('open', _aqTs.open);
+  let y = 0; _aqTs.list.forEach((t, i) => {
+    const el = t.el; el.style.zIndex = String(50 - i);
+    if (_aqTs.open) { el.style.transform = `translateY(${-y}px) scale(1)`; el.style.opacity = '1'; el.style.pointerEvents = ''; y += el.offsetHeight + 8; }
+    else { el.style.transform = `translateY(${-i * 10}px) scale(${1 - i * 0.05})`; el.style.opacity = i > 2 ? '0' : String(1 - i * 0.22); el.style.pointerEvents = i > 2 ? 'none' : ''; }
+  });
+  if (!_aqTs.list.length) _aqTs.open = false;
+}
+function _aqTsDrop(t) { clearTimeout(t.tm); const i = _aqTs.list.indexOf(t); if (i < 0) return; _aqTs.list.splice(i, 1); t.el.style.opacity = '0'; t.el.style.transform += ' translateY(12px)'; setTimeout(() => t.el.remove(), 260); _aqTsLay(); }
 function aqToast(msg, duration) {
-  const old = document.getElementById('aqToast');
-  if (old) old.remove();
-  const t = document.createElement('div');
-  t.id = 'aqToast';
-  t.className = 'aq-toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  requestAnimationFrame(() => t.classList.add('show'));
-  setTimeout(() => {
-    t.classList.remove('show');
-    setTimeout(() => { if (t.parentNode) t.remove(); }, 250);
-  }, duration || 1800);
+  const box = _aqTsBox(); const el = document.createElement('div'); el.className = 'aq-ts';
+  el.innerHTML = `<span class="tx"></span><button type="button" class="x" aria-label="치우기"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8"></path></svg></button>`;
+  el.firstChild.textContent = String(msg == null ? '' : msg);
+  const t = { el }; box.appendChild(el); _aqTs.list.unshift(t);
+  el.querySelector('.x').onclick = e => { e.stopPropagation(); _aqTsDrop(t); };
+  el.firstChild.onclick = () => { _aqTs.open = !_aqTs.open; _aqTs.list.forEach(z => { clearTimeout(z.tm); if (!_aqTs.open) z.tm = setTimeout(() => _aqTsDrop(z), 2600); }); _aqTsLay(); };
+  while (_aqTs.list.length > 5) _aqTsDrop(_aqTs.list[_aqTs.list.length - 1]);
+  el.style.transform = 'translateY(16px) scale(.98)'; el.style.opacity = '0'; void el.offsetWidth; _aqTsLay();
+  t.tm = setTimeout(() => { if (!_aqTs.open) _aqTsDrop(t); }, duration || 2600);
 }
 window.aqToast = aqToast;
 
@@ -13168,7 +13345,7 @@ function aqSetModalHexCorner(tk, d) {
 }
 window.aqSetModalHexCorner = aqSetModalHexCorner;
 // v3.46: 모달 접이식 섹션 토글
-function aqToggleColl(headEl) { const c = headEl && headEl.closest('.aq-coll'); if (c) c.classList.toggle('collapsed'); }
+function aqToggleColl(headEl) { const c = headEl && headEl.closest('.aq-coll'); if (!c) return; const b = c.querySelector(':scope > .aq-coll-body'); _aqAnimH(b, !c.classList.contains('collapsed'), () => c.classList.toggle('collapsed')); }   // v8.33: 부드럽게
 window.aqToggleColl = aqToggleColl;
 
 // v3.28: 방어(축6) = 현재 사용자 계좌 기반 비대칭성 (시트의 소유자 값 대신 클라에서 계산)
@@ -13791,9 +13968,9 @@ function aqCalendarSave() {
   aqCalendarRender();
   aqToast('일정이 저장되었습니다');
 }
-function aqCalendarDelete() {
+async function aqCalendarDelete() {
   if (!aqCal.editingId) return;
-  if (!confirm('이 일정을 삭제할까요?')) return;
+  if (!await aqConfirm('이 일정을 삭제할까요?')) return;
   const events = aqCalLoadEvents().filter(e => e.id !== aqCal.editingId);
   aqCalSaveEvents(events);
   aqCalendarCloseModal();
@@ -14164,7 +14341,7 @@ async function _deltaSync(userId, dataType, localRows, onProgress, passwordHash)
   // 6) 대량 삭제 안전 가드 — 시트의 30% 이상 또는 50개 이상 삭제 시 한 번 더 확인
   const sheetCount = Object.keys(sheetByID).length;
   if (sheetCount > 0 && toDelete.length >= Math.max(50, sheetCount * 0.3) && !firstSync) {
-    const ok = confirm(
+    const ok = await aqConfirm(
       `⚠ 시트의 ${sheetCount}건 중 ${toDelete.length}건이 삭제됩니다 (로컬에 없는 행).\n\n` +
       `다른 기기에서 추가한 데이터가 사라질 수 있습니다.\n` +
       `먼저 "📥 불러오기"로 합치는 게 좋을 수 있습니다.\n\n` +
@@ -14206,7 +14383,7 @@ async function loadUserDataFromBackend(opts) {
   const hasTr = (tradesSheet.data || []).filter(r => r.ticker).length > 0;
   if (!silentLoad && (hasPf || hasTr)) {
     const msg = `현재 LocalStorage 데이터를 백업 내용으로 덮어씁니다.\n\n· 포트폴리오: ${hasPf ? '있음' : '없음'}\n· 매매이력: ${hasTr ? '있음' : '없음'}\n\n계속하시겠습니까?`;
-    if (!confirm(msg)) return;
+    if (!await aqConfirm(msg)) return;
   }
 
   lsSet(LS.USER_ID, userId);
@@ -14786,13 +14963,11 @@ window.setMarket = setMarket;
 function toggleChartMode() {
   _state.detailMode = !_state.detailMode;
   const btn = $('modeToggleBtn');
-  if (_state.detailMode) {
-    btn.textContent = '🧹 단순보기';
-    btn.classList.add('active');
+  if (_state.detailMode) {   // v8.33: 이모지 버튼 대신 스위치
+    btn.classList.add('active'); btn.setAttribute('aria-checked', 'true');
     document.body.classList.remove('simple-mode');
   } else {
-    btn.textContent = '🔬 상세보기';
-    btn.classList.remove('active');
+    btn.classList.remove('active'); btn.setAttribute('aria-checked', 'false');
     document.body.classList.add('simple-mode');
   }
   // 차트 다시 그림
@@ -14928,8 +15103,8 @@ async function aqClearAllCaches() {
 window.aqClearAllCaches = aqClearAllCaches;
 
 // v2.58: 캐시 클리어 + 페이지 새로고침 (마이 페이지 버튼용)
-async function aqClearAllCachesAndReload() {
-  if (!confirm('모든 캐시를 비우고 페이지를 새로고침합니다.\n시트에서 데이터를 다시 받아옵니다 (~100초).\n\n계속하시겠습니까?')) return;
+async function aqClearAllCachesAndReload(asked) {
+  if (asked !== true && !(await aqConfirm('모든 캐시를 비우고 페이지를 새로고침할까요?\n시트에서 데이터를 다시 받아옵니다 (~100초).'))) return;
   try {
     await aqClearAllCaches();
     // sessionStorage의 SW reload guard도 클리어 (controllerchange로 또 reload 막기 위해)
@@ -17101,7 +17276,7 @@ function aqRv4Bind(root) {
   if (!root) return; const scroller = root.closest('.modal-content') || root.closest('.report-detail-body') || window;
   const links = root.querySelectorAll('.rv4-toc, .rv4-mobar a'); const secs = [...root.querySelectorAll('.rv4-sec')];
   links.forEach(a => a.addEventListener('click', e => { e.preventDefault(); const el = root.querySelector('#' + a.dataset.target); if (el) { el.classList.add('open'); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }));
-  root.querySelectorAll('.rv4-sec-h[data-toggle]').forEach(h => h.addEventListener('click', () => { const sec = h.closest('.rv4-sec'); sec.classList.toggle('open'); if (sec.classList.contains('open')) sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+  root.querySelectorAll('.rv4-sec-h[data-toggle]').forEach(h => h.addEventListener('click', () => { const sec = h.closest('.rv4-sec'); const b = sec.querySelector(':scope > .rv4-sec-body'); const closing = sec.classList.contains('open'); _aqAnimH(b, closing, () => sec.classList.toggle('open')); if (!closing) sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));   // v8.33: 부드럽게
   try { aqTtsBind(root); } catch (e) {}   // v6.78: 섹션 읽어 주기
   root.querySelectorAll('.rv4-font button').forEach(b => b.addEventListener('click', () => { root.dataset.font = b.dataset.f; try { localStorage.setItem('aq_rv4_font', b.dataset.f); } catch (e) {} }));
   const bar = root.querySelector('.rv4-progress i');
@@ -17179,7 +17354,8 @@ function _ttsCloudNext() {
   _tts.g.slice(0, 2).forEach(t => _ttsFetch(t).catch(() => {}));   // 다음 두 묶음 미리 만들기
   _ttsFetch(text).then(url => {
     if (!_tts.on || _tts.gen !== me) return;
-    const a = _tts.audio; a.onended = () => { if (_tts.on && _tts.gen === me) _ttsCloudNext(); }; a.onerror = () => { if (_tts.on && _tts.gen === me) _ttsToDevice([text].concat(_tts.g), new Error('음성 파일 오류')); };
+    const a = _tts.audio; a.onended = () => { if (_tts.on && _tts.gen === me) _ttsCloudNext(); };
+    { const ls = text.split('\n'), tot = ls.reduce((x, l) => x + l.length, 0) || 1; let last = -1; a.ontimeupdate = () => { if (!_tts.on || _tts.gen !== me || !a.duration) return; const at = a.currentTime / a.duration * tot; let c = 0, k = 0; for (; k < ls.length - 1; k++) { c += ls[k].length; if (c > at) break; } if (k !== last) { last = k; try { _aqRaHi(ls[k]); } catch (e) {} } }; }   // v8.33: 읽는 줄 표시 a.onerror = () => { if (_tts.on && _tts.gen === me) _ttsToDevice([text].concat(_tts.g), new Error('음성 파일 오류')); };
     a.src = url; const pr = a.play(); if (pr && pr.catch) pr.catch(e => { if (_tts.on && _tts.gen === me) _ttsToDevice([text].concat(_tts.g), new Error('재생 막힘 ' + (e && e.name || ''))); });
   }).catch(err => { if (_tts.on && _tts.gen === me) _ttsToDevice([text].concat(_tts.g), err); });
 }
@@ -17192,11 +17368,11 @@ function _ttsToDevice(rest, err) {   // 서버 음성이 안 되면 이번 세�
 function _ttsNext() {
   if (!_tts.on) return;
   if (!_tts.q.length) { _ttsSectionEnd(); return; }
-  const u = new SpeechSynthesisUtterance(_tts.q.shift()); u.lang = 'ko-KR'; const v = _ttsVoice(); if (v) u.voice = v; u.rate = 1.05;
+  const _ln = _tts.q.shift(); const u = new SpeechSynthesisUtterance(_ln); u.lang = 'ko-KR'; u.onstart = () => { try { _aqRaHi(_ln); } catch (e) {} };   // v8.33: 읽는 줄 표시 const v = _ttsVoice(); if (v) u.voice = v; u.rate = 1.05;
   const me = _tts.gen; u.onend = () => { if (_tts.on && _tts.gen === me) _ttsNext(); }; u.onerror = u.onend;
   try { speechSynthesis.speak(u); } catch (e) { aqTtsStop(); }
 }
-function aqTtsStop() { _tts.on = false; _tts.gen++; _tts.q = []; _tts.g = []; try { if (aqTtsOk()) speechSynthesis.cancel(); } catch (e) {} try { if (_tts.audio) _tts.audio.pause(); } catch (e) {} _ttsMark(); _tts.sec = null; }
+function aqTtsStop() { try { document.querySelectorAll('.aq-ra').forEach(x => x.classList.remove('aq-ra')); if (_tts.audio) _tts.audio.ontimeupdate = null; } catch (e) {} _tts.on = false; _tts.gen++; _tts.q = []; _tts.g = []; try { if (aqTtsOk()) speechSynthesis.cancel(); } catch (e) {} try { if (_tts.audio) _tts.audio.pause(); } catch (e) {} _ttsMark(); _tts.sec = null; }
 window.aqTtsStop = aqTtsStop;
 
 function aqReportIsNewFormat(ticker, date) {
@@ -18370,7 +18546,7 @@ async function aqPptRefresh(tk, d) {
   if (now === 'running') _ppt.poll = setTimeout(() => { if (_ppt.key === k && document.getElementById('pptSlot')) aqPptRefresh(tk, d); }, 60000);
 }
 async function aqPptRequest(tk, d) {
-  if (!confirm(`${displayName(tk) || tk} 리포트(${d})로 PPT를 만들까요?\n보통 10~20분 걸려요.`)) return;
+  if (!await aqConfirm(`${displayName(tk) || tk} 리포트(${d})로 PPT를 만들까요?\n보통 10~20분 걸려요.`)) return;
   let r = null; try { r = await apiCall('aiPptRequest', { ticker: tk, date: d }); } catch (e) {}
   if (!r || !r.ok) { aqToast((r && r.error) || '요청하지 못했어요'); return; }
   _ppt.st[tk + '|' + d] = r.ppt; _pptSlot(tk, d); aqPptRefresh(tk, d);
@@ -18395,7 +18571,7 @@ function _ppvLayout() {
   if (_ppv.land) { const H = Math.max(200, window.innerHeight - Math.max(0, v.getBoundingClientRect().top) - 30); h = Math.min(H, W * _ppv.ratio); w = h / _ppv.ratio; v.style.height = (h + 4) + 'px'; }
   else { w = W; h = W * _ppv.ratio; v.style.height = ''; }
   v.querySelectorAll('.ppv-pg').forEach(el => { const i = +el.dataset.i; el.style.width = w + 'px'; el.style.height = h + 'px'; el.style.display = _ppv.land && i !== _ppv.cur ? 'none' : ''; if (el.dataset.w !== String(Math.round(w))) { el.dataset.w = String(Math.round(w)); el.dataset.done = ''; } });
-  const pn = document.getElementById('ppvPn'); if (pn) pn.textContent = _ppv.land && _ppv.n ? `${_ppv.cur + 1} / ${_ppv.n}` : '';
+  const pn = document.getElementById('ppvPn'); if (pn) { if (_ppv.land && _ppv.n > 1 && _ppv.n <= 20) pn.innerHTML = `<div class="aq-dots">${Array.from({ length: _ppv.n }, (_, i) => `<button type="button" aria-label="${i + 1}쪽" class="${i === _ppv.cur ? 'on' : ''}" onclick="aqPpvGo(${i})"><i></i></button>`).join('')}</div>`; else pn.textContent = _ppv.land && _ppv.n ? `${_ppv.cur + 1} / ${_ppv.n}` : ''; }   // v8.33: 쪽 점
   if (_ppv.land) { _ppvDraw(_ppv.cur); if (_ppv.cur + 1 < _ppv.n) _ppvDraw(_ppv.cur + 1); }
   else v.querySelectorAll('.ppv-pg').forEach(el => { if (_ppv.io) { _ppv.io.unobserve(el); _ppv.io.observe(el); } });
   _ppvPaintAll();
@@ -18585,21 +18761,21 @@ async function aqPptView(tk, d, ver) {   // v7.88
 Object.assign(window, { aqPptRefresh, aqPptRequest, aqPptView, aqPpvFull, aqPpvTool, aqPpvPal, aqPpvColor, aqPpvHold, aqPpvUndo, aqPpvRedo, aqPpvGo });
 async function aqArRequest(tk, renew) {
   const _busy = !!((_ar.st[tk] || {}).active);
-  if (!confirm((renew ? `${displayName(tk) || tk} AI 보고서를 리뉴얼할까요?\n지난 보고서와 비교해 새로 써요 (15~30분).` : `${displayName(tk) || tk} AI 보고서를 만들까요?\n보통 15~30분 걸려요.`) + (_busy ? '\n다른 작업이 끝나면 시작해요 (대기열).' : ''))) return;
-  const focus = (prompt('이번 보고서에서 꼭 확인할 것이 있으면 한 줄로 적어 주세요 (비우면 전체 분석)', '') || '').trim();   // v6.38: 요청 목적 → AI가 먼저 답함
+  if (!await aqConfirm((renew ? `${displayName(tk) || tk} AI 보고서를 리뉴얼할까요?\n지난 보고서와 비교해 새로 써요 (15~30분).` : `${displayName(tk) || tk} AI 보고서를 만들까요?\n보통 15~30분 걸려요.`) + (_busy ? '\n다른 작업이 끝나면 시작해요 (대기열).' : ''))) return;
+  const focus = ((await aqPrompt('이번 보고서에서 꼭 확인할 것\n비우면 전체를 분석해요', '', { multi: true, ok: '요청', cancel: '전체 분석' })) || '').trim();   // v6.38: 요청 목적 → AI가 먼저 답함
   let r = null; try { r = await apiCall('reportRequest', { ticker: tk, focus }); } catch (e) {}
   if (!r || !r.ok) aqToast((r && r.error) || '요청하지 못했어요');
   else if (r.queued) aqToast(`대기 ${r.pos}번째에 넣었어요`);
   aqArRefresh(tk);
 }
 async function aqArQCancel(id, tk) {   // v6.68
-  if (!confirm('대기열에서 뺄까요?')) return;
+  if (!await aqConfirm('대기열에서 뺄까요?')) return;
   let r = null; try { r = await apiCall('reportQueueCancel', { id }); } catch (e) {}
   aqToast(r && r.ok ? '뺐어요' : ((r && r.error) || '빼지 못했어요')); aqArRefresh(tk);
 }
 async function aqArCancelAsk(id, tk, can) {
   if (!can) { aqToast('다른 사용자가 요청한 보고서예요 — 끝나면 같이 볼 수 있어요'); return; }
-  if (!confirm('만들고 있는 AI 보고서를 취소할까요?')) return;
+  if (!await aqConfirm('만들고 있는 AI 보고서를 취소할까요?')) return;
   try { await apiCall('reportCancel', { id }); } catch (e) {}
   aqToast('취소했어요'); aqArRefresh(tk);
 }
@@ -20460,7 +20636,7 @@ function showDashContextMenu(ticker, x, y) {
   // 클릭 핸들러 (한 번만)
   if (!menu._bound) {
     menu._bound = true;
-    menu.addEventListener('click', (e) => {
+    menu.addEventListener('click', async (e) => {
       const item = e.target.closest('.dash-ctx-item');
       if (!item) return;
       const action = item.getAttribute('data-action');
@@ -20470,7 +20646,7 @@ function showDashContextMenu(ticker, x, y) {
       if (action === 'chart' && typeof openChart === 'function') openChart(tk);
       else if (action === 'rename') {
         const _cur = aqGetCustomName(tk) || displayName(tk) || tk;
-        const _v = prompt(tk + ' 표시 이름 입력 (비우면 기본 이름으로 복원):', _cur);
+        const _v = await aqPrompt(tk + ' 표시 이름\n비우면 기본 이름으로 돌아가요', _cur);
         if (_v !== null) { aqSetCustomName(tk, _v); try { aqSyncNameToTrades(tk, _v); } catch (e) {} try { renderDashboard(); } catch (e) {} try { if (typeof rerenderAll === 'function') rerenderAll(); } catch (e) {} }
       }
       else if (action === 'logo') {
@@ -23801,10 +23977,10 @@ window.AqWatchStore = (function() {
       if (!Array.isArray(arr)) return;
       try { localStorage.setItem('aq_watch_colorder_v1', JSON.stringify(arr)); } catch (e) {}
     },
-    toggle(market, ticker) {
+    async toggle(market, ticker) {   // v8.33: 매수가를 앱 안 입력 시트로 물음 → 비동기
       if (this.has(market, ticker)) { this.remove(market, ticker); return false; }
       // v5.01: 모의매수 — 매수가를 물어보고 담는다 (취소하면 담지 않음)
-      const px = (typeof aqAskSimPrice === 'function') ? aqAskSimPrice(market, ticker) : null;
+      const px = (typeof aqAskSimPrice === 'function') ? await aqAskSimPrice(market, ticker) : null;
       if (px === null) return false;
       this.add(market, ticker, DEFAULT_COL, { buyPrice: px }); return true;
     },
@@ -23814,11 +23990,11 @@ window.AqWatchStore = (function() {
 })();
 
 // 모달 하트 클릭 → 현재 종목 관심 토글 (등록 시 기본 컬럼 = 단기 모니터링)
-function toggleWatch() {
+async function toggleWatch() {
   const tk = _state.openTicker;
   if (!tk) return;
   const mkt = getCurrentMarket();
-  AqWatchStore.toggle(mkt, tk);
+  await AqWatchStore.toggle(mkt, tk);
   syncWatchButton();
 }
 window.toggleWatch = toggleWatch;
@@ -25032,7 +25208,7 @@ function aqPenBind(canvas) {
     } else return;
     ch.$penHover = null; e.preventDefault(); try { canvas.setPointerCapture(e.pointerId); } catch (er) {}
   });
-  const up = e => {
+  const up = async e => {
     const ch = C(); const m = mode; mode = null; if (!ch || !m) return;
     if (m === 'measure') {
       if (ch.$penM && ch.$penM.a === ch.$penM.b) { ch.$penM = null; _penRedraw(ch); return; }
@@ -25044,7 +25220,7 @@ function aqPenBind(canvas) {
       const p = _penXY(ch, e), d = ch.$penDraft; ch.$penDraft = null;
       if (!d || Math.hypot(p.x - start.x, p.y - start.y) < 14) {   // 짧은 탭 — 선 위면 지우기
         _penRedraw(ch); const L = _penHit(ch, p);
-        if (L && confirm(`이 ${L.kind === 't' ? '추세선' : '가로선'}을 지울까요?`)) {
+        if (L && await aqConfirm(`이 ${L.kind === 't' ? '추세선' : '가로선'}을 지울까요?`)) {
           const arr = _pen.lines[ch.$penTk] || []; const k = arr.indexOf(L); if (k >= 0) arr.splice(k, 1); _penRedraw(ch);
           if (L.id) apiCall('penLineDel', { id: L.id }).catch(() => {});
         }
@@ -25118,17 +25294,17 @@ function aqLiveApply() {
   // 목록 숫자 (그 자리에서만 바꿈 — 다시 그리지 않음)
   document.querySelectorAll('[data-lp]').forEach(el => {
     const L = aqLiveGet(el.dataset.lp, !!el.closest('#feedCard, #boardLiveCard')); if (el.dataset.lo == null) el.dataset.lo = el.innerHTML;
-    el.innerHTML = L ? escapeHtml(fmtPrice(L.p)) : el.dataset.lo;
+    if (L) aqRoll(el, fmtPrice(L.p)); else { el._aqRoll = null; el.innerHTML = el.dataset.lo; }   // v8.33: 숫자 굴러가기
   });
   document.querySelectorAll('[data-lc]').forEach(el => {
     const L = aqLiveGet(el.dataset.lc, !!el.closest('#feedCard, #boardLiveCard')), b = +el.dataset.lb;
     if (el.dataset.lo == null) { el.dataset.lo = el.innerHTML; el.dataset.lcls = el.className; }
-    if (L && b > 0) { const pc = (L.p / b - 1) * 100; el.textContent = aqSgPct(pc, 2); el.className = el.dataset.lcls.replace(/\b(up|down|zero)\b/g, '').trim() + ' ' + (pc > 0 ? 'up' : pc < 0 ? 'down' : 'zero'); }
-    else { el.innerHTML = el.dataset.lo; el.className = el.dataset.lcls; }
+    if (L && b > 0) { const pc = (L.p / b - 1) * 100; aqRoll(el, aqSgPct(pc, 2)); el.className = el.dataset.lcls.replace(/\b(up|down|zero)\b/g, '').trim() + ' ' + (pc > 0 ? 'up' : pc < 0 ? 'down' : 'zero'); }
+    else { el._aqRoll = null; el.innerHTML = el.dataset.lo; el.className = el.dataset.lcls; }
   });
   document.querySelectorAll('[data-lh]').forEach(el => {   // v6.96: 피드의 '보유 n%' (평단 대비)
     const L = aqLiveGet(el.dataset.lh, !!el.closest('#feedCard, #boardLiveCard')), avg = +el.dataset.avg; if (el.dataset.lo == null) el.dataset.lo = el.innerHTML;
-    el.innerHTML = L && avg > 0 ? '보유 ' + aqSgPct((L.p / avg - 1) * 100, 1) : el.dataset.lo;
+    if (L && avg > 0) aqRoll(el, '보유 ' + aqSgPct((L.p / avg - 1) * 100, 1)); else { el._aqRoll = null; el.innerHTML = el.dataset.lo; }
   });
   try { _aqLiveBoardTick(); } catch (e) {}
   try { _balMrLive(); } catch (e) {}   // v7.03: 밸런스 데칼코마니 차트
@@ -25140,8 +25316,11 @@ function aqLiveApply() {
       const L = aqLiveGet(mp.dataset.tk, true), b = +mp.dataset.base;
       if (L && b > 0) {
         const ch = L.p - b, pc = ch / b * 100, cls = ch > 0 ? 'up' : ch < 0 ? 'down' : '';
-        mp.innerHTML = `<span class="mp-v">${fmtPrice(L.p)}</span><span class="price-chg ${cls}">${ch > 0 ? '▲' : ch < 0 ? '▼' : ''} ${fmtPrice(Math.abs(ch)).replace('$', '')} · ${aqSgPct(pc, 2)}</span><div class="mp-date">${escapeHtml(L.label)} · ${escapeHtml(aqLiveAgo(L.ts))} · ${escapeHtml(mp.dataset.date || '')} 종가 대비</div>`;
-      } else mp.innerHTML = mp.dataset.lo;
+        const vS = fmtPrice(L.p), cS = `${ch > 0 ? '▲' : ch < 0 ? '▼' : ''} ${fmtPrice(Math.abs(ch)).replace('$', '')} · ${aqSgPct(pc, 2)}`, dS = `${L.label} · ${aqLiveAgo(L.ts)} · ${mp.dataset.date || ''} 종가 대비`;
+        const ev = mp._aqLive && mp.querySelector(':scope > .mp-v'), ec = ev && mp.querySelector(':scope > .price-chg'), ed = ev && mp.querySelector(':scope > .mp-date');
+        if (ev && ec && ed && !mp._aqScrub) { aqRoll(ev, vS); aqRoll(ec, cS); ec.className = 'price-chg ' + cls; ed.textContent = dS; }   // v8.33: 숫자 굴러가기
+        else if (!mp._aqScrub) { mp.innerHTML = `<span class="mp-v"></span><span class="price-chg ${cls}"></span><div class="mp-date">${escapeHtml(dS)}</div>`; aqRoll(mp.firstChild, vS); aqRoll(mp.children[1], cS); mp._aqLive = 1; }
+      } else { mp._aqLive = 0; if (!mp._aqScrub) mp.innerHTML = mp.dataset.lo; }
     }
   } catch (e) {}
   try { if (typeof Chart !== 'undefined') Object.values(Chart.instances || {}).forEach(ch => { if (ch && ch.$liveTk) aqLiveChart(ch); }); } catch (e) {}
@@ -25218,9 +25397,16 @@ function _aqLiveBoardHero(rows) {
   const pl = rows.reduce((a, r) => a + r.pl, 0), cost = rows.reduce((a, r) => a + r.h.cost, 0), dA = rows.reduce((a, r) => a + (r.dayAmt || 0), 0), dB = rows.reduce((a, r) => a + (r.dayAmt != null ? r.ev - r.dayAmt : 0), 0);
   const ses = aqLiveSes(true), cls = v => v > 0 ? 'up' : v < 0 ? 'down' : '';
   const anyL = rows.find(r => r.live); const ts = anyL ? aqLiveGet(anyL.ticker, true).ts : null;
-  box.innerHTML = `<small>평가수익금 · 보유 ${rows.length}종목</small><b class="${cls(pl)}">${escapeHtml(_pvS(pl))}</b>
-    <span><span class="${cls(pl)}">${aqSgPct(cost > 0 ? pl / cost * 100 : 0, 2)}</span> · ${ses && anyL ? escapeHtml(ses.label) : '오늘'} <span class="${cls(dA)}">${escapeHtml(_pvS(dA))} (${aqSgPct(dB > 0 ? dA / dB * 100 : 0, 2)})</span></span>
-    <em>${ses && anyL ? `${escapeHtml(ses.label)} 지금 가격 · ${escapeHtml(aqLiveAgo(ts))}` : '마지막 종가 기준'}</em>`;
+  if (!box.querySelector(':scope > b.lvh-pl')) box.innerHTML = `<small class="lvh-n"></small><b class="lvh-pl"></b>
+    <span><span class="lvh-pc"></span> · <span class="lvh-s"></span> <span class="lvh-d"></span></span>
+    <em class="lvh-e"></em>`;   // v8.33: 한 번 만들고 숫자만 굴러가며 바뀜
+  const q = c => box.querySelector('.' + c);
+  q('lvh-n').textContent = `평가수익금 · 보유 ${rows.length}종목`;
+  const bP = q('lvh-pl'); bP.className = 'lvh-pl ' + cls(pl); aqRoll(bP, _pvS(pl));
+  const sP = q('lvh-pc'); sP.className = 'lvh-pc ' + cls(pl); aqRoll(sP, aqSgPct(cost > 0 ? pl / cost * 100 : 0, 2));
+  q('lvh-s').textContent = ses && anyL ? ses.label : '오늘';
+  const sD = q('lvh-d'); sD.className = 'lvh-d ' + cls(dA); aqRoll(sD, `${_pvS(dA)} (${aqSgPct(dB > 0 ? dA / dB * 100 : 0, 2)})`);
+  q('lvh-e').textContent = ses && anyL ? `${ses.label} 지금 가격 · ${aqLiveAgo(ts)}` : '마지막 종가 기준';
 }
 function aqLiveBoardRender() {
   const box = document.getElementById('lvFeed'); if (!box) return;
@@ -25247,7 +25433,7 @@ function aqLiveBoardSort() { _lvb.sort = _lvb.sort === 'day' ? 'roi' : 'day'; tr
 function _aqLiveBoardTick() {   // 1분마다 — 다시 그리지 않고 숫자만 (순서는 그대로)
   const box = document.getElementById('lvFeed'); if (!box || !box.offsetParent) return;
   const rows = _lvHoldings().map(_lvRow); _aqLiveBoardHero(rows); const by = {}; rows.forEach(r => { by[r.ticker] = r; });
-  box.querySelectorAll('[data-lpl]').forEach(el => { const r = by[el.dataset.lpl]; if (r) el.textContent = _pvS(r.pl); });
+  box.querySelectorAll('[data-lpl]').forEach(el => { const r = by[el.dataset.lpl]; if (r) aqRoll(el, _pvS(r.pl)); });
 }
 Object.assign(window, { aqLiveBoardRender, aqLiveBoardSort });
 setInterval(() => aqLiveTick(false), 60e3);
@@ -25690,9 +25876,9 @@ function _srBind(resultsEl, list) {
     el.onmouseenter = () => { _aqSearchActiveIdx = Number(el.dataset.sr); resultsEl.querySelectorAll('[data-sr]').forEach(x => x.classList.toggle('active', Number(x.dataset.sr) === _aqSearchActiveIdx)); };
   });
   resultsEl.querySelectorAll('[data-sr-heart]').forEach(b => {
-    b.onclick = (e) => { e.stopPropagation(); const it = list[Number(b.dataset.srHeart)]; if (!it || !window.AqWatchStore) return;
+    b.onclick = async (e) => { e.stopPropagation(); const it = list[Number(b.dataset.srHeart)]; if (!it || !window.AqWatchStore) return;
       if (AqWatchStore.has(it.market, it.ticker)) { AqWatchStore.remove(it.market, it.ticker); b.classList.remove('watched'); }
-      else { if (!AqWatchStore.toggle(it.market, it.ticker)) return; b.classList.add('watched'); }
+      else { if (!(await AqWatchStore.toggle(it.market, it.ticker))) return; b.classList.add('watched'); }
       _srBuildCtx(); };
   });
 }
@@ -26081,11 +26267,11 @@ function _aqLatestClose(tk) {
   try { const ser = findTickerSeries(tk); if (!ser || !ser.rows || !ser.rows.length) return null; const r = ser.rows[ser.rows.length - 1]; const c = Number(r.Close); return isNaN(c) ? null : c; } catch (e) { return null; }
 }
 // v5.01: 하트 = 1주 모의매수. 매수가 입력(기본값 현재가), 취소하면 담지 않음
-function aqAskSimPrice(market, ticker) {
+async function aqAskSimPrice(market, ticker) {
   const cur = _aqLatestClose(ticker);
   const isKR = String(market) === 'KR';
   const def = cur != null ? (isKR ? String(Math.round(cur)) : cur.toFixed(2)) : '';
-  const v = prompt(`${displayName(ticker) || ticker} 모의매수가 (1주 기준)` + (cur != null ? `\n현재가 ${isKR ? Math.round(cur).toLocaleString() : '$' + aqNum(cur, 2)}` : ''), def);
+  const v = await aqPrompt(`${displayName(ticker) || ticker} 모의매수가 (1주 기준)` + (cur != null ? `\n현재가 ${isKR ? Math.round(cur).toLocaleString() : '$' + aqNum(cur, 2)}` : ''), def, { inputmode: 'decimal' });
   if (v === null) return null;
   const px = Number(String(v).replace(/[^0-9.]/g, ''));
   if (!(px > 0)) { alert('매수가를 숫자로 입력하세요'); return null; }
@@ -26732,7 +26918,7 @@ window.moDrawerNav = moDrawerNav;
 const _AQ_AGRP = { report: 'research', maps: 'research', sim: 'research', cmp: 'research', manager: 'ai', review: 'ai', fc: 'ai', brief: 'news', wx: 'news', macro: 'news', f13: 'news' };
 function _aqAgrpDef(g) { const adm = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); return g === 'research' ? 'report' : g === 'news' ? 'brief' : (adm ? 'manager' : 'review'); }
 function _aqNavKey() { const m = document.body.getAttribute('data-mtab'); if (m !== 'auto') return m; return _AQ_AGRP[document.body.getAttribute('data-atab')] || 'news'; }
-function _aqNavPaint() { const k = _aqNavKey(); document.querySelectorAll('.mtab-btn').forEach(b => b.classList.toggle('active', b.dataset.mtab === k)); }
+function _aqNavPaint() { const k = _aqNavKey(); document.querySelectorAll('.mtab-btn').forEach(b => b.classList.toggle('active', b.dataset.mtab === k)); try { const nb = document.getElementById('mobileTabBar'); if (nb) requestAnimationFrame(() => aqSegSync(nb, nb.classList.contains('aq-seg-on'))); } catch (e) {} }   // v8.33: 선택 바탕 미끄럼
 function switchMobileTab(tab) {
   try {   // v7.66: 메뉴 이동을 기록 — 갤럭시 뒤로가기가 앱을 닫지 않고 앞 화면으로
     if (!window._aqTabPop && window._aqTabCur && window._aqTabCur !== tab) history.pushState({ aqTab: tab }, '');
@@ -27402,8 +27588,8 @@ function aqFeedSetTf(tk, tf) {
 }
 window.aqFeedSetTf = aqFeedSetTf;
 
-function aqFeedToggleWatch(tk, btn) {
-  try { AqWatchStore.toggle(getCurrentMarket(), tk); } catch (e) {}
+async function aqFeedToggleWatch(tk, btn) {
+  try { await AqWatchStore.toggle(getCurrentMarket(), tk); } catch (e) {}
   let on = false; try { on = AqWatchStore.has(getCurrentMarket(), tk); } catch (e) {}
   btn.classList.toggle('on', on);
 }
@@ -27473,12 +27659,60 @@ window.aqLeadTake = aqLeadTake;
   }, true);
   document.addEventListener('contextmenu', e => { if (e.target && e.target.closest && e.target.closest('.aq-hold')) e.preventDefault(); }, true);
 })();
+// v8.33: 차트 훑기 — 손가락으로 끌면 위 숫자가 그 날 가격 · 기간 시작 대비
+(function () {
+  let cur = null;
+  const tgt = e => { const c = e.target; if (!c || c.tagName !== 'CANVAS' || e.pointerType === 'pen') return null; const item = c.closest('.feed-item'); if (item) return { c, el: item.querySelector('.feed-chg'), kind: 'feed' }; if (c.id === 'chartCanvas') return { c, el: document.getElementById('modalPrice'), kind: 'modal' }; return null; };
+  const show = (t, e) => {
+    const ch = (typeof Chart !== 'undefined' && Chart.getChart) ? Chart.getChart(t.c) : null; if (!ch || !t.el || !ch.scales || !ch.scales.x) return;
+    const ds = (ch.data.datasets || []).find(d => d.label === '종가') || (ch.data.datasets || [])[0]; if (!ds || !ds.data || !ds.data.length) return;
+    const r = t.c.getBoundingClientRect(); let i = Math.round(ch.scales.x.getValueForPixel(e.clientX - r.left)); i = Math.max(0, Math.min(ds.data.length - 1, i));
+    const v = ds.data[i]; if (v == null || isNaN(v)) return; let b0 = null; for (const x of ds.data) { if (x != null && !isNaN(x)) { b0 = x; break; } }
+    const pc = b0 ? (v / b0 - 1) * 100 : null, lb = String((ch.data.labels || [])[i] || ''), dt = /^\d{4}-\d{2}-\d{2}/.test(lb) ? `${+lb.slice(5, 7)}/${+lb.slice(8, 10)}` : lb.slice(0, 10);
+    const cls = pc > 0 ? 'up' : pc < 0 ? 'down' : '';
+    if (t.el._aqSave == null) { t.el._aqSave = t.el.innerHTML; t.el._aqSaveCls = t.el.className; t.el._aqScrub = 1; }
+    if (t.kind === 'feed') { t.el.className = t.el._aqSaveCls.replace(/\b(up|down|zero)\b/g, '').trim() + ' ' + cls; t.el.textContent = `${dt} · ${fmtPrice(v)}${pc != null ? ' · ' + aqSgPct(pc, 1) : ''}`; }
+    else t.el.innerHTML = `<span class="mp-v">${escapeHtml(fmtPrice(v))}</span><span class="price-chg ${cls}">${pc != null ? aqSgPct(pc, 2) : ''}</span><div class="mp-date">${escapeHtml(dt)} · 차트 시작 대비</div>`;
+  };
+  const end = () => { if (!cur) return; const el = cur.el; cur = null; if (el && el._aqSave != null) { el.innerHTML = el._aqSave; el.className = el._aqSaveCls; el._aqSave = null; el._aqScrub = 0; el._aqRoll = null; } };
+  document.addEventListener('pointerdown', e => { const t = tgt(e); if (!t) return; cur = t; try { t.c.style.touchAction = 'pan-y'; } catch (er) {} show(t, e); }, true);
+  document.addEventListener('pointermove', e => { if (cur) { if (e.target !== cur.c && e.pointerType !== 'mouse') return; show(cur, e); return; } if (e.pointerType === 'mouse') { const t = tgt(e); if (t) { cur = t; show(t, e); } } }, true);
+  ['pointerup', 'pointercancel'].forEach(k => document.addEventListener(k, e => { if (cur && e.pointerType !== 'mouse') end(); }, true));
+  document.addEventListener('pointerout', e => { if (cur && e.pointerType === 'mouse' && e.target === cur.c) end(); }, true);
+})();
+
+// v8.33: 읽어 줄 때 읽고 있는 줄 표시
+const _aqRaN = x => String(x || '').replace(/[\s•·▸▶›→↗()\[\],.!?'"“”‘’:;\-–—]/g, '');
+function _aqRaHi(line) {
+  const sec = _tts.sec; document.querySelectorAll('.aq-ra').forEach(x => x.classList.remove('aq-ra')); if (!sec || !line) return;
+  const key = _aqRaN(line).slice(0, 14); if (key.length < 4) return;
+  let best = null, bl = 1e9; sec.querySelectorAll('.rv4-title, .rv4-sec-body *').forEach(el => { if (el.children.length > 6) return; const t = _aqRaN(el.innerText); if (t.includes(key) && t.length < bl) { best = el; bl = t.length; } });
+  if (!best) return; best.classList.add('aq-ra');
+  try { const r = best.getBoundingClientRect(); if (r.top < 80 || r.bottom > innerHeight - 120) best.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+}
+
+// v8.33: 쪽 점 — 넘겨 보는 카드(오늘의 인사이트)
+function _aqDotsInit(root) {
+  (root || document).querySelectorAll('.fj-hero').forEach(h => {
+    const n = h.children.length; let d = h.nextElementSibling; if (d && d.classList.contains('aq-dots')) d.remove(); if (n < 2) return;
+    d = document.createElement('div'); d.className = 'aq-dots'; d.innerHTML = Array.from({ length: n }, (_, i) => `<button type="button" aria-label="${i + 1}번째" class="${i ? '' : 'on'}"><i></i></button>`).join('');
+    h.after(d); d.querySelectorAll('button').forEach((b, i) => b.onclick = () => { const c = h.children[i]; if (c) h.scrollTo({ left: c.offsetLeft - h.firstElementChild.offsetLeft, behavior: _aqRM() ? 'auto' : 'smooth' }); });
+  });
+}
+document.addEventListener('scroll', e => {
+  const h = e.target; if (!h || !h.classList || !h.classList.contains('fj-hero')) return; const d = h.nextElementSibling; if (!d || !d.classList.contains('aq-dots')) return;
+  const f = h.firstElementChild; if (!f) return; const w = (h.children[1] ? h.children[1].offsetLeft - f.offsetLeft : f.offsetWidth) || 1;
+  const i = Math.max(0, Math.min(h.children.length - 1, Math.round(h.scrollLeft / w))); d.querySelectorAll('button').forEach((b, k) => b.classList.toggle('on', k === i));
+}, true);
+
+// v8.33: 하단 메뉴 · 고르기 버튼 — 화면 크기가 바뀌면 선택 바탕 자리 다시
+window.addEventListener('resize', () => { clearTimeout(window._aqSegRz); window._aqSegRz = setTimeout(() => document.querySelectorAll('.aq-seg-on').forEach(c => { try { aqSegSync(c, false); } catch (e) {} }), 120); });
 function aqBtnLoad(el) { if (!el || !el.classList) return; el.classList.remove('aq-ok'); el.classList.add('aq-ld'); el.setAttribute('aria-busy', 'true'); }
 function aqBtnDone(el, ok, label) {
   if (!el || !el.classList) return; el.classList.remove('aq-ld'); el.removeAttribute('aria-busy');
   if (ok && el.isConnected) { el.classList.add('aq-ok'); if (label) el.textContent = label; el.disabled = true; }
 }
-const AQ_SEG = '.tf-toggle, .feed-tf, .cmp-tf, .fj-chips, .rv-tabs';
+const AQ_SEG = '.tf-toggle, .feed-tf, .cmp-tf, .fj-chips, .rv-tabs, .mobile-tab-bar';   // v8.33: 하단 메뉴도
 const _aqSegPos = {};
 function _aqSegKey(c) { const it = c.closest('.feed-item'); return (c.className.split(' ')[0] || '') + '|' + (c.dataset.target || '') + '|' + (it ? it.dataset.ticker || '' : ''); }
 function _aqSegPlace(ind, p, anim) { ind.style.transition = anim ? '' : 'none'; ind.style.width = p.w + 'px'; ind.style.height = p.h + 'px'; ind.style.transform = `translate(${p.x}px, ${p.y}px)`; }
@@ -29123,22 +29357,22 @@ function _opsMarkRunning(ids, runId) {
 async function aqOpsRun(id) {
   const def = _opsJobDef(id); if (!def) return;
   const p = { job: id };
-  if (def.scanDays) { const v = prompt(`${def.name}을(를) 지금 실행합니다.\n스캔 범위(거래일 수)를 입력하세요. 과거 소급이 필요하면 크게:`, '5'); if (v === null) return; p.scanDays = parseInt(v, 10) || 5; }
-  else if (!confirm(`${def.name}을(를) 지금 실행할까요?`)) return;
+  if (def.scanDays) { const v = await aqPrompt(`${def.name}을(를) 지금 실행할까요?\n스캔 범위(거래일 수) · 과거 소급이 필요하면 크게`, '5', { inputmode: 'numeric', ok: '실행' }); if (v === null) return; p.scanDays = parseInt(v, 10) || 5; }
+  else if (!await aqConfirm(`${def.name}을(를) 지금 실행할까요?`)) return;
   const r = await _opsCall('runJob', p);
   if (!r || !r.ok) { if (r && r.notReady) alert('실행 요청 실패'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
   _opsMarkRunning([id], r.run_id); if (typeof aqToast === 'function') aqToast(`${def.name} 시작`);
 }
 async function aqOpsRunAll(mk) {
   const cfg = _ops.cfg[mk]; const names = cfg.order.map(id => _opsJobDef(id).name);
-  if (!confirm(`${mk === 'us' ? '미국' : '한국'}주식 작업을 아래 순서대로 전부 실행할까요?\n\n${names.map((n, i) => `${i + 1}. ${n}`).join('\n')}`)) return;
+  if (!await aqConfirm(`${mk === 'us' ? '미국' : '한국'}주식 작업을 아래 순서대로 전부 실행할까요?\n\n${names.map((n, i) => `${i + 1}. ${n}`).join('\n')}`)) return;
   const r = await _opsCall('runJob', { job: 'all_' + mk, order: cfg.order.join(','), stopOnFail: cfg.cond.stopOnFail ? 1 : 0 });
   if (!r || !r.ok) { if (r && r.notReady) alert('실행 요청 실패'); else if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; else alert('실행 실패: ' + (r && r.error || '')); return; }
   _opsMarkRunning(cfg.order, r.run_id); if (typeof aqToast === 'function') aqToast('전체 실행 시작');
 }
 async function aqOpsCancel(target) {
   const isAll = target.startsWith('all_'); const def = isAll ? null : _opsJobDef(target);
-  if (!confirm(isAll ? `${target.endsWith('us') ? '미국' : '한국'}주식 작업을 전부 중단할까요? (실행 중인 것은 끊고, 대기 중인 것은 취소)` : `${def ? def.name : target}을(를) 중단할까요?`)) return;
+  if (!await aqConfirm(isAll ? `${target.endsWith('us') ? '미국' : '한국'}주식 작업을 전부 중단할까요? (실행 중인 것은 끊고, 대기 중인 것은 취소)` : `${def ? def.name : target}을(를) 중단할까요?`)) return;
   const r = await _opsCall('cancelJob', { job: target });
   if (!r || !r.ok) { if (typeof handlePasswordError === 'function' && handlePasswordError(r)) return; alert('중단 실패: ' + (r && r.error || '')); return; }
   if (typeof aqToast === 'function') aqToast(`중단 ${r.cancelled}건`);
@@ -29281,7 +29515,7 @@ async function aqAutoBlAdd(sig, tk, btn) {
   aqAutoRender(); aqAutoOpenSheet(sig);
 }
 async function aqAutoBlRemove(sig, tk, reopen) {
-  if (!confirm(`${tk} · ${sig} 제외를 해제할까요?`)) return;
+  if (!await aqConfirm(`${tk} · ${sig} 제외를 해제할까요?`)) return;
   const r = await _opsCall('blacklistRemove', { signal: sig, ticker: tk });
   if (!r || !r.ok) { alert('실패: ' + ((r && r.error) || '')); return; }
   _auto.blacklist = r.blacklist || []; aqAutoRender(); if (reopen) aqAutoOpenSheet(sig);
@@ -29347,7 +29581,7 @@ function aqEngHoldMenu(pid) {
 }
 function aqEngHoldClose() { document.getElementById('engHoldSheet').classList.remove('open'); document.getElementById('engHoldSheetBg').classList.remove('open'); }
 async function aqEngSetAutoSell(pid, on) {
-  if (!on && !confirm('이 종목의 자동매도를 중단할까요?\n이후 매도는 직접 하셔야 합니다.')) return;
+  if (!on && !await aqConfirm('이 종목의 자동매도를 중단할까요?\n이후 매도는 직접 하셔야 합니다.')) return;
   const r = await _opsCall('engineSetAutoSell', { planId: pid, on: on ? '1' : '0' });
   if (!r || !r.ok) { alert((r && r.error) || '실패'); return; }
   aqEngHoldClose(); if (typeof aqToast === 'function') aqToast(on ? '자동매도 다시 켬' : '자동매도 중단 — 직접 관리'); aqEngineLoad();
@@ -29376,8 +29610,8 @@ async function aqEngineToggle(el) {
   const want = el.checked;
   if (want) {
     const dmx = (_eng.data && _eng.data.engine.dailyMax) || 10000;
-    if (!confirm(`자동매매를 켜면 실제 주문이 나갑니다.\n하루 최대 매수 $${Number(dmx).toLocaleString()} · 켜진 신호만 대상\n\n켤까요?`)) { el.checked = false; return; }
-  } else if (!confirm('자동매매를 끌까요?\n걸려 있는 매수 주문은 즉시 취소되고, 예정된 자동 매도도 멈춥니다.')) { el.checked = true; return; }
+    if (!await aqConfirm(`자동매매를 켜면 실제 주문이 나갑니다.\n하루 최대 매수 $${Number(dmx).toLocaleString()} · 켜진 신호만 대상\n\n켤까요?`)) { el.checked = false; return; }
+  } else if (!await aqConfirm('자동매매를 끌까요?\n걸려 있는 매수 주문은 즉시 취소되고, 예정된 자동 매도도 멈춥니다.')) { el.checked = true; return; }
   const r = await _opsCall('engineSet', { mode: want ? 'live' : 'off', confirm: want ? '1' : '' });
   if (!r || !r.ok) { alert('실패: ' + ((r && r.error) || '')); el.checked = !want; return; }
   if (typeof aqToast === 'function') aqToast(want ? '자동매매 켜짐' : '자동매매 꺼짐'); aqEngineLoad();
@@ -29495,13 +29729,13 @@ async function aqGateTossLink() {
 function aqAuthFinish() { aqAuthHide(); _aqRenderAccount(); if (_aqAuth.pendingToss) { _aqAuth.pendingToss = false; } }
 function aqAuthTossFromMy() { _aqAuth.broker = null; _aqRenderAccount(); const g = document.getElementById('aqTossGateCard'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 async function aqAuthLogout() {
-  if (!confirm('로그아웃할까요?')) return;
+  if (!await aqConfirm('로그아웃할까요?')) return;
   try { await apiCall('logout', {}); } catch (e) {}
   _aqSetTok(''); _aqAuth.user = null; _aqAuth.broker = null; _aqSetRole('guest'); _aqRenderAccount(); window.dispatchEvent(new Event('aq:logout')); aqAuthShow('login');
 }
 async function aqAuthChangePw() {
-  const cur = prompt('현재 비밀번호'); if (cur === null) return;
-  const nw = prompt('새 비밀번호 (8자 이상)'); if (nw === null) return;
+  const cur = await aqPrompt('현재 비밀번호', '', { type: 'password' }); if (cur === null) return;
+  const nw = await aqPrompt('새 비밀번호\n8자 이상', '', { type: 'password' }); if (nw === null) return;
   const r = await apiCall('changePassword', { current: cur, new: nw });
   alert(r && r.ok ? '비밀번호가 바뀌었습니다' : ('실패: ' + (r && r.error || '')));
 }
@@ -29544,7 +29778,7 @@ async function aqAdminRefresh() {
   } catch (e) {}
 }
 async function aqAdminToggle(uid, st) {
-  if (!confirm(st === 'disabled' ? '이 계정을 비활성화할까요? (로그인 차단)' : '이 계정을 다시 활성화할까요?')) return;
+  if (!await aqConfirm(st === 'disabled' ? '이 계정을 비활성화할까요? (로그인 차단)' : '이 계정을 다시 활성화할까요?')) return;
   const r = await apiCall('userSetStatus', { user_id: uid, status: st });
   if (!r || !r.ok) alert('실패: ' + (r && r.error || '')); aqAdminRefresh();
 }
@@ -30318,7 +30552,7 @@ function aqSetTossOpen() {
   _setSheet('setTossSheet', true);
 }
 async function aqSetTossUnlink() {
-  if (!confirm('토스 연결을 해제할까요?\n저장된 앱 키가 삭제되고, 보유·매매 데이터는 다시 연결할 때까지 갱신되지 않습니다.')) return;
+  if (!await aqConfirm('토스 연결을 해제할까요?\n저장된 앱 키가 삭제되고, 보유·매매 데이터는 다시 연결할 때까지 갱신되지 않습니다.')) return;
   const r = await apiCall('brokerUnlink', {}); if (!r || !r.ok) { alert('실패: ' + ((r && r.error) || '')); return; }
   const me = await apiCall('me', {}); if (me && me.ok) _aqApplyUser(me.user, me.broker); _setSheet('setTossSheet', false); aqSettingsRender(); if (typeof aqToast === 'function') aqToast('토스 연결 해제됨');
 }
@@ -30468,7 +30702,12 @@ function aqSigSheetRender() {
   const types = getSignalTypes();
   document.getElementById('aqSigList').innerHTML = types.map(sig => `<div class="ar-row sg-row" onclick="aqSigToggle('${sig}')">${_sigMk(sig)}<label>${sig}</label><span class="sg-n">이 종목 ${counts[sig] || 0}회</span><span class="aq-switch"><input type="checkbox" ${_state.signalFilter.has(sig) ? 'checked' : ''} tabindex="-1"><span class="sl"></span></span></div>`).join('');
 }
-function aqSigSheetOpen() { aqSigSheetRender(); document.getElementById('aqSigSheet').classList.add('open'); document.getElementById('aqSigSheetBg').classList.add('open'); }
+function aqSigSheetOpen() {   // v8.33: 필터 버튼 자리에서 펼침 (버튼이 안 보이면 예전처럼 아래 시트)
+  aqSigSheetRender(); const sh = document.getElementById('aqSigSheet'), bg = document.getElementById('aqSigSheetBg'), p = document.getElementById('modalFilterPill');
+  if (p && p.offsetParent) { const r = p.getBoundingClientRect(), up = r.bottom > innerHeight * 0.55; sh.classList.add('aq-pop'); sh.classList.toggle('up', up); sh.style.setProperty('--pt', (r.bottom + 8) + 'px'); sh.style.setProperty('--pb', (innerHeight - r.top + 8) + 'px'); sh.style.setProperty('--pr', Math.max(12, innerWidth - r.right) + 'px'); bg.classList.add('aq-pop-bg'); }
+  else { sh.classList.remove('aq-pop', 'up'); bg.classList.remove('aq-pop-bg'); }
+  sh.classList.add('open'); bg.classList.add('open');
+}
 function aqSigSheetClose() { document.getElementById('aqSigSheet').classList.remove('open'); document.getElementById('aqSigSheetBg').classList.remove('open'); }
 function aqSigToggle(sig) { toggleSignalFilter(sig); aqSigSheetRender(); aqModalDecorate(_state.openTicker); }
 function aqSigAllOn() { getSignalTypes().forEach(x => _state.signalFilter.add(x)); try { applyFilterAndRender(); } catch (e) {} if (_state.openTicker) openChart(_state.openTicker); aqSigSheetRender(); }
@@ -31930,14 +32169,14 @@ async function aqBrRefresh(tk) {
 async function aqBrRequest(tk, focus0, el) {   // v8.30: el = 누른 버튼
   try {   // v6.28 운영: 사상 없이 사지 않기 — 어느 사상으로 사는지 먼저
     await aqStLoad();
-    if (_stc.d && !_stEff(tk) && confirm(`${displayName(tk) || tk}을(를) 어떤 사상으로 사는지 아직 정하지 않았어요.\n지금 정할까요? (취소하면 그대로 심사를 요청해요)`)) { try { document.getElementById('brSheet')?.remove(); } catch (e) {} aqStOpen(tk); return; }
+    if (_stc.d && !_stEff(tk) && await aqConfirm(`${displayName(tk) || tk}을(를) 어떤 사상으로 사는지 아직 정하지 않았어요.\n지금 정할까요? (취소하면 그대로 심사를 요청해요)`)) { try { document.getElementById('brSheet')?.remove(); } catch (e) {} aqStOpen(tk); return; }
   } catch (e) {}
-  const focus = (prompt('이번 심사에서 꼭 확인할 것이 있으면 한 줄로 적어 주세요 (비우면 전체 심사)', focus0 || '') || '').trim();   // v8.03: 선제안 받기는 경로를 미리 채움   // v6.38: 요청 목적 → AI가 먼저 답함
+  const focus = ((await aqPrompt('이번 심사에서 꼭 확인할 것\n비우면 전체를 심사해요', focus0 || '', { ghost: true, multi: true, ok: '요청', cancel: '전체 심사' })) || '').trim();   // v8.03: 선제안 받기는 경로를 미리 채움   // v6.38: 요청 목적 → AI가 먼저 답함
   aqBtnLoad(el);   // v8.30
   let r = null; try { r = await apiCall('buyReviewRequest', { ticker: tk, focus }); } catch (e) {}
   aqBtnDone(el, r && r.ok && !r.needReport && !r.held && !r.watched, '요청됨');
   if (r && r.needReport) {   // v7.00: 보고서가 없거나 많이 낡음 → 한 번 확인으로 보고서 → 매수심사
-    if (!confirm(r.error)) return;
+    if (!await aqConfirm(r.error)) return;
     try { r = await apiCall('buyReviewRequest', { ticker: tk, focus, withReport: 1 }); } catch (e) { r = null; }
     if (r && r.ok) { aqToast('보고서부터 시작했어요 · 끝나면 매수심사가 이어져요'); try { document.getElementById('brSheet')?.remove(); } catch (e) {} aqBrRefresh(tk); return; }
   }
@@ -31948,13 +32187,13 @@ async function aqBrRequest(tk, focus0, el) {   // v8.30: el = 누른 버튼
   aqBrRefresh(tk);
 }
 async function aqBrQCancel(id, tk) {   // v6.68
-  if (!confirm('대기열에서 뺄까요?')) return;
+  if (!await aqConfirm('대기열에서 뺄까요?')) return;
   let r = null; try { r = await apiCall('buyReviewQueueCancel', { id }); } catch (e) {}
   aqToast(r && r.ok ? '뺐어요' : ((r && r.error) || '빼지 못했어요')); aqBrRefresh(tk);
 }
 window.aqBrQCancel = aqBrQCancel;
 async function aqBrCancelAsk(id, tk) {
-  if (!confirm('진행 중인 매수심사를 취소할까요?\n취소하면 다른 종목을 바로 요청할 수 있어요.')) return;
+  if (!await aqConfirm('진행 중인 매수심사를 취소할까요?\n취소하면 다른 종목을 바로 요청할 수 있어요.')) return;
   try { await apiCall('buyReviewCancel', { id }); } catch (e) {}
   aqToast('취소했어요'); aqBrRefresh(tk);
 }
@@ -32254,7 +32493,7 @@ async function aqBrOrderGo(rid, mode) {
   aqMcSheetClose(); aqToast(r.mode === 'live' ? '주문을 넣었어요' : '모의 주문을 넣었어요'); aqBrOpen(rid);
 }
 async function aqBrOrderCancel(iid, rid) {
-  if (!confirm('남은 주문을 취소할까요?\n체결된 것은 그대로 둬요.')) return;
+  if (!await aqConfirm('남은 주문을 취소할까요?\n체결된 것은 그대로 둬요.')) return;
   let r = null; try { r = await apiCall('buyReviewOrderCancel', { id: iid }); } catch (e) {}
   aqToast(r && r.ok ? '주문을 취소했어요' : ((r && r.error) || '취소하지 못했어요')); aqBrOpen(rid);
 }
@@ -32561,7 +32800,7 @@ function _fjDraw() {
   const cd = I.map((x, i) => [x, i]).filter(([x]) => x.kind !== '상시' && keep(x)).sort((a, b) => (b[0].gap || 0) - (a[0].gap || 0));
   if (cd.length) h += `<div class="fj-h"><b>지켜보는 일</b><small>행동이 급한 순</small></div><div class="fj-cds">${cd.map(([x, i]) => `<button type="button" class="fj-cd" onclick="aqFjOpen(${i})"><div class="r1"><small>${_fcE(x.kind)}</small><span><em>${_fcE(x.vote || '')}</em>${_fjDd(x)}</span></div><div class="r2"><b>${_fcE(x.name)}</b>${_fjStageDots(x.stage)}</div><p>${_fcE(x.f1 || '')}</p><div class="fj-r3">${_fjGauge(x)}${x.act ? `<span class="ap">${_fcE(x.act)}</span>` : ''}<span class="sg">${_fcE(x.stage || '')}</span></div></button>`).join('')}</div>`;
   if (!ins.length && !th.length && !cd.length) h += `<div class="fj-empty">해당하는 항목이 없어요</div>`;
-  box.innerHTML = h + last + '</div>';
+  box.innerHTML = h + last + '</div>'; try { _aqDotsInit(box); } catch (e) {}   // v8.33: 쪽 점
 }
 function aqFjF(f) { _fj.f = f; _fjDraw(); }
 function aqFjMore() { _fj.more = true; _fjDraw(); }
@@ -32854,7 +33093,7 @@ function _mg3Wait() {
   const G = _mg3G(); const L = [['research', '종목마다 오늘 소식 조사'], ['rreview', '조사 검수'], ['judge', '판단 셋이 따로 판단'], ['review', '고른 판단 검수'], ['account', '계좌 전체로 다시 보기']];
   const ix = G.status === 'waiting' ? -1 : L.findIndex(x => x[0] === G.status);
   const T = G.T ? _mg3HM(_mg3KD(new Date(G.T).getTime())) : '23:00';
-  return `<div class="mg3-c mg3-hero"><div class="k"><span>오늘 밤 결론</span></div><div class="hl">${T}에 나와요</div><div class="mg3-steps" style="margin-top:18px">${L.map(([k, t], i) => `<div class="${i < ix ? 'done' : i === ix ? 'cur' : ''}"><i></i>${t}</div>`).join('')}</div></div>`;
+  return `<div class="mg3-c mg3-hero"><div class="k"><span>오늘 밤 결론</span></div><div class="hl">${T}에 나와요</div><div class="mg3-steps" style="margin-top:18px">${L.map(([k, t], i) => `<div class="${i < ix ? 'done' : i === ix ? 'cur' : ''}"><i></i><span class="${i === ix ? 'aq-think' : ''}">${t}</span></div>`).join('')}</div></div>`;
 }
 // 계좌 묶음 비중 — 지금 · 제안대로 · 내 결정(거부 뺌)
 function _mg3Live(it) { return it.status !== 'invalid' && !(it.status === 'cancelled' && /다시 판단|바뀜|계좌 종합/.test(it.note || '')); }
@@ -33124,8 +33363,9 @@ function _mg3Next() {
 function _mg3Undo(id, msg, can) {
   document.getElementById('mg3Ud')?.remove(); clearTimeout(_mg3F.ud);
   const u = document.createElement('div'); u.id = 'mg3Ud'; u.className = 'mg3-ud';
-  u.innerHTML = `<span>${_mg3E(msg)}</span>${can ? `<button onclick="aqMgr3Undo(${id})">되돌리기</button><i></i>` : ''}`;
+  u.innerHTML = `<span>${_mg3E(msg)}</span>${can ? `<button onclick="aqMgr3Undo(${id})">되돌리기<span class="n">5</span></button><i></i>` : ''}`;
   document.body.appendChild(u);
+  if (can) { let n = 5; const nEl = u.querySelector('.n'); const iv = setInterval(() => { n--; if (!u.isConnected || n <= 0) { clearInterval(iv); return; } if (nEl) nEl.textContent = String(n); }, 1000); }   // v8.33: 남은 초
   _mg3F.ud = setTimeout(() => { u.remove(); if (!document.getElementById('mg3Fl') || _mg3F.q.every(q => _mg3F.done.includes(q))) aqMgr3Close(); }, 5000);
 }
 async function aqMgr3Undo(id) {
@@ -33489,7 +33729,7 @@ async function aqMgrDecide(id) {   // v7.00: 정할 것 — 받기 = 승인 → 
   aqToast(r && r.ok ? '시작했어요 · 앞 작업이 있으면 끝나는 대로' : ((r && r.error) || '시작하지 못했어요')); aqMgrRender(true);
 }
 async function aqMgrCardOk(tk) {
-  if (tk === '*' && !confirm('포지션 카드 초안을 모두 확정할까요?\n확정 뒤에는 이탈선을 올리기만 해요.')) return;
+  if (tk === '*' && !await aqConfirm('포지션 카드 초안을 모두 확정할까요?\n확정 뒤에는 이탈선을 올리기만 해요.')) return;
   let r = null; try { r = await apiCall('managerCardConfirm', { ticker: tk, mkt: _mg.mk }); } catch (e) {}
   aqToast(r && r.ok ? `확정했어요${r.confirmed ? ' · ' + r.confirmed.length + '종목' : ''}` : '확정하지 못했어요');
   if (tk !== '*') aqMgrStock(tk);
@@ -34014,7 +34254,7 @@ function aqRvSort(v) { aqHoldScroll(); _rv.sort = v; try { localStorage.setItem(
 function aqRvOpen(id, kind) { if (kind === 'sell') { aqToast('AI 매도심사 리포트는 아직 준비 중이에요'); return; } aqBrOpen(id); }
 async function aqRvAgain(tk, kind) {
   if (kind === 'sell') { aqToast('AI 매도심사는 아직 준비 중이에요'); return; }
-  if (!confirm(`${displayName(tk) || tk} AI 매수심사를 다시 요청할까요?`)) return;
+  if (!await aqConfirm(`${displayName(tk) || tk} AI 매수심사를 다시 요청할까요?`)) return;
   await aqBrRequest(tk); setTimeout(() => aqReviewRender(true), 1500);
 }
 Object.assign(window, { aqReviewRender, aqRvKind, aqRvSort, aqRvOpen, aqRvAgain, aqBfRvSkip });
@@ -34419,12 +34659,12 @@ async function aqGdRunRefresh(force) {
 }
 async function aqGdRunGo() {
   const st = _gdr.st || {}; if (st.block) { aqToast(st.block); return; }
-  if (!confirm(`오늘 ${st.target === 'PM' ? '저녁' : '아침'} 가이드를 지금 기준으로 고칠까요?\n바뀐 것만 고치고 보통 5~15분 걸려요.`)) return;
+  if (!await aqConfirm(`오늘 ${st.target === 'PM' ? '저녁' : '아침'} 가이드를 지금 기준으로 고칠까요?\n바뀐 것만 고치고 보통 5~15분 걸려요.`)) return;
   let r = null; try { r = await apiCall('guideRunRequest', {}); } catch (e) {}
   if (!r || !r.ok) aqToast((r && r.error) || '요청하지 못했어요');
   aqGdRunRefresh(true);
 }
-async function aqGdRunCancel(id) { if (!confirm('가이드 고치기를 취소할까요?')) return; try { await apiCall('guideRunCancel', { id }); } catch (e) {} aqToast('취소했어요'); aqGdRunRefresh(true); }
+async function aqGdRunCancel(id) { if (!await aqConfirm('가이드 고치기를 취소할까요?')) return; try { await apiCall('guideRunCancel', { id }); } catch (e) {} aqToast('취소했어요'); aqGdRunRefresh(true); }
 function aqGuideToggle(k) { _gd.open[k] = !_gd.open[k]; aqGuideRender(); }
 Object.assign(window, { aqGuideRender, aqGuideSel, aqGuideToggle, aqGdRunGo, aqGdRunCancel, aqGdRunRefresh });
 
@@ -34507,7 +34747,7 @@ async function _gdDoAccept(item, risk) {
   let r = await apiCall('guideAccept', { item: JSON.stringify(item), risk: risk ? '1' : '0' });
   if (r && !r.ok && r.error === 'limit') {
     const o0 = (r.oldest || [])[0]; const nm = o0 ? `${o0.tk ? (displayName(o0.tk) || o0.tk) + ' · ' : ''}${aqKrText(o0.title || '')} (${o0.accepted || ''}부터)` : '가장 오래된 지침';   // v6.38: 무엇을 정리하는지 보여 줌
-    if (!confirm(`따르는 지침이 ${r.limit}개예요.\n가장 오래된 지침을 그만 따르고 이 지침을 따를까요?\n\n그만 따를 지침: ${nm}`)) return;
+    if (!await aqConfirm(`따르는 지침이 ${r.limit}개예요.\n가장 오래된 지침을 그만 따르고 이 지침을 따를까요?\n\n그만 따를 지침: ${nm}`)) return;
     const oldest = o0 || (_gd.accList || []).filter(x => x.status === 'active' || x.status === 'hit').sort((a, b) => String(a.accepted_at).localeCompare(String(b.accepted_at)))[0];
     if (oldest) await apiCall('guideCancel', { key: oldest.key });
     r = await apiCall('guideAccept', { item: JSON.stringify(item), risk: risk ? '1' : '0' });
@@ -34669,21 +34909,21 @@ function _gdActHuman(a) {   // 조건 실행의 동작 한 줄
   return [a.act, a.ticker].filter(Boolean).join(' ');
 }
 async function aqGdQConfirm(id) { let r = null; try { r = await apiCall('aiQueueConfirm', { id }); } catch (e) {} aqToast(r && r.ok ? '실행했어요 — 앞 작업이 있으면 끝나는 대로 시작해요' : ((r && r.error) || '실행하지 못했어요')); await aqGuideLoadAcc(true); aqGuideRender(); }
-async function aqGdQCancel(id, quiet) { if (!quiet && !confirm('이 AI 요청을 대기열에서 뺄까요?')) return; try { await apiCall('aiQueueCancel', { id }); } catch (e) {} await aqGuideLoadAcc(true); aqGuideRender(); }
+async function aqGdQCancel(id, quiet) { if (!quiet && !await aqConfirm('이 AI 요청을 대기열에서 뺄까요?')) return; try { await apiCall('aiQueueCancel', { id }); } catch (e) {} await aqGuideLoadAcc(true); aqGuideRender(); }
 async function aqGdRun(key, i) {
-  if (!confirm('위험을 키우는 설정이에요. 지금 실행할까요?')) return;
+  if (!await aqConfirm('위험을 키우는 설정이에요. 지금 실행할까요?')) return;
   let r = null; try { r = await apiCall('guideAct', { key, op: 'run', args: JSON.stringify({ i }) }); } catch (e) {}
   aqToast(r && r.ok ? '실행했어요' : ((r && r.error) || '실행하지 못했어요')); await aqGuideLoadAcc(true); aqGuideRender(); if (_gmSheetOpen()) _gmSheetRender();
 }
 async function aqGdAct(key, op, args) {
-  if (op === 'stop' && !confirm('이 지침을 그만 따를까요?\n가이드가 바꾼 자동매매 설정은 원래대로 돌아가요.')) return;
-  if (op === 'done' && !confirm('직접 처리했다고 표시하고 끝낼까요?\n가이드가 바꾼 자동매매 설정은 원래대로 돌아가요.')) return;
+  if (op === 'stop' && !await aqConfirm('이 지침을 그만 따를까요?\n가이드가 바꾼 자동매매 설정은 원래대로 돌아가요.')) return;
+  if (op === 'done' && !await aqConfirm('직접 처리했다고 표시하고 끝낼까요?\n가이드가 바꾼 자동매매 설정은 원래대로 돌아가요.')) return;
   let r = null; try { r = await apiCall('guideAct', { key, op, args: JSON.stringify(args || {}) }); } catch (e) {}
   aqToast(r && r.ok ? ({ done: '끝냈어요', extend: '7일 연장했어요', resume: '계속 지켜볼게요', edit: '기준을 고쳤어요', stop: '그만 따르기로 했어요', coexist: '둘 다 두기로 했어요', ack: '계속 따를게요' }[op] || '처리했어요') : ((r && r.error) || '처리하지 못했어요'));
   await aqGuideLoadAcc(true); aqGuideRender();
   if (_gmSheetOpen()) { if (r && r.ok && (op === 'done' || op === 'stop')) aqGuideSheetClose(); else _gmSheetRender(); }   // v6.20
 }
-function aqGdEdit(key, path, cur) { const v = prompt('새 기준값을 넣어 주세요', String(cur)); if (v == null || v.trim() === '' || isNaN(Number(v.replace(/,/g, '')))) return; aqGdAct(key, 'edit', { path, value: Number(v.replace(/,/g, '')) }); }
+async function aqGdEdit(key, path, cur) { const v = await aqPrompt('새 기준값을 넣어 주세요', String(cur), { inputmode: 'decimal' }); if (v == null || v.trim() === '' || isNaN(Number(v.replace(/,/g, '')))) return; aqGdAct(key, 'edit', { path, value: Number(v.replace(/,/g, '')) }); }
 async function _gdClientRun(key, c) {   // 앱이 실행하는 동작 (관심 추가) → 결과를 서버에 기록
   let ok = false, note = '';
   try { if (c.act === '관심 추가' && window.AqWatchStore && c.ticker) { AqWatchStore.add(/^\d{6}$/.test(c.ticker) ? 'KR' : 'US', c.ticker, c.col || 'short'); ok = true; } else note = '관심 목록을 열지 못함'; } catch (e) { note = String(e && e.message || e).slice(0, 100); }
@@ -35827,14 +36067,14 @@ async function aqSecEvents(kind) {
 async function aqSecAck(id, learn) { try { await apiCall('secAck', { id, learn: learn ? 1 : 0 }); } catch (e) {} aqSecLoad(); try { aqNotiLoad(); } catch (e) {} }
 async function aqSecAckAll() {   // v6.02
   const ids = ((_sec.data && _sec.data.alerts) || []).filter(a => a.status === 'open' && a.code !== 'filehash').map(a => a.id);
-  if (!ids.length || !confirm(`열린 경고 ${ids.length}건을 모두 확인함으로 처리할까요?\nIP·기기는 등록하지 않아요.`)) return;
+  if (!ids.length || !await aqConfirm(`열린 경고 ${ids.length}건을 모두 확인함으로 처리할까요?\nIP·기기는 등록하지 않아요.`)) return;
   for (const id of ids) { try { await apiCall('secAck', { id, learn: 0 }); } catch (e) {} }
   if (typeof aqToast === 'function') aqToast(`${ids.length}건 확인함`);
   aqSecLoad(); try { aqNotiLoad(); } catch (e) {}
 }
 async function aqSecEmergency(op) {
   const msg = { logoutAll: '모든 사용자를 로그아웃할까요?\n본부장님도 다시 로그인해야 해요.', pauseAuto: '자동매매를 즉시 멈출까요?\n엔진이 꺼지고 1분 안에 걸린 주문이 취소돼요.', unlinkToss: '모든 사용자의 토스 연결을 끊을까요?\n서버가 토스를 부를 수 없게 돼요(키는 보관).', relinkToss: '끊었던 토스 연결을 다시 켤까요?' }[op];
-  if (!confirm(msg)) return;
+  if (!await aqConfirm(msg)) return;
   try { const r = await apiCall('secEmergency', { op }); if (typeof aqToast === 'function') aqToast(r && r.ok ? r.msg : '실패: ' + ((r && r.error) || '')); } catch (e) {}
   if (op === 'logoutAll') { setTimeout(() => location.reload(), 800); return; }
   aqSecLoad();
@@ -35843,7 +36083,7 @@ async function aqSecLab(op) {
   try { const r = await apiCall(op === 'stop' ? 'labStop' : 'labStart', { hours: 1 }); if (r && r.ok === false && typeof aqToast === 'function') aqToast('주피터 ' + (op === 'stop' ? '끄기' : '켜기') + ' 실패: ' + (r.error || '')); } catch (e) {}
   aqSecLoad();
 }
-async function aqSecDeploy() { if (!confirm('지금 서버 파일 상태를 정상 기준으로 등록할까요?\n(방금 받은 파일을 올린 뒤 누르세요)')) return; try { await apiCall('deployAck', {}); if (typeof aqToast === 'function') aqToast('새 기준으로 등록했어요'); } catch (e) {} aqSecLoad(); }
+async function aqSecDeploy() { if (!await aqConfirm('지금 서버 파일 상태를 정상 기준으로 등록할까요?\n(방금 받은 파일을 올린 뒤 누르세요)')) return; try { await apiCall('deployAck', {}); if (typeof aqToast === 'function') aqToast('새 기준으로 등록했어요'); } catch (e) {} aqSecLoad(); }
 async function aqSecTg() { try { const r = await apiCall('tgTest', {}); if (typeof aqToast === 'function') aqToast(r && r.ok ? '텔레그램으로 확인 메시지를 보냈어요' : (r && !r.chat ? '봇에게 텔레그램 메시지를 먼저 한 번 보내 주세요' : '텔레그램 전송 실패 — 토큰 확인')); } catch (e) {} aqSecLoad(); }
 function aqSecRender() {
   const box = document.getElementById('setSecBody'); if (!box) return;
@@ -36334,7 +36574,7 @@ async function _stAct(op, val, cid) {
 async function _stAfter(r, sym) {
   const n = (r && r.notes) || [];
   if (n.includes('auto_sell_off')) aqToast('엔진이 산 종목이라 그 종목 자동매도 예약을 껐어요');
-  if (n.includes('stage_reduce') && sym && confirm(`계획 이탈로 정했어요.\n단계도 '줄이는 중'으로 바꿀까요?\n(반등 구간에서 나눠 파는 정리 계획이 만들어졌어요)`)) { try { await apiCall('stanceAct', { op: 'set', val: JSON.stringify({ sym, stage: 'reduce' }) }); } catch (e) {} }
+  if (n.includes('stage_reduce') && sym && await aqConfirm(`계획 이탈로 정했어요.\n단계도 '줄이는 중'으로 바꿀까요?\n(반등 구간에서 나눠 파는 정리 계획이 만들어졌어요)`)) { try { await apiCall('stanceAct', { op: 'set', val: JSON.stringify({ sym, stage: 'reduce' }) }); } catch (e) {} }
   await aqStLoad(true);
   try { if (_gdIsAsg()) aqGuideRender(); } catch (e) {}
   if (_stc.sym && _stc.mode && document.getElementById('stSheet')?.classList.contains('open')) { _stc.f = _stF(_stc.sym); _stR(); }
@@ -36688,7 +36928,7 @@ function _stConvHtml() {
 }
 async function aqStConv(k) {
   const r = _stRow(_stc.sym) || {}; if ((r.conv || '') === k) return;
-  if (k === 'fail' && !confirm(`${_stName(_stc.sym)} — 계획 이탈로 정할까요?\n단계도 '줄이는 중'으로 바뀌고, 반등 구간에서 나눠 파는 정리 계획이 만들어져요. 매수심사는 막혀요.`)) return;
+  if (k === 'fail' && !await aqConfirm(`${_stName(_stc.sym)} — 계획 이탈로 정할까요?\n단계도 '줄이는 중'으로 바뀌고, 반등 구간에서 나눠 파는 정리 계획이 만들어져요. 매수심사는 막혀요.`)) return;
   const res = await _stAct('set', Object.assign({ sym: _stc.sym, conv: k }, k === 'fail' && r.stage !== 'reduce' ? { stage: 'reduce' } : {}, _stc.tid ? { tid: _stc.tid } : {})); if (!res) return; _stc.tid = '';
   const M = _stM(); aqToast(k ? `${M.convs[k]} · ${(M.conv_rule || {})[k] || ''}` : '평가를 비웠어요', 3600);
 }
