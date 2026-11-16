@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '8.33';   // v8.33: 2·3차 교체(시안 승인 11/16) — 확인 · 입력창은 앱 안 시트(브라우저 창 없앰) · 알림은 아래에 쌓임(누르면 펼침 · ×로 치움) · AI 매니저 되돌리기 남은 초 · 하루 흐름 · 오늘 밤 단계 표시(체크 · 지금 단계 빛) · 접이식 칸 부드럽게 · 보고서 읽어 줄 때 읽는 줄 표시 · 차트를 끌면 그 날 가격 · 지금 가격 숫자 굴러가며 바뀜 · 신호 필터는 버튼에서 펼침 · 메뉴 펼침 · 상세 스위치 · 설정 체크는 스위치 · 인사이트 · PPT 쪽 점 · 하단 메뉴 선택 바탕 미끄럼 · v8.32: 종목 페이지 '오늘의 주요 뉴스'를 밸런스처럼 카드 안에(안쪽 여백 18 · 카드 사이 10) · v8.31: 부품 정리(시안 승인 11/16) — 토큰(글자 흐림 #85858a · 강조 옅음 · 모서리 16 · 움직임 120/200/320ms) · 돈이 나가는 버튼은 길게 눌러 확정(주문 넣기 · 승인 · 모두 승인 · 조건부 승인) · 기다리는 글자에 옅은 빛 · 받기 · 매수심사 요청 · 지도 만들기 버튼은 눌림 → 처리 중 → 요청됨 · 3M/6M/1Y · 예보 거르기 · 심사 탭은 선택 배경이 미끄러지듯 · 휴대폰 '동작 줄이기'면 움직임 없음 · v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '8.34';   // v8.34: AI 매수심사 영역 비공개(AQ_BUYREVIEW_ON) — 매수분석 탭 · 심사 요청 · 리포트 · 다시 볼 날 · 마감 알림 숨김 · 선제안 '받기'는 관심 종목에 넣고 바로 맞춤 · 규칙형 알림 숨김(AQ_RULE_UI_ON) — 급락장 플레이북 · 급락 기준 · 추세 이탈 카드 · 장중 급변 알림 · 관심 종목 줄에 AI 매니저 결론 한 줄(누르면 판단 근거) · v8.33: 2·3차 교체(시안 승인 11/16) — 확인 · 입력창은 앱 안 시트(브라우저 창 없앰) · 알림은 아래에 쌓임(누르면 펼침 · ×로 치움) · AI 매니저 되돌리기 남은 초 · 하루 흐름 · 오늘 밤 단계 표시(체크 · 지금 단계 빛) · 접이식 칸 부드럽게 · 보고서 읽어 줄 때 읽는 줄 표시 · 차트를 끌면 그 날 가격 · 지금 가격 숫자 굴러가며 바뀜 · 신호 필터는 버튼에서 펼침 · 메뉴 펼침 · 상세 스위치 · 설정 체크는 스위치 · 인사이트 · PPT 쪽 점 · 하단 메뉴 선택 바탕 미끄럼 · v8.32: 종목 페이지 '오늘의 주요 뉴스'를 밸런스처럼 카드 안에(안쪽 여백 18 · 카드 사이 10) · v8.31: 부품 정리(시안 승인 11/16) — 토큰(글자 흐림 #85858a · 강조 옅음 · 모서리 16 · 움직임 120/200/320ms) · 돈이 나가는 버튼은 길게 눌러 확정(주문 넣기 · 승인 · 모두 승인 · 조건부 승인) · 기다리는 글자에 옅은 빛 · 받기 · 매수심사 요청 · 지도 만들기 버튼은 눌림 → 처리 중 → 요청됨 · 3M/6M/1Y · 예보 거르기 · 심사 탭은 선택 배경이 미끄러지듯 · 휴대폰 '동작 줄이기'면 움직임 없음 · v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -5066,6 +5066,7 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
 .mg3-ask { display: flex; align-items: center; gap: 12px; min-height: 64px; border-top: 1px solid rgba(255,255,255,.06); } .mg3-ask .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; } .mg3-ask .tx b { font-size: 15px; color: #fff; font-weight: 500; } .mg3-ask .tx span { font-size: 12px; color: #8a8a8a; }
 .mg3-ask button, .mg3-ask .chip { font: inherit; font-size: 13px; color: #e4e4e4; background: none; border: 1px solid rgba(255,255,255,.16); border-radius: 10px; height: 38px; padding: 0 16px; cursor: pointer; white-space: nowrap; } .mg3-ask .chip { display: flex; align-items: center; border-color: rgba(255,255,255,.08); color: #9d9d9d; cursor: default; }
 .mg3-gk { font-size: 12px; color: #8a8a8a; margin: 16px 0 4px; }
+.mg3-op.ww { flex-wrap: wrap; row-gap: 0; padding: 11px 0 14px; } .mg3-op.ww .wl { flex: 0 0 100%; padding-left: 46px; margin-top: 2px; font-size: 12.5px; line-height: 1.5; color: #8a8a8a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }   /* 2026-11-16: 관심 종목 결론 한 줄 */
 .mg3-op { display: flex; align-items: center; gap: 12px; min-height: 56px; border-top: 1px solid rgba(255,255,255,.06); cursor: pointer; }
 .mg3-op .lg { width: 34px; height: 34px; flex: none; } .mg3-op .tk { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; } .mg3-op .tk b { font-size: 15px; color: #fff; font-weight: 500; } .mg3-op .tk span { font-size: 12.5px; }
 .mg3-op .wx { color: #9d9d9d; display: flex; } .mg3-op .r { text-align: right; display: flex; flex-direction: column; gap: 1px; } .mg3-op .r span { font-size: 13px; color: #e4e4e4; } .mg3-op .r small { font-size: 11px; color: #6a6a6a; white-space: nowrap; }
@@ -9483,6 +9484,9 @@ html.aq-wide .aq-split.drag::before, html.aq-wide .aq-split.drag::after { backgr
 /* 설정 › 넓은 화면 2단 켜기 · 끄기 (이 기기에 저장) */
 function aqWideCapable() { try { var a = Math.max(screen.width, screen.height), b = Math.min(screen.width, screen.height); return a >= 700 && b >= 600; } catch (e) { return false; } }
 function aqWideOn() { try { return localStorage.getItem('aq_wide') !== '0'; } catch (e) { return true; } }
+// 2026-11-16 (본부장님: "AI매수심사 영역을 다 비공개로" · "규칙형 알림 다 필요 없어. 급락 급등 다 알고싶지 않아"): 지우지 않고 숨김 — true로 바꾸면 예전 화면 그대로
+const AQ_BUYREVIEW_ON = false;   // AI 매수심사(요청 · 리포트 · 매수분석 탭 · 다시 볼 날 · 마감 알림)
+const AQ_RULE_UI_ON = false;     // 규칙형 알림(급락장 플레이북 · 급락 기준 · 추세 이탈 카드 · 장중 급변 알림)
 // v7.02: 신호 자동 연계 — 켠 신호 유형은 발견에 뜨면 AI 보고서(없거나 많이 낡았을 때) → AI 매수심사까지 확인 없이 (미국 · 주문은 리포트에서 승인)
 var _aqLink = { on: {}, signals: [], state: {} };
 async function aqLinkLoad() {
@@ -26916,7 +26920,7 @@ window.moDrawerNav = moDrawerNav;
 
 // v7.38: 연구 · AI · 뉴스 메뉴는 모두 AI 탭(data-mtab=auto) 위에서 서브탭 묶음만 다름
 const _AQ_AGRP = { report: 'research', maps: 'research', sim: 'research', cmp: 'research', manager: 'ai', review: 'ai', fc: 'ai', brief: 'news', wx: 'news', macro: 'news', f13: 'news' };
-function _aqAgrpDef(g) { const adm = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); return g === 'research' ? 'report' : g === 'news' ? 'brief' : (adm ? 'manager' : 'review'); }
+function _aqAgrpDef(g) { const adm = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); return g === 'research' ? 'report' : g === 'news' ? 'brief' : (adm ? 'manager' : (AQ_BUYREVIEW_ON ? 'review' : 'fc')); }
 function _aqNavKey() { const m = document.body.getAttribute('data-mtab'); if (m !== 'auto') return m; return _AQ_AGRP[document.body.getAttribute('data-atab')] || 'news'; }
 function _aqNavPaint() { const k = _aqNavKey(); document.querySelectorAll('.mtab-btn').forEach(b => b.classList.toggle('active', b.dataset.mtab === k)); try { const nb = document.getElementById('mobileTabBar'); if (nb) requestAnimationFrame(() => aqSegSync(nb, nb.classList.contains('aq-seg-on'))); } catch (e) {} }   // v8.33: 선택 바탕 미끄럼
 function switchMobileTab(tab) {
@@ -27612,7 +27616,7 @@ const _lead = { d: null, ld: 0 };
 function _leadFeedHtml(x, tka) {
   const sc = (x.screen || []).slice(0, 2).join(' · ');
   const R = _leadRec(x);
-  return `<div class="feed-lead"><div class="p">${escapeHtml((x.path || [])[0] || '')}</div><div class="r">${_vgRoom(x)}</div><button type="button" class="lr" onclick="aqLeadRec('${tka}')"><span>AI매니저 추천도</span><b class="n${R.n}" style="color:${BAL_COL[R.n]}">${R.nm}</b>${_balMeter(R.n)}</button>${R.a.why ? `<div class="lwhy">${escapeHtml(R.a.why)}</div>` : ''}<div class="b"><span>${escapeHtml(sc)}</span><button type="button" onclick="aqLeadTake('${tka}')">받기 → 매수심사</button></div></div>`;
+  return `<div class="feed-lead"><div class="p">${escapeHtml((x.path || [])[0] || '')}</div><div class="r">${_vgRoom(x)}</div><button type="button" class="lr" onclick="aqLeadRec('${tka}')"><span>AI매니저 추천도</span><b class="n${R.n}" style="color:${BAL_COL[R.n]}">${R.nm}</b>${_balMeter(R.n)}</button>${R.a.why ? `<div class="lwhy">${escapeHtml(R.a.why)}</div>` : ''}<div class="b"><span>${escapeHtml(sc)}</span><button type="button" onclick="aqLeadTake('${tka}')">${AQ_BUYREVIEW_ON ? '받기 → 매수심사' : '받기'}</button></div></div>`;
 }
 // v8.26 (본부장님: "선제안은 AI매니저가 직접 판단해야"): 서버 후보를 AI매니저(예약 작업 'AQUAMEL 선제안 판단')가 보고 올린 종목만 · 단계 필수 · 권장 · 고려 · 관망 (밸런스 게이지 5칸)
 const LEAD_N = { '필수': 5, '권장': 4, '고려': 3, '관망': 2 };
@@ -27626,7 +27630,7 @@ function aqLeadRec(tk) {   // v8.28: 선제안 시트 — 왜 이 단계인가(�
     ${sec('왜 이 단계인가', E(a.argue || a.why))}${sec('걸리는 점', E(a.risk))}${sec('틀렸다고 볼 신호', E(a.wrong))}
     ${sec('경로', (x.path || []).slice(0, 3).map(E).join('<br>'))}${sec('남은 여지', _vgRoom(x))}${sec('받쳐 주는 숫자', E((x.screen || []).join(' · ') || '없음'))}
     ${b ? sec('계좌 밸런스', E(`넣으면 좋은 점 ${b.n}/4 · 계좌와 상관 ${b.corr} · 계좌가 크게 빠진 날 평균 ${b.xw >= 0 ? '+' : ''}${b.xw}%`)) : ''}
-    <button type="button" class="lrs-take" onclick="document.getElementById('mcSheet')?.remove();aqLeadTake('${escapeAttr(tk)}')">받기 → 매수심사</button>`);
+    <button type="button" class="lrs-take" onclick="document.getElementById('mcSheet')?.remove();aqLeadTake('${escapeAttr(tk)}')">${AQ_BUYREVIEW_ON ? '받기 → 매수심사' : '받기'}</button>`);
 }
 window.aqLeadRec = aqLeadRec;
 function aqLeadTake(tk, el) {   // v8.30: el = 누른 버튼(눌림 → 처리 중 → 요청됨)
@@ -30816,12 +30820,13 @@ function setAiSubtab(x) { aqHoldScroll();
   const allowed = ['brief', 'manager', 'report', 'review', 'macro', 'maps', 'sim', 'cmp', 'wx', 'f13', 'fc'];   // v7.38: 연구(report · maps · sim · cmp) · AI(manager · review) · 뉴스(brief · macro)
   if (!allowed.includes(x)) x = 'brief';
   if (x === 'manager' && !isAdmin) x = 'review';
+  if (x === 'review' && !AQ_BUYREVIEW_ON) x = isAdmin ? 'manager' : 'fc';   // 2026-11-16 (본부장님: "AI매수심사 영역을 다 비공개로"): 매수분석 탭 닫음 — 예전 링크는 AI 매니저 · 예보로
   if (x === 'wx' && !isAdmin) x = 'brief';   // v7.42: 거시 날씨는 관리자 계좌 종목 기준   // v6.82: AI 매니저는 관리자 계좌 기준
   document.body.setAttribute('data-atab', x);
   if (x === 'report') { try { const R = _state.reports || {}; if (!Object.keys(R.US || {}).length && !Object.keys(R.KR || {}).length) { _aqRepRetry = 0; fetchReportsIndex().catch(() => {}); } } catch (e) {} }   // v8.15: 목록이 비어 있으면 탭을 열 때 다시 받음
   try {   // v7.38: 메뉴 묶음별 서브탭
     const g = _AQ_AGRP[x]; localStorage.setItem('aq_agrp_' + g, x);
-    const T = { research: [['report', 'AI 리포트'], ['maps', '종목 지도'], ['sim', '모의 매수'], ['cmp', '비교 분석']], ai: (isAdmin ? [['manager', 'AI 매니저']] : []).concat([['review', 'AI 매수분석'], ['fc', 'AI 예보']]), news: [['brief', 'AI 브리핑']].concat(isAdmin ? [['wx', '거시 날씨']] : []).concat([['macro', '주간 이슈'], ['f13', '기관 13F']]) }[g];
+    const T = { research: [['report', 'AI 리포트'], ['maps', '종목 지도'], ['sim', '모의 매수'], ['cmp', '비교 분석']], ai: (isAdmin ? [['manager', 'AI 매니저']] : []).concat((AQ_BUYREVIEW_ON ? [['review', 'AI 매수분석']] : []).concat([['fc', 'AI 예보']])), news: [['brief', 'AI 브리핑']].concat(isAdmin ? [['wx', '거시 날씨']] : []).concat([['macro', '주간 이슈'], ['f13', '기관 13F']]) }[g];
     const row = document.getElementById('aiSubRow'); if (row) row.innerHTML = T.map(([v, t]) => `<button class="xtab-btn${v === x ? ' active' : ''}" data-atab="${v}" onclick="setAiSubtab('${v}')">${t}</button>`).join('');
     _aqNavPaint();
   } catch (e) {}
@@ -31986,6 +31991,7 @@ async function _brAuto(day) {
 function _bfRvSkipGet() { try { return JSON.parse(localStorage.getItem('aq_rv_skip') || '{}') || {}; } catch (e) { return {}; } }
 function aqBfRvSkip(id, el) { const m = _bfRvSkipGet(); m[id] = Date.now(); try { localStorage.setItem('aq_rv_skip', JSON.stringify(m)); } catch (e) {} try { el.closest('.bf-r').remove(); } catch (e) {} aqToast('넘겼어요'); }
 async function _brReviewDue(mk, day) {
+  if (!AQ_BUYREVIEW_ON) return [];   // 2026-11-16: 매수심사 다시 볼 날 · 만료 줄 숨김
   if (document.body.getAttribute('data-role') !== 'admin') return [];
   let R = _rv.data && _rv.mk === mk && Date.now() - (_rv.ts || 0) < 5 * 60e3 && Array.isArray(_rv.data.items) ? _rv.data : null;
   if (!R) { try { const r = await apiCall('reviewList', { market: mk, kind: 'all', history: 0, limit: 100 }); if (r && r.ok && Array.isArray(r.items)) { R = r; _rv.data = r; _rv.mk = mk; _rv.ts = Date.now(); } } catch (e) {} }
@@ -32156,7 +32162,16 @@ function _brSlot(tk) {
   else { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}', '', this)">AI 매수심사 요청</button>`; c = rv && rv.status === 'failed' ? `지난 요청 실패 — ${escapeHtml(String(rv.error || '이유 미상').slice(0, 40))}` : ''; }
   slot.innerHTML = b; if (cap) cap.textContent = c;
 }
+// 2026-11-16 (본부장님: "AI매수심사 영역을 다 비공개로"): 지도 위 줄은 보유 · 관심 종목만 'AI 매니저 의견' (심사 요청 · 리포트 버튼 없음)
+function _brOffSlot(tk) {
+  const slot = document.getElementById('brBuySlot'), cap = document.getElementById('brCap'); if (!slot) return;
+  const T = String(tk || '').toUpperCase(), mk = /^\d[0-9A-Z]{5}$/.test(T) ? 'KR' : 'US'; let held = false, watch = false;
+  try { held = ((simulatePortfolioDaily() || {}).holdings || []).some(h => String(h.ticker).toUpperCase() === T); } catch (e) {}
+  try { watch = !_MG_OFF[mk] && !!(window.AqWatchStore && AqWatchStore.has(mk, T)); } catch (e) {}   // 관심 종목은 AI 매니저가 켜진 시장만
+  slot.innerHTML = held || watch ? `<button type="button" class="br-done" onclick="aqMgrStockFrom('${escapeAttr(T)}')">AI 매니저 의견</button>` : ''; if (cap) cap.textContent = '';
+}
 async function aqBrRefresh(tk) {
+  if (!AQ_BUYREVIEW_ON) { _brv.tk = tk; clearTimeout(_brv.poll); _brOffSlot(tk); return; }
   _brv.tk = tk; let r = null; try { r = await apiCall('buyReviewStatus', { ticker: tk }); } catch (e) {}
   if (!r || !r.ok) { const slot = document.getElementById('brBuySlot'); if (slot) slot.innerHTML = `<button type="button" class="br-off" onclick="aqToast('관리자 계정에서만 쓸 수 있어요')">AI 매수심사 요청</button>`; return; }
   const was = (_brv.st[tk] || {}).review; _brv.st[tk] = r; _brSlot(tk);
@@ -32166,7 +32181,22 @@ async function aqBrRefresh(tk) {
   const wait = busy(r.review) ? (r.review.status === 'running' ? 8000 : 20000) : (r.active || r.queued) ? 30000 : 0;   // 다른 종목이 끝나는 것도 기다림
   if (wait) _brv.poll = setTimeout(() => { if (_brv.tk === tk && document.getElementById('brBuySlot')) aqBrRefresh(tk); }, wait);
 }
+// 2026-11-16 (본부장님: "AI매수심사 영역을 다 비공개로"): 매수심사가 닫힌 뒤 — 서버가 선제안 종목을 관심 종목(user_data WATCHLIST)에 넣고 watched로 답함
+//   앱은 바뀔 때마다 목록 전체를 올리므로(_aqWatchPushLater), 답을 받는 즉시 같은 종목을 로컬 목록에도 넣음 → 뒤에 올라가는 목록에 늘 그 종목이 들어 있어 서버 줄이 지워지지 않음
+function _brWatchMirror(tk) {
+  const T = String(tk || '').toUpperCase(), mk = /^\d[0-9A-Z]{5}$/.test(T) ? 'KR' : 'US';
+  try { if (T && window.AqWatchStore && !AqWatchStore.has(mk, T)) AqWatchStore.add(mk, T, AqWatchStore.DEFAULT_COL); } catch (e) {}
+}
+async function _brTakeOff(tk, focus, el) {
+  aqBtnLoad(el);
+  let r = null; try { r = await apiCall('buyReviewRequest', { ticker: tk, focus: focus || '' }); } catch (e) {}
+  if (r && r.watched) _brWatchMirror(tk);   // 다른 일보다 먼저 (알림 · 화면 이동 전)
+  aqBtnDone(el, !!(r && r.watched), '관심 종목');
+  if (r && (r.held || r.watched)) { aqToast(r.error); try { aqMgrStockFrom(tk); } catch (e) {} return; }
+  aqToast((r && r.error) || '처리하지 못했어요');
+}
 async function aqBrRequest(tk, focus0, el) {   // v8.30: el = 누른 버튼
+  if (!AQ_BUYREVIEW_ON) return _brTakeOff(tk, focus0, el);
   try {   // v6.28 운영: 사상 없이 사지 않기 — 어느 사상으로 사는지 먼저
     await aqStLoad();
     if (_stc.d && !_stEff(tk) && await aqConfirm(`${displayName(tk) || tk}을(를) 어떤 사상으로 사는지 아직 정하지 않았어요.\n지금 정할까요? (취소하면 그대로 심사를 요청해요)`)) { try { document.getElementById('brSheet')?.remove(); } catch (e) {} aqStOpen(tk); return; }
@@ -32498,6 +32528,7 @@ async function aqBrOrderCancel(iid, rid) {
   aqToast(r && r.ok ? '주문을 취소했어요' : ((r && r.error) || '취소하지 못했어요')); aqBrOpen(rid);
 }
 async function aqBrOpen(id) {
+  if (!AQ_BUYREVIEW_ON) return;   // 2026-11-16: 매수심사 리포트 닫음 (들어오는 곳은 모두 숨김)
   let r = null; try { r = await apiCall('buyReviewGet', { id }); } catch (e) {}
   if (!r || !r.ok || !r.review) { aqToast('리포트를 불러오지 못했어요'); return; }
   _brv.cur = r.review; _brv.plans = r.plans || []; _brv.orders = r.orders || []; _brv.active = r.active || null; _brv.more = false; document.getElementById('brSheet')?.remove();
@@ -32864,7 +32895,7 @@ function aqFcOpen(i) {
   else if ((c.hurt_tks || []).length || (c.help_tks || []).length) h += `<div class="fc-h">걸린 종목</div><div class="fc-chips">${(c.hurt_tks || []).map(t => `<span style="color:#ff8787">${_fcE(t)}</span>`).join('')}${(c.help_tks || []).map(t => `<span style="color:#69db7c">${_fcE(t)}</span>`).join('')}</div>`;
   if ((c.pre || []).length || (c.out_tks || []).length) {   // v7.75: 예보 미리 담기 — 보유 · 관심 밖 덕 볼 후보
     const P = c.pre || []; const opw = o => !o ? '심사 대기' : o;
-    h += `<div class="fc-h">덕 볼 후보</div><div class="fc-tks">${P.length ? P.map(x => `<div class="it" onclick="openChart('${escapeAttr(x.tk)}')" style="cursor:pointer"><span class="lg">${_mgLogo(x.tk)}</span><b>${_fcE(x.tk)}</b><span style="width:auto">20일 ${x.r20 != null ? (x.r20 >= 0 ? '+' : '') + x.r20 + '%' : '—'}</span><em class="${x.op === '매수' ? 'g' : ''}" style="width:auto;min-width:62px">${_fcE(opw(x.op))}</em></div>`).join('') : ''}${!P.length ? `<div class="nt" style="padding-top:12px">${_fcE((c.out_tks || []).join(' · '))} — 조건(덕 볼 확률 60%+ · 반영 50% 이하 · 2~14일 앞)에 맞으면 매수심사</div>` : '<div class="nt">크기는 첫 진입 한도의 절반 · 빗나가면 다음 날 정리 후보</div>'}</div>`;
+    h += `<div class="fc-h">덕 볼 후보</div><div class="fc-tks">${P.length ? P.map(x => `<div class="it" onclick="openChart('${escapeAttr(x.tk)}')" style="cursor:pointer"><span class="lg">${_mgLogo(x.tk)}</span><b>${_fcE(x.tk)}</b><span style="width:auto">20일 ${x.r20 != null ? (x.r20 >= 0 ? '+' : '') + x.r20 + '%' : '—'}</span><em class="${x.op === '매수' ? 'g' : ''}" style="width:auto;min-width:62px">${_fcE(opw(x.op))}</em></div>`).join('') : ''}${!P.length ? `<div class="nt" style="padding-top:12px">${_fcE((c.out_tks || []).join(' · '))} — 조건(덕 볼 확률 60%+ · 반영 50% 이하 · 2~14일 앞)${AQ_BUYREVIEW_ON ? '에 맞으면 매수심사' : ''}</div>` : '<div class="nt">크기는 첫 진입 한도의 절반 · 빗나가면 다음 날 정리 후보</div>'}</div>`;
   }
   if (D.admin && (c.def || c.use || c.inv)) {
     h += `<div class="fc-h">할 일</div><div class="fc-do">${c.def ? `<div class="r"><small>방어</small><p>${_fcE(c.def)}</p>${A && A.cut ? `<i>1% 한도 안으로 약 $${A.cut.toLocaleString()} 덜기</i>` : ''}</div>` : ''}${c.use ? `<div class="g"><small>역이용</small><p>${_fcE(c.use)}</p></div>` : ''}${c.inv && !/^없음/.test(c.inv) ? `<div><small>인버스 · 제안만</small><p>${_fcE(c.inv)}</p></div>` : ''}</div>`;
@@ -33181,18 +33212,37 @@ function _mg3Queue() {
   return h + '</div>';
 }
 function _mg3Ask() {
-  const D = _mg.d; const DC = (D.decide || []).filter(x => x.id); if (!DC.length) return '';
+  const D = _mg.d; const DC = (D.decide || []).filter(x => x.id && (AQ_BUYREVIEW_ON || x.kind !== 'review')); if (!DC.length) return '';   // 2026-11-16: 매수심사 요청은 뺌
   let h = '<div class="mg3-c" style="padding-bottom:8px"><div class="hd"><b>AI가 묻는 것</b></div>';
   DC.forEach(x => {
-    const lab = x.kind === 'report+review' ? '보고서 + 매수심사' : x.kind === 'review' ? '매수심사' : (x.act === '보고서 갱신' ? '보고서 갱신' : '보고서');
+    const lab = x.kind === 'report+review' ? (AQ_BUYREVIEW_ON ? '보고서 + 매수심사' : '보고서') : x.kind === 'review' ? '매수심사' : (x.act === '보고서 갱신' ? '보고서 갱신' : '보고서');
     const go = x.status === 'queued' && !x.confirmed;
     h += `<div class="mg3-ask"><span class="tx"><b>${_mg3E(_mgTk(x.tk))} ${lab} 받을까요</b><span>${_mg3E(_mgTx(x.why || ''))}</span></span>${go ? `<button onclick="aqMgrDecide(${x.id})">받기</button>` : `<span class="chip">${{ queued: '대기', started: '작성 중', done: '완료', failed: '실패', skipped: '넘김', cancelled: '취소' }[x.status] || '—'}</span>`}</div>`;
   });
   return h + '</div>';
 }
 // AI가 보는 내 종목
+// 2026-11-16 (본부장님: "AI매수심사 영역을 다 비공개로" — 관심 종목은 AI 매니저가 같이 판단): 서버 mgr.watch_why → 관심 종목 줄에 결론 한 줄 · 누르면 판단 근거(제안과 같은 부품) · 없으면 예전 그대로
+function _mg3WW() { const G = _mg3G(), L = G && G.watch_why; if (!Array.isArray(L) || !L.length) return null; const m = {}; L.forEach(x => { if (x && x.tk) m[String(x.tk).toUpperCase()] = x; }); return Object.keys(m).length ? m : null; }
+function _mg3WwLine(x) { const W = (x && x.why) || {}; const t = String(_mgTx(W['상황'] || W['이유'] || '') || '').trim().split('\n')[0].replace(/^(.+?[.!?。])\s.*$/, '$1'); return t || String((x && x.state) || ''); }
+function aqMgr3WatchWhy(tk) {
+  const T = String(tk || '').toUpperCase(), x = (_mg3WW() || {})[T]; if (!x) { aqMgrStock(T); return; }
+  let el = document.getElementById('mg3Fl');
+  if (!el) { el = document.createElement('div'); el.id = 'mg3Fl'; el.className = 'mg3-fl'; document.body.appendChild(el); }
+  document.getElementById('mg3Bt')?.remove();
+  const S = _mgStk(T);
+  let h = `<div class="top"><div class="aq-uni-gripwrap"><div class="aq-uni-grip" aria-hidden="true"></div></div><button class="aq-uni-x" aria-label="닫기" onclick="aqMgr3Close()">${_mg3Svg('M6 6l12 12M18 6 6 18', 20, 2)}</button><div class="pg"></div></div><div class="bd">`;
+  h += `<div class="who"><span class="lg">${_mgLogo(T)}</span><div><small>${_mg3E(S.name || _mgTk(T))} · 관심 종목</small><b>${_mg3E(x.op || '')}</b></div></div>`;
+  h += aqMiniChartHtml(T, '');
+  h += _mg3WhyHtml(x.why || {}, x.op || '');
+  h += `<button class="more" onclick="aqMgrStock('${escapeAttr(T)}')">판단 근거 전체 ›</button></div>`;
+  el.innerHTML = h; el.scrollTop = 0;
+}
+window.aqMgr3WatchWhy = aqMgr3WatchWhy;
 function _mg3Ops() {
-  const O = ((_mg.d && _mg.d.opinions) || []).slice(); if (!O.length) return '';
+  const O = ((_mg.d && _mg.d.opinions) || []).slice(); const WW = _mg3WW();
+  if (WW) Object.keys(WW).forEach(t => { if (!O.some(o => String(o.tk).toUpperCase() === t)) O.push({ tk: t, op: WW[t].op || '대기', held: false }); });   // 의견 목록에 없는 관심 종목도 '관심'에
+  if (!O.length) return '';
   const W = ((_mj.d && _mj.d.last && _mj.d.last.stocks) || {});
   const grp = o => /매도/.test(o.op) ? 0 : /매수/.test(o.op) ? 1 : o.op === '보유' ? 2 : (o.op === '대기' && !o.held) ? 3 : 4;
   const K = ['줄임', '늘림', '그대로', '관심', '보류'];
@@ -33200,7 +33250,8 @@ function _mg3Ops() {
   K.forEach((k, j) => {
     const L = O.filter(o => grp(o) === j).sort((a, b) => Math.abs(b.ret || 0) - Math.abs(a.ret || 0)); if (!L.length) return;
     h += `<div class="mg3-gk">${k} ${L.length}</div>`;
-    L.forEach(o => { const w = (W[o.tk] || {}).w;
+    L.forEach(o => { const w = (W[o.tk] || {}).w; const ww = WW && !o.held ? WW[String(o.tk).toUpperCase()] : null;
+      if (ww) { const ln = _mg3WwLine(ww); h += `<div class="mg3-op ww" onclick="aqMgr3WatchWhy('${escapeAttr(o.tk)}')"><span class="lg">${_mgLogo(o.tk)}</span><span class="tk"><b>${_mg3E(_mgTk(o.tk))}</b><span style="color:#8a8a8a">관심</span></span>${w ? `<span class="wx" aria-label="${_mg3E(w)}">${_mjIc(w, 18)}</span>` : ''}<span class="r"><span>${_mg3E(ww.op || o.op)}</span><small>${_mg3E([o.votes || (ww.why || {})['표'], o.prev ? `어제 ${o.prev}` : ''].filter(Boolean).join(' · '))}</small></span>${ln ? `<span class="wl">${_mg3E(ln)}</span>` : ''}</div>`; return; }
       h += `<div class="mg3-op" onclick="aqMgrStock('${escapeAttr(o.tk)}')"><span class="lg">${_mgLogo(o.tk)}</span><span class="tk"><b>${_mg3E(_mgTk(o.tk))}</b><span class="${o.held ? (o.ret >= 0 ? 'mg3-up' : 'mg3-dn') : ''}" style="${o.held ? '' : 'color:#8a8a8a'}">${o.held ? _brP(o.ret) : '관심'}</span></span>${w ? `<span class="wx" aria-label="${_mg3E(w)}">${_mjIc(w, 18)}</span>` : ''}<span class="r"><span>${_mg3E(o.op)}</span><small>${_mg3E([o.votes, o.prev ? `어제 ${o.prev}` : ''].filter(Boolean).join(' · '))}</small></span></div>`; });
   });
   return h + '</div>';
@@ -33314,6 +33365,27 @@ function _mg3Impact(it) {
   else if (buys.length) { const nw = buys.filter(g => !_mgStk(g.tk).held); cells.push([nw.length ? '첫 진입' : '사는 돈', _mgM(buys.reduce((a, g) => a + g.qty * g.price, 0)), '']); }
   return `<div class="mg3-imp" style="grid-template-columns:repeat(${cells.length},minmax(0,1fr))">${cells.map(([k, v, c]) => `<div><small>${_mg3E(k)}</small><b class="${c}">${_mg3E(v)}</b></div>`).join('')}</div>`;
 }
+// 2026-11-16 (본부장님: "AI매수심사 영역을 다 비공개로" — 관심 종목은 AI 매니저 통합 화면으로): 제안 '하나씩 결정'의 판단 근거 부품 — 관심 종목(mgr.watch_why)도 같은 것으로
+function _mg3WhyHtml(W, op0) {
+  let h = '';
+  const vt = String(W['표'] || ''); const m = /(\d+):(\d+)/.exec(vt);
+  const dots = m ? `<span class="dots">${Array.from({ length: +m[1] }, () => '<i></i>').join('')}${Array.from({ length: +m[2] }, () => '<i class="o"></i>').join('')}</span>` : '';
+  const op = op0 || '';
+  const chips = [vt ? `<span>${dots}판단 셋 ${_mg3E(vt)}</span>` : '', W['다시 판단'] ? `<span>${_mg3Svg('M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6', 13)}00:00 다시 판단</span>` : '',
+    W['어제와 같음'] ? '<span>어제와 같음</span>' : W['어제'] ? `<span>어제 ${_mg3E(W['어제'])} → ${_mg3E(op)}</span>` : ''].filter(Boolean).join('');
+  if (chips) h += `<div class="chips">${chips}</div>`;
+  if ((W['점검'] || []).length) h += `<div class="mg3-ck"><small>확인할 점 ${W['점검'].length} · 서버 점검</small>${W['점검'].map(x => `<span>${_mg3E(x)}</span>`).join('')}</div>`;   // v7.60: 근거와 결론이 맞는지 서버가 본 것
+  h += `<p class="per">${_mg3E(_mgTx(W['설득'] || W['상황'] || ''))}</p>` + _mg3Rel(W['예보관계'], 12);   // v8.30
+  const DS = W['반대 표']; if (DS && (DS.why || DS.op)) h += `<div class="dis"><small>반대한 1표${DS.op ? ' · ' + _mg3E(DS.op) : ''}</small><span>${_mg3E(_mgTx(DS.why || ''))}</span></div>`;
+  const rows = [];
+  if (W['설득'] && W['상황']) rows.push(['상황', W['상황'], 0]);
+  if (W['바뀐 것']) rows.push(['바뀐 것', W['바뀐 것'], 0]);
+  if (W['계좌 종합'] && W['계좌 종합']['처리'] && W['계좌 종합']['처리'] !== '그대로') rows.push(['계좌 종합', `${W['계좌 종합']['처리']}${W['계좌 종합']['이유'] ? ' — ' + W['계좌 종합']['이유'] : ''}`, 0]);
+  (W['반대 사실'] || []).forEach(x => rows.push(['반대', x, 1]));
+  if (W['못 연 근거']) rows.push(['못 연 근거', W['못 연 근거'], 0]);
+  if (rows.length) h += `<div class="rows">${rows.map(([k, v, r]) => `<div><small class="${r ? 'r' : ''}">${k}</small><span>${_mg3E(_mgTx(v))}</span></div>`).join('')}</div>`;
+  return h;
+}
 function _mg3Page() {
   const el = document.getElementById('mg3Fl'); if (!el) return;
   const id = _mg3F.q[_mg3F.i]; const it = _mg3It(id);
@@ -33330,22 +33402,7 @@ function _mg3Page() {
       return `${j ? '<span class="bar"></span>' : ''}<div class="leg"><span class="n">${j + 1}</span><div><b>${_mg3E(_mgTk(g.tk))} ${g.qty}주 <span class="${sell ? 'sell' : 'buy'}">${sell ? '매도' : S.held ? '추가매수' : '매수'}</span></b><small>${S.held ? `${aqNum(S.qty || 0, 0)}주 · 수익 ${_brP(o.ret)} · ` : ''}${_mgPx(g.price)}</small></div></div>`; }).join('')}</div>`;
   }
   h += it.legs.map(g => aqMiniChartHtml(g.tk, set ? _mgTk(g.tk) : '')).join('');   // v7.68: 발견 피드 간단 차트 (세트는 종목마다)
-  const vt = String(W['표'] || ''); const m = /(\d+):(\d+)/.exec(vt);
-  const dots = m ? `<span class="dots">${Array.from({ length: +m[1] }, () => '<i></i>').join('')}${Array.from({ length: +m[2] }, () => '<i class="o"></i>').join('')}</span>` : '';
-  const op = (_mgOp(it.legs[0].tk) || {}).op || '';
-  const chips = [vt ? `<span>${dots}판단 셋 ${_mg3E(vt)}</span>` : '', W['다시 판단'] ? `<span>${_mg3Svg('M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6', 13)}00:00 다시 판단</span>` : '',
-    W['어제와 같음'] ? '<span>어제와 같음</span>' : W['어제'] ? `<span>어제 ${_mg3E(W['어제'])} → ${_mg3E(op)}</span>` : ''].filter(Boolean).join('');
-  if (chips) h += `<div class="chips">${chips}</div>`;
-  if ((W['점검'] || []).length) h += `<div class="mg3-ck"><small>확인할 점 ${W['점검'].length} · 서버 점검</small>${W['점검'].map(x => `<span>${_mg3E(x)}</span>`).join('')}</div>`;   // v7.60: 근거와 결론이 맞는지 서버가 본 것
-  h += `<p class="per">${_mg3E(_mgTx(W['설득'] || W['상황'] || ''))}</p>` + _mg3Rel(W['예보관계'], 12);   // v8.30
-  const DS = W['반대 표']; if (DS && (DS.why || DS.op)) h += `<div class="dis"><small>반대한 1표${DS.op ? ' · ' + _mg3E(DS.op) : ''}</small><span>${_mg3E(_mgTx(DS.why || ''))}</span></div>`;
-  const rows = [];
-  if (W['설득'] && W['상황']) rows.push(['상황', W['상황'], 0]);
-  if (W['바뀐 것']) rows.push(['바뀐 것', W['바뀐 것'], 0]);
-  if (W['계좌 종합'] && W['계좌 종합']['처리'] && W['계좌 종합']['처리'] !== '그대로') rows.push(['계좌 종합', `${W['계좌 종합']['처리']}${W['계좌 종합']['이유'] ? ' — ' + W['계좌 종합']['이유'] : ''}`, 0]);
-  (W['반대 사실'] || []).forEach(x => rows.push(['반대', x, 1]));
-  if (W['못 연 근거']) rows.push(['못 연 근거', W['못 연 근거'], 0]);
-  if (rows.length) h += `<div class="rows">${rows.map(([k, v, r]) => `<div><small class="${r ? 'r' : ''}">${k}</small><span>${_mg3E(_mgTx(v))}</span></div>`).join('')}</div>`;
+  h += _mg3WhyHtml(W, (_mgOp(it.legs[0].tk) || {}).op || '');   // 2026-11-16: 관심 종목 판단 근거와 같은 부품
   if (!set) h += _mg3Lad(it);
   h += _mg3Impact(it);
   h += `<button class="more" onclick="aqMgrStock('${escapeAttr(it.legs[0].tk)}')">판단 근거 전체 ›</button></div>`;
@@ -33552,12 +33609,12 @@ function _mgHtml() {
     h += '</div>';
   }
   // v7.00: 정할 것 — 보고서 · 매수심사 받기(받기 = 승인 → 바로 시작) · 포지션 카드 초안 확정
-  const DC = (D.decide || []).filter(x => x.id), DR = D.card_drafts || [];
+  const DC = (D.decide || []).filter(x => x.id && (AQ_BUYREVIEW_ON || x.kind !== 'review')), DR = AQ_BUYREVIEW_ON ? (D.card_drafts || []) : [];   // 2026-11-16: 매수심사 요청 · 포지션 카드 초안 확정 숨김
   if (DC.length || DR.length) {
     const col = (t, s2) => `<span style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1"><span class="nm">${t}</span><span class="sub" style="white-space:normal">${s2}</span></span>`;
     h += `<div class="mg-op" style="margin-top:14px"><div class="h"><b>정할 것</b></div><div style="margin-top:10px">`;
     DC.forEach(x => {
-      const lab = x.kind === 'report+review' ? '보고서 + 매수심사' : x.kind === 'review' ? '매수심사' : (x.act === '보고서 갱신' ? '보고서 갱신' : '보고서');
+      const lab = x.kind === 'report+review' ? (AQ_BUYREVIEW_ON ? '보고서 + 매수심사' : '보고서') : x.kind === 'review' ? '매수심사' : (x.act === '보고서 갱신' ? '보고서 갱신' : '보고서');
       const stt = x.status === 'queued' && !x.confirmed ? `<button class="mg-ok" style="margin-left:auto" onclick="aqMgrDecide(${x.id})">받기</button>` : `<span class="mg-chip" style="margin-left:auto">${{ queued: '대기', started: '작성 중', done: '완료', failed: '실패', skipped: '넘김', cancelled: '취소' }[x.status] || '—'}</span>`;
       h += `<div class="mg-row"><span class="lg">${_mgLogo(x.tk)}</span>${col(`${escapeHtml(_mgTk(x.tk))} · ${lab}`, escapeHtml(_mgTx(x.why || '')))}${stt}</div>`;
     });
@@ -33915,11 +33972,11 @@ function _mgStockHtml(r) {
     const AC = A.card || {}; const rs = AC.raised; const k = CD && CD.stop && CD.target && now > CD.stop && CD.target > now ? (CD.target - now) / (now - CD.stop) : null;
     h += `<div class="br-sec">포지션 카드${CD && CD.status === 'draft' ? ' · 초안' : ''}</div><div class="br-card">`
       + (A['상황'] ? `<div class="br-ln"><span>상황</span><b>${escapeHtml(_mgTx(A['상황']))}</b></div>` : '')
-      + (CD && CD.stop ? `<div class="br-st"><span class="k">이탈선</span><span><b>${_brPx(mk, CD.stop)}</b><small>${rs ? `${_brPx(mk, rs[0])}에서 올림` : '이 아래로 마감하면 줄여요'}</small></span><b class="mu">${now ? _brP((CD.stop / now - 1) * 100) : ''}</b></div>` : '')
+      + (AQ_BUYREVIEW_ON && CD && CD.stop ? `<div class="br-st"><span class="k">이탈선</span><span><b>${_brPx(mk, CD.stop)}</b><small>${rs ? `${_brPx(mk, rs[0])}에서 올림` : '이 아래로 마감하면 줄여요'}</small></span><b class="mu">${now ? _brP((CD.stop / now - 1) * 100) : ''}</b></div>` : '')
       + (CD && CD.target ? `<div class="br-st"><span class="k">목표</span><span><b>${_brPx(mk, CD.target)}</b><small>${k != null ? `벌 돈 대 잃을 돈 ${k.toFixed(1)}배` : ''}</small></span><b class="mu">${now ? _brP((CD.target / now - 1) * 100) : ''}</b></div>` : '')
       + (CD && CD.thesis ? `<div class="br-ln"><span>산 이유</span><b>${escapeHtml(_mgTx(CD.thesis))}</b></div>` : '')
       + (A['보고서 상태'] ? `<div class="br-ln"><span>보고서</span><b>${escapeHtml(_mgTx(A['보고서 상태']))}</b></div>` : '')
-      + (CD && CD.status === 'draft' ? `<div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="mg-ok" onclick="aqMgrCardOk('${escapeAttr(tk)}')">확정</button></div>` : '')
+      + (AQ_BUYREVIEW_ON && CD && CD.status === 'draft' ? `<div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="mg-ok" onclick="aqMgrCardOk('${escapeAttr(tk)}')">확정</button></div>` : '')
       + '</div>';
   }
   // 할 일
@@ -33949,7 +34006,7 @@ function _mgStockHtml(r) {
     return dr < ds && rz ? `바로 위가 저항선 ${_brPxS(mk, rz[0])}~${_brPxS(mk, rz[1])}` : s ? `바로 아래 지지선 ${_brPxS(mk, s[0])}~${_brPxS(mk, s[1])}` : ''; })();
   const rs = [];
   const sh5 = sm && sm.h && sm.h['5'], sh10 = sm && sm.h && sm.h['10'];
-  if (sm && bs) rs.push(['📊', `비슷했던 ${sm.n}번은 20일 뒤 보통 <b class="${_brC(sm.median)}">${_brPf(sm.median)}</b> (평소 ${_brPf(bs.median)})${sh5 && sh10 ? `<small class="br-rsub">5일 뒤 <b class="${_brC(sh5.median)}">${_brPf(sh5.median)}</b> · 10일 뒤 <b class="${_brC(sh10.median)}">${_brPf(sh10.median)}</b></small>` : ''}`, 'mgD1']);
+  if (AQ_BUYREVIEW_ON && sm && bs) rs.push(['📊', `비슷했던 ${sm.n}번은 20일 뒤 보통 <b class="${_brC(sm.median)}">${_brPf(sm.median)}</b> (평소 ${_brPf(bs.median)})${sh5 && sh10 ? `<small class="br-rsub">5일 뒤 <b class="${_brC(sh5.median)}">${_brPf(sh5.median)}</b> · 10일 뒤 <b class="${_brC(sh10.median)}">${_brPf(sh10.median)}</b></small>` : ''}`, 'mgD1']);
   if (rp) rs.push(['📍', `${rp}${near ? `, ${near}` : ''}`, 'mgD3']);
   if (A['이유']) rs.push(['🔍', escapeHtml(A['이유']), 'mgD2']);
   if (rs.length) h += `<div class="br-sec">이유</div><div class="br-card">${rs.map(([i, t, id]) => `<div class="br-rs" onclick="aqBrGo('${id}')"><i>${i}</i><span>${t}</span><em>›</em></div>`).join('')}</div>`;
@@ -33979,7 +34036,7 @@ function _mgStockHtml(r) {
   h += `<div class="br-sec">자세히 보기</div>`;
   if (sm && bs) {
     const per = SM.periods || [];
-    h += `<details class="br-d" id="mgD1"><summary><span class="t">📊 비슷했던 구간</span><span class="s">${sm.n}번 · 보통 ${_brPf(sm.median)}</span><span class="c">▾</span></summary><div class="br-db">
+    if (AQ_BUYREVIEW_ON) h += `<details class="br-d" id="mgD1"><summary><span class="t">📊 비슷했던 구간</span><span class="s">${sm.n}번 · 보통 ${_brPf(sm.median)}</span><span class="c">▾</span></summary><div class="br-db">
       ${sm.h && bs.h ? _brHTable(sm, bs) : ''}${_brPathSvg(per)}
       ${per.slice(0, 6).map(p => `<div class="br-pr"><div class="top"><span>${escapeHtml(displayName(p.ticker) || p.ticker)} ${p.date} · ${p.own ? '본인' : '피어'}</span><b class="${_brC(p.fwd20)}">${_brPf(p.fwd20)}</b></div><small>흐름 ${Math.round(p.shape * 100)}% 닮음${p.mkt_down ? ' · 시장도 같이 빠짐' : ''}</small></div>`).join('')}
       ${per.length > 6 ? `<div class="br-more">나머지 ${per.length - 6}개는 같은 기준</div>` : ''}</div></details>`;
@@ -34156,6 +34213,7 @@ async function aqRvPublicRender(force) {
   box.innerHTML = '<div style="margin-top:8px">' + L.map(it => `<div class="mg-row" style="align-items:flex-start;padding-top:14px;padding-bottom:14px" onclick="aqRvPublicOpen(${Number(it.id)})"><span class="lg">${_mgLogo(it.ticker)}</span><span style="display:flex;flex-direction:column;gap:4px;min-width:0;flex:1"><span class="nm">${escapeHtml(displayName(it.ticker) || it.ticker)}</span><span class="sub" style="white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(it.summary || '')}</span><span class="sub">${escapeHtml(_rvAgo(it.requested_at))}</span></span><span class="mg-chip ${it.opinion === '매수' ? 'act' : ''}" style="margin-left:auto;flex:0 0 auto">${escapeHtml(it.opinion || '')}</span></div>`).join('') + '</div>';
 }
 async function aqRvPublicOpen(id) {
+  if (!AQ_BUYREVIEW_ON) return;   // 2026-11-16: 매수심사 리포트 닫음
   let r = null; try { r = await apiCall('reviewPublicGet', { id }); } catch (e) {}
   if (!r || !r.ok || !r.review) { aqToast((r && r.error) || '리포트를 불러오지 못했어요'); return; }
   const v = r.review, mk = v.market, op = v.opinion || '', nm = escapeHtml(displayName(v.ticker) || v.ticker), cls = { '매수': 'g', '관망': 'y', '금지': 'r' }[op] || '';
@@ -34214,6 +34272,7 @@ function _aqHistFill(tk, r, body) {
 }
 window.aqRvPublicOpen = aqRvPublicOpen; window.aqHistOpen = aqHistOpen;
 async function aqReviewRender(force) {
+  if (!AQ_BUYREVIEW_ON) return;   // 2026-11-16: 매수분석 탭 닫음
   if (!_mgAdm()) return aqRvPublicRender(force);   // v7.05
   const box = document.getElementById('reviewBody'); if (!box) return; const mk = getCurrentMarket(); clearTimeout(_rv.poll);
   if (force || !_rv.data || _rv.mk !== mk || Date.now() - _rv.ts > 60e3) {
@@ -34678,7 +34737,7 @@ async function aqGuideLoadAcc(force) {
   let r = null; try { r = await apiCall('guideList', {}); } catch (e) {}
   _gd.acc = {}; _gd.accList = (r && r.ok) ? (r.items || []) : []; _gd.accTs = Date.now();
   _gd.accList.forEach(x => { _gd.acc[x.key] = x; });
-  if (r && r.ok) { _gd.seen = new Set(r.seen || []); _gd.queue = r.queue || []; _gd.picks = r.picks || null; _gd.pledge = r.pledge || null; _gd.conflicts = r.conflicts || []; setTimeout(() => { _gdClientRetry().catch(() => {}); }, 0); }   // v6.11 · v6.12 AI 요청 대기열
+  if (r && r.ok) { _gd.seen = new Set(r.seen || []); _gd.queue = (r.queue || []).filter(q => AQ_BUYREVIEW_ON || !(q.kind === 'review' && q.status === 'queued'));   /* 2026-11-16: 매수심사 닫음 — 받기 버튼이 갈 곳 없음 */ _gd.picks = r.picks || null; _gd.pledge = r.pledge || null; _gd.conflicts = r.conflicts || []; setTimeout(() => { _gdClientRetry().catch(() => {}); }, 0); }   // v6.11 · v6.12 AI 요청 대기열
   window._gdTodos = []; _gd.accList.forEach(x => (x.applied || []).forEach(a => { if (a.client && a.client.act === '할 일 등록' && a.client.date) window._gdTodos.push({ date: a.client.date, text: a.client.text, gid: x.gid, title: x.title }); }));
   try { await aqStLoad(force); } catch (e) {}   // v6.28 운영
   return _gd.acc;
@@ -35068,14 +35127,14 @@ function _gmLens(f) {   // 종목 줄에서 고른 종목: 이름 · 지금 가�
   const mk = /^\d{6}$/.test(f) ? 'KR' : 'US';
   const dates = (((_state.reports || {})[mk]) || {})[f] || []; const rk = mk + '/' + f;
   if (dates[0] && typeof aqLoadAnalysisAction === 'function' && _analysisActions[rk] === undefined && !(_gd.gmLoad || {})[rk]) { _gd.gmLoad = Object.assign({}, _gd.gmLoad, { [rk]: 1 }); aqLoadAnalysisAction(mk, f, dates[0]).then(() => { if (_gd.view === 'mine') aqGuideRender(); }).catch(() => {}); }
-  if (!_rv.data && !_gd.gmRvTried) { _gd.gmRvTried = 1; apiCall('reviewList', { market: mk, kind: 'all', history: 0, limit: 100 }).then(r => { if (r && r.ok && Array.isArray(r.items)) { _rv.data = r; _rv.mk = mk; _rv.ts = Date.now(); if (_gd.view === 'mine') aqGuideRender(); } }).catch(() => {}); }
+  if (AQ_BUYREVIEW_ON && !_rv.data && !_gd.gmRvTried) { _gd.gmRvTried = 1; apiCall('reviewList', { market: mk, kind: 'all', history: 0, limit: 100 }).then(r => { if (r && r.ok && Array.isArray(r.items)) { _rv.data = r; _rv.mk = mk; _rv.ts = Date.now(); if (_gd.view === 'mine') aqGuideRender(); } }).catch(() => {}); }
   const ra = _analysisActions[rk];
   const rv = (((_rv.data || {}).items) || []).filter(it => String(it.ticker || '').toUpperCase() === f && (it.kind || 'buy') === 'buy').sort((a, b) => String(b.requested_at || '').localeCompare(String(a.requested_at || '')))[0];
   const px = typeof _aqLatestClose === 'function' ? _aqLatestClose(f) : null;
   const T = escapeAttr(f);
-  return `<div class="gm-lh"><b>${escapeHtml(displayName(f) || f)}</b><span>${px ? escapeHtml(_gmPv(f, px)) : ''}</span></div><div class="gm-tiles">`
+  return `<div class="gm-lh"><b>${escapeHtml(displayName(f) || f)}</b><span>${px ? escapeHtml(_gmPv(f, px)) : ''}</span></div><div class="gm-tiles"${AQ_BUYREVIEW_ON ? '' : ' style="grid-template-columns:minmax(0,1fr)"'}>`
     + `<div class="gm-tile" onclick="openChart('${T}')"><small>AI 보고서${dates[0] ? ' · ' + _gmMD(dates[0]) : ''}</small><b>${dates[0] ? escapeHtml((ra && ra.action) || '보기') : '없음'}</b></div>`
-    + `<div class="gm-tile" onclick="${rv ? `aqBrOpen(${Number(rv.id)})` : `openChart('${T}')`}"><small>AI 매수심사${rv && rv.requested_at ? ' · ' + _gmMD(_rvKstDate(rv.requested_at)) : ''}</small><b>${rv ? escapeHtml(rv.opinion || '보기') : '없음'}</b></div></div>`
+    + (AQ_BUYREVIEW_ON ? `<div class="gm-tile" onclick="${rv ? `aqBrOpen(${Number(rv.id)})` : `openChart('${T}')`}"><small>AI 매수심사${rv && rv.requested_at ? ' · ' + _gmMD(_rvKstDate(rv.requested_at)) : ''}</small><b>${rv ? escapeHtml(rv.opinion || '보기') : '없음'}</b></div></div>` : '</div>')
     + (() => { const e = _stEff(f); return `<div class="gm-row st-lens" onclick="aqStOpen('${T}')"><span class="tx">운영<small>${e ? escapeHtml(_stChipTx(f)) + (e.reason ? ' · ' + escapeHtml(e.reason) : '') : '정하지 않음'}</small></span><b class="st-go">${e ? '고치기' : '정하기'} ›</b></div>`; })();
 }
 // ---- v6.25: 신호를 종류마다 맞는 그림으로 — 가격·지표는 선(기준선·닿는 쪽 칠), 평단·등락은 눈금, 비중은 막대, 연속은 칸, 날짜는 달력, 판단은 질문, 약속은 방패, 설정은 기간 막대 ----
@@ -35708,9 +35767,11 @@ function _notiBadge() {
   const n = _noti.items.filter(x => !x.read).length; const b = document.getElementById('aqNotiBadge');
   if (b) { b.textContent = n > 9 ? '9+' : String(n); b.style.display = n ? '' : 'none'; }
 }
+// 2026-11-16 (본부장님: "규칙형 알림 다 필요 없어. 급락 급등 다 알고싶지 않아" · "AI매수심사 영역을 다 비공개로"): 장중 급변 · 매수심사 마감 알림은 목록 · 숫자에서 뺌
+function _notiShow(x) { return !!x && (AQ_RULE_UI_ON || x.type !== 'move') && (AQ_BUYREVIEW_ON || x.type !== 'review'); }
 async function aqNotiLoad() {
   try { if (!localStorage.getItem('aq_session_token')) return; } catch (e) { return; }
-  try { const r = await apiCall('getFeed', {}); if (r && r.ok) { _noti.items = r.items || []; _noti.ts = Date.now(); } } catch (e) {}
+  try { const r = await apiCall('getFeed', {}); if (r && r.ok) { _noti.items = (r.items || []).filter(_notiShow); _noti.ts = Date.now(); } } catch (e) {}
   _notiBadge(); if (_noti.open) _notiRender();
   try {   // v6.46: 목록에 없는 보고서 알림이 있으면 보고서 목록 다시 받기
     const R = _state.reports || {}; const miss = (_noti.items || []).filter(x => x.type === 'report' && x.ticker && x.date && !(((R[x.market] || {})[String(x.ticker).toUpperCase()] || []).includes(x.date))).map(x => x.ticker + '_' + x.date).join(',');
@@ -36461,9 +36522,10 @@ function _pvStWarns(G) {
 }
 function _pvStFoot() {
   const row = (k, t, s) => `<button type="button" class="pv-gr pv-foot" onclick="aqPvStOpen('${k}')"><span class="pv-gn"><b>${t}</b><small>${s}</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9d9d9d" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>`;
+  if (!AQ_RULE_UI_ON) return `<div class="pv-lh"><b>계좌 전체</b></div>` + row('stats', '운영 성적', '사상별 적중 · 수익 (수집 제외)') + row('sets', '기준', '사상별 한도 · 목표');   // 2026-11-16 (본부장님: "규칙형 알림 다 필요 없어. 급락 급등 다 알고싶지 않아"): 급락장 플레이북 · 급락 기준 숨김
   return `<div class="pv-lh"><b>계좌 전체</b></div>` + row('pb', '급락장 플레이북', '시장이 크게 빠진 날 계좌 전체 할 일') + row('stats', '운영 성적', '사상별 적중 · 수익 (수집 제외)') + row('sets', '기준', '사상별 한도 · 목표 · 급락장 기준');
 }
-function aqPvStOpen(k) { const go = () => { _stc.sym = null; _stc.nav = []; _stc.mode = k; _stc.wz = null; _stShow(); _stR(); }; if (!_stc.d) aqStLoad().then(go); else go(); }
+function aqPvStOpen(k) { if (k === 'pb' && !AQ_RULE_UI_ON) return; const go = () => { _stc.sym = null; _stc.nav = []; _stc.mode = k; _stc.wz = null; _stShow(); _stR(); }; if (!_stc.d) aqStLoad().then(go); else go(); }
 function aqPvGoSt() {   // v6.39: 어디서든 마이 › 포트폴리오 › 운영 탭으로
   try { aqStClose(); } catch (e) {} try { if (typeof aqGuideSheetClose === 'function') aqGuideSheetClose(); } catch (e) {} try { if (typeof closeModal === 'function') closeModal(); } catch (e) {}
   try { switchMobileTab('board'); } catch (e) {} try { setBoardSubtab('holdings'); } catch (e) {}
@@ -36543,13 +36605,13 @@ function aqStSigTag(tk) {   // 신호표: 들고 있는 종목은 지금 사상,
 }
 // ---- 내 지침 '정할 것'에 들어가는 운영 카드 ----
 function _stCardsAll() {
-  const cards = ((_stc.d && _stc.d.cards) || []).filter(c => !c.sym || _gdVis(_stMk(c.sym)));
+  const cards = ((_stc.d && _stc.d.cards) || []).filter(c => (!c.sym || _gdVis(_stMk(c.sym))) && (AQ_RULE_UI_ON || c.kind !== 'trend'));   // 2026-11-16: '추세 이탈 — 정리할 때예요' 카드 숨김
   const setup = cards.filter(c => c.kind === 'setup'); const rest = cards.filter(c => c.kind !== 'setup');
   if (setup.length > 3) rest.unshift({ id: '_setup_all', kind: 'setup_all', t: `운영을 정할 종목 ${setup.length}개`, s: setup.slice(0, 4).map(c => _gmTkName(c.sym)).join(' · ') + (setup.length > 4 ? ' …' : ''), btns: [['하나씩 정하기', 'page', null]], _n: setup.length });
   else rest.unshift(...setup);
   return rest;
 }
-function _stCardsFor(f) { return ((_stc.d && _stc.d.cards) || []).filter(c => c.sym === f); }
+function _stCardsFor(f) { return ((_stc.d && _stc.d.cards) || []).filter(c => c.sym === f && (AQ_RULE_UI_ON || c.kind !== 'trend')); }
 function _stCardHtml(c) {
   _stc.cardMap = _stc.cardMap || {}; _stc.cardMap[c.id] = c;
   const id = escapeAttr(c.id);
@@ -36582,6 +36644,7 @@ async function _stAfter(r, sym) {
   try { if (_pvMode() === 'st' && document.getElementById('aqPvTop')) aqPvRender(); } catch (e) {}
 }
 function _stPbBanner() {
+  if (!AQ_RULE_UI_ON) return '';   // 2026-11-16: 급락장 플레이북 숨김
   const pb = (_stc.d && _stc.d.playbook) || {}; const mk = getCurrentMarket(); const p = pb[mk]; if (!p) return '';
   const sec = Object.entries(p.sections || {}).map(([k, v]) => `<div class="st-pbs"><b>${escapeHtml(k)}</b>${v.map(x => `<span>${escapeHtml(aqKrText(x))}</span>`).join('')}</div>`).join('');
   return `<div class="st-pb"><div class="st-pbh">급락장 플레이북 <em>${escapeHtml(mk === 'US' ? '나스닥(QQQ)' : '코스피')} ${_gmPct(p.chg)}</em></div>${sec}</div>`;
@@ -36618,21 +36681,21 @@ function _stPage() {
   return back + _stPbBanner()
     + sec('사상 지도', bar + (warn ? `<div class="st-ws">${warn}</div>` : '') + vr)
     + sec(`종목<em>${syms.length}</em>`, `<div class="gm-box">${lst || '<div class="gm-row nc"><span class="tx">보유 종목이 없어요</span></div>'}</div>`)
-    + sec('급락장 플레이북<small>시장이 크게 빠진 날 계좌 전체 할 일</small>', `<div class="gm-btns" style="margin-top:0"><button class="gm-b" onclick="aqStPbNow()">지금 기준으로 보기</button></div>` + pb)
+    + (AQ_RULE_UI_ON ? sec('급락장 플레이북<small>시장이 크게 빠진 날 계좌 전체 할 일</small>', `<div class="gm-btns" style="margin-top:0"><button class="gm-b" onclick="aqStPbNow()">지금 기준으로 보기</button></div>` + pb) : '')
     + sec('운영 성적<small>수집 제외</small>', _stStatsHtml())
     + sec('기준<small>예산·목표·알림</small>', sets);
 }
 function _stSetsHtml() {   // v6.39: 기준(한도·목표·급락장) — 운영 탭 '기준' 시트와 공용
   const S = ((_stc.d || {}).settings) || {};
   const setRow = (lab, grp, k, v) => `<label class="st-set"><span>${escapeHtml(lab)}</span><input type="number" inputmode="decimal" step="1" data-g="${grp}" data-k="${k}" value="${v == null ? '' : v}"><em>%</em></label>`;
-  return `<div class="st-sets">${setRow('일정 추종 한도', 'budget', 'event', (S.budget || {}).event)}${setRow('바닥 매집 한도', 'budget', 'contra', (S.budget || {}).contra)}${setRow('추세 추종 한도', 'budget', 'trend', (S.budget || {}).trend)}${setRow('방어 헤지 목표', 'target', 'defense', (S.target || {}).defense)}${setRow('현금 대기 목표', 'target', 'cash', (S.target || {}).cash)}${setRow('숨은 집중 기준', 'conc', 'conc', S.conc)}${setRow('급락장 (미국)', 'drop', 'US', (S.drop || {}).US)}${setRow('급락장 (한국)', 'drop', 'KR', (S.drop || {}).KR)}</div><div class="gm-btns"><button class="gm-b" onclick="aqStSaveSettings()">기준 저장</button></div>`;
+  return `<div class="st-sets">${setRow('일정 추종 한도', 'budget', 'event', (S.budget || {}).event)}${setRow('바닥 매집 한도', 'budget', 'contra', (S.budget || {}).contra)}${setRow('추세 추종 한도', 'budget', 'trend', (S.budget || {}).trend)}${setRow('방어 헤지 목표', 'target', 'defense', (S.target || {}).defense)}${setRow('현금 대기 목표', 'target', 'cash', (S.target || {}).cash)}${setRow('숨은 집중 기준', 'conc', 'conc', S.conc)}${AQ_RULE_UI_ON ? setRow('급락장 (미국)', 'drop', 'US', (S.drop || {}).US) + setRow('급락장 (한국)', 'drop', 'KR', (S.drop || {}).KR) : ''}</div><div class="gm-btns"><button class="gm-b" onclick="aqStSaveSettings()">기준 저장</button></div>`;
 }
 function _stPbSheet() {
   const pb = _stc.pb ? `<div class="st-pb in">${Object.entries(_stc.pb).map(([k, v]) => `<div class="st-pbs"><b>${escapeHtml(k)}</b>${v.map(x => `<span>${escapeHtml(aqKrText(x))}</span>`).join('')}</div>`).join('') || '<div class="st-pbs"><span>할 일 없음</span></div>'}<small>${escapeHtml(_stc.pbAt || '')} 기준</small></div>` : '<div class="st-k2" style="margin:10px 2px">시장이 크게 빠진 날, 사상별로 무엇을 할지 한 번에 봐요. 평소에도 눌러서 미리 볼 수 있어요.</div>';
   return _stHead('급락장 플레이북', '계좌 전체 할 일') + `<div class="gm-btns" style="margin-top:0"><button class="gm-b pri" onclick="aqStPbNow()">지금 기준으로 보기</button></div>` + pb;
 }
 function _stStatsSheet() { return _stHead('운영 성적', '수집 제외') + _stStatsHtml(); }
-function _stSetsSheet() { return _stHead('기준', '사상별 한도 · 목표 · 급락장') + _stSetsHtml(); }
+function _stSetsSheet() { return _stHead('기준', AQ_RULE_UI_ON ? '사상별 한도 · 목표 · 급락장' : '사상별 한도 · 목표') + _stSetsHtml(); }
 function _stOpenMode() { return document.getElementById('stSheet')?.classList.contains('open') ? _stc.mode : null; }
 async function aqStSaveSettings() {
   const v = { budget: {}, target: {}, drop: {} };
@@ -36928,7 +36991,7 @@ function _stConvHtml() {
 }
 async function aqStConv(k) {
   const r = _stRow(_stc.sym) || {}; if ((r.conv || '') === k) return;
-  if (k === 'fail' && !await aqConfirm(`${_stName(_stc.sym)} — 계획 이탈로 정할까요?\n단계도 '줄이는 중'으로 바뀌고, 반등 구간에서 나눠 파는 정리 계획이 만들어져요. 매수심사는 막혀요.`)) return;
+  if (k === 'fail' && !await aqConfirm(`${_stName(_stc.sym)} — 계획 이탈로 정할까요?\n단계도 '줄이는 중'으로 바뀌고, 반등 구간에서 나눠 파는 정리 계획이 만들어져요.${AQ_BUYREVIEW_ON ? ' 매수심사는 막혀요.' : ''}`)) return;
   const res = await _stAct('set', Object.assign({ sym: _stc.sym, conv: k }, k === 'fail' && r.stage !== 'reduce' ? { stage: 'reduce' } : {}, _stc.tid ? { tid: _stc.tid } : {})); if (!res) return; _stc.tid = '';
   const M = _stM(); aqToast(k ? `${M.convs[k]} · ${(M.conv_rule || {})[k] || ''}` : '평가를 비웠어요', 3600);
 }
