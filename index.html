@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '8.30';   // v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
+window.AQ_PWA_VERSION = '8.31';   // v8.31: 부품 정리(시안 승인 11/16) — 토큰(글자 흐림 #85858a · 강조 옅음 · 모서리 16 · 움직임 120/200/320ms) · 돈이 나가는 버튼은 길게 눌러 확정(주문 넣기 · 승인 · 모두 승인 · 조건부 승인) · 기다리는 글자에 옅은 빛 · 받기 · 매수심사 요청 · 지도 만들기 버튼은 눌림 → 처리 중 → 요청됨 · 3M/6M/1Y · 예보 거르기 · 심사 탭은 선택 배경이 미끄러지듯 · 휴대폰 '동작 줄이기'면 움직임 없음 · v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
 // v6.39: 운영 탭(마이 › 포트폴리오 네 번째 축) · 종목 상세 '내 주식' 운영 칸 · 길게 누르기 원래 메뉴(아이콘) · 사상 이름 체계(평생 수집·장기 확신·배당 확보·업황 추종·추세 추종·바닥 매집·일정 추종·방어 헤지·현금 대기·자동 매매) · 운영 지도 → 운영 탭
@@ -186,10 +186,12 @@ if ('serviceWorker' in navigator) {
   --line: transparent; --line-2: transparent;
   /* v1.48: 모바일 플로팅 탭바 배경 — 페이지 bg(#1e1e1e)보다 살짝 어둡게 */
   --tab-bar-bg: #161616;
-  --text: #d4d4d4; --text-hi: #ffffff; --text-dim: #9d9d9d; --text-mute: #6a6a6a;
+  --text: #d4d4d4; --text-hi: #ffffff; --text-dim: #9d9d9d; --text-mute: #85858a;   /* v8.30: 흐림 글자 대비 4.5:1 (#6a6a6a → #85858a) */
   --accent: #569cd6; --accent-2: #4ec9b0; --string: #ce9178;
   --number: #b5cea8; --func: #dcdcaa; --const: #4fc1ff;
   --danger: #f48771; --warn: #dcdcaa; --green: #6a9955;
+  /* v8.30: 강조 옅음(완료 · 선택 바탕) · 강조 진함(길게 누르기 채움) */
+  --accent-soft: #22303d; --accent-text: #8fc0ec; --accent-deep: #2f6aa8;
   --green-2: #4ec9b0; --orange: #ce9178;
 
   /* V-Shape signal colors */
@@ -210,7 +212,7 @@ if ('serviceWorker' in navigator) {
   --text-xs:    11px;   /* meta/caption (날짜, 라벨 등) */
   --text-sm:    12px;   /* secondary text */
   --text-base:  13px;   /* body */
-  --text-md:    14px;   /* body emphasis */
+  --text-md:    15px;   /* body emphasis — v8.30: 6단(11 · 12 · 13 · 15 · 18 · 26) 중 하나 */
   --text-lg:    16px;   /* sub-title */
   --text-xl:    18px;   /* card sub-headline */
   --text-2xl:   22px;   /* card h2 (PC) */
@@ -230,7 +232,8 @@ if ('serviceWorker' in navigator) {
   /* v2.08: Border radius — 일관된 둥근 모서리 */
   --radius-sm:  6px;
   --radius-md:  10px;
-  --radius-lg:  14px;
+  --radius-lg:  16px;   /* v8.30: 모서리 4종 6 · 10 · 16 · 알약 */
+  --radius-pill: 999px;
   --radius-xl:  18px;
 
   /* v2.08: Elevation (shadows) — 깊이감 */
@@ -242,8 +245,8 @@ if ('serviceWorker' in navigator) {
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --t-fast: 0.12s;
-  --t-base: 0.18s;
-  --t-slow: 0.28s;
+  --t-base: 0.2s;    /* v8.30: 120 · 200 · 320ms · 곡선은 --ease-out 하나 */
+  --t-slow: 0.32s;
 }
 
 /* ============ LIGHT THEME (warm oat) ============ */
@@ -265,6 +268,7 @@ if ('serviceWorker' in navigator) {
 
   /* cool accent against warm bg */
   --accent: #2a6cb0;
+  --accent-soft: #dde7f2; --accent-text: #1f5a96; --accent-deep: #2a6cb0;   /* v8.30 */
   --accent-2: #4f7a4a;
   --string: #a04020;
   --number: #5e7a3a;
@@ -2855,6 +2859,28 @@ html.aq-wide .br-sheet.ppv-full, .br-sheet.ppv-full { left: 0 !important; right:
 .feed-lead1 { display: block; width: calc(100% - 24px); margin: 10px 12px 0; padding: 0; border: 0; background: none; font: inherit; font-size: 13px; line-height: 1.5; color: var(--text-dim, #9d9d9d); text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; } .feed-take { margin-left: auto; border: 0; border-radius: 999px; background: rgba(255,255,255,.1); color: var(--text-hi, #fff); font: inherit; font-size: 12px; font-weight: 600; padding: 6px 14px; cursor: pointer; } .ld-tier { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; } .ld-tier .bal-meter i { width: 7px; height: 3px; }
 .lrs-sec { padding: 14px 0; border-top: 1px solid rgba(127,127,127,.15); } .lrs-sec .lk { font-size: 12.5px; color: var(--text-dim); margin-bottom: 6px; } .lrs-sec .lv { font-size: 14.5px; line-height: 1.65; color: var(--text-hi); word-break: keep-all; } .lrs-take { width: 100%; margin: 18px 0 8px; padding: 14px 0; border: 0; border-radius: 14px; background: #f4f4f5; color: #111; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
 [data-theme="light"] .feed-take { background: rgba(0,0,0,.08); } [data-theme="light"] .lrs-take { background: #111; color: #fff; }
+/* ============ v8.30: 부품 — 길게 눌러 확정 · 생각 중 글자 · 요청 버튼 3단계 · 고르기 버튼 ============ */
+.aq-hold { position: relative; overflow: hidden; isolation: isolate; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: manipulation; }
+.aq-hold::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: currentColor; opacity: .22; z-index: -1; pointer-events: none; transition: width var(--t-base) var(--ease-out); }
+.aq-hold.aq-holding::after { width: 100%; transition: width .8s linear; }
+.aq-hold.aq-held::after { width: 100%; transition: none; }
+@keyframes aqShim { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+.aq-think { background: linear-gradient(90deg, var(--text-mute) 0%, var(--text-mute) 38%, var(--text-hi) 50%, var(--text-mute) 62%, var(--text-mute) 100%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent !important; animation: aqShim 1.8s linear infinite; }
+@keyframes aqSpin { to { transform: rotate(360deg); } }
+.aq-ld { position: relative; color: transparent !important; pointer-events: none; }
+.aq-ld::before { content: ''; position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; border: 2px solid rgba(127,127,127,.3); border-top-color: var(--text-hi); box-sizing: border-box; animation: aqSpin .8s linear infinite; }
+.aq-ok { background: var(--accent-soft) !important; color: var(--accent-text) !important; transition: background var(--t-base) var(--ease-out), color var(--t-base) var(--ease-out); }
+.aq-ok::before { content: ''; display: inline-block; width: 9px; height: 5px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-3px) rotate(-45deg); margin-right: 7px; }
+.aq-seg-ind { position: absolute; top: 0; left: 0; z-index: 0; pointer-events: none; transition: transform var(--t-base) var(--ease-out), width var(--t-base) var(--ease-out), height var(--t-base) var(--ease-out); }
+.aq-seg-on > button { position: relative; z-index: 1; }
+.aq-seg-on > button.active, .aq-seg-on > button.on { background: transparent !important; box-shadow: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .aq-think { animation: none; background: none; color: var(--text-dim) !important; }
+  .aq-ld::before { animation-duration: 2.4s; }
+  .aq-seg-ind, .aq-ok, .aq-hold::after { transition: none !important; }
+  .aq-hold.aq-holding::after { width: 100%; transition: width .8s linear !important; }
+}
+
 .feed-lead .lwhy { font-size: 12.5px; line-height: 1.5; color: var(--text-dim, #9d9d9d); word-break: keep-all; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } .feed-lj { margin: 4px 16px 12px; font-size: 12.5px; color: var(--text-dim, #9d9d9d); }
 .feed-lead .b { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 2px; } .feed-lead .b span { font-size: 11.5px; color: var(--text-mute, #6a6a6a); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .feed-lead .b button { flex: none; border: none; border-radius: 999px; background: rgba(255,255,255,.1); color: var(--text-hi, #fff); font: inherit; font-size: 12.5px; font-weight: 600; padding: 7px 14px; cursor: pointer; }
 [data-theme="light"] .feed-lead { background: rgba(0,0,0,.04); } [data-theme="light"] .feed-lead .b button { background: rgba(0,0,0,.08); }
@@ -17598,12 +17624,12 @@ function _smHtml(r) {
     if (busy) return `<div class="sm-empty">종목 지도를 만들고 있어요<div class="sm-cap">${r.req.status === 'queued' && r.req.ahead ? `앞에 ${r.req.ahead}개 · ` : ''}보통 10분</div></div><div id="smLead"></div><div class="sm2-sec" style="gap:6px;margin-top:18px"><div class="sm2-rows"><button type="button" class="sm2-rw" onclick="aqMapHistNoMap(this)"><span>크게 움직였을 때</span><i>›</i></button></div></div>`;
     h = '<div class="sm-empty">아직 종목 지도가 없어요';
     if (r.req && r.req.status === 'failed') h += '<div class="sm-cap">지난 요청은 만들지 못했어요</div>';
-    h += `<div style="margin-top:18px"><button class="sm-btn pri" ${r.can ? '' : 'disabled'} onclick="aqMapRequest()">종목 지도 만들기</button></div>`;
+    h += `<div style="margin-top:18px"><button class="sm-btn pri" ${r.can ? '' : 'disabled'} onclick="aqMapRequest(this)">종목 지도 만들기</button></div>`;
     if (!r.admin) h += `<div class="sm-cap">오늘 ${r.left}회 남음</div>`;
     return h + `</div><div id="smLead"></div><div class="sm2-sec" style="gap:6px;margin-top:18px"><div class="sm2-rows"><button type="button" class="sm2-rw" onclick="aqMapHistNoMap(this)"><span>크게 움직였을 때</span><i>›</i></button></div></div>`;
   }
   const dt = M.asof ? String(M.asof).slice(5).replace('-', '/') : '';
-  h += `<div class="sm-head">${dt ? `<span>${dt} 기준</span>` : ''}${_smCkSum(M.ck)}${busy ? '<span>· 다시 만드는 중</span>' : ''}${_mgAdm() ? '<span class="sm-br" id="brBuySlot"></span>' : ''}</div>${_mgAdm() ? '<div class="sm-brcap" id="brCap"></div>' : ''}`;   // v8.24: 한국도 지도 위 줄로   // v7.54: AI 매수심사 — 지도가 있을 때 위 줄 오른쪽
+  h += `<div class="sm-head">${dt ? `<span>${dt} 기준</span>` : ''}${_smCkSum(M.ck)}${busy ? '<span class="aq-think">· 다시 만드는 중</span>' : ''}${_mgAdm() ? '<span class="sm-br" id="brBuySlot"></span>' : ''}</div>${_mgAdm() ? '<div class="sm-brcap" id="brCap"></div>' : ''}`;   // v8.24: 한국도 지도 위 줄로   // v7.54: AI 매수심사 — 지도가 있을 때 위 줄 오른쪽
   h += _smBody(r);   // v7.12: 시안 모양
   if (r.admin) h += `<div style="display:flex;gap:10px;margin:22px 4px 0"><button class="sm-btn" style="flex:1" ${busy || !r.can ? 'disabled' : ''} onclick="aqMapRequest()">다시 만들기</button></div>`;
   return h;
@@ -17699,9 +17725,11 @@ function _vgRoom(x) {   // 남은 여지 한 줄 — 넉넉 · 보통 · 좁음 
   if (x.src_mv != null && x.moved != null) a.push(`출처 ${x.src_mv >= 0 ? '+' : ''}${x.src_mv}% · 이 종목 ${x.moved >= 0 ? '+' : ''}${x.moved}%`);
   return _smEsc(a.join(' · '));
 }
-async function aqMapRequest() {
+async function aqMapRequest(el) {   // v8.30: 눌림 → 처리 중 → 요청됨
   const tk = _sm.tk; if (!tk) return;
+  aqBtnLoad(el);
   let r = null; try { r = await apiCall('stockMapRequest', { ticker: tk }); } catch (e) {}
+  aqBtnDone(el, r && r.ok, '요청됨');
   if (!r || !r.ok) { aqToast((r && r.error) || '요청하지 못했어요'); return; }
   aqToast('종목 지도를 만들기 시작했어요'); aqMapOpen(tk, true);
 }
@@ -27414,11 +27442,69 @@ function aqLeadRec(tk) {   // v8.28: 선제안 시트 — 왜 이 단계인가(�
     <button type="button" class="lrs-take" onclick="document.getElementById('mcSheet')?.remove();aqLeadTake('${escapeAttr(tk)}')">받기 → 매수심사</button>`);
 }
 window.aqLeadRec = aqLeadRec;
-function aqLeadTake(tk) {
+function aqLeadTake(tk, el) {   // v8.30: el = 누른 버튼(눌림 → 처리 중 → 요청됨)
   const x = ((_lead.d && _lead.d.items) || []).find(o => o.tk === tk);
-  aqBrRequest(tk, x && x.path && x.path[0] ? `선제안 경로가 실제로 실적에 닿는지: ${x.path[0]}`.slice(0, 160) : '');
+  aqBrRequest(tk, x && x.path && x.path[0] ? `선제안 경로가 실제로 실적에 닿는지: ${x.path[0]}`.slice(0, 160) : '', el);
 }
 window.aqLeadTake = aqLeadTake;
+
+// ---------- v8.30: 부품 — 길게 눌러 확정(.aq-hold) · 요청 버튼 3단계(aqBtnLoad/aqBtnDone) · 고르기 버튼 미끄럼 ----------
+(function () {
+  const HOLD = 800; let cur = null, tm = 0;
+  const clear = () => { if (cur) cur.classList.remove('aq-holding'); clearTimeout(tm); cur = null; };
+  document.addEventListener('pointerdown', e => {
+    const b = e.target && e.target.closest ? e.target.closest('.aq-hold') : null; if (!b || b.disabled) return;
+    clear(); cur = b; b.classList.add('aq-holding');
+    tm = setTimeout(() => {
+      const x = cur; clear(); if (!x || !x.isConnected || x.disabled) return;
+      x.classList.add('aq-held'); x._aqArmed = 1; x._aqHeldAt = Date.now();
+      try { navigator.vibrate && navigator.vibrate(12); } catch (_) {}
+      x.click(); setTimeout(() => x.classList.remove('aq-held'), 700);
+    }, HOLD);
+  }, true);
+  ['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, clear, true));
+  document.addEventListener('pointermove', e => { if (!cur) return; const el = document.elementFromPoint(e.clientX, e.clientY); if (!el || !cur.contains(el)) clear(); }, true);
+  document.addEventListener('click', e => {
+    const b = e.target && e.target.closest ? e.target.closest('.aq-hold') : null; if (!b) return;
+    if (b._aqArmed) { b._aqArmed = 0; return; }
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (!(b._aqHeldAt && Date.now() - b._aqHeldAt < 1500)) aqToast('길게 눌러 주세요');
+  }, true);
+  document.addEventListener('contextmenu', e => { if (e.target && e.target.closest && e.target.closest('.aq-hold')) e.preventDefault(); }, true);
+})();
+function aqBtnLoad(el) { if (!el || !el.classList) return; el.classList.remove('aq-ok'); el.classList.add('aq-ld'); el.setAttribute('aria-busy', 'true'); }
+function aqBtnDone(el, ok, label) {
+  if (!el || !el.classList) return; el.classList.remove('aq-ld'); el.removeAttribute('aria-busy');
+  if (ok && el.isConnected) { el.classList.add('aq-ok'); if (label) el.textContent = label; el.disabled = true; }
+}
+const AQ_SEG = '.tf-toggle, .feed-tf, .cmp-tf, .fj-chips, .rv-tabs';
+const _aqSegPos = {};
+function _aqSegKey(c) { const it = c.closest('.feed-item'); return (c.className.split(' ')[0] || '') + '|' + (c.dataset.target || '') + '|' + (it ? it.dataset.ticker || '' : ''); }
+function _aqSegPlace(ind, p, anim) { ind.style.transition = anim ? '' : 'none'; ind.style.width = p.w + 'px'; ind.style.height = p.h + 'px'; ind.style.transform = `translate(${p.x}px, ${p.y}px)`; }
+function aqSegSync(c, anim) {
+  if (!c || !c.isConnected) return;
+  const a = c.querySelector(':scope > button.active, :scope > button.on'); let ind = c.querySelector(':scope > .aq-seg-ind');
+  if (!a || !a.offsetWidth) { if (ind) ind.style.opacity = '0'; return; }
+  const k = _aqSegKey(c);
+  if (!ind) {
+    c.classList.remove('aq-seg-on');
+    const cs = getComputedStyle(a); if (getComputedStyle(c).position === 'static') c.style.position = 'relative';
+    ind = document.createElement('span'); ind.className = 'aq-seg-ind'; ind.setAttribute('aria-hidden', 'true');
+    ind.style.background = cs.backgroundColor; ind.style.borderRadius = cs.borderRadius; ind.style.boxShadow = cs.boxShadow;
+    c.insertBefore(ind, c.firstChild);
+    if (anim && _aqSegPos[k]) { _aqSegPlace(ind, _aqSegPos[k], false); void ind.offsetWidth; } else anim = false;
+  }
+  const cr = c.getBoundingClientRect(), ar = a.getBoundingClientRect();
+  const p = { x: ar.left - cr.left - c.clientLeft, y: ar.top - cr.top - c.clientTop, w: ar.width, h: ar.height };
+  ind.style.opacity = ''; _aqSegPlace(ind, p, anim); c.classList.add('aq-seg-on'); _aqSegPos[k] = p;
+}
+document.addEventListener('pointerdown', e => { const c = e.target && e.target.closest ? e.target.closest(AQ_SEG) : null; if (c) try { aqSegSync(c, false); } catch (_) {} }, true);
+document.addEventListener('click', e => {
+  const c = e.target && e.target.closest ? e.target.closest(AQ_SEG) : null; if (!c) return;
+  const k = _aqSegKey(c), cls = '.' + (c.className.split(' ')[0] || 'x');
+  const run = () => document.querySelectorAll(cls).forEach(x => { if (_aqSegKey(x) === k) try { aqSegSync(x, true); } catch (_) {} });
+  requestAnimationFrame(run); setTimeout(run, 160);
+});
 function _aqFeedItemHtml(it, C) {
   const { market, today, cutoff30, fmtPct } = C;
     const tk = it.ticker;
@@ -27488,7 +27574,7 @@ function _aqFeedItemHtml(it, C) {
         <button class="feed-act${watched ? ' on' : ''}" title="관심" aria-label="관심" onclick="aqFeedToggleWatch('${tka}',this)">${AQ_SVG.heart}</button>
         ${stat('30일 신호', cnt.sig, !cnt.sig)}
         ${isUS ? stat('내부자 매수', aqFeedUsd(cnt.buyAmt), !(cnt.buyAmt > 0)) : ''}
-        ${it.lead ? `<button type="button" class="feed-take" onclick="aqLeadTake('${tka}')">받기</button>` : isUS ? stat('매도', aqFeedUsd(cnt.sellAmt), !(cnt.sellAmt > 0), true) : ''}
+        ${it.lead ? `<button type="button" class="feed-take" onclick="aqLeadTake('${tka}', this)">받기</button>` : isUS ? stat('매도', aqFeedUsd(cnt.sellAmt), !(cnt.sellAmt > 0), true) : ''}
       </div>
       ${desc ? `<div class="feed-caption clamp"><b class="feed-cap-name">${escapeHtml(comp || displayName(tk))}</b> ${escapeHtml(desc)}</div><button type="button" class="feed-capmore" onclick="aqFeedCapMore(this)">더 보기</button>` : ''}
       ${aqFeedValTags(tk)}
@@ -27515,7 +27601,7 @@ function buildDiscoverFeed(res, keepShown) {
   const fmtPct = v => (v == null || isNaN(v)) ? '—' : `${aqSg(v)}${Math.abs(v).toFixed(2)}%`;
 
   const _C = { market, today, cutoff30, fmtPct };
-  const _lj = (market === 'US' && _lead.d && _lead.d.judge && _lead.d.judge.st !== 'done' && _lead.d.judge.n) ? `<div class="feed-lj">선제안 ${_lead.d.judge.n}개 · AI매니저 ${_lead.d.judge.st === 'wait' ? '판단 중' : '판단 전'}</div>` : '';   // v8.26
+  const _lj = (market === 'US' && _lead.d && _lead.d.judge && _lead.d.judge.st !== 'done' && _lead.d.judge.n) ? `<div class="feed-lj">선제안 ${_lead.d.judge.n}개 · AI매니저 ${_lead.d.judge.st === 'wait' ? '<span class="aq-think">판단 중</span>' : '판단 전'}</div>` : '';   // v8.26
   container.innerHTML = _lj + slice.map(it => _aqFeedItemHtml(it, _C)).join('') + (_items.length > shown ? `<button class="feed-more" onclick="aqFeedMore()">더 보기 (${_items.length - shown})</button>` : '');
 
   // 차트 렌더 (개별 인터랙티브)
@@ -31826,8 +31912,8 @@ function _brSlot(tk) {
     c = rv.ai_status === 'done' ? `${_brHM(rv.finished_at || rv.requested_at)} 심사` : `AI 분석을 받지 못했어요 — ${escapeHtml(String(rv.ai_error || '이유 미상').slice(0, 30))}`;
     if (r.queued) c += ` · 재심사 대기 ${r.queued.pos}번째`; }
   else if (r.queued) { b = `<button type="button" class="br-off" onclick="aqBrQCancel(${r.queued.id}, '${escapeAttr(tk)}')">대기 ${r.queued.pos}번째 · 취소</button>`; c = r.queued.note || '앞 작업이 끝나면 자동 시작'; }   // v6.68: 대기열
-  else if (act) { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}')">AI 매수심사 요청</button>`; c = '다른 작업 중 · 누르면 대기'; }
-  else { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}')">AI 매수심사 요청</button>`; c = rv && rv.status === 'failed' ? `지난 요청 실패 — ${escapeHtml(String(rv.error || '이유 미상').slice(0, 40))}` : ''; }
+  else if (act) { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}', '', this)">AI 매수심사 요청</button>`; c = '다른 작업 중 · 누르면 대기'; }
+  else { b = `<button type="button" class="br-buy" onclick="aqBrRequest('${escapeAttr(tk)}', '', this)">AI 매수심사 요청</button>`; c = rv && rv.status === 'failed' ? `지난 요청 실패 — ${escapeHtml(String(rv.error || '이유 미상').slice(0, 40))}` : ''; }
   slot.innerHTML = b; if (cap) cap.textContent = c;
 }
 async function aqBrRefresh(tk) {
@@ -31840,13 +31926,15 @@ async function aqBrRefresh(tk) {
   const wait = busy(r.review) ? (r.review.status === 'running' ? 8000 : 20000) : (r.active || r.queued) ? 30000 : 0;   // 다른 종목이 끝나는 것도 기다림
   if (wait) _brv.poll = setTimeout(() => { if (_brv.tk === tk && document.getElementById('brBuySlot')) aqBrRefresh(tk); }, wait);
 }
-async function aqBrRequest(tk, focus0) {
+async function aqBrRequest(tk, focus0, el) {   // v8.30: el = 누른 버튼
   try {   // v6.28 운영: 사상 없이 사지 않기 — 어느 사상으로 사는지 먼저
     await aqStLoad();
     if (_stc.d && !_stEff(tk) && confirm(`${displayName(tk) || tk}을(를) 어떤 사상으로 사는지 아직 정하지 않았어요.\n지금 정할까요? (취소하면 그대로 심사를 요청해요)`)) { try { document.getElementById('brSheet')?.remove(); } catch (e) {} aqStOpen(tk); return; }
   } catch (e) {}
   const focus = (prompt('이번 심사에서 꼭 확인할 것이 있으면 한 줄로 적어 주세요 (비우면 전체 심사)', focus0 || '') || '').trim();   // v8.03: 선제안 받기는 경로를 미리 채움   // v6.38: 요청 목적 → AI가 먼저 답함
+  aqBtnLoad(el);   // v8.30
   let r = null; try { r = await apiCall('buyReviewRequest', { ticker: tk, focus }); } catch (e) {}
+  aqBtnDone(el, r && r.ok && !r.needReport && !r.held && !r.watched, '요청됨');
   if (r && r.needReport) {   // v7.00: 보고서가 없거나 많이 낡음 → 한 번 확인으로 보고서 → 매수심사
     if (!confirm(r.error)) return;
     try { r = await apiCall('buyReviewRequest', { ticker: tk, focus, withReport: 1 }); } catch (e) { r = null; }
@@ -32156,7 +32244,7 @@ async function aqBrOrderAsk(rid) {   // v7.01: 지금 가격으로 지정가를 
   if (q.stop) lines.push(['이탈선', `${_brPx(mk, q.stop)} · 닿으면 −${M2((q.price - q.stop) * q.qty)}`]);
   lines.push(['유효', '오늘 장 마감까지']);
   const warn = (q.above_zone ? '지금 가격이 계획 가격대 위라 가격대 위 끝에 걸어 둬요. ' : '') + (q.open ? '' : '지금은 정규장 시간이 아니에요. ') + '주문 넣기는 토스 실제 주문, 모의 운영은 지정가를 지나면 가상 체결로만 기록해요.';
-  _mcSheet(`<div class="mg-sh"><h3>승인<span>주문 1건</span></h3><div class="od"><span class="n">1</span><span><b>${nm} ${q.qty}주 <span class="buy">매수</span></b><small>지정가 ${_brPx(mk, q.price)}</small></span><span class="a">−${M2(q.amount)}</span></div><div style="margin-top:14px">${lines.map(([k, v]) => `<div class="ln"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div><div class="wn">${escapeHtml(warn)}</div><div class="bt bt3"><button class="c" onclick="aqMcSheetClose()">닫기</button><button class="c" id="mgPaper" ${q.open ? '' : 'disabled'} onclick="aqBrOrderGo(${rid}, 'paper')">모의 운영</button><button class="g" id="mgGo" ${q.open ? '' : 'disabled'} onclick="aqBrOrderGo(${rid}, 'live')">주문 넣기</button></div></div>`);
+  _mcSheet(`<div class="mg-sh"><h3>승인<span>주문 1건</span></h3><div class="od"><span class="n">1</span><span><b>${nm} ${q.qty}주 <span class="buy">매수</span></b><small>지정가 ${_brPx(mk, q.price)}</small></span><span class="a">−${M2(q.amount)}</span></div><div style="margin-top:14px">${lines.map(([k, v]) => `<div class="ln"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div><div class="wn">${escapeHtml(warn)}</div><div class="bt bt3"><button class="c" onclick="aqMcSheetClose()">닫기</button><button class="c" id="mgPaper" ${q.open ? '' : 'disabled'} onclick="aqBrOrderGo(${rid}, 'paper')">모의 운영</button><button class="g aq-hold" id="mgGo" ${q.open ? '' : 'disabled'} onclick="aqBrOrderGo(${rid}, 'live')">길게 눌러 주문</button></div></div>`);
 }
 async function aqBrOrderGo(rid, mode) {
   const b = document.getElementById(mode === 'live' ? 'mgGo' : 'mgPaper'), lab = b ? b.textContent : ''; document.querySelectorAll('#mgGo, #mgPaper').forEach(x => { x.disabled = true; }); if (b) b.textContent = '넣는 중…';
@@ -32931,7 +33019,7 @@ function _mg3Hy() {
     h += W.map(w => {
       const side = w.side === 'BUY' ? '매수' : '매도', st = w.fired ? ((w.res && w.res.ok) ? `${(w.res.qty || '')}주 @ $${w.res.price || ''} 주문함` : (w.res && w.res.skip) ? '확인 결과 안 함' : (w.res && w.res.noapprove) ? '신호 · 승인 안 함' : '주문 못 함') : '';
       const ok = w.ok, tka = escapeAttr(w.tk);
-      const btns = w.fired ? `<div class="hy-st">${_mg3E(st)}</div>` : `<div class="hy-bt"><button type="button" class="${ok === 'no' ? 'on' : ''}" onclick="aqMgrWatch('${tka}','no')">거부</button><button type="button" class="${ok === 'paper' ? 'on' : ''}" onclick="aqMgrWatch('${tka}','paper')">모의</button><button type="button" class="${ok === 'live' ? 'on' : ''}" onclick="aqMgrWatch('${tka}','live')">조건부 승인</button></div>`;
+      const btns = w.fired ? `<div class="hy-st">${_mg3E(st)}</div>` : `<div class="hy-bt"><button type="button" class="${ok === 'no' ? 'on' : ''}" onclick="aqMgrWatch('${tka}','no')">거부</button><button type="button" class="${ok === 'paper' ? 'on' : ''}" onclick="aqMgrWatch('${tka}','paper')">모의</button><button type="button" class="aq-hold${ok === 'live' ? ' on' : ''}" onclick="aqMgrWatch('${tka}','live')">조건부 승인</button></div>`;
       return `<div class="hy-wt"><div class="t"><b>${_mg3E(w.tk)}</b><span>${side} 최대 ${_mg3E(w.max)}주 · $${_mg3E(w.lo)}~$${_mg3E(w.hi)}</span></div><div class="hy-w">${_mg3E((String(w.raw || '').split('·')[0] || '').replace(/^신호\s*[:：]\s*/, ''))}${w.why ? ' · ' + _mg3E(w.why) : ''}</div>${btns}</div>`;
     }).join('') + '</div>';
   }
@@ -33073,7 +33161,7 @@ function aqMgr3Ask(id) {
   L.push(['넣는 때', ck ? '지금 · 당일 지정가' : '00:00 확인 뒤 · 당일']);
   _mg3Sheet(`<span class="k">실제 주문</span><h3>${_mg3E(_mg3Title(it))}${it.legs.length === 1 ? ' · ' + _mgPx(it.legs[0].price) : ''}</h3><div class="lns">${L.map(([k, v]) => `<div class="ln"><span>${k}</span><b>${_mg3E(v)}</b></div>`).join('')}</div>`
     + (ck ? '' : `<label class="sw"><span><b>맡기기</b><small>00:00에 다시 판단돼도 묻지 않기</small></span><input type="checkbox" id="mg3Ent"></label>`)
-    + `<div class="bt"><button onclick="document.getElementById('mg3Sh').remove()">돌아가기</button><button class="g" id="mg3Go" onclick="aqMgr3Live(${id})">승인</button></div>`);
+    + `<div class="bt"><button onclick="document.getElementById('mg3Sh').remove()">돌아가기</button><button class="g aq-hold" id="mg3Go" onclick="aqMgr3Live(${id})">길게 눌러 승인</button></div>`);
 }
 async function aqMgr3Live(id) {
   const b = document.getElementById('mg3Go'); if (b) { b.disabled = true; b.textContent = '넣는 중…'; }
@@ -33166,7 +33254,7 @@ function _mgRight(it) {
   if (it.status === 'proposed') return `<button class="mg-ok" onclick="event.stopPropagation(); aqMgrAsk(${it.id})">승인</button>`;
   if (it.status === 'working') return `<button class="mg-cx" onclick="event.stopPropagation(); aqMgrCancelAsk(${it.id})">취소</button>${pp}`;
   if (it.status === 'approved') return `<span class="mg-st">${it.mode === 'paper' ? '모의' : '승인'} · 00:00 확인 뒤 주문${(it.why || {})['맡기기'] ? ' · 맡김' : ''}</span><button class="mg-cx" onclick="event.stopPropagation(); aqMgrCancelAsk(${it.id})">거두기</button>`;   // v7.25
-  if (it.status === 'held') return `<span class="mg-st">보류 · 다시 판단 중</span>`;
+  if (it.status === 'held') return `<span class="mg-st aq-think">보류 · 다시 판단 중</span>`;
   const w = it.status === 'cancelled' && /거부/.test(it.note || '') ? '거부' : it.status === 'cancelled' && /다시 판단/.test(it.note || '') ? '바뀜' : ({ done: '완료', partial: '일부', expired: '미체결', cancelled: '넘김', invalid: '제외' }[it.status] || it.status);
   return `<span class="mg-st">${w}</span>${pp}`;
 }
@@ -33329,11 +33417,11 @@ function aqMgrAsk(id) {
   lines.push(['유효', '오늘 장 마감까지']);
   const _ck = !(_mg.d && _mg.d.run && _mg.d.run.v3) || _mg.d.run.checked;
   const warn = `${_ck ? '' : '지금 승인하면 받아 두었다가 00:00(개장 30분 뒤) 확인에서 걸리지 않으면 그때 주문해요 · 걸리면 보류하고 다시 판단해요. '}승인은 토스 실제 주문(당일 지정가), 모의는 주문 없이 20거래일 추적에서 따로 모아 봐요. 거부는 주문 없이 기록만 남겨요. 안 된 주문은 장 마감 때 취소${set ? ' · 매도가 다 안 되면 매수는 내지 않아요' : ''}.`;
-  _mcSheet(`<div class="mg-sh"><h3>${set ? '세트 승인' : '승인'}<span>주문 ${it.legs.length}건</span></h3>${ods}<div style="margin-top:14px">${lines.map(([k, v]) => `<div class="ln"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div><div class="wn">${warn}</div><label style="display:flex;gap:8px;align-items:center;margin-top:14px;font-size:13px;color:var(--text-mute)"><input type="checkbox" id="mgEnt"> 맡기기 — 00:00에 다시 판단되면 다시 묻지 않고 그 판단대로 주문해요 · 방향이 바뀌면 다시 물어요</label><div class="bt bt3"><button class="c" id="mgNo" onclick="aqMgrReject(${id})">거부</button><button class="c" id="mgPaper" onclick="aqMgrApprove(${id}, 'paper')">모의</button><button class="g" id="mgGo" onclick="aqMgrApprove(${id}, 'live')">승인</button></div><div style="text-align:center;margin-top:12px"><a onclick="aqMcSheetClose()" style="color:var(--text-mute);font-size:13px">나중에</a></div></div>`);
+  _mcSheet(`<div class="mg-sh"><h3>${set ? '세트 승인' : '승인'}<span>주문 ${it.legs.length}건</span></h3>${ods}<div style="margin-top:14px">${lines.map(([k, v]) => `<div class="ln"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div><div class="wn">${warn}</div><label style="display:flex;gap:8px;align-items:center;margin-top:14px;font-size:13px;color:var(--text-mute)"><input type="checkbox" id="mgEnt"> 맡기기 — 00:00에 다시 판단되면 다시 묻지 않고 그 판단대로 주문해요 · 방향이 바뀌면 다시 물어요</label><div class="bt bt3"><button class="c" id="mgNo" onclick="aqMgrReject(${id})">거부</button><button class="c" id="mgPaper" onclick="aqMgrApprove(${id}, 'paper')">모의</button><button class="g aq-hold" id="mgGo" onclick="aqMgrApprove(${id}, 'live')">승인</button></div><div style="text-align:center;margin-top:12px"><a onclick="aqMcSheetClose()" style="color:var(--text-mute);font-size:13px">나중에</a></div></div>`);
 }
 function aqMgrBulkAsk() {   // v7.19: 어제와 같은 제안을 한 번에 — 모의 또는 승인
   const L = ((_mg.d && _mg.d.items) || []).filter(i => i.status === 'proposed' && (i.why || {})['어제와 같음']); if (!L.length) return;
-  _mcSheet(`<div class="mg-sh"><h3>어제와 같은 제안<span>${L.length}건</span></h3>${L.map(it => it.legs.map(g => `<div class="ln"><span>${escapeHtml(_mgTk(g.tk))} ${g.qty}주 ${g.side === 'SELL' ? '매도' : '매수'}</span><b>${_mgPx(g.price)}</b></div>`).join('')).join('')}<div class="wn">하나씩 승인할 때와 똑같이 넣어요. 현금 검사는 서버가 다시 해요.</div><div class="bt bt3"><button class="c" onclick="aqMcSheetClose()">닫기</button><button class="c" id="mgBP" onclick="aqMgrBulk('paper')">모두 모의</button><button class="g" id="mgBL" onclick="aqMgrBulk('live')">모두 승인</button></div></div>`);
+  _mcSheet(`<div class="mg-sh"><h3>어제와 같은 제안<span>${L.length}건</span></h3>${L.map(it => it.legs.map(g => `<div class="ln"><span>${escapeHtml(_mgTk(g.tk))} ${g.qty}주 ${g.side === 'SELL' ? '매도' : '매수'}</span><b>${_mgPx(g.price)}</b></div>`).join('')).join('')}<div class="wn">하나씩 승인할 때와 똑같이 넣어요. 현금 검사는 서버가 다시 해요.</div><div class="bt bt3"><button class="c" onclick="aqMcSheetClose()">닫기</button><button class="c" id="mgBP" onclick="aqMgrBulk('paper')">모두 모의</button><button class="g aq-hold" id="mgBL" onclick="aqMgrBulk('live')">길게 눌러 모두 승인</button></div></div>`);
 }
 async function aqMgrBulk(mode) {
   document.querySelectorAll('#mgBP, #mgBL').forEach(x => { x.disabled = true; });
@@ -33810,7 +33898,7 @@ function _rvCard(it, mk, held, watch) {   // v6.21: 색 딱지·칩을 글로 ·
     ${st || it.summary ? `<div class="rv-st${L && L.x ? ' x' : ''}">${escapeHtml(st)}${st && it.summary ? '<span> · </span>' : ''}${it.summary ? `<span>${escapeHtml(it.summary)}</span>` : ''}</div>` : ''}
     ${it.grade && it.grade.verdict ? `<div class="rv-gr">채점 <b>${escapeHtml(it.grade.verdict)}</b>${it.grade.why ? ' · ' + escapeHtml(it.grade.why) : ''}</div>` : ''}
     <div class="rv-kv"><div><span>심사 후 주가</span><b class="${_brC(since)}">${since == null ? '—' : aqSgPct(since, 1)}</b><small>${base ? `${_brPxS(mk, base)} → ${_brPxS(mk, cur)}${lpt ? ` · ${lpt}` : ''}` : ''}</small></div>
-      <div><span>다음 할 일</span><b class="rv-nx">${escapeHtml(nx)}</b><small>${escapeHtml(nxs)}</small></div></div>
+      <div><span>다음 할 일</span><b class="rv-nx${busy ? ' aq-think' : ''}">${escapeHtml(nx)}</b><small>${escapeHtml(nxs)}</small></div></div>
     ${steps ? `<div class="rv-steps">${escapeHtml(steps)}</div>` : ''}
     ${L && L.x ? again('만료 · 다시 심사', 'x') : stale ? again('다시 심사 · 7일 넘은 심사', '') : ''}
   </div>`;
@@ -33907,7 +33995,7 @@ async function aqReviewRender(force) {
   const keys = _RV_ORDER.filter(k => cnt[k]).concat(Object.keys(cnt).filter(k => !_RV_ORDER.includes(k)));
   const hi = (v) => v ? ' hot' : '';   // v6.21: 숫자 칸 → 한 줄 · 색은 주황 하나
   let h = `<div class="rv-sumbar">${keys.map(k => `<div><span>${escapeHtml(k)}</span><b>${cnt[k]}</b></div>`).join('')}<i></i><div><span>재심사 도래</span><b class="${hi(due)}">${due}</b></div><div><span>만료</span><b class="${hi(nExp)}">${nExp}</b></div></div>`;
-  const A = R.active; if (A && A.ticker) h += `<div class="rv-active">${escapeHtml(displayName(A.ticker) || A.ticker)} ${A.kind === 'sell' ? '매도' : '매수'}심사 ${A.status === 'queued' ? '대기 중' : '진행 중'}${A.queued ? ` · 대기 ${A.queued}건` : ''}</div>`;
+  const A = R.active; if (A && A.ticker) h += `<div class="rv-active">${escapeHtml(displayName(A.ticker) || A.ticker)} ${A.kind === 'sell' ? '매도' : '매수'}심사 ${A.status === 'queued' ? '대기 중' : '<span class="aq-think">진행 중</span>'}${A.queued ? ` · 대기 ${A.queued}건` : ''}</div>`;
   h += _rvScoreHtml(R);
   h += `<div class="rv-segs"><div class="rv-tabs">${[['all', '전체'], ['buy', '매수심사'], ['sell', '매도심사']].map(([v, t]) => `<button class="${_rv.kind === v ? 'on' : ''}" onclick="aqRvKind('${v}')">${t}</button>`).join('')}</div>
     <select class="rv-sort" onchange="aqRvSort(this.value)" aria-label="정렬">${[['new', '최신순'], ['recheck', '재심사 임박순'], ['expired', '만료 먼저']].map(([v, t]) => `<option value="${v}" ${_rv.sort === v ? 'selected' : ''}>${t}</option>`).join('')}</select></div>`;
