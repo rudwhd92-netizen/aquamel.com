@@ -124,6 +124,7 @@ components:
 | 시장 · AI 위치 | `_fjG(x, small)` — 비관~낙관 선 위에 ● 시장 · ○ AI · 사이 간격 (AI 거시 예보) |
 | 겹친 카드 넘기기 | `.fj2-stk` + `_fjStkLay()` · `aqFjNext()` — 다음 버튼 · 옆으로 밀기 (오늘의 인사이트) |
 | 줄 펼치기 | `.fj2-ex` 안에 넣고 줄에 `.open` — `aqFjTg(btn, key)` |
+| 상태 꼬리표 | `<span class="mgp-tag">` — 단계 상태 · 지금 단계 숫자(2/3) 같은 짧은 딱지. 기본은 회색(`bg-3` 바탕 · `text-dim` 글자), 지금 · 실행됨만 `.on`(`accent-soft` 바탕 · `accent-text` 글자) |
 
 ## 4. 하지 않는 것
 
