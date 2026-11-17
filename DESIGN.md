@@ -82,7 +82,8 @@ components:
   button-secondary: { backgroundColor: "rgba(127,127,127,.16)", textColor: "{colors.text}", rounded: "{rounded.pill}", height: 52px }
   button-danger:   { backgroundColor: "{colors.danger-bg}", textColor: "{colors.danger-text}", rounded: "{rounded.pill}" }
   chip-active:     { backgroundColor: "{colors.accent-soft}", textColor: "{colors.accent-text}", rounded: "{rounded.pill}" }
-  sheet:           { backgroundColor: "{colors.panel}", rounded: "16px 16px 0 0", padding: "12px 24px 28px", grip: "36x4px" }
+  sheet:           { backgroundColor: "{colors.panel}", rounded: "16px 16px 0 0", padding: "12px 24px 28px", grip: "36x4px" }   # 긴 상세 화면용
+  dialog:          { backgroundColor: "{colors.panel}", rounded: "{rounded.lg}", position: "입력 = 화면 위쪽 10% (키보드가 올라오면 보이는 칸 안) · 확인 = 가운데" }
   switch:          { size: "44x26px", knob: 22px, off: "#3a3a3f", on: "{colors.accent-deep}" }
   touch-target:    { min: 44px }
 ---
@@ -134,6 +135,7 @@ components:
 - 이모지 아이콘, 그라데이션 바탕, 왼쪽 굵은 테두리 카드
 - 설명 문장이 두 줄 넘는 카드
 - 손가락 닿는 곳이 44px보다 작은 버튼
+- 입력칸이 있는 창을 화면 아래에 두기 (키보드가 가림) — 확인 · 입력 창은 `aqConfirm` · `aqPrompt`가 위쪽 · 가운데에 띄움
 
 ## 5. 작업 규칙
 
