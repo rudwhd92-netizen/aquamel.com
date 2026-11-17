@@ -126,6 +126,8 @@ components:
 | 겹친 카드 넘기기 | `.fj2-stk` + `_fjStkLay()` · `aqFjNext()` — 다음 버튼 · 옆으로 밀기 (오늘의 인사이트) |
 | 줄 펼치기 | `.fj2-ex` 안에 넣고 줄에 `.open` — `aqFjTg(btn, key)` |
 | 상태 꼬리표 | `<span class="mgp-tag">` — 단계 상태 · 지금 단계 숫자(2/3) 같은 짧은 딱지. 기본은 회색(`bg-3` 바탕 · `text-dim` 글자), 지금 · 실행됨만 `.on`(`accent-soft` 바탕 · `accent-text` 글자) |
+| 조용한 들어가는 줄 | `.df-door` — 안 써도 되는 선택 입력으로 가는 한 줄(이름 + 숫자). 색 · 배지 · 알림 점 없이 `text-dim` 글자만 · 숫자가 0이면 그리지 않음 (AI 매니저 '다르게 한 것') |
+| 시트 안 하나 고르기 칩 | `.mg3-sh .ch.df-ch` — 누르면 `.on`(chip-active: `accent-soft` 바탕 · `accent-text` 글자) · 다시 누르면 풀림 · 높이 44px |
 
 ## 4. 하지 않는 것
 
