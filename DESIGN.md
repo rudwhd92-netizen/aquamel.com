@@ -1,19 +1,23 @@
 ---
-version: 1.0
+version: 2.0
 name: AQUAMEL
-updated: 2026-11-16
+updated: 2026-11-18
 description: |
   AQUAMEL 앱(index.html 한 파일, 순수 HTML·JS PWA)의 화면 규칙. 투자 판단을 돕는 앱이라
   화려함보다 "숫자와 판단이 한눈에 읽히는 것"이 먼저다. 어두운 바탕 · 강조색 하나 ·
-  넉넉한 위아래 여백 · 글은 최소 · 움직임은 손으로 조작할 때와 처음 들어올 때만.
+  넉넉한 위아래 여백 · 글은 최소 · 움직임은 손과 상태를 따르는 스프링.
   화면을 새로 만들거나 고치는 사람(사람이든 Claude든)은 작업 전에 이 파일을 끝까지 읽고 따른다.
 
 colors:            # 다크(기본) — CSS 변수 이름 그대로
-  bg: "#161618"            # --bg
-  panel: "#1c1c1f"         # --panel (카드)
-  panel-2: "#222226"       # --panel-hi / --bg-2 (카드 위 · 입력칸)
-  bg-3: "#2a2a2e"          # --bg-3 (눌린 칩 · 선택 바탕)
-  line: "#2c2c30"          # 꼭 필요할 때만 쓰는 가는 선 (기본은 선 없이 카드로 나눔)
+  bg: "#000000"            # --bg
+  panel: "#171717"         # --panel (카드)
+  surface: "#262626"       # 부품 몸통 · 카드 안 칸 · 시트 안 줄
+  fill-1: "rgba(255,255,255,.05)"   # 칸 · 입력칸
+  fill-2: "rgba(255,255,255,.09)"   # 칩 · 딱지
+  fill-3: "rgba(255,255,255,.14)"   # 눌린 칩 · 선택 바탕 · 막대
+  object: "#2c2c2c"        # 카드 없이 떠 있는 물체 (섬 · 방울)
+  # 옛 이름 --panel-2 · --bg-2 · --bg-3 · --panel-hi는 코드에서 1단계까지 그대로 두고, surface / fill-3으로 옮긴다
+  line: "#2c2c30"          # 선 · 그림자 없음이 기본. 꼭 필요할 때만 쓰는 가는 선
   text-hi: "#ffffff"       # --text-hi (제목 · 숫자)
   text: "#d4d4d4"          # --text (본문)
   text-dim: "#9d9d9d"      # --text-dim (보조)
@@ -38,6 +42,10 @@ colors-light:      # [data-theme="light"] — 같은 이름, 값만 바뀜
   accent-soft: "#dde7f2"
   accent-text: "#1f5a96"
   accent-deep: "#2a6cb0"
+  fill-1: "rgba(23,24,26,.04)"
+  fill-2: "rgba(23,24,26,.07)"
+  fill-3: "rgba(23,24,26,.12)"
+  object: "#e6e5e2"
 
 typography:        # 글꼴: 'Pretendard Variable', Pretendard, -apple-system, sans-serif · 숫자는 tabular-nums
   number-xl: { fontSize: 26px, fontWeight: 700 }   # 큰 수치 (--text-3xl)
@@ -49,10 +57,14 @@ typography:        # 글꼴: 'Pretendard Variable', Pretendard, -apple-system, s
   # 위 6단만 쓴다. 12.5px · 11.5px · 13.5px 같은 반 픽셀은 새로 만들지 않는다.
   # 입력칸 글자는 16px (iOS 확대 막음).
 
-rounded:
-  sm: 6px        # --radius-sm (작은 딱지)
-  md: 10px       # --radius-md (작은 카드 · 칸)
-  lg: 16px       # --radius-lg (카드 · 시트 위 모서리)
+rounded:         # 안쪽 모서리 = 바깥 모서리 − 사이 여백. 코드의 --radius-sm/md/lg는 화면마다 3단계 시안 때 이 값으로 옮긴다.
+  xs: 6px        # 키 · 작은 칩 · 딱지 · 지도 칸
+  bar: 5px       # 막대
+  row: 12px      # 패널 안 줄 · 아이콘 버튼
+  tile: 14px     # 타일 · 가로 카드
+  panel: 18px    # 메뉴 · 작은 패널 · 아래 칸 셋
+  sheet: 24px    # 큰 패널 · 시트 위 모서리
+  card: 28px     # 카드
   pill: 999px    # --radius-pill (버튼 · 칩 · 스위치)
 
 spacing:         # 4의 배수 (--space-1 ~ --space-8)
@@ -69,22 +81,31 @@ spacing:         # 4의 배수 (--space-1 ~ --space-8)
   card-gap: 10~12px      # 카드 사이
 
 motion:
-  fast: 120ms    # --t-fast (색 · 눌림)
+  fast: 120ms    # --t-fast (색 · 눌림) — 색 · 눌림 같은 CSS 전환만
   base: 200ms    # --t-base (선택 바탕 이동 · 스위치)
   slow: 320ms    # --t-slow (시트 · 펼치기)
-  ease: "cubic-bezier(0.22, 1, 0.36, 1)"   # --ease-out, 곡선은 이것 하나
-  hold: 800ms    # 길게 눌러 확정
+  ease: "cubic-bezier(0.22, 1, 0.36, 1)"   # --ease-out, CSS 전환 곡선은 이것 하나
+  springs:         # 강성 감쇠 · 질량 1 · 출처 designbookmark motion-src/shared/tokens.css · 원본 값 그대로 · 모듈 고유 값은 옮길 때만 추가
+    follow: "900 50"     # 손가락이 잡고 있는 것 (튕김 · 늦음 없음)
+    settle: "280 22"     # 놓았을 때 · 값에 내려앉을 때 (작게 한 번 튕김)
+    soft: "260 24"       # 큰 이동 (패널 · 시트 · 부품 전체)
+    lead: "620 36"       # 늘어나는 선택 바탕, 움직이는 쪽 끝
+    trail: "190 19"      # 늘어나는 선택 바탕, 뒤따르는 끝 (늘어남을 만듦)
+    pop: "520 16"        # 고를 때 아이콘 · 숫자가 톡
+    fade: "420 32"       # 투명도 · 작은 밀림
+    stagger: 45ms        # 여러 개가 차례로 들어올 때 간격
+  hold: 1200ms   # 길게 눌러 확정 (원본 Hold to publish) · 코드 반영 전까지 .aq-hold는 800ms
   spring-expand: "강성/감쇠 (질량 1) · 펼침 240/21 · 상세 나타남 260/28 (0.16초 뒤) · 자리 300/26 · 크기 300/26 · 투명도 300/30"   # 펼침 카드에만 쓴다 · 출처: designbookmark expand-card (나머지 카드는 0.94배 · 위아래 24px 밀려나며 사라짐)
-  reduced: "prefers-reduced-motion이면 움직임 없이 바로 바뀜"
+  reduced: "스프링은 감쇠를 2√강성으로(튕김 없이 움직임) · CSS 전환 · 흐림 · 저절로 도는 것은 바로 바뀜"
 
 components:
-  card:            { backgroundColor: "{colors.panel}", rounded: "{rounded.lg}", padding: "{spacing.card-pad}" }
+  card:            { backgroundColor: "{colors.panel}", rounded: "{rounded.card}", padding: "{spacing.card-pad}" }
   button-primary:  { backgroundColor: "{colors.accent-deep}", textColor: "#ffffff", rounded: "{rounded.pill}", height: 52px }
   button-secondary: { backgroundColor: "rgba(127,127,127,.16)", textColor: "{colors.text}", rounded: "{rounded.pill}", height: 52px }
   button-danger:   { backgroundColor: "{colors.danger-bg}", textColor: "{colors.danger-text}", rounded: "{rounded.pill}" }
   chip-active:     { backgroundColor: "{colors.accent-soft}", textColor: "{colors.accent-text}", rounded: "{rounded.pill}" }
-  sheet:           { backgroundColor: "{colors.panel}", rounded: "16px 16px 0 0", padding: "12px 24px 28px", grip: "36x4px" }   # 긴 상세 화면용
-  dialog:          { backgroundColor: "{colors.panel}", rounded: "{rounded.lg}", position: "입력 = 화면 위쪽 10% (키보드가 올라오면 보이는 칸 안) · 확인 = 가운데" }
+  sheet:           { backgroundColor: "{colors.panel}", rounded: "24px 24px 0 0", padding: "12px 24px 28px", grip: "36x4px" }   # 긴 상세 화면용
+  dialog:          { backgroundColor: "{colors.panel}", rounded: "{rounded.sheet}", position: "입력 = 화면 위쪽 10% (키보드가 올라오면 보이는 칸 안) · 확인 = 가운데" }
   switch:          { size: "44x26px", knob: 22px, off: "#3a3a3f", on: "{colors.accent-deep}" }
   touch-target:    { min: 44px }
 ---
@@ -98,7 +119,9 @@ components:
 3. **글은 최소.** 설명 문장 대신 숫자 · 딱지 · 짧은 이름. 문장이 필요하면 한 줄.
 4. **여백은 넉넉하게.** 카드 안쪽 18~24px, 위아래 여백을 아끼지 않는다. 글이 카드 가장자리에 붙으면 안 된다.
 5. **선 대신 카드로 나눈다.** 구분선은 꼭 필요할 때만 `line`.
-6. **움직임은 이유가 있을 때만.** 처음 들어올 때, 손으로 조작할 때. 출렁 · 번짐 · 젤리 · 오로라 · 커서 효과는 쓰지 않는다.
+6. **움직임은 손과 상태를 따른다.** 처음 들어올 때 · 손으로 조작할 때 · 상태가 바뀔 때만 움직인다. 위치 · 크기는 공용 스프링으로, 가져온 움직임은 원본 값 그대로.
+   - 쓴다: 스프링이 만드는 늘어남 · 튕김(젤리 슬라이더 · 늘어나는 선택 바탕 · 방울), 모양이 바뀌는 순간의 짧은 흐림(예: 알림 창 내용 흐림 5px → 0).
+   - 쓰지 않는다: 손대지 않아도 저절로 반복하는 장식(오로라 · 구슬 · 물결 · 뒤섞이는 글자), 커서 따라오기 · 기울임(모바일), 숫자를 가리는 흐림, 터지는 입자.
 
 ## 2. 글자 · 말투
 
@@ -114,7 +137,7 @@ components:
 | 확인 묻기 | `await aqConfirm('제목\n설명')` → true/false. 삭제 · 취소 · 중단 문구면 버튼이 위험 색. **`confirm()` 금지** |
 | 입력 받기 | `await aqPrompt('제목\n설명', 기본값, { ghost, multi, type, inputmode, ok, cancel })` → 글자 또는 null. **`prompt()` 금지** |
 | 알림 | `aqToast('글', ms)` — 아래에 쌓임, 누르면 펼침, ×로 치움. `alert()`도 자동으로 여기로 옴 |
-| 돈이 나가는 버튼 | 버튼에 `class="aq-hold"` — 0.8초 길게 눌러야 실행. 주문 · 승인 · 조건부 승인 |
+| 돈이 나가는 버튼 | 버튼에 `class="aq-hold"` — 1.2초(v2 · 코드 반영 전에는 0.8초) 길게 눌러야 실행. 주문 · 승인 · 조건부 승인 |
 | 요청 버튼 | `aqBtnLoad(el)` → 처리 → `aqBtnDone(el, ok, '요청됨')` |
 | 기다리는 글자 | `<span class="aq-think">판단 중</span>` |
 | 고르기 버튼 | 버튼 묶음 클래스를 `AQ_SEG`에 넣으면 선택 바탕이 미끄러짐 (`.active` 또는 `.on`) |
@@ -142,6 +165,8 @@ components:
 - 한국 종목 코드를 그대로 화면에
 - 반 픽셀 글자 크기, 토큰 밖 색 · 모서리
 - 이모지 아이콘, 그라데이션 바탕, 왼쪽 굵은 테두리 카드
+- 그림자 · 테두리 선(카드 · 버튼)
+- 손대지 않아도 저절로 반복하는 장식 · 커서 효과 · 터지는 입자
 - 설명 문장이 두 줄 넘는 카드
 - 손가락 닿는 곳이 44px보다 작은 버튼
 - 입력칸이 있는 창을 화면 아래에 두기 (키보드가 가림) — 확인 · 입력 창은 `aqConfirm` · `aqPrompt`가 위쪽 · 가운데에 띄움
@@ -153,3 +178,15 @@ components:
 - 푸시 전에 `git pull --rebase` (여러 방이 같은 저장소에 올림). 번호가 겹치면 다음 번호로.
 - 미국 거래일 매니저 줄(겨울 20:40~00:00)에는 배포하지 않는다 (본부장님이 허락하면 예외).
 - 새 부품이 생기면 3장 표에 한 줄 더한다.
+
+## 6. v2 적용 상태 (2026-11-18 승인)
+
+- 원칙 6: 움직임은 손과 상태를 따르는 스프링으로 개정했다.
+- 표면: 사이트 단계(바탕 #000 · 카드 #171717 · 몸통 #262626) + 채움 3단 · object를 토큰에 넣었다.
+- 모서리: 사이트 8단(카드 28)을 토큰에 넣었다.
+- 움직임 줄이기: 임계 감쇠(튕김 없이 움직임)로 정했다.
+- 길게 눌러 확정: 1.2초로 정했다.
+
+코드 반영은 DESIGN_ROOM.md 5장 1단계: index.html 색 토큰 한 곳으로(지금 다크 색 블록 3곳) · 공용 스프링 엔진 AQMotion · .aq-hold 1.2초 · 화면별 모서리는 3단계 시안 때.
+
+시안 캔버스: https://claude.ai/artifact/EbNC3oaVzXZaAM4GfaQWfh

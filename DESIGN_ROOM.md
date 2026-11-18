@@ -62,7 +62,7 @@
 - **이미 옮김 (목록 84개 안, 3개):** Pull to refresh(알림 `_npr`) · Stack panel(설정, Kokonut UI) · Expand card(종목 지도).
 - **목록 밖에서 옮김:** Dynamic island(알림 열고 닫기 `_nis`, SmoothUI · MIT) — 지금 designbookmark 84개 목록에는 없음. 목록 안에서 가장 가까운 것은 Morph island.
 - **0단계 목록과 권리:** 84개를 앱의 어느 화면 · 어디에 쓸지 짝짓는 표를 이 파일에 만든다. Kokonut UI · SmoothUI는 MIT(출처 주석). designbookmark 자체 모듈은 사이트에 라이선스 표기가 없다 — 본부장님께 확인을 받고, 받기 전에는 값(스프링 · 시간)만 참고해 직접 짠다. 짝짓기 표 초안: `docs/design/1_모듈표_DESIGN_ROOM_5장.md` · DESIGN.md v2 개정안 초안: `docs/design/2_DESIGN_v2_개정안.md` (둘 다 본부장님 확인 전).
-- **1단계 공통 토대:** 사이트 공통 파일(tokens.css · base.css · motion.js)의 스프링 값 · 표면색 · 모서리를 `DESIGN.md` 토큰으로 옮기고, 알림 창의 스프링 엔진(`_npr` 안)을 앱 전체가 함께 쓰는 하나로 묶는다. `DESIGN.md` 원칙 6('출렁 · 번짐 · 젤리 · 오로라 · 커서 효과는 쓰지 않는다')은 이 이식과 부딪치므로 v2에서 본부장님 확인 뒤 고친다.
+- **1단계 공통 토대:** 사이트 공통 파일(tokens.css · base.css · motion.js)의 스프링 값 · 표면색 · 모서리를 `DESIGN.md` 토큰으로 옮기고, 알림 창의 스프링 엔진(`_npr` 안)을 앱 전체가 함께 쓰는 하나로 묶는다. DESIGN.md v2(2026-11-18 승인)에 토큰 · 원칙 6을 반영함 — 남은 것은 index.html 코드 반영.
 - **2단계 자주 쓰는 부품부터:** 돈 · 결정(Hold to publish, Slide to confirm, Swipe deck, Undo button) → 고르기 · 입력(Segmented control, Tab pill, Toggle switch, Number stepper, Range slider, Wheel picker) → 화면 틀(Bottom bar, Notification stack, Step progress, Pagination dots, Morph popover) → AI 글(Streaming reply, Thinking text, Goo thinking, Typewriter).
 - **3단계 화면 단위:** AI 매니저 → 발견 → 종목 상세 → 일정 · 뉴스 → 설정. 화면마다 시안 → 승인 → 반영.
 
