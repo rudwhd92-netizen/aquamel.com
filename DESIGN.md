@@ -74,6 +74,7 @@ motion:
   slow: 320ms    # --t-slow (시트 · 펼치기)
   ease: "cubic-bezier(0.22, 1, 0.36, 1)"   # --ease-out, 곡선은 이것 하나
   hold: 800ms    # 길게 눌러 확정
+  spring-expand: "강성/감쇠 (질량 1) · 펼침 240/21 · 상세 나타남 260/28 (0.16초 뒤) · 자리 300/26 · 크기 300/26 · 투명도 300/30"   # 펼침 카드에만 쓴다 · 출처: designbookmark expand-card (나머지 카드는 0.94배 · 위아래 24px 밀려나며 사라짐)
   reduced: "prefers-reduced-motion이면 움직임 없이 바로 바뀜"
 
 components:
