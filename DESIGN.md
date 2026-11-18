@@ -16,7 +16,7 @@ colors:            # 다크(기본) — CSS 변수 이름 그대로
   fill-2: "rgba(255,255,255,.09)"   # 칩 · 딱지
   fill-3: "rgba(255,255,255,.14)"   # 눌린 칩 · 선택 바탕 · 막대
   object: "#2c2c2c"        # 카드 없이 떠 있는 물체 (섬 · 방울)
-  # 옛 이름 --panel-2 · --bg-2 · --bg-3 · --panel-hi는 코드에서 1단계까지 그대로 두고, surface / fill-3으로 옮긴다
+  # 옛 이름 --panel-2 · --bg-2(= surface #262626) · --bg-3 · --panel-hi(= fill-3을 카드 위에 얹은 불투명 #383838)는 그대로 쓰이고, 화면별로 surface / fill-3으로 옮긴다 (v8.66)
   line: "#2c2c30"          # 선 · 그림자 없음이 기본. 꼭 필요할 때만 쓰는 가는 선
   text-hi: "#ffffff"       # --text-hi (제목 · 숫자)
   text: "#d4d4d4"          # --text (본문)
@@ -94,7 +94,7 @@ motion:
     pop: "520 16"        # 고를 때 아이콘 · 숫자가 톡
     fade: "420 32"       # 투명도 · 작은 밀림
     stagger: 45ms        # 여러 개가 차례로 들어올 때 간격
-  hold: 1200ms   # 길게 눌러 확정 (원본 Hold to publish) · 코드 반영 전까지 .aq-hold는 800ms
+  hold: 1200ms   # 길게 눌러 확정 (원본 Hold to publish) · 코드 --hold-ms (v8.66)
   spring-expand: "강성/감쇠 (질량 1) · 펼침 240/21 · 상세 나타남 260/28 (0.16초 뒤) · 자리 300/26 · 크기 300/26 · 투명도 300/30"   # 펼침 카드에만 쓴다 · 출처: designbookmark expand-card (나머지 카드는 0.94배 · 위아래 24px 밀려나며 사라짐)
   reduced: "스프링은 감쇠를 2√강성으로(튕김 없이 움직임) · CSS 전환 · 흐림 · 저절로 도는 것은 바로 바뀜"
 
@@ -137,7 +137,8 @@ components:
 | 확인 묻기 | `await aqConfirm('제목\n설명')` → true/false. 삭제 · 취소 · 중단 문구면 버튼이 위험 색. **`confirm()` 금지** |
 | 입력 받기 | `await aqPrompt('제목\n설명', 기본값, { ghost, multi, type, inputmode, ok, cancel })` → 글자 또는 null. **`prompt()` 금지** |
 | 알림 | `aqToast('글', ms)` — 아래에 쌓임, 누르면 펼침, ×로 치움. `alert()`도 자동으로 여기로 옴 |
-| 돈이 나가는 버튼 | 버튼에 `class="aq-hold"` — 1.2초(v2 · 코드 반영 전에는 0.8초) 길게 눌러야 실행. 주문 · 승인 · 조건부 승인 |
+| 돈이 나가는 버튼 | 버튼에 `class="aq-hold"` — 1.2초(`--hold-ms`) 길게 눌러야 실행. 주문 · 승인 · 조건부 승인 |
+| 스프링 움직임 | 공용 스프링 엔진 `window.AQMotion` — `S(x, k, c)` 스프링 하나 · `tune(s, k, c)`(움직임 줄이기면 튕김 없이) · `step(s, dt)` · `clamp` · `token('--x')` · `spring('--spring-soft')` → [강성, 감쇠] · `register({ frame(dt), render(), idle() })` → 떼는 함수 · `kick()`. rAF 고리 하나(dt 최대 1/30 · 4번 나눔)가 모두 쉬면 스스로 멈춤. 새 움직임은 이것과 `--spring-*` 토큰으로 |
 | 요청 버튼 | `aqBtnLoad(el)` → 처리 → `aqBtnDone(el, ok, '요청됨')` |
 | 기다리는 글자 | `<span class="aq-think">판단 중</span>` |
 | 고르기 버튼 | 버튼 묶음 클래스를 `AQ_SEG`에 넣으면 선택 바탕이 미끄러짐 (`.active` 또는 `.on`) |
@@ -187,6 +188,11 @@ components:
 - 움직임 줄이기: 임계 감쇠(튕김 없이 움직임)로 정했다.
 - 길게 눌러 확정: 1.2초로 정했다.
 
-코드 반영은 DESIGN_ROOM.md 5장 1단계: index.html 색 토큰 한 곳으로(지금 다크 색 블록 3곳) · 공용 스프링 엔진 AQMotion · .aq-hold 1.2초 · 화면별 모서리는 3단계 시안 때.
+코드 반영 (v8.66, DESIGN_ROOM.md 5장 1단계):
+
+- 색 토큰: 다크 표면 색을 index.html의 `v8.66` 다크 블록 한 곳으로(바탕 #000 · 카드 #171717 · surface #262626 · fill-1/2/3 · object · 눌림 `--bg-3`/`--panel-hi` #383838). 라이트는 fill-1/2/3 · object · surface만 더함. 화면 코드에 직접 쓴 옛 색(#1c1c1f 등)은 화면별로 옮긴다.
+- 모서리 토큰 `--r-xs` ~ `--r-card`와 스프링 토큰 `--spring-*` · `--stagger`를 :root에 넣음(모서리는 아직 화면에서 안 씀 — 3단계 시안 때).
+- 공용 스프링 엔진 `window.AQMotion` — 알림 당겨서 새로고침(`_npr`)이 이 계산을 씀. `_nis` · Stack panel · 펼침 카드는 아직 따로.
+- 길게 눌러 확정 1.2초(`--hold-ms`, CSS 채움과 JS 타이머가 같은 값).
 
 시안 캔버스: https://claude.ai/artifact/EbNC3oaVzXZaAM4GfaQWfh
