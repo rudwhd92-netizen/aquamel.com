@@ -1,5 +1,7 @@
 # (초안 · 미반영) DESIGN.md v2 개정안
 
+> 고를 것 5가지 캔버스 시안(가안 A · B): https://claude.ai/artifact/EbNC3oaVzXZaAM4GfaQWfh
+
 근거: designbookmark `motion-src/shared/` 공통 파일 3개(2026-11-18 받음).
 - `tokens.css`: 색 · 글자 · 모서리 · 스프링 토큰("강성 감쇠" 두 숫자)
 - `base.css`: 기본 바탕 · 딱지 · 아바타 그물 그라데이션
