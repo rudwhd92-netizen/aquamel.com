@@ -46,6 +46,8 @@
 3. 승인 뒤 반영 → `tools/ui-test/`로 가짜 데이터 화면을 띄워 확인 → 버전 +0.01 → push.
 4. 새 부품이 생기면 `DESIGN.md` 3장 표에 한 줄.
 5. 보고는 짧게: 무엇이 바뀌었는지 + 시험 화면 캡처.
+6. **결과물은 항상 저장소에 남긴다**(초안은 `docs/design/`). 본부장님은 노트북을 여러 대 쓰므로 한 컴퓨터에만 있는 파일은 없는 것과 같다.
+7. **본부장님께 고를 것을 물을 때는 글 · 색 코드 · 전문 용어로 묻지 않는다.** 캔버스에 같은 화면을 '가안 A · 가안 B'로 나란히 그려 보여 주고, 추천안에 표시하고, 각 가안의 차이는 쉬운 말 한 줄로만 쓴다.
 
 ### 본부장님 화면 취향 (꼭 지킬 것)
 - 글은 최소, 설명 문장 대신 숫자 · 딱지 · 짧은 이름. 위아래 여백 넉넉히. 색은 절제(강조색 하나).
@@ -57,7 +59,7 @@
 
 목표: 사이트의 모듈과 룩앤필을 앱에 옮긴다. 모듈 84개 = designbookmark 자체 53 · Kokonut UI 25 · SmoothUI 6.
 
-- **이미 옮김:** Pull to refresh(알림) · Stack panel(설정) · Expand card(종목 지도) · Dynamic island(알림 열고 닫기, SmoothUI).
+- **이미 옮김(목록 안 3개):** Pull to refresh(알림) · Stack panel(설정) · Expand card(종목 지도). 목록 밖에서 옮긴 것: Dynamic island(알림 열고 닫기 `_nis`, smoothui.dev).
 - **0단계 목록과 권리:** 84개를 앱의 어느 화면 · 어디에 쓸지 짝짓는 표를 이 파일에 만든다. Kokonut UI · SmoothUI는 MIT(출처 주석). designbookmark 자체 모듈은 사이트에 라이선스 표기가 없다 — 본부장님께 확인을 받고, 받기 전에는 값(스프링 · 시간)만 참고해 직접 짠다.
 - **1단계 공통 토대:** 사이트 공통 파일(tokens.css · base.css · motion.js)의 스프링 값 · 표면색 · 모서리를 `DESIGN.md` 토큰으로 옮기고, 알림 창의 스프링 엔진(`_npr` 안)을 앱 전체가 함께 쓰는 하나로 묶는다. `DESIGN.md` 원칙 6('출렁 · 번짐 · 젤리 · 오로라 · 커서 효과는 쓰지 않는다')은 이 이식과 부딪치므로 v2에서 본부장님 확인 뒤 고친다.
 - **2단계 자주 쓰는 부품부터:** 돈 · 결정(Hold to publish, Slide to confirm, Swipe deck, Undo button) → 고르기 · 입력(Segmented control, Tab pill, Toggle switch, Number stepper, Range slider, Wheel picker) → 화면 틀(Bottom bar, Notification stack, Step progress, Pagination dots, Morph popover) → AI 글(Streaming reply, Thinking text, Goo thinking, Typewriter).
