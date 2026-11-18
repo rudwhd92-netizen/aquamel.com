@@ -125,6 +125,7 @@ components:
 | 시장 · AI 위치 | `_fjG(x, small)` — 비관~낙관 선 위에 ● 시장 · ○ AI · 사이 간격 (AI 거시 예보) |
 | 겹친 카드 넘기기 | `.fj2-stk` + `_fjStkLay()` · `aqFjNext()` — 다음 버튼 · 옆으로 밀기 (오늘의 인사이트) |
 | 줄 펼치기 | `.fj2-ex` 안에 넣고 줄에 `.open` — `aqFjTg(btn, key)` |
+| 하위 페이지로 들어가기 | 설정 Stack panel `#setSP` — 시트 id를 `_spIds()`에 넣으면 `aqSetSheet(id, true)`가 아래 시트 대신 하위 페이지로 밀어 넣음 · `‹ 앞 페이지` · 오른쪽으로 쓸어 돌아가기 · 뒤로가기. 움직임 값은 원본(Kokonut UI stack-panel, MIT) 그대로라 위 motion 토큰의 예외(밀기 420 · 돌아가기 340 · 높이 380ms) |
 | 상태 꼬리표 | `<span class="mgp-tag">` — 단계 상태 · 지금 단계 숫자(2/3) 같은 짧은 딱지. 기본은 회색(`bg-3` 바탕 · `text-dim` 글자), 지금 · 실행됨만 `.on`(`accent-soft` 바탕 · `accent-text` 글자) |
 | 조용한 들어가는 줄 | `.df-door` — 안 써도 되는 선택 입력으로 가는 한 줄(이름 + 숫자). 색 · 배지 · 알림 점 없이 `text-dim` 글자만 · 숫자가 0이면 그리지 않음 (AI 매니저 '다르게 한 것') |
 | 시트 안 하나 고르기 칩 | `.mg3-sh .ch.df-ch` — 누르면 `.on`(chip-active: `accent-soft` 바탕 · `accent-text` 글자) · 다시 누르면 풀림 · 높이 44px |
