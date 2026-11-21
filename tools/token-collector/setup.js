@@ -21,6 +21,15 @@ function clipboard() {
     return execFileSync('sh', ['-c', 'wl-paste 2>/dev/null || xclip -selection clipboard -o 2>/dev/null'], { encoding: 'utf8', timeout: 5000 }).trim();
   } catch (e) { return ''; }
 }
+function askHidden(q) {   // 클립보드에 키가 없을 때: 터미널에 붙여 넣기 (화면에는 * 로 가림)
+  return new Promise(res => {
+    if (!process.stdin.isTTY) { let b = ''; process.stdin.setEncoding('utf8'); process.stdin.on('data', c => { b += c; }); process.stdin.on('end', () => res(b.trim())); return; }
+    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout, terminal: true });
+    let muted = false; rl._writeToOutput = t => { if (muted && t !== q) rl.output.write('*'.repeat(Math.max(0, t.length))); else rl.output.write(t); };
+    rl.question(q, a => { rl.close(); process.stdout.write(NL_OUT); res(String(a || '').trim()); }); muted = true;
+  });
+}
+const NL_OUT = '\n';
 function post(url, key, body) {
   return new Promise(res => {
     const u = new URL(url), data = JSON.stringify(body), lib = u.protocol === 'http:' ? http : https;
@@ -47,8 +56,12 @@ function post(url, key, body) {
   }
 
   if (has('--key')) {
-    const key = clipboard();
-    if (!/^aqtk_[A-Za-z0-9_-]{30,}$/.test(key)) { say('✗ 클립보드에 수집 키(aqtk_…)가 없어요. 앱에서 키를 만들어 복사한 뒤 다시 실행하세요.'); process.exit(1); }
+    let key = clipboard();
+    if (!/^aqtk_[A-Za-z0-9_-]{30,}$/.test(key)) {
+      say('· 클립보드에 수집 키(aqtk_…)가 없어요. 직접 붙여 넣어 주세요 (붙여 넣으면 * 로 가려져요).');
+      key = await askHidden('수집 키: ');
+    }
+    if (!/^aqtk_[A-Za-z0-9_-]{30,}$/.test(key)) { say('✗ 수집 키 모양이 아니에요(aqtk_ 로 시작해야 해요). 앱 > 토큰 관리 > 수집기 연결에서 새로 만들어 주세요.'); process.exit(1); }
     const r = await post(SERVER + '/api?action=tokenIngest', key, { ping: true });
     if (!r.ok) { say('✗ 서버가 키를 받아주지 않았어요: ' + (r.error || '')); process.exit(1); }
     fs.writeFileSync(CFG, JSON.stringify({ server: SERVER, key, label: r.label || '' }), { mode: 0o600 });
