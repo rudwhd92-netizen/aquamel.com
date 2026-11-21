@@ -74,7 +74,29 @@ function send() {   // 따로 띄운 프로세스: pending 을 서버로 한 번
   req.end(data);
 }
 
-if (process.argv[2] === '--send') send();
+function connect(key) {   // 앱이 복사해 준 한 줄 — node ~/.claude/aquamel-statusline.js --connect aqtk_…  (서버에 확인한 뒤 키 저장)
+  key = String(key || '').trim();
+  if (!/^aqtk_[A-Za-z0-9_-]{30,}$/.test(key)) { console.log('✗ 수집 키 모양이 아니에요 — 앱 > 토큰 관리 > 수집기 연결에서 새로 만들어 주세요.'); process.exit(1); }
+  const server = (process.env.AQ_SERVER || 'https://aquamel.duckdns.org').replace(/\/$/, '');
+  let u; try { u = new URL(server + '/api?action=tokenIngest'); } catch (e) { console.log('✗ 서버 주소가 이상해요'); process.exit(1); }
+  const data = JSON.stringify({ ping: true }), lib = u.protocol === 'http:' ? http : https;
+  const req = lib.request(u, { method: 'POST', timeout: 10000, headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data), Authorization: 'Bearer ' + key } }, res => {
+    let t = ''; res.on('data', c => t += c);
+    res.on('end', () => {
+      let r = {}; try { r = JSON.parse(t); } catch (e) {}
+      if (!r.ok) { console.log('✗ 서버가 키를 받아주지 않았어요: ' + (r.error || res.statusCode) + ' — 앱에서 새 키를 만들어 주세요.'); process.exit(1); }
+      writeJSON(CFG, { server, key, label: r.label || '' });
+      console.log('✓ 연결 완료' + (r.label ? ' (' + r.label + ')' : '') + ' — Claude Code에서 메시지를 한 번 보내면 앱에 나타나요.');
+      process.exit(0);
+    });
+  });
+  req.on('error', e => { console.log('✗ 서버에 닿지 못했어요: ' + (e.code || e.message)); process.exit(1); });
+  req.on('timeout', () => { req.destroy(); });
+  req.end(data);
+}
+
+if (process.argv[2] === '--connect') connect(process.argv[3]);
+else if (process.argv[2] === '--send') send();
 else if (process.argv[2] === '--selftest') { /* 시험 도구(tools/token-collector/test.js)가 부름 */ module.exports = { win, left, showLine }; }
 else {
   let raw = ''; process.stdin.setEncoding('utf8');

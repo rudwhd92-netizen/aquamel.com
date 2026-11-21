@@ -78,7 +78,7 @@ const bar = (p, id) => p.evaluate(id => parseFloat(document.getElementById(id).s
   ok('직접 입력 버튼 3개(Claude · Gemini · Codex)', await p.evaluate(() => [...document.querySelectorAll('#setTokBody .tk-sec')].pop().querySelectorAll('button').length === 3));
   await p.evaluate(() => { window.__ans = ['회사 PC']; }); await p.evaluate(() => aqTokKeyNew()); await p.waitForTimeout(300);
   calls = await p.evaluate(() => window.__calls.filter(c => c[0] !== 'tokenState')); const clip = await p.evaluate(() => window.__clip);
-  ok('수집기 연결 → 키 만들고 클립보드에 복사(화면에는 안 보임)', calls.some(c => c[0] === 'tokenKeyCreate' && c[1].label === '회사 PC') && clip === 'aqtk_TEST_ONLY' && !(await p.evaluate(() => document.body.innerText.includes('aqtk_TEST_ONLY'))));
+  ok('수집기 연결 → 키 만들고 "붙여 넣고 엔터" 한 줄 명령을 클립보드에 복사(화면에는 안 보임)', calls.some(c => c[0] === 'tokenKeyCreate' && c[1].label === '회사 PC') && clip === 'node "$HOME/.claude/aquamel-statusline.js" --connect aqtk_TEST_ONLY' && !(await p.evaluate(() => document.body.innerText.includes('aqtk_TEST_ONLY'))));
   await p.evaluate(() => aqTokKeyDel('abcd1234')); await p.waitForTimeout(300);
   calls = await p.evaluate(() => window.__calls.filter(c => c[0] !== 'tokenState')); ok('수집기 지우기 → tokenKeyRevoke', calls.some(c => c[0] === 'tokenKeyRevoke' && c[1].id === 'abcd1234'));
   await p.evaluate(() => { document.getElementById('setTokBody').scrollTop = 99999; }); await p.waitForTimeout(300); await p.screenshot({ path: path.join(OUT, 'tokens_4_tools.png') });

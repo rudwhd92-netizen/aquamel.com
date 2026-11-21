@@ -17,9 +17,10 @@ node tools/token-collector/setup.js          # 수집기 복사 + ~/.claude/sett
 이미 다른 상태줄이 있으면 바꾸지 않고 알려 줘요.
 
 ## 서버에 연결 (수집 키)
-1. 앱 > 설정 > 관리자 > 토큰 관리 > **수집기 연결** → 이름을 적으면 수집 키가 **클립보드에 복사**돼요 (화면에는 안 보여요).
-2. 바로 PC에서 `node tools/token-collector/setup.js --key` — 클립보드의 키를 서버에 확인한 뒤 `~/.claude/aquamel-token-config.json`에 저장해요.
-- 클립보드에 키가 없으면(앱이 복사에 실패해 키를 화면에 보여 줬거나, 다른 기기에서 만들었을 때) 스크립트가 `수집 키:` 를 물어요. 키를 붙여 넣으면 `*`로 가려져요.
+1. 앱 > 설정 > 관리자 > 토큰 관리 > **수집기 연결** → 이름을 적으면 **연결 명령 한 줄**이 클립보드에 복사돼요 (화면에는 안 보여요).
+2. PC 터미널(PowerShell)에 **붙여 넣고 엔터** — 키를 서버에 확인한 뒤 `~/.claude/aquamel-token-config.json`에 저장해요. (`node "$HOME/.claude/aquamel-statusline.js" --connect aqtk_…`)
+- 먼저 `node tools/token-collector/setup.js` 로 수집기를 설치해 두어야 해요(새 PC는 한 번).
+- `setup.js --key`(클립보드의 키를 읽음 · 없으면 붙여 넣기 입력)도 그대로 쓸 수 있어요.
 - 수집 키는 숫자 올리기만 돼요(관리자 권한 아님). 새 PC는 키를 따로 만들고, 앱에서 언제든 지울 수 있어요.
 
 ## 시험

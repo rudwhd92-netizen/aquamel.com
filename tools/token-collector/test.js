@@ -43,6 +43,16 @@ const files = () => fs.readdirSync(claudeDir).map(f => fs.readFileSync(path.join
   let b2 = {}; try { b2 = JSON.parse((hits[2] || {}).body || '{}'); } catch (e) {}
   ok('계정을 바꾸면 다른 해시로 올림', hits.length === 3 && b2.acct && b2.acct !== body.acct, (b2.acct || '') + ' vs ' + body.acct);
 
+  // 2-2) 앱이 복사해 주는 한 줄: --connect 키
+  { const dir2 = fs.mkdtempSync(path.join(os.tmpdir(), 'aqtok2-')), e2 = Object.assign({}, process.env, { AQ_CLAUDE_DIR: dir2, AQ_SERVER: 'http://127.0.0.1:' + port });
+    const conn = k => new Promise(res => { const ch = spawn(process.execPath, [SCRIPT, '--connect', k], { env: e2 }); let o = ''; ch.stdout.on('data', d => { o += d; }); ch.on('close', code => res({ status: code, stdout: o })); });   // 가짜 서버가 이 프로세스라 비동기로 실행
+    const n0 = hits.length; let c = await conn('wrongkey');
+    ok('--connect: 키 모양이 아니면 거부 · 저장 안 함', c.status === 1 && !fs.existsSync(path.join(dir2, 'aquamel-token-config.json')) && hits.length === n0, c.stdout.trim());
+    const GOOD = 'aqtk_CONNECT_CONNECT_CONNECT_CONNECT_00'; c = await conn(GOOD);
+    const cfgp = path.join(dir2, 'aquamel-token-config.json'); let cfg = {}; try { cfg = JSON.parse(fs.readFileSync(cfgp, 'utf8')); } catch (e) {}
+    ok('--connect: 서버가 받으면 키 저장', c.status === 0 && cfg.key === GOOD && hits.length === n0 + 1 && hits[hits.length - 1].auth === 'Bearer ' + GOOD, c.stdout.trim());
+    fs.rmSync(dir2, { recursive: true, force: true }); }
+
   // 3) 서버가 꺼져 있어도 상태줄은 빠르고 조용함
   fs.writeFileSync(path.join(claudeDir, 'aquamel-token-config.json'), JSON.stringify({ server: 'http://127.0.0.1:1', key: 'aqtk_TESTKEY_TESTKEY_TESTKEY_TESTKEY_00' }));
   r = run(input(77, 10)); ok('서버가 없어도 상태줄은 즉시 끝남(1초 안)', r.out === '5시간 남음 23% · 주간 90%' && r.code === 0 && r.ms < 1500, r.ms + 'ms');
