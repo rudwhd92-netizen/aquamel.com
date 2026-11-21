@@ -51,7 +51,7 @@
 | 35 | Loading to success | Buttons | 요청 버튼 처리 → 완료 | `aqBtnLoad` · `aqBtnDone` | **2단계** |
 | 36 | Copy button | Buttons | 복사 버튼(키 · 보고서) | — | 보류 |
 | 37 | Like burst | Buttons | 관심 종목 담기(터짐 효과는 뺌) | 관심 버튼 | 보류 |
-| 38 | Tab pill | Navigation | AI 하위 탭(매니저 · 예보 · 이슈 · 지도) | `setAiSubtab` 탭 | **2단계** |
+| 38 | Tab pill | Navigation | 앱 메뉴 탭 줄 전체(탐색 · 마이 · 연구 · 뉴스 · 일정 · 운영 · AI) | `.xtab-row` · `aqTpSync` | **v8.72 반영** (종목 창 탭은 다음) |
 | 39 | Bottom bar | Navigation | 하단 탭 | `switchMobileTab` 탭바 | **2단계** |
 | 40 | Dynamic menu | Navigation | 종목 상세 ⋯ 메뉴 | — | 3단계 |
 | 41 | Segmented control | Navigation | 고르기 버튼 묶음 | `AQ_SEG` | **2단계** |

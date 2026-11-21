@@ -64,6 +64,7 @@
 - **0단계 목록과 권리:** 84개를 앱의 어느 화면 · 어디에 쓸지 짝짓는 표를 이 파일에 만든다. Kokonut UI · SmoothUI는 MIT(출처 주석). designbookmark 자체 모듈은 사이트에 라이선스 표기가 없다 — 본부장님께 확인을 받고, 받기 전에는 값(스프링 · 시간)만 참고해 직접 짠다. 짝짓기 표 초안: `docs/design/1_모듈표_DESIGN_ROOM_5장.md` · DESIGN.md v2 개정안 초안: `docs/design/2_DESIGN_v2_개정안.md` (둘 다 본부장님 확인 전).
 - **1단계 공통 토대:** 사이트 공통 파일(tokens.css · base.css · motion.js)의 스프링 값 · 표면색 · 모서리를 `DESIGN.md` 토큰으로 옮기고, 알림 창의 스프링 엔진(`_npr` 안)을 앱 전체가 함께 쓰는 하나로 묶는다. DESIGN.md v2(2026-11-18 승인)에 토큰 · 원칙 6을 반영함 — 코드 반영 v8.66(다크 표면 색 한 곳 · 모서리 · 스프링 토큰 · `window.AQMotion` · 길게 눌러 1.2초). 남은 것: `_nis` · Stack panel · 펼침 카드를 AQMotion으로 옮기기, 화면에 직접 쓴 옛 색 정리.
 - **2단계 자주 쓰는 부품부터:** 돈 · 결정(Hold to publish, Slide to confirm, Swipe deck, Undo button) → 고르기 · 입력(Segmented control, Tab pill, Toggle switch, Number stepper, Range slider, Wheel picker) → 화면 틀(Bottom bar, Notification stack, Step progress, Pagination dots, Morph popover) → AI 글(Streaming reply, Thinking text, Goo thinking, Typewriter).
+  - **진행(2026-11-21):** Tab pill = 앱 메뉴 탭 줄(`.xtab-row`)에 v8.72로 반영(가안 A 회색 알약 · 시안 `docs/design/tab-pill/` · 두 가장자리 스프링 620/40 · 170/19 — designbookmark 라이선스 표기가 없어 값만 참고해 직접 구현). 종목 창 탭(`.modal-view-tabs`) · 밸류 창 탭(`#aqValTabs`)은 다음 단계. 시험: `tools/ui-test/tabpill.js`.
 - **3단계 화면 단위:** AI 매니저 → 발견 → 종목 상세 → 일정 · 뉴스 → 설정. 화면마다 시안 → 승인 → 반영.
 
 ## 6. 남은 일 · 서버 방에 요청
@@ -71,4 +72,5 @@
 - AI 매니저: 업종 묶음 비중(반도체 46% 등)은 첫 화면에서 빠짐(하나씩 결정의 영향 칸에만 남음) — 계좌 지도에 업종 경계를 그어 살릴지 본부장님 확인 필요.
 - AI 매니저: 계좌 지도 칸을 눌렀을 때의 '20일 추적'은 데이터 자리가 없어 아직 안 넣음.
 - 한국 AI 매니저 화면은 '개발 중' 상태 그대로(서버 방 결정 대기).
+- 결정(본부장님 2026-11-21): AI 메뉴(매니저 · 매수분석 · 예보)는 아직 베타라 비관리자에게 열지 않는다 — 하단 메뉴 AI는 `data-role-admin-tab`, `switchMobileTab('ai')` · `setAiSubtab`은 비관리자를 뉴스 AI 브리핑으로 돌림(v8.72). 열 때는 이 가드 두 곳과 하단 메뉴 속성을 같이 푼다.
 - (서버 방에 요청할 것이 생기면 여기에 한 줄씩)

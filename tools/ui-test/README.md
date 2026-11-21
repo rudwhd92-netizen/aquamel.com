@@ -8,6 +8,7 @@ python3 -m http.server 8773 &          # 앱을 로컬로 띄움
 node tools/ui-test/manager.js night     # AI 매니저 — 결정할 시간 + 하나씩 결정 + 종목 한 장 + 오늘 주시
 node tools/ui-test/manager.js after     # AI 매니저 — 결정 뒤 결과
 node tools/ui-test/notifications.js     # 알림 창 — 열기 · 당겨서 새로고침
+node tools/ui-test/tabpill.js           # 탭 메뉴 Tab pill — 알약이 늘어났다 멈춤 · 줄 다시 그리기 · 좁은 화면 · 움직임 줄이기 · 비관리자 AI 숨김 (17항목)
 ```
 
 - 캡처는 `tools/ui-test/out/`(git에 안 올림)에 쌓인다. `OUT=경로`로 바꿀 수 있다.
