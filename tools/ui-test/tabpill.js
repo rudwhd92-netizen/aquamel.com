@@ -62,10 +62,9 @@ const prep = async (b, opts, role) => {
     ok('AI: 줄이 다시 그려져도 알약이 이어서 늘어났다 멈춤', at(s) && Math.max(...R.map(r => r[2])) > R[0][2] + 15, `폭 ${R[0][2].toFixed(0)} → 최대 ${Math.max(...R.map(r => r[2])).toFixed(0)} · ${s.label}`);
   }
   // 4) 뉴스 · 연구 — 같은 줄에 다른 탭 묶음 (구성이 다르면 바로 놓임)
-  await p.evaluate(() => switchMobileTab('news')); await p.waitForTimeout(900); s = await state(p, '#aiSubRow'); ok('뉴스: 구성이 달라도 알약이 고른 탭 자리', at(s) && s.n >= 3, `${s.label} · 탭 ${s.n}개`); await shot(p, '#aiSubRow', 'tabpill_news.png');
+  await p.evaluate(() => switchMobileTab('news')); await p.waitForTimeout(900); s = await state(p, '#aiSubRow'); ok('뉴스: 구성이 달라도 알약이 고른 탭 자리', at(s) && s.n === 2, `${s.label} · 탭 ${s.n}개`); await shot(p, '#aiSubRow', 'tabpill_news.png');
   await p.evaluate(() => switchMobileTab('research')); await p.waitForTimeout(900); s = await state(p, '#aiSubRow'); ok('연구: 알약이 고른 탭 자리', at(s) && s.n === 4, `${s.label} · 탭 ${s.n}개`); await shot(p, '#aiSubRow', 'tabpill_research.png');
   // 일정 · 운영
-  await p.evaluate(() => switchMobileTab('schedule')); await p.waitForTimeout(900); s = await state(p, '#schedSubtabs .xtab-row'); ok('일정: 알약이 고른 탭 자리', at(s), `${s.label} · 탭 ${s.n}개`); await shot(p, '#schedSubtabs .xtab-row', 'tabpill_sched.png');
   await p.close();
 
   // 5) 좁은 화면 — 넘치면 가로로 밀기 + 고른 탭을 가운데로 + 양끝 흐림
@@ -85,7 +84,7 @@ const prep = async (b, opts, role) => {
   const vis = await p.evaluate(() => { const g = m => { const el = document.querySelector('.mtab-btn[data-mtab="' + m + '"]'); return el ? getComputedStyle(el).display : 'none-el'; }; return { ai: g('ai'), news: g('news'), research: g('research') }; });
   ok('비관리자: 하단 메뉴에서 AI 숨김 · 연구는 보임 (뉴스는 좁은 화면에서 원래 햄버거로)', vis.ai === 'none' && vis.research !== 'none', JSON.stringify(vis));
   const go = await p.evaluate(() => { switchMobileTab('ai'); const a = document.body.dataset.atab; setAiSubtab('fc'); const b2 = document.body.dataset.atab; setAiSubtab('manager'); return { a, b2, c: document.body.dataset.atab, m: document.body.dataset.mtab }; });
-  ok('비관리자: AI 링크로 와도 뉴스 AI 브리핑으로', go.a === 'brief' && go.b2 === 'brief' && go.c === 'brief' && go.m === 'auto', JSON.stringify(go));
+  ok('비관리자: AI 링크로 와도 뉴스 첫 탭(기관 13F)으로', go.a === 'f13' && go.b2 === 'f13' && go.c === 'f13' && go.m === 'auto', JSON.stringify(go));   // v8.75: AI 브리핑 삭제 — 비관리자 뉴스 첫 탭 = 기관 13F
   await p.evaluate(() => switchMobileTab('news')); await p.waitForTimeout(800); await p.screenshot({ path: path.join(OUT, 'tabpill_nonadmin_nav.png') });
   // 8) 종목 창 탭(.modal-view-tabs)은 예전 밑줄 그대로
   const mv = await p.evaluate(() => { const bt = document.querySelector('.modal-view-tabs .xtab-btn'), c = getComputedStyle(bt); return { pad: c.padding, after: getComputedStyle(bt, '::after').content }; });

@@ -5,7 +5,7 @@ const OUT = process.env.OUT || path.join(__dirname, 'out'); fs.mkdirSync(OUT, { 
 const URL = process.env.URL || 'http://localhost:8773/index.html';
 const mode = process.argv[2] || 'night';
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+  const b = await chromium.launch({ channel: process.env.CHANNEL || undefined }); const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
   p.on('pageerror', e => console.log('PAGEERR ' + e.message));
   await p.goto(URL, { timeout: 40000 });
   await p.evaluate((mode) => {
