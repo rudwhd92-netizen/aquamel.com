@@ -1,0 +1,354 @@
+<title>리포트 뒤집기 시안</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 레이아웃: 설명 → ① 리포트 핵심 3블록 구분 가안(A 구분선 · B 면) 모바일 + 넓은 카드 → ② 길게 눌러 뒤집기 프로토타입 → 값 표 → 정해 주세요.
+   프레임 안은 앱 토큰(바탕 #161618 · 카드 #1c1c1f · 강조 #569cd6 · 글자 26/18/15/13/12/11) 그대로, 그림자 · 그라데이션 · 이모지 없음 */
+:root {
+  --page-bg: #f3f3f1; --page-fg: #1b1c1e; --page-dim: #62646a; --page-line: #dcdcd8; --page-card: #fbfbfa; --tag: #2a6cb0;
+  --font: 'Noto Sans KR', 'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; color-scheme: dark; } }
+:root[data-theme="dark"] { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font); padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; line-height: 1.55; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+.wrap > * { min-width: 0; }
+h1 { font-size: 26px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 8px; text-wrap: balance; }
+h2 { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
+p { margin: 0; }
+.dim { color: var(--page-dim); }
+.lead { max-width: 64ch; }
+.ctl { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; margin-top: 14px; }
+.sw { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--page-card); border: 1px solid var(--page-line); gap: 2px; }
+.sw button { font: inherit; font-size: 13px; font-weight: 600; border: 0; background: transparent; color: var(--page-dim); padding: 7px 14px; border-radius: 999px; cursor: pointer; min-height: 36px; }
+.sw button[aria-pressed="true"] { background: var(--page-fg); color: var(--page-bg); }
+.sw button:focus-visible, .stage button:focus-visible, .cue:focus-visible { outline: 2px solid var(--tag); outline-offset: 2px; }
+.cap { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.cap b { font-size: 14px; font-weight: 700; }
+.cap span { font-size: 12.5px; color: var(--page-dim); }
+.frames { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px 20px; margin-top: 14px; align-items: start; }
+.xs { overflow-x: auto; }
+.frames.f1 { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); }
+@media (max-width: 1040px) { .frames.f1 { grid-template-columns: minmax(0, 1fr); } }
+
+/* ───── 앱 프레임 ───── */
+.app { --bg: #161618; --panel: #1c1c1f; --body: #222226; --f1: rgba(255,255,255,.05); --f3: rgba(255,255,255,.14); --hi: #fff; --txt: #d4d4d4; --dim: #9d9d9d; --mute: #85858a; --acc: #569cd6; --accs: #22303d; --acct: #8fc0ec; --up: #40c057; --dn: #ff6b6b; --line: rgba(255,255,255,.07);
+  background: var(--bg); color: var(--txt); border-radius: 28px; padding: 16px; border: 1px solid var(--page-line); font-size: 13px; line-height: 1.5; user-select: none; -webkit-user-select: none; }
+.app.m { max-width: 360px; margin-inline: auto; width: 100%; }
+.app.w { min-width: 600px; width: 660px; }
+.app button { font: inherit; color: inherit; }
+.bar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.pills { position: relative; display: flex; flex: 1; height: 40px; background: var(--f1); border-radius: 999px; min-width: 0; }
+.pills button { position: relative; z-index: 1; flex: 1 0 auto; height: 40px; padding: 0 10px; border: 0; background: transparent; color: var(--dim); font-size: 13px; font-weight: 600; cursor: pointer; }
+.pills button[aria-selected="true"] { color: var(--hi); }
+.pills .ind { position: absolute; z-index: 0; left: 0; top: 3px; bottom: 3px; width: 0; border-radius: 999px; background: var(--f3); transition: transform .42s cubic-bezier(.22,1,.36,1), width .42s cubic-bezier(.22,1,.36,1); }
+.srch { width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--f1); display: grid; place-items: center; cursor: pointer; flex: none; }
+.srch svg, .cue svg { width: 18px; height: 18px; stroke: var(--dim); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.head { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+.av { width: 40px; height: 40px; border-radius: 50%; background: #2a2a2e; display: grid; place-items: center; font-weight: 700; font-size: 13px; color: var(--hi); flex: none; }
+.id { flex: 1; min-width: 0; }
+.id b { display: block; font-size: 15px; font-weight: 600; color: var(--hi); }
+.id span { font-size: 12px; color: var(--dim); }
+.hs { text-align: right; }
+.hs b { display: block; font-size: 13px; font-weight: 600; color: var(--up); font-variant-numeric: tabular-nums; }
+.hs span { font-size: 11px; color: var(--dim); }
+.body { display: grid; gap: 0; }
+.app.w .body { grid-template-columns: minmax(0, 1fr) 232px; gap: 0 20px; }
+.rrow { margin-top: 12px; font-size: 12px; color: var(--dim); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.rrow b { color: var(--acct); font-weight: 600; }
+.hint { margin-top: 8px; font-size: 11px; color: var(--mute); }
+
+/* ───── 3D 뒤집기 ───── */
+.stage { position: relative; height: 444px; perspective: 1100px; --hold: 0; --lift: 0; }
+.flipper { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; touch-action: pan-y; -webkit-touch-callout: none; }
+.face { position: absolute; inset: 0; isolation: isolate; border-radius: 24px; padding: 14px 16px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; outline: 1px solid rgba(86,156,214, calc(var(--hold) * .85)); outline-offset: -1px; }
+.face::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--panel); border-radius: 24px; opacity: var(--lift, 0); pointer-events: none; }   /* 평소엔 없음 — 누르거나 뒤집는 동안만 카드 면이 나타남 */
+.face.back { transform: rotateY(180deg); }
+.cue { position: absolute; top: 0; right: 0; width: 44px; height: 44px; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; z-index: 3; }
+.cue i { display: block; width: 28px; height: 28px; border-radius: 50%; background: var(--f1); display: grid; place-items: center; }
+.cue svg { width: 15px; height: 15px; }
+
+/* 리포트 핵심 3블록 — 가안 A: 구분선 */
+.rp { display: grid; gap: 0; }
+.rp .lb { font-size: 12px; font-weight: 600; color: var(--dim); display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.rp p { font-size: 13px; line-height: 1.6; color: var(--txt); }
+.rp .c2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
+.rp .c3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.op { font-size: 11px; font-weight: 700; color: var(--acct); background: var(--accs); border-radius: 999px; padding: 1px 9px; line-height: 18px; }
+.rp.a .blk { padding: 11px 0; border-top: 1px solid var(--line); }
+.rp.a .blk:first-child { border-top: 0; padding-top: 22px; }   /* 오른쪽 위 뒤집기 단서 자리 */
+.rp.b { gap: 8px; padding-top: 22px; }
+.rp.b .blk { background: var(--f1); border-radius: 16px; padding: 10px 14px 11px; }
+.rp.b .blk.v { background: var(--accs); }
+.rp .full { margin-top: 6px; height: 36px; border: 0; border-radius: 999px; background: var(--f1); color: var(--hi); font-size: 12px; font-weight: 600; cursor: pointer; width: 100%; }
+.rp.b .full { margin-top: 0; }
+
+/* 차트 면 */
+.chart { position: absolute; inset: 0; }
+.chart svg { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: pan-y; overflow: visible; }
+.rng { position: absolute; left: 16px; top: 14px; font-size: 12px; color: var(--dim); font-variant-numeric: tabular-nums; pointer-events: none; }
+.tf { position: absolute; right: 12px; bottom: 12px; display: flex; height: 26px; background: var(--f1); border-radius: 999px; z-index: 2; }
+.tf button { position: relative; z-index: 1; height: 26px; padding: 0 9px; border: 0; background: transparent; color: var(--dim); font-size: 11px; font-weight: 600; cursor: pointer; }
+.tf button[aria-selected="true"] { color: var(--hi); }
+.tf .ind { position: absolute; z-index: 0; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 999px; background: var(--f3); transition: transform .42s cubic-bezier(.22,1,.36,1), width .42s cubic-bezier(.22,1,.36,1); }
+.tip { position: absolute; top: 34px; font-size: 11px; color: var(--acct); background: var(--accs); border-radius: 6px; padding: 3px 8px; white-space: nowrap; pointer-events: none; display: none; font-variant-numeric: tabular-nums; }
+
+/* 시그널 이력 */
+.side { display: none; }
+.app.w .side { display: block; border-left: 1px solid var(--line); padding-left: 18px; }
+.side h4 { margin: 0 0 6px; font-size: 13px; font-weight: 700; color: var(--hi); }
+.side .sr { display: flex; justify-content: space-between; gap: 8px; width: 100%; min-height: 44px; align-items: center; border: 0; background: transparent; border-radius: 12px; padding: 0 10px; font-size: 12px; color: var(--txt); text-align: left; cursor: pointer; }
+.side .sr[aria-pressed="true"] { background: var(--accs); color: var(--acct); }
+.side .sr span:last-child { color: var(--dim); }
+.side .dt { font-size: 11px; color: var(--dim); padding: 0 10px 6px; display: none; }
+.side .sr[aria-pressed="true"] + .dt { display: block; }
+.none { color: var(--dim); font-size: 12px; padding: 6px 10px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.tw { overflow-x: auto; border: 1px solid var(--page-line); border-radius: 14px; background: var(--page-card); margin-top: 12px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--page-line); vertical-align: top; }
+th { font-size: 12px; color: var(--page-dim); font-weight: 600; white-space: nowrap; }
+td:first-child { white-space: nowrap; font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+.decide { background: var(--page-card); border: 1px solid var(--page-line); border-radius: 16px; padding: 18px 20px; display: grid; gap: 8px; }
+.decide ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+@media (prefers-reduced-motion: reduce) { .pills .ind, .tf .ind { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>리포트 뒤집기 시안</h1>
+    <p class="lead dim">연구 › AI리포트, 발견, 마이 › 실시간 현황의 종목 카드를 길게 눌러 리포트 핵심 내용과 차트로 뒤집는 시안입니다. 아래 두 가지를 직접 만져 보세요. 문장은 실제 유니티 보고서(2026-11-20)에서 앱 파서로 뽑은 그대로입니다.</p>
+    <div class="ctl">
+      <div class="sw" role="group" aria-label="3블록 구분 방식"><button type="button" data-v="a" aria-pressed="true">가안 A · 구분선</button><button type="button" data-v="b" aria-pressed="false">가안 B · 면</button></div>
+    </div>
+  </header>
+
+  <section aria-labelledby="h1">
+    <h2 id="h1">① 리포트 핵심 내용 — 3블록 구분</h2>
+    <p class="dim">① 지금 쟁점의 진실(5단계) → ② 최종 판정(왜 이렇게 판단했나요?) → ③ 10년 동업의 진실(6-1). ②는 4줄, ③은 3줄까지 보이고 전문은 버튼으로 엽니다.</p>
+    <div class="frames f1">
+      <div><div class="cap"><b>모바일</b><span>카드 폭 354 · 시그널 이력은 숨김(발견과 같음)</span></div><div id="f-m"></div></div>
+      <div class="xs"><div class="cap"><b>넓은 카드</b><span>카드 폭 600 이상 · 왼쪽 리포트 · 오른쪽 시그널 이력</span></div><div id="f-w"></div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h2">
+    <h2 id="h2">② 길게 눌러 뒤집기 — 작동 프로토타입</h2>
+    <p class="dim">카드의 왼쪽 면을 0.45초 길게 누르세요. 평소에는 발견처럼 바탕 위에 바로 놓여 있다가, 누르면 카드 면이 나타나며 살짝 눌리고 눌린 쪽으로 기울고, 때가 되면 탄성 있게 뒤집힙니다. 누른 채 8px 넘게 움직이면 뒤집기가 취소되고 차트 스크럽(좌우)과 화면 스크롤(세로)이 그대로 됩니다. 오른쪽 위 작은 단추로도 넘길 수 있어요.</p>
+    <div class="ctl">
+      <div class="sw" role="group" aria-label="메뉴" id="sc"><button type="button" data-s="rpt" aria-pressed="true">연구 › AI리포트</button><button type="button" data-s="dis" aria-pressed="false">발견</button><button type="button" data-s="live" aria-pressed="false">마이 › 실시간 현황</button></div>
+      <div class="sw" role="group" aria-label="리포트" id="rp"><button type="button" data-r="1" aria-pressed="true">보고서 있음</button><button type="button" data-r="0" aria-pressed="false">보고서 없음</button></div>
+      <div class="sw" role="group" aria-label="폭" id="wd"><button type="button" data-w="m" aria-pressed="true">모바일</button><button type="button" data-w="w" aria-pressed="false">넓은 카드</button></div>
+    </div>
+    <div class="frames" style="grid-template-columns: minmax(0, 1fr);"><div class="xs"><div id="proto"></div></div></div>
+    <p class="hint dim" id="state" style="margin-top:10px;font-size:12px">상태: 준비됐어요</p>
+  </section>
+
+  <section aria-labelledby="h3">
+    <h2 id="h3">참고한 값과 우리 값</h2>
+    <div class="tw"><table>
+      <thead><tr><th>항목</th><th>Parallax ticket에서 확인한 값</th><th>이 시안에서 쓴 값</th></tr></thead>
+      <tbody>
+        <tr><td>뒤집기 스프링</td><td>강성 170 · 감쇠 15 (작게 넘쳤다 돌아옴)</td><td>170 / 15 그대로 · 움직임 줄이기면 감쇠 2√k</td></tr>
+        <tr><td>기울기</td><td>최대 14° · 앞면 시차 12px</td><td>누르는 동안 최대 8°(손가락이 있는 쪽으로) · 시차 없음(차트 스크럽과 겹치지 않게)</td></tr>
+        <tr><td>손을 따라가는 값</td><td>900 / 50 (튕김 없음)</td><td>기울기 따라가기에 900 / 50</td></tr>
+        <tr><td>누름</td><td>정해진 값 없음</td><td>눌림 스프링 520 / 30 · 크기 0.965까지 · 테두리가 점점 강조색으로(0.45초)</td></tr>
+        <tr><td>3D 구조</td><td>확인하지 못함 (데모 소스가 글자만 내려옴)</td><td>원근 1100px · 앞뒤 면 · 뒤집힌 면은 눌리지 않게 처리</td></tr>
+        <tr><td>반사광 · 그림자</td><td>커서 빛 토큰이 있음</td><td>쓰지 않음(그림자 · 그라데이션 · 반사광 없음)</td></tr>
+        <tr><td>라이선스</td><td>표기를 찾지 못함</td><td>코드는 복사하지 않고 수치만 참고해 직접 구현</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="decide" aria-labelledby="h4">
+    <h2 id="h4">정해 주세요</h2>
+    <ol>
+      <li><b>3블록 구분:</b> 가안 A(구분선) 또는 가안 B(면). 위 스위치로 둘 다 확인해 보세요.</li>
+      <li><b>모바일에서 시그널 이력:</b> 발견과 같이 숨깁니다(추천). 아래에 붙이려면 말씀해 주세요.</li>
+      <li><b>와이드 기준:</b> 지금 발견은 카드 폭 600 이상일 때만 좌우로 갈라집니다. 앱의 2분할 가로 화면에서는 카드 폭이 394라 갈라지지 않아요. 같은 규칙(600 이상)을 쓸까요?</li>
+    </ol>
+  </section>
+</div>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<script>
+(function () {
+  'use strict';
+  var RM = false; try { RM = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  var C = {   // 실제 유니티 보고서(2026-11-20)에서 앱 파서로 뽑은 문장
+    t5: "광고주는 의리가 아니라 성적표를 따라와요. 벡터의 성장은 '남이 갖지 못한 데이터로 더 잘 맞힌다'는 우위가 유지되는 동안만 이어져요.",
+    why: "유니티는 모바일 게임의 바닥에서 나온 데이터로 광고 엔진 벡터를 키워, 상장 뒤 처음으로 회계상 이익을 내고 4분기 전략 매출이 65% 넘게 늘 것으로 내다보는 회사예요. 본질적 악재는 없고 이익 예상도 30일 새 42% 올랐지만, 인공지능의 엔진 대체 걱정과 앱러빈과의 경쟁은 아직 결론이 나지 않았고, 희석과 인수설의 향방이 주가를 흔들 수 있어요. 주가 위치는 보통, 대중 심리는 적정이라 크게 싸게 살 기회는 아니어서, 한 번에 사기보다 실적을 확인하며 세 번에 나눠 사는 게 맞아요.",
+    t6: "“사람들은 앞으로도 휴대폰으로 게임을 하고, 게임 회사는 그 게임을 알리려고 광고를 내요. 유니티는 그 게임이 만들어지고 돌아가는 바닥을 쥐고 있어요.” 근거는 두 가지예요. 하나는 유니티 엔진 게임을 한 달에 약 30억 명이 즐긴다는 점이에요 (2분기 실적 보도, 2026-08). 다른 하나는 그 바닥에서 나온 데이터가 3분기 벡터 126% 성장으로 실제 돈이 되고 있다는 점이에요 (3분기 실적 발표, 2026-11-05). 다만 이 진실은 ‘모바일’에 한정돼요. PC·콘솔에서는 언리얼에 밀리는 중이고, 인공지능이 게임 만드는 방식 자체를 바꾸면 바닥이 바뀔 수 있어요. 그래서 이 진실에 대한 확신은 중간이에요.",
+    op: '분할 매수'
+  };
+  var SIG = [{ b: 2, d: '11-18', t: 'V시그널', x: '시그널 · 5거래일 뒤 +3.1%' }, { b: 9, d: '11-11', t: '내부자 매수 · CEO', x: '12,000주 · 약 $48만' }, { b: 21, d: '10-24', t: '매도 · 이사', x: '3,500주 · 약 $14만' }, { b: 38, d: '10-01', t: '내부자 매수 · 이사', x: '2,000주 · 약 $7만' }, { b: 55, d: '09-08', t: 'V시그널', x: '시그널 · 5거래일 뒤 +6.4%' }];
+  var ICO_FLIP = '<svg viewBox="0 0 24 24"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg>', ICO_S = '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
+
+  /* ── 스프링 엔진(앱의 AQMotion과 같은 식: a = -k(x-t) - c·v) ── */
+  function S(x, k, c) { return { x: x, v: 0, t: x, k: k, c: RM ? 2 * Math.sqrt(k) : c }; }
+  function step(s, dt) { var a = -s.k * (s.x - s.t) - s.c * s.v; s.v += a * dt; s.x += s.v * dt; }
+  var live = new Set(), raf = 0, last = 0;
+  function kick() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+  function tick(now) {
+    var dt = Math.min(1 / 30, (now - last) / 1000); last = now; var busy = false;
+    live.forEach(function (o) { var n = 2; for (var i = 0; i < n; i++) o.step(dt / n); if (o.render) o.render(); if (o.busy()) busy = true; else live.delete(o); });
+    raf = live.size || busy ? requestAnimationFrame(tick) : 0;
+  }
+
+  /* ── 시리즈(1년 252거래일 · 3M = 마지막 63 · 6M = 126) ── */
+  var seed = 7; function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+  var SER = []; (function () { var v = 22; for (var i = 0; i < 252; i++) { v *= 1 + (rnd() - .485) * .032 + (i > 150 ? .0012 : 0); SER.push(v); } })();
+  var TFN = { '3M': 63, '6M': 126, '1Y': 252 };
+  function slice(tf) { return SER.slice(SER.length - TFN[tf]); }
+  function resample(a, n) { var o = []; for (var i = 0; i < n; i++) { var j = i / (n - 1) * (a.length - 1), lo = Math.floor(j), hi = Math.ceil(j); o.push(a[lo] + (a[hi] - a[lo]) * (j - lo)); } return o; }
+  function fracs(a) { var lo = Math.min.apply(null, a), hi = Math.max.apply(null, a); return a.map(function (v) { return 1 - (v - lo) / (hi - lo || 1); }); }
+
+  /* ── 리포트 면 ── */
+  function reportHtml(v) {
+    var b1 = '<div class="blk"><div class="lb">① 지금 쟁점의 진실</div><p>' + C.t5 + '</p></div>',
+        b2 = '<div class="blk v"><div class="lb">② 최종 판정 <span class="op">' + C.op + '</span></div><p class="c2">' + C.why + '</p></div>',
+        b3 = '<div class="blk"><div class="lb">③ 10년 동업의 진실</div><p class="c3">' + C.t6 + '</p></div>';
+    return '<div class="rp ' + v + '">' + b1 + b2 + b3 + '<button type="button" class="full">보고서 전문 보기 ›</button></div>';
+  }
+
+  /* ── 카드(앞뒤 면 · 길게 눌러 뒤집기) ── */
+  function Card(host, o) {
+    var self = this; this.o = o; this.tf = '3M'; this.hl = -1;
+    var wide = o.w === 'w';
+    host.innerHTML = '<div class="app ' + (wide ? 'w' : 'm') + '">' + (o.bar ? '<div class="bar"><div class="pills" role="tablist"><span class="ind"></span><button role="tab" aria-selected="true">전체</button><button role="tab" aria-selected="false">보유</button><button role="tab" aria-selected="false">관심</button><button role="tab" aria-selected="false">매수의견</button></div><button class="srch" aria-label="검색">' + ICO_S + '</button></div>' : '')
+      + '<div class="head"><div class="av">U</div><div class="id"><b>유니티 소프트웨어</b><span>소프트웨어 · 보유</span></div><div class="hs"><b>+1.88%</b><span>3개월 고점대비 -3.1%</span></div></div>'
+      + '<div class="body"><div class="stage"><div class="flipper"><div class="face front"></div><div class="face back"></div></div></div><div class="side"><h4>시그널 이력</h4><div class="sl"></div></div></div>'
+      + '<div class="rrow"><span>AI 리포트 · 11/20 ·</span><b>' + C.op + '</b></div>'
+      + (o.hint ? '<div class="hint">' + o.hint + '</div>' : '') + '</div>';
+    this.root = host.firstChild; this.stage = this.root.querySelector('.stage'); this.fl = this.root.querySelector('.flipper');
+    this.front = this.root.querySelector('.front'); this.back = this.root.querySelector('.back');
+    this.canFlip = o.flip !== false;
+    var reportOnFront = o.start === 'report';
+    (reportOnFront ? this.front : this.back).innerHTML = reportHtml(o.v);
+    var chartFace = reportOnFront ? this.back : this.front; this.chartFace = chartFace; this.chartBuilt = false;
+    this.rot = S(0, 170, 15); this.press = S(0, 520, 30); this.tx = S(0, 900, 50); this.ty = S(0, 900, 50);
+    this.reportFront = reportOnFront; this.flipped = false; this.blend = S(1, 200, 26); this.cur = null; this.prev = null;
+    // 뒤집기 단서(오른쪽 위 작은 단추 · 눌림 영역 44) — 앞뒤 면 모두
+    if (this.canFlip) { [this.front, this.back].forEach(function (f) { var b = document.createElement('button'); b.type = 'button'; b.className = 'cue'; b.innerHTML = '<i>' + ICO_FLIP + '</i>'; b.setAttribute('aria-label', '리포트와 차트 넘기기'); b.addEventListener('click', function (e) { e.stopPropagation(); self.flip(); }); b.addEventListener('pointerdown', function (e) { e.stopPropagation(); }); f.appendChild(b); }); }
+    this.sync(); this.bindHold(); this.renderSide(); this.bar();
+    // 차트 면이 보이는 쪽이면 바로 그림 · 뒷면이면 처음 뒤집을 때 그림(지연)
+    if (!this.chartIsBack()) this.buildChart();
+  }
+  Card.prototype.chartIsBack = function () { return this.reportFront; };
+  Card.prototype.showingChart = function () { return this.reportFront ? this.flipped : !this.flipped; };
+  Card.prototype.sync = function () {   // 눌리지 않아야 할 쪽(뒤쪽 면)은 inert
+    var rot = ((this.rot.x % 360) + 360) % 360, frontVisible = rot < 90 || rot > 270;
+    this.front.inert = !frontVisible; this.back.inert = frontVisible;
+  };
+  Card.prototype.apply = function () {
+    var p = Math.max(0, this.press.x), sc = 1 - .035 * p;
+    this.fl.style.transform = 'rotateX(' + this.tx.x.toFixed(2) + 'deg) rotateY(' + (this.rot.x + this.ty.x).toFixed(2) + 'deg) scale(' + sc.toFixed(4) + ')';
+  };
+  Card.prototype.flip = function () {
+    if (!this.canFlip) return;
+    if (!this.chartBuilt) this.buildChart();   // 뒷면 차트는 처음 뒤집는 순간에 실제 크기로 그림
+    this.flipped = !this.flipped; this.rot.t = this.flipped ? 180 : 0; this.press.t = 0; this.tx.t = 0; this.ty.t = 0;
+    this.runSprings(); try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {}
+    var el = document.getElementById('state'); if (el && this.o.proto) el.textContent = '상태: ' + (this.showingChart() ? '차트 면' : '리포트 면') + '으로 뒤집었어요' + (this.chartIsBack() && this.flipped ? ' (뒷면 차트를 이제 처음 그렸어요)' : '');
+    this.renderSide();
+  };
+  Card.prototype.runSprings = function () {
+    var self = this; live.add({ step: function (dt) { [self.rot, self.press, self.tx, self.ty].forEach(function (s) { step(s, dt); }); }, render: function () { self.apply(); self.sync(); self.stage.style.setProperty('--hold', Math.max(0, self.press.x * self.holdP).toFixed(3)); self.stage.style.setProperty('--lift', Math.max(0, Math.min(1, Math.max(self.press.x * .9, Math.abs(Math.sin(self.rot.x * Math.PI / 180)) * 1.4))).toFixed(3)); }, busy: function () { return [self.rot, self.press, self.tx, self.ty].some(function (s) { return Math.abs(s.x - s.t) + Math.abs(s.v) > .02; }); } }); kick();
+  };
+  Card.prototype.holdP = 0;
+  Card.prototype.bindHold = function () {
+    var self = this, st = null, tm = 0, T = 450, R = 8, fl = this.fl;
+    function cancel() { clearTimeout(tm); tm = 0; self.holdP = 0; self.press.t = 0; self.tx.t = 0; self.ty.t = 0; self.stage.style.setProperty('--hold', 0); self.runSprings(); }
+    fl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    fl.addEventListener('pointerdown', function (e) {
+      if (!self.canFlip || e.button > 0 || e.target.closest('button, .tf')) return;
+      var r = fl.getBoundingClientRect(); st = { x: e.clientX, y: e.clientY, t0: performance.now(), r: r, done: false };
+      self.press.t = 1; self.holdP = 0; self.runSprings();
+      var prog = function () { if (!st || st.done) return; self.holdP = Math.min(1, (performance.now() - st.t0) / T); self.stage.style.setProperty('--hold', (self.press.x * self.holdP).toFixed(3)); if (self.holdP < 1) requestAnimationFrame(prog); }; requestAnimationFrame(prog);
+      tm = setTimeout(function () { if (!st) return; st.done = true; self.holdP = 0; self.flip(); }, T);
+    });
+    fl.addEventListener('pointermove', function (e) {
+      if (!st || st.done) return;
+      var dx = e.clientX - st.x, dy = e.clientY - st.y;
+      if (Math.hypot(dx, dy) > R) { st = null; cancel(); return; }   // 8px 넘게 움직이면 뒤집기 취소 → 스크럽 · 스크롤이 그대로
+      var nx = (e.clientX - st.r.left) / st.r.width * 2 - 1, ny = (e.clientY - st.r.top) / st.r.height * 2 - 1;
+      if (!RM) { self.ty.t = nx * 8; self.tx.t = -ny * 8; self.runSprings(); }
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (n) { fl.addEventListener(n, function () { if (st && !st.done) cancel(); st = null; }); });
+  };
+  /* ── 차트(스크럽 · 3M/6M/1Y 알약 · 선 섞기) ── */
+  Card.prototype.buildChart = function () {
+    if (this.chartBuilt) return; this.chartBuilt = true; var self = this, f = this.chartFace;
+    var box = document.createElement('div'); box.className = 'chart'; box.innerHTML = '<div class="rng"></div><svg><path class="ln" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><g class="mk"></g><line class="vl" stroke="#569cd6" stroke-dasharray="3 3" stroke-width="1" visibility="hidden"/><circle class="dot" r="4" fill="#569cd6" visibility="hidden"/></svg><div class="tip"></div><div class="tf"><span class="ind"></span><button data-tf="3M" aria-selected="true">3M</button><button data-tf="6M" aria-selected="false">6M</button><button data-tf="1Y" aria-selected="false">1Y</button></div>';
+    f.insertBefore(box, f.firstChild); this.box = box; this.svg = box.querySelector('svg'); this.ln = box.querySelector('.ln'); this.mk = box.querySelector('.mk'); this.vl = box.querySelector('.vl'); this.dot = box.querySelector('.dot'); this.tip = box.querySelector('.tip'); this.rng = box.querySelector('.rng');
+    var W = f.clientWidth || 300, H = f.clientHeight || 444; this.W = W; this.H = H;   // 보이는 면의 실제 크기로 한 번에 맞춤
+    this.cur = fracs(resample(slice('3M'), 80)); this.prev = this.cur.slice();
+    this.paint(1); this.ind3 = box.querySelector('.tf .ind'); this.placeInd();
+    box.querySelectorAll('.tf button').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); self.setTf(b.dataset.tf); }); });
+    this.svg.addEventListener('pointermove', function (e) { self.scrub(e); }); this.svg.addEventListener('pointerleave', function () { self.hideScrub(); });
+    this.svg.addEventListener('pointerdown', function (e) { self.scrub(e); });
+    this.setRange();
+  };
+  Card.prototype.pad = function () { return { l: 14, r: 14, t: 40, b: 56 }; };
+  Card.prototype.xy = function (i, n, fr) { var p = this.pad(); return [p.l + i / (n - 1) * (this.W - p.l - p.r), p.t + fr * (this.H - p.t - p.b)]; };
+  Card.prototype.paint = function (k) {
+    var n = this.cur.length, d = '', pts = [];
+    for (var i = 0; i < n; i++) { var fr = this.prev[i] + (this.cur[i] - this.prev[i]) * k, c = this.xy(i, n, fr); pts.push(c); d += (i ? 'L' : 'M') + c[0].toFixed(1) + ' ' + c[1].toFixed(1); }
+    this.ln.setAttribute('d', d); this.pts = pts;
+    var s = '', len = TFN[this.tf];
+    SIG.forEach(function (g, gi) { if (g.b < len) { var idx = Math.round((1 - g.b / (len - 1)) * (n - 1)); var c = pts[Math.max(0, Math.min(n - 1, idx))]; s += '<circle cx="' + c[0].toFixed(1) + '" cy="' + (c[1] - 9).toFixed(1) + '" r="3.2" fill="#ff6b6b"/>'; } });
+    this.mk.innerHTML = s;
+    if (this.hl >= 0) this.showHL();
+  };
+  Card.prototype.setRange = function () { var a = slice(this.tf), pc = (a[a.length - 1] / a[0] - 1) * 100; this.rng.textContent = (pc >= 0 ? '+' : '−') + Math.abs(pc).toFixed(1) + '%'; };
+  Card.prototype.placeInd = function () { var b = this.box.querySelector('.tf button[aria-selected="true"]'), tf = this.box.querySelector('.tf'); if (b) { this.ind3.style.width = (b.offsetWidth - 4) + 'px'; this.ind3.style.transform = 'translateX(' + (b.offsetLeft + 2) + 'px)'; } };
+  Card.prototype.setTf = function (tf) {
+    if (tf === this.tf) return; var self = this; this.tf = tf;
+    this.box.querySelectorAll('.tf button').forEach(function (b) { b.setAttribute('aria-selected', String(b.dataset.tf === tf)); }); this.placeInd(); this.setRange();
+    this.prev = this.cur.slice(); this.cur = fracs(resample(slice(tf), 80)); this.blend.x = 0; this.blend.t = 1; this.blend.v = 0;
+    if (RM) { this.prev = this.cur; this.paint(1); return; }
+    live.add({ step: function (dt) { step(self.blend, dt); }, render: function () { self.paint(Math.max(0, Math.min(1, self.blend.x))); }, busy: function () { return Math.abs(self.blend.x - 1) + Math.abs(self.blend.v) > .01; } }); kick();
+  };
+  Card.prototype.scrub = function (e) {
+    if (!this.pts) return; var r = this.svg.getBoundingClientRect(), x = e.clientX - r.left, n = this.pts.length, p = this.pad();
+    var i = Math.round((x - p.l) / (this.W - p.l - p.r) * (n - 1)); i = Math.max(0, Math.min(n - 1, i)); this.showAt(i);
+  };
+  Card.prototype.showAt = function (i) {
+    var c = this.pts[i], n = this.pts.length, len = TFN[this.tf], a = slice(this.tf), j = Math.round(i / (n - 1) * (len - 1)), price = a[j];
+    this.vl.setAttribute('x1', c[0]); this.vl.setAttribute('x2', c[0]); this.vl.setAttribute('y1', 28); this.vl.setAttribute('y2', this.H - 48); this.vl.setAttribute('visibility', 'visible');
+    this.dot.setAttribute('cx', c[0]); this.dot.setAttribute('cy', c[1]); this.dot.setAttribute('visibility', 'visible');
+    var d = new Date(Date.UTC(2026, 10, 20)); d.setUTCDate(d.getUTCDate() - Math.round((len - 1 - j) * 1.4)); var lbl = (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + ' · $' + price.toFixed(2);
+    this.tip.textContent = lbl; this.tip.style.display = 'block'; var w = this.tip.offsetWidth; this.tip.style.left = Math.max(10, Math.min(this.W - w - 10, c[0] - w / 2)) + 'px';
+  };
+  Card.prototype.hideScrub = function () { if (this.hl >= 0) { this.showHL(); return; } if (!this.vl) return; this.vl.setAttribute('visibility', 'hidden'); this.dot.setAttribute('visibility', 'hidden'); this.tip.style.display = 'none'; };
+  Card.prototype.showHL = function () { var g = SIG[this.hl], len = TFN[this.tf]; if (!g || g.b >= len) { this.tip.style.display = 'block'; this.tip.textContent = '이 기간 밖이에요 · 1Y로 바꿔 보세요'; this.tip.style.left = '14px'; this.vl.setAttribute('visibility', 'hidden'); this.dot.setAttribute('visibility', 'hidden'); return; } var n = this.pts.length; this.showAt(Math.round((1 - g.b / (len - 1)) * (n - 1))); };
+  /* 시그널 이력(넓은 카드) — 차트 면이면 날짜 하이라이트, 리포트 면이면 상세만 */
+  Card.prototype.renderSide = function () {
+    var self = this, el = this.root.querySelector('.sl'); if (!el) return;
+    el.innerHTML = SIG.map(function (g, i) { return '<button type="button" class="sr" aria-pressed="' + (self.hl === i) + '"><span>' + g.d + ' · ' + g.t + '</span><span>' + (g.b < 63 ? '3M' : '6M') + '</span></button><div class="dt">' + g.x + '</div>'; }).join('');
+    el.querySelectorAll('.sr').forEach(function (b, i) { b.addEventListener('click', function () { self.hl = self.hl === i ? -1 : i; self.renderSide(); if (self.chartBuilt) { if (self.hl >= 0) self.showHL(); else self.hideScrub(); } }); });
+  };
+  Card.prototype.bar = function () { var row = this.root.querySelector('.pills'); if (!row) return; var self = this; function place() { var b = row.querySelector('[aria-selected="true"]'), ind = row.querySelector('.ind'); ind.style.width = (b.offsetWidth - 6) + 'px'; ind.style.transform = 'translateX(' + (b.offsetLeft + 3) + 'px)'; } place(); row.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; row.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); }); place(); }); };
+
+  /* ── 화면 ── */
+  var VAR = 'a', cardsF = [], proto = null, sc = 'rpt', hasR = 1, wd = 'm';
+  function sw(id, attr, fn) { document.querySelectorAll('#' + id + ' button').forEach(function (b) { b.addEventListener('click', function () { document.querySelectorAll('#' + id + ' button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); fn(b.dataset[attr]); }); }); }
+  function renderFrames() {
+    new Card(document.getElementById('f-m'), { w: 'm', start: 'report', v: VAR, bar: true, flip: false });
+    new Card(document.getElementById('f-w'), { w: 'w', start: 'report', v: VAR, bar: true, flip: false });
+  }
+  function renderProto() {
+    var start = sc === 'rpt' ? 'report' : 'chart', can = sc === 'rpt' ? true : hasR === 1;
+    var hint = !can ? '이 종목은 AI 보고서가 없어서 뒤집히지 않아요(길게 눌러도 반응이 없고 단서 단추도 없어요).' : (start === 'report' ? '길게 누르면 차트로 넘어가요. 다시 길게 누르면 돌아와요.' : '길게 누르면 리포트 핵심 내용으로 넘어가요. 다시 길게 누르면 돌아와요.');
+    proto = new Card(document.getElementById('proto'), { w: wd, start: start, v: VAR, bar: sc === 'rpt', flip: can, hint: hint, proto: true });
+    document.getElementById('state').textContent = '상태: ' + (start === 'report' ? '리포트 면' : '차트 면') + '으로 시작했어요' + (sc === 'rpt' ? ' (리포트가 있는 종목만 목록에 나오므로 항상 뒤집을 수 있어요)' : '');
+  }
+  document.querySelectorAll('[data-v]').forEach(function (b) { b.addEventListener('click', function () { document.querySelectorAll('[data-v]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); VAR = b.dataset.v; renderFrames(); renderProto(); }); });
+  sw('sc', 's', function (v) { sc = v; renderProto(); });
+  sw('rp', 'r', function (v) { hasR = +v; renderProto(); });
+  sw('wd', 'w', function (v) { wd = v; renderProto(); });
+  renderFrames(); renderProto();
+  window.addEventListener('resize', function () { /* 뒷면 크기는 처음 그릴 때 한 번 잡음 */ });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { renderFrames(); renderProto(); });
+})();
+</script>

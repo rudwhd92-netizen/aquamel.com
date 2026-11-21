@@ -52,6 +52,7 @@
 | 36 | Copy button | Buttons | 복사 버튼(키 · 보고서) | — | 보류 |
 | 37 | Like burst | Buttons | 관심 종목 담기(터짐 효과는 뺌) | 관심 버튼 | 보류 |
 | 38 | Tab pill | Navigation | 앱 메뉴 탭 줄 전체(탐색 · 마이 · 연구 · 뉴스 · 운영 · AI — 일정 탭 줄은 v8.75에서 삭제) | `.xtab-row` · `aqTpSync` | **v8.72 반영** (종목 창 탭은 다음) |
+| 38-2 | Parallax ticket (카드 뒤집기) | Cards | 종목 카드 길게 눌러 리포트 ↔ 차트 (AI리포트 · 발견 · 마이 › 실시간 현황) | `.fl-stage` · `enhance`(뒤집기 부품) · `_rpFeed` | **v8.83 반영** (스프링 값만 참고 · 코드 복사 안 함) |
 | 39 | Bottom bar | Navigation | 하단 탭 | `switchMobileTab` 탭바 | **2단계** |
 | 40 | Dynamic menu | Navigation | 종목 상세 ⋯ 메뉴 | — | 3단계 |
 | 41 | Segmented control | Navigation | 고르기 버튼 묶음 | `AQ_SEG` | **2단계** |
