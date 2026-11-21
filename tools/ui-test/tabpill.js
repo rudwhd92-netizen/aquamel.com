@@ -15,11 +15,13 @@ const state = (p, sel) => p.evaluate(sel => {
   return { x, w, right: x + w, tl: ar ? aL + 4 : null, tr: ar ? aL + ar.width - 4 : null, op: ind.style.opacity, label: a ? a.textContent.trim() : '', sl: row.scrollLeft, sw: row.scrollWidth, cw: row.clientWidth, fl: row.style.getPropertyValue('--tp-l'), fr: row.style.getPropertyValue('--tp-r'), n: Array.from(row.children).filter(c => c.classList.contains('xtab-btn') && c.offsetWidth > 0).length };
 }, sel);
 const at = s => Math.abs(s.x - s.tl) < 0.6 && Math.abs(s.right - s.tr) < 0.6;
+const waitSettled = async (p, sel, ms = 4000) => { const t0 = Date.now(); let s = await state(p, sel); while (!at(s) && Date.now() - t0 < ms) { await p.waitForTimeout(100); s = await state(p, sel); } return s; };   // 알약이 멈출 때까지(무거운 화면은 프레임이 밀려 늦게 도착)
 // 페이지 안에서 직접 눌러 프레임마다 알약 기록 (눌린 시각을 정확히 맞춤)
 const run = (p, rowSel, fn, ms) => p.evaluate(([rowSel, fn, ms]) => new Promise(res => {
-  const row = document.querySelector(rowSel); const S = []; const t0 = performance.now(); let did = false;
-  (function f() { const now = performance.now() - t0; if (!did && now > 120) { did = true; (new Function(fn))(); }
-    const ind = row.querySelector('.aq-tp-ind') || { style: { transform: S.length ? 'translateX(' + S[S.length - 1][1] + 'px)' : '', width: S.length ? S[S.length - 1][2] + 'px' : '0' } }; const m = /translateX\(([-\d.]+)px\)/.exec(ind.style.transform); S.push([Math.round(now), +m[1], parseFloat(ind.style.width)]); if (now < ms) requestAnimationFrame(f); else res(S); })();
+  const row = document.querySelector(rowSel); const S = []; const t0 = performance.now(); let did = false, tClick = 0;
+  (function f() { const now = performance.now() - t0; if (!did && now > 120) { did = true; tClick = now; (new Function(fn))(); }
+    const ind = row.querySelector('.aq-tp-ind') || { style: { transform: S.length ? 'translateX(' + S[S.length - 1][1] + 'px)' : '', width: S.length ? S[S.length - 1][2] + 'px' : '0' } }; const m = /translateX\(([-\d.]+)px\)/.exec(ind.style.transform); S.push([Math.round(now), +m[1], parseFloat(ind.style.width)]); const stable = S.length > 12 && S.slice(-10).every(q => Math.abs(q[1] - S[S.length - 1][1]) < 0.05 && Math.abs(q[2] - S[S.length - 1][2]) < 0.05);   // 탭 내용이 처음 그려질 때 메인 스레드가 1초 넘게 막혀도(알약이 그 뒤에 움직임) 멈출 때까지 기록
+    if (now < ms || (did && now - tClick < 6000 && !(stable && now - tClick > 500))) requestAnimationFrame(f); else res(S); })();
 }), [rowSel, fn, ms]);
 const prep = async (b, opts, role) => {
   const ctx = await b.newContext(Object.assign({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }, opts || {})); const p = await ctx.newPage();
@@ -39,16 +41,16 @@ const prep = async (b, opts, role) => {
   ok('탐색: 알약이 고른 탭 자리 · 탭 4개 · 밀 필요 없음(흐림 0)', s.op === '' && at(s) && s.n === 4 && s.sw <= s.cw + 2 && s.fl === '0px' && s.fr === '0px', JSON.stringify(s));
   await shot(p, '#exploreSubtabs .xtab-row', 'tabpill_explore_1.png');
   let R = await run(p, '#exploreSubtabs .xtab-row', "document.querySelector('#exploreSubtabs .xtab-btn[data-xtab=\"balance\"]').click()", 1300); await p.waitForTimeout(100);
-  s = await state(p, '#exploreSubtabs .xtab-row'); const W = R.map(r => r[2]), w0 = W[0], wMax = Math.max(...W), fin = R[R.length - 1];
+  s = await waitSettled(p, '#exploreSubtabs .xtab-row'); const W = R.map(r => r[2]), w0 = W[0], wMax = Math.max(...W), fin = R[R.length - 1];
   ok('탐색: 이동 뒤 알약이 새 탭 자리에 정확히 멈춤', at(s), `${s.label} x=${s.x.toFixed(1)} 목표 ${s.tl}`);
   ok('탐색: 가는 동안 알약이 늘어났다 줄어듦', wMax > w0 + 30 && Math.abs(fin[2] - w0) < 25, `폭 ${w0.toFixed(0)} → 최대 ${wMax.toFixed(0)} → 끝 ${fin[2].toFixed(0)}`);
   const settle = R.findIndex((r, i) => R.slice(i).every(q => Math.abs(q[1] - fin[1]) < 0.5 && Math.abs(q[2] - fin[2]) < 0.5)); ok('탐색: 1초 안에 멈춤', settle > -1 && R[settle][0] - 120 < 1000, `${R[settle][0] - 120}ms`);
   await shot(p, '#exploreSubtabs .xtab-row', 'tabpill_explore_4.png');
-  R = await run(p, '#exploreSubtabs .xtab-row', "document.querySelector('#exploreSubtabs .xtab-btn[data-xtab=\"list\"]').click()", 1300); s = await state(p, '#exploreSubtabs .xtab-row'); ok('탐색: 반대(왼쪽) 이동도 늘어났다 정확히 멈춤', at(s) && Math.max(...R.map(r => r[2])) > R[0][2] + 30, JSON.stringify(s) + ' 폭 ' + R[0][2] + '→' + Math.max(...R.map(r => r[2])));
+  R = await run(p, '#exploreSubtabs .xtab-row', "document.querySelector('#exploreSubtabs .xtab-btn[data-xtab=\"list\"]').click()", 1300); s = await waitSettled(p, '#exploreSubtabs .xtab-row'); ok('탐색: 반대(왼쪽) 이동도 늘어났다 정확히 멈춤', at(s) && Math.max(...R.map(r => r[2])) > R[0][2] + 30, JSON.stringify(s) + ' 폭 ' + R[0][2] + '→' + Math.max(...R.map(r => r[2])));
 
   // 2) 마이 — 탭 4개
   await p.evaluate(() => switchMobileTab('board')); await p.waitForTimeout(900);
-  R = await run(p, '#boardSubtabs .xtab-row', "document.querySelector('#boardSubtabs .xtab-btn[data-btab=\"performance\"]').click()", 1200); s = await state(p, '#boardSubtabs .xtab-row');
+  R = await run(p, '#boardSubtabs .xtab-row', "document.querySelector('#boardSubtabs .xtab-btn[data-btab=\"performance\"]').click()", 1200); s = await waitSettled(p, '#boardSubtabs .xtab-row');
   ok('마이: 4개 줄 · 알약이 고른 탭 자리', at(s) && s.n === 4 && Math.max(...R.map(r => r[2])) > R[0][2] + 20, `${s.label} · 탭 ${s.n}개`); await shot(p, '#boardSubtabs .xtab-row', 'tabpill_board.png');
 
   // 3) AI (관리자) — 줄을 innerHTML로 다시 그려도 알약이 이어서 움직임
