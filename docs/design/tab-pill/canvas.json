@@ -1,0 +1,17 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-11-21T10:00:00Z" },
+  "title": "AQUAMEL 탭 메뉴 Tab pill 시안",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 390, "h": 500, "title": "가안 A · 회색 알약 (추천)", "is_interactive": true },
+    "B.dc.html": { "x": 470, "y": 0, "w": 390, "h": 500, "title": "가안 B · 파란 알약", "is_interactive": true },
+    "Now.dc.html": { "x": 940, "y": 0, "w": 390, "h": 500, "title": "지금 · 밑줄형", "is_interactive": true }
+  },
+  "order": ["Main.dc.html", "B.dc.html", "Now.dc.html"],
+  "notes": {
+    "t1": { "x": 0, "y": -300, "text": "탭 메뉴 Tab pill — 가안 비교 (탭을 눌러 보세요)", "kind": "title1", "maxW": 1330 }
+  },
+  "designSystems": []
+}

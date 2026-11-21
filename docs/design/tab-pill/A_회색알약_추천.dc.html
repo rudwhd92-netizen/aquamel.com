@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>탭 메뉴 가안 A</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.tp-scroll::-webkit-scrollbar{display:none}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width:390px;height:500px;box-sizing:border-box;background:#161618;padding:28px 20px 24px;display:flex;flex-direction:column;gap:26px;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',-apple-system,sans-serif;color:#d4d4d4">
+  <sc-for list="{{rows}}" as="row" hint-placeholder-count="3">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:11px;color:#85858a;padding:0 4px">{{row.caption}}</div>
+      <div style="border-radius:999px;background:rgba(255,255,255,.05);overflow:hidden">
+        <div class="tp-scroll" style="{{row.scrollStyle}}">
+          <div role="tablist" style="{{row.trackStyle}}">
+            <span style="{{row.pillPos}}"><span style="display:block;width:100%;height:100%;border-radius:999px;background:rgba(255,255,255,.14)"></span></span>
+            <sc-for list="{{row.tabs}}" as="tab" hint-placeholder-count="4">
+              <button type="button" role="tab" aria-selected="{{tab.on}}" onClick="{{tab.pick}}" style="{{tab.style}}">{{tab.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-for>
+  <div style="background:#1c1c1f;border-radius:28px;padding:24px;flex-grow:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#85858a">[선택한 탭의 내용 자리]</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":500}}'>
+class Component extends DCLogic {
+  state = { sel: [0, 0, 0], dir: [1, 1, 1] };
+  renderVals() {
+    const W = 350;
+    const eq = (labels) => labels.map(() => W / labels.length);
+    const defs = [
+      { caption: '탐색 · 탭 5개 (가로로 밀어요)', scroll: true, labels: ['종목 리스트', '섹터 동향', '내부자 매매', '공매도 이력', '밸런스 종목'], widths: [90, 78, 90, 90, 90] },
+      { caption: '마이 · 탭 4개', scroll: false, labels: ['실시간 현황', '포트폴리오', '누적 성과', '운영 통계'], widths: eq([1, 2, 3, 4]) },
+      { caption: 'AI · 탭 2개 (관리자에게만 보여요)', scroll: false, labels: ['AI 매니저', 'AI 예보'], widths: eq([1, 2]) },
+    ];
+    const lead = '.26s cubic-bezier(.22,1,.36,1)', trail = '.52s cubic-bezier(.22,1,.36,1)';
+    const rows = defs.map((d, r) => {
+      const track = d.widths.reduce((a, b) => a + b, 0);
+      const starts = []; let acc = 0; d.widths.forEach((w) => { starts.push(acc); acc += w; });
+      const i = this.state.sel[r], dir = this.state.dir[r];
+      const left = starts[i] + 4, right = track - (starts[i] + d.widths[i]) + 4;
+      const tl = dir > 0 ? trail : lead, tr = dir > 0 ? lead : trail;
+      return {
+        caption: d.caption,
+        scrollStyle: 'overflow-x:auto;scrollbar-width:none;' + (d.scroll ? '-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);' : ''),
+        trackStyle: 'position:relative;display:flex;height:44px;width:' + track + 'px',
+        pillPos: 'position:absolute;top:4px;bottom:4px;left:' + left + 'px;right:' + right + 'px;transition:left ' + tl + ',right ' + tr + ';will-change:left,right',
+        tabs: d.labels.map((label, k) => ({
+          label,
+          on: k === i,
+          style: 'position:relative;z-index:1;flex:none;height:44px;padding:0;border:0;background:none;cursor:pointer;white-space:nowrap;font-size:13px;font-weight:600;transition:color .25s;width:' + d.widths[k] + 'px;color:' + (k === i ? '#ffffff' : '#9d9d9d'),
+          pick: () => {
+            const sel = this.state.sel.slice(), dr = this.state.dir.slice();
+            dr[r] = k >= sel[r] ? 1 : -1; sel[r] = k;
+            this.setState({ sel, dir: dr });
+          },
+        })),
+      };
+    });
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

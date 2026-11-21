@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>탭 메뉴 지금 밑줄형</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width:390px;height:500px;box-sizing:border-box;background:#161618;padding:28px 20px 24px;display:flex;flex-direction:column;gap:26px;font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',-apple-system,sans-serif;color:#d4d4d4">
+  <sc-for list="{{rows}}" as="row" hint-placeholder-count="3">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:11px;color:#85858a;padding:0 4px">{{row.caption}}</div>
+      <div role="tablist" style="display:flex;gap:2px;border-bottom:1px solid rgba(255,255,255,.07)">
+        <sc-for list="{{row.tabs}}" as="tab" hint-placeholder-count="4">
+          <button type="button" role="tab" aria-selected="{{tab.on}}" onClick="{{tab.pick}}" style="{{tab.style}}">{{tab.label}}<span style="{{tab.lineStyle}}"></span></button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+  <div style="background:#1c1c1f;border-radius:28px;padding:24px;flex-grow:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#85858a">[선택한 탭의 내용 자리]</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":500}}'>
+class Component extends DCLogic {
+  state = { sel: [0, 0, 0] };
+  renderVals() {
+    const defs = [
+      { caption: '탐색 · 탭 5개', labels: ['종목 리스트', '섹터 동향', '내부자 매매', '공매도 이력', '밸런스 종목'] },
+      { caption: '마이 · 탭 4개', labels: ['실시간 현황', '포트폴리오', '누적 성과', '운영 통계'] },
+      { caption: 'AI · 탭 2개 (관리자에게만 보여요)', labels: ['AI 매니저', 'AI 예보'] },
+    ];
+    const rows = defs.map((d, r) => ({
+      caption: d.caption,
+      tabs: d.labels.map((label, k) => {
+        const on = k === this.state.sel[r];
+        return {
+          label,
+          on,
+          style: 'position:relative;flex:1 1 0;min-width:0;padding:11px 4px 10px;border:0;background:transparent;cursor:pointer;white-space:nowrap;font-size:12.5px;letter-spacing:-0.01em;transition:color .18s ease;color:' + (on ? '#ffffff' : '#85858a') + ';font-weight:' + (on ? 700 : 600),
+          lineStyle: 'position:absolute;left:14%;right:14%;bottom:-1px;height:2px;border-radius:2px;background:#569cd6;transform-origin:center;transition:transform .2s ease;transform:scaleX(' + (on ? 1 : 0) + ')',
+          pick: () => { const sel = this.state.sel.slice(); sel[r] = k; this.setState({ sel }); },
+        };
+      }),
+    }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>
