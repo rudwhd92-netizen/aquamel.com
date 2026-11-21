@@ -19,6 +19,8 @@ const URL = process.env.URL || 'http://localhost:8773/index.html';
   const pill = await p.evaluate(() => { const r = document.querySelector('#feedScroll .feed-tf'), bs = [...r.querySelectorAll('button')]; const q = b => { const k = b.getBoundingClientRect(); return Math.round(k.width) + 'x' + Math.round(k.height); }; const rr = r.getBoundingClientRect(); return { row: Math.round(rr.width) + 'x' + Math.round(rr.height), btns: bs.map(q).join(' '), font: getComputedStyle(bs[0]).fontSize, ind: !!r.querySelector('.aq-tp-ind') }; });
   ok('3M/6M/1Y 알약이 작음(높이 32 이하 · 글자 12 이하)', parseInt(pill.row.split('x')[1]) <= 32 && parseFloat(pill.font) <= 12, JSON.stringify(pill));
   await p.screenshot({ path: path.join(OUT, 'discover_pill.png') });
+  const side = await p.evaluate(() => { const it = document.querySelector('#feedScroll .feed-item'), sd = it && it.querySelector('.feed-side'), card = document.getElementById('feedCard'); return { w: card ? Math.round(card.clientWidth) : null, disp: sd ? getComputedStyle(sd).display : null }; });
+  ok('시그널 이력(.feed-side)은 좁은 화면(카드 폭 600 미만)에서 숨김 · 넓으면 오른쪽 칸', side.w == null || (side.w < 600 ? side.disp === 'none' : side.disp === 'flex'), JSON.stringify(side));
   const info = await p.evaluate(() => [...document.querySelectorAll('#feedScroll .feed-item')].map(i => i.dataset.ticker + ':' + !!(i.querySelector('canvas') && i.querySelector('canvas')._aqChart)));
   console.log('피드 종목 ' + info.length);
   // 한 시점의 틀 검사: 종가 선의 모든 점이 chartArea 안에 있는지 · 척도 범위가 데이터 범위를 덮는지

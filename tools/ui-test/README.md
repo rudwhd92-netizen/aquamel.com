@@ -12,6 +12,7 @@ node tools/ui-test/tabpill.js           # 탭 메뉴 Tab pill — 알약이 늘�
 node tools/ui-test/tokens.js            # 토큰 관리 화면 — 설정 행 · 큰 숫자 · 막대 · 초기화 지난 창 · 빨강 · 동작 호출 · 좁은 화면 · 넓은 화면 (가짜 서버 · 지어낸 값)
 node tools/ui-test/diet.js              # 기능 다이어트(v8.75) — 지운 함수 · 카드 · 탭 줄 없음 · 일정 · 뉴스 구성 · 옛 링크 · 알림 이동 · 일반 사용자 뉴스 · 다른 메뉴 그대로
 node tools/ui-test/discover.js          # 발견 차트(v8.78) — 3M/6M/1Y 알약 크기 · 기간 전환 중/뒤 선이 틀 밖으로 안 나감
+node tools/ui-test/navbar.js            # 하단 메뉴(v8.80) — 선택 바탕이 선택 버튼 폭과 같음(관리자로 확인돼 버튼 수가 바뀌어도)
 node tools/ui-test/perf-load.js <URL> <CPU배속>    # 속도 — 시작 화면이 사라질 때까지 · 메인 스레드 막힌 시간 · 무거운 함수 (CPU 4면 폰 흉내 · 버전끼리 번갈아 3번씩 재서 중앙값 비교)
 node tools/ui-test/perf-switch.js <URL> <CPU배속>  # 속도 — 화면 전환마다 걸리는 시간 · 무거운 함수의 호출자
 ```
