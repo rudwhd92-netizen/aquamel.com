@@ -73,6 +73,9 @@ const bar = (p, id) => p.evaluate(id => parseFloat(document.getElementById(id).s
   calls = await p.evaluate(() => window.__calls.filter(c => c[0] !== 'tokenState')); ok('지우기 → tokenRemove', calls.some(c => c[0] === 'tokenRemove' && c[1].acct === 'b2b2b2b2b2b2b2b2'));
   await p.evaluate(() => { window.__ans = ['40', '70']; }); await p.evaluate(() => aqTokManual('codex')); await p.waitForTimeout(300);
   calls = await p.evaluate(() => window.__calls.filter(c => c[0] !== 'tokenState')); ok('직접 입력 → tokenManual(남은 %)', calls.some(c => c[0] === 'tokenManual' && c[1].provider === 'codex' && c[1].five_left === '40' && c[1].seven_left === '70'));
+  await p.evaluate(() => { window.__ans = ['회사', '35', '60']; }); await p.evaluate(() => aqTokManual('claude')); await p.waitForTimeout(300);
+  calls = await p.evaluate(() => window.__calls.filter(c => c[0] !== 'tokenState')); ok('Claude 직접 입력(Team 등) → tokenManual(이름 · 남은 %)', calls.some(c => c[0] === 'tokenManual' && c[1].provider === 'claude' && c[1].alias === '회사' && c[1].five_left === '35' && c[1].seven_left === '60'));
+  ok('직접 입력 버튼 3개(Claude · Gemini · Codex)', await p.evaluate(() => [...document.querySelectorAll('#setTokBody .tk-sec')].pop().querySelectorAll('button').length === 3));
   await p.evaluate(() => { window.__ans = ['회사 PC']; }); await p.evaluate(() => aqTokKeyNew()); await p.waitForTimeout(300);
   calls = await p.evaluate(() => window.__calls.filter(c => c[0] !== 'tokenState')); const clip = await p.evaluate(() => window.__clip);
   ok('수집기 연결 → 키 만들고 클립보드에 복사(화면에는 안 보임)', calls.some(c => c[0] === 'tokenKeyCreate' && c[1].label === '회사 PC') && clip === 'aqtk_TEST_ONLY' && !(await p.evaluate(() => document.body.innerText.includes('aqtk_TEST_ONLY'))));

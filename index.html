@@ -31443,7 +31443,7 @@ function _tkEnsureMotion() {
   M.register({
     frame(dt) { M.step(_tk.num, dt); M.step(_tk.b5, dt); M.step(_tk.b7, dt); },
     render() {
-      const n = document.getElementById('tkNum'); if (n) n.textContent = _tk.show ? String(Math.max(0, Math.round(_tk.num.x))) : '—';
+      const n = document.getElementById('tkNum'); if (n) n.textContent = _tk.show ? String(Math.max(0, Math.min(100, Math.round(_tk.num.x)))) : '—';   // 스프링이 살짝 튕겨도 100%를 넘는 숫자는 보이지 않게
       const a = document.getElementById('tkB5'), b = document.getElementById('tkB7');
       if (a) a.style.width = M.clamp(_tk.b5.x, 0, 100).toFixed(2) + '%'; if (b) b.style.width = M.clamp(_tk.b7.x, 0, 100).toFixed(2) + '%';
     },
@@ -31474,8 +31474,8 @@ function aqTokRender() {
   const coll = (d.collectors || []).map(c => `<div class="tk-co"><div class="tk-con"><b>${escapeHtml(c.label || '수집기')}</b><small>${c.last ? _tkAgo(now - c.last) + ' 올림' : '아직 올린 값 없음'}</small></div><button class="btn sm secondary" onclick="aqTokKeyDel('${c.id}')">지우기</button></div>`).join('');
   const tools = `<div class="tk-sec"><div class="eng-sec-h"><span>수집기</span></div>${coll || '<div class="tk-hint">연결된 수집기가 없어요. 내 PC의 Claude Code가 한도를 올려 줘요.</div>'}
     <div class="tk-act"><button class="btn sm" onclick="aqTokKeyNew()">수집기 연결</button></div></div>
-    <div class="tk-sec"><div class="eng-sec-h"><span>직접 입력</span></div><div class="tk-hint">자동으로 읽기 어려운 서비스는 남은 %를 직접 적어요.</div>
-    <div class="tk-act"><button class="btn sm secondary" onclick="aqTokManual('gemini')">Gemini</button><button class="btn sm secondary" onclick="aqTokManual('codex')">Codex</button></div></div>`;
+    <div class="tk-sec"><div class="eng-sec-h"><span>직접 입력</span></div><div class="tk-hint">자동으로 읽기 어려운 것(Gemini · Codex · 한도가 안 나오는 Claude 계정 — 예: Team 플랜)은 남은 %를 직접 적어요.</div>
+    <div class="tk-act"><button class="btn sm secondary" onclick="aqTokManual('claude')">Claude</button><button class="btn sm secondary" onclick="aqTokManual('gemini')">Gemini</button><button class="btn sm secondary" onclick="aqTokManual('codex')">Codex</button></div></div>`;
   if (!d.items.length) { body.innerHTML = `<div class="tk-card"><div class="tk-cap">남은 한도</div><div class="tk-empty">아직 받은 한도가 없어요</div></div>${tools}`; return; }
   const rows = d.items.map((it, i) => {
     const v = _tkView(it, now), on = i === _tk.sel, low = v.f != null && v.f.left <= 15;
@@ -31507,10 +31507,11 @@ async function aqTokRemove(acct) {
   const r = await apiCall('tokenRemove', { acct }); if (!r || !r.ok) { aqToast((r && r.error) || '지우지 못했어요'); return; } await aqTokLoad();
 }
 async function aqTokManual(provider) {
-  const nm = _TK_PROV[provider] || provider;
+  const nm = _TK_PROV[provider] || provider; let alias = '';
+  if (provider === 'claude') { const v = await aqPrompt('이름\n이 Claude 계정을 부를 이름이에요 (예: 회사)', 'Claude 회사', { ok: '다음' }); if (v == null) return; alias = v.trim(); }
   const a = await aqPrompt(`${nm} 5시간 남은 %\n0~100 숫자예요. 모르면 비워 두세요.`, '', { inputmode: 'numeric', ok: '다음' }); if (a == null) return;
   const b = await aqPrompt(`${nm} 주간 남은 %\n0~100 숫자예요. 모르면 비워 두세요.`, '', { inputmode: 'numeric', ok: '저장' }); if (b == null) return;
-  const r = await apiCall('tokenManual', { provider, five_left: a.trim(), seven_left: b.trim() }); if (!r || !r.ok) { aqToast((r && r.error) || '저장하지 못했어요'); return; } await aqTokLoad();
+  const r = await apiCall('tokenManual', Object.assign({ provider, five_left: a.trim(), seven_left: b.trim() }, alias ? { alias } : {})); if (!r || !r.ok) { aqToast((r && r.error) || '저장하지 못했어요'); return; } await aqTokLoad();
 }
 async function aqTokKeyNew() {
   const label = await aqPrompt('수집기 이름\n어느 PC에서 쓸지 적어 주세요.', '내 PC', { ok: '만들기' }); if (label == null) return;
