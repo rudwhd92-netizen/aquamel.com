@@ -73,4 +73,5 @@
 - AI 매니저: 계좌 지도 칸을 눌렀을 때의 '20일 추적'은 데이터 자리가 없어 아직 안 넣음.
 - 한국 AI 매니저 화면은 '개발 중' 상태 그대로(서버 방 결정 대기).
 - 결정(본부장님 2026-11-21): AI 메뉴(매니저 · 매수분석 · 예보)는 아직 베타라 비관리자에게 열지 않는다 — 하단 메뉴 AI는 `data-role-admin-tab`, `switchMobileTab('ai')` · `setAiSubtab`은 비관리자를 뉴스 AI 브리핑으로 돌림(v8.72). 열 때는 이 가드 두 곳과 하단 메뉴 속성을 같이 푼다.
+- 토큰 관리(2026-11-21 본부장님 승인): 설정 > 관리자 > 계정 관리 아래. Claude 3계정(한 PC 전환) · 한도 남은 %가 핵심 · Codex/Gemini는 CLI + 웹/앱 · 회사 계정 합계도 서버로 보내도 됨. Claude = Claude Code 상태줄 `rate_limits`(공식) → 수집기 `tools/token-collector`(상태줄 스크립트 + 수집 전용 키) → 서버 `tokens.py`(`tokenIngest` · `tokenState` …) → 앱. Codex = 이 PC에 세션 기록 없음(앱형) · Gemini = 공식 경로 없음 → 우선 직접 입력. 서버 방에 알림: `tokens.py` · `tests/test_tokens.py` 새로 둠(app.py 3곳).
 - (서버 방에 요청할 것이 생기면 여기에 한 줄씩)
