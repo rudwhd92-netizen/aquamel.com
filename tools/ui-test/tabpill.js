@@ -7,12 +7,13 @@ const URL = process.env.URL || 'http://localhost:8773/index.html';
 let fails = 0;
 const ok = (name, cond, extra) => { console.log((cond ? 'PASS ' : 'FAIL ') + name + (extra ? '  · ' + extra : '')); if (!cond) fails++; };
 const shot = async (p, sel, name) => { const b = await p.evaluate(sel => { const r = document.querySelector(sel).getBoundingClientRect(); return { y: r.y, h: r.height }; }, sel); await p.screenshot({ path: path.join(OUT, name), clip: { x: 0, y: Math.max(0, b.y - 14), width: p.viewportSize().width, height: b.h + 28 } }); };
-// 알약 상태: 알약 가장자리와 고른 탭 가장자리(+inset 4)
+// 알약 상태: 알약 가장자리와 고른 탭 가장자리(+inset — 줄의 --tp-inx, 메뉴 탭 줄은 3 · v8.82)
 const state = (p, sel) => p.evaluate(sel => {
   const row = document.querySelector(sel), ind = row.querySelector(':scope > .aq-tp-ind'), a = row.querySelector(':scope > .xtab-btn.active');
   const m = /translateX\(([-\d.]+)px\)/.exec(ind.style.transform || ''); const x = m ? +m[1] : null, w = parseFloat(ind.style.width);
   const rr = row.getBoundingClientRect(), ar = a ? a.getBoundingClientRect() : null, aL = ar ? ar.left - rr.left + row.scrollLeft : null;   // 소수점까지
-  return { x, w, right: x + w, tl: ar ? aL + 4 : null, tr: ar ? aL + ar.width - 4 : null, op: ind.style.opacity, label: a ? a.textContent.trim() : '', sl: row.scrollLeft, sw: row.scrollWidth, cw: row.clientWidth, fl: row.style.getPropertyValue('--tp-l'), fr: row.style.getPropertyValue('--tp-r'), n: Array.from(row.children).filter(c => c.classList.contains('xtab-btn') && c.offsetWidth > 0).length };
+  const k = parseFloat(getComputedStyle(row).getPropertyValue('--tp-inx')) || 4;
+  return { x, w, right: x + w, tl: ar ? aL + k : null, tr: ar ? aL + ar.width - k : null, k, rh: Math.round(rr.height), rw: Math.round(rr.width), fit: row.classList.contains('tp-fit'), op: ind.style.opacity, label: a ? a.textContent.trim() : '', sl: row.scrollLeft, sw: row.scrollWidth, cw: row.clientWidth, fl: row.style.getPropertyValue('--tp-l'), fr: row.style.getPropertyValue('--tp-r'), n: Array.from(row.children).filter(c => c.classList.contains('xtab-btn') && c.offsetWidth > 0).length };
 }, sel);
 const at = s => Math.abs(s.x - s.tl) < 0.6 && Math.abs(s.right - s.tr) < 0.6;
 const waitSettled = async (p, sel, ms = 4000) => { const t0 = Date.now(); let s = await state(p, sel); while (!at(s) && Date.now() - t0 < ms) { await p.waitForTimeout(100); s = await state(p, sel); } return s; };   // 알약이 멈출 때까지(무거운 화면은 프레임이 밀려 늦게 도착)
@@ -89,5 +90,21 @@ const prep = async (b, opts, role) => {
   // 8) 종목 창 탭(.modal-view-tabs)은 예전 밑줄 그대로
   const mv = await p.evaluate(() => { const bt = document.querySelector('.modal-view-tabs .xtab-btn'), c = getComputedStyle(bt); return { pad: c.padding, after: getComputedStyle(bt, '::after').content }; });
   ok('종목 창 탭은 예전 밑줄 그대로', mv.pad === '11px 4px 10px' && mv.after !== 'none', JSON.stringify(mv));
+  // 9) v8.82 가안 A — 탭 3개 이하는 글자 폭 알약(높이 36 · 왼쪽 정렬 · 탭 최소 72) · 4개는 꽉 채운 높이 40 · 안쪽 여백 3
+  p = await prep(b, {}, 'admin');
+  const geo = async (m, sel) => { await p.evaluate(m => switchMobileTab(m), m); await p.waitForTimeout(900); return state(p, sel); };
+  let g = await geo('news', '#aiSubRow'); ok('뉴스(2개): 글자 폭 알약 · 높이 36 · 줄 폭이 화면 폭보다 훨씬 작음', g.fit && g.rh === 36 && g.rw < 220 && g.k === 3, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw, inset: g.k }));
+  ok('뉴스(2개): 알약이 고른 탭 자리(안쪽 3)', Math.abs(g.x - g.tl) < 0.6 && Math.abs(g.right - g.tr) < 0.6, JSON.stringify({ x: g.x, tl: g.tl, right: g.right, tr: g.tr }));
+  const minw = await p.evaluate(() => Math.min(...Array.from(document.querySelectorAll('#aiSubRow .xtab-btn')).filter(b => b.offsetWidth > 0).map(b => b.getBoundingClientRect().width)));
+  ok('뉴스(2개): 탭 최소 폭 72 이상', minw >= 71.5, String(minw));
+  g = await geo('ai', '#aiSubRow'); ok('AI(2개): 글자 폭 알약 · 높이 36', g.fit && g.rh === 36 && g.rw < 220, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
+  g = await geo('explore', '.explore-subtabs#exploreSubtabs .xtab-row'); ok('탐색(4개): 꽉 채운 줄 · 높이 40 · fit 아님', !g.fit && g.rh === 40 && g.rw > 300, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
+  ok('탐색(4개): 알약이 고른 탭 자리(안쪽 3)', Math.abs(g.x - g.tl) < 0.6 && Math.abs(g.right - g.tr) < 0.6, JSON.stringify({ x: g.x, tl: g.tl, right: g.right, tr: g.tr }));
+  g = await geo('research', '#aiSubRow'); ok('연구(4개): 꽉 채운 줄 · 높이 40', !g.fit && g.rh === 40 && g.rw > 300, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
+  g = await geo('board', '#boardSubtabs .xtab-row'); ok('마이(4개): 꽉 채운 줄 · 높이 40', !g.fit && g.rh === 40 && g.rw > 300, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
+  // 메뉴를 바꿔도(뉴스 2개 ↔ 연구 4개 같은 줄) 클래스가 따라 바뀜
+  g = await geo('news', '#aiSubRow'); const g2 = await geo('research', '#aiSubRow'); const g3 = await geo('news', '#aiSubRow');
+  ok('같은 줄(#aiSubRow)이 뉴스 → 연구 → 뉴스로 바뀌어도 폭 규칙이 따라 바뀜', g.fit && !g2.fit && g3.fit && g3.rw < 220, JSON.stringify({ 뉴스: g.rw, 연구: g2.rw, 다시뉴스: g3.rw }));
+  await p.screenshot({ path: path.join(OUT, 'tabpill_v82_news.png') });
   console.log(fails ? '\n실패 ' + fails + '건' : '\n전부 통과'); console.log('캡처:', OUT); await b.close(); process.exit(fails ? 1 : 0);
 })();

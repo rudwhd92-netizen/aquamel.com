@@ -1,0 +1,188 @@
+<title>탭 알약 가안</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 레이아웃: 위에 문제 한 줄 + 다크/라이트 전환 → 화면별 가로 비교(현재 · 가안 A · 가안 B) → 수치표 → 결정 */
+:root {
+  --page-bg: #f3f3f1; --page-fg: #1b1c1e; --page-dim: #62646a; --page-line: #dcdcd8; --page-card: #fbfbfa; --tag: #2a6cb0;
+  /* 앱 토큰(다크) — index.html :root 값 그대로 */
+  --d-bg: #161618; --d-panel: #1c1c1f; --d-f1: rgba(255,255,255,.05); --d-f3: rgba(255,255,255,.14); --d-hi: #ffffff; --d-dim: #9d9d9d; --d-mute: #85858a; --d-up: #40c057; --d-sk: rgba(255,255,255,.07);
+  /* 앱 토큰(라이트 · 오트) */
+  --l-bg: #ece6d3; --l-panel: #f3eddd; --l-f1: rgba(23,24,26,.04); --l-f3: rgba(23,24,26,.12); --l-hi: #1f1810; --l-dim: #6b5d3f; --l-mute: #8a7e5e; --l-up: #2b8a3e; --l-sk: rgba(23,24,26,.07);
+  --font: 'Noto Sans KR', 'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; color-scheme: dark; } }
+:root[data-theme="dark"] { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font); padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px; line-height: 1.55; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
+.wrap > * { min-width: 0; }
+h1 { font-size: 26px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 8px; text-wrap: balance; }
+h2 { font-size: 17px; font-weight: 700; margin: 0 0 4px; }
+p { margin: 0; }
+.dim { color: var(--page-dim); }
+.lead { max-width: 62ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 14px; font-size: 13px; color: var(--page-dim); font-variant-numeric: tabular-nums; }
+.facts b { color: var(--page-fg); font-weight: 600; }
+.theme-sw { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--page-card); border: 1px solid var(--page-line); gap: 2px; margin-top: 18px; }
+.theme-sw button { font: inherit; font-size: 13px; font-weight: 600; border: 0; background: transparent; color: var(--page-dim); padding: 6px 16px; border-radius: 999px; cursor: pointer; }
+.theme-sw button[aria-pressed="true"] { background: var(--page-fg); color: var(--page-bg); }
+.theme-sw button:focus-visible, .tabs button:focus-visible { outline: 2px solid var(--tag); outline-offset: 2px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 24px 20px; margin-top: 16px; }
+.col { min-width: 0; display: grid; gap: 10px; align-content: start; }
+.cap { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.cap b { font-size: 14px; font-weight: 700; }
+.cap span { font-size: 12.5px; color: var(--page-dim); }
+.rec { font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--tag); border: 1px solid currentColor; border-radius: 999px; padding: 1px 8px; }
+
+/* 폰 화면 — 앱 토큰(data-t 로 다크/라이트) */
+.phone { --bg: var(--d-bg); --panel: var(--d-panel); --f1: var(--d-f1); --f3: var(--d-f3); --hi: var(--d-hi); --dim: var(--d-dim); --mute: var(--d-mute); --up: var(--d-up); --sk: var(--d-sk);
+  width: 100%; max-width: 360px; margin-inline: auto; background: var(--bg); color: var(--hi); border-radius: 28px; padding: 18px 16px 22px; border: 1px solid var(--page-line); min-height: 420px; }
+.phone[data-t="light"] { --bg: var(--l-bg); --panel: var(--l-panel); --f1: var(--l-f1); --f3: var(--l-f3); --hi: var(--l-hi); --dim: var(--l-dim); --mute: var(--l-mute); --up: var(--l-up); --sk: var(--l-sk); }
+.top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.top b { font-size: 19px; font-weight: 700; }
+.top i { width: 22px; height: 22px; border-radius: 50%; background: var(--f3); display: block; }
+.tabs { position: relative; display: flex; --in: 4px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { position: relative; z-index: 1; font: inherit; border: 0; background: transparent; cursor: pointer; white-space: nowrap; color: var(--dim); transition: color .2s ease; }
+.tabs button[aria-selected="true"] { color: var(--hi); }
+.tabs .ind { position: absolute; z-index: 0; left: 0; top: var(--in); bottom: var(--in); width: 0; border-radius: 999px; background: var(--f3); pointer-events: none; transition: transform .42s cubic-bezier(.22,1,.36,1), width .42s cubic-bezier(.22,1,.36,1); }
+/* 현재 */
+.tabs.cur { height: 44px; background: var(--f1); border-radius: 999px; }
+.tabs.cur button { flex: 1 0 auto; height: 44px; padding: 0 12px; font-size: 13px; font-weight: 600; }
+/* 가안 A — 탭 3개 이하: 글자 폭에 맞춘 알약, 왼쪽 정렬 · 4개: 꽉 채우되 40 */
+.tabs.a2 { width: max-content; max-width: 100%; height: 36px; background: var(--f1); border-radius: 999px; --in: 3px; }
+.tabs.a2 button { height: 36px; min-width: 72px; padding: 0 16px; font-size: 13px; font-weight: 600; }
+.tabs.a4 { height: 40px; background: var(--f1); border-radius: 999px; --in: 3px; }
+.tabs.a4 button { flex: 1 0 auto; height: 40px; padding: 0 10px; font-size: 13px; font-weight: 600; }
+/* 가안 B — 2개만 글자 탭: 알약 없음 · 선택은 밝기와 굵기 + 짧은 막대 */
+.tabs.b2 { gap: 22px; height: 36px; align-items: center; }
+.tabs.b2 button { height: 36px; padding: 0; font-size: 17px; font-weight: 700; letter-spacing: -.01em; color: var(--mute); }
+.tabs.b2 button[aria-selected="true"] { color: var(--hi); }
+.tabs.b2 .ind { top: auto; bottom: 0; height: 3px; border-radius: 3px; background: var(--hi); }
+.body { margin-top: 16px; display: grid; gap: 10px; }
+.card { background: var(--panel); border-radius: 20px; padding: 14px; display: grid; gap: 8px; }
+.row { display: flex; align-items: center; gap: 10px; }
+.dot { width: 30px; height: 30px; border-radius: 50%; background: var(--sk); flex: none; }
+.bar { height: 9px; border-radius: 5px; background: var(--sk); }
+.bar.up { background: var(--up); opacity: .55; width: 42px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.tw { overflow-x: auto; border: 1px solid var(--page-line); border-radius: 14px; background: var(--page-card); }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--page-line); white-space: nowrap; }
+th { font-size: 12px; color: var(--page-dim); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+.decide { background: var(--page-card); border: 1px solid var(--page-line); border-radius: 16px; padding: 18px 20px; display: grid; gap: 6px; }
+@media (prefers-reduced-motion: reduce) { .tabs .ind, .tabs button { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>탭 알약 가안</h1>
+    <p class="lead dim">메뉴 위의 탭 줄이 화면 폭을 꽉 채워서, 탭이 2개인 메뉴는 글자가 휑하게 떠 보입니다. 같은 화면을 현재 모양과 두 가지 가안으로 나란히 둡니다. 탭을 눌러 보세요.</p>
+    <div class="facts">
+      <span>지금 줄 <b>334 × 44px</b></span>
+      <span>2탭 메뉴 <b>뉴스 · AI</b> (관리자) — 탭마다 <b>167px</b></span>
+      <span>4탭 메뉴 <b>탐색 · 연구 · 마이</b> — 탭마다 <b>83px</b></span>
+    </div>
+    <div class="theme-sw" role="group" aria-label="화면 테마">
+      <button type="button" id="t-dark" aria-pressed="true">다크</button>
+      <button type="button" id="t-light" aria-pressed="false">라이트</button>
+    </div>
+  </header>
+
+  <section aria-labelledby="h-two">
+    <h2 id="h-two">탭이 2개인 메뉴 — 뉴스</h2>
+    <p class="dim">일간 이슈 · 기관 13F. 가안 A는 알약을 글자 폭에 맞추고, 가안 B는 알약을 빼고 글자 탭으로 바꿉니다.</p>
+    <div class="cols">
+      <div class="col">
+        <div class="cap"><b>현재</b><span>꽉 찬 알약 · 44px</span></div>
+        <div class="phone" data-t="dark"><div class="top"><b>뉴스</b><i></i></div>
+          <div class="tabs cur" role="tablist"><span class="ind"></span><button role="tab" aria-selected="true">일간 이슈</button><button role="tab" aria-selected="false">기관 13F</button></div>
+          <div class="body"><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:60%"></span><span class="bar" style="width:38%"></span></div><span class="bar up"></span></div><span class="bar"></span><span class="bar" style="width:80%"></span></div><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:52%"></span><span class="bar" style="width:30%"></span></div></div><span class="bar"></span></div></div></div>
+      </div>
+      <div class="col">
+        <div class="cap"><b>가안 A</b><span>글자 폭 알약 · 왼쪽 정렬 · 36px</span><span class="rec">추천</span></div>
+        <div class="phone" data-t="dark"><div class="top"><b>뉴스</b><i></i></div>
+          <div class="tabs a2" role="tablist"><span class="ind"></span><button role="tab" aria-selected="true">일간 이슈</button><button role="tab" aria-selected="false">기관 13F</button></div>
+          <div class="body"><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:60%"></span><span class="bar" style="width:38%"></span></div><span class="bar up"></span></div><span class="bar"></span><span class="bar" style="width:80%"></span></div><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:52%"></span><span class="bar" style="width:30%"></span></div></div><span class="bar"></span></div></div></div>
+      </div>
+      <div class="col">
+        <div class="cap"><b>가안 B</b><span>글자 탭 · 알약 없음</span></div>
+        <div class="phone" data-t="dark"><div class="top"><b>뉴스</b><i></i></div>
+          <div class="tabs b2" role="tablist"><span class="ind"></span><button role="tab" aria-selected="true">일간 이슈</button><button role="tab" aria-selected="false">기관 13F</button></div>
+          <div class="body"><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:60%"></span><span class="bar" style="width:38%"></span></div><span class="bar up"></span></div><span class="bar"></span><span class="bar" style="width:80%"></span></div><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:52%"></span><span class="bar" style="width:30%"></span></div></div><span class="bar"></span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-four">
+    <h2 id="h-four">탭이 4개인 메뉴 — 탐색</h2>
+    <p class="dim">4개는 꽉 채워도 균형이 맞습니다. 높이만 낮추고, 3개 이하 메뉴와 같은 알약 모양을 씁니다.</p>
+    <div class="cols">
+      <div class="col">
+        <div class="cap"><b>현재</b><span>44px</span></div>
+        <div class="phone" data-t="dark"><div class="top"><b>탐색</b><i></i></div>
+          <div class="tabs cur" role="tablist"><span class="ind"></span><button role="tab" aria-selected="true">종목 리스트</button><button role="tab" aria-selected="false">섹터 동향</button><button role="tab" aria-selected="false">내부자 매수</button><button role="tab" aria-selected="false">밸런스 종목</button></div>
+          <div class="body"><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:56%"></span><span class="bar" style="width:34%"></span></div><span class="bar up"></span></div></div><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:48%"></span><span class="bar" style="width:28%"></span></div><span class="bar up"></span></div></div></div></div>
+      </div>
+      <div class="col">
+        <div class="cap"><b>규칙 적용 (A · B 공통)</b><span>꽉 찬 알약 · 40px</span><span class="rec">추천</span></div>
+        <div class="phone" data-t="dark"><div class="top"><b>탐색</b><i></i></div>
+          <div class="tabs a4" role="tablist"><span class="ind"></span><button role="tab" aria-selected="true">종목 리스트</button><button role="tab" aria-selected="false">섹터 동향</button><button role="tab" aria-selected="false">내부자 매수</button><button role="tab" aria-selected="false">밸런스 종목</button></div>
+          <div class="body"><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:56%"></span><span class="bar" style="width:34%"></span></div><span class="bar up"></span></div></div><div class="card"><div class="row"><span class="dot"></span><div style="flex:1;display:grid;gap:6px"><span class="bar" style="width:48%"></span><span class="bar" style="width:28%"></span></div><span class="bar up"></span></div></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-spec">
+    <h2 id="h-spec">수치</h2>
+    <div class="tw" style="margin-top:12px"><table>
+      <thead><tr><th>항목</th><th>현재</th><th>가안 A (추천)</th><th>가안 B</th></tr></thead>
+      <tbody>
+        <tr><td>탭 2~3개</td><td>꽉 찬 알약 · 높이 44</td><td>글자 폭 알약 · 높이 36 · 왼쪽 정렬 · 탭 최소 72 · 좌우 여백 16</td><td>글자 탭 · 17/700 · 선택은 밝기 + 3px 막대</td></tr>
+        <tr><td>탭 4개</td><td>꽉 찬 알약 · 높이 44</td><td colspan="2">꽉 찬 알약 · 높이 40 · 넘치면 가로로 밀기(지금과 같음)</td></tr>
+        <tr><td>선택 바탕 안쪽 여백</td><td>4px</td><td colspan="2">3px (알약) · 막대는 해당 없음</td></tr>
+        <tr><td>2탭 줄 폭 (390 화면)</td><td>334px</td><td>166px</td><td>153px</td></tr>
+        <tr><td>알약 높이 단계</td><td>26 · 44</td><td colspan="2">26(차트 기간) · 36(탭 3개 이하) · 40(탭 4개)</td></tr>
+        <tr><td>다른 알약과의 관계</td><td>탭만 크고 기간 알약은 작음</td><td>기간 알약(3M · 6M · 1Y)과 같은 가족</td><td>4탭 메뉴와 모양이 갈림</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="decide" aria-labelledby="h-d">
+    <h2 id="h-d">정해 주세요</h2>
+    <p>가안 A로 가면 앱 전체 알약이 한 가족으로 보이고, 가안 B는 2탭 메뉴만 더 가볍고 세련돼 보이는 대신 4탭 메뉴와 모양이 갈립니다.</p>
+    <p class="dim">적용 범위는 뉴스, AI(관리자), 탐색, 연구, 마이의 탭 줄입니다. 구현은 간격과 높이 값만 바꾸고 움직임(두 가장자리 스프링)은 그대로 둡니다.</p>
+  </section>
+</div>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<script>
+(function () {
+  var phones = document.querySelectorAll('.phone');
+  function place(tabs, instant) {
+    var sel = tabs.querySelector('[aria-selected="true"]'), ind = tabs.querySelector('.ind'); if (!sel || !ind) return;
+    var inset = parseFloat(getComputedStyle(tabs).getPropertyValue('--in')) || 0, under = tabs.classList.contains('b2');
+    var x = sel.offsetLeft + (under ? 0 : inset), w = sel.offsetWidth - (under ? 0 : 2 * inset);
+    if (instant) ind.style.transition = 'none';
+    ind.style.width = w + 'px'; ind.style.transform = 'translateX(' + x + 'px)';
+    if (instant) { void ind.offsetWidth; ind.style.transition = ''; }
+  }
+  document.querySelectorAll('.tabs').forEach(function (tabs) {
+    tabs.addEventListener('click', function (e) {
+      var b = e.target.closest('button[role="tab"]'); if (!b) return;
+      tabs.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+      place(tabs, false);
+    });
+  });
+  function all(instant) { document.querySelectorAll('.tabs').forEach(function (t) { place(t, instant); }); }
+  function theme(t) {
+    phones.forEach(function (p) { p.setAttribute('data-t', t); });
+    document.getElementById('t-dark').setAttribute('aria-pressed', String(t === 'dark'));
+    document.getElementById('t-light').setAttribute('aria-pressed', String(t === 'light'));
+  }
+  document.getElementById('t-dark').onclick = function () { theme('dark'); };
+  document.getElementById('t-light').onclick = function () { theme('light'); };
+  all(true);
+  window.addEventListener('resize', function () { all(true); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { all(true); });
+})();
+</script>
