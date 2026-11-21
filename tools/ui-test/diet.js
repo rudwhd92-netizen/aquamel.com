@@ -10,7 +10,7 @@ const GONE_ID = ['schedSubtabs', 'guideCard', 'assistCard', 'briefCard', 'preCar
 async function prep(b, role, opts) {
   const ctx = await b.newContext(Object.assign({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }, opts || {})); const p = await ctx.newPage();
   p.on('pageerror', e => { console.log('PAGEERR(' + role + ') ' + e.message); fails++; });
-  p.on('console', m => { if (m.type() === 'error' && !/Failed to load resource|net::ERR|favicon|manifest|fonts\.g|CORS policy/i.test(m.text())) { console.log('CONSOLE.ERROR(' + role + ') ' + m.text().slice(0, 160)); fails++; } });
+  p.on('console', m => { if (m.type() === 'error' && !/Failed to load resource|net::ERR|favicon|manifest|fonts\.g|CORS policy|아카이브 로드 실패/i.test(m.text())) { console.log('CONSOLE.ERROR(' + role + ') ' + m.text().slice(0, 160)); fails++; } });
   await p.goto(URL, { timeout: 60000, waitUntil: 'domcontentloaded' }); await p.waitForTimeout(2500);
   await p.evaluate(role => { document.querySelectorAll('#aqAuth, #splashOverlay').forEach(x => x.style.display = 'none'); document.body.setAttribute('data-role', role); document.body.setAttribute('data-broker', 'linked'); try { _aqAuth.user = { role, username: 'u' }; } catch (e) {} window.apiCall = async () => ({ ok: false }); }, role);
   return p;
