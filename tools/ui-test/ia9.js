@@ -83,6 +83,30 @@ const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'sche
     ok('일반 사용자: 하단 메뉴 8개(AI 숨김) · 바탕 = 켜진 칸', r.n === 8 && Math.abs(r.dl) <= 1 && Math.abs(r.dw) <= 1, JSON.stringify(r));
     await p.context().close(); }
 
+  /* ── v8.86: 넓은 화면(폰이 아닌 폭)은 예전 균등 메뉴 · 좁은 화면만 독 ── */
+  for (const [label, vp, wantDock] of [['폭 460(바 428)', { width: 460, height: 860 }, true], ['폭 480(바 448)', { width: 480, height: 860 }, false], ['폭 600 세로', { width: 600, height: 960 }, false]]) {
+    const p = await open(vp);
+    const r = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); const a = bar.querySelector(':scope > .mtab-btn.active'), ind = bar.querySelector(':scope > .aq-seg-ind'), ar = a.getBoundingClientRect(), ir = ind ? ind.getBoundingClientRect() : null; const ws = bt.map(x => x.getBoundingClientRect().width); return { wide: document.documentElement.classList.contains('aq-wide'), dock: bar.classList.contains('aq-dock'), dk: !!bar.querySelector(':scope > .aq-dk-ind'), n: bt.length, min: +Math.min(...ws).toFixed(1), max: +Math.max(...ws).toFixed(1), seg: ir ? { dl: +(ir.left - ar.left).toFixed(1), dw: +(ir.width - ar.width).toFixed(1) } : null, labelBelow: getComputedStyle(bt[0]).flexDirection, fs: getComputedStyle(bt[0].querySelector('.mtab-label')).fontSize }; });
+    if (wantDock) ok(label + ': 좁은 화면 = 아코디언 독', !r.wide && r.dock && r.dk && r.n === 9, JSON.stringify(r));
+    else ok(label + ': 넓은 화면(폰 아님) = 예전 균등 메뉴(글자 아래 · 칸 44 이상 · 바탕 = 켜진 칸)', !r.wide && !r.dock && !r.dk && r.n === 9 && r.min >= 44 && r.max - r.min < 1 && r.labelBelow === 'column' && r.seg && Math.abs(r.seg.dl) <= 1 && Math.abs(r.seg.dw) <= 1, JSON.stringify(r));
+    if (!wantDock) { await p.evaluate(() => switchMobileTab('voyage')); const segNow = () => p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), a = bar.querySelector(':scope > .mtab-btn.active'), ind = bar.querySelector(':scope > .aq-seg-ind'), ar = a.getBoundingClientRect(), ir = ind.getBoundingClientRect(); return { n: a.getAttribute('aria-label'), dl: +(ir.left - ar.left).toFixed(1), dw: +(ir.width - ar.width).toFixed(1) }; }); await p.waitForTimeout(600); let q = await segNow(); for (let i = 0; i < 10 && !(Math.abs(q.dl) <= 1.5 && Math.abs(q.dw) <= 1.5); i++) { await p.waitForTimeout(300); q = await segNow(); } ok(label + ': 메뉴를 눌러도 예전 방식 바탕이 따라감', q.n === '항해' && Math.abs(q.dl) <= 1.5 && Math.abs(q.dw) <= 1.5, JSON.stringify(q)); }
+    await p.context().close();
+  }
+
+  /* ── v8.86: 항해 › AS-IS 포트폴리오 — 종목 추가 없음 · 보유 종목 전부 한 번에 ── */
+  { const p = await open({ width: 390, height: 844 });
+    await p.evaluate(() => { switchMobileTab('voyage'); setVoyageSubtab('asis'); }); await p.waitForTimeout(800);
+    const mk = (n) => p.evaluate(n => { const tk = Object.keys(_state.tickerSectorMap || {}).slice(0, n); return tk.map((t, i) => ({ ticker: t, sector: _state.tickerSectorMap[t], qty: 1, evalVal: 1000 + i * 10, cost: 900 + i * 10, roi: 5 })); }, n);
+    const hs = await mk(40); ok('AS-IS 시험 자료: 가짜 보유 40종목', hs.length === 40);
+    for (const mode of ['t', 'mega', 'sec']) {
+      const r = await p.evaluate(([hs, mode]) => { _pvSet('mode', mode); _pv.open = {}; _pv.all = false; aqPvRender(hs); const body = document.getElementById('dashHoldingsBody'); return { rows: body.querySelectorAll('.pv-tr').length, more: !!body.querySelector('.pv-more2'), txt: /더 보기/.test(body.innerText), grp: body.querySelectorAll('.pv-gr').length, add: !!document.querySelector('#dashHoldingsCard .watch-add-btn') || /종목 추가/.test(document.getElementById('dashHoldingsCard').innerText) }; }, [hs, mode]);
+      ok('AS-IS(' + mode + '): 보유 40종목이 한 번에 · 더 보기 없음 · 종목 추가 버튼 없음', r.rows === 40 && !r.more && !r.txt && !r.add, JSON.stringify(r));
+    }
+    // 묶음 줄을 누르면 접힘 · 다시 누르면 펼침
+    const tg = await p.evaluate(() => { const b = document.querySelector('#dashHoldingsBody .pv-gr'), n0 = document.querySelectorAll('#dashHoldingsBody .pv-tr').length; b.click(); const n1 = document.querySelectorAll('#dashHoldingsBody .pv-tr').length; document.querySelector('#dashHoldingsBody .pv-gr').click(); const n2 = document.querySelectorAll('#dashHoldingsBody .pv-tr').length; return { n0, n1, n2 }; });
+    ok('AS-IS: 묶음을 누르면 접히고 다시 누르면 펼침', tg.n1 < tg.n0 && tg.n2 === tg.n0, JSON.stringify(tg));
+    await p.context().close(); }
+
   /* ── 와이드 1000×700 ── */
   { const p = await open({ width: 1000, height: 700 });
     const w = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), br = bar.getBoundingClientRect(); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); return { wide: document.documentElement.classList.contains('aq-wide'), dock: bar.classList.contains('aq-dock'), n: bt.length, order: bt.slice(0, 9).map(x => x.getAttribute('aria-label')), fit: bar.scrollHeight <= bar.clientHeight + 1, last: Math.round(bt[bt.length - 1].getBoundingClientRect().bottom), vh: innerHeight, h: Math.round(bt[0].getBoundingClientRect().height) }; });
