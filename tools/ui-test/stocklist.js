@@ -36,5 +36,16 @@ const URL = process.env.URL || 'file:///' + path.resolve(__dirname, '../../index
   await p.screenshot({ path: path.join(OUT, 'stocklist_wide.png'), clip: { x: 0, y: 0, width: 760, height: 260 } });
   const sortMenu = await p.evaluate(() => [...document.querySelectorAll('#sortMenu button')].map(b => b.textContent.trim()));
   ok('정렬에 「지도 최신순」 없음', !sortMenu.some(t => /지도/.test(t)), sortMenu.join(' · '));
+  // 실제 앱 데이터(저장소 data/data.json)로 — 이름을 시험이 넣어 주지 않음. 미국 종목도 한글 회사명이 종목명으로 나와야 함(v8.95)
+  const p2 = await (await b.newContext({ viewport: { width: 390, height: 844 } })).newPage();
+  p2.on('pageerror', e => { console.log('PAGEERR ' + e.message); fails++; });
+  await p2.goto(URL, { timeout: 60000, waitUntil: 'domcontentloaded' }); await p2.waitForTimeout(3000);
+  await p2.evaluate(() => document.querySelectorAll('#aqAuth, #splashOverlay').forEach(x => x.style.display = 'none'));
+  await p2.evaluate(() => { switchMobileTab('explore'); setExploreSubtab('list'); });
+  for (let i = 0; i < 40; i++) { if (await p2.evaluate(() => document.querySelectorAll('#stockList .stock-list-row').length > 50)) break; await p2.waitForTimeout(500); }
+  const real = await p2.evaluate(() => { const rows = [...document.querySelectorAll('#stockList .stock-list-row')]; const hasName = rows.filter(r => { const n = r.querySelector('.sl-ticker').textContent.trim(); return n && n !== r.dataset.ticker && /[가-힣]/.test(n); }); const nv = rows.find(r => r.dataset.ticker === 'NVDA'); return { n: rows.length, ko: hasName.length, nvda: nv ? nv.querySelector('.sl-ticker').textContent + ' / ' + (nv.querySelector('.sl-tk') || {}).textContent : null, sample: rows.slice(0, 3).map(r => r.querySelector('.sl-ticker').textContent + ' ' + ((r.querySelector('.sl-tk') || {}).textContent || '')) }; });
+  ok('실제 데이터: 종목 대부분이 한글 종목명 + 티커로 나옴(미국 종목 포함)', real.n > 50 && real.ko / real.n > 0.9, JSON.stringify(real));
+  ok('실제 데이터: NVDA 행 = 엔비디아 + NVDA', /엔비디아 \/ NVDA/.test(real.nvda || ''), real.nvda);
+  await p2.screenshot({ path: path.join(OUT, 'stocklist_real.png'), clip: { x: 0, y: 0, width: 390, height: 420 } });
   await b.close(); console.log(fails ? '\n실패 ' + fails + '건' : '\n전부 통과'); process.exit(fails ? 1 : 0);
 })();
