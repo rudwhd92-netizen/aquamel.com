@@ -145,24 +145,12 @@ const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'sche
     for (let i = 0; i < 40; i++) { if (await p.evaluate(() => document.querySelectorAll('#stockList .stock-list-row').length > 50)) break; await p.waitForTimeout(500); }   // 데이터가 늦게 들어와도 기다림
     await p.evaluate(() => aqMapIdxLoad(true)); await p.waitForTimeout(1500);
     const s = await p.evaluate(() => { const rows = [...document.querySelectorAll('#stockList .stock-list-row')]; const mk = rows.filter(r => r.classList.contains('has-map')); return { rows: rows.length, mk: mk.length, tags: mk.every(r => r.querySelector('.sl-mk') && r.querySelector('.sl-mk').textContent === '지도'), toggle: !!document.querySelector('#stockListCard .pills, #stockListCard [data-f]'), sort: [...document.querySelectorAll('#sortMenu button')].map(x => x.textContent.trim()) }; });
-    ok(label + ': 종목리스트에 지도 있는 종목 딱지(' + s.mk + '개) · 전체/지도 토글 없음', s.rows > 50 && s.mk === 3 && s.tags && !s.toggle, JSON.stringify({ rows: s.rows, mk: s.mk }));
-    ok(label + ': 정렬 4가지(등락률 · 섹터 · 지도 최신 · 상대 PER)', JSON.stringify(s.sort) === JSON.stringify(['등락률 높은순', '섹터 강한순', '지도 최신순', '상대 PER 낮은 순']), JSON.stringify(s.sort));
-    // 지도 없는 종목 → 종목 페이지
-    const plain = await p.evaluate(() => { const r = [...document.querySelectorAll('#stockList .stock-list-row')].find(x => !x.classList.contains('has-map')); r.click(); return { opened: window.__opened.slice(), tk: r.dataset.ticker, card: !!document.querySelector('#stockList .mlx') }; });
-    ok(label + ': 지도 없는 종목 = 종목 페이지로(카드 안 펼침)', plain.opened.length === 1 && plain.opened[0] === plain.tk && !plain.card, JSON.stringify(plain));
-    await p.evaluate(() => { window.__opened = []; });
-    // 지도 있는 종목 → 그 자리에서 펼침
-    await p.evaluate(() => { const r = document.querySelector('#stockList .stock-list-row.has-map'); window.__mk = r.dataset.ticker; r.scrollIntoView({ block: 'center' }); r.click(); }); await p.waitForTimeout(1800);
-    const x = await p.evaluate(() => { const c = document.querySelector('#stockList .mlx'); if (!c) return { card: false }; const lk = c.querySelector('.mlx-pg2'); const head = lk && lk.parentElement; const lr = lk && lk.getBoundingClientRect(), cr = c.getBoundingClientRect(); return { card: true, go: !!c.querySelector('.mlx-go'), link: lk ? lk.textContent : null, inHead: !!(head && head.classList.contains('sm-head')), rightEdge: lr ? Math.round(cr.right - lr.right) : null, h: lr ? Math.round(lr.height) : 0, opened: window.__opened.length }; });
-    ok(label + ': 지도 있는 종목 = 그 자리에서 지도 카드 펼침 · 별도 \'종목 페이지\' 줄 없음', x.card && !x.go && x.opened === 0, JSON.stringify(x));
-    ok(label + ': 머리줄 오른쪽 끝에 \'종목페이지 ›\' 글자 버튼(44px 터치)', x.link === '종목페이지 ›' && x.inHead && x.rightEdge >= 0 && x.rightEdge <= 40 && x.h >= 44, JSON.stringify(x));
+    ok(label + ': 종목리스트에 지도 딱지 없음(v8.92 — ' + s.mk + '개) · 전체/지도 토글 없음', s.rows > 50 && s.mk === 0 && !s.toggle, JSON.stringify({ rows: s.rows, mk: s.mk }));
+    ok(label + ': 정렬 3가지(등락률 · 섹터 · 상대 PER — 「지도 최신순」은 v8.92에서 없앰)', JSON.stringify(s.sort) === JSON.stringify(['등락률 높은순', '섹터 강한순', '상대 PER 낮은 순']), JSON.stringify(s.sort));
+    // v8.92: 지도 펼침 · 「종목페이지 ›」 · 「지도 최신순」은 없앰 — 어느 행이든 누르면 바로 종목 페이지
+    const plain = await p.evaluate(() => { const r = document.querySelector('#stockList .stock-list-row'); r.click(); return { opened: window.__opened.slice(), tk: r.dataset.ticker, card: !!document.querySelector('#stockList .mlx') }; });
+    ok(label + ': 행을 누르면 바로 종목 페이지(카드 안 펼침 · v8.92)', plain.opened.length === 1 && plain.opened[0] === plain.tk && !plain.card, JSON.stringify(plain));
     await p.screenshot({ path: path.join(OUT, 'ia9_list_' + (label === '폰' ? 'phone' : 'wide') + '.png') });
-    const go = await p.evaluate(() => { const lk = document.querySelector('#stockList .mlx-pg2'); lk.click(); return { opened: window.__opened.slice(), tk: window.__mk, card: !!document.querySelector('#stockList .mlx') }; });
-    ok(label + ': 종목페이지 › 누르면 종목 페이지(그 종목) 열림 · 카드는 접힘', go.opened.length === 1 && go.opened[0] === go.tk && !go.card, JSON.stringify(go));
-    // 정렬: 지도 최신순 = 지도 있는 종목이 맨 위
-    await p.evaluate(() => setStockSort('mapnew')); await p.waitForTimeout(500);
-    const top = await p.evaluate(() => [...document.querySelectorAll('#stockList .stock-list-row')].slice(0, 4).map(r => r.classList.contains('has-map')));
-    ok(label + ': 지도 최신순 — 지도 있는 종목이 맨 위', top[0] && top[1] && top[2] && !top[3], JSON.stringify(top));
     await p.context().close();
   }
   await b.close(); console.log(fails ? '\n실패 ' + fails + '건' : '\n전부 통과'); process.exit(fails ? 1 : 0);
