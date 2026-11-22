@@ -8,6 +8,7 @@ const URL = process.env.URL || 'http://localhost:8773/index.html';
 const MENUS = ['발견', '탐색', '관심', '연구', 'AI', '뉴스', '일정', '항해', '마이'];
 const SUBS = { discover: null, explore: ['종목리스트', '내부자 매수', '밸런스 종목'], interest: ['모의매수', '비교분석'], research: ['AI리포트', '해자근거'], ai: ['AI매니저', 'AI예보', 'AI세력분석'], news: ['일간 이슈', '기관13F'], schedule: ['통합캘린더', '실적시즌'], voyage: ['섹터동향', 'AS-IS 포트폴리오', 'TO-BE 포트폴리오'], board: ['실시간 현황', '누적 성과', '운영 통계'] };
 const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'schedule', 'voyage', 'board'];
+const DOCK7 = MENUS.filter(n => n !== '관심' && n !== '일정');   // v8.97: 좁은 화면(독)은 관심 · 일정을 ☰ 메뉴로 — 하단 7개
 (async () => {
   const b = await chromium.launch({ channel: process.env.CHANNEL || undefined });
   async function open(vp) {
@@ -25,13 +26,14 @@ const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'sche
     if (process.env.ONLY) continue;
     const p = await open(vp);
     const st = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), br = bar.getBoundingClientRect(); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); return { dock: bar.classList.contains('aq-dock'), n: bt.length, names: bt.map(x => x.getAttribute('aria-label')), inside: bt.every(x => { const r = x.getBoundingClientRect(); return r.left >= br.left - 0.5 && r.right <= br.right + 0.5 && r.width > 20; }), minW: Math.min(...bt.map(x => x.getBoundingClientRect().width)), h: Math.round(bt[0].getBoundingClientRect().height), barW: Math.round(br.width) }; });
-    ok(label + ': 하단 메뉴 9개가 전부 보임(좁은 화면 5개 제한 없음)', st.dock && st.n === 9 && st.inside && JSON.stringify(st.names) === JSON.stringify(MENUS), JSON.stringify(st));
+    ok(label + ': 하단 메뉴 7개(관심 · 일정은 ☰ 메뉴로 · v8.97)', st.dock && st.n === 7 && st.inside && JSON.stringify(st.names) === JSON.stringify(DOCK7), JSON.stringify(st));
     ok(label + ': 칸이 붙어 있어 빈틈 없이 누를 수 있음(높이 56 · 칸 폭 28 이상)', st.h >= 56 && st.minW >= 28, 'min ' + st.minW.toFixed(1) + 'px × ' + st.h);
     // 눌러 보기 — 켜진 칸만 글자가 펼쳐지고, 바탕은 켜진 칸과 같은 자리·폭으로 멈춤
     for (let i = 0; i < KEYS.length; i++) {
       await p.evaluate(k => switchMobileTab(k), KEYS[i]); await p.waitForTimeout(600);
       let r = null; for (let t = 0; t < 14; t++) { r = await dockState(p); if (r && Math.abs(r.dl) <= 1 && Math.abs(r.dw) <= 1 && r.othersLab < .05) break; await p.waitForTimeout(300); }
 
+      if (MENUS[i] === '관심' || MENUS[i] === '일정') { const hm = await p.evaluate(() => ({ ham: document.getElementById('mobileMenuBtn').classList.contains('aq-hasact'), bar: [...document.querySelectorAll('#mobileTabBar > .mtab-btn')].filter(x => x.classList.contains('active') && getComputedStyle(x).display !== 'none').length })); ok(label + ': ' + MENUS[i] + ' 선택 — 하단 바에는 없고 ☰ 메뉴가 강조됨', hm.ham && hm.bar === 0, JSON.stringify(hm)); continue; }
       ok(label + ': ' + MENUS[i] + ' 선택 — 바탕 = 켜진 칸 · 글자는 켜진 칸만', !!r && r.n === MENUS[i] && Math.abs(r.dl) <= 1 && Math.abs(r.dw) <= 1 && r.lab > .95 && r.othersLab < .05, JSON.stringify(r));
     }
     // 하위 탭 구성
@@ -80,14 +82,14 @@ const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'sche
   /* ── 비관리자: AI 숨김 → 8개, 켜진 칸 · 바탕 정상 ── */
   { const p = await open({ width: 360, height: 780 }); await p.evaluate(() => document.body.setAttribute('data-role', 'user')); await p.waitForTimeout(900);
     const r = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); const a = bar.querySelector(':scope > .mtab-btn.active'), ind = bar.querySelector(':scope > .aq-dk-ind'); const ar = a.getBoundingClientRect(), ir = ind.getBoundingClientRect(); return { n: bt.length, dl: +(ir.left - ar.left).toFixed(1), dw: +(ir.width - ar.width).toFixed(1) }; });
-    ok('일반 사용자: 하단 메뉴 8개(AI 숨김) · 바탕 = 켜진 칸', r.n === 8 && Math.abs(r.dl) <= 1 && Math.abs(r.dw) <= 1, JSON.stringify(r));
+    ok('일반 사용자: 하단 메뉴 6개(AI 숨김 · 관심 · 일정은 ☰) · 바탕 = 켜진 칸', r.n === 6 && Math.abs(r.dl) <= 1 && Math.abs(r.dw) <= 1, JSON.stringify(r));
     await p.context().close(); }
 
   /* ── v8.86: 넓은 화면(폰이 아닌 폭)은 예전 균등 메뉴 · 좁은 화면만 독 ── */
   for (const [label, vp, wantDock] of [['폭 460(바 428)', { width: 460, height: 860 }, true], ['폭 480(바 448)', { width: 480, height: 860 }, false], ['폭 600 세로', { width: 600, height: 960 }, false]]) {
     const p = await open(vp);
     const r = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); const a = bar.querySelector(':scope > .mtab-btn.active'), ind = bar.querySelector(':scope > .aq-seg-ind'), ar = a.getBoundingClientRect(), ir = ind ? ind.getBoundingClientRect() : null; const ws = bt.map(x => x.getBoundingClientRect().width); return { wide: document.documentElement.classList.contains('aq-wide'), dock: bar.classList.contains('aq-dock'), dk: !!bar.querySelector(':scope > .aq-dk-ind'), n: bt.length, min: +Math.min(...ws).toFixed(1), max: +Math.max(...ws).toFixed(1), seg: ir ? { dl: +(ir.left - ar.left).toFixed(1), dw: +(ir.width - ar.width).toFixed(1) } : null, labelBelow: getComputedStyle(bt[0]).flexDirection, fs: getComputedStyle(bt[0].querySelector('.mtab-label')).fontSize }; });
-    if (wantDock) ok(label + ': 좁은 화면 = 아코디언 독', !r.wide && r.dock && r.dk && r.n === 9, JSON.stringify(r));
+    if (wantDock) ok(label + ': 좁은 화면 = 아코디언 독(7개)', !r.wide && r.dock && r.dk && r.n === 7, JSON.stringify(r));
     else ok(label + ': 넓은 화면(폰 아님) = 예전 균등 메뉴(글자 아래 · 칸 44 이상 · 바탕 = 켜진 칸)', !r.wide && !r.dock && !r.dk && r.n === 9 && r.min >= 44 && r.max - r.min < 1 && r.labelBelow === 'column' && r.seg && Math.abs(r.seg.dl) <= 1 && Math.abs(r.seg.dw) <= 1, JSON.stringify(r));
     if (!wantDock) { await p.evaluate(() => switchMobileTab('voyage')); const segNow = () => p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), a = bar.querySelector(':scope > .mtab-btn.active'), ind = bar.querySelector(':scope > .aq-seg-ind'), ar = a.getBoundingClientRect(), ir = ind.getBoundingClientRect(); return { n: a.getAttribute('aria-label'), dl: +(ir.left - ar.left).toFixed(1), dw: +(ir.width - ar.width).toFixed(1) }; }); await p.waitForTimeout(600); let q = await segNow(); for (let i = 0; i < 10 && !(Math.abs(q.dl) <= 1.5 && Math.abs(q.dw) <= 1.5); i++) { await p.waitForTimeout(300); q = await segNow(); } ok(label + ': 메뉴를 눌러도 예전 방식 바탕이 따라감', q.n === '항해' && Math.abs(q.dl) <= 1.5 && Math.abs(q.dw) <= 1.5, JSON.stringify(q)); }
     await p.context().close();
