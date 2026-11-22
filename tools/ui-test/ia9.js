@@ -6,7 +6,7 @@ const OUT = process.env.OUT || path.join(__dirname, 'out'); fs.mkdirSync(OUT, { 
 let fails = 0; const ok = (n, c, x) => { console.log((c ? 'PASS ' : 'FAIL ') + n + (x ? '  · ' + x : '')); if (!c) fails++; };
 const URL = process.env.URL || 'http://localhost:8773/index.html';
 const MENUS = ['발견', '탐색', '관심', '연구', 'AI', '뉴스', '일정', '항해', '마이'];
-const SUBS = { discover: null, explore: ['종목리스트', '내부자 매수', '밸런스 종목'], interest: ['모의매수', '비교분석'], research: ['AI리포트', '해자근거'], ai: ['AI매니저', 'AI예보', 'AI세력분석'], news: ['일간 이슈', '기관13F'], schedule: ['통합캘린더', '실적시즌'], voyage: ['섹터동향', 'AS-IS 포트폴리오', 'TO-BE 포트폴리오'], board: ['실시간 현황', '누적 성과', '운영 통계'] };
+const SUBS = { discover: null, explore: ['종목리스트', '내부자 매수', '밸런스 종목'], interest: ['모의매수', '비교분석'], research: ['AI리포트', '해자근거'], ai: ['AI매니저', 'AI예보', 'AI세력분석'], news: ['일간 이슈', '기관13F'], schedule: ['통합캘린더', '실적시즌'], voyage: ['섹터동향', '밸류체인', 'AS-IS 포트폴리오', 'TO-BE 포트폴리오'], board: ['실시간 현황', '누적 성과', '운영 통계'] };
 const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'schedule', 'voyage', 'board'];
 const DOCK7 = MENUS.filter(n => n !== '관심' && n !== '일정');   // v8.97: 좁은 화면(독)은 관심 · 일정을 ☰ 메뉴로 — 하단 7개
 (async () => {
