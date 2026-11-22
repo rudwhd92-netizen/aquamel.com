@@ -97,10 +97,17 @@ const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'sche
   { const p = await open({ width: 390, height: 844 });
     await p.evaluate(() => { switchMobileTab('voyage'); setVoyageSubtab('asis'); }); await p.waitForTimeout(800);
     const mk = (n) => p.evaluate(n => { const tk = Object.keys(_state.tickerSectorMap || {}).slice(0, n); return tk.map((t, i) => ({ ticker: t, sector: _state.tickerSectorMap[t], qty: 1, evalVal: 1000 + i * 10, cost: 900 + i * 10, roi: 5 })); }, n);
+    for (let i = 0; i < 40; i++) { if (await p.evaluate(() => Object.keys(_state.tickerSectorMap || {}).length >= 40)) break; await p.waitForTimeout(500); }   // 데이터가 늦게 들어와도 기다림
     const hs = await mk(40); ok('AS-IS 시험 자료: 가짜 보유 40종목', hs.length === 40);
     for (const mode of ['t', 'mega', 'sec']) {
       const r = await p.evaluate(([hs, mode]) => { _pvSet('mode', mode); _pv.open = {}; _pv.all = false; aqPvRender(hs); const body = document.getElementById('dashHoldingsBody'); return { rows: body.querySelectorAll('.pv-tr').length, more: !!body.querySelector('.pv-more2'), txt: /더 보기/.test(body.innerText), grp: body.querySelectorAll('.pv-gr').length, add: !!document.querySelector('#dashHoldingsCard .watch-add-btn') || /종목 추가/.test(document.getElementById('dashHoldingsCard').innerText) }; }, [hs, mode]);
       ok('AS-IS(' + mode + '): 보유 40종목이 한 번에 · 더 보기 없음 · 종목 추가 버튼 없음', r.rows === 40 && !r.more && !r.txt && !r.add, JSON.stringify(r));
+    }
+    // 잘림 없이 전부 — 목록 칸이 안쪽 스크롤 없이 내용 높이만큼 늘어나고 마지막 종목이 카드 안에 완전히 들어옴
+    for (const mode of ['t', 'mega']) {
+      await p.evaluate(([hs, mode]) => { _pvSet('mode', mode); _pv.open = {}; aqPvRender(hs); window.scrollTo(0, 0); }, [hs, mode]); await p.waitForTimeout(400);
+      const c = await p.evaluate(() => { const b = document.getElementById('dashHoldingsBody'), card = document.getElementById('dashHoldingsCard'), rows = [...b.querySelectorAll('.pv-tr')], last = rows[rows.length - 1].getBoundingClientRect(), cr = card.getBoundingClientRect(), cs = getComputedStyle(b), ch = getComputedStyle(card); const chain = []; for (let n = b; n && n !== document.body; n = n.parentElement) { const o = getComputedStyle(n); if ((o.overflowY === 'auto' || o.overflowY === 'scroll' || o.overflowY === 'hidden') && n.scrollHeight > n.clientHeight + 1) chain.push((n.id || n.className) + ':' + n.scrollHeight + '/' + n.clientHeight); } return { scrollH: b.scrollHeight, clientH: b.clientHeight, ov: cs.overflowY, maxH: ch.maxHeight, lastIn: last.bottom <= cr.bottom + 1, clipped: chain }; });
+      ok('AS-IS(' + mode + '): 보유 종목 칸이 잘리지 않음(안쪽 스크롤 없음 · 마지막 종목이 카드 안)', c.scrollH <= c.clientH + 1 && c.ov === 'visible' && c.maxH === 'none' && c.lastIn && c.clipped.length === 0, JSON.stringify(c));
     }
     // 묶음 줄을 누르면 접힘 · 다시 누르면 펼침
     const tg = await p.evaluate(() => { const b = document.querySelector('#dashHoldingsBody .pv-gr'), n0 = document.querySelectorAll('#dashHoldingsBody .pv-tr').length; b.click(); const n1 = document.querySelectorAll('#dashHoldingsBody .pv-tr').length; document.querySelector('#dashHoldingsBody .pv-gr').click(); const n2 = document.querySelectorAll('#dashHoldingsBody .pv-tr').length; return { n0, n1, n2 }; });
