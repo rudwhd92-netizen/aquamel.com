@@ -141,7 +141,9 @@ components:
 | 돈이 나가는 버튼 | 버튼에 `class="aq-hold"` — 1.2초(`--hold-ms`) 길게 눌러야 실행. 주문 · 승인 · 조건부 승인 |
 | 스프링 움직임 | 공용 스프링 엔진 `window.AQMotion` — `S(x, k, c)` 스프링 하나 · `tune(s, k, c)`(움직임 줄이기면 튕김 없이) · `step(s, dt)` · `clamp` · `token('--x')` · `spring('--spring-soft')` → [강성, 감쇠] · `register({ frame(dt), render(), idle() })` → 떼는 함수 · `kick()`. rAF 고리 하나(dt 최대 1/30 · 4번 나눔)가 모두 쉬면 스스로 멈춤. 새 움직임은 이것과 `--spring-*` 토큰으로 |
 | 요청 버튼 | `aqBtnLoad(el)` → 처리 → `aqBtnDone(el, ok, '요청됨')` |
-| 기다리는 글자 | `<span class="aq-think">판단 중</span>` |
+| 기다리는 글자 | 짧은 상태 글자 `<span class="aq-think">판단 중</span>`(밝기 숨쉬기 · 그라데이션 없음) |
+| 로딩 문구 (Thinking text · v8.93) | 데이터를 기다리는 자리에 `<span class="aq-tt" data-tt="feed">불러오는 중…</span>` 한 줄 — 화면에 붙으면 문구가 1.5초마다 바뀌고(`data-tt` = init · feed · rpt · cal 문구 세트 `AQ_TT_SETS`) 글자가 아래에서 한 글자씩(0.018초 간격 · 420/32) 떠오르며 사라질 때 0.15초 위로 + 흐림 3px(Kokonut UI Thinking text, MIT · 타이밍만 참고해 AQMotion 위에 직접 구현). 그라데이션 · 반짝임 없음. 데이터로 바뀌어 화면에서 떨어지거나 숨겨지면 타이머 · 스프링을 바로 치움(`AQ_TT_LIVE(true)` = 새는 것 0) · 안 보이는 자리는 시작 안 함 · 움직임 줄이기면 문구만 바뀜. 시안 `docs/design/report-v2/` · 시험 `tools/ui-test/thinking.js` |
+| 종목리스트 행 (v8.92) | 탐색 › 종목리스트 `.stock-list-row` — 로고 36 · 윗줄 종목명(15/500, 한글) + 티커(12, 이름이 한글로 바뀐 종목만 · `data-raw`) · 아랫줄 섹터(12) · 오른쪽 가격 · 등락률. 좁은 폭에서 이름이 길어도 섹터가 보이게 두 줄, 목록 폭 560 이상(`@container`)은 한 줄 열 맞춤(36 · 200 · 84 · 섹터 · 92). 지도 딱지 · 「지도 최신순」 · 행 안 펼침은 없앰(누르면 바로 종목 페이지). 행 높이 56(와이드 열 52). 시험 `tools/ui-test/stocklist.js` |
 | 고르기 버튼 | 버튼 묶음 클래스를 `AQ_SEG`에 넣으면 선택 바탕이 미끄러짐 (`.active` 또는 `.on`) |
 | 켜고 끄기 | `<input type="checkbox" class="aq-sw">` 또는 기존 `.aq-switch` |
 | 접이식 칸 | `.aq-coll` + `aqToggleColl(head)` (높이가 부드럽게) |
