@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '8.97'; // v8.97: 좁은 화면(아코디언 독)은 하단 메뉴 7개만 — 관심 · 일정은 ☰ 햄버거 메뉴로(지금 보는 메뉴가 ☰ 안에 있으면 ☰ 강조) · 칸이 넓어져 가장 좁은 칸도 44px 이상 / v8.96: 연구 › AI리포트 · 발견 · 마이 › 실시간 현황 뒷면 슬라이드 3장 전면 개편 — 면 높이 380 · ① 5 WHYS 문답(쟁점 질문 + 1 · 2 · 5단계 전문 · 스트리밍) ② 최종 판정(방울 → 딱지 · 8번 첫 문단 전문 · 눈금 · 기준 주가 → 지금) ③ 10년 뒤 변하지 않는 진실(스크램블 · 선언문 한 문장) / v8.95: 탐색 › 종목리스트 — 미국 종목도 종목명(한글 회사명)이 나오게(티커만 나오던 것 · renderStockRow) / v8.94: 가로 폭 1024 넘는 화면으로 처음 켜면 일정이 통합캘린더 + 실적시즌으로 합쳐지고 항해가 빈 화면이던 것 — 와이드 @media 다시 판정(aqWideCss)을 로딩 뒤에도 한 번 더 / v8.93: 로딩 문구 Thinking text(aq-tt · 문구 1.5초 순환 · 글자가 아래에서 한 글자씩 떠오름 · 끝나면 타이머 · 스프링 정리) — 피드 · AI리포트 · 일정 · 실적 · 일반 불러오는 중 자리에 적용 · 기존 .aq-think 그라데이션 반짝임 없앰 / v8.92: 탐색 › 종목리스트 행 B안(로고 · 종목명 · 티커 / 섹터 · 지도 딱지 · 「지도 최신순」 · 행 안 펼침 없앰 · 목록 폭 560 이상은 한 줄 열 맞춤 · renderStockRow) / v8.91: 발견 피드 차트 — 3M · 6M · 1Y 어느 기간에도 시그널 · 내부자 매수/매도 · 내 매매 마커를 하나도 빼지 않고 표시(1Y 시그널 복원 · 기간 시작 경계 마커 · 한 칸에 다른 날 마커 여럿이면 층으로 나눠 모두 찍음 · 시그널 툴팁에 실제 날짜) / v8.90: 발견 · 마이 › 실시간 현황 카드 뒷면(리포트)도 슬라이드 3장 + 점 + 그림(AI리포트와 같게) · 전문 보기 작은 글자 / v8.89: ① 발견 · 마이 › 실시간 현황 · AI리포트 오른쪽 이력 칸 — 안쪽 스크롤 · 끝에서 막힘 없앰, 맨 위 알약 「시그널 | 내부자」로 나눔(각 5줄 + 전체 보기) ② 연구 › AI리포트 — 전체/보유/관심/매수의견 알약 없앰(보유 → 관심 → 나머지 순) · 종목 카드 안 슬라이드 3장(쟁점 · 판정 · 동업, 첫 문장 + 시각화) + Pagination dots(170/22 · 520/34 · 140/18) · 전문 보기는 작은 글자 버튼 · 길게 누르면 차트로 뒤집힘은 그대로 // v8.88: 일정 — 통합캘린더를 새 일정 데이터(경제지표 · 만기 · 휴장 · 실적, 미국+한국)로 · 필터 4개(경제지표 · 실적 · 만기·휴장 · 매매) · 실적시즌 탭 신설(주 이동 · 월~금 칸 · 장 시작 전/후/시간 미정 · 내 종목만 · Beat/Miss는 서버가 주면 켜짐) · 날짜 없는 실적은 내 종목만 달력에 '(시간 미정)' · 종목명 name_ko → 한글 사전 → name → 코드 · 한국 경제지표 영문 제목 임시 한글(표 분리) · 새 데이터를 못 받으면 예전 시트 경로 // v8.87: 항해 › AS-IS 포트폴리오 목록이 440px 칸 안에서 잘리고 안쪽 스크롤이 되던 것 — 마이 기준으로만 걸려 있던 높이 제한 해제 규칙을 항해에도 적용(보유 종목이 잘림 없이 전부) // v8.86: 하단 메뉴 아코디언 독은 좁은 화면(화면 472 미만)만 — 넓으면 예전 균등 메뉴(글자 아래) · 항해 › AS-IS 포트폴리오: '+ 종목 추가' 삭제 · 보유 종목 전부 한 번에(12개 + 더 보기 없음 · 묶음 처음부터 펼침) // v8.85: 와이드 왼쪽 메뉴 접기(가안 B 좁게) — 맨 위 화살표로 펼침 90px(아이콘 옆 두 글자 · 칸 높이 44) ↔ 접힘 56px(아이콘만) · 스프링 340/21 · 420/30 · 글자 420/32 · 칸 시차 45ms · 접힘은 기억(aq_rail) // v8.84: 메뉴 9체계(발견 · 탐색 · 관심 · 연구 · AI · 뉴스 · 일정 · 항해 · 마이) — 관심(하트 · 모의매수 · 비교분석) · 항해(돛단배 · 섹터동향 · AS-IS 포트폴리오 · TO-BE 준비 중) 신설 · 하단 메뉴 5개 제한 폐지 = 9개 전부 아코디언 독(켜진 칸만 글자가 펼쳐짐 · 스프링 340/21 · 420/30 · 알약 620/36 · 190/19 · 팝 520/16) · 연구 › 종목지도를 탐색 › 종목리스트로 합침(지도가 있는 종목에 '지도' 딱지 · 누르면 그 자리에서 지도 카드 · 머리줄 오른쪽 '종목페이지 ›') · 정렬 4가지 · 연구 › 해자근거 · AI › AI세력분석 · 일정 › 실적시즌 자리 · 와이드 세로 메뉴 칸 높이 50 // v8.83: 종목 카드 길게 눌러 뒤집기(0.45초 · 8px 이내 · 스프링 170/15 · 누르는 동안만 카드 면) — 연구 › AI리포트(앞 리포트 핵심 3블록 · 뒤 차트) · 발견 · 마이 › 실시간 현황(앞 차트 · 뒤 리포트, 보고서가 있는 종목만) · AI리포트를 발견과 같은 종목 카드 구조로 · 위 한 줄(전체 · 보유 · 관심 · 매수의견 + 검색) // v8.82: 메뉴 탭 줄 가안 A 적용 — 탭 3개 이하(뉴스 · AI)는 글자 폭 알약(높이 36 · 왼쪽 정렬 · 탭 최소 72 · 좌우 16) · 4개 이상(탐색 · 연구 · 마이)은 꽉 채운 높이 40(44에서 낮춤) · 선택 바탕 안쪽 여백 4 → 3 // v8.81: 마이 › 실시간 현황 · 종목 페이지 차트에도 발견과 같은 3M/6M/1Y 작은 알약(Tab pill 미끄럼) · 기간을 바꿀 때 선이 흘러가는 움직임 · 시그널 이력 · 마커 · 변화율(실시간 현황) // v8.80: 하단 메뉴 '발견' 선택 바탕이 첫 로딩 뒤 오른쪽으로 길게 남던 것 고침(관리자로 확인돼 AI 버튼이 나타나 버튼 폭이 줄어도 처음 잰 폭이 남던 것 · 폭이 바뀌면 다시 맞춤 · v8.72 때부터) · 발견 — 시그널 이력(.feed-side)이 좁은 화면에서도 차트 밑에 붙던 것 고침(v8.77이 더한 display:block 줄 삭제 · 원래대로 폭 600 이상일 때만 오른쪽에 표시) // v8.79: 검색 팝업 — 열기 · 닫기를 약 0.2초로(스프링 620/42 · 800/57 닫을 땐 튕김 없이) · 닫을 때 안 보이면 바로 닫음 · 결과 줄 움직임을 줄마다 따로가 아니라 위쪽 12줄 한 번에(줄 수만큼 늘던 프레임 작업 · 강제 레이아웃 제거) // v8.78: 발견 차트 3M/6M/1Y — 알약을 예전 크기로 작게 · 기간을 바꾼 뒤 선이 틀 밖으로 나가던 것 고침(움직임이 차트 축을 건드리지 않고 선 높이 비율만 섞음 · 튕김 없음) // v8.77: 발견 필터 · 차트와 이력(aqFeedSetTf · aqFeedHL) · 우상단 검색(openSearchModal) · 보고서 글로우 제거
+window.AQ_PWA_VERSION = '8.98'; // v8.98: 항해 › 섹터동향 UI 전면 개편(가안 2차 승인) — ① 섹터마다 한 줄 행(이름 · 시그널 글자 딱지 · 오늘 등락 막대 + σ · 평균 · 30일 σ 띠) — 왼쪽 막대 · 오른쪽 히트맵 두 패널과 이모지 · 그림자 · 9~10px 글자 제거 ② 섹터/메가 · 정렬을 Tab pill(aqTpSync 그대로)로 ③ 날짜 되감기 플레이어(젤리 슬라이더 900/50 · 420/22 · 300/14 + 재생 · 숫자 굴러 바뀜 · 그날 섹터 σ 막대) ④ 섹터 연속 기록 카드 — 들어올 때 통통 · 그날 σ 막대 · 숫자 올라감 · 눌렀다 튕김 / v8.97: 좁은 화면(아코디언 독)은 하단 메뉴 7개만 — 관심 · 일정은 ☰ 햄버거 메뉴로(지금 보는 메뉴가 ☰ 안에 있으면 ☰ 강조) · 칸이 넓어져 가장 좁은 칸도 44px 이상 / v8.96: 연구 › AI리포트 · 발견 · 마이 › 실시간 현황 뒷면 슬라이드 3장 전면 개편 — 면 높이 380 · ① 5 WHYS 문답(쟁점 질문 + 1 · 2 · 5단계 전문 · 스트리밍) ② 최종 판정(방울 → 딱지 · 8번 첫 문단 전문 · 눈금 · 기준 주가 → 지금) ③ 10년 뒤 변하지 않는 진실(스크램블 · 선언문 한 문장) / v8.95: 탐색 › 종목리스트 — 미국 종목도 종목명(한글 회사명)이 나오게(티커만 나오던 것 · renderStockRow) / v8.94: 가로 폭 1024 넘는 화면으로 처음 켜면 일정이 통합캘린더 + 실적시즌으로 합쳐지고 항해가 빈 화면이던 것 — 와이드 @media 다시 판정(aqWideCss)을 로딩 뒤에도 한 번 더 / v8.93: 로딩 문구 Thinking text(aq-tt · 문구 1.5초 순환 · 글자가 아래에서 한 글자씩 떠오름 · 끝나면 타이머 · 스프링 정리) — 피드 · AI리포트 · 일정 · 실적 · 일반 불러오는 중 자리에 적용 · 기존 .aq-think 그라데이션 반짝임 없앰 / v8.92: 탐색 › 종목리스트 행 B안(로고 · 종목명 · 티커 / 섹터 · 지도 딱지 · 「지도 최신순」 · 행 안 펼침 없앰 · 목록 폭 560 이상은 한 줄 열 맞춤 · renderStockRow) / v8.91: 발견 피드 차트 — 3M · 6M · 1Y 어느 기간에도 시그널 · 내부자 매수/매도 · 내 매매 마커를 하나도 빼지 않고 표시(1Y 시그널 복원 · 기간 시작 경계 마커 · 한 칸에 다른 날 마커 여럿이면 층으로 나눠 모두 찍음 · 시그널 툴팁에 실제 날짜) / v8.90: 발견 · 마이 › 실시간 현황 카드 뒷면(리포트)도 슬라이드 3장 + 점 + 그림(AI리포트와 같게) · 전문 보기 작은 글자 / v8.89: ① 발견 · 마이 › 실시간 현황 · AI리포트 오른쪽 이력 칸 — 안쪽 스크롤 · 끝에서 막힘 없앰, 맨 위 알약 「시그널 | 내부자」로 나눔(각 5줄 + 전체 보기) ② 연구 › AI리포트 — 전체/보유/관심/매수의견 알약 없앰(보유 → 관심 → 나머지 순) · 종목 카드 안 슬라이드 3장(쟁점 · 판정 · 동업, 첫 문장 + 시각화) + Pagination dots(170/22 · 520/34 · 140/18) · 전문 보기는 작은 글자 버튼 · 길게 누르면 차트로 뒤집힘은 그대로 // v8.88: 일정 — 통합캘린더를 새 일정 데이터(경제지표 · 만기 · 휴장 · 실적, 미국+한국)로 · 필터 4개(경제지표 · 실적 · 만기·휴장 · 매매) · 실적시즌 탭 신설(주 이동 · 월~금 칸 · 장 시작 전/후/시간 미정 · 내 종목만 · Beat/Miss는 서버가 주면 켜짐) · 날짜 없는 실적은 내 종목만 달력에 '(시간 미정)' · 종목명 name_ko → 한글 사전 → name → 코드 · 한국 경제지표 영문 제목 임시 한글(표 분리) · 새 데이터를 못 받으면 예전 시트 경로 // v8.87: 항해 › AS-IS 포트폴리오 목록이 440px 칸 안에서 잘리고 안쪽 스크롤이 되던 것 — 마이 기준으로만 걸려 있던 높이 제한 해제 규칙을 항해에도 적용(보유 종목이 잘림 없이 전부) // v8.86: 하단 메뉴 아코디언 독은 좁은 화면(화면 472 미만)만 — 넓으면 예전 균등 메뉴(글자 아래) · 항해 › AS-IS 포트폴리오: '+ 종목 추가' 삭제 · 보유 종목 전부 한 번에(12개 + 더 보기 없음 · 묶음 처음부터 펼침) // v8.85: 와이드 왼쪽 메뉴 접기(가안 B 좁게) — 맨 위 화살표로 펼침 90px(아이콘 옆 두 글자 · 칸 높이 44) ↔ 접힘 56px(아이콘만) · 스프링 340/21 · 420/30 · 글자 420/32 · 칸 시차 45ms · 접힘은 기억(aq_rail) // v8.84: 메뉴 9체계(발견 · 탐색 · 관심 · 연구 · AI · 뉴스 · 일정 · 항해 · 마이) — 관심(하트 · 모의매수 · 비교분석) · 항해(돛단배 · 섹터동향 · AS-IS 포트폴리오 · TO-BE 준비 중) 신설 · 하단 메뉴 5개 제한 폐지 = 9개 전부 아코디언 독(켜진 칸만 글자가 펼쳐짐 · 스프링 340/21 · 420/30 · 알약 620/36 · 190/19 · 팝 520/16) · 연구 › 종목지도를 탐색 › 종목리스트로 합침(지도가 있는 종목에 '지도' 딱지 · 누르면 그 자리에서 지도 카드 · 머리줄 오른쪽 '종목페이지 ›') · 정렬 4가지 · 연구 › 해자근거 · AI › AI세력분석 · 일정 › 실적시즌 자리 · 와이드 세로 메뉴 칸 높이 50 // v8.83: 종목 카드 길게 눌러 뒤집기(0.45초 · 8px 이내 · 스프링 170/15 · 누르는 동안만 카드 면) — 연구 › AI리포트(앞 리포트 핵심 3블록 · 뒤 차트) · 발견 · 마이 › 실시간 현황(앞 차트 · 뒤 리포트, 보고서가 있는 종목만) · AI리포트를 발견과 같은 종목 카드 구조로 · 위 한 줄(전체 · 보유 · 관심 · 매수의견 + 검색) // v8.82: 메뉴 탭 줄 가안 A 적용 — 탭 3개 이하(뉴스 · AI)는 글자 폭 알약(높이 36 · 왼쪽 정렬 · 탭 최소 72 · 좌우 16) · 4개 이상(탐색 · 연구 · 마이)은 꽉 채운 높이 40(44에서 낮춤) · 선택 바탕 안쪽 여백 4 → 3 // v8.81: 마이 › 실시간 현황 · 종목 페이지 차트에도 발견과 같은 3M/6M/1Y 작은 알약(Tab pill 미끄럼) · 기간을 바꿀 때 선이 흘러가는 움직임 · 시그널 이력 · 마커 · 변화율(실시간 현황) // v8.80: 하단 메뉴 '발견' 선택 바탕이 첫 로딩 뒤 오른쪽으로 길게 남던 것 고침(관리자로 확인돼 AI 버튼이 나타나 버튼 폭이 줄어도 처음 잰 폭이 남던 것 · 폭이 바뀌면 다시 맞춤 · v8.72 때부터) · 발견 — 시그널 이력(.feed-side)이 좁은 화면에서도 차트 밑에 붙던 것 고침(v8.77이 더한 display:block 줄 삭제 · 원래대로 폭 600 이상일 때만 오른쪽에 표시) // v8.79: 검색 팝업 — 열기 · 닫기를 약 0.2초로(스프링 620/42 · 800/57 닫을 땐 튕김 없이) · 닫을 때 안 보이면 바로 닫음 · 결과 줄 움직임을 줄마다 따로가 아니라 위쪽 12줄 한 번에(줄 수만큼 늘던 프레임 작업 · 강제 레이아웃 제거) // v8.78: 발견 차트 3M/6M/1Y — 알약을 예전 크기로 작게 · 기간을 바꾼 뒤 선이 틀 밖으로 나가던 것 고침(움직임이 차트 축을 건드리지 않고 선 높이 비율만 섞음 · 튕김 없음) // v8.77: 발견 필터 · 차트와 이력(aqFeedSetTf · aqFeedHL) · 우상단 검색(openSearchModal) · 보고서 글로우 제거
 // v8.76: 토큰 관리 — 수집기 연결을 '붙여 넣고 엔터' 한 줄로(앱이 키 대신 연결 명령을 복사 · 수집기 statusline.js --connect 키 · setup.js --key 는 클립보드에 없으면 붙여 넣기 입력) · v8.75: 기능 다이어트 — 일정 › 주간 일정 · AI 비서 / 뉴스 › AI 브리핑 · 주간 이슈를 탭 · 카드 · 화면 그리는 함수(aqGuideRender · aqDailyBriefRender · aqMacroRender 등 선언 141개) · CSS(규칙 390개)까지 삭제(숨김 아님) · 일정 = 월간 일정만(탭 줄 없음) · 뉴스 = 일간 이슈(관리자) + 기관 13F(일반은 탭 줄 숨김) · 알림 brief/guide → 뉴스/일정으로 이동 · AI 매니저 · 내 주식 스탠스 · 포트폴리오가 같이 쓰는 도우미(_gm* · _brHM · _mcSheet 등)는 남김 · v8.74: 설정 > 관리자 > 계정 관리 아래 '토큰 관리' — 각 AI 구독의 남은 한도 %(Storage meter 룩 · 가안 A · 큰 숫자 · 5시간/주간 막대 = AQMotion soft 스프링 · 계정 행 펼침 · 이름 바꾸기 · 직접 입력 · 수집기 연결) · 서버 tokens.py · 수집기 tools/token-collector · v8.73: 속도 — ① 일정(aqTLEventsFor): 결과를 버리는 반복문(실행 기록 1만 건 × 시간 변환) 제거 · _aqKST 변환기 한 번만 만들고 기억 · _aqETDate · _aqFmtKST 등 Intl 포맷터 공용(_aqDtf) ② findTickerSeries: 업종별 종목 색인(가격 14만 행 전부 훑던 것) ③ aqHoldScroll: 화면 바꾼 직후 window.scrollY 읽기(강제 레이아웃)를 scroll 이벤트로 기억한 값으로 · 결과는 같음(실제 데이터 종목 501개 비교) · v8.72: 앱 메뉴 탭 줄(.xtab-row)을 Tab pill로(가안 A 회색 알약 · aqTpSync + AQMotion 두 가장자리 스프링 620/40 · 170/19 · 5개 줄은 가로로 밀기) · 비관리자에게 AI 메뉴(하단 메뉴 · switchMobileTab · setAiSubtab) 숨김 · v8.71: 종목 창 — 상세 차트 아래 '공매도 거래 비중' 차트(#aqSupSub)와 '공매도 잔고 · days to cover' 한 줄(#aqSupLn)이 종목 지도 · AI 보고서 · 내 주식 탭에도 남던 것 → 세 탭에서는 숨김(CSS 한 묶음 · 차트 탭은 그대로) · v8.70: 미국주식 평가 수익금 보정(디자인 방 이번만 직접 수정) — simulatePortfolioDaily 현재 보유: 토스와 수량이 같은 종목은 원가 = 토스 수량 × 토스 평단 · 시트 종가가 없거나 오래되면 토스 현재가(px, 동기화 때 저장 aqSyncLocalFromServer) · 맨 끝 일별 기록도 같은 값 · 앱 -8,050 vs 토스 -7,657 · v8.69: 가로 2분할 모드에서 AI 매니저 하나씩 결정 · 아래 시트 · 버튼 줄 · 되돌리기 알림을 오른쪽 칸에 열리게(왼쪽 메뉴 · 폰 화면을 덮던 것) · v8.68: AI 매니저 '판단 근거 전체' 옆 'AI 보고서' → '종목 상세보기'(종목 화면으로, aqMg4Detail — aqMg4Tile · _mg4Go) · 계좌 지도 칸 시트 로고 확대되던 것(.m4-* img 크기) · 앱 전체 로고 동그라미 옅은 흰 테 없앰(흰 바탕을 가장자리 안쪽에서 끝냄 --aq-lg-bg) · v8.67: 다크 표면 색을 v8.65 값으로 되돌림(바탕 #161618 · 카드 #1c1c1f · 몸통 #222226 · 눌림 #2a2a2e · 탭바 #0e0e10 — 본부장님 '바탕이 너무 검정') · 채움 3단 · 스프링 엔진 · 1.2초는 그대로 · v8.66: 디자인 v2 1단계 공통 토대 — 다크 표면 색 한 곳으로(바탕 #000 · 카드 #171717 · 몸통 #262626 · 채움 3단 · object · 눌림 #383838) · 라이트는 채움 3단 · object · surface만 더함 · 모서리 8단 · 스프링 7종 토큰 · 공용 스프링 엔진 window.AQMotion(S · tune · step · spring · register · kick) · 알림 당겨서 새로고침이 AQMotion 계산을 씀(값 그대로) · 길게 눌러 확정 0.8초 → 1.2초(--hold-ms) · v8.65: AI 매니저 화면 다시 짬(캔버스 시안 승인) — 맨 위 할 일 카드(밤: 결정할 것 n건 · 남은 시간 · 결론 · 결정할 종목 로고 줄(매수 초록 · 매도 빨강 테두리) · 하나씩 결정하기 / 결정 뒤: 체결 · 미체결 · 모의 · 건별 결과 + 오늘 밤 단계) · 계좌 지도(보유 금액만큼 칸 · 오늘 손대는 종목 테두리 · 누르면 종목 한 장) · 관심 종목 · 오늘 주시 가로 카드(누르면 거부 · 모의 · 조건부 승인) · 아래 칸 셋(신뢰 기록 · 통합 성적 · 다르게 한 것) · 하나씩 결정은 정보 그대로 카드 넷(주문 · 판단 · 반대 쪽 · 계획) + 판단 근거 전체 · AI 보고서 · v8.64: 알림 창 지니 효과(v8.63)를 되돌려 다이내믹 아일랜드 방식(v8.62)으로 · v8.63: 지니 효과(되돌림) · v8.62: 알림 창이 종에서 다이내믹 아일랜드처럼 호로록 나왔다 들어감 (스프링 0.25초 · 열 때 튕김 0.3 · 닫을 때 0 · 내용 흐림 5px→0 · 0.9→1 · 0.05초 늦게) · 열린 동안 종 숫자 배지 숨김 · v8.61: 연구 › 종목 지도 목록 줄을 접힌 카드 모양으로(네모 로고 타일 + 종목명 · 티커 + 한 줄 + 딱지 + 실적 D-day · 예전 PER 막대는 펼친 안쪽에서) · v8.60: 펼침 카드를 연구 › 종목 지도 목록으로 옮김(줄을 누르면 맨 위로 올라가며 펼침 · 띠 색 = 로고 바탕색 · AQ_MAP_EXPAND) · 종목 페이지의 종목 지도 탭은 예전 그대로 되돌림 · v8.59: 종목 지도 — 펼침 카드(접힘: 로고 타일 + 이름 + 한 줄 + 딱지 → 누르면 타일 바탕이 상단 띠로 넓어지며 펼침 · window.AQ_MAP_EXPAND · 끄면 예전 그대로) · v8.58: 알림 아이콘 구슬의 입체감 빼고 납작한 옅은 바탕 + 같은 색 선 아이콘 · v8.57: 알림 창 모양을 Pull to Refresh 원본대로 — 모서리 28 · 선 · 그림자 · 꼬리 없음 · 바탕 #262626 · 머리 '알림' 왼쪽 · 상태 글씨 오른쪽 · 모두 읽음은 체크 아이콘 · 날짜 줄 · 줄 사이 선 · ✕ 없앰(좌우로 밀어 지우기는 그대로) · 둥근 아이콘 38(이모지 대신 선 아이콘) · 제목 · 한 줄 · 지난 시간(방금 · 2분 · 1시간 · 1일) · 안 읽음 주황 점 · v8.56: 알림 — 목록 맨 위에서 아래로 당기면 새로고침(designbookmark Pull to Refresh · 스프링 값 원본 그대로 · 고무줄 버팀 · 손잡이에서 방울이 늘어나 88px 넘으면 떨어져 도는 표시 · 서버에서 새 알림 받는 동안 돎(최소 0.6초) · 새 알림은 위에서 내려앉음 · 제목 아래 'HH:MM 받음 / 당겨서 새로고침 / 놓으면 새로고침 / 받는 중…') · v8.55: 설정 — 줄을 누르면 하위 페이지가 오른쪽에서 밀려 들어오는 Stack panel(움직임 값 Kokonut UI stack-panel · MIT) — 누른 줄 이름이 제목으로 · 아래 페이지 30% 따라감 · ‹ 앞 페이지 이름 버튼 · 오른쪽으로 쓸어 돌아가기(35% · 초속 500px) · 폰 뒤로가기 · 높이 부드럽게 · 토스 연동 · 비밀번호 · ATR · 데이터 상태 · 키 4종 · 서버 고치기 · 신호 연계 · 보안 모니터링을 아래 시트 대신 하위 페이지로 (한국 수급 · 계정 관리는 그대로) · v8.54: 발견 내부자 매수 — 체결일이 아니라 공시가 들어온 날(Filed_Date_KST) 기준으로 최근 5일에 넣음(늦게 공시돼 빠지던 것) · 카드 날짜도 공시일 · 30일 내부자 매수 · 매도 금액도 공시일 기준 · 차트 마커는 그대로 체결일 · v8.53: 일간 이슈 — 최신 뉴스가 위로 · v8.52: 일간 이슈 — 카드가 있는 모든 종목(서버 newsDay all=1) · 거르기 전체 · 보유 · 관심(기본 전체 · 그날 건수) · v8.51: 뉴스 › '거시 날씨' → '일간 이슈' — 위 '거시' 숫자 칸 뺌 · 종목 페이지 '오늘의 주요 뉴스' 카드를 내 보유 · 관심 종목만 모아 최근 7일(서버 leadGet newsDay) · 주간 일정과 같은 날짜 띠(오늘이 맨 오른쪽) · 시간줄 · 로고 테두리 영향 색(좋음 초록 · 나쁨 빨강 · 그 밖 회색) · 누르면 요약 · 영향 · 원문 · 아래는 종목별 날씨 그대로 · v8.50: 차트 매매 마커 — 6M · 1Y에서 건너뛴 날짜의 내 매매 · 내부자 매매 마커가 빠지던 것(가장 가까운 칸에 붙임 · 한 칸에 여럿이면 모두) · 내 매수 · 매도 마커를 누르면 몇 주 · 얼마(다른 날 칸이면 실제 날짜) · v8.49: AI 매니저 '다르게 한 것' — AI와 다르게 한 건(안 함 · 혼자 함 · 반대로 함)에 한 줄 이유(선택) · 이유를 안 남긴 것이 있으면 첫 화면에 조용한 한 줄(서버 diff_open) · 아래 '통합 성적' 옆 '다르게 한 것' · 날짜별 목록(조합 꼬리표 · AI · 나 · 적은 이유) · 누르면 시트(꼬리표 하나 · 한 줄 200자 · 저장 · 지우기 → mgrDiffWhy) · 칸이 없으면 예전 그대로 · v8.48: 한국 종목 '이름 (코드)' 자리에서 코드까지 이름으로 바꿔 '삼성전기 (삼성전기)'가 되던 것 — 이름이 바로 앞에 있으면 '(코드)' · '· 코드'는 지움 · 발견 카드 머리줄은 한국 종목이면 이름만 · v8.47: 확인 · 입력 창 위치 — 아래 시트였던 것을 화면 위쪽(입력 · 키보드에 안 가림 · 키보드가 올라오면 보이는 칸 안으로) · 가운데(확인)로 · 보고서 '꼭 확인할 것' 같은 입력 창이 키보드에 가려 뒤로가기를 한 번 더 눌러야 하던 것 고침 · v8.46: AI 매니저 하나씩 결정 — 주문 내용 바로 아래 계획 요약(서버 items[].plan · 방향 · 지금 단계 · 도착 · 오늘 n단계 · 그만두는 조건 작은 한 줄 · 종목 상세 .mgp 재사용) · 개장 매도 새 제안이면 서버 replaces 한 줄 · 칸이 없으면 예전 그대로 · v8.45: AI 매니저 종목 계획(서버 managerStock.plan · mgr.plans) — 종목 상세에 계획 구역(방향 · 지금 단계 · 도착 · 단계 목록과 상태 꼬리표 · 뜻 · 조건 · 그만은 접어 둠 · 마지막 고침 · 계획 끝내기 → mgrPlanEnd) · 결정할 것 줄에 지금 단계 숫자 · 칸이 없으면 예전 그대로 · v8.44: AI 거시 예보 상시 주제 — 이름이 잘리던 것 · 폰에서 점이 겹치던 것 고침(윗줄 날씨 · 이름 전체 · 간격 숫자, 아랫줄 카드 폭 전체 축) · 펼친 글 왼쪽 비움 없앰 · v8.43: 수급 표시 디자인 기준 맞춤 — 한국 내부자 툴팁 이모지 뺌 · 공매도 비중 칸 · 공매도 잔고 줄 · 그 밖 변동 여백 · 글자를 토큰(4의 배수 · 11/12px)으로 · 보조 칸 선 · 툴팁 색을 상세 차트 COL과 같게 · v8.42: 수급 자료를 차트에(서버 supplyGet · 관리자 · 종목을 열 때 한 번 · 실패하면 숨김) — 한국 상세 · 간단 차트 내부자 장내 매수/매도 ▼(누르면 사람 · 직위 · 주식 수 · 추정 금액) · 자사주 평단 얇은 선(기간 안 · 추정은 점선) · 내부자 매수/매도 칸(최근 90일 건수 · 가장 큰 것 · 그 밖 변동) · 상세 차트 아래 공매도 비중 칸(미국 FINRA 일별 공매도 거래 비중 · 한국 공매도 비중 + 20일 평균) · 미국 차트 아래 '공매도 잔고 · days to cover' 한 줄 · 발견 피드 한국 '내부자 매수 ₩억'(받아 둔 종목만) · v8.41: AI 매니저 매도만 주문은 개장부터(뉴욕 11/17 판부터) — 승인 시트 '넣는 때 개장부터 · 당일' · '승인하면 개장부터 주문해요' · 승인 알림 '개장부터 주문' · 서버 mgr.early가 오면 결정할 것 줄 상태에 그 한 줄 · 체결 n / m주(검사에서 빠짐 · 못 넣음 · 멈춤은 경고 색) · early가 없으면 예전 그대로 · v8.40: AI 거시 예보 새 화면(시안 승인 11/16) — 숫자 띠(괴리 큰 주제 · 다음 갈림길 · 지난 예보 적중) · 거르기 미끄럼 · 인사이트 겹친 카드(다음 · 옆으로 밀기) · 상시 주제 괴리 지도(괴리 큰 순 · 펼침) · 지켜보는 일 안내판(가까운 순 · D-day 넘김 · 단계 이음) · 지난 예보 추이 · 상세는 큰 축(시장 · 판단 A·B·C 떨어짐) · 판단 카드 부채 · 시장 반응 계기 · 시장/AI 생각 바꾸기 · 틀렸다고 볼 신호 형광펜 · v8.39: S펜 추세선 · 가로선 탭하면 다시 '지울까요?' — 확인 시트가 연 탭에 바로 닫히던 것 고침 · v8.38: 차트 1Y는 마지막 날짜에서 365일 전 이후만(종목 · 발견 피드 · 간단 차트 · 비교 · 매크로 · 섹터 · KJP500) — 서버 시세 창이 400일로 늘어도 1년 · 365일 이하 자료는 예전과 같음 · v8.37: 밸런스(60일 · 넣으면 좋은 순 1년) · 쏠림 급락일 — 날짜 고르기의 '종목 절반' 기준을 1년 시세가 있는 종목만으로 셈(막 편입된 종목 때문에 계산이 막히지 않게 · 1년이 안 된 종목은 후보에서 빠짐 그대로) · 넣으면 좋은 순은 1년이 251일이 안 돼도 241일 이상이면 그 날 수로 계산(점 설명의 250일 자리에 실제 날 수) · v8.36: 통합 성적 화면(AI 매니저 › AI 신뢰 기록 아래 · 관리자) — 한눈에 · AI 매니저 · 예보 종결 · 목록 · 한 건 · 처음 4주(첫 결과까지 n거래일) · 끝난 것 10건 미만은 건수 · AI 예보 카드는 반영 숫자 · 방어 · 역이용 · 인버스가 없으면 그 칸을 그리지 않음 · v8.35: 한국 종목은 어디서든 코드(006600 등) 대신 종목명 — 화면에 뜨는 글자 전부 · v8.34: AI 매수심사 영역 비공개(AQ_BUYREVIEW_ON) — 매수분석 탭 · 심사 요청 · 리포트 · 다시 볼 날 · 마감 알림 숨김 · 선제안 '받기'는 관심 종목에 넣고 바로 맞춤 · 규칙형 알림 숨김(AQ_RULE_UI_ON) — 급락장 플레이북 · 급락 기준 · 추세 이탈 카드 · 장중 급변 알림 · 관심 종목 줄에 AI 매니저 결론 한 줄(누르면 판단 근거) · v8.33: 2·3차 교체(시안 승인 11/16) — 확인 · 입력창은 앱 안 시트(브라우저 창 없앰) · 알림은 아래에 쌓임(누르면 펼침 · ×로 치움) · AI 매니저 되돌리기 남은 초 · 하루 흐름 · 오늘 밤 단계 표시(체크 · 지금 단계 빛) · 접이식 칸 부드럽게 · 보고서 읽어 줄 때 읽는 줄 표시 · 차트를 끌면 그 날 가격 · 지금 가격 숫자 굴러가며 바뀜 · 신호 필터는 버튼에서 펼침 · 메뉴 펼침 · 상세 스위치 · 설정 체크는 스위치 · 인사이트 · PPT 쪽 점 · 하단 메뉴 선택 바탕 미끄럼 · v8.32: 종목 페이지 '오늘의 주요 뉴스'를 밸런스처럼 카드 안에(안쪽 여백 18 · 카드 사이 10) · v8.31: 부품 정리(시안 승인 11/16) — 토큰(글자 흐림 #85858a · 강조 옅음 · 모서리 16 · 움직임 120/200/320ms) · 돈이 나가는 버튼은 길게 눌러 확정(주문 넣기 · 승인 · 모두 승인 · 조건부 승인) · 기다리는 글자에 옅은 빛 · 받기 · 매수심사 요청 · 지도 만들기 버튼은 눌림 → 처리 중 → 요청됨 · 3M/6M/1Y · 예보 거르기 · 심사 탭은 선택 배경이 미끄러지듯 · 휴대폰 '동작 줄이기'면 움직임 없음 · v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
@@ -2472,6 +2472,16 @@ body.modal-report-mode #chartModal #aqSupSub, body.modal-report-mode #chartModal
 .aqval-bar-row.is-self .sa-bar-label { color: var(--accent-2); font-weight: 800; }
 .aqval-num { font-weight: 700; color: var(--text); }
 .aqval-num.na { color: var(--text-mute); font-weight: 500; }
+/* v8.98: 밸류에이션 창 막대 — 예전 섹터 분석 규칙을 이 창 몫만 남김(섹터동향은 .sa2-* 로 옮김) */
+.sa-bar-row { display: flex; align-items: center; padding: 4px 6px; border-radius: 4px; transition: background 0.12s; }
+.sa-bar-row:hover { background: var(--bg-3); }
+.sa-bar-label { width: 120px; font-size: 11px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+.sa-bar-track { flex: 1; height: 14px; position: relative; margin: 0 8px; min-width: 60px; }
+.sa-bar-center-line { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--line-2); z-index: 0; }
+.sa-bar-fill { position: absolute; top: 1px; height: 12px; border-radius: 2px; min-width: 2px; }
+.sa-bar-val { width: 100px; text-align: right; font-size: 11px; display: flex; justify-content: flex-end; gap: 5px; flex-shrink: 0; }
+.sa-bar-fill.pos { background: #40c057; } .sa-bar-fill.neg { background: #ff6b6b; }
+@media (max-width: 1024px) { .sa-bar-val { font-size: 10px; } .sa-bar-row { padding: 4px 6px; gap: 6px; } .sa-bar-track { height: 16px; } }
 
 .chart-wrap { background: transparent; padding: 0; margin: 10px 0 4px; position: relative; height: 520px; }  /* v3.62/v3.66: 평탄화 + 영역 여백 */
 
@@ -4741,10 +4751,6 @@ body[data-mtab="auto"][data-atab="guide"] footer, body[data-mtab="auto"][data-at
 .sd-mega-row { margin: 2px 0 10px; } .sd-mega, .ms-chip.ms-mega { background: rgba(77,171,247,.14) !important; color: #74c0fc !important; border: none; border-radius: 999px; font-size: 11.5px; font-weight: 700; padding: 3px 10px; cursor: pointer; }
 .sd-def { background: rgba(255,255,255,.04); border-radius: 14px; padding: 12px 14px; font-size: 13px; line-height: 1.6; color: var(--text); margin-bottom: 10px; } .sd-def small { display: block; font-size: 11px; color: var(--text-mute); margin-bottom: 4px; }
 .sd-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 14px; } .sd-stats div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 10px 12px; } .sd-stats span { display: block; font-size: 11px; color: var(--text-mute); } .sd-stats b { font-size: 15px; color: var(--text-hi); } .sd-stats b.up { color: var(--kr-up); } .sd-stats b.down { color: var(--kr-down); }
-.sa-mode { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; margin: 0 0 10px; } .sa-mode button { background: none; border: none; color: var(--text-mute); font-size: 12px; font-weight: 700; padding: 5px 14px; cursor: pointer; } .sa-mode button.on { background: rgba(255,255,255,.09); color: var(--text-hi); }
-[data-mega] { cursor: pointer; } [data-mega] .sa-bar-label { width: 140px; } .sa-mega-nm { font-weight: 800; } .sa-mega-nm em { font-style: normal; color: var(--text-mute); font-size: 10px; } .sa-mega-sub { display: block; font-size: 10px; color: var(--text-mute); font-weight: 500; }
-.sa-bar-row.sa-sub { padding-left: 18px !important; opacity: .9; } .sa-bar-row.sa-sub .sa-bar-label { width: 122px; }
-.sa-mega-other { font-size: 11px; color: var(--text-mute); margin: 8px 4px 0; line-height: 1.5; }
 /* v5.69 */
 .sim-roi { text-align: right; } .sim-px { font-size: 14px; font-weight: 700; color: var(--text-hi); font-variant-numeric: tabular-nums; } .sim-roi b { display: block; margin-top: 2px; font-size: 12.5px; font-weight: 800; font-variant-numeric: tabular-nums; } .sim-roi b.up { color: var(--kr-up); } .sim-roi b.down { color: var(--kr-down); } .sim-roi b.zero { color: var(--text-mute); }
 /* v5.70: 관심 하위 탭 · 제목 없음 */
@@ -7384,167 +7390,113 @@ body[data-mtab="ops"][data-otab="auto"] section.card[data-mtab~="ops"][data-otab
   border: 1px solid rgba(78,201,176,0.3);
 }
 
-/* ============ SECTOR ANALYSIS — Python 대시보드 스타일 이식 ============ */
-.sa-layout { display: flex; gap: 16px; align-items: flex-start; }
-.sa-left { flex: 0 0 390px; min-width: 0; }
-.sa-right { flex: 1; min-width: 0; }
-.sa-panel-title {
-  font-size: 12px; font-weight: 700;
-  color: var(--text-mute); text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 6px; margin-bottom: 10px;
-}
-.sa-empty { color: var(--text-mute); font-size: 11px; padding: 16px; text-align: center; }
+/* ============ v8.98: 항해 › 섹터동향 — 한 줄 행 · Tab pill 토글 · 날짜 되감기 플레이어 · 통통 연속 기록 (시안 claude.ai/artifact/DBQiQ75igYJxXjfNgm6TYr) ============ */
+/* 섹터 연속 기록 카드 */
+.sa-sk-sub { font-size: var(--text-sm, 12px); color: var(--text-dim); }
+#sectorStreakCard .card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sa-sk-scroll { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; padding: 6px 2px 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.sa-sk-scroll::-webkit-scrollbar { display: none; }
+.sa-sk-empty { font-size: var(--text-base, 13px); color: var(--text-mute); padding: 12px 0; }
+.sa-sk { flex: none; width: 132px; min-height: 120px; text-align: left; border: 0; background: var(--surface); color: inherit; border-radius: var(--r-tile, 14px); padding: 12px; display: grid; grid-template-rows: auto auto auto 1fr; gap: 2px; cursor: pointer; font: inherit; touch-action: pan-x; will-change: transform; -webkit-tap-highlight-color: transparent; }
+.sa-sk .n { font-size: var(--text-md, 15px); font-weight: 500; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sa-sk .d { font-size: var(--text-sm, 12px); }
+.sa-sk .v { font-size: var(--text-xl, 18px); font-weight: 700; font-variant-numeric: tabular-nums; }
+.sa-sk .up, .sa2-pct .up, .sa2-mgh .up { color: var(--kr-up); } .sa-sk .down, .sa2-pct .down, .sa2-mgh .down { color: var(--kr-down); }
+.sa-sk .bars { display: flex; align-items: flex-end; gap: 3px; height: 32px; margin-top: 6px; }
+.sa-sk .bars i { display: block; width: 6px; border-radius: 2px; transform-origin: 50% 100%; will-change: transform; }
 
-/* 왼쪽: 가로 막대 (등락률) */
-.sa-bar-list { display: flex; flex-direction: column; gap: 2px; }
-.sa-bar-row {
-  display: flex; align-items: center;
-  padding: 4px 6px; border-radius: 4px;
-  transition: background 0.12s;
-}
-.sa-bar-row:hover { background: var(--bg-3); }
-.sa-bar-label {
-  width: 120px; font-size: 11px; font-weight: 600;
-  color: var(--text); white-space: nowrap; overflow: hidden;
-  text-overflow: ellipsis; cursor: pointer;
-  flex-shrink: 0;
-}
-.sa-bar-label:hover { color: var(--accent); text-decoration: underline; }
-.sa-bar-track {
-  flex: 1; height: 14px; position: relative; margin: 0 8px;
-  min-width: 60px;
-}
-.sa-bar-center-line {
-  position: absolute; left: 50%; top: 0;
-  width: 1px; height: 100%; background: var(--line-2); z-index: 0;
-}
-.sa-bar-fill {
-  position: absolute; top: 1px; height: 12px;
-  border-radius: 2px; min-width: 2px;
-}
-.sa-bar-val {
-  width: 100px; text-align: right;
- font-size: 11px;
-  display: flex; justify-content: flex-end; gap: 5px;
-  flex-shrink: 0;
-}
-.sa-bar-fill.pos { background: #40c057; }
-.sa-bar-fill.neg { background: #ff6b6b; }
-.sa-bar-val .pos-pct { color: #40c057; font-weight: 700; }
-.sa-bar-val .neg-pct { color: #ff6b6b; font-weight: 700; }
-.sa-bar-val .sigma-hot { color: #2b8a3e; font-weight: 800; }
-.sa-bar-val .sigma-norm { color: var(--text-mute); font-size: 10px; }
+/* 섹터동향 카드 */
+.sa2 { container-type: inline-size; }
+.sa2-hd { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.sa2-sub { font-size: var(--text-sm, 12px); color: var(--text-dim); min-width: 0; }
+.sa-tabs { position: relative; display: flex; height: 40px; border-radius: var(--radius-pill, 999px); background: var(--fill-1); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior-x: contain; flex: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--tp-l, 0px), #000 calc(100% - var(--tp-r, 0px)), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 var(--tp-l, 0px), #000 calc(100% - var(--tp-r, 0px)), transparent 100%); }
+.sa-tabs.tp-fit { width: max-content; max-width: 100%; height: 36px; }
+.sa-tabs.tp-fit > .xtab-btn { flex: 0 0 auto; height: 36px; min-width: 56px; padding: 0 14px; }
+.sa-tabs.sa-sort { width: 100%; }
+.sa-tabs.sa-sort > .xtab-btn { padding: 0 12px; }
+.sa2-cap { font-size: var(--text-sm, 12px); color: var(--text-mute); margin: 8px 0 4px; }
 
-/* 오른쪽: 히트맵 — 다크모드 최적화 */
-.sa-heatmap-wrap { overflow-x: auto; padding-bottom: 6px; }
-.sa-hm-table {
-  display: inline-block; min-width: 100%;
-  font-size: 10px;
-}
-.sa-hm-row {
-  display: flex; gap: 1px; margin-bottom: 1px;
-  height: 26px; align-items: stretch;
-}
-.sa-hm-row.sa-hm-header { height: 28px; }
-.sa-hm-cell {
-  display: flex; align-items: center; justify-content: center;
-  padding: 2px 4px; border-radius: 2px;
+/* 날짜 되감기 플레이어 */
+.sa2-rw { background: var(--surface); border-radius: var(--r-panel, 18px); padding: 12px 14px 6px; margin: 8px 0; }
+.sa2-rw[hidden] { display: none; }
+.sa2-rw-top { display: flex; align-items: center; gap: 12px; }
+.sa2-play { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--accent-deep); color: #fff; cursor: pointer; display: grid; place-items: center; position: relative; transition: background-color .15s cubic-bezier(0.23, 1, 0.32, 1); -webkit-tap-highlight-color: transparent; }
+.sa2-play:active { background: var(--accent); }
+.sa2-play svg { position: absolute; width: 20px; height: 20px; fill: currentColor; transition: opacity var(--t-base, .2s) var(--ease-out), transform var(--t-slow, .32s) var(--ease-out); }
+.sa2-play .i-pause { opacity: 0; transform: scale(.6); }
+.sa2-play.on .i-play { opacity: 0; transform: scale(.6); }
+.sa2-play.on .i-pause { opacity: 1; transform: none; }
+.sa2-rw-d { min-width: 0; flex: 1; }
+.sa2-roll { display: flex; font-size: var(--text-xl, 18px); font-weight: 700; color: var(--text-hi); font-variant-numeric: tabular-nums; line-height: 24px; height: 24px; }
+.sa2-rc { display: inline-grid; overflow: hidden; height: 24px; }
+.sa2-rc > span { grid-area: 1 / 1; display: block; white-space: pre; }
+.sa2-ago { font-size: var(--text-sm, 12px); color: var(--text-dim); line-height: 16px; }
+.sa2-close { flex: none; min-height: 44px; padding: 0 14px; border-radius: var(--radius-pill, 999px); border: 1px solid var(--fill-3); background: transparent; color: var(--accent-text); font: inherit; font-size: var(--text-base, 13px); font-weight: 600; cursor: pointer; white-space: nowrap; }
+.sa2-eqw { margin-top: 10px; }
+.sa2-eqc { font-size: var(--text-xs, 11px); color: var(--text-mute); margin-bottom: 4px; }
+.sa2-eq { display: flex; gap: 3px; height: 28px; }
+.sa2-eq > div { position: relative; flex: 1; min-width: 0; }
+.sa2-eq > div::before { content: ""; position: absolute; left: 0; right: 0; top: 13px; height: 1px; background: var(--fill-2); }
+.sa2-eq b { position: absolute; left: 0; right: 0; border-radius: 1px; }
+.sa2-jl { position: relative; height: 84px; margin: 0 16px; touch-action: pan-y; cursor: grab; outline-offset: 4px; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.sa2-jl.drag { cursor: grabbing; }
+.sa2-jl:focus-visible { outline: 2px solid var(--accent); }
+.sa2-jlt { position: absolute; left: 0; right: 0; top: 56px; height: 6px; border-radius: 3px; background: var(--fill-3); }
+.sa2-jlt.back { transition: transform .45s cubic-bezier(0.34, 1.4, 0.64, 1); }
+.sa2-jlf { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 3px; background: var(--accent); }
+.sa2-goo { position: absolute; left: -24px; right: -24px; top: 0; bottom: 0; filter: url(#saGoo); pointer-events: none; }
+.sa2-thumb, .sa2-bub { position: absolute; left: 24px; top: 0; border-radius: 50%; background: var(--accent); will-change: transform; }
+.sa2-thumb { width: 28px; height: 28px; margin: -14px 0 0 -14px; }
+.sa2-bub { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+.sa2-lab { position: absolute; left: 0; top: 0; width: 44px; margin: -9px 0 0 -22px; text-align: center; font-size: var(--text-sm, 12px); line-height: 18px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; pointer-events: none; will-change: transform, opacity; white-space: nowrap; opacity: 0; }
+.sa2-ends { display: flex; justify-content: space-between; font-size: var(--text-xs, 11px); color: var(--text-mute); padding: 0 6px 8px; font-variant-numeric: tabular-nums; }
 
-  font-size: 10px;
-  white-space: nowrap; overflow: hidden;
+/* 한 줄 행 */
+.sa2-rh { display: none; }
+.sa2-empty { color: var(--text-mute); font-size: var(--text-base, 13px); padding: 16px; text-align: center; }
+.sa2-r { display: grid; grid-template-columns: minmax(0, 1fr) 72px 104px; grid-template-areas: "id id pct" "trk avg strip"; column-gap: 10px; row-gap: 6px; align-items: center; min-height: 64px; padding: 10px 0; border-top: 1px solid var(--fill-1); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.sa2-r:active { background: var(--fill-1); }
+.sa2-r:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.sa2-r.sa2-sub { padding-left: 14px; }
+.sa2-id { grid-area: id; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.sa2-nm { grid-area: nm; flex: 0 1 auto; min-width: 0; font-size: var(--text-md, 15px); font-weight: 500; color: var(--text-hi); line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sa2-chip { grid-area: chip; flex: none; display: inline-block; font-size: var(--text-sm, 12px); line-height: 18px; padding: 0 8px; border-radius: var(--radius-pill, 999px); border: 1px solid transparent; white-space: nowrap; }
+.sa2-chip.c-hot { background: color-mix(in srgb, var(--kr-up) 20%, transparent); color: var(--kr-up); }
+.sa2-chip.c-cold { background: color-mix(in srgb, var(--kr-down) 20%, transparent); color: var(--kr-down); }
+.sa2-chip.c-turn { background: var(--accent-soft); color: var(--accent-text); }
+.sa2-chip.c-down { border-color: color-mix(in srgb, var(--kr-down) 45%, transparent); color: var(--kr-down); }
+.sa2-chip.c-neu { color: var(--text-mute); padding-left: 0; }
+.sa2-pct { grid-area: pct; justify-self: end; text-align: right; line-height: 20px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.sa2-pct .v { font-size: var(--text-md, 15px); font-weight: 700; }
+.sa2-pct .s { font-size: var(--text-sm, 12px); color: var(--text-mute); margin-left: 6px; }
+.sa2-pct .s.hot-up { color: var(--kr-up); font-weight: 600; } .sa2-pct .s.hot-down { color: var(--kr-down); font-weight: 600; }
+.sa2-trk { grid-area: trk; position: relative; height: 8px; border-radius: var(--r-bar, 5px); background: var(--fill-1); }
+.sa2-mid { position: absolute; left: 50%; top: -2px; width: 1px; height: 12px; background: var(--fill-3); }
+.sa2-fill { position: absolute; top: 0; height: 8px; border-radius: 2px; min-width: 2px; transition: left .4s var(--ease-out), width .4s var(--ease-out), background-color .2s; }
+.sa2-avg { grid-area: avg; font-size: var(--text-sm, 12px); color: var(--text-dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sa2-avg em { font-style: normal; color: var(--text-mute); margin-right: 4px; }
+.sa2-strip { grid-area: strip; justify-self: end; width: 104px; display: grid; grid-template-columns: repeat(var(--n, 30), 1fr); gap: 1px; border: 0; background: none; padding: 13px 0; margin: -13px 0; cursor: pointer; align-items: center; -webkit-tap-highlight-color: transparent; }
+.sa2-strip span { display: block; height: 18px; border-radius: 1px; }
+.sa2-strip span.sel { outline: 1px solid var(--text-hi); outline-offset: 1px; }
+.sa2-mg .sa2-nm { font-weight: 600; }
+.sa2-chev { flex: none; width: 7px; height: 7px; border-right: 1.6px solid var(--text-mute); border-bottom: 1.6px solid var(--text-mute); transform: rotate(45deg) translateY(-2px); transition: transform var(--t-base, .2s) var(--ease-out); }
+.sa2-mg.open .sa2-chev { transform: rotate(-135deg) translateY(-2px); }
+.sa2-msub { grid-area: avg; grid-column: 2 / span 2; font-size: var(--text-sm, 12px); color: var(--text-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sa2-other { font-size: var(--text-xs, 11px); color: var(--text-mute); margin: 10px 2px 0; line-height: 1.5; }
+@container (min-width: 640px) {
+  .sa2-id { display: contents; }
+  .sa2-rh { display: grid; grid-template-columns: 130px 64px minmax(80px, 1fr) 104px 76px 150px; column-gap: 10px; padding: 6px 0; font-size: var(--text-sm, 12px); color: var(--text-mute); }
+  .sa2-rh span:nth-child(4), .sa2-rh span:nth-child(5) { text-align: right; }
+  .sa2-r { grid-template-columns: 130px 64px minmax(80px, 1fr) 104px 76px 150px; grid-template-areas: "nm chip trk pct avg strip"; row-gap: 0; min-height: 48px; padding: 4px 0; }
+  .sa2-avg { text-align: right; }
+  .sa2-strip { width: 150px; }
+  .sa2-mg { grid-template-areas: "nm . trk pct msub msub"; }
+  .sa2-msub { grid-area: msub; grid-column: auto; text-align: left; }
+  .sa2-r.sa2-sub { padding-left: 0; }
+  .sa2-r.sa2-sub .sa2-nm { padding-left: 14px; }
 }
-.sa-hm-row.sa-hm-header .sa-hm-cell {
-  background: var(--bg-3); color: var(--text-dim);
-  font-weight: 700; font-size: 9px;
-  font-family: inherit;
-  border: 1px solid var(--line);
-}
-/* v1.19: 정렬 가능한 헤더 셀 — hover + cursor 표시 */
-.sa-hm-row.sa-hm-header .sa-hm-cell.sortable {
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.1s, color 0.1s;
-}
-.sa-hm-row.sa-hm-header .sa-hm-cell.sortable:hover {
-  background: rgba(86,156,214,0.15);
-  color: var(--accent);
-}
-.sa-hm-label {
-  width: 130px; min-width: 130px;
-  justify-content: flex-start !important;
-  padding-left: 8px !important;
-  color: var(--text) !important;
-  font-weight: 600; font-family: inherit !important;
-  font-size: 11px !important;
-  background: var(--panel) !important;
-  cursor: pointer;
-  /* v1.28: 좌우 스크롤 시 섹터명 freeze */
-  position: sticky;
-  left: 0;
-  z-index: 2;
-  box-shadow: 1px 0 0 var(--line), 4px 0 6px -3px rgba(0,0,0,0.25);
-}
-.sa-hm-row.sa-hm-header .sa-hm-label {
-  background: var(--bg-3) !important;
-  z-index: 3; /* 헤더는 더 위 */
-}
-[data-theme="light"] .sa-hm-label {
-  box-shadow: 1px 0 0 var(--line), 4px 0 6px -3px rgba(40,30,15,0.12);
-}
-.sa-hm-row .sa-hm-label:hover { color: var(--accent) !important; background: var(--bg-3) !important; }
-.sa-hm-signal {
-  width: 82px; min-width: 82px;
-  background: rgba(255,255,255,0.03) !important;
-  font-family: inherit !important; font-size: 10px !important;
-}
-.sa-hm-avg {
-  width: 46px; min-width: 46px;
-  background: rgba(255,255,255,0.05) !important;
-  color: var(--text) !important;
-  font-weight: 800;
-  font-size: 11px !important;
-}
-.sa-hm-day {
-  flex: 1; min-width: 42px;
-  font-weight: 600;
-}
-
-/* 시그널 배지 — 다크모드용 vivid 톤 */
-.sa-badge {
-  padding: 0 7px; height: 18px; line-height: 18px;
-  border-radius: 9px; font-weight: 700; font-size: 9px;
-  display: inline-block; width: 70px; text-align: center;
-  letter-spacing: 0.1px;
-}
-.sa-badge.sa-badge-hot     { background: rgba(64,192,87,0.85);  color: #fff; box-shadow: 0 0 0 1px #2b8a3e; }
-.sa-badge.sa-badge-cold    { background: rgba(255,107,107,0.85); color: #fff; box-shadow: 0 0 0 1px #c92a2a; }
-.sa-badge.sa-badge-turn    { background: rgba(255,212,59,0.92); color: #5c2700; box-shadow: 0 0 0 1px #2b8a3e; line-height: 16px; }
-.sa-badge.sa-badge-down    { background: rgba(255,107,107,0.18); color: #ff8787; box-shadow: 0 0 0 1px #e03131; line-height: 16px; }
-.sa-badge.sa-badge-neutral { background: rgba(255,255,255,0.08); color: var(--text-dim); }
-
-/* 인사이트 박스 (Python의 insight-box 이식) */
-.sa-insight-box {
-  background: rgba(121, 80, 242, 0.10);
-  border-left: 4px solid #7950F2;
-  padding: 10px 14px; border-radius: 4px;
-  margin-bottom: 12px;
-}
-.sa-insight-title {
-  color: #B197FC; font-weight: 800; font-size: 12px;
-  margin-bottom: 4px;
-}
-.sa-insight-text {
-  font-size: 12px; line-height: 1.6; color: var(--text);
-}
-.sa-insight-text b { color: var(--text-hi); }
-
-@media (max-width: 1100px) {
-  .sa-layout { flex-direction: column; }
-  .sa-left { flex: 1 1 auto; width: 100%; }
-  .sa-right { width: 100%; }
-}
+@media (prefers-reduced-motion: reduce) { .sa2-fill, .sa2-jlt.back, .sa2-chev, .sa2-play svg { transition: none !important; } }
 
 /* ============ MACRO GRID ============ */
 .macro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
@@ -8586,12 +8538,6 @@ table.sec-modal-table tbody tr:last-child td { border-bottom: none; }
   .sf-layer-divider { margin: 0 1px; }
   .sf-layer-return .sf-arrow-glyph { display: none; }  /* ▲▼ 화살표 모바일에선 숨김 (색상으로 구분) */
 
-  /* 40섹터 동향 분석 — sa-bar 값 폰트 축소 */
-  .sa-bar-label { font-size: 11px; }
-  .sa-bar-val { font-size: 10px; }
-  .sa-bar-val .sigma-norm { font-size: 9px; }
-  .sa-bar-row { padding: 4px 6px; gap: 6px; }
-  .sa-bar-track { height: 16px; }
 
   /* v1.19 (3): 콤보 평가표 — 건수 컬럼 정렬 fix (4자리까지 동일 폭) */
   table.combo-eval { font-variant-numeric: tabular-nums; }
@@ -10213,35 +10159,67 @@ html.aq-wide .aq-rail-tg svg { width: 18px; height: 18px; fill: none; stroke: cu
     </div>
   </section>
 
-  <!-- v3.91: 섹터 연속 기록 (금주의 발견 UI 재사용, 섹터 동향 탭 최상단) -->
+  <!-- v8.98: 섹터 연속 기록 (통통 튀는 카드 · 3일 이상 연속 상승/하락 · 연속 일수만큼 그날 σ 막대) -->
   <section class="card mobile-only" id="sectorStreakCard" data-mtab="voyage" data-vtab="trend">
     <div class="card-header">
       <h2>섹터 연속 기록</h2>
+      <span class="sa-sk-sub" id="sectorStreakSub"></span>
     </div>
     <div class="card-body">
-      <div class="buy-points-scroll" id="sectorStreakScroll">
-        <div class="buy-points-empty"><span class="aq-tt" data-tt="feed">로딩 중…</span></div>
+      <div class="sa-sk-scroll" id="sectorStreakScroll">
+        <div class="sa-sk-empty"><span class="aq-tt" data-tt="feed">로딩 중…</span></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ SECTOR ANALYSIS (Equal-Weight Bars + 30D Cycle Heatmap) ============ -->
+  <!-- v8.98: 섹터동향 — 한 줄 행(오늘 등락 막대 + σ + 시그널 + 평균 + 30일 띠) · Tab pill 토글 · 날짜 되감기 플레이어(젤리 슬라이더) -->
   <section class="card" id="sectorAnalysisCard" data-mtab="voyage" data-vtab="trend">
     <div class="card-header" onclick="toggleCard(this)">
       <h2>섹터 동향</h2>
       <span class="toggle-icon">▼</span>
     </div>
     <div class="card-body">
-      <div class="sa-layout">
-        <div class="sa-left">
-          <div class="sa-panel-title">Custom Sectors (Equal-Weight)</div>
-          <div id="saBarList" class="sa-bar-list"><div class="sa-empty">데이터 업데이트 후 표시됩니다.</div></div>
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <filter id="saGoo" x="-10%" y="-30%" width="120%" height="170%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
+          <feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8"/>
+        </filter>
+      </svg>
+      <div class="sa2" id="sa2">
+        <div class="sa2-hd">
+          <div class="sa2-sub" id="saSub"></div>
+          <div class="xtab-row sa-tabs" id="saViewTabs" role="group" aria-label="보기 방식">
+            <button type="button" class="xtab-btn active" data-saview="sector" onclick="aqSaSetMode('sector')">섹터</button>
+            <button type="button" class="xtab-btn" data-saview="mega" onclick="aqSaSetMode('mega')">메가</button>
+          </div>
         </div>
-        <div class="sa-right">
-          <div class="sa-panel-title">Cycle Analysis (30D Daily σ)</div>
-          <div id="saInsight"></div>
-          <div id="saHeatmap" class="sa-heatmap-wrap"></div>
+        <div class="xtab-row sa-tabs sa-sort" id="saSortTabs" role="group" aria-label="정렬">
+          <button type="button" class="xtab-btn active" data-sasort="chg" onclick="aqSaSort('chg')">오늘 등락 ↓</button>
+          <button type="button" class="xtab-btn" data-sasort="avg" onclick="aqSaSort('avg')">평균</button>
+          <button type="button" class="xtab-btn" data-sasort="sig" onclick="aqSaSort('sig')">시그널</button>
+          <button type="button" class="xtab-btn" data-sasort="name" onclick="aqSaSort('name')">이름</button>
+          <button type="button" class="xtab-btn" data-sasort="day" id="saDayTab" onclick="aqSaSort('day')">날짜별 σ</button>
         </div>
+        <div class="sa2-cap" id="saCap">30일 띠는 오른쪽이 오늘이에요. 띠나 「날짜별 σ」를 눌러 되감아요.</div>
+        <div class="sa2-rw" id="saRw" hidden>
+          <div class="sa2-rw-top">
+            <button class="sa2-play" type="button" id="saPlay" aria-label="재생">
+              <svg class="i-play" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3.5v13a1 1 0 0 0 1.5.86l10-6.5a1 1 0 0 0 0-1.72l-10-6.5A1 1 0 0 0 6 3.5Z"/></svg>
+              <svg class="i-pause" viewBox="0 0 20 20" aria-hidden="true"><rect x="4.5" y="3" width="4" height="14" rx="1.2"/><rect x="11.5" y="3" width="4" height="14" rx="1.2"/></svg>
+            </button>
+            <div class="sa2-rw-d"><div class="sa2-roll" id="saRwDate" aria-hidden="true"></div><div class="sa2-ago" id="saRwAgo">오늘</div></div>
+            <button class="sa2-close" type="button" id="saRwClose">닫기</button>
+          </div>
+          <div class="sa2-eqw"><div class="sa2-eqc" id="saEqCap">그날 섹터의 σ</div><div class="sa2-eq" id="saEq" aria-hidden="true"></div></div>
+          <div class="sa2-jl" id="saJl" role="slider" tabindex="0" aria-label="날짜 고르기" aria-valuemin="0" aria-valuemax="29">
+            <div class="sa2-jlt" id="saJlTrack"><div class="sa2-jlf" id="saJlFill"></div></div>
+            <div class="sa2-goo"><i class="sa2-bub" id="saJlBub"></i><i class="sa2-thumb" id="saJlThumb"></i></div>
+            <div class="sa2-lab" id="saJlLab"></div>
+          </div>
+          <div class="sa2-ends"><span id="saRwFirst"></span><span>오늘</span></div>
+        </div>
+        <div class="sa2-rh" aria-hidden="true"><span>섹터</span><span>시그널</span><span id="saRhBar">오늘 등락</span><span id="saRhVal">등락 · σ</span><span>평균</span><span id="saRhStrip">30일 흐름</span></div>
+        <div id="saList" role="list"><div class="sa2-empty">데이터 업데이트 후 표시됩니다.</div></div>
       </div>
     </div>
   </section>
@@ -22441,258 +22419,422 @@ function computeSectorAnalysis() {
   return result;
 }
 
-// 히트맵 셀 색상 — 다크모드 최적화 (어두운 배경 위에 vivid red/blue overlay)
-//   σ≈0 → 거의 투명, σ=±2.5 → 풀톤 초록/빨강 + 선명한 흰글자
-function _saCellStyle(sigma) {
-  if (!isFinite(sigma)) return 'background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.22);';
-  const absV = Math.abs(sigma);
-  // 거의 0 근처 셀은 매우 차분하게
-  if (absV < 0.15) return 'background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.45);';
-  const alpha = Math.min(absV / 2.5, 1.0);
-  const bgA = 0.18 + alpha * 0.62;   // 0.18 → 0.80
-  const shadow = 'text-shadow:0 1px 2px rgba(0,0,0,0.55);';
-  if (sigma >= 0) {
-    // 초록 vivid: #40c057 (64, 192, 87) — v5.97 미국식
-    return `background:rgba(64,192,87,${bgA.toFixed(3)});color:#fff;${shadow}font-weight:700;`;
+// ===========================================================================================================
+// v8.98: 항해 › 섹터동향 — 한 줄 행(오늘 등락 막대 + σ + 시그널 + 평균 + 30일 띠) · Tab pill 토글(섹터/메가 · 정렬) · 날짜 되감기 플레이어(젤리 슬라이더 + 재생) · 통통 튀는 섹터 연속 기록
+//   시안 https://claude.ai/artifact/DBQiQ75igYJxXjfNgm6TYr (본부장님 승인) · 정보 체계(연속 기록 · 섹터/메가 · 등락 + σ · 시그널 · 평균 · 30일 σ · 날짜별 정렬 · 상세 창)는 그대로
+//   스프링은 공용 엔진 AQMotion 위에: 젤리 슬라이더 값만 designbookmark 공용 tokens.css(손가락 900/50 · 방울 420/22 · 놓았을 때 300/14 · 엉김 8) — 원본 모양 코드는 못 읽어 복사 안 함(모양은 직접)
+//   재생 느낌은 Kokonut UI 플레이어 카드(MIT)의 타이밍만 참고(숫자 굴러 바뀜 220ms · 끝 넘겨 당김 18px · 돌아옴 450ms · 막대 올라감 0.08초 · 내려감 0.3초) — 도는 디스크 · 유리 · 그림자는 뺌(DESIGN 6번)
+// ===========================================================================================================
+function _saSig(avg, delta) {   // 적응형 시그널 분기 (Python get_ai_signal_v63 그대로) — 글자 딱지(이모지 없음)
+  if (avg >= 1.5) return { t: '과열', c: 'hot', r: 0 };
+  if (avg <= -1.5) return { t: '침체', c: 'cold', r: 4 };
+  if (delta >= 0.3) return { t: '반등', c: 'turn', r: 1 };
+  if (delta <= -0.3) return { t: '조정', c: 'down', r: 3 };
+  return { t: '신호없음', c: 'neu', r: 2 };
+}
+const _saUi = { sort: 'chg', desc: true, rw: false, day: 0, dates: [], list: [], rows: new Map(), megas: new Map(), first: true, noFlip: false, timer: 0, playing: false, dragging: false, W: 1, wired: false };
+function _saFmt(v, d) { v = Number(v); if (!isFinite(v)) return '–'; d = d == null ? 1 : d; return (v > 0.0001 ? '+' : v < -0.0001 ? '−' : '') + Math.abs(v).toFixed(d); }
+function _saDl(ds) { ds = String(ds || ''); return ds.slice(5, 7) + '/' + ds.slice(8, 10); }
+function _saDw(ds) { const d = new Date(String(ds) + 'T00:00:00Z'); return isNaN(d) ? '' : '일월화수목금토'[d.getUTCDay()]; }
+function _saDateTxt(ds) { return _saDl(ds) + ' (' + _saDw(ds) + ')'; }
+function _saCellBg(v) {
+  if (v == null || !isFinite(v)) return 'var(--fill-1)';
+  if (Math.abs(v) < 0.15) return 'var(--fill-2)';
+  const p = Math.round(18 + Math.min(Math.abs(v) / 2.5, 1) * 62);
+  return 'color-mix(in srgb, var(' + (v > 0 ? '--kr-up' : '--kr-down') + ') ' + p + '%, transparent)';
+}
+// AQMotion 스프링 하나를 목표로 보냄 — 다 멈추면 스스로 떼어냄(idle이 stop을 부름)
+function _saGo(s, t, k, c, apply) {
+  if (k) AQMotion.tune(s, k, c); s.t = t;
+  if (_aqRM()) { s.x = t; s.v = 0; apply(s); return; }
+  if (s._on) { AQMotion.kick(); return; } s._on = 1;
+  let stop = null;
+  stop = AQMotion.register({
+    frame(dt) { AQMotion.step(s, dt); }, render() { apply(s); },
+    idle() { if (Math.abs(s.x - s.t) < 0.002 && Math.abs(s.v) < 0.02) { s.x = s.t; s.v = 0; apply(s); s._on = 0; if (stop) stop(); return true; } return false; }
+  });
+}
+function _saModel(metrics) {
+  const entries = Object.entries(metrics); let ref = [];
+  entries.forEach(([k, v]) => { const h = v && v.sigmaHist30 || []; if (h.length > ref.length) ref = h; });
+  const dates = ref.map(d => d.date).reverse();   // 오래된 → 오늘
+  const list = entries.map(([k, v]) => {
+    const m = {}; (v.sigmaHist30 || []).forEach(d => { m[d.date] = d.sigma; });
+    const ad = v.adaptive || { avg: 0, delta: 0 };
+    return { key: k, name: (typeof aqStripSectorEmoji === 'function' ? aqStripSectorEmoji(k) : k) || k, chg: v.change, sigma: v.sigma, avg: ad.avg, delta: ad.delta, sg: dates.map(d => (m[d] != null && isFinite(m[d])) ? m[d] : null), sig: _saSig(ad.avg, ad.delta) };
+  });
+  return { dates, list };
+}
+function _saRowEl(s) {
+  let r = _saUi.rows.get(s.key);
+  if (!r) {
+    const el = document.createElement('div'); el.className = 'sa2-r'; el.setAttribute('role', 'listitem'); el.tabIndex = 0; el.setAttribute('data-sector-key', s.key);
+    el.innerHTML = '<div class="sa2-id"><div class="sa2-nm"></div><span class="sa2-chip"></span></div><div class="sa2-trk"><i class="sa2-mid"></i><b class="sa2-fill" style="left:50%;width:0"></b></div>'
+      + '<div class="sa2-pct"><b class="v"></b><span class="s"></span></div><div class="sa2-avg"></div><button type="button" class="sa2-strip"></button>';
+    r = { el, nm: el.querySelector('.sa2-nm'), chip: el.querySelector('.sa2-chip'), fill: el.querySelector('.sa2-fill'), v: el.querySelector('.v'), sp: el.querySelector('.s'), avg: el.querySelector('.sa2-avg'), strip: el.querySelector('.sa2-strip'), cur: 0, raf: 0, sub: false };
+    _saUi.rows.set(s.key, r);
   }
-  // 빨강 vivid: #ff6b6b (255, 107, 107) — v5.97 미국식
-  return `background:rgba(255,107,107,${bgA.toFixed(3)});color:#fff;${shadow}font-weight:700;`;
+  r.s = s; r.nm.textContent = s.name; r.nm.title = s.name;
+  r.chip.className = 'sa2-chip c-' + s.sig.c; r.chip.textContent = s.sig.t;
+  r.avg.innerHTML = '<em>평균</em>' + _saFmt(s.avg);
+  r.strip.setAttribute('aria-label', s.name + ' 30일 흐름 · 눌러서 날짜 되감기'); r.strip.style.setProperty('--n', s.sg.length);
+  r.strip.innerHTML = s.sg.map((v, i) => '<span data-i="' + i + '" style="background:' + _saCellBg(v) + '"></span>').join('');
+  return r;
 }
-
-// 적응형 시그널 분기 (Python의 get_ai_signal_v63 그대로)
-function _saSignal(avg, delta) {
-  if (avg >= 1.5)     return { text: '🔥 과열',  cls: 'sa-badge-hot' };
-  if (avg <= -1.5)    return { text: '🧊 침체',  cls: 'sa-badge-cold' };
-  if (delta >= 0.3)   return { text: '🚀 반등',  cls: 'sa-badge-turn' };
-  if (delta <= -0.3)  return { text: '☁️ 조정',  cls: 'sa-badge-down' };
-  return                    { text: '💤 신호없음', cls: 'sa-badge-neutral' };
+function _saMegaEl(m) {
+  let g = _saUi.megas.get(m);
+  if (!g) {
+    const el = document.createElement('div'); el.className = 'sa2-r sa2-mg'; el.setAttribute('role', 'button'); el.tabIndex = 0; el.setAttribute('data-mega', m);
+    el.innerHTML = '<div class="sa2-id"><div class="sa2-nm"></div><i class="sa2-chev" aria-hidden="true"></i></div><div class="sa2-trk"><i class="sa2-mid"></i><b class="sa2-fill" style="left:50%;width:0"></b></div>'
+      + '<div class="sa2-pct"><b class="v"></b></div><div class="sa2-msub"></div>';
+    g = { el, nm: el.querySelector('.sa2-nm'), fill: el.querySelector('.sa2-fill'), v: el.querySelector('.v'), msub: el.querySelector('.sa2-msub'), cur: 0, raf: 0, mega: true };
+    _saUi.megas.set(m, g);
+  }
+  return g;
 }
-
+function _saTween(r, to, unit, animate) {
+  cancelAnimationFrame(r.raf); const from = r.cur; r.cur = to;
+  const paint = v => { r.v.textContent = _saFmt(v) + unit; };
+  if (!animate || _aqRM() || from === to) { paint(to); return; }
+  const t0 = performance.now(), dur = 320;
+  (function f(t) { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); paint(from + (to - from) * e); if (p < 1) r.raf = requestAnimationFrame(f); })(t0);
+}
+function _saBar(r, v, max) {
+  const wd = Math.abs(v) / max * 50, up = v >= 0;
+  r.fill.style.width = wd + '%'; r.fill.style.left = (up ? 50 : 50 - wd) + '%';
+  r.fill.style.background = up ? 'var(--kr-up)' : 'var(--kr-down)';
+  r.v.className = 'v ' + (up ? 'up' : 'down');
+}
+function _saMegas(list) {   // 메가 = 하위 섹터를 종목 수(n)로 가중 평균 (구성 종목 동일가중과 같음)
+  const groups = {}, other = [];
+  list.forEach(s => { const d = aqSectorDef(s.key); if (!d || !d.mega) { other.push(s); return; } const g = groups[d.mega] = groups[d.mega] || { m: d.mega, arr: [], n: 0 }; s._n = d.n || 1; g.arr.push(s); g.n += s._n; });
+  return { megas: Object.values(groups), other };
+}
+function _saPaint(animate, noFlip) {
+  const L = document.getElementById('saList'); if (!L) return;
+  const ui = _saUi, rw = ui.rw, di = ui.day, n = ui.dates.length, k = ui.sort;
+  const val = s => rw ? (s.sg[di] == null ? 0 : s.sg[di]) : s.chg;
+  const mega = ui.view === 'mega';
+  const rowsAll = ui.list.map(s => ui.rows.get(s.key)).filter(Boolean);
+  const before = new Map(); [...ui.rows.values(), ...ui.megas.values()].forEach(r => { if (r.el.isConnected) before.set(r, r.el.getBoundingClientRect().top); });
+  const cmp = (A, B) => {   // A · B = {name, chg, avg, rank, v}
+    let x;
+    if (rw) x = B.v - A.v; else if (k === 'chg') x = B.chg - A.chg; else if (k === 'avg') x = B.avg - A.avg;
+    else if (k === 'sig') x = (A.rank - B.rank) || (B.avg - A.avg); else x = B.name.localeCompare(A.name, 'ko');   // 이름: 내림 = 뒤쪽 글자 먼저 · 처음(오름)은 가나다순
+    return ui.desc ? x : -x;
+  };
+  const key = r => ({ name: r.s.name, chg: r.s.chg, avg: r.s.avg, rank: r.s.sig.r, v: val(r.s) });
+  const nodes = []; let other = null, unit = rw ? 'σ' : '%', max = 0.1;
+  if (!mega) {
+    rowsAll.sort((a, b) => cmp(key(a), key(b))); rowsAll.forEach(r => { r.el.classList.remove('sa2-sub'); r.mega = false; });
+    max = Math.max(...rowsAll.map(r => Math.abs(val(r.s))), rw ? 3.3 : 0.1); if (rw) max = 3.3;
+    rowsAll.forEach(r => { nodes.push(r.el); });
+    ui.placed = rowsAll;
+  } else {
+    const G = _saMegas(ui.list), open = _state.megaOpen || {}, placed = [], heads = [];
+    const wavg = (arr, f) => arr.reduce((a, s) => a + f(s) * (s._n || 1), 0) / (arr.reduce((a, s) => a + (s._n || 1), 0) || 1);
+    G.megas.forEach(g => {
+      g.chg = wavg(g.arr, s => s.chg); g.avg = wavg(g.arr, s => s.avg); g.delta = wavg(g.arr, s => s.delta); g.v = wavg(g.arr, val);
+      g.rank = _saSig(g.avg, g.delta).r;
+    });
+    G.megas.sort((A, B) => cmp({ name: A.m, chg: A.chg, avg: A.avg, rank: A.rank, v: A.v }, { name: B.m, chg: B.chg, avg: B.avg, rank: B.rank, v: B.v }));
+    const all = [...G.megas.map(g => Math.abs(g.v)), ...ui.list.map(s => Math.abs(val(s)))]; max = rw ? 3.3 : Math.max(...all, 0.1);
+    G.megas.forEach(g => {
+      const h = _saMegaEl(g.m), isOpen = !!open[g.m]; h.g = g; h.nm.textContent = g.m; h.el.setAttribute('aria-expanded', String(isOpen)); h.el.classList.toggle('open', isOpen);
+      h.msub.textContent = g.arr.length + '개 섹터 · ' + g.n + '종목'; heads.push(h); nodes.push(h.el);
+      if (isOpen) { const rs = g.arr.map(s => _saUi.rows.get(s.key)).sort((a, b) => cmp(key(a), key(b))); rs.forEach(r => { r.el.classList.add('sa2-sub'); nodes.push(r.el); placed.push(r); }); }
+    });
+    rowsAll.forEach(r => { if (!placed.includes(r)) r.el.classList.remove('sa2-sub'); });
+    if (G.other.length) { other = _saUi.otherEl || (_saUi.otherEl = document.createElement('div')); other.className = 'sa2-other'; other.textContent = '메가 정의에 없는 섹터 ' + G.other.length + '개: ' + G.other.map(s => s.name).join(', '); nodes.push(other); }
+    ui.placed = placed; ui.heads = heads;
+    heads.forEach(h => { _saBar(h, h.g.v, max); _saTween(h, h.g.v, unit, animate); });
+  }
+  (ui.placed || []).forEach(r => {
+    const v = val(r.s); _saBar(r, v, max); _saTween(r, v, unit, animate);
+    if (rw) { r.sp.textContent = ''; r.sp.className = 's'; }
+    else { const sg = r.s.sigma; r.sp.textContent = isFinite(sg) ? Math.abs(sg).toFixed(1) + 'σ' : ''; r.sp.className = 's' + (Math.abs(sg) >= 2 ? (sg > 0 ? ' hot-up' : ' hot-down') : ''); }
+    const cs = r.strip.children; for (let i = 0; i < cs.length; i++) cs[i].classList.toggle('sel', rw && i === di);
+  });
+  L.replaceChildren.apply(L, nodes);
+  if (!noFlip && !_aqRM() && !ui.first) {
+    const moved = [...ui.rows.values(), ...ui.megas.values()].filter(r => r.el.isConnected);
+    moved.forEach(r => { r.el.getAnimations().forEach(a => a.cancel()); });
+    moved.forEach(r => { const b = before.get(r); if (b == null) return; const dy = b - r.el.getBoundingClientRect().top; if (Math.abs(dy) > 1) r.el.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: 380, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }); });
+  }
+  // 위 글 · 머리 줄 · 알약
+  const dd = ui.dates[rw ? di : n - 1], mk = (typeof getCurrentMarket === 'function' && getCurrentMarket() === 'KR') ? '한국' : '미국';
+  const sub = document.getElementById('saSub'); if (sub) sub.textContent = mk + ' · 섹터 ' + ui.list.length + '개' + (dd ? ' · 기준 ' + _saDateTxt(dd) : '');
+  const set = (id, t) => { const e = document.getElementById(id); if (e) e.textContent = t; };
+  set('saRhBar', rw ? '그날 σ' : '오늘 등락'); set('saRhVal', rw ? 'σ' : '등락 · σ'); set('saRhStrip', '30일 · ' + (ui.dates.length ? _saDl(ui.dates[0]) + '→' + _saDl(ui.dates[n - 1]) : ''));
+  set('saCap', rw ? '값은 선택한 날의 σ예요. 손잡이를 밀어서 날짜를 바꿔요.' : '30일 띠는 오른쪽이 오늘이에요. 띠나 「날짜별 σ」를 눌러 되감아요.');
+  const rwp = document.getElementById('saRw'); if (rwp) rwp.hidden = !rw;
+  document.querySelectorAll('#saSortTabs .xtab-btn').forEach(b => {
+    const kk = b.dataset.sasort, base = { chg: '오늘 등락', avg: '평균', sig: '시그널', name: '이름', day: '날짜별 σ' }[kk];
+    b.classList.toggle('active', rw ? kk === 'day' : kk === ui.sort);
+    b.textContent = base + (kk !== 'day' && !rw && kk === ui.sort ? (ui.desc ? ' ↓' : ' ↑') : '');
+  });
+  document.querySelectorAll('#saViewTabs .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.saview === ui.view));
+}
+function aqSaMegaOk() { return getCurrentMarket() !== 'KR' && !!_secDef.byKey && !!Object.keys(_secDef.byKey).length; }
 function renderSectorAnalysis() {
-  const card = $('sectorAnalysisCard');
-  if (!card) return;
-  const metrics = computeSectorAnalysis();
-  if (!metrics || Object.keys(metrics).length === 0) {
-    $('saBarList').innerHTML = '<div class="sa-empty">데이터 업데이트 후 표시됩니다.</div>';
-    $('saHeatmap').innerHTML = '';
-    $('saInsight').innerHTML = '';
+  const card = document.getElementById('sectorAnalysisCard'); if (!card) return;
+  const metrics = computeSectorAnalysis(), L = document.getElementById('saList');
+  if (!metrics || !Object.keys(metrics).length) {
+    _saUi.list = []; _saUi.dates = []; if (L) L.innerHTML = '<div class="sa2-empty">데이터 업데이트 후 표시됩니다.</div>';
+    const rwp = document.getElementById('saRw'); if (rwp) rwp.hidden = true; _saUi.rw = false;
     try { buildSectorStreaks({}); } catch (e) {}
     return;
   }
-
-  const sectors = Object.entries(metrics).map(([k, v]) => ({ key: k, ...v }));
-
-  // ============ LEFT: 등락률 가로 막대 (Change 내림차순) ============
-  const sortedByChange = sectors.slice().sort((a, b) => b.change - a.change);
-  const maxAbs = Math.max(...sortedByChange.map(s => Math.abs(s.change)), 0.1);
-
-  const barHtml = sortedByChange.map(s => {
-    const val = s.change;
-    const sigma = s.sigma;
-    const width = (Math.abs(val) / maxAbs) * 48;
-    const left = val >= 0 ? '50%' : `calc(50% - ${width}%)`;
-    const fillCls = val >= 0 ? 'pos' : 'neg';
-    const pctCls = val >= 0 ? 'pos-pct' : 'neg-pct';
-    const sigmaCls = Math.abs(sigma) >= 2.0 ? 'sigma-hot' : 'sigma-norm';
-    return `<div class="sa-bar-row">
-      <div class="sa-bar-label" data-sector-key="${escapeAttr(s.key)}" title="섹터 상세 보기">${escapeHtml(s.key)}</div>
-      <div class="sa-bar-track">
-        <div class="sa-bar-center-line"></div>
-        <div class="sa-bar-fill ${fillCls}" style="width:${width}%;left:${left};"></div>
-      </div>
-      <div class="sa-bar-val">
-        <span class="${pctCls}">${aqSg(val)}${Math.abs(val).toFixed(1)}%</span>
-        <span class="${sigmaCls}">(${Math.abs(sigma).toFixed(1)}σ)</span>
-      </div>
-    </div>`;
-  }).join('');
-  $('saBarList').innerHTML = aqSaToggleHtml() + ((aqSaToggleHtml() && _saMode() === 'mega') ? aqMegaBars(sortedByChange) : barHtml);   // v5.68: 섹터 / 메가 보기 (미국만)
-
-  // ============ RIGHT: 30일 σ 히트맵 ============
-  // v1.19: 정렬 상태 (기본: Avg desc)
-  if (!_state.heatmapSort) _state.heatmapSort = { key: 'avg', dir: 'desc' };
-  const hsKey = _state.heatmapSort.key;
-  const hsDir = _state.heatmapSort.dir;
-  const sortIndic = (k) => hsKey === k ? (hsDir === 'asc' ? ' ↑' : ' ↓') : '';
-
-  let sortedByAvg;
-  if (hsKey === 'sector') {
-    sortedByAvg = sectors.slice().sort((a, b) => {
-      const r = (a.key || '').localeCompare(b.key || '');
-      return hsDir === 'asc' ? r : -r;
-    });
-  } else if (hsKey === 'signal') {
-    // signal sort by avg (proxy for signal strength)
-    sortedByAvg = sectors.slice().sort((a, b) => {
-      const r = (b.adaptive.avg || 0) - (a.adaptive.avg || 0);
-      return hsDir === 'asc' ? -r : r;
-    });
-  } else if (hsKey === 'avg') {
-    sortedByAvg = sectors.slice().sort((a, b) => {
-      const r = (b.adaptive.avg || 0) - (a.adaptive.avg || 0);
-      return hsDir === 'asc' ? -r : r;
-    });
-  } else if (hsKey.startsWith('date:')) {
-    // 특정 날짜 컬럼 sort
-    const targetDate = hsKey.slice(5);
-    sortedByAvg = sectors.slice().sort((a, b) => {
-      const sa = (a.sigmaHist30 || []).find(d => d.date === targetDate);
-      const sb = (b.sigmaHist30 || []).find(d => d.date === targetDate);
-      const va = (sa && isFinite(sa.sigma)) ? sa.sigma : -Infinity;
-      const vb = (sb && isFinite(sb.sigma)) ? sb.sigma : -Infinity;
-      return hsDir === 'asc' ? (va - vb) : (vb - va);
-    });
-  } else {
-    sortedByAvg = sectors.slice().sort((a, b) => b.adaptive.avg - a.adaptive.avg);
+  const M = _saModel(metrics); _saUi.dates = M.dates; _saUi.list = M.list; M.list.forEach(_saRowEl);
+  _saUi.rows.forEach((r, k) => { if (!metrics[k]) _saUi.rows.delete(k); });
+  const hasMega = aqSaMegaOk(); _saUi.view = hasMega && _saMode() === 'mega' ? 'mega' : 'sector';
+  const vt = document.getElementById('saViewTabs'); if (vt) vt.style.display = hasMega ? '' : 'none';
+  if (_saUi.rw && (_saUi.day >= M.dates.length || _saUi.day < 0)) _saUi.day = Math.max(0, M.dates.length - 1);
+  const dt = document.getElementById('saDayTab'); if (dt) dt.style.display = M.dates.length > 1 ? '' : 'none'; if (M.dates.length < 2) _saUi.rw = false;
+  const nf = _saUi.noFlip; _saUi.noFlip = false;
+  const first = _saUi.first;
+  _saPaint(!first, nf || first);
+  if (first) {   // 처음 그릴 때: 막대가 가운데에서 자라며 들어옴
+    _saUi.first = false;
+    const all = [..._saUi.rows.values(), ..._saUi.megas.values()]; all.forEach(r => { r.fill.style.transition = 'none'; r.fill.style.width = '0'; r.fill.style.left = '50%'; });
+    requestAnimationFrame(() => requestAnimationFrame(() => { all.forEach(r => { r.fill.style.transition = ''; }); _saPaint(true, true); }));
   }
-
-  // 컬럼 날짜 = 첫 섹터(=adaptive avg 최상위)의 30일 날짜 (newest first)
-  const dateCols = (sortedByAvg[0]?.sigmaHist30 || []).map(s => s.date);
-
-  // 섹터별 date → sigma 맵 (열 정렬 보장)
-  const sigmaMap = {};
-  sortedByAvg.forEach(s => {
-    sigmaMap[s.key] = {};
-    s.sigmaHist30.forEach(d => { sigmaMap[s.key][d.date] = d.sigma; });
-  });
-
-  // Market Energy = 모든 섹터의 today σ 평균
-  const todaySigmas = sortedByAvg
-    .map(s => s.sigmaHist30[0]?.sigma)
-    .filter(v => isFinite(v));
-  const marketEnergy = todaySigmas.length > 0
-    ? todaySigmas.reduce((a,b) => a+b, 0) / todaySigmas.length
-    : 0;
-  const energyStatus = marketEnergy > 0.8 ? '🔴 과열'
-    : (marketEnergy < -0.8 ? '🔵 침체' : '⚪ 중립');
-  const hotSec  = sortedByAvg[0];
-  const coldSec = sortedByAvg[sortedByAvg.length - 1];
-
-  $('saInsight').innerHTML = '';
-
-  // 히트맵 테이블
-  let hmHtml = '<div class="sa-hm-table">';
-
-  // 헤더 — v1.19: 클릭 가능 정렬
-  hmHtml += '<div class="sa-hm-row sa-hm-header">';
-  hmHtml += `<div class="sa-hm-cell sa-hm-label sortable" onclick="sortHeatmap('sector')">Sector (30D)${sortIndic('sector')}</div>`;
-  hmHtml += `<div class="sa-hm-cell sa-hm-signal sortable" onclick="sortHeatmap('signal')">Signal${sortIndic('signal')}</div>`;
-  hmHtml += `<div class="sa-hm-cell sa-hm-avg sortable" onclick="sortHeatmap('avg')">Avg${sortIndic('avg')}</div>`;
-  dateCols.forEach(d => {
-    const mm = d.slice(5, 7), dd = d.slice(8, 10);
-    hmHtml += `<div class="sa-hm-cell sa-hm-day sortable" onclick="sortHeatmap('date:${d}')">${mm}/${dd}${sortIndic('date:' + d)}</div>`;
-  });
-  hmHtml += '</div>';
-
-  // 데이터 행
-  sortedByAvg.forEach(s => {
-    const sig = _saSignal(s.adaptive.avg, s.adaptive.delta);
-    const avgStr = aqSg(s.adaptive.avg) + Math.abs(s.adaptive.avg).toFixed(1);
-    hmHtml += '<div class="sa-hm-row">';
-    hmHtml += `<div class="sa-hm-cell sa-hm-label" data-sector-key="${escapeAttr(s.key)}" title="섹터 상세 보기">${escapeHtml(s.key)}</div>`;
-    hmHtml += `<div class="sa-hm-cell sa-hm-signal"><span class="sa-badge ${sig.cls}">${sig.text}</span></div>`;
-    hmHtml += `<div class="sa-hm-cell sa-hm-avg">${avgStr}</div>`;
-    dateCols.forEach(d => {
-      const v = sigmaMap[s.key][d];
-      if (v == null || !isFinite(v)) {
-        hmHtml += '<div class="sa-hm-cell sa-hm-day" style="background:rgba(255,255,255,0.02);color:rgba(255,255,255,0.18);">-</div>';
-      } else {
-        hmHtml += `<div class="sa-hm-cell sa-hm-day" style="${_saCellStyle(v)}">${v.toFixed(1)}</div>`;
-      }
-    });
-    hmHtml += '</div>';
-  });
-  hmHtml += '</div>';
-  $('saHeatmap').innerHTML = hmHtml;
-
-  // 섹터명 클릭 이벤트 위임 — 한 번만 부착
-  const cardEl = card;
-  if (!cardEl._saClickBound) {
-    cardEl.addEventListener('click', (e) => {
-      const el = e.target.closest('[data-sector-key]');
-      if (!el) return;
-      const key = el.getAttribute('data-sector-key');
-      if (key && typeof openSectorModal === 'function') openSectorModal(key);
-    });
-    cardEl._saClickBound = true;
-  }
-
+  _saWire();
   try { buildSectorStreaks(metrics); } catch (e) {}
 }
 window.renderSectorAnalysis = renderSectorAnalysis;
 
-// v3.91: 섹터 연속 기록 — 2일 이상 연속 상승/하락 섹터를 금주의 발견 UI로 표시
-//   연속일수 = sigmaHist30(최신순)에서 같은 부호가 이어지는 일수, 누적시그마 = 그 구간 σ 합
+// ───── 날짜 숫자 굴러 바뀜(220ms · cubic-bezier(.23,1,.32,1)) ─────
+const _saRoll = { cur: '' };
+function _saRollSet(txt, dir) {
+  const el = document.getElementById('saRwDate'); if (!el) return;
+  if (_aqRM() || !_saRoll.cur || _saRoll.cur.length !== txt.length) {
+    el.textContent = ''; [...txt].forEach(c => { const s = document.createElement('span'), i = document.createElement('span'); i.textContent = c; s.className = 'sa2-rc'; s.appendChild(i); el.appendChild(s); });
+    _saRoll.cur = txt; return;
+  }
+  [...txt].forEach((c, i) => {
+    if (c === _saRoll.cur[i]) return;
+    const slot = el.children[i]; if (!slot) return;
+    while (slot.children.length > 1) slot.removeChild(slot.firstChild);
+    const old = slot.lastElementChild, nw = document.createElement('span'); nw.textContent = c; slot.appendChild(nw);
+    const o = { duration: 220, easing: 'cubic-bezier(0.23, 1, 0.32, 1)', fill: 'both' };
+    old.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(' + (-100 * dir) + '%)' }], o).onfinish = () => { if (old.parentNode) old.parentNode.removeChild(old); };
+    nw.animate([{ transform: 'translateY(' + (100 * dir) + '%)' }, { transform: 'translateY(0)' }], o).onfinish = () => { nw.style.transform = 'none'; };
+  });
+  _saRoll.cur = txt;
+}
+// ───── 그날 섹터 σ 막대(올라갈 때 0.08초 · 내려갈 때 0.3초) ─────
+const _saEq = { cur: [], tgt: [], els: [], stop: null };
+function _saEqBuild() {
+  const eq = document.getElementById('saEq'); if (!eq) return; const n = _saUi.list.length;
+  if (_saEq.els.length === n && eq.children.length === n) return;
+  eq.textContent = ''; _saEq.els = []; _saEq.cur = []; _saEq.tgt = [];
+  for (let i = 0; i < n; i++) { const c = document.createElement('div'), b = document.createElement('b'); c.appendChild(b); eq.appendChild(c); _saEq.els.push(b); _saEq.cur.push(0); _saEq.tgt.push(0); }
+  const cap = document.getElementById('saEqCap'); if (cap) cap.textContent = '그날 섹터 ' + n + '개의 σ';
+}
+function _saEqPaint(i) {
+  const v = _saEq.cur[i], h = Math.max(Math.abs(v) / 3.3 * 13, 1.5), b = _saEq.els[i]; if (!b) return;
+  b.style.height = h + 'px'; b.style.top = (v >= 0 ? 13 - h : 14) + 'px'; b.style.background = v >= 0 ? 'var(--kr-up)' : 'var(--kr-down)';
+}
+function _saEqSet(day, animate) {
+  _saEqBuild(); const q = _saEq;
+  _saUi.list.forEach((s, i) => { q.tgt[i] = s.sg[day] == null ? 0 : s.sg[day]; });
+  if (!animate || _aqRM()) { q.tgt.forEach((t, i) => { q.cur[i] = t; _saEqPaint(i); }); return; }
+  if (q.stop) return;
+  q.stop = AQMotion.register({
+    frame(dt) { for (let i = 0; i < q.cur.length; i++) { const diff = q.tgt[i] - q.cur[i]; if (Math.abs(diff) < 0.01) { q.cur[i] = q.tgt[i]; continue; } const tau = Math.abs(q.tgt[i]) > Math.abs(q.cur[i]) ? 0.08 : 0.3; q.cur[i] += diff * (1 - Math.exp(-dt / tau)); } },
+    render() { for (let i = 0; i < q.cur.length; i++) _saEqPaint(i); },
+    idle() { if (q.cur.every((c, i) => c === q.tgt[i])) { const s = q.stop; q.stop = null; if (s) s(); return true; } return false; }
+  });
+}
+// ───── 젤리 슬라이더 (손가락 900/50 · 방울 420/22 · 놓았을 때 300/14 · 엉김 8) ─────
+const _saJ = { th: null, bub: null, rise: null, stop: null, over: 0 };
+function _saJx(day) { const n = _saUi.dates.length; return n > 1 ? day / (n - 1) * _saUi.W : 0; }
+function _saJRender() {
+  const q = _saJ, th = document.getElementById('saJlThumb'); if (!th || !q.th) return;
+  const sx = 1 + Math.min(Math.abs(q.th.v) / 2400, 0.45), sy = 1 / Math.sqrt(sx);
+  th.style.transform = 'translate(' + q.th.x.toFixed(2) + 'px, 59px) scale(' + sx.toFixed(3) + ', ' + sy.toFixed(3) + ')';
+  const rs = AQMotion.clamp(q.rise.x, -0.2, 1.25), by = 59 - 44 * rs, bs = 0.3 + 0.7 * AQMotion.clamp(rs, 0, 1.25), st = 1 + Math.min(Math.abs(q.bub.x - q.th.x) / 160, 0.35);
+  document.getElementById('saJlBub').style.transform = 'translate(' + q.bub.x.toFixed(2) + 'px, ' + by.toFixed(2) + 'px) scale(' + (bs * st).toFixed(3) + ', ' + (bs / Math.sqrt(st)).toFixed(3) + ')';
+  const lab = document.getElementById('saJlLab'); lab.style.transform = 'translate(' + q.bub.x.toFixed(2) + 'px, ' + by.toFixed(2) + 'px)'; lab.style.opacity = AQMotion.clamp((rs - 0.55) / 0.45, 0, 1);
+  document.getElementById('saJlFill').style.width = AQMotion.clamp(q.th.x, 0, _saUi.W) + 'px';
+}
+function _saJInit() { if (!_saJ.th) { _saJ.th = AQMotion.S(0, 900, 50); _saJ.bub = AQMotion.S(0, 260, 24); _saJ.rise = AQMotion.S(0, 420, 22); } }
+function _saJKick() {
+  const q = _saJ; _saJInit();
+  if (_aqRM()) { q.th.x = q.th.t; q.bub.x = q.th.t; q.rise.x = q.rise.t; q.th.v = q.bub.v = q.rise.v = 0; _saJRender(); return; }
+  if (q.stop) { AQMotion.kick(); return; }
+  q.stop = AQMotion.register({
+    frame(dt) { AQMotion.step(q.th, dt); q.bub.t = q.th.x; AQMotion.step(q.bub, dt); AQMotion.step(q.rise, dt); },
+    render() { _saJRender(); },
+    idle() {
+      const r = s => Math.abs(s.x - s.t) < 0.002 && Math.abs(s.v) < 0.02;
+      if (r(q.th) && r(q.bub) && r(q.rise) && Math.abs(q.bub.x - q.th.x) < 0.05) { q.th.x = q.th.t; q.th.v = 0; q.bub.x = q.th.x; q.bub.v = 0; q.rise.x = q.rise.t; q.rise.v = 0; _saJRender(); const s = q.stop; q.stop = null; if (s) s(); return true; }
+      return false;
+    }
+  });
+}
+function _saJMeasure() { const jl = document.getElementById('saJl'); _saUi.W = Math.max(jl ? jl.clientWidth : 1, 1); }
+function _saJPlace(day, instant) { _saJInit(); _saJ.th.t = _saJx(day); if (instant) { _saJ.th.x = _saJ.th.t; _saJ.th.v = 0; _saJ.bub.x = _saJ.th.t; _saJ.bub.v = 0; } _saJKick(); _saJRender(); }
+function _saRise(v) { _saJInit(); AQMotion.tune(_saJ.rise, 420, 22); _saJ.rise.t = v; _saJKick(); }
+function _saSetDay(i, dir0) {
+  const ui = _saUi, n = ui.dates.length; i = AQMotion.clamp(i, 0, n - 1); const dir = dir0 != null ? dir0 : (i >= ui.day ? 1 : -1);
+  ui.day = i; const ds = ui.dates[i];
+  _saRollSet(_saDateTxt(ds), dir);
+  const ago = document.getElementById('saRwAgo'); if (ago) ago.textContent = i === n - 1 ? '오늘' : (n - 1 - i) + '거래일 전';
+  const lab = document.getElementById('saJlLab'); if (lab) lab.textContent = _saDl(ds);
+  const jl = document.getElementById('saJl'); if (jl) { jl.setAttribute('aria-valuenow', i); jl.setAttribute('aria-valuemax', n - 1); jl.setAttribute('aria-valuetext', _saDateTxt(ds)); }
+  _saEqSet(i, true); _saPaint(true, false);
+}
+function _saStopPlay() {
+  clearInterval(_saUi.timer); _saUi.timer = 0; _saUi.playing = false;
+  const p = document.getElementById('saPlay'); if (p) { p.classList.remove('on'); p.setAttribute('aria-label', '재생'); }
+  if (!_saUi.dragging) _saRise(0);
+}
+function _saOpenRw(i) {
+  const ui = _saUi, n = ui.dates.length; if (n < 2) return;
+  ui.rw = true; const rw = document.getElementById('saRw'); rw.hidden = false;
+  const d0 = i == null ? n - 1 : AQMotion.clamp(i, 0, n - 1); ui.day = d0;
+  _saJMeasure(); _saEqBuild(); _saEqSet(d0, false);
+  _saRoll.cur = ''; _saRollSet(_saDateTxt(ui.dates[d0]), 1);
+  const ago = document.getElementById('saRwAgo'); ago.textContent = d0 === n - 1 ? '오늘' : (n - 1 - d0) + '거래일 전';
+  document.getElementById('saRwFirst').textContent = _saDl(ui.dates[0]); document.getElementById('saJlLab').textContent = _saDl(ui.dates[d0]);
+  const jl = document.getElementById('saJl'); jl.setAttribute('aria-valuemin', 0); jl.setAttribute('aria-valuemax', n - 1); jl.setAttribute('aria-valuenow', d0); jl.setAttribute('aria-valuetext', _saDateTxt(ui.dates[d0]));
+  _saJPlace(d0, true); _saPaint(true, false);
+}
+function _saCloseRw() { _saStopPlay(); _saUi.rw = false; _saPaint(true, false); }
+function aqSaSort(k) {
+  const ui = _saUi;
+  if (k === 'day') { if (!ui.rw) _saOpenRw(); return; }
+  if (ui.rw) { _saStopPlay(); ui.rw = false; ui.sort = k; ui.desc = k !== 'name'; }
+  else if (k === ui.sort) ui.desc = !ui.desc;
+  else { ui.sort = k; ui.desc = k !== 'name'; }
+  _saPaint(true, false);
+}
+function _saWire() {
+  if (_saUi.wired) return; const root = document.getElementById('sa2'); if (!root) return; _saUi.wired = true;
+  const ui = _saUi, $ = id => document.getElementById(id);
+  root.addEventListener('click', e => {
+    const mg = e.target.closest('.sa2-mg'); if (mg) { aqSaToggleMega(mg.getAttribute('data-mega')); return; }
+    const strip = e.target.closest('.sa2-strip');
+    if (strip) {
+      const c = e.target.closest('span[data-i]'), x = strip.getBoundingClientRect(), n = ui.dates.length, i = c ? +c.dataset.i : AQMotion.clamp(Math.floor((e.clientX - x.left) / x.width * n), 0, n - 1);
+      if (ui.rw) { _saStopPlay(); _saJInit(); AQMotion.tune(_saJ.th, 300, 14); _saSetDay(i); _saJ.th.t = _saJx(i); _saRise(1); setTimeout(() => { if (!ui.dragging && !ui.playing) _saRise(0); }, 700); }
+      else { _saOpenRw(i); try { $('saRw').scrollIntoView({ block: 'nearest', behavior: _aqRM() ? 'auto' : 'smooth' }); } catch (e2) {} }
+      e.stopPropagation(); return;
+    }
+    const row = e.target.closest('.sa2-r[data-sector-key]'); if (row && typeof openSectorModal === 'function') openSectorModal(row.getAttribute('data-sector-key'));
+  });
+  root.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('sa2-r')) { e.preventDefault(); e.target.click(); } });
+  $('saRwClose').addEventListener('click', _saCloseRw);
+  $('saPlay').addEventListener('click', () => {
+    if (ui.playing) { _saStopPlay(); return; }
+    const n = ui.dates.length; _saJMeasure();
+    if (ui.day >= n - 1) { _saSetDay(0, 1); _saJPlace(0, true); }
+    ui.playing = true; const p = $('saPlay'); p.classList.add('on'); p.setAttribute('aria-label', '멈춤'); _saRise(1);
+    ui.timer = setInterval(() => {
+      if (!$('saRw') || !$('saRw').offsetParent || ui.day >= n - 1) { _saStopPlay(); return; }
+      _saSetDay(ui.day + 1); AQMotion.tune(_saJ.th, 300, 14); _saJ.th.t = _saJx(ui.day); _saJKick();   // 하루 지날 때마다 손잡이가 한 번 톡
+    }, 420);
+  });
+  // 젤리 슬라이더: 손가락을 따라가고(900/50) · 끝을 넘겨 당기면 줄이 최대 18px 늘어났다 450ms에 돌아옴 · 놓으면 300/14로 내려앉음
+  const jl = $('saJl'), tr = $('saJlTrack');
+  const drag = e => {
+    const r = jl.getBoundingClientRect(), W = ui.W, x = e.clientX - r.left, cl = AQMotion.clamp(x, 0, W), o = x - cl;
+    const over = Math.sign(o) * Math.min(18, Math.abs(o) * 0.4); _saJInit();
+    AQMotion.tune(_saJ.th, 900, 50); _saJ.th.t = cl + over;
+    tr.style.transformOrigin = over < 0 ? '100% 50%' : '0% 50%';
+    tr.style.transform = 'scale(' + (1 + Math.abs(over) / W).toFixed(4) + ', ' + (1 - 0.35 * Math.abs(over) / 18).toFixed(3) + ')';
+    _saJKick();
+    const n = ui.dates.length, day = Math.round(cl / W * (n - 1)); if (day !== ui.day) _saSetDay(day);
+  };
+  jl.addEventListener('pointerdown', e => {
+    if (e.button > 0) return; _saStopPlay(); _saJMeasure(); ui.dragging = true; jl.classList.add('drag'); tr.classList.remove('back');
+    try { jl.setPointerCapture(e.pointerId); } catch (x) {}
+    _saRise(1); drag(e); e.preventDefault();
+  });
+  jl.addEventListener('pointermove', e => { if (ui.dragging) drag(e); });
+  const up = () => { if (!ui.dragging) return; ui.dragging = false; jl.classList.remove('drag'); tr.classList.add('back'); tr.style.transform = 'none'; AQMotion.tune(_saJ.th, 300, 14); _saJ.th.t = _saJx(ui.day); _saRise(0); _saJKick(); };
+  jl.addEventListener('pointerup', up); jl.addEventListener('pointercancel', up);
+  let kt = 0;
+  jl.addEventListener('keydown', e => {
+    const dv = e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : e.key === 'Home' ? -999 : e.key === 'End' ? 999 : 0;
+    if (!dv) return; e.preventDefault(); _saStopPlay(); _saSetDay(ui.day + dv); AQMotion.tune(_saJ.th, 300, 14); _saJ.th.t = _saJx(ui.day); _saJKick();
+    _saRise(1); clearTimeout(kt); kt = setTimeout(() => _saRise(0), 700);
+  });
+  window.addEventListener('resize', () => { if (ui.rw) { _saJMeasure(); _saJPlace(ui.day, true); } });
+}
+
+// ───── 섹터 연속 기록 — 화면에 들어올 때 통통 · 연속 일수만큼 그날 σ 막대가 차례로 솟음 · 숫자 올라감 · 눌렀다 튕김 ─────
+let _skIO = null;
 function buildSectorStreaks(metrics) {
   const scroll = document.getElementById('sectorStreakScroll');
   if (!scroll) return;
   const m = metrics || (typeof computeSectorAnalysis === 'function' ? computeSectorAnalysis() : null);
-  if (!m || Object.keys(m).length === 0) {
-    scroll.innerHTML = '<div class="buy-points-empty">데이터 업데이트 후 표시됩니다.</div>';
-    return;
-  }
+  const subEl = document.getElementById('sectorStreakSub');
+  if (_skIO) { try { _skIO.disconnect(); } catch (e) {} _skIO = null; }
+  if (!m || Object.keys(m).length === 0) { scroll.innerHTML = '<div class="sa-sk-empty">데이터 업데이트 후 표시됩니다.</div>'; if (subEl) subEl.textContent = ''; return; }
   const items = [];
   Object.entries(m).forEach(([key, v]) => {
     const hist = v && v.sigmaHist30;          // 최신순 [{date, sigma}]
     if (!hist || hist.length < 2) return;
     const s0 = hist[0] && hist[0].sigma;
     if (s0 == null || !isFinite(s0) || s0 === 0) return;
-    const dir = s0 > 0 ? 1 : -1;
-    let streak = 0, cum = 0;
+    const dir = s0 > 0 ? 1 : -1; let streak = 0, cum = 0; const days = [];
     for (let i = 0; i < hist.length; i++) {
       const sg = hist[i] && hist[i].sigma;
       if (sg == null || !isFinite(sg) || sg === 0) break;
       if ((sg > 0 ? 1 : -1) !== dir) break;
-      streak++; cum += sg;
+      streak++; cum += sg; days.unshift(sg);
     }
     if (streak < 3) return;
     const name = (typeof aqStripSectorEmoji === 'function') ? aqStripSectorEmoji(key) : key;
-    const idx = name ? String(key).indexOf(name) : -1;
-    const emoji = (idx > 0 ? String(key).slice(0, idx) : '').trim() || '📊';
-    items.push({ key, emoji, name: name || key, dir, streak, cum });
+    items.push({ key, name: name || key, dir, streak, cum, days: days.slice(-10) });
   });
-  if (items.length === 0) {
-    scroll.innerHTML = '<div class="buy-points-empty">3일 이상 연속 상승·하락 중인 섹터가 없어요.</div>';
-    return;
-  }
+  if (subEl) subEl.textContent = items.length ? items.length + '개 섹터' : '';
+  if (items.length === 0) { scroll.innerHTML = '<div class="sa-sk-empty">3일 이상 연속 상승·하락 중인 섹터가 없어요.</div>'; return; }
   items.sort((a, b) => (b.streak - a.streak) || (Math.abs(b.cum) - Math.abs(a.cum)));
-  scroll.innerHTML = items.map(it => {
-    const col = it.dir > 0 ? '#40c057' : '#ff6b6b';
-    const dirCls = it.dir > 0 ? 'up' : 'down';
-    const dirTxt = it.dir > 0 ? '▲ 상승' : '▼ 하락';
-    const sigTxt = aqSg(it.cum) + Math.abs(it.cum).toFixed(1) + 'σ';
-    return `<div class="buy-point-item" data-sector-key="${escapeAttr(it.key)}">
-        <div class="bp-emoji ${dirCls}">${escapeHtml(it.emoji)}</div>
-        <div class="bp-name" title="${escapeAttr(it.name)}">${escapeHtml(it.name)}</div>
-        <div class="bp-type" style="color:${col}">${dirTxt}</div>
-        <div class="bp-streak">${it.streak}일 연속</div>
-        <div class="bp-ret" style="color:${col};font-weight:700;">${sigTxt}</div>
-      </div>`;
-  }).join('');
-  if (!scroll._streakClickBound) {
-    scroll.addEventListener('click', (e) => {
-      const el = e.target.closest('[data-sector-key]');
-      if (!el) return;
-      const key = el.getAttribute('data-sector-key');
-      if (key && typeof openSectorModal === 'function') openSectorModal(key);
+  scroll.textContent = '';
+  const rm = _aqRM(), cards = [];
+  items.forEach((it, idx) => {
+    const cls = it.dir > 0 ? 'up' : 'down', el = document.createElement('button');
+    el.type = 'button'; el.className = 'sa-sk'; el.setAttribute('data-sector-key', it.key);
+    const mx = Math.max(...it.days.map(Math.abs));
+    el.innerHTML = '<span class="n" title="' + escapeAttr(it.name) + '">' + escapeHtml(it.name) + '</span><span class="d ' + cls + '">' + (it.dir > 0 ? '상승' : '하락') + ' · ' + it.streak + '일 연속</span><span class="v ' + cls + '">' + _saFmt(it.cum) + 'σ</span><span class="bars">'
+      + it.days.map(v => '<i style="height:' + Math.round(6 + Math.abs(v) / mx * 20) + 'px;background:var(--kr-' + (it.dir > 0 ? 'up' : 'down') + ');opacity:' + (0.45 + 0.55 * Math.abs(v) / mx).toFixed(2) + '"></i>').join('') + '</span>';
+    const o = { el, it, idx, sc: AQMotion.S(rm ? 1 : 0.86, 520, 16), op: AQMotion.S(rm ? 1 : 0, 420, 32), pr: AQMotion.S(1, 900, 50), val: AQMotion.S(rm ? it.cum : 0, 280, 22), bars: [...el.querySelectorAll('i')].map(() => AQMotion.S(rm ? 1 : 0, 520, 16)), done: rm, vEl: el.querySelector('.v'), bEls: [...el.querySelectorAll('i')] };
+    o.paint = () => { const op = AQMotion.clamp(o.op.x, 0, 1); el.style.opacity = op; el.style.transform = 'translateY(' + ((1 - op) * 16).toFixed(1) + 'px) scale(' + (o.sc.x * o.pr.x).toFixed(3) + ')'; o.vEl.textContent = _saFmt(o.val.x) + 'σ'; };
+    o.paintBar = j => s => { o.bEls[j].style.transform = 'scaleY(' + Math.max(s.x, 0).toFixed(3) + ')'; };
+    if (!rm) { el.style.opacity = 0; o.bEls.forEach(b => { b.style.transform = 'scaleY(0)'; }); o.paint(); }
+    el.addEventListener('pointerdown', () => _saGo(o.pr, 0.94, 900, 50, o.paint));
+    const rel = () => _saGo(o.pr, 1, 300, 14, o.paint);
+    el.addEventListener('pointerup', rel); el.addEventListener('pointerleave', rel); el.addEventListener('pointercancel', rel);
+    el.addEventListener('click', () => {
+      o.bars.forEach((b, j) => { b.x = 0.45; b.v = 0; setTimeout(() => _saGo(b, 1, 520, 16, o.paintBar(j)), j * 25); });
+      if (typeof openSectorModal === 'function') openSectorModal(it.key);
     });
-    scroll._streakClickBound = true;
-  }
+    scroll.appendChild(el); cards.push(o);
+  });
+  const enter = o => {
+    if (o.done) return; o.done = true;
+    setTimeout(() => {
+      _saGo(o.op, 1, 420, 32, o.paint); _saGo(o.sc, 1, 520, 16, o.paint); _saGo(o.val, o.it.cum, 280, 22, o.paint);
+      o.bars.forEach((b, j) => setTimeout(() => _saGo(b, 1, 520, 16, o.paintBar(j)), 160 + j * 45));
+    }, (o.idx % 4) * 45);
+  };
+  if (rm || typeof IntersectionObserver !== 'function') { cards.forEach(o => { o.done = false; enter(o); }); return; }
+  _skIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const o = cards.find(c => c.el === e.target); if (o) { enter(o); _skIO.unobserve(e.target); } } }), { root: scroll, threshold: 0.5 });
+  cards.forEach(o => _skIO.observe(o.el));
 }
 window.buildSectorStreaks = buildSectorStreaks;
 
-// v1.19: 히트맵 컬럼 클릭 → 정렬 토글
+// v1.19: 예전 히트맵 열 머리 눌러 정렬 — 이름은 그대로 두고 새 정렬(aqSaSort · 날짜는 되감기)로 이어 줌
 function sortHeatmap(key) {
-  if (!_state.heatmapSort) _state.heatmapSort = { key: 'avg', dir: 'desc' };
-  if (_state.heatmapSort.key === key) {
-    _state.heatmapSort.dir = _state.heatmapSort.dir === 'desc' ? 'asc' : 'desc';
-  } else {
-    _state.heatmapSort.key = key;
-    _state.heatmapSort.dir = 'desc';
-  }
-  renderSectorAnalysis();
+  key = String(key || '');
+  if (key.indexOf('date:') === 0) { const i = _saUi.dates.indexOf(key.slice(5)); if (i >= 0) _saOpenRw(i); return; }
+  aqSaSort({ sector: 'name', signal: 'sig', avg: 'avg' }[key] || 'chg');
 }
-window.sortHeatmap = sortHeatmap;
+window.sortHeatmap = sortHeatmap; window.aqSaSort = aqSaSort;
 
 
 function _sfMobChips(g) {
@@ -36622,36 +36764,13 @@ function aqSectorDefHtml(key) {
 }
 // 섹터 동향 — 섹터 / 메가 보기
 function _saMode() { try { return localStorage.getItem('aq_sa_mode') === 'mega' ? 'mega' : 'sector'; } catch (e) { return 'sector'; } }
-function aqSaSetMode(m) { aqHoldScroll(); try { localStorage.setItem('aq_sa_mode', m); } catch (e) {} if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); }
+function aqSaSetMode(m) { aqHoldScroll(); try { localStorage.setItem('aq_sa_mode', m); } catch (e) {} _saUi.noFlip = true; if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); }   // v8.98: 보기가 바뀔 때는 행이 미끄러지지 않고 바로 바뀜(토글 알약만 움직임)
 function aqSaToggleMega(m) { _state.megaOpen = _state.megaOpen || {}; _state.megaOpen[m] = !_state.megaOpen[m]; if (typeof renderSectorAnalysis === 'function') renderSectorAnalysis(); }
 function aqOpenMega(m) {   // 종목·섹터 페이지의 메가 딱지 → 섹터 동향을 메가 보기로, 그 메가를 펼쳐서
   try { localStorage.setItem('aq_sa_mode', 'mega'); } catch (e) {} _state.megaOpen = Object.assign({}, _state.megaOpen || {}, { [m]: true });
   try { if (typeof closeModal === 'function') closeModal(); } catch (e) {} try { aqCloseSectorSheet(); } catch (e) {}
   try { switchMobileTab('voyage'); setVoyageSubtab('trend'); } catch (e) {}   // v8.84: 섹터 동향 = 항해
   setTimeout(() => { try { renderSectorAnalysis(); } catch (e) {} const el = document.querySelector(`[data-mega="${CSS.escape(m)}"]`) || document.getElementById('sectorAnalysisCard'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 350);
-}
-function _saBarRow(label, val, sub, extra, attrs) {
-  const maxAbs = _saBarRow._max || 1; const width = (Math.abs(val) / maxAbs) * 48; const left = val >= 0 ? '50%' : `calc(50% - ${width}%)`;
-  return `<div class="sa-bar-row${sub ? ' sa-sub' : ''}" ${attrs || ''}><div class="sa-bar-label" ${sub ? `data-sector-key="${escapeAttr(sub)}"` : ''}>${label}</div><div class="sa-bar-track"><div class="sa-bar-center-line"></div><div class="sa-bar-fill ${val >= 0 ? 'pos' : 'neg'}" style="width:${width}%;left:${left};"></div></div><div class="sa-bar-val"><span class="${val >= 0 ? 'pos-pct' : 'neg-pct'}">${aqSg(val)}${Math.abs(val).toFixed(1)}%</span>${extra || ''}</div></div>`;
-}
-function aqMegaBars(sectors) {   // sectors: [{key, change, sigma}] — 메가 등락 = 하위 섹터 등락을 종목 수로 가중 평균 (구성 종목 동일가중과 같음)
-  const groups = {}; const other = [];
-  sectors.forEach(s => { const d = aqSectorDef(s.key); if (!d || !d.mega) { other.push(s); return; } (groups[d.mega] = groups[d.mega] || []).push(Object.assign({ n: d.n || 1 }, s)); });
-  const megas = Object.entries(groups).map(([m, arr]) => { const n = arr.reduce((a, x) => a + x.n, 0); return { m, arr: arr.sort((a, b) => b.change - a.change), n, change: arr.reduce((a, x) => a + x.change * x.n, 0) / (n || 1) }; }).sort((a, b) => b.change - a.change);
-  _saBarRow._max = Math.max(...megas.map(x => Math.abs(x.change)), ...sectors.map(x => Math.abs(x.change)), 0.1);
-  let h = '';
-  megas.forEach(g => {
-    const open = (_state.megaOpen || {})[g.m];
-    h += _saBarRow(`<span class="sa-mega-nm">${escapeHtml(g.m)} <em>${open ? '▴' : '▾'}</em></span><small class="sa-mega-sub">${g.arr.length}개 섹터 · ${g.n}종목</small>`, g.change, null, '', `data-mega="${escapeAttr(g.m)}" onclick="aqSaToggleMega('${escapeAttr(g.m)}')"`);
-    if (open) g.arr.forEach(s => { h += _saBarRow(escapeHtml(s.key), s.change, s.key, `<span class="${Math.abs(s.sigma) >= 2 ? 'sigma-hot' : 'sigma-norm'}">(${Math.abs(s.sigma).toFixed(1)}σ)</span>`); });
-  });
-  if (other.length) h += `<div class="sa-mega-other">메가 정의에 없는 섹터 ${other.length}개: ${other.map(s => escapeHtml(s.key)).join(', ')}</div>`;
-  return h;
-}
-function aqSaToggleHtml() {
-  if (getCurrentMarket() === 'KR' || !_secDef.byKey || !Object.keys(_secDef.byKey).length) return '';
-  const m = _saMode();
-  return `<div class="sa-mode"><button class="${m === 'sector' ? 'on' : ''}" onclick="aqSaSetMode('sector')">섹터</button><button class="${m === 'mega' ? 'on' : ''}" onclick="aqSaSetMode('mega')">메가</button></div>`;
 }
 Object.assign(window, { aqLoadSectorDefs, aqSaSetMode, aqSaToggleMega, aqOpenMega });
 setTimeout(() => { try { aqLoadSectorDefs(); } catch (e) {} }, 1500);
