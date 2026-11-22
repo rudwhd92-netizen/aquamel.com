@@ -36,7 +36,7 @@ const shown = p => p.evaluate(() => Array.from(document.querySelectorAll('sectio
   // 3) 뉴스(관리자) — 일간 이슈 + 기관 13F
   await p.evaluate(() => switchMobileTab('news')); await p.waitForTimeout(1200);
   let t = await tabs(p, '#aiSubRow'); const act = await p.evaluate(() => document.body.dataset.atab);
-  ok('뉴스(관리자): 탭 = 일간 이슈 · 기관 13F (AI 브리핑 · 주간 이슈 없음)', JSON.stringify(t) === JSON.stringify(['일간 이슈', '기관 13F']) && act === 'wx', t.join(' · ') + ' / 열린 탭 ' + act);
+  ok('뉴스(관리자): 탭 = 일간 이슈 · 기관13F (AI 브리핑 · 주간 이슈 없음)', JSON.stringify(t) === JSON.stringify(['일간 이슈', '기관13F']) && act === 'wx', t.join(' · ') + ' / 열린 탭 ' + act);   // v8.84: 9체계 — 탭 이름 '기관13F'
   ok('뉴스(관리자): 탭이 2개라 줄이 보임(알약)', await p.evaluate(() => { const s = document.getElementById('aiSubtabs'); return !s.classList.contains('aq-tab-solo') && s.getBoundingClientRect().height > 20 && !!document.querySelector('#aiSubRow .aq-tp-ind'); }));
   await p.screenshot({ path: path.join(OUT, 'diet_news_admin.png') });
   await p.evaluate(() => setAiSubtab('f13')); await p.waitForTimeout(900); ok('뉴스: 기관 13F로 전환', (await p.evaluate(() => document.body.dataset.atab)) === 'f13');
@@ -53,17 +53,17 @@ const shown = p => p.evaluate(() => Array.from(document.querySelectorAll('sectio
   ok('저장돼 있던 마지막 탭이 brief여도 뉴스는 일간 이슈로 열림', dflt === 'wx', dflt);
 
   // 5) 다른 메뉴는 그대로 — 연구 · AI · 탐색 · 마이 · 설정 토큰 관리
-  await p.evaluate(() => switchMobileTab('research')); await p.waitForTimeout(900); t = await tabs(p, '#aiSubRow'); ok('연구: 4탭 그대로', t.length === 4, t.join(' · '));
-  await p.evaluate(() => switchMobileTab('ai')); await p.waitForTimeout(900); t = await tabs(p, '#aiSubRow'); ok('AI(관리자): AI 매니저 · AI 예보 그대로', t.includes('AI 매니저') && t.includes('AI 예보'), t.join(' · '));
+  await p.evaluate(() => switchMobileTab('research')); await p.waitForTimeout(900); t = await tabs(p, '#aiSubRow'); ok('연구: AI리포트 · 해자근거 (종목지도 · 모의매수 · 비교분석은 탐색 · 관심으로)', JSON.stringify(t) === JSON.stringify(['AI리포트', '해자근거']), t.join(' · '));
+  await p.evaluate(() => switchMobileTab('ai')); await p.waitForTimeout(900); t = await tabs(p, '#aiSubRow'); ok('AI(관리자): AI매니저 · AI예보 · AI세력분석', JSON.stringify(t) === JSON.stringify(['AI매니저', 'AI예보', 'AI세력분석']), t.join(' · '));
   await p.evaluate(() => switchMobileTab('explore')); await p.waitForTimeout(900); ok('탐색: 탭 줄 그대로', (await tabs(p, '#exploreSubtabs')).length >= 3);
-  await p.evaluate(() => switchMobileTab('board')); await p.waitForTimeout(900); ok('마이: 탭 줄 그대로', (await tabs(p, '#boardSubtabs')).length === 4);
+  await p.evaluate(() => switchMobileTab('board')); await p.waitForTimeout(900); ok('마이: 실시간 현황 · 누적 성과 · 운영 통계 (포트폴리오는 항해로)', (await tabs(p, '#boardSubtabs')).length === 3);
   await p.evaluate(() => { switchMobileTab('settings'); }); await p.waitForTimeout(900); ok('설정: 토큰 관리 행 그대로', await p.evaluate(() => Array.from(document.querySelectorAll('.set-row .sr-l')).some(e => e.textContent.trim() === '토큰 관리')));
   await p.close();
 
   // 6) 일반 사용자 — 뉴스는 기관 13F 하나 · 탭 줄 숨김 · 빈 화면 아님
   p = await prep(b, 'user'); await p.evaluate(() => switchMobileTab('news')); await p.waitForTimeout(1500);
   t = await p.evaluate(() => Array.from(document.querySelectorAll('#aiSubRow .xtab-btn')).map(b => b.textContent.trim())); const solo = await p.evaluate(() => ({ atab: document.body.dataset.atab, hidden: document.getElementById('aiSubtabs').classList.contains('aq-tab-solo') && getComputedStyle(document.getElementById('aiSubtabs')).display === 'none' }));
-  ok('뉴스(일반): 기관 13F 하나 · 탭 줄 숨김', t.length === 1 && t[0] === '기관 13F' && solo.atab === 'f13' && solo.hidden, JSON.stringify(solo) + ' ' + t.join(','));
+  ok('뉴스(일반): 기관13F 하나 · 탭 줄 숨김', t.length === 1 && t[0] === '기관13F' && solo.atab === 'f13' && solo.hidden, JSON.stringify(solo) + ' ' + t.join(','));
   const vs2 = await shown(p); ok('뉴스(일반): 보이는 카드가 있음(빈 화면 아님)', vs2.includes('f13Card'), vs2.join(','));
   await p.screenshot({ path: path.join(OUT, 'diet_news_user.png') });
   const leg2 = await p.evaluate(() => { const r = {}; for (const k of ['wx', 'brief', 'macro', 'manager', 'fc']) { setAiSubtab(k); r[k] = document.body.dataset.atab; } return r; });

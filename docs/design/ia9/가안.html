@@ -1,0 +1,508 @@
+<title>9체계 개편 가안</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 레이아웃: 문제 한 줄 → 7→9 지도 → ① 하단 바 A·B(폭 360/412 · 실제 스프링) → ② 종목리스트+종목지도 병합 A·B(모바일 + 1000×700) → 정할 것 */
+:root {
+  --page-bg: #f3f3f1; --page-fg: #1b1c1e; --page-dim: #62646a; --page-line: #dcdcd8; --page-card: #fbfbfa; --tag: #2a6cb0; --warn: #a65a12;
+  --font: 'Noto Sans KR', 'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', sans-serif;
+  /* 앱 토큰(다크) — index.html :root 값 그대로. 폰 화면은 앱 기본(다크) 기준 */
+  --bg: #161618; --panel: #1c1c1f; --f1: rgba(255,255,255,.05); --f2: rgba(255,255,255,.08); --f3: rgba(255,255,255,.14); --hi: #ffffff; --txt: #e8e8e8; --dim: #9d9d9d; --mute: #85858a; --up: #40c057; --dn: #ff6b6b; --acc: #569cd6;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; --warn: #e0a55f; color-scheme: dark; } }
+:root[data-theme="dark"] { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; --warn: #e0a55f; color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font); padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; line-height: 1.55; font-size: 14px; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 44px; }
+.wrap > * { min-width: 0; }
+h1 { font-size: 26px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 8px; text-wrap: balance; }
+h2 { font-size: 18px; font-weight: 700; margin: 0 0 4px; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 700; margin: 0; }
+p { margin: 0; }
+.dim { color: var(--page-dim); }
+.lead { max-width: 64ch; }
+.sw { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--page-card); border: 1px solid var(--page-line); gap: 2px; }
+.sw button { font: inherit; font-size: 13px; font-weight: 600; border: 0; background: transparent; color: var(--page-dim); padding: 6px 16px; border-radius: 999px; cursor: pointer; min-height: 32px; }
+.sw button[aria-pressed="true"] { background: var(--page-fg); color: var(--page-bg); }
+button:focus-visible { outline: 2px solid var(--tag); outline-offset: 2px; }
+.bar-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin-top: 14px; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+.tbl th, .tbl td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--page-line); vertical-align: top; }
+.tbl th { font-size: 12px; color: var(--page-dim); font-weight: 600; white-space: nowrap; }
+.tbl td.n { white-space: nowrap; font-weight: 600; }
+.scroll-x { overflow-x: auto; margin-top: 12px; }
+.chg { color: var(--tag); font-weight: 600; }
+.new { color: var(--tag); font-weight: 700; } .soon { color: var(--warn); }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px 24px; margin-top: 16px; }
+.col { min-width: 0; display: grid; gap: 10px; align-content: start; }
+.cap { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.cap b { font-size: 15px; font-weight: 700; }
+.cap span { font-size: 13px; color: var(--page-dim); }
+.rec { font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--tag); border: 1px solid currentColor; border-radius: 999px; padding: 1px 8px; }
+.meas { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--page-dim); font-variant-numeric: tabular-nums; }
+.meas b { color: var(--page-fg); font-weight: 600; }
+.meas .bad { color: var(--warn); }
+.stage { overflow-x: auto; padding-bottom: 4px; }
+
+/* ===== 폰 화면(앱 토큰) ===== */
+.phone { position: relative; width: var(--pw, 360px); flex: none; margin-inline: auto; background: var(--bg); color: var(--txt); border-radius: 28px; border: 1px solid var(--page-line); height: 620px; overflow: hidden; font-size: 13px; }
+.phone .scr { position: absolute; inset: 0 0 0 0; padding: 18px 16px 92px; overflow: hidden; }
+.ph-top { display: flex; justify-content: space-between; align-items: center; height: 32px; margin-bottom: 10px; }
+.ph-top b { font-size: 18px; font-weight: 700; color: var(--hi); }
+.ph-top i { width: 22px; height: 22px; border-radius: 50%; background: var(--f3); display: block; }
+.tabs { position: relative; display: flex; width: max-content; max-width: 100%; height: 36px; padding: 0; background: var(--f1); border-radius: 999px; overflow-x: auto; scrollbar-width: none; margin-bottom: 14px; --in: 3px; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { position: relative; z-index: 1; font: inherit; font-size: 13px; font-weight: 600; border: 0; background: transparent; color: var(--dim); height: 36px; min-width: 72px; padding: 0 16px; border-radius: 999px; cursor: default; white-space: nowrap; transition: color .2s; }
+.tabs button.on { color: var(--hi); background: var(--f3); }
+.tabs button.soon-t { color: var(--mute); }
+.empty { padding: 36px 8px; text-align: center; color: var(--dim); font-size: 13px; }
+.empty b { display: block; color: var(--txt); font-size: 15px; margin-bottom: 6px; }
+.sk { height: 12px; border-radius: 6px; background: var(--f2); margin: 10px 0; }
+.card-m { background: var(--panel); border-radius: 18px; padding: 14px; margin-bottom: 10px; }
+
+/* 하단 바 공통 */
+.bar { position: absolute; left: var(--bm, 16px); right: var(--bm, 16px); bottom: 14px; height: 56px; border-radius: 28px; background: var(--panel); border: 1px solid var(--f2); overflow: hidden; z-index: 5; user-select: none; -webkit-user-select: none; }
+.bar button { font: inherit; color: var(--mute); background: none; border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bar svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; display: block; }
+.bar svg .fl-liq { fill: currentColor; fill-opacity: .35; stroke: none; } .bar svg .fl-bub { fill: currentColor; fill-opacity: .8; stroke: none; }
+.ind { position: absolute; top: 4px; bottom: 4px; left: 0; width: 0; border-radius: 22px; background: var(--f3); pointer-events: none; will-change: transform, width; }
+/* 가안 A — 칸 폭 스프링, 켜진 칸만 라벨이 펼쳐짐 */
+.dockA button { position: absolute; top: 0; left: 0; height: 56px; display: flex; align-items: center; justify-content: center; overflow: hidden; will-change: transform, width; }
+.dockA button.on { color: var(--hi); }
+.dockA button .ic { display: flex; transform: scale(var(--pop, 1)); }
+.dockA button .lb { display: block; overflow: hidden; white-space: nowrap; font-size: 12px; font-weight: 600; width: calc(var(--p, 0) * 26px); margin-left: calc(var(--p, 0) * 4px); opacity: var(--p, 0); }
+/* 가안 B — 44 이상 칸 · 가로로 밀기 · 켜진 칸 자리를 알약이 스프링으로 따라감 */
+.dockB .sc { position: absolute; inset: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; cursor: grab; touch-action: pan-x; }
+.dockB .sc::-webkit-scrollbar { display: none; }
+.dockB .in { position: relative; height: 100%; display: flex; padding: 0 4px; width: max-content; }
+.dockB button { position: relative; z-index: 1; width: var(--bw, 48px); height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; flex: none; }
+.dockB button .lb { font-size: 11px; font-weight: 600; line-height: 1; }
+.dockB button.on { color: var(--hi); }
+.dockB button .ic { display: flex; transform: scale(var(--pop, 1)); }
+
+/* ===== ② 병합 시안 ===== */
+.row { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 0; border-bottom: 1px solid var(--f2); cursor: pointer; }
+.row .lg { width: 32px; height: 32px; border-radius: 50%; background: var(--f2); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--dim); flex: none; }
+.row .nm { min-width: 0; flex: 1; }
+.row .nm b { display: block; font-size: 15px; font-weight: 600; color: var(--hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .nm > span { display: block; font-size: 12px; color: var(--dim); }
+.row .pc { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.row .pc.up { color: var(--up); } .row .pc.dn { color: var(--dn); }
+.row.sel { background: var(--f1); margin-inline: -8px; padding-inline: 8px; border-radius: 12px; border-bottom-color: transparent; }
+.mk { font-size: 11px; font-weight: 600; color: var(--acc); border: 1px solid currentColor; border-radius: 999px; padding: 0 7px; line-height: 18px; margin-left: 6px; vertical-align: 1px; }
+.seg2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.pills { display: inline-flex; padding: 3px; background: var(--f1); border-radius: 999px; }
+.pills button { font: inherit; font-size: 12px; font-weight: 600; border: 0; background: transparent; color: var(--dim); height: 32px; padding: 0 12px; border-radius: 999px; cursor: pointer; }
+.pills button.on { background: var(--f3); color: var(--hi); }
+.sortb { font: inherit; font-size: 12px; font-weight: 600; color: var(--dim); background: transparent; border: 0; min-height: 44px; padding: 0 2px; cursor: pointer; }
+.mapc { background: var(--panel); border-radius: 18px; padding: 14px 14px 12px; margin: 8px 0 10px; display: grid; gap: 10px; }
+.mapc h4 { margin: 0; font-size: 15px; font-weight: 700; color: var(--hi); }
+.mapc p { font-size: 13px; color: var(--txt); line-height: 1.55; }
+.mapc small { font-size: 12px; color: var(--dim); display: block; margin-bottom: 2px; font-weight: 600; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags i { font-style: normal; font-size: 11px; color: var(--dim); background: var(--f2); border-radius: 999px; padding: 2px 9px; }
+.per { height: 6px; border-radius: 3px; background: var(--f2); position: relative; margin-top: 8px; }
+.per u { position: absolute; top: -3px; width: 12px; height: 12px; border-radius: 50%; background: var(--acc); margin-left: -6px; }
+.perl { display: flex; justify-content: space-between; font-size: 11px; color: var(--mute); margin-top: 4px; }
+.btn { font: inherit; font-size: 12px; font-weight: 600; height: 44px; border: 0; border-radius: 999px; background: var(--f2); color: var(--hi); cursor: pointer; padding: 0 16px; }
+.btn.pri { background: var(--acc); color: #161618; }
+.hint { font-size: 12px; color: var(--page-dim); }
+
+.wide { position: relative; width: 1000px; height: 700px; background: var(--bg); color: var(--txt); border: 1px solid var(--page-line); border-radius: 12px; overflow: hidden; display: grid; grid-template-columns: 84px 430px minmax(0, 1fr); transform-origin: 0 0; font-size: 13px; }
+.wide-box { overflow: hidden; margin-top: 12px; }
+.rail { background: #121214; border-right: 1px solid var(--f2); display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 0; overflow: hidden; }
+.rail button { width: 64px; height: 50px; border: 0; border-radius: 12px; background: transparent; color: var(--mute); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font: inherit; font-size: 11px; font-weight: 500; cursor: default; flex: none; }
+.rail button.on { background: #2a2a2e; color: var(--hi); font-weight: 600; }
+.rail svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.rail svg .fl-liq { fill: currentColor; fill-opacity: .35; stroke: none; } .rail svg .fl-bub { fill: currentColor; fill-opacity: .8; stroke: none; }
+.rail hr { width: 48px; border: 0; border-top: 1px solid var(--f2); margin: 4px 0; flex: none; }
+.rail .gap { flex: 1 1 0; min-height: 0; }
+.wcol { padding: 18px 16px 0; overflow: hidden; }
+.wpane { border-left: 1px solid var(--f2); padding: 20px 24px; overflow: hidden; }
+.wpane h4 { margin: 0 0 2px; font-size: 18px; color: var(--hi); }
+.wpane .sub { color: var(--dim); font-size: 12px; margin-bottom: 14px; }
+.chart { width: 100%; height: 150px; display: block; margin-bottom: 12px; }
+.chart path { fill: none; stroke: var(--acc); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.dtabs { display: inline-flex; padding: 3px; background: var(--f1); border-radius: 999px; margin-bottom: 14px; }
+.dtabs b { font-size: 12px; font-weight: 600; color: var(--dim); height: 32px; line-height: 32px; padding: 0 14px; border-radius: 999px; }
+.dtabs b.on { background: var(--f3); color: var(--hi); }
+.splitp { border-top: 1px solid var(--f3); margin-top: 6px; padding-top: 10px; }
+
+/* ===== ④ 사이드바 접기 ===== */
+.wideC { grid-template-columns: var(--rw, 84px) 430px minmax(0, 1fr); }
+.railC { background: #121214; border-right: 1px solid var(--f2); display: flex; flex-direction: column; align-items: stretch; gap: 2px; padding: 8px 0 12px; overflow: hidden; min-width: 0; }
+.railC button { position: relative; flex: none; border: 0; background: transparent; color: var(--mute); font: inherit; cursor: pointer; padding: 0; text-align: left; }
+.railC .tg { height: 44px; width: 44px; margin: 0 0 4px 6px; border-radius: 12px; display: grid; place-items: center; color: var(--dim); }
+.railC .tg svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transform: rotate(calc(var(--r, 0) * 180deg)); }
+.railC .it { margin: 0 6px; border-radius: 12px; overflow: hidden; }
+.railC .it svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.railC .it svg .fl-liq { fill: currentColor; fill-opacity: .35; stroke: none; } .railC .it svg .fl-bub { fill: currentColor; fill-opacity: .8; stroke: none; }
+.railC .it.on { background: #2a2a2e; color: var(--hi); }
+.railC .lb { font-size: 11px; font-weight: 600; white-space: nowrap; }
+.railC hr { border: 0; border-top: 1px solid var(--f2); margin: 4px 12px; flex: none; }
+.railC .gap { flex: 1 1 0; min-height: 0; }
+/* 가안 A — 아이콘 줄이기: 펼침 = 아이콘 + 글자 아래(84) · 접힘 = 아이콘만(56) */
+.railC.va .it { height: calc(44px + var(--q, 1) * 6px); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.railC.va .lb { display: block; height: calc(var(--q, 1) * 13px); margin-top: calc(var(--q, 1) * 3px); line-height: 13px; opacity: var(--q, 1); overflow: hidden; }
+/* 가안 B — 글자 옆으로 펼치기: 펼침 = 아이콘 + 글자 옆(184) · 접힘 = 아이콘만(56) · 아이콘 자리는 그대로 */
+.railC.vb .it { height: 44px; display: flex; align-items: center; padding: 0 11px 0 13px; gap: 8px; }
+.railC.vb .lb { width: 26px; font-size: 12px; opacity: var(--q, 1); transform: translateX(calc((1 - var(--q, 1)) * -8px)); }
+.railC .it .tip { display: none; }
+.pill-note { display: inline-block; font-size: 12px; color: var(--page-dim); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .ind { will-change: auto; } }
+</style>
+
+<main class="wrap">
+  <header>
+    <h1>메뉴 9체계 · 하단 바 · 종목리스트 병합</h1>
+    <p class="lead dim">앱 맨 위 메뉴를 7개에서 9개로 늘려요(관심 · 항해 신설). 좁은 화면 하단 바는 5개 제한 없이 9개가 모두 보여야 하고, 탐색 › 종목리스트와 연구 › 종목지도는 한 화면으로 합쳐요. 아래 두 가지를 직접 눌러 보고 골라 주세요. 폰 화면은 앱 기본(다크) 기준이고 종목 이름 · 등락률은 예시예요.</p>
+    <div class="bar-row">
+      <div class="sw" id="swW" role="group" aria-label="폰 폭"><button type="button" data-w="360" aria-pressed="true">폰 360</button><button type="button" data-w="412" aria-pressed="false">폰 412</button></div>
+      <div class="sw" id="swT" role="group" aria-label="페이지 테마"><button type="button" data-t="auto" aria-pressed="true">자동</button><button type="button" data-t="dark" aria-pressed="false">다크</button><button type="button" data-t="light" aria-pressed="false">라이트</button></div>
+    </div>
+  </header>
+
+  <section>
+    <h2>7체계 → 9체계</h2>
+    <p class="dim">바뀌는 칸만 색으로 표시했어요. 개발예정 탭은 눌러 들어가면 한 줄 안내가 나와요.</p>
+    <div class="scroll-x"><table class="tbl">
+      <thead><tr><th>#</th><th>메뉴</th><th>하위 탭 (새 구성)</th><th>이전과 달라진 점</th></tr></thead>
+      <tbody id="iaBody"></tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>① 하단 바 — 9개 전부 보이게</h2>
+    <p class="dim">두 폰 모두 같은 9개예요. 눌러 보세요. 켜진 칸을 따라가는 알약과 칸 폭이 스프링으로 움직여요(공통 토큰: 리드 620/36 · 트레일 190/19 · 펼침 340/21 · 접힘 420/30 · 팝 520/16). 화면에는 누른 메뉴의 하위 탭이 바로 보여요.</p>
+    <div class="cols" id="barCols">
+      <div class="col">
+        <div class="cap"><b>가안 A · 아코디언 독</b><span>9개 한 줄 · 켜진 칸만 글자가 펼쳐져요</span><span class="rec">추천</span></div>
+        <div class="stage"><div class="phone" id="phA"></div></div>
+        <div class="meas" id="mA"></div>
+      </div>
+      <div class="col">
+        <div class="cap"><b>가안 B · 밀어서 보는 바</b><span>칸 48px · 한 번에 7개쯤 보이고 나머지는 옆으로</span></div>
+        <div class="stage"><div class="phone" id="phB"></div></div>
+        <div class="meas" id="mB"></div>
+      </div>
+    </div>
+    <div class="scroll-x"><table class="tbl" style="min-width:560px">
+      <thead><tr><th></th><th>가안 A</th><th>가안 B</th></tr></thead>
+      <tbody>
+        <tr><td class="n">9개가 한눈에</td><td>전부 보여요</td><td>7개 보이고 2개는 밀어야 보여요 (잘린 칸이 단서)</td></tr>
+        <tr><td class="n">터치 폭(360 기준)</td><td class="soon">비활성 약 31px × 높이 56px — 44 미달</td><td>48px × 56px — 규칙 충족</td></tr>
+        <tr><td class="n">오터치</td><td>칸이 붙어 있어 빈틈 없음 · 켜진 칸이 넓어 현재 위치가 분명</td><td>밀다가 눌리는 일 없게 8px 넘게 움직이면 누름 취소</td></tr>
+        <tr><td class="n">한 줄에 9개 수학</td><td colspan="2">360 폭에서 9칸 × 44px = 396px라 어떤 단일 줄 배치도 44를 지킬 수 없어요. 44 이상이 되려면 폭 ≥ 396 + 바 좌우 여백이 필요해요.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="hint" style="margin-top:10px">와이드(1000×700) 왼쪽 세로 메뉴는 아래 ②의 와이드 화면에 그대로 들어 있어요. 9개 + 자동 · 운영 · 설정(관리자) 12칸이 높이 50px로 700 안에 다 들어가요.</p>
+  </section>
+
+  <section>
+    <h2>② 종목리스트 + 종목지도 — 한 화면</h2>
+    <p class="dim">두 기능은 같은 종목을 다른 눈으로 봐요(리스트 = 전체 종목의 등락률 · 섹터, 지도 = 지도가 만들어진 종목의 사업 · 해자 · 밸류 위치). 가안 A · B 모두 두 기능의 검색 · 정렬 · 종목 열기 · 지도 보기 · 지도 요청이 그대로 살아 있어요. 종목을 눌러 보세요.</p>
+    <div class="bar-row"><div class="sw" id="swV" role="group" aria-label="병합 가안"><button type="button" data-v="A" aria-pressed="true">가안 A · 한 목록</button><button type="button" data-v="B" aria-pressed="false">가안 B · 목록 + 지도 패널</button></div></div>
+    <div class="cols" style="grid-template-columns:minmax(0,1fr)">
+      <div class="col">
+        <div class="cap"><b id="vTitle"></b><span id="vSub"></span></div>
+        <div class="stage" style="padding-top:6px"><div class="phone" id="phM" style="height:720px"></div></div>
+      </div>
+      <div class="col">
+        <div class="cap"><b>같은 가안 · 와이드 1000×700</b><span>왼쪽 세로 메뉴 9개 + 관리자 3개 · 가운데 폰 화면 · 오른쪽 열림 칸</span></div>
+        <div class="wide-box" id="wideBox"><div class="wide" id="wideM"></div></div>
+      </div>
+    </div>
+    <div class="scroll-x"><table class="tbl" style="min-width:560px">
+      <thead><tr><th></th><th>가안 A · 한 목록</th><th>가안 B · 목록 + 지도 패널</th></tr></thead>
+      <tbody>
+        <tr><td class="n">모양</td><td>종목리스트 하나. 지도가 있는 종목에 &lsquo;지도&rsquo; 딱지. 누르면 그 자리에서 지도 카드가 펼쳐져요.</td><td>위는 압축 목록, 아래는 고른 종목의 지도 패널. 와이드는 오른쪽 칸이 늘 지도.</td></tr>
+        <tr><td class="n">합쳐진 도구</td><td>보기 [전체 · 지도 있는 종목] · 정렬 4가지(등락률 · 섹터 강한순 · 지도 최신순 · 상대 PER 낮은 순)</td><td>목록 정렬 2가지 + 패널 안 지도 정렬 없음(고른 종목 하나)</td></tr>
+        <tr><td class="n">판단 속도</td><td>스크롤 한 번에 한 흐름 · 지도 없는 종목도 같은 곳</td><td>고르면서 바로 지도 비교 · 폰에서는 목록이 4줄만 보여요</td></tr>
+        <tr><td class="n">손볼 곳</td><td>buildStockList 줄 틀에 딱지 · 펼침(기존 _mlxRow 재사용)</td><td>패널 영역 신설 · 폰 높이 분할</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>정할 것</h2>
+    <p class="dim">① 하단 바: 가안 A(9개가 다 보이고 글자는 켜진 칸에만 · 비활성 칸 폭 약 31px로 44px 규칙에서 13px 모자람)와 가안 B(44 이상 지킴 · 2개는 밀어야 보임) 중 무엇으로 갈지. ② 병합: 가안 A와 B 중 무엇으로 갈지. 그리고 아래 세 가지.</p>
+    <ol class="dim" style="margin:10px 0 0; padding-left:20px; display:grid; gap:4px; max-width:70ch">
+      <li>AI 메뉴는 지금처럼 관리자에게만 보이게 둘까요? (일반 사용자는 8개)</li>
+      <li>섹터동향이 항해로 가면서 탐색 첫 화면이 종목리스트가 돼요. 그래도 괜찮을까요?</li>
+      <li>마이 › 포트폴리오가 항해 › AS-IS 포트폴리오로 옮겨가요. 마이에는 3개 탭만 남아요.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>④ 와이드 왼쪽 메뉴 접기</h2>
+    <p class="dim">메뉴가 9개 + 관리자 3개로 늘어서 왼쪽 세로 메뉴가 길어졌어요. 맨 위 화살표를 눌러 접고 펼쳐 보세요. 접으면 아이콘만 남아 오른쪽 열림 칸이 넓어져요. 칸 사이 시차 45ms는 공통 토큰이에요(펼침 340/21 · 접힘 420/30 · 글자 420/32 — Sidebar collapse 원본 코드는 읽지 못해서 공통 숫자만 썼어요).</p>
+    <div class="bar-row"><div class="sw" id="swC" role="group" aria-label="접기 가안"><button type="button" data-c="a" aria-pressed="true">가안 A · 아이콘 줄이기</button><button type="button" data-c="b" aria-pressed="false">가안 B · 글자 옆으로(좁게)</button></div><span class="pill-note" id="cNote"></span></div>
+    <div class="wide-box" id="wideBoxC"><div class="wide wideC" id="wideC"></div></div>
+    <div class="scroll-x"><table class="tbl" style="min-width:560px">
+      <thead><tr><th></th><th>가안 A · 아이콘 줄이기</th><th>가안 B · 글자 옆으로(좁게)</th></tr></thead>
+      <tbody>
+        <tr><td class="n">펼침 / 접힘 폭</td><td>84px(지금 모양) / 56px</td><td>90px / 56px (글자가 모두 두 글자라 오른쪽 여유 11px만)</td></tr>
+        <tr><td class="n">접은 모양</td><td>아이콘만 · 켜진 칸은 바탕</td><td>같음 · 아이콘 자리가 펼칠 때도 안 움직여요</td></tr>
+        <tr><td class="n">펼친 모양</td><td>아이콘 아래 글자(지금과 같음)</td><td>아이콘 옆 글자 12px · 칸 높이 44라 12칸이 528px로 더 여유</td></tr>
+        <tr><td class="n">오른쪽 열림 칸</td><td>펼침 486px → 접힘 514px</td><td>펼침 480px → 접힘 514px</td></tr>
+        <tr><td class="n">처음 상태 제안</td><td>펼침(지금 그대로) · 접으면 기억</td><td>펼침 · 접으면 기억(펼쳐도 지금과 6px 차이)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- 스프링(공통: x += v·dt, 4번 쪼개서) ---------- */
+  const Sp = (x, k, c) => ({ x, v: 0, t: x, k, c });
+  const act = new Set(); let raf = 0, last = 0;
+  function tick(now) {
+    const dt = Math.min((now - last) / 1000, 1 / 30); last = now; let any = false;
+    act.forEach(fn => { if (fn(dt)) any = true; else act.delete(fn); });
+    raf = act.size ? requestAnimationFrame(tick) : 0;
+  }
+  function kick(fn) { act.add(fn); if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+  function step(s, dt) { const c = RM ? 2 * Math.sqrt(s.k) : s.c; for (let i = 0; i < 4; i++) { const h = dt / 4; s.v += (-s.k * (s.x - s.t) - c * s.v) * h; s.x += s.v * h; } }
+  const rest = s => Math.abs(s.x - s.t) < .02 && Math.abs(s.v) < .02;
+
+  /* ---------- 아이콘 (앱의 7개 그대로 + 새로 그린 하트 · 돛단배) ---------- */
+  const IC = {
+    discover: '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/>',
+    explore: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+    interest: '<path d="M12 20.2C7.3 16.9 4 13.9 4 10.1A4.1 4.1 0 0 1 8.1 6c1.6 0 3 .8 3.9 2.2C12.9 6.8 14.3 6 15.9 6A4.1 4.1 0 0 1 20 10.1c0 3.8-3.3 6.8-8 10.1z"/>',
+    research: '<path d="M8.5 2.5h7"/><path d="M10 2.5v5.6a7 7 0 1 0 4 0V2.5"/><path class="fl-liq" d="M5.95 14.3c1-.7 2-.7 3.03 0s2 .7 3.02 0 2-.7 3.03 0 2 .7 3.02 0A6.1 6.1 0 1 1 5.95 14.3z"/><circle class="fl-bub" cx="10.4" cy="11.3" r=".85"/><circle class="fl-bub" cx="13.1" cy="9.6" r=".55"/>',
+    ai: '<path d="M10 3l1.6 4.4L16 9l-4.4 1.6L10 15l-1.6-4.4L4 9l4.4-1.6z"/><path d="M18 13l.8 2.2L21 16l-2.2.8L18 19l-.8-2.2L15 16l2.2-.8z"/>',
+    news: '<path d="M4 5h13v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v10a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5M8 17h3"/>',
+    schedule: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/>',
+    voyage: '<path d="M12 3v13.5"/><path d="M12 4.6c3.3 1.7 5.3 5.2 5.6 9.4H12z"/><path d="M12 8.6c-1.9 1.4-3.4 3.4-4 5.4H12"/><path d="M3.5 17.2h17l-2.7 3.5H6.2z"/>',
+    my: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>',
+    engine: '<path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><circle cx="12" cy="19.6" r="1.1" fill="currentColor" stroke="none"/>',
+    ops: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'
+  };
+  const svg = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + IC[k] + '</svg>';
+
+  /* ---------- 9체계 ---------- */
+  const M = [
+    { k: 'discover', n: '발견', t: [], note: '변경 없음' },
+    { k: 'explore', n: '탐색', t: [['종목리스트'], ['내부자 매수'], ['밸런스 종목']], note: '종목리스트에 연구 › 종목지도를 합침 · 섹터동향은 항해로 · 공매도 이력은 이미 숨김', ch: 1 },
+    { k: 'interest', n: '관심', t: [['모의매수'], ['비교분석']], note: '신설(하트) · 연구에 있던 두 기능을 그대로 옮김', nw: 1 },
+    { k: 'research', n: '연구', t: [['AI리포트'], ['해자근거', 1]], note: '종목지도 · 모의매수 · 비교분석이 빠지고 해자근거(개발예정) 추가', ch: 1 },
+    { k: 'ai', n: 'AI', t: [['AI매니저'], ['AI예보'], ['AI세력분석', 1]], note: 'AI세력분석(개발예정) 추가 · 지금처럼 관리자만 보임(결정 필요)', ch: 1 },
+    { k: 'news', n: '뉴스', t: [['일간 이슈'], ['기관13F']], note: '변경 없음(일반 사용자는 기관13F만)' },
+    { k: 'schedule', n: '일정', t: [['통합캘린더'], ['실적시즌', 1]], note: '월간 일정 → 통합캘린더로 이름만 · 실적시즌(개발예정)', ch: 1 },
+    { k: 'voyage', n: '항해', t: [['섹터동향'], ['AS-IS 포트폴리오'], ['TO-BE 포트폴리오', 1]], note: '신설(돛단배) · 섹터동향(탐색에서) · 포트폴리오(마이에서, 이름 변경) · TO-BE는 개발예정', nw: 1 },
+    { k: 'my', n: '마이', t: [['실시간 현황'], ['누적 성과'], ['운영 통계']], note: '포트폴리오가 항해로 나가 3개 탭만 남음', ch: 1 }
+  ];
+  $('#iaBody').innerHTML = M.map((m, i) => `<tr><td>${i + 1}</td><td class="n ${m.nw ? 'new' : ''}">${m.n}${m.nw ? ' · 신설' : ''}</td><td>${m.t.length ? m.t.map(x => x[0] + (x[1] ? ' <span class="soon">(개발예정)</span>' : '')).join(' / ') : '—'}</td><td class="${m.ch ? 'chg' : 'dim'}">${m.note}</td></tr>`).join('');
+
+  /* ---------- 폰 안 화면: 누른 메뉴의 제목 · 하위 탭 · 본문 ---------- */
+  function scr(root, ix) {
+    const m = M[ix]; const s = $('.scr', root); let h = `<div class="ph-top"><b>${m.n}</b><i></i></div>`;
+    if (m.t.length) h += `<div class="tabs">${m.t.map((x, j) => `<button type="button" class="${j === 0 ? 'on' : ''} ${x[1] ? 'soon-t' : ''}">${x[0]}</button>`).join('')}</div>`;
+    h += m.t[0] && m.t[0][1] ? `<div class="empty"><b>${m.t[0][0]}은 준비 중이에요</b>곧 이 자리에 들어와요.</div>` : '<div class="card-m"><div class="sk" style="width:62%"></div><div class="sk"></div><div class="sk" style="width:80%"></div></div><div class="card-m"><div class="sk" style="width:48%"></div><div class="sk"></div><div class="sk" style="width:70%"></div></div>';
+    s.innerHTML = h;
+  }
+
+  /* ---------- 가안 A: 아코디언 독 ---------- */
+  function dockA(root, meas) {
+    root.innerHTML = '<div class="scr"></div><nav class="bar dockA" aria-label="메뉴"><div class="ind"></div></nav>';
+    const bar = $('.bar', root), ind = $('.ind', bar); let sel = 0, ACT = 70, base = 30, first = true;
+    const bt = M.map((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', m.n); b.innerHTML = `<span class="ic">${svg(m.k)}</span><span class="lb">${m.n}</span>`; b.onclick = () => pick(i); bar.appendChild(b); return b; });
+    const W = M.map(() => Sp(0, 340, 21)), P = M.map(() => Sp(1, 520, 16)), L = Sp(0, 620, 36), R = Sp(0, 190, 19);
+    function geo() { const inner = bar.clientWidth - 8; ACT = 70; base = (inner - ACT) / (M.length - 1); }
+    function targets(snap) {
+      W.forEach((s, i) => { s.t = i === sel ? ACT : base; s.k = i === sel ? 340 : 420; s.c = i === sel ? 21 : 30; if (snap) { s.x = s.t; s.v = 0; } });
+      L.t = 4 + sel * base; R.t = L.t + ACT; if (snap) { L.x = L.t; R.x = R.t; L.v = R.v = 0; }
+    }
+    function render() {
+      let x = 4; bt.forEach((b, i) => { const w = W[i].x; b.style.transform = `translateX(${x}px)`; b.style.width = w + 'px'; b.style.setProperty('--p', clamp((w - base) / (ACT - base), 0, 1)); b.style.setProperty('--pop', P[i].x); x += w; });
+      ind.style.transform = `translateX(${L.x}px)`; ind.style.width = Math.max(0, R.x - L.x) + 'px';
+    }
+    function frame(dt) { [...W, ...P, L, R].forEach(s => step(s, dt)); render(); return ![...W, ...P, L, R].every(rest); }
+    function pick(i) {
+      if (i === sel) return; const right = i > sel; sel = i;
+      bt.forEach((b, j) => b.classList.toggle('on', j === i));
+      L.k = right ? 190 : 620; L.c = right ? 19 : 36; R.k = right ? 620 : 190; R.c = right ? 36 : 19;
+      P[i].x = .78; P[i].v = 0; P[i].t = 1; targets(false); scr(root, i); kick(frame); report();
+    }
+    function report() { meas.innerHTML = `<span>비활성 칸 <b class="bad">${base.toFixed(1)}px</b> × 높이 <b>56px</b></span><span>켜진 칸 <b>${ACT}px</b></span><span>44 대비 <b class="bad">${(44 - base).toFixed(1)}px 모자람</b></span>`; }
+    new ResizeObserver(() => { geo(); targets(true); render(); report(); }).observe(bar);
+    bt[0].classList.add('on'); geo(); targets(true); render(); scr(root, 0); report();
+    return { pick };
+  }
+
+  /* ---------- 가안 B: 밀어서 보는 바 ---------- */
+  function dockB(root, meas) {
+    root.innerHTML = '<div class="scr"></div><nav class="bar dockB" aria-label="메뉴"><div class="sc"><div class="in"><div class="ind"></div></div></div></nav>';
+    const bar = $('.bar', root), sc = $('.sc', bar), inn = $('.in', bar), ind = $('.ind', inn); let sel = 0; const BW = 48;
+    const bt = M.map((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', m.n); b.innerHTML = `<span class="ic">${svg(m.k)}</span><span class="lb">${m.n}</span>`; b.onclick = () => { if (moved) return; pick(i); }; inn.appendChild(b); return b; });
+    const L = Sp(4, 620, 36), R = Sp(4 + BW, 190, 19), P = M.map(() => Sp(1, 520, 16)), SC = Sp(0, 260, 24);
+    let moved = false, down = false, x0 = 0, s0 = 0, scrolling = false;
+    function render() { ind.style.transform = `translateX(${L.x}px)`; ind.style.width = Math.max(0, R.x - L.x) + 'px'; bt.forEach((b, i) => b.style.setProperty('--pop', P[i].x)); }
+    function frame(dt) { [L, R, ...P].forEach(s => step(s, dt)); render(); return ![L, R, ...P].every(rest); }
+    function sframe(dt) { step(SC, dt); sc.scrollLeft = SC.x; scrolling = !rest(SC); if (!scrolling) { SC.x = SC.t; } return scrolling; }
+    function pick(i) {
+      const right = i > sel; sel = i; bt.forEach((b, j) => b.classList.toggle('on', j === i));
+      L.k = right ? 190 : 620; L.c = right ? 19 : 36; R.k = right ? 620 : 190; R.c = right ? 36 : 19; L.t = 4 + i * BW; R.t = L.t + BW; P[i].x = .78; P[i].v = 0; P[i].t = 1;
+      const vis = sc.clientWidth, want = clamp(4 + i * BW + BW / 2 - vis / 2, 0, sc.scrollWidth - vis); SC.x = sc.scrollLeft; SC.v = 0; SC.t = want; kick(sframe); kick(frame); scr(root, i);
+    }
+    sc.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') return; down = true; moved = false; x0 = e.clientX; s0 = sc.scrollLeft; });
+    window.addEventListener('pointermove', e => { if (!down) return; const d = e.clientX - x0; if (Math.abs(d) > 8) moved = true; if (moved) { act.delete(sframe); sc.scrollLeft = s0 - d; } });
+    window.addEventListener('pointerup', () => { if (down) { down = false; setTimeout(() => { moved = false; }, 0); } });
+    sc.addEventListener('touchstart', () => { act.delete(sframe); }, { passive: true });
+    const rep = () => { const vis = (sc.clientWidth - 4) / BW; meas.innerHTML = `<span>칸 <b>${BW}px</b> × 높이 <b>56px</b></span><span>한 번에 <b>${vis.toFixed(1)}칸</b> 보임</span><span>44 대비 <b>충족</b></span>`; };
+    new ResizeObserver(rep).observe(bar);
+    bt[0].classList.add('on'); L.x = L.t = 4; R.x = R.t = 4 + BW; render(); scr(root, 0); rep();
+    return { pick };
+  }
+
+  /* ---------- ② 종목 · 지도 예시 데이터 ---------- */
+  const S = [
+    { tk: 'NVDA', nm: '엔비디아', sec: '반도체', chg: 3.2, map: { line: '인공지능 서버의 두뇌 역할인 칩을 가장 많이 팔아요.', tags: ['데이터센터', 'GPU', '소프트웨어 생태계'], moat: '개발자들이 쓰는 도구가 이 칩에 맞춰져 있어 다른 칩으로 옮기기 어려워요.', per: .62 } },
+    { tk: 'AVGO', nm: '브로드컴', sec: '반도체', chg: 2.1, map: { line: '서버를 잇는 통신 칩과 기업용 소프트웨어로 돈을 벌어요.', tags: ['네트워크 칩', '맞춤 칩'], moat: '대형 고객이 설계 단계부터 같이 만들어서 바꾸기 어려워요.', per: .48 } },
+    { tk: 'PLTR', nm: '팔란티어', sec: '소프트웨어', chg: -1.4, map: { line: '정부와 기업의 흩어진 자료를 모아 판단을 돕는 프로그램을 팔아요.', tags: ['정부', '기업 분석'], moat: '한번 쓰기 시작하면 업무 방식 자체가 맞춰져요.', per: .91 } },
+    { tk: 'MSFT', nm: '마이크로소프트', sec: '소프트웨어', chg: 0.8, map: null },
+    { tk: 'VRT', nm: '버티브', sec: '전력 설비', chg: 1.7, map: { line: '데이터센터의 전력과 냉각 설비를 만들어요.', tags: ['냉각', '전력'], moat: '설치 후 점검 계약으로 이어져 꾸준히 매출이 나요.', per: .35 } },
+    { tk: 'TSLA', nm: '테슬라', sec: '자동차', chg: -2.6, map: null },
+    { tk: 'AMD', nm: 'AMD', sec: '반도체', chg: 1.1, map: null },
+    { tk: 'ANET', nm: '아리스타', sec: '네트워크', chg: -0.3, map: null }
+  ];
+  const st = { v: 'A', sel: 'NVDA', f: 'all', sort: 0 };
+  const SORTS = ['등락률 높은순', '섹터 강한순', '지도 최신순', '상대 PER 낮은 순'];
+  const pc = c => `<span class="pc ${c > 0 ? 'up' : 'dn'}">${c > 0 ? '+' : '−'}${Math.abs(c).toFixed(1)}%</span>`;
+  const byTk = t => S.find(x => x.tk === t);
+  function list() {
+    let a = S.slice(); if (st.f === 'map') a = a.filter(x => x.map);
+    if (st.sort === 0) a.sort((x, y) => y.chg - x.chg); else if (st.sort === 1) a.sort((x, y) => x.sec.localeCompare(y.sec, 'ko') || y.chg - x.chg);
+    else if (st.sort === 2) a.sort((x, y) => (!!y.map - !!x.map)); else a.sort((x, y) => (x.map ? x.map.per : 9) - (y.map ? y.map.per : 9));
+    return a;
+  }
+  const row = (x, extra) => `<div class="row ${st.sel === x.tk ? 'sel' : ''}" data-tk="${x.tk}"><span class="lg">${x.tk.slice(0, 2)}</span><div class="nm"><b>${x.nm}${x.map ? '<span class="mk">지도</span>' : ''}</b><span>${x.tk} · ${x.sec}</span></div>${pc(x.chg)}</div>${extra || ''}`;
+  const perBar = p => `<div class="per"><u style="left:${p * 100}%"></u></div><div class="perl"><span>5년 중 싼 쪽</span><span>비싼 쪽</span></div>`;
+  const mapCard = x => x.map ? `<div class="mapc"><h4>${x.nm} 종목 지도</h4><p>${x.map.line}</p><div class="tags">${x.map.tags.map(t => `<i>${t}</i>`).join('')}</div><div><small>왜 버티나요</small><p>${x.map.moat}</p></div><div><small>지금 가격 위치(상대 PER)</small>${perBar(x.map.per)}</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button">종목 페이지</button></div></div>`
+    : `<div class="mapc"><h4>${x.nm}은 지도가 아직 없어요</h4><p class="dim">요청하면 만들어 드려요.</p><div><button class="btn pri" type="button">지도 요청</button></div></div>`;
+  const spark = (seed) => { let y = 60, d = 'M0 60'; for (let i = 1; i <= 40; i++) { y = clamp(y + Math.sin(i * seed) * 7 - 1.1 + (i % 5 === 0 ? 4 : 0), 8, 112); d += ` L${i * 10} ${y.toFixed(1)}`; } return `<svg class="chart" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="${d}"/></svg>`; };
+
+  function head(withTitle) {
+    return `<div class="ph-top"><b>탐색</b><i></i></div><div class="tabs"><button type="button" class="on">종목리스트</button><button type="button">내부자 매수</button><button type="button">밸런스 종목</button></div>`;
+  }
+  function bar2() {
+    return `<div class="seg2"><div class="pills"><button type="button" data-f="all" class="${st.f === 'all' ? 'on' : ''}">전체</button><button type="button" data-f="map" class="${st.f === 'map' ? 'on' : ''}">지도 있는 종목</button></div><button type="button" class="sortb" data-sort>${SORTS[st.sort]} ▾</button></div>`;
+  }
+  /* 폰 본문 */
+  function phoneBody() {
+    const a = list(); let h = head();
+    if (st.v === 'A') {
+      h += bar2() + a.map(x => row(x, x.map && st.sel === x.tk ? mapCard(x) : '')).join('');
+    } else {
+      const cur = byTk(st.sel);
+      const rows = a.slice(0, 4); if (a.includes(cur) && !rows.includes(cur)) rows[3] = cur;
+      h += bar2() + rows.map(x => row(x)).join('') + `<div class="splitp">${mapCard(cur)}</div>`;
+    }
+    return `<div class="scr" style="padding-bottom:20px">${h}</div>`;
+  }
+  /* 와이드 */
+  function rail() {
+    const adm = ['engine', 'ops', 'settings'], nm = { engine: '자동', ops: '운영', settings: '설정' };
+    return '<div class="rail">' + M.map((m, i) => `<button type="button" class="${i === 1 ? 'on' : ''}"><svg viewBox="0 0 24 24">${IC[m.k]}</svg>${m.n}</button>`).join('') + '<div class="gap"></div><hr>' + adm.map(k => `<button type="button"><svg viewBox="0 0 24 24">${IC[k]}</svg>${nm[k]}</button>`).join('') + '</div>';
+  }
+  function wideBody() {
+    const a = list(), cur = byTk(st.sel); let left = head() + bar2() + a.map(x => row(x)).join('');
+    let right;
+    if (st.v === 'A') {
+      right = `<h4>${cur.nm} <span class="dim" style="font-size:13px;font-weight:500">${cur.tk}</span></h4><div class="sub">${cur.sec} · ${pc(cur.chg).replace(/<[^>]+>/g, '')}</div>${spark(cur.tk.length + 2)}<div class="dtabs"><b>차트</b><b class="${cur.map ? 'on' : ''}">종목 지도</b><b>AI 보고서</b><b>내 주식</b></div>${cur.map ? mapCard(cur) : `<div class="empty"><b>지도가 아직 없어요</b><button class="btn pri" type="button">지도 요청</button></div>`}`;
+    } else {
+      right = `<h4>${cur.nm} 종목 지도</h4><div class="sub">고른 종목의 지도가 오른쪽에 계속 떠 있어요 · ${cur.tk}</div>${mapCard(cur)}`;
+    }
+    return rail() + `<div class="wcol">${left}</div><div class="wpane">${right}</div>`;
+  }
+  function paintM() {
+    const ph = $('#phM'); const sc = ph.firstElementChild ? ph.firstElementChild.scrollTop : 0; ph.innerHTML = phoneBody(); if (ph.firstElementChild) ph.firstElementChild.scrollTop = sc;
+    $('#wideM').innerHTML = wideBody();
+    $('#vTitle').textContent = st.v === 'A' ? '가안 A · 한 목록 · 지도는 그 자리에서 펼침' : '가안 B · 목록 + 지도 패널';
+    $('#vSub').textContent = st.v === 'A' ? '폰 360' : '폰 360 · 목록 위 · 지도 아래';
+    $$('#swV button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.v)));
+    fit();
+  }
+  document.addEventListener('click', e => {
+    const r = e.target.closest('#phM .row, #wideM .row'); if (r) { st.sel = r.dataset.tk; paintM(); return; }
+    const f = e.target.closest('#phM [data-f], #wideM [data-f]'); if (f) { st.f = f.dataset.f; paintM(); return; }
+    if (e.target.closest('#phM [data-sort], #wideM [data-sort]')) { st.sort = (st.sort + 1) % SORTS.length; paintM(); }
+  });
+  $('#swV').onclick = e => { const b = e.target.closest('button'); if (!b) return; st.v = b.dataset.v; paintM(); };
+
+  /* 와이드 목업을 컨테이너 폭에 맞춰 줄임 */
+  function fit() { const box = $('#wideBox'), w = $('#wideM'), k = Math.min(1, box.clientWidth / 1000); w.style.transform = k < 1 ? `scale(${k})` : ''; box.style.height = (700 * k) + 'px'; }
+  new ResizeObserver(fit).observe($('#wideBox'));
+
+  /* ---------- 폰 폭 · 테마 ---------- */
+  function setW(w) { document.documentElement.style.setProperty('--pw', w + 'px'); $$('#swW button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.w === String(w)))); }
+  $('#swW').onclick = e => { const b = e.target.closest('button'); if (b) setW(b.dataset.w); };
+  $('#swT').onclick = e => { const b = e.target.closest('button'); if (!b) return; const t = b.dataset.t, r = document.documentElement; if (t === 'auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', t); $$('#swT button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); };
+
+  const A = dockA($('#phA'), $('#mA')), B = dockB($('#phB'), $('#mB'));
+  paintM();
+})();
+</script>
+
+<script>
+(function () {
+  const $ = (s, r) => (r || document).querySelector(s);
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const Sp = (x, k, c) => ({ x, v: 0, t: x, k, c });
+  const set = new Set(); let raf = 0, last = 0;
+  const step = (s, dt) => { const c = RM ? 2 * Math.sqrt(s.k) : s.c; for (let i = 0; i < 4; i++) { const h = dt / 4; s.v += (-s.k * (s.x - s.t) - c * s.v) * h; s.x += s.v * h; } };
+  const rest = s => Math.abs(s.x - s.t) < .002 && Math.abs(s.v) < .002;
+  function loop(now) { const dt = Math.min((now - last) / 1000, 1 / 30); last = now; set.forEach(f => { if (!f(dt)) set.delete(f); }); raf = set.size ? requestAnimationFrame(loop) : 0; }
+  const kick = f => { set.add(f); if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); } };
+  const IC = {
+    discover: '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/>',
+    explore: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+    interest: '<path d="M12 20.2C7.3 16.9 4 13.9 4 10.1A4.1 4.1 0 0 1 8.1 6c1.6 0 3 .8 3.9 2.2C12.9 6.8 14.3 6 15.9 6A4.1 4.1 0 0 1 20 10.1c0 3.8-3.3 6.8-8 10.1z"/>',
+    research: '<path d="M8.5 2.5h7"/><path d="M10 2.5v5.6a7 7 0 1 0 4 0V2.5"/><path class="fl-liq" d="M5.95 14.3c1-.7 2-.7 3.03 0s2 .7 3.02 0 2-.7 3.03 0 2 .7 3.02 0A6.1 6.1 0 1 1 5.95 14.3z"/><circle class="fl-bub" cx="10.4" cy="11.3" r=".85"/><circle class="fl-bub" cx="13.1" cy="9.6" r=".55"/>',
+    ai: '<path d="M10 3l1.6 4.4L16 9l-4.4 1.6L10 15l-1.6-4.4L4 9l4.4-1.6z"/><path d="M18 13l.8 2.2L21 16l-2.2.8L18 19l-.8-2.2L15 16l2.2-.8z"/>',
+    news: '<path d="M4 5h13v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v10a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5M8 17h3"/>',
+    schedule: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/>',
+    voyage: '<path d="M12 3v13.5"/><path d="M12 4.6c3.3 1.7 5.3 5.2 5.6 9.4H12z"/><path d="M12 8.6c-1.9 1.4-3.4 3.4-4 5.4H12"/><path d="M3.5 17.2h17l-2.7 3.5H6.2z"/>',
+    my: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>',
+    engine: '<path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><circle cx="12" cy="19.6" r="1.1" fill="currentColor" stroke="none"/>',
+    ops: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'
+  };
+  const MENU = [['discover', '발견'], ['explore', '탐색'], ['interest', '관심'], ['research', '연구'], ['ai', 'AI'], ['news', '뉴스'], ['schedule', '일정'], ['voyage', '항해'], ['my', '마이']];
+  const ADM = [['engine', '자동'], ['ops', '운영'], ['settings', '설정']];
+  const root = $('#wideC'); let v = 'a', open = true, wOpen = 84, ctl = null;
+  const item = (k, n, i, on) => '<button type="button" class="it' + (on ? ' on' : '') + '" data-i="' + i + '" aria-label="' + n + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + IC[k] + '</svg><span class="lb">' + n + '</span></button>';
+  function build() {
+    if (ctl) { set.delete(ctl.frame); ctl = null; }
+    wOpen = v === 'a' ? 84 : 90;
+    const items = MENU.map((m, i) => item(m[0], m[1], i, i === 1)).join('') + '<div class="gap"></div><hr>' + ADM.map((m, i) => item(m[0], m[1], 20 + i, false)).join('');
+    root.innerHTML = '<nav class="railC v' + v + '" aria-label="메뉴"><button type="button" class="tg" aria-label="메뉴 접기" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>' + items + '</nav>' +
+      '<div class="wcol"><div class="ph-top"><b>탐색</b><i></i></div><div class="tabs"><button type="button" class="on">종목리스트</button><button type="button">내부자 매수</button><button type="button">밸런스 종목</button></div><div class="card-m"><div class="sk" style="width:62%"></div><div class="sk"></div><div class="sk" style="width:80%"></div></div><div class="card-m"><div class="sk" style="width:48%"></div><div class="sk"></div></div></div>' +
+      '<div class="wpane" style="display:grid;place-items:center;color:var(--dim)"><span id="paneTxt"></span></div>';
+    const rail = $('.railC', root), tg = $('.tg', rail), its = [...rail.querySelectorAll('.it')];
+    const W = Sp(open ? wOpen : 56, 340, 21), Q = its.map(() => Sp(open ? 1 : 0, 420, 32)), R = Sp(open ? 0 : 1, 340, 21); const timers = [];
+    function paint() {
+      root.style.setProperty('--rw', W.x.toFixed(2) + 'px'); rail.style.setProperty('--r', R.x.toFixed(3));
+      its.forEach((b, i) => b.style.setProperty('--q', Math.max(0, Math.min(1, Q[i].x)).toFixed(3)));
+      const pw = 1000 - 430 - W.x; $('#paneTxt').textContent = '종목이나 항목을 누르면 여기에 열려요 · 열림 칸 ' + Math.round(pw) + 'px'; $('#cNote').textContent = '왼쪽 메뉴 ' + Math.round(W.x) + 'px';
+    }
+    function frame(dt) { step(W, dt); step(R, dt); Q.forEach(q => step(q, dt)); paint(); return !(rest(W) && rest(R) && Q.every(rest)); }
+    function apply() {
+      timers.forEach(clearTimeout); timers.length = 0;
+      W.t = open ? wOpen : 56; W.k = open ? 340 : 420; W.c = open ? 21 : 30; R.t = open ? 0 : 1; R.k = 340; R.c = 21;
+      its.forEach((b, i) => { const d = i * 45; timers.push(setTimeout(() => { Q[i].t = open ? 1 : 0; kick(frame); }, open ? 120 + d : d * .4)); });
+      tg.setAttribute('aria-expanded', String(open)); tg.setAttribute('aria-label', open ? '메뉴 접기' : '메뉴 펼치기'); kick(frame);
+    }
+    tg.onclick = () => { open = !open; apply(); };
+    ctl = { frame }; paint();
+  }
+  $('#swC').onclick = e => { const b = e.target.closest('button'); if (!b) return; v = b.dataset.c; open = v === 'a'; $('#swC').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); build(); };
+  function fit() { const box = $('#wideBoxC'), k = Math.min(1, box.clientWidth / 1000); root.style.transform = k < 1 ? 'scale(' + k + ')' : ''; box.style.height = (700 * k) + 'px'; }
+  new ResizeObserver(fit).observe($('#wideBoxC')); build(); fit();
+})();
+</script>
