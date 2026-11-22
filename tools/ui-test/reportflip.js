@@ -94,8 +94,8 @@ async function hold(p, sel, ms, dx) {
   const dsel = '#feedScroll .feed-item[data-ticker="CL"]';
   if (await p.evaluate(s => !!document.querySelector(s), dsel)) {
     await hold(p, dsel, 650); r = await rotY(p, dsel);
-    const back = await p.evaluate(s => { const rc = document.querySelector(s + ' .fl-back .rc'); return rc ? rc.innerText : ''; }, dsel);
-    ok('발견: 길게 누르면 리포트 핵심 면으로 뒤집힘(3블록)', Math.abs(r - 180) < 4 && /고객은 가격이 아니라/.test(back) && /사람들은 앞으로도/.test(back), 'rotY ' + r.toFixed(1));
+    const back = await p.evaluate(s => { const rc = document.querySelector(s + ' .fl-back .rs'); return rc ? rc.textContent : ''; }, dsel);
+    ok('발견: 길게 누르면 리포트 핵심 면(슬라이드 3장)으로 뒤집힘', Math.abs(r - 180) < 4 && /고객은 가격이 아니라/.test(back) && /사람들은 앞으로도/.test(back), 'rotY ' + r.toFixed(1));
     await hold(p, dsel, 650); ok('발견: 다시 길게 누르면 차트 면으로 돌아옴', Math.abs(await rotY(p, dsel)) < 4);
     const cv = await p.evaluate(s => { const c = document.querySelector(s + ' canvas'); return { chart: !!c._aqChart, w: c.clientWidth }; }, dsel); ok('발견: 차트는 그대로 그려져 있음', cv.chart && cv.w > 200, JSON.stringify(cv));
   } else ok('발견: CL 카드가 있음', false, '피드에 CL 없음');
@@ -113,7 +113,7 @@ async function hold(p, sel, ms, dx) {
   ok('실시간 현황: 보고서가 있는 종목(CL · WMB)만 뒤집기 부품, 없는 종목(ZZZZ)은 그대로', /CL:Y/.test(live) && /WMB:Y/.test(live) && /ZZZZ:n/.test(live), live);
   const lsel = '#lvFeed .feed-item[data-ticker="CL"]';
   await hold(p, lsel, 650); r = await rotY(p, lsel);
-  ok('실시간 현황: 길게 누르면 리포트 핵심 면으로 뒤집힘', Math.abs(r - 180) < 4 && /고객은 가격이 아니라/.test(await p.evaluate(s => (document.querySelector(s + ' .fl-back .rc') || {}).innerText || '', lsel)), 'rotY ' + r.toFixed(1));
+  ok('실시간 현황: 길게 누르면 리포트 핵심 면으로 뒤집힘', Math.abs(r - 180) < 4 && /고객은 가격이 아니라/.test(await p.evaluate(s => (document.querySelector(s + ' .fl-back .rs') || {}).textContent || '', lsel)), 'rotY ' + r.toFixed(1));
   await p.close();
 
   // ───────── 카드 폭 600 이상(700px): 왼쪽 리포트 · 오른쪽 시그널 이력 / 2분할 가로(1000x700): 카드 폭 394 → 모바일과 같음

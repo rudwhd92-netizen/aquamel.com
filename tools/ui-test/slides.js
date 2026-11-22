@@ -138,5 +138,38 @@ async function prep(b, vp) {
     await p.context().close();
   }
 
+
+  /* ───────── ③ 발견 · 마이 › 실시간 현황: 카드 뒷면(리포트)도 슬라이드 (390) — v8.90 ───────── */
+  for (const [name, root, go] of [['발견', '#feedScroll', () => { switchMobileTab('discover'); }], ['마이 › 실시간 현황', '#lvFeed', () => { _dashLastComputed = { holdings: ['CL', 'WMB', 'ELV'].map((t, i) => ({ ticker: t, qty: 10 + i, cost: 1000 + i * 50, curPrice: 100 + i, avgPrice: 90 + i })) }; switchMobileTab('board'); setBoardSubtab('live'); aqLiveBoardRender(); }]]) {
+    const p = await prep(b, { width: 390, height: 844 });
+    await p.evaluate(go); await p.waitForSelector(root + ' .feed-item[data-ticker="CL"] .fl-stage', { timeout: 20000 }).catch(() => {}); await p.waitForTimeout(2500);
+    const sel = root + ' .feed-item[data-ticker="CL"]';
+    const has = await p.evaluate(s => !!document.querySelector(s), sel); ok(name + ': CL 카드가 있음', has);
+    if (!has) { await p.context().close(); continue; }
+    await p.evaluate(s => document.querySelector(s).scrollIntoView({ block: 'center' }), sel); await p.waitForTimeout(900);
+    const rot = () => p.evaluate(s => { const f = document.querySelector(s + ' .fl-flipper'); const m = f && /rotateY\(([-\d.]+)deg\)/.exec(f.style.transform); return m ? +m[1] : 0; }, sel);
+    const hold = async () => { await p.evaluate(s => document.querySelector(s + ' .fl-stage').scrollIntoView({ block: 'center' }), sel); await p.waitForTimeout(500); const r = await p.evaluate(s => { const k = document.querySelector(s + ' .fl-stage').getBoundingClientRect(); return { x: k.left + k.width * 0.4, y: k.top + k.height * 0.55 }; }, sel); await p.mouse.move(r.x, r.y); await p.mouse.down(); await p.waitForTimeout(750); await p.mouse.up(); await p.waitForTimeout(1300); };
+    await hold();
+    ok(name + ': 길게 누르면 리포트 면으로 뒤집힘', Math.abs((await rot()) - 180) < 4, 'rotY ' + (await rot()).toFixed(1));
+    const v = await p.evaluate(s => { const rs = document.querySelector(s + ' .fl-back .rs'); const sl = rs ? [...rs.querySelectorAll('.rs-sl')] : []; const host = document.querySelector(s + ' .fl-back'); const more = rs && rs.querySelector('.rs-more'); return { n: sl.length, dots: rs ? rs.querySelectorAll('.rs-dots button').length : 0, labels: sl.map(x => x.querySelector('.rs-lab').textContent.replace(/\s+/g, ' ').trim().slice(0, 8)), viz: sl.every(x => x.querySelector('.rs-viz').innerHTML.length > 30), fit: !!rs && rs.scrollHeight <= host.clientHeight + 1 && sl.every(x => x.scrollHeight <= x.clientHeight + 1), old: !!document.querySelector(s + ' .fl-back .rc-b'), moreH: more ? Math.round(more.getBoundingClientRect().height) : 0, big: !!document.querySelector(s + ' .fl-back .rc-full') }; }, sel);
+    ok(name + ' 뒷면: 슬라이드 3장 · 점 3개 · 그림이 있음 · 잘림 없음 · 예전 3블록 없음 · 큰 버튼 없음(작은 「전문 보기」 44)', v.n === 3 && v.dots === 3 && v.viz && v.fit && !v.old && !v.big && v.moreH >= 44, JSON.stringify(v));
+    // 점 누름 → 셋째
+    const xy = await p.evaluate(s => { const r = document.querySelectorAll(s + ' .fl-back .rs-dots button')[2].getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }, sel);
+    await p.mouse.click(xy[0], xy[1]); await p.waitForTimeout(1000);
+    const x1 = await p.evaluate(s => { const m = /translateX\(([-\d.]+)%\)/.exec(document.querySelector(s + ' .fl-back .rs-strip').style.transform); return m ? -parseFloat(m[1]) / 100 : 0; }, sel);
+    ok(name + ' 뒷면: 점을 누르면 셋째 슬라이드', Math.abs(x1 - 2) < 0.02 && Math.abs(await rot() - 180) < 4, 'x ' + x1);
+    // 밀기: 뒤집히지 않고 슬라이드만
+    const vb = await p.evaluate(s => { const r = document.querySelector(s + ' .fl-back .rs-view').getBoundingClientRect(); return { x: r.left, y: r.top }; }, sel);
+    await p.mouse.move(vb.x + 80, vb.y + 70); await p.mouse.down(); await p.mouse.move(vb.x + 200, vb.y + 72, { steps: 8 }); await p.waitForTimeout(600); await p.mouse.up(); await p.waitForTimeout(1000);
+    const x2 = await p.evaluate(s => { const m = /translateX\(([-\d.]+)%\)/.exec(document.querySelector(s + ' .fl-back .rs-strip').style.transform); return m ? -parseFloat(m[1]) / 100 : 0; }, sel);
+    ok(name + ' 뒷면: 오른쪽으로 밀면 이전 슬라이드 · 뒤집히지 않음', Math.abs(x2 - 1) < 0.02 && Math.abs(await rot() - 180) < 4, 'x ' + x2 + ' rot ' + (await rot()).toFixed(1));
+    await p.screenshot({ path: path.join(OUT, 'slides_back_' + (root === '#lvFeed' ? 'live' : 'disc') + '.png') });
+    // 가만히 길게 → 차트로
+    await hold();
+    const cv = await p.evaluate(s => { const c = document.querySelector(s + ' canvas'); return { chart: !!(c && c._aqChart), w: c ? c.clientWidth : 0 }; }, sel);
+    ok(name + ' 뒷면: 가만히 길게 누르면 차트로 돌아옴 · 차트 그려져 있음', Math.abs(await rot()) < 4 && cv.chart && cv.w > 200, 'rot ' + (await rot()).toFixed(1) + ' ' + JSON.stringify(cv));
+    await p.context().close();
+  }
+
   await b.close(); console.log(fails ? '\n실패 ' + fails + '건' : '\n전부 통과'); process.exit(fails ? 1 : 0);
 })();
