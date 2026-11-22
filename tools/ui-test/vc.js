@@ -49,7 +49,10 @@ const lanes = p => p.evaluate(() => Array.from(document.querySelectorAll('#vcLan
     /* 나중에 하기 → 지도 + 배너 남음 */
     await p.click('#vcDkx'); await p.waitForTimeout(rm ? 400 : 1200);
     ok(L + '나중에 하기 → 덱 닫힘 · 배너에 남은 대기', await p.evaluate(() => !document.getElementById('aqVcDeck').classList.contains('open') && /대기 5건/.test(document.getElementById('vcBn').textContent)));
-    ok(L + '지도: 틀 8개 · 선 19개', await p.evaluate(() => document.querySelectorAll('#vcLanes .vc-ln').length === 8 && document.querySelectorAll('#vcEdges path').length === 19));
+    ok(L + '지도: 마디 21개 전부 · 선 27개', await p.evaluate(() => document.querySelectorAll('#vcLanes .vc-ln').length === 21 && document.querySelectorAll('#vcEdges path').length === 27));
+    ok(L + '지도: 종목 로고가 붙음(앱 공용 logos/tickers) · 없는 곳은 두 글자', await p.evaluate(() => document.querySelectorAll('.vc-sn .vc-lo img').length >= 85 && document.querySelectorAll('.vc-sn .vc-lo.no').length >= 1));
+    ok(L + '지도: 시안 문구가 남아 있지 않음', await p.evaluate(() => !/시안|핵심 8개|더 보기/.test(document.getElementById('vcCard').innerText)));
+    ok(L + '지도: 표본 없는 마디(소버린)는 안내 문구', await p.evaluate(() => /종목 표본이 아직 없어요/.test(document.querySelector('.vc-ln[data-f="3"]').innerText)));
     const w0 = await lanes(p), mem = w0.find(x => x.f === '7');
     ok(L + '지금: 메모리 물높이 ≈52.7%', Math.abs(mem.h - 52.7) < 1.5 && mem.m === '1', JSON.stringify(mem));
     await p.screenshot({ path: path.join(OUT, 'vc-map-' + vw + (rm ? '-rm' : '') + '.png'), fullPage: false });
@@ -81,16 +84,18 @@ const lanes = p => p.evaluate(() => Array.from(document.querySelectorAll('#vcLan
     ok(L + 'CEG: 다른 사슬(MSFT) 관계 + 태그', await p.evaluate(() => !!document.querySelector('#aqVcBody .r[data-go="MSFT"]') && /다른 사슬/.test(document.getElementById('aqVcBody').innerText)));
     await p.click('#aqVcBody .r[data-go="MSFT"]'); await p.waitForTimeout(rm ? 300 : 700);
     await p.click('#vcToMap'); await p.waitForTimeout(rm ? 800 : 2200);
-    ok(L + 'MSFT 지도에서 보기 → AI 사슬로 이동 · 포커스', await p.evaluate(() => document.querySelectorAll('#vcLanes .vc-ln').length === 8 && document.querySelector('.vc-sn.sel') && document.querySelector('.vc-sn.sel').dataset.tk === 'MSFT'));
-    await p.click('.vc-ch[data-k="bank"]'); await p.waitForTimeout(rm ? 300 : 900);
-    ok(L + '틀 없는 사슬: 등급 분포 + 안내', await p.evaluate(() => !!document.querySelector('.vc-empty') && document.querySelectorAll('#vcLanes').length === 0));
+    ok(L + 'MSFT 지도에서 보기 → AI 사슬로 이동 · 포커스', await p.evaluate(() => document.querySelectorAll('#vcLanes .vc-ln').length === 21 && document.querySelector('.vc-sn.sel') && document.querySelector('.vc-sn.sel').dataset.tk === 'MSFT'));
+    for (const [k, n] of [['defense', 6], ['health', 5], ['reshore', 6], ['commod', 6], ['bank', 4], ['exch', 3], ['brand', 3], ['ads', 3], ['semi', 2]]) {
+      await p.click('.vc-ch[data-k="' + k + '"]'); await p.waitForTimeout(rm ? 300 : 700);
+      ok(L + k + ' 사슬: 마디 ' + n + '개 · 종목 · 로고', await p.evaluate(n => document.querySelectorAll('#vcLanes .vc-ln').length === n && document.querySelectorAll('.vc-sn').length >= n && document.querySelectorAll('.vc-sn .vc-lo').length === document.querySelectorAll('.vc-sn').length, n));
+    }
     await p.click('.vc-ch[data-k="ai"]'); await p.waitForTimeout(rm ? 400 : 1200);
     /* 직접 지정: 프롬프트 3번 + 틀 고르기 */
-    await p.evaluate(() => { window.__answers = ['lrcx', '식각 장비 점유율이 유지돼요', '점유율이 2분기 연속 하락']; window.__prompts = []; });
+    await p.evaluate(() => { window.__answers = ['zzzq', '식각 장비 점유율이 유지돼요', '점유율이 2분기 연속 하락']; window.__prompts = []; });
     await p.click('.vc-add'); await p.waitForTimeout(rm ? 300 : 900);
     ok(L + '직접 지정: 틀 고르기가 먼저 뜸(종목 코드 입력 뒤)', await p.evaluate(() => document.getElementById('aqVcSheet').classList.contains('open') && /들어갈 틀/.test(document.getElementById('aqVcBody').innerText)));
     await p.click('.vc-frs button[data-f="9"]'); await p.waitForTimeout(rm ? 600 : 1800);
-    ok(L + '직접 지정: LRCX가 장비 틀에 올라가고 로컬에 저장', await p.evaluate(() => !!document.querySelector('.vc-ln[data-f="9"] .vc-sn[data-tk="LRCX"]') && !!JSON.parse(localStorage.getItem('aqVcState1')).custom.LRCX), JSON.stringify(await p.evaluate(() => window.__prompts)));
+    ok(L + '직접 지정: ZZZQ가 장비 틀에 올라가고 로컬에 저장', await p.evaluate(() => !!document.querySelector('.vc-ln[data-f="9"] .vc-sn[data-tk="ZZZQ"]') && !!JSON.parse(localStorage.getItem('aqVcState1')).custom.ZZZQ), JSON.stringify(await p.evaluate(() => window.__prompts)));
     /* 가로 넘침 */
     const ov = await p.evaluate(() => { const o = []; document.querySelectorAll('#vcCard *').forEach(e => { const r = e.getBoundingClientRect(), c = document.getElementById('vcCard').getBoundingClientRect(); if (r.width && r.right > c.right + 1 && !e.closest('.vc-chains') && !e.closest('svg')) o.push((e.className && e.className.baseVal === undefined ? e.className : e.tagName) + ':' + Math.round(r.right - c.right)); }); return o.slice(0, 5); });
     ok(L + '카드 안 가로 넘침 없음', ov.length === 0, JSON.stringify(ov));
