@@ -1,0 +1,313 @@
+<title>시그널 이력·AI리포트 가안</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 레이아웃: 두 문제 한 줄씩 → ① 시그널 이력 스크롤 갇힘(진단 · 직접 굴려 보는 3안) → ② AI리포트 슬라이드(시각화 후보표 · 폰 A/B · 와이드) → 정할 것 */
+:root {
+  --page-bg: #f3f3f1; --page-fg: #1b1c1e; --page-dim: #62646a; --page-line: #dcdcd8; --page-card: #fbfbfa; --tag: #2a6cb0; --warn: #a65a12;
+  --font: 'Noto Sans KR', 'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', sans-serif;
+  /* 앱 토큰(다크) — index.html :root 값 */
+  --bg: #161618; --panel: #1c1c1f; --f1: rgba(255,255,255,.05); --f2: rgba(255,255,255,.09); --f3: rgba(255,255,255,.14); --hi: #ffffff; --txt: #d4d4d4; --dim: #9d9d9d; --mute: #85858a;
+  --accent: #569cd6; --accent-soft: #22303d; --accent-text: #8fc0ec; --up: #40c057; --down: #ff6b6b;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; --warn: #e0a55f; color-scheme: dark; } }
+:root[data-theme="dark"] { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; --warn: #e0a55f; color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font); font-size: 14px; line-height: 1.55; padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; }
+.wrap > * { min-width: 0; }
+h1 { font-size: 26px; font-weight: 700; margin: 0 0 8px; text-wrap: balance; }
+h2 { font-size: 18px; font-weight: 700; margin: 0 0 4px; text-wrap: balance; }
+p { margin: 0; }
+.dim { color: var(--page-dim); }
+.lead { max-width: 68ch; }
+.sw { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--page-card); border: 1px solid var(--page-line); gap: 2px; }
+.sw button { font: inherit; font-size: 13px; font-weight: 600; border: 0; background: transparent; color: var(--page-dim); padding: 6px 16px; border-radius: 999px; cursor: pointer; min-height: 32px; }
+.sw button[aria-pressed="true"] { background: var(--page-fg); color: var(--page-bg); }
+button:focus-visible { outline: 2px solid var(--tag); outline-offset: 2px; }
+.bar-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin-top: 12px; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+.tbl th, .tbl td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--page-line); vertical-align: top; }
+.tbl th { font-size: 12px; color: var(--page-dim); font-weight: 600; white-space: nowrap; }
+.scroll-x { overflow-x: auto; margin-top: 12px; }
+.tag { color: var(--tag); font-weight: 700; } .warn { color: var(--warn); font-weight: 600; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px 24px; margin-top: 16px; }
+.col { min-width: 0; display: grid; gap: 10px; align-content: start; }
+.cap { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.cap b { font-size: 15px; font-weight: 700; }
+.cap span { font-size: 13px; color: var(--page-dim); }
+.rec { font-size: 11px; font-weight: 700; color: var(--tag); border: 1px solid currentColor; border-radius: 999px; padding: 1px 8px; }
+.list { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; color: var(--page-dim); font-size: 13px; }
+.stage { overflow-x: auto; padding-bottom: 4px; }
+.meas { font-size: 12px; color: var(--page-dim); font-variant-numeric: tabular-nums; }
+.meas b { color: var(--page-fg); }
+
+/* ===== ① 스크롤 갇힘 데모: 페이지 흉내 틀(안쪽에서 휠·터치) ===== */
+.pgfr { height: 400px; overflow-y: auto; border-radius: 18px; background: var(--bg); color: var(--txt); padding: 14px; scrollbar-width: thin; font-size: 13px; }
+.pgfr .blk { height: 96px; border-radius: 14px; background: var(--f1); margin-bottom: 12px; display: grid; place-items: center; color: var(--mute); font-size: 12px; }
+.pgfr .crd { background: var(--panel); border-radius: 18px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; }
+.pgfr .ch { flex: 0 0 38%; min-height: 150px; border-radius: 12px; background: var(--f1); display: grid; place-items: center; color: var(--mute); font-size: 12px; align-self: flex-start; height: 220px; }
+.pgfr .sd { flex: 1; min-width: 0; display: flex; flex-direction: column; border-left: 1px solid var(--f3); padding-left: 12px; }
+.pgfr .sd.fixed { height: 220px; }
+.pgfr .sd.trap { overflow: auto; overscroll-behavior: contain; }
+.pgfr .hd { display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px 8px; }
+.pgfr .hd b { font-size: 13px; color: var(--hi); } .pgfr .hd span { font-size: 11px; color: var(--mute); }
+.pgfr .rw { display: flex; align-items: center; gap: 8px; min-height: 44px; border-bottom: 1px solid var(--f1); font-size: 12px; }
+.pgfr .rw i { font-style: normal; width: 34px; color: var(--mute); font-variant-numeric: tabular-nums; }
+.pgfr .rw s { text-decoration: none; margin-left: auto; font-weight: 700; color: var(--hi); font-variant-numeric: tabular-nums; }
+.pgfr .rw .mk { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+.pgfr .all { margin-top: auto; align-self: flex-end; min-height: 44px; border: 0; background: none; color: var(--dim); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.pgfr .hint { font-size: 11px; color: var(--mute); padding: 6px 2px; }
+
+/* ===== ② AI리포트 폰 ===== */
+.phone { position: relative; width: 360px; flex: none; margin-inline: auto; background: var(--bg); color: var(--txt); border-radius: 28px; border: 1px solid var(--page-line); height: 660px; overflow: hidden; font-size: 13px; }
+.phone .scr { position: absolute; inset: 0 0 56px 0; padding: 16px 16px 0; overflow-y: auto; scrollbar-width: none; }
+.phone .scr::-webkit-scrollbar { display: none; }
+.dock { position: absolute; inset: auto 0 0 0; height: 56px; background: var(--panel); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--mute); }
+.ph-top { display: flex; justify-content: space-between; align-items: center; min-height: 44px; }
+.ph-top b { font-size: 18px; font-weight: 700; color: var(--hi); }
+.ph-top .sub { font-size: 12px; color: var(--dim); display: block; font-weight: 400; margin-top: 1px; }
+.ib { width: 44px; height: 44px; border: 0; background: transparent; color: var(--txt); border-radius: 12px; display: grid; place-items: center; cursor: pointer; }
+.ib svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.pill { display: flex; width: max-content; max-width: 100%; height: 36px; background: var(--f1); border-radius: 999px; margin: 4px 0 10px; }
+.pill button { font: inherit; font-size: 13px; font-weight: 600; border: 0; background: transparent; color: var(--dim); height: 36px; min-width: 72px; padding: 0 16px; border-radius: 999px; }
+.pill button.on { color: var(--hi); background: var(--f3); }
+.view { overflow: hidden; border-radius: 18px; touch-action: pan-y; }
+.strip { display: flex; will-change: transform; align-items: stretch; }
+.sl { flex: none; width: 100%; background: var(--panel); padding: 14px; }
+.sl-h { display: flex; align-items: center; gap: 10px; }
+.lg { width: 32px; height: 32px; border-radius: 50%; background: var(--f3); color: var(--hi); font-size: 11px; font-weight: 700; display: grid; place-items: center; flex: none; }
+.sl-h .nm { flex: 1; min-width: 0; }
+.sl-h .nm b { display: block; font-size: 15px; font-weight: 700; color: var(--hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sl-h .nm i { display: block; font-style: normal; font-size: 12px; color: var(--dim); }
+.chip { display: inline-block; font-size: 11px; font-weight: 600; padding: 0 6px; border-radius: 6px; background: var(--f2); color: var(--dim); margin-left: 6px; vertical-align: 1px; }
+.chip.my { background: rgba(86,156,214,.16); color: var(--accent-text); }
+.op { flex: none; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-text); }
+.hero { margin: 12px 0 4px; position: relative; }
+.hero .big { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.hero .cp { font-size: 12px; color: var(--dim); }
+.up { color: var(--up); } .dn { color: var(--down); }
+.hero svg { display: block; width: 100%; height: 96px; margin-top: 6px; }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin: 12px 0 0; }
+.scale i { height: 6px; border-radius: 3px; background: var(--f2); display: block; }
+.scale i.on { background: var(--accent); }
+.scale-l { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin-top: 4px; font-size: 11px; color: var(--mute); text-align: center; font-style: normal; }
+.scale-l span.on { color: var(--accent-text); font-weight: 600; }
+.scale.big i { height: 28px; border-radius: 8px; }
+.vh { font-size: 12px; color: var(--dim); margin: 12px 0 2px; }
+.verdict { font-size: 13px; line-height: 1.6; color: var(--txt); }
+.more { display: flex; justify-content: flex-end; margin-top: 4px; }
+.more button { min-height: 44px; padding: 0 2px 0 12px; border: 0; background: transparent; font: inherit; font-size: 13px; font-weight: 600; color: var(--accent-text); cursor: pointer; }
+.tl { margin: 14px 0 0; }
+.tl-bar { position: relative; height: 6px; border-radius: 3px; background: var(--f2); }
+.tl-bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: var(--accent); }
+.tl-bar b { position: absolute; top: -3px; width: 12px; height: 12px; border-radius: 50%; background: var(--hi); margin-left: -6px; }
+.tl-l { display: flex; justify-content: space-between; font-size: 11px; color: var(--mute); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.tl-l span:nth-child(2) { color: var(--hi); font-weight: 600; }
+.chipret { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; color: var(--dim); margin-top: 10px; }
+.chipret b { font-variant-numeric: tabular-nums; }
+.dots { position: relative; display: flex; justify-content: center; gap: 14px; height: 44px; align-items: center; margin-top: 4px; }
+.dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: var(--f3); cursor: pointer; position: relative; }
+.dots button::after { content: ""; position: absolute; inset: -18px -7px; }
+.dots .act { position: absolute; left: 0; top: 18px; height: 8px; border-radius: 4px; background: var(--hi); pointer-events: none; will-change: transform, width; }
+.cnt { text-align: center; font-size: 11px; color: var(--mute); margin-top: -4px; }
+.arrows { display: none; }
+/* 와이드 */
+.wide { position: relative; width: 1000px; height: 700px; flex: none; background: var(--bg); color: var(--txt); border: 1px solid var(--page-line); border-radius: 16px; display: grid; grid-template-columns: 90px 430px 1fr; overflow: hidden; font-size: 13px; }
+.wide .rail { background: var(--panel); display: grid; align-content: start; gap: 2px; padding: 12px 6px; font-size: 12px; color: var(--dim); }
+.wide .rail div { height: 44px; border-radius: 12px; display: flex; align-items: center; padding-left: 12px; }
+.wide .rail .on { background: var(--f3); color: var(--hi); }
+.wide .lft { padding: 16px; overflow-y: auto; border-right: 1px solid var(--f1); scrollbar-width: none; position: relative; }
+.wide .rgt { padding: 16px 20px; }
+.wide .arrows { display: flex; justify-content: center; gap: 8px; margin-top: -2px; }
+.skl { height: 10px; border-radius: 5px; background: var(--f2); margin: 10px 0; }
+.sp-card { background: var(--panel); border-radius: 18px; padding: 14px; margin-bottom: 10px; }
+.note { font-size: 12px; color: var(--page-dim); max-width: 64ch; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>시그널 이력 · AI리포트 가안</h1>
+    <p class="lead dim">① 발견 · 마이 › 실시간 현황의 오른쪽 시그널 이력이 스크롤을 붙잡는 문제와 ② 연구 › AI리포트를 슬라이드 피드로 바꾸는 안이에요. ①은 직접 굴려 볼 수 있고, ②는 실제 앱 가격 데이터(2026-08-14 ~ 11-20)로 선을 그렸어요. 보고서 문장은 예시예요.</p>
+  </header>
+
+  <section>
+    <h2>① 시그널 이력이 스크롤을 붙잡는 문제</h2>
+    <p class="dim lead">원인을 직접 확인했어요. 넓은 카드(폭 600 이상)의 오른쪽 이력 칸은 높이가 380px로 고정이고 <code>overflow:auto</code> + <code>overscroll-behavior:contain</code>이에요. 이력이 길어지면 칸 안에서만 굴러가고, 끝에 닿아도 바깥 화면으로 이어지지 않아요.</p>
+    <div class="scroll-x"><table class="tbl">
+      <thead><tr><th>기간</th><th>이력 줄 수</th><th>내용 높이</th><th>칸 높이</th><th>결과</th></tr></thead>
+      <tbody>
+        <tr><td>3개월</td><td>대부분 4~5줄</td><td>380px</td><td>380px</td><td>맞아서 문제 없음</td></tr>
+        <tr><td>6개월 · 1년</td><td>대부분 <b>10줄</b></td><td><b>532px</b></td><td>380px</td><td class="warn">칸이 스크롤됨 → 그 위에서는 화면이 안 내려감</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:8px">(실제 보유 종목 12개로 측정: 6개월 10줄 532px · 8줄 444px. 마우스 휠로도 재현: 칸 위에서 휠을 굴리면 화면은 148px만 내려가고 멈춤.) 그래서 3개월에서는 멀쩡하다가 기간을 바꾸면 갑자기 「앱이 고장난」 것처럼 느껴져요.</p>
+    <div class="bar-row"><span class="meas">아래 세 틀에서 오른쪽 이력 칸 <b>위에 커서(손가락)를 올리고</b> 위아래로 굴려 보세요.</span></div>
+    <div class="cols" style="grid-template-columns: repeat(auto-fit, minmax(290px, 1fr))">
+      <div class="col"><div class="cap"><b>지금</b><span>칸 안 스크롤 + 끝에서도 안 넘어감</span></div><div class="pgfr" id="f0"></div><div class="meas" id="m0"></div></div>
+      <div class="col"><div class="cap"><b>A · 5줄 + 전체 이력</b><span class="rec">추천</span></div><div class="pgfr" id="f1"></div><div class="meas" id="m1"></div></div>
+      <div class="col"><div class="cap"><b>C · 전부 펼침</b><span>칸이 내용만큼 길어짐</span></div><div class="pgfr" id="f2"></div><div class="meas" id="m2"></div></div>
+    </div>
+    <ul class="list">
+      <li><b>A (추천)</b>: 이력 칸에는 최근 5줄만, 나머지는 이미 있는 「전체 이력 N건 ›」(전체 이력 시트)로. 칸 높이가 380px에 항상 맞아서 <b>안쪽 스크롤이 없어요</b>. 차트와 높이도 그대로예요.</li>
+      <li><b>C</b>: 이력을 전부 펼쳐요. 잘림 · 스크롤이 없지만 6개월 · 1년에는 카드가 532px 이상으로 길어지고, 차트 옆이 빈 채로 늘어나요. 카드가 여러 장이면 목록이 많이 길어져요.</li>
+      <li><b>B (권하지 않음)</b>: 안쪽 스크롤을 두고 끝에서 바깥으로 이어지게만 고치기. 칸 한가운데서 시작한 터치는 여전히 칸이 먼저 가져가서 「가끔 먹통」이 남아요.</li>
+      <li>적용 범위: 발견 · 마이 › 실시간 현황 · 연구 › AI리포트 카드가 같은 부품이라 한 번에 바뀌어요(<code>.feed-side</code>).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>② 연구 › AI리포트: 슬라이드 피드 + Pagination dots</h2>
+    <p class="note" style="margin-bottom:8px">아래 폰 화면에서 가격 선 · 수익률은 앱의 실제 가격으로 계산했고, 의견 · 보고서 문장은 예시예요(실제 보고서 의견이 아니에요).</p><p class="dim lead">지금은 종목 카드 8장이 길게 이어지고, 위에 전체 · 보유 · 관심 · 매수의견 알약, 카드마다 세 블록 글(① 쟁점 ② 판정 ③ 동업)과 큰 「보고서 전문 보기」 버튼이 있어요. 아래처럼 바꾸는 안이에요.</p>
+    <ul class="list">
+      <li><b>거르기 알약 없앰.</b> 대신 순서로 해결: 내 보유 → 관심 → 최근 보고서. 슬라이드 위에 작은 꼬리표(보유 · 관심 · 최근)가 붙어요. 검색(돋보기)만 남겨요.</li>
+      <li><b>한 번에 한 장, 3~5장.</b> 옆으로 밀거나(터치) 점을 누르거나 방향키로 넘겨요. 와이드(마우스)에는 ‹ › 버튼도 같이 둬요.</li>
+      <li><b>글은 판정 한 문장만.</b> ① 쟁점 · ③ 동업 문단은 전문 보기로 옮겨요.</li>
+      <li><b>전문 보기는 작은 글자 버튼.</b> 채운 큰 버튼 → 오른쪽 아래 「전문 보기 ›」(44px 터치 영역은 그대로).</li>
+      <li><b>점(Pagination dots)</b>: designbookmark 값 그대로 — 슬라이드 이동 170/22, 알약 앞쪽 가장자리 520/34, 뒤쪽 140/18(앞이 먼저 다음 점으로 뻗고 뒤가 따라와 늘어났다 모임). 8px 점 · 14px 간격 · 알약 20px. 코드는 복사하지 않고 AQMotion 위에 직접 구현해요. 자동 넘김(1.8초)은 읽는 화면이라 <b>끔</b>.</li>
+    </ul>
+
+    <h2 style="margin-top:28px">시각화 요소 후보</h2>
+    <p class="dim lead">새 서버 호출 없이 지금 앱에 이미 있는 값으로 그릴 수 있는지를 기준으로 골랐어요.</p>
+    <div class="scroll-x"><table class="tbl">
+      <thead><tr><th>후보</th><th>보여 주는 것</th><th>쓰는 값(이미 있음)</th><th>평가</th></tr></thead>
+      <tbody>
+        <tr><td><b>V1 보고서 이후 성적표</b></td><td>보고서를 낸 날부터 오늘까지 가격 선 + 수익률 숫자 + 낸 날 기준선</td><td><code>aqReportSinceRet</code> · 종가 시리즈</td><td class="tag">가장 직관적 — 「이 보고서 믿어도 돼?」에 바로 답해요</td></tr>
+        <tr><td><b>V2 의견 눈금</b></td><td>매도 · 비중 축소 · 관망 · 분할 매수 · 적극 매수 5칸 중 지금 의견</td><td>보고서 의견(<code>_analysisActions</code>)</td><td class="tag">작게 항상 넣기 좋음 — 글을 안 읽어도 입장이 보여요</td></tr>
+        <tr><td><b>V3 다시 볼 날</b></td><td>보고서일 ──●(오늘)── 다시 볼 날 진행 막대 + D-day</td><td><code>aqRecheckAll()</code>(보고서가 정한 점검일)</td><td>좋지만 점검일이 없는 보고서가 있어 빈 경우를 설계해야 해요</td></tr>
+        <tr><td>V4 의견 변화 점들</td><td>종목의 과거 보고서마다 의견이 어떻게 바뀌었는지</td><td>과거 보고서 전부 열어 파싱해야 함</td><td class="warn">지금은 비쌈(슬라이드당 보고서 여러 개 호출) — 나중에</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:8px">추천: <b>V1을 크게 + V2를 작게</b>(가안 A). V3 중심 구성은 가안 B로 보여 드려요.</p>
+
+    <div class="bar-row"><div class="sw" id="swV"><button aria-pressed="true" data-v="A">A 성적표 중심 (V1 + V2)</button><button aria-pressed="false" data-v="B">B 눈금 · 다시 볼 날 중심 (V2 + V3)</button></div></div>
+    <div class="cols">
+      <div class="col"><div class="cap"><b id="vCap">A · 성적표 중심</b><span id="vSub">큰 숫자는 보고서 이후 수익률, 선은 낸 날부터 오늘까지예요.</span></div>
+        <div class="stage"><div class="phone"><div class="scr" id="rpScr"></div><div class="dock">하단 메뉴</div></div></div></div>
+      <div class="col" id="vNote"></div>
+    </div>
+
+    <h2 style="margin-top:28px">와이드 (1000×700)</h2>
+    <p class="dim lead">왼쪽은 일반 화면과 똑같은 슬라이드, 「전문 보기 ›」를 누르면 오른쪽에 보고서가 바로 열려요(중간 단계 없음). 마우스에는 ‹ › 버튼이 같이 보여요.</p>
+    <div class="stage" style="margin-top:12px"><div class="wide">
+      <div class="rail"><div>발견</div><div>탐색</div><div>관심</div><div class="on">연구</div><div>AI</div><div>뉴스</div><div>일정</div><div>항해</div><div>마이</div></div>
+      <div class="lft" id="wideL"></div>
+      <div class="rgt"><div class="sp-card"><div class="skl" style="width:50%"></div><div class="skl"></div><div class="skl" style="width:88%"></div><div class="skl" style="width:70%"></div><div class="skl"></div><div class="skl" style="width:80%"></div></div><p class="note">오른쪽은 지금 앱의 보고서 화면을 그대로 써요. 아래 가운데 점과 ‹ › 로 다른 보고서로 넘기면 오른쪽도 같이 바뀌어요.</p></div>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>정할 것</h2>
+    <ul class="list">
+      <li><b>① 시그널 이력</b>: A(5줄 + 전체 이력) / C(전부 펼침). 제 추천은 <span class="tag">A</span>예요. 「잘림 없이 전부」를 원하시면 C로 가되 카드가 길어져요.</li>
+      <li><b>② 슬라이드</b>: A(성적표 중심) / B(눈금 · 다시 볼 날 중심). 제 추천은 <span class="tag">A</span>예요.</li>
+      <li>슬라이드에 ① 쟁점 · ③ 동업 문단을 <b>빼도 될까요</b>? (전문 보기에서는 그대로 있어요)</li>
+      <li>슬라이드 수는 <b>5장</b>(보유 → 관심 → 최근 순으로 채움)으로 할까요? 5장보다 보고서가 적으면 있는 만큼만 보여요.</li>
+      <li>연구 › AI리포트에서 길게 눌러 카드를 뒤집어 차트를 보던 동작은 슬라이드로 바뀌면서 <b>없어져요</b>(발견 · 마이는 그대로). 괜찮을까요?</li>
+    </ul>
+    <p class="note" style="margin-top:12px">확정되면 구현 → <code>tools/ui-test</code> 시험(스크롤 갇힘이 없는지 · 슬라이드 · 점 · 터치 44px) → 버전 +0.01 → 푸시 승인 요청 순서로 가요.</p>
+  </section>
+</div>
+
+<script>
+const SERIES = {"IREN":[["2026-08-14",44.06],["2026-08-17",44.9],["2026-08-18",42],["2026-08-19",42.84],["2026-08-20",42.6],["2026-08-21",41.88],["2026-08-24",39.81],["2026-08-25",42.21],["2026-08-26",39.58],["2026-08-27",40.53],["2026-08-28",35.45],["2026-08-31",37.115],["2026-09-01",36.82],["2026-09-02",39.6],["2026-09-03",41.65],["2026-09-04",44.68],["2026-09-08",46.93],["2026-09-09",45.37],["2026-09-10",43.64],["2026-09-11",43.83],["2026-09-14",43.17],["2026-09-15",41.58],["2026-09-16",42.62],["2026-09-17",43.48],["2026-09-18",46.68],["2026-09-21",47.23],["2026-09-22",48.55],["2026-09-23",47.05],["2026-09-24",46.15],["2026-09-25",44.125],["2026-09-28",41.72],["2026-09-29",41.38],["2026-09-30",40.88],["2026-10-01",40.65],["2026-10-02",41.76],["2026-10-05",40.48],["2026-10-06",41.28],["2026-10-07",38.69],["2026-10-08",35.71],["2026-10-09",35.19],["2026-10-12",34.8],["2026-10-13",34.8],["2026-10-14",30.56],["2026-10-15",30.39],["2026-10-16",26.99],["2026-10-19",27.73],["2026-10-20",26.62],["2026-10-21",27.84],["2026-10-22",25.51],["2026-10-23",24.905],["2026-10-26",25.43],["2026-10-27",27.44],["2026-10-28",28.84],["2026-10-29",26.25],["2026-10-30",23.95],["2026-11-02",22.02],["2026-11-03",24.46],["2026-11-04",21.71],["2026-11-05",18.03],["2026-11-06",21.64],["2026-11-09",21.41],["2026-11-10",19.73],["2026-11-11",20.84],["2026-11-12",19.48],["2026-11-13",18.17],["2026-11-16",16.39],["2026-11-17",15.805],["2026-11-18",15.24],["2026-11-19",14.41],["2026-11-20",11.82]],"SMR":[["2026-08-14",9.39],["2026-08-17",9.19],["2026-08-18",8.64],["2026-08-19",9.29],["2026-08-20",9.07],["2026-08-21",9.4],["2026-08-24",9.05],["2026-08-25",9.81],["2026-08-26",9.27],["2026-08-27",9.74],["2026-08-28",9.29],["2026-08-31",9.27],["2026-09-01",9.21],["2026-09-02",9.56],["2026-09-03",9.75],["2026-09-04",9.7],["2026-09-08",11.18],["2026-09-09",10.81],["2026-09-10",10.21],["2026-09-11",8.61],["2026-09-14",8.51],["2026-09-15",8.43],["2026-09-16",8.3],["2026-09-17",9.04],["2026-09-18",8.27],["2026-09-21",8.79],["2026-09-22",8.89],["2026-09-23",8.68],["2026-09-24",8.47],["2026-09-25",8.42],["2026-09-28",7.91],["2026-09-29",7.76],["2026-09-30",7.9],["2026-10-01",7.79],["2026-10-02",7.75],["2026-10-05",7.68],["2026-10-06",8.02],["2026-10-07",7.67],["2026-10-08",7.32],["2026-10-09",7.2],["2026-10-12",6.7],["2026-10-13",6.49],["2026-10-14",5.83],["2026-10-15",6.15],["2026-10-16",5.83],["2026-10-19",5.69],["2026-10-20",5.58],["2026-10-21",5.5],["2026-10-22",5.38],["2026-10-23",5.38],["2026-10-26",5.27],["2026-10-27",5.7],["2026-10-28",5.67],["2026-10-29",5.92],["2026-10-30",5.62],["2026-11-02",5.35],["2026-11-03",5.37],["2026-11-04",5.13],["2026-11-05",4.37],["2026-11-06",5.08],["2026-11-09",5.44],["2026-11-10",5.22],["2026-11-11",5.23],["2026-11-12",4.82],["2026-11-13",4.66],["2026-11-16",4.27],["2026-11-17",4.09],["2026-11-18",3.91],["2026-11-19",3.81],["2026-11-20",3.36]],"ASTS":[["2026-08-14",70.98],["2026-08-17",71.14],["2026-08-18",67.07],["2026-08-19",66.43],["2026-08-20",65.06],["2026-08-21",68.65],["2026-08-24",62.35],["2026-08-25",62.01],["2026-08-26",59.88],["2026-08-27",61.44],["2026-08-28",58.05],["2026-08-31",59.1],["2026-09-01",55.8],["2026-09-02",62.4],["2026-09-03",62.13],["2026-09-04",62.31],["2026-09-08",66.12],["2026-09-09",62.42],["2026-09-10",59.91],["2026-09-11",59.86],["2026-09-14",60],["2026-09-15",58.77],["2026-09-16",59.27],["2026-09-17",62.71],["2026-09-18",58.52],["2026-09-21",61.89],["2026-09-22",63.69],["2026-09-23",59.98],["2026-09-24",61.06],["2026-09-25",61.81],["2026-09-28",61],["2026-09-29",59.4],["2026-09-30",58.86],["2026-10-01",57.04],["2026-10-02",58.45],["2026-10-05",58.44],["2026-10-06",63.12],["2026-10-07",60.65],["2026-10-08",56.93],["2026-10-09",50.965],["2026-10-12",51.46],["2026-10-13",47.065],["2026-10-14",42.14],["2026-10-15",44.46],["2026-10-16",40.66],["2026-10-19",41.87],["2026-10-20",41.13],["2026-10-21",40.9],["2026-10-22",38.77],["2026-10-23",39.79],["2026-10-26",39.45],["2026-10-27",41.96],["2026-10-28",42.3],["2026-10-29",43.07],["2026-10-30",40.97],["2026-11-02",36.33],["2026-11-03",37.15],["2026-11-04",35.62],["2026-11-05",30.2],["2026-11-06",32.33],["2026-11-09",36.89],["2026-11-10",33.69],["2026-11-11",36.62],["2026-11-12",34.5],["2026-11-13",32.6],["2026-11-16",28.58],["2026-11-17",27.59],["2026-11-18",25.49],["2026-11-19",25.55],["2026-11-20",23.27]],"RDW":[["2026-08-14",13.58],["2026-08-17",13.41],["2026-08-18",12.94],["2026-08-19",12.4],["2026-08-20",11.77],["2026-08-21",12.02],["2026-08-24",11.38],["2026-08-25",11.48],["2026-08-26",11.27],["2026-08-27",11.27],["2026-08-28",10.87],["2026-08-31",10.7],["2026-09-01",10.26],["2026-09-02",10.33],["2026-09-03",10.37],["2026-09-04",10.53],["2026-09-08",11.23],["2026-09-09",10.7],["2026-09-10",10.87],["2026-09-11",10.62],["2026-09-14",10.49],["2026-09-15",10.75],["2026-09-16",10.79],["2026-09-17",11.55],["2026-09-18",10.74],["2026-09-21",11.6],["2026-09-22",11.76],["2026-09-23",11.27],["2026-09-24",11.6],["2026-09-25",11.62],["2026-09-28",11.2],["2026-09-29",10.73],["2026-09-30",10.44],["2026-10-01",10.57],["2026-10-02",10.88],["2026-10-05",10.43],["2026-10-06",10.62],["2026-10-07",10.24],["2026-10-08",9.76],["2026-10-09",9.58],["2026-10-12",9.22],["2026-10-13",9.16],["2026-10-14",8.62],["2026-10-15",8.91],["2026-10-16",8.39],["2026-10-19",8.46],["2026-10-20",8.3],["2026-10-21",8.56],["2026-10-22",8.14],["2026-10-23",8.36],["2026-10-26",8.32],["2026-10-27",8.89],["2026-10-28",9.01],["2026-10-29",9.16],["2026-10-30",8.39],["2026-11-02",7.83],["2026-11-03",8.12],["2026-11-04",7.72],["2026-11-05",6.19],["2026-11-06",7.21],["2026-11-09",8.15],["2026-11-10",8.13],["2026-11-11",8.4],["2026-11-12",8.03],["2026-11-13",7.73],["2026-11-16",7.05],["2026-11-17",6.78],["2026-11-18",6.82],["2026-11-19",6.51],["2026-11-20",5.64]],"LUNR":[["2026-08-14",19.01],["2026-08-17",20.38],["2026-08-18",19.31],["2026-08-19",18.52],["2026-08-20",17.93],["2026-08-21",18.32],["2026-08-24",16.66],["2026-08-25",16.6],["2026-08-26",16.11],["2026-08-27",16.18],["2026-08-28",15.37],["2026-08-31",15.36],["2026-09-01",14.72],["2026-09-02",14.86],["2026-09-03",14.7],["2026-09-04",14.81],["2026-09-08",15.68],["2026-09-09",14.94],["2026-09-10",14.62],["2026-09-11",14.35],["2026-09-14",13.88],["2026-09-15",13.87],["2026-09-16",13.87],["2026-09-17",14.79],["2026-09-18",13.92],["2026-09-21",15.72],["2026-09-22",16.24],["2026-09-23",15.24],["2026-09-24",15.7],["2026-09-25",15.61],["2026-09-28",15.2],["2026-09-29",14.55],["2026-09-30",14.24],["2026-10-01",14.05],["2026-10-02",14.71],["2026-10-05",14.29],["2026-10-06",15.06],["2026-10-07",14.41],["2026-10-08",13.7],["2026-10-09",13.19],["2026-10-12",12.86],["2026-10-13",12.18],["2026-10-14",11.02],["2026-10-15",11.57],["2026-10-16",10.78],["2026-10-19",10.74],["2026-10-20",10.54],["2026-10-21",10.91],["2026-10-22",10.45],["2026-10-23",10.52],["2026-10-26",10.48],["2026-10-27",11.56],["2026-10-28",11.59],["2026-10-29",11.68],["2026-10-30",10.67],["2026-11-02",9.86],["2026-11-03",10.48],["2026-11-04",9.93],["2026-11-05",8.62],["2026-11-06",10.47],["2026-11-09",12.04],["2026-11-10",11.81],["2026-11-11",12.18],["2026-11-12",13.03],["2026-11-13",13],["2026-11-16",11.73],["2026-11-17",11.045],["2026-11-18",10.12],["2026-11-19",9.78],["2026-11-20",8.775]]};
+const $ = id => document.getElementById(id);
+
+/* ===== ① 스크롤 갇힘 데모 ===== */
+(function () {
+  const rows = Array.from({ length: 10 }, (_, i) => ({ d: (11 - Math.floor(i / 3)) + '/' + (28 - i * 2 > 0 ? 28 - i * 2 : 1), r: (i % 3 === 0 ? '-' : '+') + (1 + i * 0.7).toFixed(1) + '%' }));
+  const r = x => '<div class="rw"><i>' + x.d + '</i><span class="mk"></span><span>시그널</span><s>' + x.r + '</s></div>';
+  const side = (cls, body) => '<div class="sd ' + cls + '">' + body + '</div>';
+  const frame = (id, sideHtml) => {
+    $(id).innerHTML = '<div class="blk">위쪽 카드</div><div class="crd"><div class="ch">차트</div>' + sideHtml + '</div><div class="blk">아래 카드 1</div><div class="blk">아래 카드 2</div><div class="blk">아래 카드 3</div><div class="blk">아래 카드 4</div>';
+  };
+  const hd = n => '<div class="hd"><b>시그널 이력</b><span>6개월 · ' + n + '건</span></div>';
+  frame('f0', side('fixed trap', hd(10) + rows.map(r).join('')));
+  frame('f1', side('fixed', hd(10) + rows.slice(0, 5).map(r).join('') + '<button class="all" type="button">전체 이력 10건 ›</button>'));
+  frame('f2', side('', hd(10) + rows.map(r).join('')));
+  [0, 1, 2].forEach(i => {
+    const f = $('f' + i), m = $('m' + i);
+    const upd = () => { const s = f.querySelector('.sd'); m.innerHTML = '화면 스크롤 <b>' + Math.round(f.scrollTop) + '</b> / ' + Math.round(f.scrollHeight - f.clientHeight) + 'px · 이력 칸 스크롤 <b>' + Math.round(s.scrollTop) + '</b>px'; };
+    f.addEventListener('scroll', upd, true); upd();
+  });
+})();
+
+/* ===== ② 슬라이드 ===== */
+const OPS = ['매도', '비중 축소', '관망', '분할 매수', '적극 매수'];
+const DATA = [
+  { tk: 'IREN', nm: '아이렌', lg: '아이', tag: '보유', op: 3, date: '2026-11-03', re: '2026-12-05', v: 'AI 데이터센터에 쓸 전력을 확보하는 속도는 빠르지만 자금 조달 비용이 부담이라, 한 번에 사지 말고 나눠서 사는 편이 안전해요.' },
+  { tk: 'SMR', nm: '뉴스케일 파워', lg: '뉴스', tag: '보유', op: 2, date: '2026-11-05', re: '2026-11-28', v: '소형 원전 수주 기대는 이미 가격에 많이 반영됐어요. 새 계약이 확정되기 전까지는 지켜보는 쪽이 낫다고 봐요.' },
+  { tk: 'ASTS', nm: 'AST 스페이스모바일', lg: 'AST', tag: '관심', op: 4, date: '2026-11-10', re: '2026-12-12', v: '위성이 늘어날수록 통신사 계약이 현실이 되는 구조예요. 발사 일정만 지켜지면 지금 가격은 매력적이라고 판단했어요.' },
+  { tk: 'RDW', nm: '레드와이어', lg: '레드', tag: '최근', op: 3, date: '2026-11-12', re: null, v: '우주 부품 매출은 꾸준히 늘고 있지만 이익이 아직 작아요. 큰 흔들림이 올 때 나눠서 담는 전략이 어울려요.' },
+  { tk: 'LUNR', nm: '인튜이티브 머신스', lg: '인튜', tag: '최근', op: 1, date: '2026-11-14', re: '2026-12-01', v: '달 착륙 성공 여부에 실적이 크게 좌우돼요. 결과가 나오기 전에는 비중을 줄여 두는 편이 안전하다고 봐요.' },
+];
+const dMD = s => Number(s.slice(5, 7)) + '/' + Number(s.slice(8, 10));
+const dayDiff = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
+const TODAY = '2026-11-22';
+function sinceOf(d) {
+  const s = SERIES[d.tk]; let bi = 0; s.forEach((x, i) => { if (x[0] <= d.date) bi = i; });
+  const part = s.slice(bi), base = part[0][1], last = part[part.length - 1][1];
+  return { part, base, ret: (last / base - 1) * 100, days: dayDiff(d.date, TODAY) };
+}
+function lineSvg(part, base) {
+  const W = 300, H = 96, pad = 6, ys = part.map(x => x[1]), lo = Math.min(...ys, base), hi = Math.max(...ys, base);
+  const X = i => pad + (W - 2 * pad) * (part.length === 1 ? 0 : i / (part.length - 1)), Y = v => H - pad - (H - 2 * pad) * (hi === lo ? .5 : (v - lo) / (hi - lo));
+  const up = part[part.length - 1][1] >= base, col = up ? 'var(--up)' : 'var(--down)';
+  const dstr = part.map((x, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(x[1]).toFixed(1)).join(' ');
+  return '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true"><line x1="' + pad + '" x2="' + (W - pad) + '" y1="' + Y(base).toFixed(1) + '" y2="' + Y(base).toFixed(1) + '" stroke="var(--f3)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><path d="' + dstr + '" fill="none" stroke="' + col + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="' + X(0).toFixed(1) + '" cy="' + Y(base).toFixed(1) + '" r="3.5" fill="var(--hi)"/><circle cx="' + X(part.length - 1).toFixed(1) + '" cy="' + Y(part[part.length - 1][1]).toFixed(1) + '" r="3.5" fill="' + col + '"/></svg>';
+}
+const scale = (op, big) => '<div class="scale' + (big ? ' big' : '') + '">' + OPS.map((_, i) => '<i class="' + (i === op ? 'on' : '') + '"></i>').join('') + '</div><div class="scale-l">' + OPS.map((n, i) => '<span class="' + (i === op ? 'on' : '') + '">' + (big || i === op ? n : '') + '</span>').join('') + '</div>';
+function slideHtml(d, v) {
+  const s = sinceOf(d), sign = s.ret >= 0 ? '+' : '', cls = s.ret >= 0 ? 'up' : 'dn';
+  const head = '<div class="sl-h"><span class="lg">' + d.lg + '</span><span class="nm"><b>' + d.nm + '<span class="chip' + (d.tag === '최근' ? '' : ' my') + '">' + d.tag + '</span></b><i>보고서 ' + dMD(d.date) + ' · ' + s.days + '일 전</i></span><span class="op">' + OPS[d.op] + '</span></div>';
+  const verdict = '<div class="vh">최종 판정</div><p class="verdict">' + d.v + '</p><div class="more"><button type="button" data-open="' + d.tk + '">전문 보기 ›</button></div>';
+  if (v === 'A') return '<div class="sl">' + head + '<div class="hero"><div class="big ' + cls + '">' + sign + s.ret.toFixed(1) + '%</div><div class="cp">보고서 낸 뒤 ' + s.days + '일</div>' + lineSvg(s.part, s.base) + '</div>' + scale(d.op, false) + verdict + '</div>';
+  const span = d.re ? dayDiff(d.date, d.re) : 0, pos = d.re ? Math.min(100, Math.max(0, dayDiff(d.date, TODAY) / span * 100)) : 0;
+  const tl = d.re ? '<div class="tl"><div class="tl-bar"><i style="width:' + pos.toFixed(1) + '%"></i><b style="left:' + pos.toFixed(1) + '%"></b></div><div class="tl-l"><span>보고서 ' + dMD(d.date) + '</span><span>오늘</span><span>다시 볼 날 ' + dMD(d.re) + ' · D-' + dayDiff(TODAY, d.re) + '</span></div></div>' : '<div class="tl"><div class="tl-l"><span style="color:var(--mute)">이 보고서는 다시 볼 날이 없어요</span></div></div>';
+  return '<div class="sl">' + head + '<div style="margin-top:14px">' + scale(d.op, true) + '</div>' + tl + '<div class="chipret">보고서 낸 뒤 <b class="' + cls + '">' + sign + s.ret.toFixed(1) + '%</b></div>' + verdict + '</div>';
+}
+
+/* ===== Pagination dots: 슬라이드 170/22 · 알약 앞 520/34 · 뒤 140/18 (designbookmark 값) — AQMotion 대신 시안용 작은 스프링 ===== */
+function Pager(root, v) {
+  const S = (x, k, c) => ({ x, v: 0, t: x, k, c }), step = (s, dt) => { const a = -s.k * (s.x - s.t) - s.c * s.v; s.v += a * dt; s.x += s.v * dt; };
+  root.innerHTML = '<div class="view"><div class="strip">' + DATA.map(d => slideHtml(d, v)).join('') + '</div></div><div class="dots" role="tablist" aria-label="보고서"><span class="act"></span></div><div class="cnt"></div><div class="arrows"><button class="ib" type="button" data-p="-1" aria-label="이전 보고서"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="ib" type="button" data-p="1" aria-label="다음 보고서"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>';
+  const view = root.querySelector('.view'), strip = root.querySelector('.strip'), dots = root.querySelector('.dots'), act = root.querySelector('.act'), cnt = root.querySelector('.cnt');
+  const n = DATA.length, btns = DATA.map((d, i) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', d.nm + ' 보고서'); dots.appendChild(b); b.onclick = () => go(i); return b; });
+  const P = S(0, 170, 22), A = S(0, 520, 34), B = S(0, 520, 34); let cur = 0, ready = false, run = false, drag = null;
+  function go(i, snap) {
+    i = Math.max(0, Math.min(n - 1, i)); const dir = i >= cur ? 1 : -1; cur = i; P.t = i;
+    btns.forEach((b, k) => b.setAttribute('aria-selected', k === i));
+    const b = btns[i], c = b.offsetLeft + b.offsetWidth / 2; A.t = c - 10; B.t = c + 10;
+    if (dir > 0) { A.k = 140; A.c = 18; B.k = 520; B.c = 34; } else { A.k = 520; A.c = 34; B.k = 140; B.c = 18; }
+    cnt.textContent = (i + 1) + ' / ' + n; if (snap) { P.x = P.t; A.x = A.t; B.x = B.t; paint(); } else kick();
+  }
+  function paint() { strip.style.transform = 'translateX(' + (-P.x * 100).toFixed(3) + '%)'; act.style.transform = 'translateX(' + A.x.toFixed(2) + 'px)'; act.style.width = Math.max(8, B.x - A.x).toFixed(2) + 'px'; }
+  function tick(now) { const dt = Math.min((now - tick.l) / 1000, 1 / 30); tick.l = now; for (let k = 0; k < 4; k++) [P, A, B].forEach(s => step(s, dt / 4)); paint(); const rest = [P, A, B].every(s => Math.abs(s.x - s.t) < .002 && Math.abs(s.v) < .01); if (rest && !drag) { run = false; return; } requestAnimationFrame(tick); }
+  function kick() { if (!run) { run = true; tick.l = performance.now(); requestAnimationFrame(tick); } }
+  view.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, p: P.x, t: performance.now(), moved: false, lock: null }; });
+  view.addEventListener('pointermove', e => {
+    if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.lock && Math.hypot(dx, dy) > 8) drag.lock = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    if (drag.lock === 'x') { try { view.setPointerCapture(e.pointerId); } catch (x) {} drag.moved = true; const w = view.clientWidth; P.x = Math.max(-0.15, Math.min(n - 1 + 0.15, drag.p - dx / w)); P.v = 0; paint(); kick(); } else if (drag.lock === 'y') drag = null;
+  });
+  const end = e => { if (!drag) return; const dx = e.clientX - drag.x, dt = Math.max(1, performance.now() - drag.t), vel = dx / dt; const was = drag.moved; drag = null; if (!was) return; let i = cur; if (dx < -40 || vel < -.4) i = cur + 1; else if (dx > 40 || vel > .4) i = cur - 1; go(i); };
+  view.addEventListener('pointerup', end); view.addEventListener('pointercancel', end);
+  root.tabIndex = 0; root.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { go(cur + 1); e.preventDefault(); } if (e.key === 'ArrowLeft') { go(cur - 1); e.preventDefault(); } });
+  root.addEventListener('click', e => { const p = e.target.closest('[data-p]'); if (p) go(cur + Number(p.dataset.p)); });
+  requestAnimationFrame(() => { go(0, true); ready = true; });
+  new ResizeObserver(() => { if (ready) go(cur, true); }).observe(root);
+}
+const SEARCH = '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
+function renderPhone(v) {
+  $('rpScr').innerHTML = '<div class="ph-top"><span><b>AI 리포트</b><span class="sub">내 종목 먼저 · 5개</span></span><button class="ib" type="button" aria-label="종목 검색">' + SEARCH + '</button></div><div class="pill"><button>기업 분석</button><button class="on">AI 리포트</button></div><div id="rpPager"></div>';
+  Pager($('rpPager'), v);
+  $('vCap').textContent = v === 'A' ? 'A · 성적표 중심' : 'B · 눈금 · 다시 볼 날 중심';
+  $('vSub').textContent = v === 'A' ? '큰 숫자는 보고서 이후 수익률, 선은 낸 날부터 오늘까지예요.' : '의견 눈금을 크게, 아래에 보고서일 → 오늘 → 다시 볼 날을 보여요.';
+  $('vNote').innerHTML = v === 'A'
+    ? '<ul class="list"><li>큰 숫자 = 보고서 종가 대비 지금 수익률(<span class="up">오름 초록</span> · <span class="dn">내림 빨강</span>). 점선 = 보고서 낸 날 가격.</li><li>작은 눈금 = 이 보고서의 의견 위치(5칸 중 파란 칸).</li><li>한 문장 판정은 끝까지 다 보여요(말줄임 없음).</li><li>점은 5개. 누르거나 밀면 알약이 다음 점으로 뻗었다가 모여요.</li></ul>'
+    : '<ul class="list"><li>의견 눈금을 크게 — 글을 안 읽어도 입장이 보여요.</li><li>아래 막대 = 보고서를 낸 날에서 점검일까지 얼마나 왔는지. 점검일이 없는 보고서(RDW 슬라이드)는 한 줄 안내로 대체.</li><li>수익률은 작게 한 줄. 선 그림이 없어서 한 장이 더 짧아져요.</li></ul>';
+}
+renderPhone('A');
+document.querySelectorAll('#swV button').forEach(b => b.onclick = () => { document.querySelectorAll('#swV button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderPhone(b.dataset.v); });
+/* 와이드 왼쪽 */
+(function () { $('wideL').innerHTML = '<div class="ph-top"><span><b>AI 리포트</b><span class="sub">내 종목 먼저 · 5개</span></span><button class="ib" type="button" aria-label="종목 검색">' + SEARCH + '</button></div><div class="pill"><button>기업 분석</button><button class="on">AI 리포트</button></div><div id="wPager"></div>'; Pager($('wPager'), 'A'); $('wPager').classList.add('wp'); })();
+</script>

@@ -55,6 +55,7 @@
 | 38-2 | Parallax ticket (카드 뒤집기) | Cards | 종목 카드 길게 눌러 리포트 ↔ 차트 (AI리포트 · 발견 · 마이 › 실시간 현황) | `.fl-stage` · `enhance`(뒤집기 부품) · `_rpFeed` | **v8.83 반영** (스프링 값만 참고 · 코드 복사 안 함) |
 | 39 | Bottom bar | Navigation | 하단 탭 — 9개 전부(아코디언 독 · 좁은 화면) | `#mobileTabBar.aq-dock` · `aqDockSync` | **v8.84 반영** (공통 스프링 숫자만 참고 · 원본 코드는 읽지 못해 복사 안 함) |
 | 39-2 | Sidebar collapse | Navigation | 와이드 왼쪽 세로 메뉴 접기(펼침 90 ↔ 접힘 56) | `.aq-rail-tg` · `--aqR` | **v8.85 반영** (공통 스프링 숫자만 · 원본 코드는 읽지 못해 복사 안 함) |
+| 39-3 | Pagination dots | Navigation | AI리포트 종목 카드 안 슬라이드 3장의 점 | `.rs-dots` · `rsWire` | **v8.89 반영** (공통 스프링 숫자 + 컴포넌트 원본 동작 참고 · 코드 복사 안 함 · 자동 넘김 끔) |
 | 40 | Dynamic menu | Navigation | 종목 상세 ⋯ 메뉴 | — | 3단계 |
 | 41 | Segmented control | Navigation | 고르기 버튼 묶음 | `AQ_SEG` | **2단계** |
 | 42 | Sidebar collapse | Navigation | 데스크톱 옆 메뉴 | — | 안 씀 |

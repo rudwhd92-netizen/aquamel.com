@@ -100,7 +100,7 @@ const prep = async (b, opts, role) => {
   g = await geo('ai', '#aiSubRow'); ok('AI(3개): 글자 폭 알약 · 높이 36', g.fit && g.rh === 36 && g.rw < 300, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
   g = await geo('explore', '.explore-subtabs#exploreSubtabs .xtab-row'); ok('탐색(3개): 글자 폭 알약 · 높이 36 · fit', g.fit && g.rh === 36 && g.rw < 300, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
   ok('탐색(3개): 알약이 고른 탭 자리(안쪽 3)', Math.abs(g.x - g.tl) < 0.6 && Math.abs(g.right - g.tr) < 0.6, JSON.stringify({ x: g.x, tl: g.tl, right: g.right, tr: g.tr }));
-  g = await geo('research', '#rpBar .xtab-row'); ok('AI리포트 거르기(4개): 꽉 채운 줄 · 높이 40', !g.fit && g.rh === 40 && g.rw > 230, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
+  await p.evaluate(() => switchMobileTab('research')); await p.waitForTimeout(700); ok('AI리포트(v8.89): 거르기 알약 줄이 없음(검색 단추만)', await p.evaluate(() => !document.querySelector('#rpBar .xtab-row') && !!document.querySelector('#rpBar .rp-srch')));
   g = await geo('board', '#boardSubtabs .xtab-row'); ok('마이(3개): 글자 폭 알약 · 높이 36', g.fit && g.rh === 36 && g.rw < 300, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
   // 메뉴를 바꿔도(뉴스 2개 ↔ AI 3개 같은 줄) 줄 폭이 따라 바뀜
   g = await geo('news', '#aiSubRow'); const g2 = await geo('ai', '#aiSubRow'); const g3 = await geo('news', '#aiSubRow');

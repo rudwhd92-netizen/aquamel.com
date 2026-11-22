@@ -39,16 +39,16 @@ async function hold(p, sel, ms, dx) {
   let p = await prep(b, { width: 390, height: 844 });
   await p.evaluate(() => { switchMobileTab('research'); setAiSubtab('report'); buildAnalysisGrid(); });
   await p.waitForSelector('#rpFeed .feed-item', { timeout: 15000 }).catch(() => {}); await p.waitForTimeout(1500);
-  const bar = await p.evaluate(() => { const bar = document.getElementById('rpBar'), btns = [...bar.querySelectorAll('.rp-flt .xtab-btn')], s = bar.querySelector('.rp-srch'), r0 = btns[0].getBoundingClientRect(), rs = s.getBoundingClientRect(); const row = bar.querySelector('.rp-flt').getBoundingClientRect(); return { labels: btns.map(x => x.textContent.trim()).join('|'), rowH: Math.round(row.height), sameLine: Math.abs((r0.top + r0.height / 2) - (rs.top + rs.height / 2)) < 6, srchRight: rs.left > row.right - 4, srchH: Math.round(rs.height), ind: !!bar.querySelector('.aq-tp-ind') }; });
-  ok('AI리포트: 위 한 줄 = 전체 · 보유 · 관심 · 매수의견 알약 + 오른쪽 검색', bar.labels === '전체|보유|관심|매수의견' && bar.sameLine && bar.srchRight && bar.ind, JSON.stringify(bar));
-  ok('AI리포트: 알약 높이 40 · 검색 단추 44(터치 영역)', bar.rowH === 40 && bar.srchH === 44);
+  const bar = await p.evaluate(() => { const bar = document.getElementById('rpBar'), s = bar.querySelector('.rp-srch'), rs = s.getBoundingClientRect(); return { flt: bar.querySelectorAll('.rp-flt, [data-rf]').length, sub: (bar.querySelector('.rp-sub') || {}).textContent || '', srchH: Math.round(rs.height), srchW: Math.round(rs.width) }; });
+  ok('AI리포트(v8.89): 전체 · 보유 · 관심 · 매수의견 알약이 없음 · 검색 단추만 남음', bar.flt === 0 && /내 종목 먼저/.test(bar.sub) && bar.srchH === 44 && bar.srchW === 44, JSON.stringify(bar));
   const n = await p.evaluate(() => document.querySelectorAll('#rpFeed .feed-item').length);
   ok('AI리포트: 보고서 있는 종목 4개가 발견과 같은 카드(.feed-item)로 나옴', n === 4, String(n));
   await p.evaluate(() => document.querySelectorAll('#rpFeed .feed-item').forEach(i => i.scrollIntoView())); await p.waitForTimeout(1500);
   await p.evaluate(() => document.querySelector('#rpFeed .feed-item[data-ticker="CL"]').scrollIntoView({ block: 'center' })); await p.waitForTimeout(800);
-  const core = await p.evaluate(() => { const it = document.querySelector('#rpFeed .feed-item[data-ticker="CL"]'), rc = it.querySelector('.fl-front .rc'); const f = it.querySelector('.fl-front'); return { blocks: rc ? rc.querySelectorAll('.rc-b').length : 0, text: rc ? rc.innerText : '', fit: rc ? it.querySelector('.rc-host').scrollHeight <= it.querySelector('.rc-host').clientHeight + 1 && rc.scrollHeight <= f.clientHeight + 1 : false, h: f.clientHeight, sh: rc ? rc.scrollHeight : 0, op: !!(rc && rc.querySelector('.rc-op')) }; });
-  ok('AI리포트: 앞면에 핵심 3블록(① 5단계 · ② 최종 판정 · ③ 6-1)이 순서대로', core.blocks === 3 && /고객은 가격이 아니라/.test(core.text) && /가나다 소프트웨어는 문서를/.test(core.text) && /사람들은 앞으로도 문서를/.test(core.text) && core.text.indexOf('고객은 가격') < core.text.indexOf('가나다 소프트웨어는') && core.text.indexOf('가나다 소프트웨어는') < core.text.indexOf('사람들은 앞으로도'), JSON.stringify({ blocks: core.blocks, op: core.op }));
-  ok('AI리포트: 핵심 3블록이 면 안에 들어감(잘림 없음)', core.fit, `내용 ${core.sh} / 면 ${core.h}`);
+  const core = await p.evaluate(() => { const it = document.querySelector('#rpFeed .feed-item[data-ticker="CL"]'), rs = it.querySelector('.fl-front .rs'); const host = it.querySelector('.rc-host'), f = it.querySelector('.fl-front'); const sl = rs ? [...rs.querySelectorAll('.rs-sl')] : []; const more = rs && rs.querySelector('.rs-more'), mb = more && more.getBoundingClientRect(), mcs = more && getComputedStyle(more); return { n: sl.length, texts: sl.map(x => x.querySelector('p').textContent), labels: sl.map(x => x.querySelector('.rs-lab').textContent.replace(/\s+/g, ' ').trim()), viz: sl.map(x => x.querySelector('.rs-viz').innerHTML.length), dots: rs ? rs.querySelectorAll('.rs-dots button').length : 0, op: !!(rs && rs.querySelector('.rc-op')), fit: !!rs && rs.scrollHeight <= f.clientHeight + 1 && sl.every(x => x.scrollHeight <= x.clientHeight + 1), moreH: mb ? Math.round(mb.height) : 0, moreBg: mcs ? mcs.backgroundColor : '', moreTxt: more ? more.textContent.trim() : '' }; });
+  ok('AI리포트(v8.89): 카드 안 슬라이드 3장(① 쟁점 → ② 판정 → ③ 동업) · 점 3개 · 슬라이드마다 첫 문장만', core.n === 3 && core.dots === 3 && /^① 지금 쟁점의 진실/.test(core.labels[0]) && /^② 최종 판정/.test(core.labels[1]) && /^③ 10년 동업의 진실/.test(core.labels[2]) && core.texts[0] === '고객은 가격이 아니라 바꾸는 수고 때문에 남아요.' && /^가나다 소프트웨어는 문서를 바꾸기 어려운 구독 도구로 해마다 고객을 늘리는 회사예요\.$/.test(core.texts[1]) && /^"?사람들은 앞으로도 문서를/.test(core.texts[2]) && !/이 수고가 유지되는/.test(core.texts[0]), JSON.stringify({ n: core.n, texts: core.texts }));
+  ok('AI리포트(v8.89): ② 슬라이드에 의견 알약 · 슬라이드 안에 들어감(잘림 없음)', core.op && core.fit, JSON.stringify({ op: core.op, fit: core.fit }));
+  ok('AI리포트(v8.89): 전문 보기 = 작은 글자 버튼(바탕 없음 · 터치 높이 44)', core.moreTxt === '전문 보기 ›' && core.moreH >= 44 && /rgba\(0, 0, 0, 0\)|transparent/.test(core.moreBg), JSON.stringify({ h: core.moreH, bg: core.moreBg }));
   const legacy = await p.evaluate(() => { const it = document.querySelector('#rpFeed .feed-item[data-ticker="PLD"]'); const rc = it && it.querySelector('.fl-front .rc'); return rc ? rc.innerText : ''; });
   ok('AI리포트: 옛 양식 보고서는 안내 문구 + 전문 보기(깨지지 않음)', /옛 양식/.test(legacy) && /보고서 전문 보기/.test(legacy), legacy.replace(/\s+/g, ' ').slice(0, 60));
   const noChart = await p.evaluate(() => [...document.querySelectorAll('#rpFeed .feed-item')].map(i => !!(i.querySelector('canvas') && i.querySelector('canvas')._aqChart)));
@@ -74,11 +74,9 @@ async function hold(p, sel, ms, dx) {
   // 평소에는 카드 면 없음 · 누를 때만
   const lift0 = await p.evaluate(sel => getComputedStyle(document.querySelector(sel + ' .fl-stage')).getPropertyValue('--lift').trim(), sel);
   ok('평소에는 배경 카드 면이 없음(발견과 같은 모양)', parseFloat(lift0) === 0, '--lift ' + lift0);
-  // 거르기 · 검색
-  await p.evaluate(() => document.querySelector('#rpBar [data-rf="buy"]').click()); await p.waitForTimeout(1500);
-  const buyN = await p.evaluate(() => ({ n: document.querySelectorAll('#rpFeed .feed-item').length, tks: [...document.querySelectorAll('#rpFeed .feed-item')].map(i => i.dataset.ticker).join(','), act: document.querySelector('#rpBar .rp-flt .xtab-btn.active').textContent.trim() }));
-  ok('매수의견 거르기: 최종 의견이 분할 · 적극 매수인 종목만(옛 양식 제외)', buyN.act === '매수의견' && buyN.n === 3 && !/PLD/.test(buyN.tks), JSON.stringify(buyN));
-  await p.evaluate(() => document.querySelector('#rpBar [data-rf="all"]').click()); await p.waitForTimeout(800);
+  // 순서(알약 없음) · 검색
+  const order = await p.evaluate(() => [...document.querySelectorAll('#rpFeed .feed-item')].map(i => i.dataset.ticker));
+  ok('AI리포트(v8.89): 카드 4장이 그대로 나옴(알약으로 거르지 않음)', order.length === 4, order.join(','));
   await p.evaluate(() => document.querySelector('#rpBar .rp-srch').click()); await p.waitForTimeout(300);
   await p.fill('#rpQi', 'cl'); await p.waitForTimeout(900);
   ok('검색: 입력한 종목만 남음', await p.evaluate(() => [...document.querySelectorAll('#rpFeed .feed-item')].map(i => i.dataset.ticker).join(',')) === 'CL');
