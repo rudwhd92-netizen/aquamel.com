@@ -1,0 +1,339 @@
+<title>일정 메뉴 가안</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 레이아웃: 문제 한 줄 → 실서버 데이터 점검표 → ① 통합캘린더 A·B → ② 실적시즌 A·B → ③ 와이드 1000×700 → 정할 것 */
+:root {
+  --page-bg: #f3f3f1; --page-fg: #1b1c1e; --page-dim: #62646a; --page-line: #dcdcd8; --page-card: #fbfbfa; --tag: #2a6cb0; --warn: #a65a12;
+  --font: 'Noto Sans KR', 'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', sans-serif;
+  /* 앱 토큰(다크) — index.html :root 값 그대로 */
+  --bg: #161618; --panel: #1c1c1f; --f1: rgba(255,255,255,.05); --f2: rgba(255,255,255,.08); --f3: rgba(255,255,255,.14); --hi: #ffffff; --txt: #e8e8e8; --dim: #9d9d9d; --mute: #85858a;
+  --accent: #569cd6; --accent-text: #8fc0ec; --up: #40c057; --down: #ff6b6b; --danger: #f48771;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; --warn: #e0a55f; color-scheme: dark; } }
+:root[data-theme="dark"] { --page-bg: #111113; --page-fg: #ececee; --page-dim: #9a9ca3; --page-line: #2a2b30; --page-card: #18181b; --tag: #8fc0ec; --warn: #e0a55f; color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font); font-size: 14px; line-height: 1.55; padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 44px; }
+.wrap > * { min-width: 0; }
+h1 { font-size: 26px; font-weight: 700; margin: 0 0 8px; text-wrap: balance; }
+h2 { font-size: 18px; font-weight: 700; margin: 0 0 4px; text-wrap: balance; }
+p { margin: 0; }
+.dim { color: var(--page-dim); }
+.lead { max-width: 66ch; }
+.sw { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--page-card); border: 1px solid var(--page-line); gap: 2px; }
+.sw button { font: inherit; font-size: 13px; font-weight: 600; border: 0; background: transparent; color: var(--page-dim); padding: 6px 16px; border-radius: 999px; cursor: pointer; min-height: 32px; }
+.sw button[aria-pressed="true"] { background: var(--page-fg); color: var(--page-bg); }
+button:focus-visible { outline: 2px solid var(--tag); outline-offset: 2px; }
+.bar-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 720px; }
+.tbl th, .tbl td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--page-line); vertical-align: top; }
+.tbl th { font-size: 12px; color: var(--page-dim); font-weight: 600; white-space: nowrap; }
+.scroll-x { overflow-x: auto; margin-top: 12px; }
+.tag { color: var(--tag); font-weight: 700; } .warn { color: var(--warn); font-weight: 600; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 28px 24px; margin-top: 16px; }
+.col { min-width: 0; display: grid; gap: 10px; align-content: start; }
+.cap { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.cap b { font-size: 15px; font-weight: 700; }
+.cap span { font-size: 13px; color: var(--page-dim); }
+.rec { font-size: 11px; font-weight: 700; color: var(--tag); border: 1px solid currentColor; border-radius: 999px; padding: 1px 8px; }
+.list { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; color: var(--page-dim); font-size: 13px; }
+.stage { overflow-x: auto; padding-bottom: 4px; }
+
+/* ===== 앱 화면(앱 토큰·6단 글자 26/18/15/13/12/11) ===== */
+.phone { position: relative; width: 360px; flex: none; margin-inline: auto; background: var(--bg); color: var(--txt); border-radius: 28px; border: 1px solid var(--page-line); height: 640px; overflow: hidden; font-size: 13px; }
+.phone .scr { position: absolute; inset: 0; padding: 16px 16px 0; overflow-y: auto; scrollbar-width: none; }
+.phone .scr::-webkit-scrollbar { display: none; }
+.ph-top { display: flex; justify-content: space-between; align-items: center; height: 32px; margin-bottom: 8px; }
+.ph-top b { font-size: 18px; font-weight: 700; color: var(--hi); }
+.pill { display: flex; width: max-content; max-width: 100%; height: 36px; background: var(--f1); border-radius: 999px; overflow-x: auto; scrollbar-width: none; margin-bottom: 10px; }
+.pill::-webkit-scrollbar { display: none; }
+.pill button { font: inherit; font-size: 13px; font-weight: 600; border: 0; background: transparent; color: var(--dim); height: 36px; min-width: 64px; padding: 0 14px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.pill button.on { color: var(--hi); background: var(--f3); }
+.tog { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 10px; }
+.tog::-webkit-scrollbar { display: none; }
+.tog button { font: inherit; font-size: 12px; font-weight: 600; flex: none; min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--f3); background: transparent; color: var(--dim); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.tog button.on { color: var(--hi); background: var(--f2); }
+.dot { width: 6px; height: 6px; border-radius: 50%; flex: none; display: inline-block; }
+.dot.mac { background: var(--accent); } .dot.ear { background: var(--hi); } .dot.exp { background: var(--mute); } .dot.my { background: transparent; border: 1.5px solid var(--accent-text); width: 7px; height: 7px; } .dot.buy { background: var(--up); } .dot.sell { background: var(--down); }
+.mh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.mh b { font-size: 18px; font-weight: 700; color: var(--hi); }
+.mh span { display: flex; gap: 2px; }
+.ib { font: inherit; width: 44px; height: 44px; border: 0; background: transparent; color: var(--txt); border-radius: 12px; cursor: pointer; font-size: 15px; }
+.ib.tx { width: auto; padding: 0 10px; font-size: 13px; font-weight: 600; }
+.wd { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; color: var(--mute); margin-bottom: 2px; }
+.grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+.cell { font: inherit; height: 44px; border: 0; background: transparent; color: var(--txt); font-size: 13px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 5px; gap: 3px; cursor: pointer; border-radius: 12px; position: relative; }
+.cell.o { color: var(--mute); opacity: .5; }
+.cell.today b { color: var(--accent-text); }
+.cell.sel { background: var(--f3); color: var(--hi); }
+.cell b { font-weight: 500; line-height: 16px; }
+.dots { display: flex; gap: 3px; height: 6px; }
+.day-h { display: flex; align-items: baseline; justify-content: space-between; margin: 14px 0 6px; }
+.day-h b { font-size: 15px; font-weight: 700; color: var(--hi); }
+.day-h span { font-size: 12px; color: var(--dim); }
+.row { display: flex; gap: 10px; align-items: center; min-height: 56px; padding: 6px 0; border-bottom: 1px solid var(--f1); }
+.row .tm { flex: none; width: 46px; font-size: 12px; color: var(--dim); font-variant-numeric: tabular-nums; }
+.row .bd { flex: 1; min-width: 0; }
+.row .bd b { display: block; font-size: 13px; font-weight: 600; color: var(--hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .bd i { display: block; font-style: normal; font-size: 12px; color: var(--dim); }
+.row .rt { flex: none; text-align: right; font-size: 12px; color: var(--dim); font-variant-numeric: tabular-nums; }
+.row .rt b { display: block; font-size: 13px; color: var(--hi); font-weight: 600; }
+.lg { width: 28px; height: 28px; border-radius: 50%; background: var(--f3); color: var(--hi); font-size: 11px; font-weight: 700; display: grid; place-items: center; flex: none; }
+.chip { display: inline-block; font-size: 11px; font-weight: 600; padding: 0 6px; border-radius: 6px; background: var(--f2); color: var(--dim); margin-left: 6px; vertical-align: 1px; }
+.chip.my { color: var(--accent-text); background: rgba(86,156,214,.16); }
+.up { color: var(--up) !important; } .dn { color: var(--down) !important; }
+.sum { background: var(--panel); border-radius: 18px; padding: 14px; margin-bottom: 10px; }
+.sum .t { font-size: 12px; color: var(--dim); }
+.sum .n { font-size: 18px; font-weight: 700; color: var(--hi); margin: 2px 0 8px; }
+.bar { height: 6px; border-radius: 3px; background: var(--f2); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 8px 0 4px; }
+.strip button { font: inherit; min-height: 56px; border: 0; border-radius: 14px; background: var(--f1); color: var(--txt); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.strip button b { font-size: 13px; font-weight: 600; }
+.strip button span { font-size: 11px; color: var(--dim); font-variant-numeric: tabular-nums; }
+.strip button.on { background: var(--f3); color: var(--hi); }
+.strip button.on span { color: var(--txt); }
+.strip button.my span::after { content: ' ·'; color: var(--accent-text); font-weight: 700; }
+.grp { display: flex; justify-content: space-between; font-size: 12px; color: var(--dim); margin: 12px 0 0; padding-bottom: 4px; }
+.mine { background: var(--panel); border-radius: 18px; padding: 4px 14px; margin: 6px 0 4px; }
+.mine .grp { margin-top: 10px; color: var(--accent-text); font-weight: 600; }
+.dh { position: sticky; top: -16px; background: var(--bg); display: flex; justify-content: space-between; align-items: center; min-height: 44px; font-size: 13px; font-weight: 700; color: var(--hi); border: 0; width: 100%; padding: 0; font-family: inherit; cursor: pointer; z-index: 1; }
+.dh span { font-weight: 400; font-size: 12px; color: var(--dim); }
+.hint { font-size: 12px; color: var(--mute); padding: 10px 0 20px; }
+.dock { position: absolute; inset: auto 0 0 0; height: 56px; background: var(--panel); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--mute); border-top: 1px solid var(--f1); }
+/* 와이드 */
+.wide { position: relative; width: 1000px; height: 700px; flex: none; background: var(--bg); color: var(--txt); border: 1px solid var(--page-line); border-radius: 16px; display: grid; grid-template-columns: 90px 430px 1fr; overflow: hidden; font-size: 13px; }
+.wide .rail { background: var(--panel); display: grid; align-content: start; gap: 2px; padding: 12px 6px; font-size: 12px; color: var(--dim); }
+.wide .rail div { height: 44px; border-radius: 12px; display: flex; align-items: center; padding-left: 12px; }
+.wide .rail .on { background: var(--f3); color: var(--hi); }
+.wide .lft { padding: 16px; overflow-y: auto; border-right: 1px solid var(--f1); scrollbar-width: none; }
+.wide .rgt { padding: 16px 20px; overflow: hidden; }
+.sp-h { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.sp-h .lg { width: 40px; height: 40px; font-size: 13px; }
+.sp-h b { font-size: 18px; color: var(--hi); font-weight: 700; display: block; }
+.sp-h i { font-style: normal; font-size: 12px; color: var(--dim); }
+.sp-card { background: var(--panel); border-radius: 18px; padding: 14px; margin-bottom: 10px; }
+.sp-card .k { font-size: 12px; color: var(--dim); margin-bottom: 6px; }
+.kv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.kv b { display: block; font-size: 18px; color: var(--hi); font-weight: 700; font-variant-numeric: tabular-nums; }
+.kv span { font-size: 12px; color: var(--dim); }
+.skl { height: 10px; border-radius: 5px; background: var(--f2); margin: 10px 0; }
+.note { font-size: 12px; color: var(--page-dim); max-width: 64ch; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>일정 메뉴 가안</h1>
+    <p class="lead dim">통합캘린더를 새 일정 데이터(<code>schedule_index.json</code>)로 바꾸고, 실적시즌 탭을 새로 만들어요. 구현 전에 두 가지 방향씩 보여 드려요. 앱 화면은 실제 앱 토큰(#161618 · #1c1c1f · #569cd6)과 실서버 11월 데이터 일부로 그렸어요. 이 화면 안의 숫자는 모두 실서버에서 받아 온 값이에요.</p>
+  </header>
+
+  <section>
+    <h2>먼저, 실서버 데이터를 직접 열어 보고 알게 된 점</h2>
+    <p class="dim lead">브리핑 내용과 실제 값이 다른 곳이 있어서, 화면에 어떻게 반영할지를 같이 적었어요.</p>
+    <div class="scroll-x"><table class="tbl">
+      <thead><tr><th>브리핑</th><th>실제 (2026-11-22 확인)</th><th>화면에서 하는 일</th></tr></thead>
+      <tbody>
+        <tr><td><code>result</code>: beat / miss</td><td>발표 완료 427건 전부 <code>unknown</code>. 예상치가 있는 건 아직 발표 전인 48건뿐이고 <code>surprise_pct</code>도 비어 있어요.</td><td class="warn">「예상 상회·하회」 뱃지는 만들지 않아요. 발표 전엔 <b>예상 EPS</b>, 발표 후엔 <b>실제 EPS와 이전 값</b>을 보여 줘요. 예상치가 채워지면 그때 뱃지를 켜요.</td></tr>
+        <tr><td>날짜는 <code>date_kst</code></td><td>미국 85건은 <code>date_kst</code>·시각이 비어 있고 <code>week_start</code>·<code>weekday</code>만 있어요.</td><td>요일 칸에는 넣고 「시간 미정」으로 묶어요. 달력에는 날짜가 있는 것만 찍어요.</td></tr>
+        <tr><td>한국 종목명 표기</td><td>미국은 <code>name</code>에 한글명이 있어요(<code>name_ko</code>는 전부 비어 있음). 일부는 「J」처럼 코드뿐이에요.</td><td><code>name_ko → name → 앱의 종목명 사전 → 코드</code> 순으로 써요.</td></tr>
+        <tr><td>한글 표준화된 제목</td><td>한국 경제지표 일부가 영어 그대로예요. 예: <i>Consumer Survey Index (CSI) for November 2026</i>, <i>Interest Rates in October 2026</i>.</td><td class="warn">앱에서 임시로 한글로 바꿔 보여 줘요(소비자심리지수·기업경기실사지수·금리 등). 백엔드에서 고쳐 주시면 이 변환은 지워요.</td></tr>
+        <tr><td>한국 실적</td><td>23곳 모두 시각 없음, 값은 매출·영업이익(원). EPS는 비어 있어요.</td><td>한국은 영업이익을 크게, 매출을 작게. 단위는 조·억 원.</td></tr>
+        <tr><td><code>previous</code></td><td>이전 분기인지 전년 동기인지 필드에 안 적혀 있어요.</td><td class="warn">라벨은 「이전」으로만 써요. 기준을 알려 주시면 「전년 동기」 등으로 바꿔요.</td></tr>
+        <tr><td>—</td><td>인덱스 <code>status: partial</code> · 시장 전망치(<code>macro_consensus</code>, <code>earnings_consensus</code>) <i>unavailable</i></td><td>경제지표의 「예상」 칸은 비어 있으면 감춰요. 빈 칸에 「-」를 늘어놓지 않아요.</td></tr>
+      </tbody>
+    </table></div>
+    <ul class="list">
+      <li>[일정] 안에 옛 <b>주간 일정 · AI 비서</b>는 이미 없어요(v8.84에서 탭이 통합캘린더·실적시즌 2개). 지울 것은 없고, 옛 시트(<code>getOneSheet</code>)는 비상 폴백으로만 남겨요.</li>
+      <li>시간은 모두 <b>한국 시간</b>으로 써요. 미국 장 시작 전(BMO) 발표는 한국 시간 전날 밤 22시쯤이라, 달력에서는 한국 날짜로, 실적시즌 요일 칸에서는 시장 현지 거래일로 묶어요. 두 화면이 다른 날을 가리킬 수 있는 이유를 한 줄 안내로 달아요.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>① 통합캘린더</h2>
+    <p class="dim lead">공통: 일정 종류를 점 색으로 구분(경제지표 파랑 · 실적 흰색 · 만기/휴장 회색 · 내 종목 실적은 파란 테두리 · 매수 초록 · 매도 빨강). 새 색은 쓰지 않아요. 보기를 바꾸면 달력 점과 목록이 같이 바뀌어요.</p>
+    <div class="bar-row" style="margin-top:12px"><div class="sw" id="swCal"><button aria-pressed="true" data-v="A">A 달력 먼저</button><button aria-pressed="false" data-v="B">B 다가오는 일정 먼저</button></div></div>
+    <div class="cols">
+      <div class="col"><div class="cap"><b id="calCap">A · 달력 먼저</b><span id="calSub">지금 구조를 그대로 두고 점·목록만 강화해요.</span></div><div class="stage"><div class="phone"><div class="scr" id="calScr"></div><div class="dock">하단 메뉴</div></div></div></div>
+      <div class="col" id="calNote"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>② 실적시즌</h2>
+    <p class="dim lead">공통: 맨 위에 시즌 요약(발표 완료 / 예정 · 내 종목 수), 알약으로 시장(전체·미국·한국)과 보기(전체·내 종목). 줄을 누르면 지금처럼 종목페이지가 열려요.</p>
+    <div class="bar-row" style="margin-top:12px"><div class="sw" id="swEar"><button aria-pressed="true" data-v="A">A 요일 칸</button><button aria-pressed="false" data-v="B">B 한 주 이어 보기</button></div></div>
+    <div class="cols">
+      <div class="col"><div class="cap"><b id="earCap">A · 요일 칸</b><span id="earSub">월~금 다섯 칸에서 하루씩 봐요.</span></div><div class="stage"><div class="phone"><div class="scr" id="earScr"></div><div class="dock">하단 메뉴</div></div></div></div>
+      <div class="col" id="earNote"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>③ 와이드 (1000×700)</h2>
+    <p class="dim lead">지난번 정하신 방식 그대로예요. 왼쪽은 일반 화면과 똑같고, 종목 줄을 누르면 오른쪽에 종목페이지가 바로 열려요. 중간 단계를 새로 두지 않아요. 실적시즌 A 기준이고, 통합캘린더도 같아요(달력은 왼쪽, 오른쪽에 종목페이지).</p>
+    <div class="stage" style="margin-top:12px"><div class="wide">
+      <div class="rail"><div>발견</div><div>탐색</div><div>관심</div><div>연구</div><div>AI</div><div>뉴스</div><div class="on">일정</div><div>항해</div><div>마이</div></div>
+      <div class="lft" id="wideLeft"></div>
+      <div class="rgt">
+        <div class="sp-h"><span class="lg">아날</span><span><b>아날로그 디바이시스</b><i>종목페이지 · 선택한 줄</i></span></div>
+        <div class="sp-card"><div class="k">이번 실적</div><div class="kv"><span><b>3.88</b>예상 EPS</span><span><b>-</b>이전</span><span><b>11/23 22:00</b>발표 한국시간</span></div></div>
+        <div class="sp-card"><div class="skl" style="width:70%"></div><div class="skl"></div><div class="skl" style="width:85%"></div><div class="skl" style="width:55%"></div></div>
+        <p class="note">오른쪽은 지금 앱의 종목페이지를 그대로 써요. 실적 줄을 누를 때마다 같은 자리에서 바뀌어요.</p>
+      </div>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>정할 것</h2>
+    <ul class="list">
+      <li><b>통합캘린더</b>: A(달력 먼저) / B(다가오는 일정 먼저). 제 추천은 <span class="tag">A</span>예요. 지금 쓰는 방식이라 손에 익고, 일정이 달 단위로 나오기 때문이에요. B는 「오늘 뭐 있지」에 강해요.</li>
+      <li><b>실적시즌</b>: A(요일 칸) / B(한 주 이어 보기). 제 추천은 <span class="tag">A</span>예요. 한 주에 실적이 130건 넘게 몰리는 시기(10월 말~11월 초)에도 하루씩 끊어 보면 길이가 감당돼요. B는 내 종목을 맨 위에 모으기 좋지만 길어요.</li>
+      <li>「한국 경제지표 영어 제목」을 앱에서 임시로 한글로 바꿔도 될까요, 아니면 백엔드에서 고치기를 기다릴까요?</li>
+      <li>이전 값 기준(전분기 / 전년 동기)을 백엔드에서 알려 주실 수 있나요?</li>
+    </ul>
+    <p class="note" style="margin-top:12px">확정되면 구현 → 시험(<code>tools/ui-test</code>에 일정 시험 추가) → <code>AQ_PWA_VERSION</code> +0.01 → 푸시 승인 요청 순으로 가요.</p>
+  </section>
+</div>
+
+<script>
+const D = {"w1":[{"t":"A","n":"애질런트","m":"US","d":"2026-11-24","tm":"06:00","s":"AMC","st":"estimated","wd":1,"rm":"eps","eps":[null,1.73,null],"rev":[null,null],"oi":[null]},{"t":"HPE","n":"휴렛 팩커드 엔터프라이즈","m":"US","d":"2026-11-24","tm":"06:00","s":"AMC","st":"estimated","wd":1,"rm":"eps","eps":[null,1.28,null],"rev":[null,null],"oi":[null]},{"t":"J","n":"J","m":"US","d":"2026-11-24","tm":"06:00","s":"AMC","st":"estimated","wd":1,"rm":"eps","eps":[null,2.12,null],"rev":[null,null],"oi":[null]},{"t":"SYM","n":"심보틱","m":"US","d":"2026-11-24","tm":"06:00","s":"AMC","st":"estimated","wd":1,"rm":"eps","eps":[null,0.16,null],"rev":[null,null],"oi":[null]},{"t":"ADI","n":"아날로그 디바이시스","m":"US","d":"2026-11-24","tm":"22:00","s":"BMO","st":"estimated","wd":2,"rm":"eps","eps":[null,3.88,null],"rev":[null,null],"oi":[null]},{"t":"DY","n":"다이콤","m":"US","d":"2026-11-24","tm":"22:00","s":"BMO","st":"estimated","wd":2,"rm":"eps","eps":[null,4.53,null],"rev":[null,null],"oi":[null]},{"t":"MDT","n":"메드트로닉","m":"US","d":"2026-11-24","tm":"22:00","s":"BMO","st":"estimated","wd":2,"rm":"eps","eps":[null,1.33,null],"rev":[null,null],"oi":[null]},{"t":"ADSK","n":"오토데스크","m":"US","d":"2026-11-25","tm":"06:00","s":"AMC","st":"estimated","wd":2,"rm":"eps","eps":[null,3.07,null],"rev":[null,null],"oi":[null]},{"t":"AMBA","n":"암바렐라","m":"US","d":"2026-11-25","tm":"06:00","s":"AMC","st":"estimated","wd":2,"rm":"eps","eps":[null,0.31,null],"rev":[null,null],"oi":[null]},{"t":"DELL","n":"델 테크놀로지스","m":"US","d":"2026-11-25","tm":"06:00","s":"AMC","st":"estimated","wd":2,"rm":"eps","eps":[null,6.55,null],"rev":[null,null],"oi":[null]},{"t":"NTNX","n":"누타닉스","m":"US","d":"2026-11-25","tm":"06:00","s":"AMC","st":"estimated","wd":2,"rm":"eps","eps":[null,0.61,null],"rev":[null,null],"oi":[null]},{"t":"WDAY","n":"워크데이","m":"US","d":"2026-11-25","tm":"06:00","s":"AMC","st":"estimated","wd":2,"rm":"eps","eps":[null,2.74,null],"rev":[null,null],"oi":[null]},{"t":"DE","n":"디어","m":"US","d":"2026-11-25","tm":"22:00","s":"BMO","st":"estimated","wd":3,"rm":"eps","eps":[null,4.06,null],"rev":[null,null],"oi":[null]}],"w0":[{"t":"UNH","n":"유나이티드헬스 그룹","m":"US","d":null,"tm":null,"s":"TIME_TBD","st":"reported","wd":2,"rm":"eps","eps":[4.56,null,6.04],"rev":[112694000000,112032000000],"oi":[6563000000]},{"t":"CVS","n":"CVS 헬스","m":"US","d":"2026-11-04","tm":"22:00","s":"BMO","st":"reported","wd":3,"rm":"eps","eps":[1.68,null,2.31],"rev":[108399000000,106096000000],"oi":[3566000000]},{"t":"CI","n":"시그나","m":"US","d":"2026-11-05","tm":"22:00","s":"BMO","st":"reported","wd":4,"rm":"eps","eps":[5.47,null,6.29],"rev":[73683000000,71668000000],"oi":[2396000000]},{"t":"MPC","n":"마라톤 페트롤리엄","m":"US","d":"2026-11-03","tm":"22:00","s":"BMO","st":"reported","wd":2,"rm":"eps","eps":[26.59,null,17.73],"rev":[56032000000,51994000000],"oi":[10450000000]},{"t":"HUM","n":"휴매나","m":"US","d":"2026-11-06","tm":"22:00","s":"BMO","st":"reported","wd":5,"rm":"eps","eps":[1.33,null,5.73],"rev":[41155000000,40867000000],"oi":[75000000]},{"t":"PGR","n":"프로그레시브","m":"US","d":null,"tm":null,"s":"TIME_TBD","st":"reported","wd":1,"rm":"eps","eps":[4.37,null,5.67],"rev":[23192000000,23609000000],"oi":[null]},{"t":"SMCI","n":"슈퍼마이크로 컴퓨터","m":"US","d":"2026-11-04","tm":"06:00","s":"AMC","st":"reported","wd":2,"rm":"eps","eps":[1.75,null,null],"rev":[19945832000,null],"oi":[2064493000]},{"t":"COP","n":"코노코필립스","m":"US","d":"2026-11-05","tm":"22:00","s":"BMO","st":"reported","wd":4,"rm":"eps","eps":[3.34,null,3.23],"rev":[17201000000,18088000000],"oi":[null]},{"t":"PFE","n":"화이자","m":"US","d":"2026-11-03","tm":"22:00","s":"BMO","st":"reported","wd":2,"rm":"eps","eps":[0.56,null,-0.04],"rev":[16583000000,15034000000],"oi":[null]},{"t":"CHTR","n":"차터 커뮤니케이션스","m":"US","d":"2026-11-06","tm":"22:00","s":"BMO","st":"reported","wd":5,"rm":"eps","eps":[-20.5,null,10.66],"rev":[14922000000,13526000000],"oi":[-3526000000]}],"kr":[{"t":"000270","n":"기아","m":"KR","d":"2026-11-16","tm":null,"s":"TIME_TBD","st":"reported","wd":1,"rm":"operating_income","eps":[null,null,null],"rev":[31597447000000,null],"oi":[1818286000000]},{"t":"000660","n":"SK하이닉스","m":"KR","d":"2026-11-16","tm":null,"s":"TIME_TBD","st":"reported","wd":1,"rm":"operating_income","eps":[null,null,null],"rev":[104615483000000,null],"oi":[83333818000000]},{"t":"005380","n":"현대차","m":"KR","d":"2026-11-16","tm":null,"s":"TIME_TBD","st":"reported","wd":1,"rm":"operating_income","eps":[null,null,null],"rev":[45110247000000,null],"oi":[2677232000000]},{"t":"005930","n":"삼성전자","m":"KR","d":"2026-11-16","tm":null,"s":"TIME_TBD","st":"reported","wd":1,"rm":"operating_income","eps":[null,null,null],"rev":[195253209000000,null],"oi":[107440482000000]},{"t":"009150","n":"삼성전기","m":"KR","d":"2026-11-16","tm":null,"s":"TIME_TBD","st":"reported","wd":1,"rm":"operating_income","eps":[null,null,null],"rev":[3763277979377,null],"oi":[690956897032]}],"cal":[{"k":"macro","t":"미국 구인·이직(JOLTS)","d":"2026-11-04","tm":"00:00","m":"US","s":"INTRADAY"},{"k":"macro","t":"Balance of Payments in September 2026 (preliminary)","d":"2026-11-05","tm":"08:00","m":"KR","s":"INTRADAY"},{"k":"macro","t":"미국 비농업 고용지표","d":"2026-11-06","tm":"22:30","m":"US","s":"INTRADAY"},{"k":"macro","t":"미국 소비자물가(CPI)","d":"2026-11-10","tm":"22:30","m":"US","s":"INTRADAY"},{"k":"expiry","t":"한국 코스피200 월간 옵션 만기","d":"2026-11-12","tm":null,"m":"KR","s":"TIME_TBD"},{"k":"macro","t":"미국 생산자물가(PPI)","d":"2026-11-13","tm":"22:30","m":"US","s":"INTRADAY"},{"k":"filing","t":"13F 제출 마감","d":"2026-11-17","tm":"07:30","m":"US","s":"AMC"},{"k":"expiry","t":"미국 월간 옵션 만기","d":"2026-11-20","tm":null,"m":"US","s":"TIME_TBD"},{"k":"macro","t":"Producer Price Indexes in October 2026 (preliminary)","d":"2026-11-20","tm":"06:00","m":"KR","s":"INTRADAY"},{"k":"macro","t":"Consumer Survey Index (CSI) for November 2026","d":"2026-11-24","tm":"06:00","m":"KR","s":"INTRADAY"},{"k":"macro","t":"Business Survey Index (BSI) and Economic Sentiment Index (ESI) for November 2026","d":"2026-11-25","tm":"06:00","m":"KR","s":"INTRADAY"},{"k":"macro","t":"Interest Rates in October 2026","d":"2026-11-25","tm":"12:00","m":"KR","s":"INTRADAY"},{"k":"macro","t":"미국 3분기 GDP (잠정)","d":"2026-11-25","tm":"22:30","m":"US","s":"INTRADAY"},{"k":"macro","t":"미국 개인소비지출(PCE)","d":"2026-11-25","tm":"22:30","m":"US","s":"INTRADAY"},{"k":"macro","t":"한국은행 금융통화위원회","d":"2026-11-26","tm":null,"m":"KR","s":"TIME_TBD"},{"k":"market_holiday","t":"미국 증시 휴장","d":"2026-11-26","tm":null,"m":"US","s":"TIME_TBD"},{"k":"early_close","t":"미국 증시 조기폐장","d":"2026-11-27","tm":"03:00","m":"US","s":"INTRADAY"}],"cnt":{"2026-11-02":[125,0],"2026-11-09":[18,7],"2026-11-16":[3,16],"2026-11-23":[13,0],"2026-11-30":[18,0]}};
+const $ = s => document.querySelector(s);
+const MY = new Set(['HPE', 'ADI', 'UNH']);               // 시안용 '내 종목' 예시
+const SESS = { BMO: '장 시작 전', AMC: '장 마감 후', INTRADAY: '장중', TIME_TBD: '시간 미정' };
+const WD = ['월', '화', '수', '목', '금'];
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const ini = n => esc(String(n).replace(/[^가-힣A-Za-z]/g, '').slice(0, 2));
+function money(v, cur) {
+  if (v == null) return '';
+  const a = Math.abs(v), s = v < 0 ? '-' : '';
+  if (cur === 'KRW') return a >= 1e12 ? s + (a / 1e12).toFixed(1) + '조 원' : s + Math.round(a / 1e8).toLocaleString('ko-KR') + '억 원';
+  return a >= 1e8 ? s + Math.round(a / 1e8).toLocaleString('ko-KR') + '억 달러' : s + Math.round(a / 1e4).toLocaleString('ko-KR') + '만 달러';
+}
+const KO = { 'Balance of Payments in September 2026 (preliminary)': '한국 9월 국제수지(잠정)', 'Producer Price Indexes in October 2026 (preliminary)': '한국 10월 생산자물가(잠정)', 'Consumer Survey Index (CSI) for November 2026': '한국 11월 소비자심리지수', 'Business Survey Index (BSI) and Economic Sentiment Index (ESI) for November 2026': '한국 11월 기업경기실사지수·경제심리지수', 'Interest Rates in October 2026': '한국 10월 금리 동향' };
+const kcal = x => ({ title: KO[x.t] || x.t, tm: x.tm, cls: x.k === 'macro' ? 'mac' : 'exp', who: x.m === 'KR' ? '한국' : '미국', tbd: !x.tm });
+
+/* ---- 통합캘린더 ---- */
+const calEv = {};
+D.cal.forEach(x => { (calEv[x.d] = calEv[x.d] || []).push(Object.assign(kcal(x), { d: x.d })); });
+D.w1.concat(D.w0).forEach(x => { if (!x.d) return; (calEv[x.d] = calEv[x.d] || []).push({ title: x.n + ' 실적', tm: x.tm, cls: 'ear', who: SESS[x.s], my: MY.has(x.t), d: x.d, tbd: false }); });
+Object.values(calEv).forEach(a => a.sort((p, q) => (p.tm || '99') < (q.tm || '99') ? -1 : 1));
+const cal = { v: 'A', sel: '2026-11-25', f: { mac: 1, ear: 1, exp: 1 } };
+const dstr = d => '2026-11-' + String(d).padStart(2, '0');
+const wk = d => ['일', '월', '화', '수', '목', '금', '토'][new Date(dstr(d) + 'T00:00:00').getDay()];
+function evRow(e) {
+  return '<div class="row"><span class="tm">' + (e.tm || '시간 미정').replace('시간 미정', '종일') + '</span><span class="dot ' + e.cls + (e.my ? ' my' : '') + '"></span><span class="bd"><b>' + esc(e.title) + (e.my ? '<span class="chip my">내 종목</span>' : '') + '</b><i>' + esc(e.who) + '</i></span></div>';
+}
+function filtered(d) { return (calEv[dstr(d)] || []).filter(e => cal.f[e.cls]); }
+function togRow() {
+  const t = [['mac', '경제지표'], ['ear', '실적'], ['exp', '만기·휴장']];
+  return '<div class="tog">' + t.map(([k, n]) => '<button class="' + (cal.f[k] ? 'on' : '') + '" data-f="' + k + '"><span class="dot ' + k + '"></span>' + n + '</button>').join('') + '</div>';
+}
+function monthGrid() {
+  let h = '<div class="mh"><b>2026년 11월</b><span><button class="ib">‹</button><button class="ib tx">오늘</button><button class="ib">›</button></span></div><div class="wd">' + ['월', '화', '수', '목', '금', '토', '일'].map(x => '<span>' + x + '</span>').join('') + '</div><div class="grid">';
+  for (let i = 0; i < 6; i++) h += '<span class="cell o"><b>' + (26 + i) + '</b></span>';   // 10/26~31 → 월요일 시작(11/1=일)
+  for (let d = 1; d <= 30; d++) {
+    const ev = filtered(d), kinds = [...new Set(ev.map(e => e.cls + (e.my ? ' my' : '')))].slice(0, 3);
+    h += '<button class="cell' + (d === 22 ? ' today' : '') + (dstr(d) === cal.sel ? ' sel' : '') + '" data-d="' + d + '"><b>' + d + '</b><span class="dots">' + kinds.map(k => '<span class="dot ' + k + '"></span>').join('') + '</span></button>';
+  }
+  return h + '</div>';
+}
+function dayList(ds) {
+  const d = +ds.slice(8), ev = filtered(d);
+  return '<div class="day-h"><b>' + d + '일 (' + wk(d) + ')</b><span>' + ev.length + '건 · 한국 시간</span></div>' + (ev.length ? ev.map(evRow).join('') : '<div class="hint">이 날은 일정이 없어요.</div>');
+}
+function agenda() {
+  let h = '';
+  [22, 23, 24, 25, 26, 27].forEach(d => {
+    const ev = filtered(d); if (!ev.length) return;
+    h += '<div class="day-h"><b>' + (d === 22 ? '오늘' : d === 23 ? '내일' : d + '일 (' + wk(d) + ')') + '</b><span>' + ev.length + '건</span></div>' + ev.slice(0, d === 22 ? 6 : 4).map(evRow).join('') + (ev.length > 4 ? '<div class="hint" style="padding:6px 0">+' + (ev.length - 4) + '건 더 보기 ›</div>' : '');
+  });
+  return h;
+}
+function weekStrip() {
+  return '<div class="wd" style="margin-top:8px">' + ['월', '화', '수', '목', '금', '토', '일'].map(x => '<span>' + x + '</span>').join('') + '</div><div class="grid">' + [23, 24, 25, 26, 27, 28, 29].map(d => '<button class="cell' + (dstr(d) === cal.sel ? ' sel' : '') + '" data-d="' + d + '"><b>' + d + '</b><span class="dots">' + [...new Set(filtered(d).map(e => e.cls))].slice(0, 3).map(k => '<span class="dot ' + k + '"></span>').join('') + '</span></button>').join('') + '</div>';
+}
+function renderCal() {
+  const s = $('#calScr'), top = s.scrollTop;
+  if (cal.v === 'A') s.innerHTML = '<div class="ph-top"><b>일정</b></div><div class="pill"><button class="on">통합캘린더</button><button>실적시즌</button></div>' + togRow() + monthGrid() + dayList(cal.sel) + '<div class="hint">토스를 연결하면 내 매수·매도와 보유 종목 실적도 함께 보여요 ›</div>';
+  else s.innerHTML = '<div class="ph-top"><b>일정</b></div><div class="pill"><button class="on">통합캘린더</button><button>실적시즌</button></div>' + togRow() + '<div class="mh"><b>다가오는 일정</b><span><button class="ib tx">달력 펼치기 ⌄</button></span></div>' + weekStrip() + agenda() + '<div class="hint">토스를 연결하면 내 매수·매도와 보유 종목 실적도 함께 보여요 ›</div>';
+  s.scrollTop = top;
+  $('#calCap').textContent = cal.v === 'A' ? 'A · 달력 먼저' : 'B · 다가오는 일정 먼저';
+  $('#calSub').textContent = cal.v === 'A' ? '지금 구조를 그대로 두고 점·목록만 강화해요.' : '맨 위에 이번 주 줄 하나, 아래에 날짜별 일정을 이어 보여요.';
+  $('#calNote').innerHTML = cal.v === 'A'
+    ? '<ul class="list"><li>달력 한 달 + 고른 날의 목록. 지금 구조와 같아서 새로 익힐 게 없어요.</li><li>필터 6개 → <b>3개</b>(경제지표 · 실적 · 만기·휴장). 내 종목·매매 필터는 「내 일정」으로 합치는 것까지 이어서 정리해요.</li><li>목록은 한국 시간순. 시각이 없는 것(옵션 만기, 휴장, 금통위)은 「종일」로 맨 아래.</li><li>내 종목 실적에는 「내 종목」 표시. 줄을 누르면 종목페이지.</li><li>달력 칸 점은 최대 3개, 종류별로 하나씩만 찍어서 한눈에 종류를 봐요.</li></ul>'
+    : '<ul class="list"><li>들어오면 바로 오늘부터의 일정이 시간순으로 이어져요. 달력은 한 줄(이번 주)만 보이고, 필요할 때만 「달력 펼치기」.</li><li>날짜 칸을 누르면 그 날짜 위치로 스크롤해요.</li><li>「오늘 뭐 있지」에는 빠르지만, 먼 달을 훑으려면 한 번 더 눌러야 해요.</li></ul>';
+}
+document.addEventListener('click', e => {
+  const f = e.target.closest('[data-f]'); if (f) { cal.f[f.dataset.f] = cal.f[f.dataset.f] ? 0 : 1; renderCal(); }
+  const c = e.target.closest('#calScr [data-d]'); if (c) { cal.sel = dstr(c.dataset.d); renderCal(); }
+});
+document.querySelectorAll('#swCal button').forEach(b => b.onclick = () => { cal.v = b.dataset.v; document.querySelectorAll('#swCal button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderCal(); });
+
+/* ---- 실적시즌 ---- */
+const earnRows = [
+  ...D.w1.map(x => Object.assign({}, x, { day: x.wd })),
+  ...D.w0.map(x => Object.assign({}, x, { day: x.wd })),
+];
+D.w1.concat(D.w0).forEach(x => { x.day = x.wd; });
+const ear = { v: 'A', day: 2, mk: '전체', mine: false, wkOff: 0 };
+function curW() { return ear.wkOff === 0 ? D.w1 : D.w0; }
+function earRow(x) {
+  const my = MY.has(x.t), kr = x.m === 'KR';
+  let rt = '';
+  if (x.st === 'estimated') rt = x.eps && x.eps[1] != null ? '<b>' + x.eps[1] + '</b>예상 EPS' : '<b>-</b>예상 없음';
+  else if (kr) rt = '<b>' + money(x.oi && x.oi[0], 'KRW') + '</b>영업이익';
+  else rt = '<b>' + (x.eps[0] != null ? x.eps[0] : '-') + '</b>EPS' + (x.eps[2] != null ? ' · 이전 ' + x.eps[2] : '');
+  const sub = x.st === 'estimated' ? (x.tm ? '한국시간 ' + x.tm : '시간 미정') : (kr ? '매출 ' + money(x.rev && x.rev[0], 'KRW') : '매출 ' + money(x.rev && x.rev[0]) + (x.tm ? ' · ' + x.tm : ''));
+  return '<div class="row"><span class="lg">' + ini(x.n) + '</span><span class="bd"><b>' + esc(x.n) + (my ? '<span class="chip my">내 종목</span>' : '') + (kr ? '<span class="chip">한국</span>' : '') + '</b><i>' + sub + '</i></span><span class="rt">' + rt + '</span></div>';
+}
+function earSummary() {
+  return '<div class="sum"><div class="t">2026년 3분기 실적시즌</div><div class="n">발표 427 / 예정 49 · 내 종목 3</div><div class="bar"><i style="width:' + Math.round(427 / 476 * 100) + '%"></i></div></div>' +
+    '<div class="pill">' + ['전체', '미국', '한국'].map(m => '<button data-m="' + m + '" class="' + (ear.mk === m ? 'on' : '') + '">' + m + '</button>').join('') + '</div>' +
+    '<div class="tog"><button data-mine="1" class="' + (ear.mine ? 'on' : '') + '"><span class="dot my"></span>내 종목만</button></div>';
+}
+function earGroups(rows) {
+  const g = {};
+  rows.forEach(r => { const k = r.s; (g[k] = g[k] || []).push(r); });
+  return ['BMO', 'INTRADAY', 'AMC', 'TIME_TBD'].filter(k => g[k]).map(k => '<div class="grp"><span>' + SESS[k] + '</span><span>' + g[k].length + '곳</span></div>' + g[k].map(earRow).join('')).join('');
+}
+function earFilter(rows) { return rows.filter(r => (ear.mk === '전체' || (ear.mk === '미국') === (r.m === 'US')) && (!ear.mine || MY.has(r.t))); }
+function renderEar() {
+  const s = $('#earScr'), top = s.scrollTop, w = curW();
+  let h = '<div class="ph-top"><b>일정</b></div><div class="pill"><button>통합캘린더</button><button class="on">실적시즌</button></div>' + earSummary();
+  h += '<div class="mh"><b>' + (ear.wkOff === 0 ? '11/23 ~ 11/27' : '11/2 ~ 11/6') + '</b><span><button class="ib" data-wk="1">‹</button><button class="ib tx" data-wk="0">이번 주</button><button class="ib" data-wk="0">›</button></span></div>';
+  const rows = earFilter(w);
+  if (ear.v === 'A') {
+    h += '<div class="strip">' + [1, 2, 3, 4, 5].map(d => { const n = earFilter(w).filter(r => r.day === d).length; return '<button data-day="' + d + '" class="' + (ear.day === d ? 'on' : '') + (earFilter(w).some(r => r.day === d && MY.has(r.t)) ? ' my' : '') + '"><b>' + WD[d - 1] + '</b><span>' + n + '곳</span></button>'; }).join('') + '</div>';
+    h += earGroups(rows.filter(r => r.day === ear.day)) || '<div class="hint">이 날은 발표가 없어요.</div>';
+    h += '<div class="hint">미국 거래일 기준이에요. 한국 시간으로는 하루 앞서 나올 수 있어요.</div>';
+  } else {
+    const my = rows.filter(r => MY.has(r.t));
+    if (my.length) h += '<div class="mine"><div class="grp"><span>이 주 내 종목</span><span>' + my.length + '곳</span></div>' + my.map(earRow).join('') + '</div>';
+    [1, 2, 3, 4, 5].forEach(d => {
+      const rr = rows.filter(r => r.day === d); if (!rr.length) return;
+      h += '<button class="dh" data-day="' + d + '">' + WD[d - 1] + '요일<span>' + rr.length + '곳 ⌄</span></button>' + (ear.open && ear.open[d] === false ? '' : earGroups(rr));
+    });
+    h += '<div class="hint">미국 거래일 기준이에요. 한국 시간으로는 하루 앞서 나올 수 있어요.</div>';
+  }
+  s.innerHTML = h; s.scrollTop = top;
+  $('#earCap').textContent = ear.v === 'A' ? 'A · 요일 칸' : 'B · 한 주 이어 보기';
+  $('#earSub').textContent = ear.v === 'A' ? '월~금 다섯 칸에서 하루씩 봐요.' : '요일 머리글을 달고 한 주를 이어서 내려 봐요.';
+  $('#earNote').innerHTML = ear.v === 'A'
+    ? '<ul class="list"><li>요일 칸에는 건수와, 내 종목이 있는 날은 파란 점. 한 번에 하루만 보여서 130건 넘는 주에도 길지 않아요.</li><li>하루 안에서는 장 시작 전 → 장중 → 장 마감 후 → 시간 미정 순서로 묶어요. 한국 시간 표시.</li><li>발표 전: 예상 EPS. 발표 후: 실제 EPS · 이전 · 매출. 한국은 영업이익 · 매출(조·억 원).</li><li>예상 상회·하회 뱃지는 데이터가 채워질 때까지 만들지 않아요.</li><li>알약 「전체·미국·한국」과 「내 종목만」은 모든 요일에 같이 적용돼요.</li></ul>'
+    : '<ul class="list"><li>맨 위에 「이 주 내 종목」을 따로 모아서 가장 중요한 것부터 봐요.</li><li>요일 머리글(월~금)이 위에 붙어 따라와요. 머리글을 누르면 그 날을 접어요.</li><li>한 번의 스크롤로 한 주 전체를 훑을 수 있지만, 10월 말~11월 초 같은 주는 매우 길어요.</li></ul>';
+}
+document.addEventListener('click', e => {
+  const m = e.target.closest('#earScr [data-m]'); if (m) { ear.mk = m.dataset.m; renderEar(); renderWide(); }
+  const mi = e.target.closest('#earScr [data-mine]'); if (mi) { ear.mine = !ear.mine; renderEar(); }
+  const d = e.target.closest('#earScr [data-day]'); if (d) { const n = +d.dataset.day; if (ear.v === 'A') ear.day = n; else { ear.open = ear.open || {}; ear.open[n] = ear.open[n] === false; } renderEar(); }
+  const wkb = e.target.closest('#earScr [data-wk]'); if (wkb) { ear.wkOff = +wkb.dataset.wk; renderEar(); }
+});
+document.querySelectorAll('#swEar button').forEach(b => b.onclick = () => { ear.v = b.dataset.v; document.querySelectorAll('#swEar button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderEar(); });
+
+function renderWide() {
+  const w = D.w1, rows = w.filter(r => r.day === 2);
+  $('#wideLeft').innerHTML = '<div class="pill"><button>통합캘린더</button><button class="on">실적시즌</button></div>' + earSummary().replace(/data-m=/g, 'data-x=').replace(/data-mine=/g, 'data-y=') +
+    '<div class="mh"><b>11/23 ~ 11/27</b></div><div class="strip">' + [1, 2, 3, 4, 5].map(d => '<button class="' + (d === 2 ? 'on' : '') + '"><b>' + WD[d - 1] + '</b><span>' + w.filter(r => r.day === d).length + '곳</span></button>').join('') + '</div>' + earGroups(rows);
+}
+renderCal(); renderEar(); renderWide();
+</script>
