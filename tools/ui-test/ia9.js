@@ -88,6 +88,18 @@ const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'sche
     const w = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), br = bar.getBoundingClientRect(); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); return { wide: document.documentElement.classList.contains('aq-wide'), dock: bar.classList.contains('aq-dock'), n: bt.length, order: bt.slice(0, 9).map(x => x.getAttribute('aria-label')), fit: bar.scrollHeight <= bar.clientHeight + 1, last: Math.round(bt[bt.length - 1].getBoundingClientRect().bottom), vh: innerHeight, h: Math.round(bt[0].getBoundingClientRect().height) }; });
     ok('와이드: 세로 메뉴(독 아님) · 9개 + 관리자 3개 = 12칸이 스크롤 없이 700 안에', w.wide && !w.dock && w.n === 12 && w.fit && w.last <= w.vh, JSON.stringify(w));
     ok('와이드: 순서 = 발견 · 탐색 · 관심 · 연구 · AI · 뉴스 · 일정 · 항해 · 마이', JSON.stringify(w.order) === JSON.stringify(MENUS), JSON.stringify(w.order));
+    // v8.85 왼쪽 메뉴 접기 — 펼침 90 ↔ 접힘 56 · 아이콘 자리 그대로 · 오른쪽 열림 칸이 따라 넓어짐 · 접힘 기억
+    const rail = () => p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), br = bar.getBoundingClientRect(), bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); const ic = bt[0].querySelector('.mtab-icon').getBoundingClientRect(), lb = bt[0].querySelector('.mtab-label'); const lr = lb.getBoundingClientRect(); return { w: Math.round(br.width), ic: Math.round(ic.left - br.left), lab: +parseFloat(getComputedStyle(lb).opacity).toFixed(2), labIn: lr.right <= br.right + 0.5, n: bt.length, h: Math.round(bt[0].getBoundingClientRect().height), last: Math.round(bt[bt.length - 1].getBoundingClientRect().bottom), col: Math.round(document.querySelector('.container').getBoundingClientRect().left), after: parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--aqL')) || null, aqR: getComputedStyle(document.documentElement).getPropertyValue('--aqR').trim(), tg: !!bar.querySelector(':scope > .aq-rail-tg') }; });
+    const settle = async () => { let r = null; for (let i = 0; i < 12; i++) { await p.waitForTimeout(250); const n = await rail(); if (r && n.w === r.w && n.lab === r.lab) return n; r = n; } return r; };
+    let r0 = await rail(); ok('와이드: 펼친 왼쪽 메뉴 90px · 아이콘 옆 두 글자(칸 높이 44) · 12칸이 700 안에', r0.tg && r0.w === 90 && r0.lab === 1 && r0.labIn && r0.h === 44 && r0.n === 12 && r0.last <= 700, JSON.stringify(r0));
+    await p.click('.aq-rail-tg'); const r1 = await settle();
+    ok('접기: 56px · 글자 숨김 · 아이콘 자리 그대로 · 폰 화면 칸이 같이 왼쪽으로', r1.w === 56 && r1.lab === 0 && Math.abs(r1.ic - r0.ic) <= 1 && r1.col === r0.col - 34, JSON.stringify(r1));
+    ok('접기: 접으면 title(툴팁) · aria-expanded=false', await p.evaluate(() => document.querySelector('#mobileTabBar .mtab-btn').title.length > 0 && document.querySelector('.aq-rail-tg').getAttribute('aria-expanded') === 'false'));
+    await p.reload({ waitUntil: 'domcontentloaded' }); await p.waitForTimeout(2500);
+    await p.evaluate(() => { document.querySelectorAll('#aqAuth, #splashOverlay').forEach(x => x.style.display = 'none'); document.body.setAttribute('data-role', 'admin'); }); await p.waitForTimeout(800);
+    const r2 = await rail(); ok('접힘 기억: 다시 열어도 56px · 글자 숨김', r2.w === 56 && r2.lab === 0 && parseFloat(r2.aqR) === 56, JSON.stringify(r2));
+    await p.click('.aq-rail-tg'); const r3 = await settle(); ok('펼치기: 90px · 글자 돌아옴 · 폰 화면 칸 제자리', r3.w === 90 && r3.lab === 1 && r3.labIn && r3.col === r0.col, JSON.stringify(r3));
+    await p.screenshot({ path: path.join(OUT, 'ia9_rail_open.png') });
     await p.context().close(); }
 
   /* ── 종목리스트 + 종목지도 병합 ── */
@@ -99,6 +111,7 @@ const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'sche
       window.apiCall = (function (o) { return function (name, a) { if (name === 'stockMapList') { const tk = Object.keys(_state.tickerSectorMap || {}).slice(0, 40); window.__mapTk = tk.slice(0, 3); return Promise.resolve({ ok: true, items: tk.slice(0, 3).map((t, i) => ({ ticker: t, at: '2026-11-0' + (i + 1), vp: 20 + i * 30, vk: 'PER' })) }); } if (name === 'stockMapGet') return Promise.resolve({ ok: true, map: { asof: '2026-11-20', ck: [] }, can: true, left: 3 }); return o.apply(this, arguments); }; })(window.apiCall);
     });
     await p.evaluate(() => { switchMobileTab('explore'); setExploreSubtab('list'); }); await p.waitForTimeout(1500);
+    for (let i = 0; i < 40; i++) { if (await p.evaluate(() => document.querySelectorAll('#stockList .stock-list-row').length > 50)) break; await p.waitForTimeout(500); }   // 데이터가 늦게 들어와도 기다림
     await p.evaluate(() => aqMapIdxLoad(true)); await p.waitForTimeout(1500);
     const s = await p.evaluate(() => { const rows = [...document.querySelectorAll('#stockList .stock-list-row')]; const mk = rows.filter(r => r.classList.contains('has-map')); return { rows: rows.length, mk: mk.length, tags: mk.every(r => r.querySelector('.sl-mk') && r.querySelector('.sl-mk').textContent === '지도'), toggle: !!document.querySelector('#stockListCard .pills, #stockListCard [data-f]'), sort: [...document.querySelectorAll('#sortMenu button')].map(x => x.textContent.trim()) }; });
     ok(label + ': 종목리스트에 지도 있는 종목 딱지(' + s.mk + '개) · 전체/지도 토글 없음', s.rows > 50 && s.mk === 3 && s.tags && !s.toggle, JSON.stringify({ rows: s.rows, mk: s.mk }));
