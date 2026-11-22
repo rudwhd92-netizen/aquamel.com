@@ -85,7 +85,7 @@ const prep = async (b, opts, role) => {
   const vis = await p.evaluate(() => { const g = m => { const el = document.querySelector('.mtab-btn[data-mtab="' + m + '"]'); return el ? getComputedStyle(el).display : 'none-el'; }; return { ai: g('ai'), news: g('news'), research: g('research') }; });
   ok('비관리자: 하단 메뉴에서 AI 숨김 · 연구는 보임 (v8.84: 뉴스도 하단 메뉴에)', vis.ai === 'none' && vis.research !== 'none' && vis.news !== 'none', JSON.stringify(vis));
   const go = await p.evaluate(() => { switchMobileTab('ai'); const a = document.body.dataset.atab; setAiSubtab('fc'); const b2 = document.body.dataset.atab; setAiSubtab('manager'); return { a, b2, c: document.body.dataset.atab, m: document.body.dataset.mtab }; });
-  ok('비관리자: AI 링크로 와도 뉴스 첫 탭(기관 13F)으로', go.a === 'f13' && go.b2 === 'f13' && go.c === 'f13' && go.m === 'auto', JSON.stringify(go));   // v8.75: AI 브리핑 삭제 — 비관리자 뉴스 첫 탭 = 기관 13F
+  ok('비관리자: AI 링크로 와도 뉴스 첫 탭(일간 이슈)으로', go.a === 'wx' && go.b2 === 'wx' && go.c === 'wx' && go.m === 'auto', JSON.stringify(go));   // v8.75: AI 브리핑 삭제 — 비관리자 뉴스 첫 탭 = 기관 13F
   await p.evaluate(() => switchMobileTab('news')); await p.waitForTimeout(800); await p.screenshot({ path: path.join(OUT, 'tabpill_nonadmin_nav.png') });
   // 8) 종목 창 탭(.modal-view-tabs)은 예전 밑줄 그대로
   const mv = await p.evaluate(() => { const bt = document.querySelector('.modal-view-tabs .xtab-btn'), c = getComputedStyle(bt); return { pad: c.padding, after: getComputedStyle(bt, '::after').content }; });

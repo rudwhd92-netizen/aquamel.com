@@ -107,7 +107,7 @@ try {
   window.addEventListener('pageshow', e => { if (e.persisted) { touched = false; top(); } });
   [100, 400, 1000, 2000, 3000].forEach(t => setTimeout(top, t));
 })();
-window.AQ_PWA_VERSION = '9.00'; // v9.00: 섹터 페이지를 종목 페이지와 같은 전체 화면 틀로(가안 승인) — 손잡이 · 섹터 이름 · 큰 숫자(고른 기간 섹터 평균 수익) + 오늘 등락 · 칩(메가 › · 나스닥 대비 %p · 시그널) · 차트 높이 240 → 380 · 오른쪽 아래 「나스닥」 스위치 + 3M/6M/1Y 알약 · 섹터 정의(통계 3개)가 구성 종목 위 · 맨 아래 닫기 / v8.99: 섹터 시트 맨 위에 기간별(3M · 6M · 1Y) 섹터 평균 차트 — 각 기간 시작을 1로 두고 종목들의 하루 평균 등락률을 이어 곱함 · 뒤에 같은 시작일 = 1의 흐린 나스닥(매크로 나스닥 지수 → QQQ → SPY · 한국은 코스피) · 종목 페이지 차트와 같은 모양(흰 굵은 선 · 빨간 점선 십자 · 3M/6M/1Y Tab pill) · 시트 전체가 스크롤 / v8.98: 항해 › 섹터동향 UI 전면 개편(가안 2차 승인) — ① 섹터마다 한 줄 행(이름 · 시그널 글자 딱지 · 오늘 등락 막대 + σ · 평균 · 30일 σ 띠) — 왼쪽 막대 · 오른쪽 히트맵 두 패널과 이모지 · 그림자 · 9~10px 글자 제거 ② 섹터/메가 · 정렬을 Tab pill(aqTpSync 그대로)로 ③ 날짜 되감기 플레이어(젤리 슬라이더 900/50 · 420/22 · 300/14 + 재생 · 숫자 굴러 바뀜 · 그날 섹터 σ 막대) ④ 섹터 연속 기록 카드 — 들어올 때 통통 · 그날 σ 막대 · 숫자 올라감 · 눌렀다 튕김 / v8.97: 좁은 화면(아코디언 독)은 하단 메뉴 7개만 — 관심 · 일정은 ☰ 햄버거 메뉴로(지금 보는 메뉴가 ☰ 안에 있으면 ☰ 강조) · 칸이 넓어져 가장 좁은 칸도 44px 이상 / v8.96: 연구 › AI리포트 · 발견 · 마이 › 실시간 현황 뒷면 슬라이드 3장 전면 개편 — 면 높이 380 · ① 5 WHYS 문답(쟁점 질문 + 1 · 2 · 5단계 전문 · 스트리밍) ② 최종 판정(방울 → 딱지 · 8번 첫 문단 전문 · 눈금 · 기준 주가 → 지금) ③ 10년 뒤 변하지 않는 진실(스크램블 · 선언문 한 문장) / v8.95: 탐색 › 종목리스트 — 미국 종목도 종목명(한글 회사명)이 나오게(티커만 나오던 것 · renderStockRow) / v8.94: 가로 폭 1024 넘는 화면으로 처음 켜면 일정이 통합캘린더 + 실적시즌으로 합쳐지고 항해가 빈 화면이던 것 — 와이드 @media 다시 판정(aqWideCss)을 로딩 뒤에도 한 번 더 / v8.93: 로딩 문구 Thinking text(aq-tt · 문구 1.5초 순환 · 글자가 아래에서 한 글자씩 떠오름 · 끝나면 타이머 · 스프링 정리) — 피드 · AI리포트 · 일정 · 실적 · 일반 불러오는 중 자리에 적용 · 기존 .aq-think 그라데이션 반짝임 없앰 / v8.92: 탐색 › 종목리스트 행 B안(로고 · 종목명 · 티커 / 섹터 · 지도 딱지 · 「지도 최신순」 · 행 안 펼침 없앰 · 목록 폭 560 이상은 한 줄 열 맞춤 · renderStockRow) / v8.91: 발견 피드 차트 — 3M · 6M · 1Y 어느 기간에도 시그널 · 내부자 매수/매도 · 내 매매 마커를 하나도 빼지 않고 표시(1Y 시그널 복원 · 기간 시작 경계 마커 · 한 칸에 다른 날 마커 여럿이면 층으로 나눠 모두 찍음 · 시그널 툴팁에 실제 날짜) / v8.90: 발견 · 마이 › 실시간 현황 카드 뒷면(리포트)도 슬라이드 3장 + 점 + 그림(AI리포트와 같게) · 전문 보기 작은 글자 / v8.89: ① 발견 · 마이 › 실시간 현황 · AI리포트 오른쪽 이력 칸 — 안쪽 스크롤 · 끝에서 막힘 없앰, 맨 위 알약 「시그널 | 내부자」로 나눔(각 5줄 + 전체 보기) ② 연구 › AI리포트 — 전체/보유/관심/매수의견 알약 없앰(보유 → 관심 → 나머지 순) · 종목 카드 안 슬라이드 3장(쟁점 · 판정 · 동업, 첫 문장 + 시각화) + Pagination dots(170/22 · 520/34 · 140/18) · 전문 보기는 작은 글자 버튼 · 길게 누르면 차트로 뒤집힘은 그대로 // v8.88: 일정 — 통합캘린더를 새 일정 데이터(경제지표 · 만기 · 휴장 · 실적, 미국+한국)로 · 필터 4개(경제지표 · 실적 · 만기·휴장 · 매매) · 실적시즌 탭 신설(주 이동 · 월~금 칸 · 장 시작 전/후/시간 미정 · 내 종목만 · Beat/Miss는 서버가 주면 켜짐) · 날짜 없는 실적은 내 종목만 달력에 '(시간 미정)' · 종목명 name_ko → 한글 사전 → name → 코드 · 한국 경제지표 영문 제목 임시 한글(표 분리) · 새 데이터를 못 받으면 예전 시트 경로 // v8.87: 항해 › AS-IS 포트폴리오 목록이 440px 칸 안에서 잘리고 안쪽 스크롤이 되던 것 — 마이 기준으로만 걸려 있던 높이 제한 해제 규칙을 항해에도 적용(보유 종목이 잘림 없이 전부) // v8.86: 하단 메뉴 아코디언 독은 좁은 화면(화면 472 미만)만 — 넓으면 예전 균등 메뉴(글자 아래) · 항해 › AS-IS 포트폴리오: '+ 종목 추가' 삭제 · 보유 종목 전부 한 번에(12개 + 더 보기 없음 · 묶음 처음부터 펼침) // v8.85: 와이드 왼쪽 메뉴 접기(가안 B 좁게) — 맨 위 화살표로 펼침 90px(아이콘 옆 두 글자 · 칸 높이 44) ↔ 접힘 56px(아이콘만) · 스프링 340/21 · 420/30 · 글자 420/32 · 칸 시차 45ms · 접힘은 기억(aq_rail) // v8.84: 메뉴 9체계(발견 · 탐색 · 관심 · 연구 · AI · 뉴스 · 일정 · 항해 · 마이) — 관심(하트 · 모의매수 · 비교분석) · 항해(돛단배 · 섹터동향 · AS-IS 포트폴리오 · TO-BE 준비 중) 신설 · 하단 메뉴 5개 제한 폐지 = 9개 전부 아코디언 독(켜진 칸만 글자가 펼쳐짐 · 스프링 340/21 · 420/30 · 알약 620/36 · 190/19 · 팝 520/16) · 연구 › 종목지도를 탐색 › 종목리스트로 합침(지도가 있는 종목에 '지도' 딱지 · 누르면 그 자리에서 지도 카드 · 머리줄 오른쪽 '종목페이지 ›') · 정렬 4가지 · 연구 › 해자근거 · AI › AI세력분석 · 일정 › 실적시즌 자리 · 와이드 세로 메뉴 칸 높이 50 // v8.83: 종목 카드 길게 눌러 뒤집기(0.45초 · 8px 이내 · 스프링 170/15 · 누르는 동안만 카드 면) — 연구 › AI리포트(앞 리포트 핵심 3블록 · 뒤 차트) · 발견 · 마이 › 실시간 현황(앞 차트 · 뒤 리포트, 보고서가 있는 종목만) · AI리포트를 발견과 같은 종목 카드 구조로 · 위 한 줄(전체 · 보유 · 관심 · 매수의견 + 검색) // v8.82: 메뉴 탭 줄 가안 A 적용 — 탭 3개 이하(뉴스 · AI)는 글자 폭 알약(높이 36 · 왼쪽 정렬 · 탭 최소 72 · 좌우 16) · 4개 이상(탐색 · 연구 · 마이)은 꽉 채운 높이 40(44에서 낮춤) · 선택 바탕 안쪽 여백 4 → 3 // v8.81: 마이 › 실시간 현황 · 종목 페이지 차트에도 발견과 같은 3M/6M/1Y 작은 알약(Tab pill 미끄럼) · 기간을 바꿀 때 선이 흘러가는 움직임 · 시그널 이력 · 마커 · 변화율(실시간 현황) // v8.80: 하단 메뉴 '발견' 선택 바탕이 첫 로딩 뒤 오른쪽으로 길게 남던 것 고침(관리자로 확인돼 AI 버튼이 나타나 버튼 폭이 줄어도 처음 잰 폭이 남던 것 · 폭이 바뀌면 다시 맞춤 · v8.72 때부터) · 발견 — 시그널 이력(.feed-side)이 좁은 화면에서도 차트 밑에 붙던 것 고침(v8.77이 더한 display:block 줄 삭제 · 원래대로 폭 600 이상일 때만 오른쪽에 표시) // v8.79: 검색 팝업 — 열기 · 닫기를 약 0.2초로(스프링 620/42 · 800/57 닫을 땐 튕김 없이) · 닫을 때 안 보이면 바로 닫음 · 결과 줄 움직임을 줄마다 따로가 아니라 위쪽 12줄 한 번에(줄 수만큼 늘던 프레임 작업 · 강제 레이아웃 제거) // v8.78: 발견 차트 3M/6M/1Y — 알약을 예전 크기로 작게 · 기간을 바꾼 뒤 선이 틀 밖으로 나가던 것 고침(움직임이 차트 축을 건드리지 않고 선 높이 비율만 섞음 · 튕김 없음) // v8.77: 발견 필터 · 차트와 이력(aqFeedSetTf · aqFeedHL) · 우상단 검색(openSearchModal) · 보고서 글로우 제거
+window.AQ_PWA_VERSION = '9.01'; // v9.01: 뉴스 › 기관 13F 움직임 · 읽는 흐름 개편(가안 승인 · 카드가 그대로 커져 상세 · 분기 젤리 슬라이더 · 숫자 · 막대 · 글이 쭈르륵 · 「내 종목 있는 곳」 알약 · 색 · 글자 토큰) /  뉴스 › 일간 이슈 움직임 개편(가안 승인 · 선택 원이 늘어나며 이동 · 숫자 올라감 · 분위기 막대 · 시간줄 차례로 · 옆으로 쓸어 날짜 넘기기 · 펼침 스프링 · 글이 쭈르륵) + 일반 회원에게도 일간 이슈(뉴스 첫 탭) + 「종목별 날씨」 이 페이지에서 삭제 / v9.00: 섹터 페이지를 종목 페이지와 같은 전체 화면 틀로(가안 승인) — 손잡이 · 섹터 이름 · 큰 숫자(고른 기간 섹터 평균 수익) + 오늘 등락 · 칩(메가 › · 나스닥 대비 %p · 시그널) · 차트 높이 240 → 380 · 오른쪽 아래 「나스닥」 스위치 + 3M/6M/1Y 알약 · 섹터 정의(통계 3개)가 구성 종목 위 · 맨 아래 닫기 / v8.99: 섹터 시트 맨 위에 기간별(3M · 6M · 1Y) 섹터 평균 차트 — 각 기간 시작을 1로 두고 종목들의 하루 평균 등락률을 이어 곱함 · 뒤에 같은 시작일 = 1의 흐린 나스닥(매크로 나스닥 지수 → QQQ → SPY · 한국은 코스피) · 종목 페이지 차트와 같은 모양(흰 굵은 선 · 빨간 점선 십자 · 3M/6M/1Y Tab pill) · 시트 전체가 스크롤 / v8.98: 항해 › 섹터동향 UI 전면 개편(가안 2차 승인) — ① 섹터마다 한 줄 행(이름 · 시그널 글자 딱지 · 오늘 등락 막대 + σ · 평균 · 30일 σ 띠) — 왼쪽 막대 · 오른쪽 히트맵 두 패널과 이모지 · 그림자 · 9~10px 글자 제거 ② 섹터/메가 · 정렬을 Tab pill(aqTpSync 그대로)로 ③ 날짜 되감기 플레이어(젤리 슬라이더 900/50 · 420/22 · 300/14 + 재생 · 숫자 굴러 바뀜 · 그날 섹터 σ 막대) ④ 섹터 연속 기록 카드 — 들어올 때 통통 · 그날 σ 막대 · 숫자 올라감 · 눌렀다 튕김 / v8.97: 좁은 화면(아코디언 독)은 하단 메뉴 7개만 — 관심 · 일정은 ☰ 햄버거 메뉴로(지금 보는 메뉴가 ☰ 안에 있으면 ☰ 강조) · 칸이 넓어져 가장 좁은 칸도 44px 이상 / v8.96: 연구 › AI리포트 · 발견 · 마이 › 실시간 현황 뒷면 슬라이드 3장 전면 개편 — 면 높이 380 · ① 5 WHYS 문답(쟁점 질문 + 1 · 2 · 5단계 전문 · 스트리밍) ② 최종 판정(방울 → 딱지 · 8번 첫 문단 전문 · 눈금 · 기준 주가 → 지금) ③ 10년 뒤 변하지 않는 진실(스크램블 · 선언문 한 문장) / v8.95: 탐색 › 종목리스트 — 미국 종목도 종목명(한글 회사명)이 나오게(티커만 나오던 것 · renderStockRow) / v8.94: 가로 폭 1024 넘는 화면으로 처음 켜면 일정이 통합캘린더 + 실적시즌으로 합쳐지고 항해가 빈 화면이던 것 — 와이드 @media 다시 판정(aqWideCss)을 로딩 뒤에도 한 번 더 / v8.93: 로딩 문구 Thinking text(aq-tt · 문구 1.5초 순환 · 글자가 아래에서 한 글자씩 떠오름 · 끝나면 타이머 · 스프링 정리) — 피드 · AI리포트 · 일정 · 실적 · 일반 불러오는 중 자리에 적용 · 기존 .aq-think 그라데이션 반짝임 없앰 / v8.92: 탐색 › 종목리스트 행 B안(로고 · 종목명 · 티커 / 섹터 · 지도 딱지 · 「지도 최신순」 · 행 안 펼침 없앰 · 목록 폭 560 이상은 한 줄 열 맞춤 · renderStockRow) / v8.91: 발견 피드 차트 — 3M · 6M · 1Y 어느 기간에도 시그널 · 내부자 매수/매도 · 내 매매 마커를 하나도 빼지 않고 표시(1Y 시그널 복원 · 기간 시작 경계 마커 · 한 칸에 다른 날 마커 여럿이면 층으로 나눠 모두 찍음 · 시그널 툴팁에 실제 날짜) / v8.90: 발견 · 마이 › 실시간 현황 카드 뒷면(리포트)도 슬라이드 3장 + 점 + 그림(AI리포트와 같게) · 전문 보기 작은 글자 / v8.89: ① 발견 · 마이 › 실시간 현황 · AI리포트 오른쪽 이력 칸 — 안쪽 스크롤 · 끝에서 막힘 없앰, 맨 위 알약 「시그널 | 내부자」로 나눔(각 5줄 + 전체 보기) ② 연구 › AI리포트 — 전체/보유/관심/매수의견 알약 없앰(보유 → 관심 → 나머지 순) · 종목 카드 안 슬라이드 3장(쟁점 · 판정 · 동업, 첫 문장 + 시각화) + Pagination dots(170/22 · 520/34 · 140/18) · 전문 보기는 작은 글자 버튼 · 길게 누르면 차트로 뒤집힘은 그대로 // v8.88: 일정 — 통합캘린더를 새 일정 데이터(경제지표 · 만기 · 휴장 · 실적, 미국+한국)로 · 필터 4개(경제지표 · 실적 · 만기·휴장 · 매매) · 실적시즌 탭 신설(주 이동 · 월~금 칸 · 장 시작 전/후/시간 미정 · 내 종목만 · Beat/Miss는 서버가 주면 켜짐) · 날짜 없는 실적은 내 종목만 달력에 '(시간 미정)' · 종목명 name_ko → 한글 사전 → name → 코드 · 한국 경제지표 영문 제목 임시 한글(표 분리) · 새 데이터를 못 받으면 예전 시트 경로 // v8.87: 항해 › AS-IS 포트폴리오 목록이 440px 칸 안에서 잘리고 안쪽 스크롤이 되던 것 — 마이 기준으로만 걸려 있던 높이 제한 해제 규칙을 항해에도 적용(보유 종목이 잘림 없이 전부) // v8.86: 하단 메뉴 아코디언 독은 좁은 화면(화면 472 미만)만 — 넓으면 예전 균등 메뉴(글자 아래) · 항해 › AS-IS 포트폴리오: '+ 종목 추가' 삭제 · 보유 종목 전부 한 번에(12개 + 더 보기 없음 · 묶음 처음부터 펼침) // v8.85: 와이드 왼쪽 메뉴 접기(가안 B 좁게) — 맨 위 화살표로 펼침 90px(아이콘 옆 두 글자 · 칸 높이 44) ↔ 접힘 56px(아이콘만) · 스프링 340/21 · 420/30 · 글자 420/32 · 칸 시차 45ms · 접힘은 기억(aq_rail) // v8.84: 메뉴 9체계(발견 · 탐색 · 관심 · 연구 · AI · 뉴스 · 일정 · 항해 · 마이) — 관심(하트 · 모의매수 · 비교분석) · 항해(돛단배 · 섹터동향 · AS-IS 포트폴리오 · TO-BE 준비 중) 신설 · 하단 메뉴 5개 제한 폐지 = 9개 전부 아코디언 독(켜진 칸만 글자가 펼쳐짐 · 스프링 340/21 · 420/30 · 알약 620/36 · 190/19 · 팝 520/16) · 연구 › 종목지도를 탐색 › 종목리스트로 합침(지도가 있는 종목에 '지도' 딱지 · 누르면 그 자리에서 지도 카드 · 머리줄 오른쪽 '종목페이지 ›') · 정렬 4가지 · 연구 › 해자근거 · AI › AI세력분석 · 일정 › 실적시즌 자리 · 와이드 세로 메뉴 칸 높이 50 // v8.83: 종목 카드 길게 눌러 뒤집기(0.45초 · 8px 이내 · 스프링 170/15 · 누르는 동안만 카드 면) — 연구 › AI리포트(앞 리포트 핵심 3블록 · 뒤 차트) · 발견 · 마이 › 실시간 현황(앞 차트 · 뒤 리포트, 보고서가 있는 종목만) · AI리포트를 발견과 같은 종목 카드 구조로 · 위 한 줄(전체 · 보유 · 관심 · 매수의견 + 검색) // v8.82: 메뉴 탭 줄 가안 A 적용 — 탭 3개 이하(뉴스 · AI)는 글자 폭 알약(높이 36 · 왼쪽 정렬 · 탭 최소 72 · 좌우 16) · 4개 이상(탐색 · 연구 · 마이)은 꽉 채운 높이 40(44에서 낮춤) · 선택 바탕 안쪽 여백 4 → 3 // v8.81: 마이 › 실시간 현황 · 종목 페이지 차트에도 발견과 같은 3M/6M/1Y 작은 알약(Tab pill 미끄럼) · 기간을 바꿀 때 선이 흘러가는 움직임 · 시그널 이력 · 마커 · 변화율(실시간 현황) // v8.80: 하단 메뉴 '발견' 선택 바탕이 첫 로딩 뒤 오른쪽으로 길게 남던 것 고침(관리자로 확인돼 AI 버튼이 나타나 버튼 폭이 줄어도 처음 잰 폭이 남던 것 · 폭이 바뀌면 다시 맞춤 · v8.72 때부터) · 발견 — 시그널 이력(.feed-side)이 좁은 화면에서도 차트 밑에 붙던 것 고침(v8.77이 더한 display:block 줄 삭제 · 원래대로 폭 600 이상일 때만 오른쪽에 표시) // v8.79: 검색 팝업 — 열기 · 닫기를 약 0.2초로(스프링 620/42 · 800/57 닫을 땐 튕김 없이) · 닫을 때 안 보이면 바로 닫음 · 결과 줄 움직임을 줄마다 따로가 아니라 위쪽 12줄 한 번에(줄 수만큼 늘던 프레임 작업 · 강제 레이아웃 제거) // v8.78: 발견 차트 3M/6M/1Y — 알약을 예전 크기로 작게 · 기간을 바꾼 뒤 선이 틀 밖으로 나가던 것 고침(움직임이 차트 축을 건드리지 않고 선 높이 비율만 섞음 · 튕김 없음) // v8.77: 발견 필터 · 차트와 이력(aqFeedSetTf · aqFeedHL) · 우상단 검색(openSearchModal) · 보고서 글로우 제거
 // v8.76: 토큰 관리 — 수집기 연결을 '붙여 넣고 엔터' 한 줄로(앱이 키 대신 연결 명령을 복사 · 수집기 statusline.js --connect 키 · setup.js --key 는 클립보드에 없으면 붙여 넣기 입력) · v8.75: 기능 다이어트 — 일정 › 주간 일정 · AI 비서 / 뉴스 › AI 브리핑 · 주간 이슈를 탭 · 카드 · 화면 그리는 함수(aqGuideRender · aqDailyBriefRender · aqMacroRender 등 선언 141개) · CSS(규칙 390개)까지 삭제(숨김 아님) · 일정 = 월간 일정만(탭 줄 없음) · 뉴스 = 일간 이슈(관리자) + 기관 13F(일반은 탭 줄 숨김) · 알림 brief/guide → 뉴스/일정으로 이동 · AI 매니저 · 내 주식 스탠스 · 포트폴리오가 같이 쓰는 도우미(_gm* · _brHM · _mcSheet 등)는 남김 · v8.74: 설정 > 관리자 > 계정 관리 아래 '토큰 관리' — 각 AI 구독의 남은 한도 %(Storage meter 룩 · 가안 A · 큰 숫자 · 5시간/주간 막대 = AQMotion soft 스프링 · 계정 행 펼침 · 이름 바꾸기 · 직접 입력 · 수집기 연결) · 서버 tokens.py · 수집기 tools/token-collector · v8.73: 속도 — ① 일정(aqTLEventsFor): 결과를 버리는 반복문(실행 기록 1만 건 × 시간 변환) 제거 · _aqKST 변환기 한 번만 만들고 기억 · _aqETDate · _aqFmtKST 등 Intl 포맷터 공용(_aqDtf) ② findTickerSeries: 업종별 종목 색인(가격 14만 행 전부 훑던 것) ③ aqHoldScroll: 화면 바꾼 직후 window.scrollY 읽기(강제 레이아웃)를 scroll 이벤트로 기억한 값으로 · 결과는 같음(실제 데이터 종목 501개 비교) · v8.72: 앱 메뉴 탭 줄(.xtab-row)을 Tab pill로(가안 A 회색 알약 · aqTpSync + AQMotion 두 가장자리 스프링 620/40 · 170/19 · 5개 줄은 가로로 밀기) · 비관리자에게 AI 메뉴(하단 메뉴 · switchMobileTab · setAiSubtab) 숨김 · v8.71: 종목 창 — 상세 차트 아래 '공매도 거래 비중' 차트(#aqSupSub)와 '공매도 잔고 · days to cover' 한 줄(#aqSupLn)이 종목 지도 · AI 보고서 · 내 주식 탭에도 남던 것 → 세 탭에서는 숨김(CSS 한 묶음 · 차트 탭은 그대로) · v8.70: 미국주식 평가 수익금 보정(디자인 방 이번만 직접 수정) — simulatePortfolioDaily 현재 보유: 토스와 수량이 같은 종목은 원가 = 토스 수량 × 토스 평단 · 시트 종가가 없거나 오래되면 토스 현재가(px, 동기화 때 저장 aqSyncLocalFromServer) · 맨 끝 일별 기록도 같은 값 · 앱 -8,050 vs 토스 -7,657 · v8.69: 가로 2분할 모드에서 AI 매니저 하나씩 결정 · 아래 시트 · 버튼 줄 · 되돌리기 알림을 오른쪽 칸에 열리게(왼쪽 메뉴 · 폰 화면을 덮던 것) · v8.68: AI 매니저 '판단 근거 전체' 옆 'AI 보고서' → '종목 상세보기'(종목 화면으로, aqMg4Detail — aqMg4Tile · _mg4Go) · 계좌 지도 칸 시트 로고 확대되던 것(.m4-* img 크기) · 앱 전체 로고 동그라미 옅은 흰 테 없앰(흰 바탕을 가장자리 안쪽에서 끝냄 --aq-lg-bg) · v8.67: 다크 표면 색을 v8.65 값으로 되돌림(바탕 #161618 · 카드 #1c1c1f · 몸통 #222226 · 눌림 #2a2a2e · 탭바 #0e0e10 — 본부장님 '바탕이 너무 검정') · 채움 3단 · 스프링 엔진 · 1.2초는 그대로 · v8.66: 디자인 v2 1단계 공통 토대 — 다크 표면 색 한 곳으로(바탕 #000 · 카드 #171717 · 몸통 #262626 · 채움 3단 · object · 눌림 #383838) · 라이트는 채움 3단 · object · surface만 더함 · 모서리 8단 · 스프링 7종 토큰 · 공용 스프링 엔진 window.AQMotion(S · tune · step · spring · register · kick) · 알림 당겨서 새로고침이 AQMotion 계산을 씀(값 그대로) · 길게 눌러 확정 0.8초 → 1.2초(--hold-ms) · v8.65: AI 매니저 화면 다시 짬(캔버스 시안 승인) — 맨 위 할 일 카드(밤: 결정할 것 n건 · 남은 시간 · 결론 · 결정할 종목 로고 줄(매수 초록 · 매도 빨강 테두리) · 하나씩 결정하기 / 결정 뒤: 체결 · 미체결 · 모의 · 건별 결과 + 오늘 밤 단계) · 계좌 지도(보유 금액만큼 칸 · 오늘 손대는 종목 테두리 · 누르면 종목 한 장) · 관심 종목 · 오늘 주시 가로 카드(누르면 거부 · 모의 · 조건부 승인) · 아래 칸 셋(신뢰 기록 · 통합 성적 · 다르게 한 것) · 하나씩 결정은 정보 그대로 카드 넷(주문 · 판단 · 반대 쪽 · 계획) + 판단 근거 전체 · AI 보고서 · v8.64: 알림 창 지니 효과(v8.63)를 되돌려 다이내믹 아일랜드 방식(v8.62)으로 · v8.63: 지니 효과(되돌림) · v8.62: 알림 창이 종에서 다이내믹 아일랜드처럼 호로록 나왔다 들어감 (스프링 0.25초 · 열 때 튕김 0.3 · 닫을 때 0 · 내용 흐림 5px→0 · 0.9→1 · 0.05초 늦게) · 열린 동안 종 숫자 배지 숨김 · v8.61: 연구 › 종목 지도 목록 줄을 접힌 카드 모양으로(네모 로고 타일 + 종목명 · 티커 + 한 줄 + 딱지 + 실적 D-day · 예전 PER 막대는 펼친 안쪽에서) · v8.60: 펼침 카드를 연구 › 종목 지도 목록으로 옮김(줄을 누르면 맨 위로 올라가며 펼침 · 띠 색 = 로고 바탕색 · AQ_MAP_EXPAND) · 종목 페이지의 종목 지도 탭은 예전 그대로 되돌림 · v8.59: 종목 지도 — 펼침 카드(접힘: 로고 타일 + 이름 + 한 줄 + 딱지 → 누르면 타일 바탕이 상단 띠로 넓어지며 펼침 · window.AQ_MAP_EXPAND · 끄면 예전 그대로) · v8.58: 알림 아이콘 구슬의 입체감 빼고 납작한 옅은 바탕 + 같은 색 선 아이콘 · v8.57: 알림 창 모양을 Pull to Refresh 원본대로 — 모서리 28 · 선 · 그림자 · 꼬리 없음 · 바탕 #262626 · 머리 '알림' 왼쪽 · 상태 글씨 오른쪽 · 모두 읽음은 체크 아이콘 · 날짜 줄 · 줄 사이 선 · ✕ 없앰(좌우로 밀어 지우기는 그대로) · 둥근 아이콘 38(이모지 대신 선 아이콘) · 제목 · 한 줄 · 지난 시간(방금 · 2분 · 1시간 · 1일) · 안 읽음 주황 점 · v8.56: 알림 — 목록 맨 위에서 아래로 당기면 새로고침(designbookmark Pull to Refresh · 스프링 값 원본 그대로 · 고무줄 버팀 · 손잡이에서 방울이 늘어나 88px 넘으면 떨어져 도는 표시 · 서버에서 새 알림 받는 동안 돎(최소 0.6초) · 새 알림은 위에서 내려앉음 · 제목 아래 'HH:MM 받음 / 당겨서 새로고침 / 놓으면 새로고침 / 받는 중…') · v8.55: 설정 — 줄을 누르면 하위 페이지가 오른쪽에서 밀려 들어오는 Stack panel(움직임 값 Kokonut UI stack-panel · MIT) — 누른 줄 이름이 제목으로 · 아래 페이지 30% 따라감 · ‹ 앞 페이지 이름 버튼 · 오른쪽으로 쓸어 돌아가기(35% · 초속 500px) · 폰 뒤로가기 · 높이 부드럽게 · 토스 연동 · 비밀번호 · ATR · 데이터 상태 · 키 4종 · 서버 고치기 · 신호 연계 · 보안 모니터링을 아래 시트 대신 하위 페이지로 (한국 수급 · 계정 관리는 그대로) · v8.54: 발견 내부자 매수 — 체결일이 아니라 공시가 들어온 날(Filed_Date_KST) 기준으로 최근 5일에 넣음(늦게 공시돼 빠지던 것) · 카드 날짜도 공시일 · 30일 내부자 매수 · 매도 금액도 공시일 기준 · 차트 마커는 그대로 체결일 · v8.53: 일간 이슈 — 최신 뉴스가 위로 · v8.52: 일간 이슈 — 카드가 있는 모든 종목(서버 newsDay all=1) · 거르기 전체 · 보유 · 관심(기본 전체 · 그날 건수) · v8.51: 뉴스 › '거시 날씨' → '일간 이슈' — 위 '거시' 숫자 칸 뺌 · 종목 페이지 '오늘의 주요 뉴스' 카드를 내 보유 · 관심 종목만 모아 최근 7일(서버 leadGet newsDay) · 주간 일정과 같은 날짜 띠(오늘이 맨 오른쪽) · 시간줄 · 로고 테두리 영향 색(좋음 초록 · 나쁨 빨강 · 그 밖 회색) · 누르면 요약 · 영향 · 원문 · 아래는 종목별 날씨 그대로 · v8.50: 차트 매매 마커 — 6M · 1Y에서 건너뛴 날짜의 내 매매 · 내부자 매매 마커가 빠지던 것(가장 가까운 칸에 붙임 · 한 칸에 여럿이면 모두) · 내 매수 · 매도 마커를 누르면 몇 주 · 얼마(다른 날 칸이면 실제 날짜) · v8.49: AI 매니저 '다르게 한 것' — AI와 다르게 한 건(안 함 · 혼자 함 · 반대로 함)에 한 줄 이유(선택) · 이유를 안 남긴 것이 있으면 첫 화면에 조용한 한 줄(서버 diff_open) · 아래 '통합 성적' 옆 '다르게 한 것' · 날짜별 목록(조합 꼬리표 · AI · 나 · 적은 이유) · 누르면 시트(꼬리표 하나 · 한 줄 200자 · 저장 · 지우기 → mgrDiffWhy) · 칸이 없으면 예전 그대로 · v8.48: 한국 종목 '이름 (코드)' 자리에서 코드까지 이름으로 바꿔 '삼성전기 (삼성전기)'가 되던 것 — 이름이 바로 앞에 있으면 '(코드)' · '· 코드'는 지움 · 발견 카드 머리줄은 한국 종목이면 이름만 · v8.47: 확인 · 입력 창 위치 — 아래 시트였던 것을 화면 위쪽(입력 · 키보드에 안 가림 · 키보드가 올라오면 보이는 칸 안으로) · 가운데(확인)로 · 보고서 '꼭 확인할 것' 같은 입력 창이 키보드에 가려 뒤로가기를 한 번 더 눌러야 하던 것 고침 · v8.46: AI 매니저 하나씩 결정 — 주문 내용 바로 아래 계획 요약(서버 items[].plan · 방향 · 지금 단계 · 도착 · 오늘 n단계 · 그만두는 조건 작은 한 줄 · 종목 상세 .mgp 재사용) · 개장 매도 새 제안이면 서버 replaces 한 줄 · 칸이 없으면 예전 그대로 · v8.45: AI 매니저 종목 계획(서버 managerStock.plan · mgr.plans) — 종목 상세에 계획 구역(방향 · 지금 단계 · 도착 · 단계 목록과 상태 꼬리표 · 뜻 · 조건 · 그만은 접어 둠 · 마지막 고침 · 계획 끝내기 → mgrPlanEnd) · 결정할 것 줄에 지금 단계 숫자 · 칸이 없으면 예전 그대로 · v8.44: AI 거시 예보 상시 주제 — 이름이 잘리던 것 · 폰에서 점이 겹치던 것 고침(윗줄 날씨 · 이름 전체 · 간격 숫자, 아랫줄 카드 폭 전체 축) · 펼친 글 왼쪽 비움 없앰 · v8.43: 수급 표시 디자인 기준 맞춤 — 한국 내부자 툴팁 이모지 뺌 · 공매도 비중 칸 · 공매도 잔고 줄 · 그 밖 변동 여백 · 글자를 토큰(4의 배수 · 11/12px)으로 · 보조 칸 선 · 툴팁 색을 상세 차트 COL과 같게 · v8.42: 수급 자료를 차트에(서버 supplyGet · 관리자 · 종목을 열 때 한 번 · 실패하면 숨김) — 한국 상세 · 간단 차트 내부자 장내 매수/매도 ▼(누르면 사람 · 직위 · 주식 수 · 추정 금액) · 자사주 평단 얇은 선(기간 안 · 추정은 점선) · 내부자 매수/매도 칸(최근 90일 건수 · 가장 큰 것 · 그 밖 변동) · 상세 차트 아래 공매도 비중 칸(미국 FINRA 일별 공매도 거래 비중 · 한국 공매도 비중 + 20일 평균) · 미국 차트 아래 '공매도 잔고 · days to cover' 한 줄 · 발견 피드 한국 '내부자 매수 ₩억'(받아 둔 종목만) · v8.41: AI 매니저 매도만 주문은 개장부터(뉴욕 11/17 판부터) — 승인 시트 '넣는 때 개장부터 · 당일' · '승인하면 개장부터 주문해요' · 승인 알림 '개장부터 주문' · 서버 mgr.early가 오면 결정할 것 줄 상태에 그 한 줄 · 체결 n / m주(검사에서 빠짐 · 못 넣음 · 멈춤은 경고 색) · early가 없으면 예전 그대로 · v8.40: AI 거시 예보 새 화면(시안 승인 11/16) — 숫자 띠(괴리 큰 주제 · 다음 갈림길 · 지난 예보 적중) · 거르기 미끄럼 · 인사이트 겹친 카드(다음 · 옆으로 밀기) · 상시 주제 괴리 지도(괴리 큰 순 · 펼침) · 지켜보는 일 안내판(가까운 순 · D-day 넘김 · 단계 이음) · 지난 예보 추이 · 상세는 큰 축(시장 · 판단 A·B·C 떨어짐) · 판단 카드 부채 · 시장 반응 계기 · 시장/AI 생각 바꾸기 · 틀렸다고 볼 신호 형광펜 · v8.39: S펜 추세선 · 가로선 탭하면 다시 '지울까요?' — 확인 시트가 연 탭에 바로 닫히던 것 고침 · v8.38: 차트 1Y는 마지막 날짜에서 365일 전 이후만(종목 · 발견 피드 · 간단 차트 · 비교 · 매크로 · 섹터 · KJP500) — 서버 시세 창이 400일로 늘어도 1년 · 365일 이하 자료는 예전과 같음 · v8.37: 밸런스(60일 · 넣으면 좋은 순 1년) · 쏠림 급락일 — 날짜 고르기의 '종목 절반' 기준을 1년 시세가 있는 종목만으로 셈(막 편입된 종목 때문에 계산이 막히지 않게 · 1년이 안 된 종목은 후보에서 빠짐 그대로) · 넣으면 좋은 순은 1년이 251일이 안 돼도 241일 이상이면 그 날 수로 계산(점 설명의 250일 자리에 실제 날 수) · v8.36: 통합 성적 화면(AI 매니저 › AI 신뢰 기록 아래 · 관리자) — 한눈에 · AI 매니저 · 예보 종결 · 목록 · 한 건 · 처음 4주(첫 결과까지 n거래일) · 끝난 것 10건 미만은 건수 · AI 예보 카드는 반영 숫자 · 방어 · 역이용 · 인버스가 없으면 그 칸을 그리지 않음 · v8.35: 한국 종목은 어디서든 코드(006600 등) 대신 종목명 — 화면에 뜨는 글자 전부 · v8.34: AI 매수심사 영역 비공개(AQ_BUYREVIEW_ON) — 매수분석 탭 · 심사 요청 · 리포트 · 다시 볼 날 · 마감 알림 숨김 · 선제안 '받기'는 관심 종목에 넣고 바로 맞춤 · 규칙형 알림 숨김(AQ_RULE_UI_ON) — 급락장 플레이북 · 급락 기준 · 추세 이탈 카드 · 장중 급변 알림 · 관심 종목 줄에 AI 매니저 결론 한 줄(누르면 판단 근거) · v8.33: 2·3차 교체(시안 승인 11/16) — 확인 · 입력창은 앱 안 시트(브라우저 창 없앰) · 알림은 아래에 쌓임(누르면 펼침 · ×로 치움) · AI 매니저 되돌리기 남은 초 · 하루 흐름 · 오늘 밤 단계 표시(체크 · 지금 단계 빛) · 접이식 칸 부드럽게 · 보고서 읽어 줄 때 읽는 줄 표시 · 차트를 끌면 그 날 가격 · 지금 가격 숫자 굴러가며 바뀜 · 신호 필터는 버튼에서 펼침 · 메뉴 펼침 · 상세 스위치 · 설정 체크는 스위치 · 인사이트 · PPT 쪽 점 · 하단 메뉴 선택 바탕 미끄럼 · v8.32: 종목 페이지 '오늘의 주요 뉴스'를 밸런스처럼 카드 안에(안쪽 여백 18 · 카드 사이 10) · v8.31: 부품 정리(시안 승인 11/16) — 토큰(글자 흐림 #85858a · 강조 옅음 · 모서리 16 · 움직임 120/200/320ms) · 돈이 나가는 버튼은 길게 눌러 확정(주문 넣기 · 승인 · 모두 승인 · 조건부 승인) · 기다리는 글자에 옅은 빛 · 받기 · 매수심사 요청 · 지도 만들기 버튼은 눌림 → 처리 중 → 요청됨 · 3M/6M/1Y · 예보 거르기 · 심사 탭은 선택 배경이 미끄러지듯 · 휴대폰 '동작 줄이기'면 움직임 없음 · v8.30: AI 매니저 맨 위 '오늘의 전제' 한 줄(예보 종결 · 결론 확률) · 제안 · 종목 판단에 '전제와의 관계' 한 줄 · v8.29: 개장 조건부 계획 꺼짐(서버 hy.plans_on) — 진행 막대 · 개장 확인 카드는 계획을 켠 날만, 주시 종목 카드는 그대로 · v8.28: 발견 선제안 카드를 다른 종목과 같은 모양으로 — 머리줄 '선제안 · 단계 게이지' · 차트 아래 경로 한 줄 · 매도 자리에 '받기' · 누르면 시트(왜 이 단계인가 · 걸리는 점 · 틀렸다고 볼 신호 · 경로 · 남은 여지 · 받쳐 주는 숫자 · 계좌 밸런스 · 받기 → 매수심사) · v8.27: AI 매니저 하이브리드(11/17부터) — 하루 흐름 '장 전 계획 23:00 → 최종 00:15' · 개장 확인 카드(장 전엔 계획 셋 · 뒤엔 고른 계획 · 이유 · 바뀐 것) · 오늘 주시 3종목(조건부 승인 · 모의 · 거부 · 신호 · 주문 결과) · v8.26: 선제안은 AI매니저가 판단해 올린 종목만 — 추천도(필수 · 권장 · 고려 · 관망)와 근거 한 줄 · 누르면 근거 · 걸리는 점 · 틀렸다고 볼 신호 · 계좌 밸런스 · 판단 전에는 '선제안 n개 · AI매니저 판단 중' · v8.25: 발견 선제안에 'AI매니저 추천도'(밸런스 게이지 5칸 · 필수 · 권장 · 고려 · 관망 · 보류 · 누르면 점수 내역) · v8.24: 한국 종목도 AI 매니저 의견 · AI 매수심사 버튼을 내 주식에서 종목 지도 위 줄 오른쪽으로(미국과 같게) · v8.23: AI 예보 새 화면(시안 v11) — 거르기 딱지 · 오늘의 인사이트 3장(● 시장 · ○ AI · 비관/낙관 · 표 수) · 상시 주제(날씨 · 표 수 · 보류면 AI 점 없음) · 지켜보는 일(단계 점) · 항목 상세(세 번 판단 · ①~⑤ · 반응 단계 · 내 종목은 관리자만) · v8.22: 설정 › 관리자 › 서버 고치기 작업(주소 · 토큰 — 오류 알림이 오면 서버가 깨움) · v8.21: 종목 페이지 '오늘의 주요 뉴스'(차트 아래 · 밸런스 위 · 처음부터 펼침 · 카드 3개 · 누르면 요약 · 영향 · 원문 보기) · v8.20: 한국 종목 페이지 '20일 수급데이터' — 접힌 머리에 주체별 20일 순매수 금액 · 펼치면 막대(가운데 0) · v8.19: 종목 지도 본문의 가려진 고객사(D사 등)에 가치사슬 2차 보강으로 밝힌 이름을 '(= 회사)'로 · v8.18: AI 매니저 제안 추적에 '앞 근거별 성적'(추정치 · 가이던스 · 옵션 · 예보 · 선제안 · 선행 숫자 · 가치사슬 · 없음) · v8.17: 옛 PC 화면 코드(오른쪽 세로 메뉴 · 옆 패널 · data-pc-page/panel 규칙 · setPCTab 등) 지움 — 넓은 화면은 2단(aq-wide) 그대로 · v8.16: 한국 종목 지도에도 가치사슬(고객 · 공급 · 경쟁 · 협력 · 가려진 고객사 밝힌 것) · v8.15: AI 리포트 목록 받기가 실패하면 다시 받음(5 · 15 · 45초) · 리포트 탭을 열 때 목록이 비어 있으면 다시 받음 · v8.14: 설정 › 관리자 › 네이버 뉴스 키(DART 키와 같은 방식) · v8.13: 상세 차트 수평선 — Round · 전저점 대신 매물대 · 실적 후 평균 단가 · 30일 기대 범위(미국 옵션) · 외국인 평균 매입가(한국) · 지금 가격과의 거리 / 보조선 — 한국 세 주체 같은 잣대 · 주인공 진하게 · 끝 숫자 · 미국 A/D 대신 시장 대비 강도 · CMF 20 · v8.12: 세로 ↔ 2분할 가로 전환 때 보던 메뉴 · 하위 탭 유지 · v8.11: 상세 차트 MA20 · 전저점 · Round · 모의매수 숫자를 주가와 겹치지 않는 자리로(왼쪽부터) · 숫자끼리도 겹치지 않게 · v8.10: 뒤로가기 · 쓸어내리기는 맨 위 화면 하나만 — 팝업 위 팝업 · 시트 위 종목 페이지 · 종목에서 종목으로 넘어가면 직전 종목(탭 · 스크롤 그대로) · 설정 키 시트도 · v8.09: 평단 숫자 — 산 뒤 구간이 주가와 겹치면 왼쪽 빈 자리로 · v8.08: 가치사슬 · 종목 지도에서 다른 종목을 누르면 차트부터 새로 · 맨 위에서 · v8.07: 가치사슬 · 종목 지도의 상대 회사가 KJP500 · 후보 풀 · 한국 유니버스 종목이면 누르면 그 종목 페이지(시장이 다르면 바꿔 엶) · v8.06: 미국 매수심사 요청 — 결과가 나오는 시각(오늘 밤 23:00 등) · v8.05: AI 가이드 '지금 고치기' 없앰 · 관심 종목은 매수심사 대신 AI 매니저가 판단 · v8.04: 한국 종목 지도(DART 사업보고서) · 한국 IR 비교 매출을 억원 · 조로 · v8.03: 발견 '선제안'(가치사슬 경로로 덕 볼 종목 · 아직 덜 움직임 · 남은 여지 · 받기 → 매수심사) · 종목 지도에 가치사슬(공급사 · 고객 · 경쟁 · 협력) · 선행 요인(오르면 좋음/나쁨 · 요즘 크게 움직임) · v8.02: 설정 › 관리자 DART 키(한국 AI 매니저 정보 체계) · v8.01: 종목 상세 '공매도 이력' 접힌 머리에 미리보기(잔고 · DTC 판정) · v8.00: 탐색 공매도 목록에도 판정(낮음~매우 높음 · 가벼움~매우 무거움) · v7.99: 종목 상세 공매도 — 판정(낮음~매우 높음 · 가벼움~매우 무거움) · KJP500 안 위치 · 지난번 대비 늘었나 줄었나 · 한 줄 해석 · v7.98: 13F 크게 늘림 편입 6종목 로고 · v7.97: 기관 13F — 종목 옆 딱지(보유중 · KJP500 · 13F · ETF) · v7.96: 13F 편입 22종목 로고 · v7.95: 기관 13F — GOOG처럼 같은 회사 다른 주식 종류도 있는 쪽 종목 페이지로 연결 · v7.94: 필기 색에 노랑 · 자동펜 도형은 되돌리기 한 번에 지워짐(손글씨를 남기지 않음) · v7.93: 필기 — S펜만 그림 · 손가락은 넘김(펜을 쓰는 중 · 손바닥 무시) · 펜이 없는 휴대폰은 손가락으로 그림 · v7.92: AI 보고서 필기가 아예 안 되던 것 고침(보고서를 감싼 창 전체를 버튼으로 보고 무시하던 탓) · v7.91: 필기 — 펜 · 손가락 구분을 모두 뺌(도구를 켜면 한 손가락 · 펜은 그림 · 두 손가락으로 끌면 넘김 · 두 손가락 톡 되돌리기) · S펜 진단 뺌 · v7.90: PPT 보기 — 가로에서도 세로처럼 이어 보기 · 전체보기(2분할 넘어 화면 전체 · 상태 막대 숨김) · S펜 진단(필기 도구를 켠 동안 입력 종류 · 접촉 크기만 서버로) · v7.89: 기관 13F 글 속 'AI' 같은 흔한 낱말이 종목(C3.ai 등)으로 연결되던 것 고침 — 그런 코드는 '(AI)' · '$AI'처럼 쓴 때만 연결 · v7.88: S펜을 손가락으로 알리는 기기도 펜으로(터치 펜 표시 · 아주 작은 접촉) · 펜과 손바닥이 함께 닿아도 필기 계속 · 필기 중 안쪽 목록도 끌리지 않게 · PPT 보기 — 세로는 가로폭에 맞춰 이어 보기 · 가로는 한 장씩 높이에 맞춰 좌우로 넘김 · 아래로 쓸어내리면 보고서로 · 필기(형광펜 · 자동펜 · 펜 · 지우개 · 3색 · 되돌리기/다시 하기) · 다시 만들어도 이전 판과 그 필기는 남김 · v7.87: 필기 — 밑줄 도구가 자동펜(곧게 그으면 밑줄 · 동그라미 · 네모 · 별은 깔끔한 도형) · 펜은 손글씨 그대로 · S펜으로 그을 땐 필기만(손바닥 · 펜 쓰는 중 손가락 무시) · 손가락만 넘김 · v7.86: AI 보고서 필기 — 형광펜 진하게(노랑 바탕 · 검은 글씨) · 펜으로 그린 동그라미 · 네모 · 별표 · 곧은 선을 자동으로 깔끔하게(글자를 감싸면 그 글자에 붙음 · 바로 되돌리면 손글씨) · 색 빨강 · 초록 · 파랑 · 되돌리기 · 다시 하기(두 손가락 톡 · 세 손가락 톡 · 버튼 길게 누르면 계속) · v7.85: AI 보고서 필기 버튼을 모든 기기에(오른쪽 아래 흰 펜 버튼) · 휴대폰은 도구를 켜면 손가락으로 그림 · v7.84: 발견 리포트 의견을 오른쪽 위 등락률 왼쪽 작은 딱지로(보유 딱지와 같은 모양) · v7.83: 발견 리포트 딱지에서 문서 아이콘 뺌 · v7.82: 발견 AI 리포트 표시를 종목명 줄 오른쪽 작은 딱지로 · v7.81: AI 리포트 PPT는 앱 안에서 — 글꼴 넣은 PDF를 장마다 넘겨 봄('PPT 보기') · v7.80: AI 보고서 필기 — 형광펜 · 밑줄(글자에 붙음) · 펜(문단에 붙음) · 지우개 · 되돌리기 · S펜 옆 버튼 지우개 · 손가락은 넘김 · 사람마다 서버 저장 · v7.79: AI 리포트 맨 아래 리뉴얼 · PPT 만들기 버튼을 반반 한 줄로 · v7.78: 장이 닫히면 피드 차트 마지막 종가에 흰 점 · 발견의 보고서 딱지를 차트 아래 'AI 리포트 · 날짜 · 의견' 줄로 · v7.77: AI 리포트 맨 아래 'PPT 만들기'(관리자) — Claude가 이 리포트만 보고 장 구성을 새로 짠 PPT를 만들어 '정량분석' 폴더에 두고 'PPT 열기'로 연결 · v7.76: 탐색 › 섹터 동향 맨 아래 분기 평가(관리자) — 13F 마감 뒤 올릴 후보 · 내릴 후보 · 근거 · AI가 쓴 KJP 등록 정보(섹터 · 간단 설명 · 회사명 · 상세 설명) 고쳐 반영하면 마스터 시트에 씀 · v7.75: AI 예보 — 덕 볼 후보(보유 · 관심 밖 · 미리 담기) · 지난 예보에 미리 담기 성적 · 발견에 '예보 미리 담기' · v7.74: 제안 추적에 판단 뒤집힘 비율 · v7.73: 제안 추적에 '시장 영향 뺀 성적'(같은 날 사는 쪽 − 파는 쪽 · 유지 판단만) · v7.72: 마이 › 실시간 현황도 장외 지금 가격 · v7.71: 장외(프리 · 애프터 · 주간거래) 지금 가격은 차트 · 종목 페이지 가격 · 발견 피드에만, 누적성과 · 포트폴리오 · 탐색 등은 정규장만(장외는 마지막 종가) · v7.70: 발견 정렬 — 최신일이 먼저, 같은 날 안에서 내부자 매수 > 시그널 > 밸런스 · v7.69: AI › AI 예보 탭(앞으로 4주 · 예보 카드 · 경우별 확률 · 내 계좌 손익 · 걸린 종목 · 할 일 · 경제 일정 · 지난 예보) · v7.68: AI 매수리포트 · AI 매니저 리포트 · 승인 페이지 머리에 발견 피드 간단 차트(3M · 6M · 1Y · 지금 가격) · v7.67: 기관 13F — KJP500 종목(코드 · 이름)은 누르면 종목 페이지 · 방향은 분기마다 기관의 사상(추론) · 시사점(내 계좌와 같은 점 · 다른 점 · 볼 것) · 기관 로고에 사진 넣기(관리자) · v7.66: AI 매니저 승인 페이지 · 승인/거부 시트도 아래로 쓸어 닫기 · 갤럭시 뒤로가기는 앱을 닫지 않고 앞 화면(시트 → 앞 메뉴) · v7.65: 차트 평단가 숫자가 주가를 가리면 평단선 위 가리지 않는 자리로 · v7.64: 밸런스 종목 '넣으면 좋은 순'(기본) — 현금에서 계좌의 10%를 넣었다 치고 지난 1년 다시 계산 · 스스로 오르는 종목만 · 점 = 60 · 120 · 250일 · 계좌 급락일 · 발견 밸런스도 이 순서 · v7.63: AI 리포트 · AI 매수분석 목록 덜 답답하게(카드 높이 · 여백 · 아래 줄) · 종목 지도 정렬은 누를 때마다 바뀌는 글자 버튼으로 · v7.62: 종목 지도 실적 콜 비교 — 주제 · 숫자를 차례로(토글 없앰) · 숫자 차트를 앱 간단 차트 모양으로 · v7.61: AI 보고서 읽어 주기 — 첫 묶음 짧게(곧바로 소리) · 다음 두 묶음 미리 · 서버가 조각으로 나눠 동시에 만듦 · v7.60: AI 매니저 서버 점검 — 확인할 점(근거와 결론 어긋남 · 반대 방향 표 · 빈 항목 · 검수 치우침 · 어제와 반대 · 큰 주문) · 크게 어긋나면 보류 · v7.59: 태블릿 2단에서 탐색 · 뉴스가 메뉴에서 빠지던 것 고침 · v7.58: 좁은 화면(폴드 접은 화면)에서 하단 메뉴의 탐색 · 뉴스는 ☰ 메뉴로 · 펼치면 하단 메뉴 · v7.57: 매수심사 · AI 매니저 예전 리포트도 시안 틀(자료 없는 칸은 뺌) · 미국 매수심사는 늘 저녁 줄(AI 매니저와 같은 매일 조사) · v7.56: 겹친 화면 위에서 쓸면 그 화면만 움직임(뒤 화면 끌림 막음) · 종목 지도 '영역별로 보기' 처음엔 접음 · 연구 › 종목 지도 정렬(최신순 · 상대 PER 낮은 순) · v7.55: 매수심사 · AI 매니저 리포트 — 결론까지 온 길 · 설득 · 무엇을 고민했나 · 무엇을 저울질했나(18항목 쪽) · 판단 셋 · 검수가 확인한 것 · (매니저) 늘림·그대로·줄임 신호등 · 어제→오늘 · 계좌 전체 · 00:00 · 지난 제안 · v7.54: 내 주식 › AI 매도심사 버튼 없앰 · 미국 종목 AI 매수심사는 종목 지도 위 줄 오른쪽(지도가 있을 때) · v7.53: AI 매니저 새 화면 — 하루 흐름 · 오늘 밤 결론(지금 · 제안 · 내 결정) · 하나씩 결정(설득 · 반대 표 · 어제와 바뀐 것) · 거부 이유 한 줄 · 되돌리기 · 신뢰 기록(거부 노트) · 제안 도착 알림 · v7.52: 뉴스 › 기관 13F 탭(주요 기관 5곳 + 의회 · 방향 · 근거 4분기 · 기관 상세) · v7.51: 알림 — 장중 급변(보유 종목 · QQQ가 ATR 2배 · 3배) · v7.50: 종목 지도 — '최근 분기' 아래 실적 콜 비교(최근 4분기 · [주제 | 숫자]) · v7.49: 설정 › 관리자 › Alpha Vantage 키 · v7.48: 넓은 화면 2단 — 가운데 경계선을 끌 수 있는 범위 넓힘(왼쪽 최소 320 · 오른쪽 최소 300) · v7.47: 연구 › 종목 지도 — 최근 분기 실적 콜 원문이 있으면 실적 D-day 왼쪽에 초록 점 · v7.46: 넓은 화면 2단 — 폴드 펼친 화면을 가로로 돌리면 2단 · 세로는 한 칸 · v7.45: 알림 — 매수심사 마감(21:00) 1시간 전 · v7.44: 알림 · 링크로 AI 가이드를 열면 일정 › 주간 일정으로 · v7.43: 연구 › 종목 지도 — 오른쪽에 5년 밸류 위치 막대 · 다음 실적 D-day · v7.42: 뉴스 › 거시 날씨 탭(AI 매니저에서 옮김) · 우호 해 · 중립 구름 · 비우호 비 아이콘 · v7.41: 연구 아이콘 — 액체 · 기포 무채색(색은 AI 메뉴만) · v7.40: 연구 아이콘 — 플라스크에 액체 · 기포 · v7.39: 연구 아이콘 플라스크 · 모의 매수 · 비교 분석에서 서브탭이 아래로 가던 것 고침 · 일정 › 주간 일정 탭(AI 가이드 · 그날 체결 · 일정) · v7.38: 메뉴 7개 — 발견(내부자 매수 > 시그널 > 밸런스 종목) · 탐색 · 연구(AI 리포트 · 종목 지도 · 모의 매수 · 비교 분석) · AI(AI 매니저 · AI 매수분석) · 뉴스(AI 브리핑 · 주간 이슈) · 일정(월간 일정 + AI 가이드 · AI 비서) · 마이 · v7.37: 평단이 차트 기간 주가 범위 밖이면 선 없이 숫자만(위 · 아래 모서리) — 차트 비율 그대로 · v7.36: 종목 상세 — 차트 탭 없앰(종목명 · 로고 · 주가를 누르면 차트) · 탭 순서 종목 지도 · AI 보고서 · 내 주식 · 자산 탭에서 들어와도 차트 먼저 · v7.35: MACRO에 천연가스 · 반도체 지수 · 미국채 2년(코드 고침) · v7.34: 매수심사 리포트 — 주문 승인을 '할 일' 칸 안으로 · 16항목은 '자세히 보기' 첫 줄로 접음 · v7.33: 매수심사 리포트(새 체계) — 할 일은 첫 진입만 · 손절 · 익절 · 2차 계획 · 비슷했던 구간 뺌 · v7.32: 새로고침하면 늘 맨 위에서 시작 (브라우저 스크롤 복원 끔 · 처음 3초 안에 손대기 전까지 맨 위로) · v7.31: 매수심사 대기 까닭(저녁 줄 · 준비물) · 걸리는 시간 문구 · v7.30: 매수심사 검수 '검수가 오지 않음' 표시 · v7.29: 제안 추적 — 금액(방향이 맞으면 +) · 버튼별 · 경우별 합계 · v7.28: 00:00 확인 — 지금 가격을 못 받은 종목 알림 줄 · v7.27: 종목 이력 구간 — 날짜 · 수치 겹침과 오른쪽 정렬 고침 · 출처 링크 색 · 그 뒤 값이 없으면 '아직' · v7.26: 종목 지도 — 지도 고칠 후보(지도 밖 사실) · 매일 조사 목록 칸 · 지도 없어도 '크게 움직였을 때' · AI 보고서 탭의 이력 버튼은 지도 탭으로 옮김 · 이력에 그 뒤 20 · 60일 · 거시 날씨 칩은 목록만 다시 그림 · 평생 수집 문구 ·   // v7.25: AI 매니저 — 승인은 00:00 확인 뒤 주문(받아 둠 · 거두기) · 보류 · 00:00 확인 결과 · 계좌 종합 · 제안 추적(기준 가격 · 가격 · 나스닥 따로 · 유지 · 홀딩까지) ·   // v7.24: 매수심사 리포트 — 판단 셋의 표 · 검수 · 18항목 ·   // v7.23: 산 이유 — 새로 산 종목은 '매수심사' 표시 ·   // v7.22: AI 매니저 제안 추적 — 어떤 제안에 무엇을 눌렀나 ·   // v7.21: 크게 움직였을 때 — 구간마다 원인(출처) ·   // v7.20: 내 주식 › 산 이유(추정) ·   // v7.19: AI 매니저 제안 추적(20거래일 · 나스닥 종합 대비 · 최고 · 최저) · 누른 버튼별 결과 · 어제와 같은 제안 한 번에 ·   // v7.18: AI 매니저 맡기기(00:00 다시 판단대로 바꿔도 됨) · 00:00 다시 판단 결과 표시 ·   // v7.17: AI 매니저 승인 시트 거부 · 모의 · 승인 세 버튼(누른 버튼 기록) · 종목 상세에 근거(오늘 조사 · 출처 · 검수 · 거시 날씨) ·   // v7.16: AI 매니저 다시 켬(미국) — 매일 조사 → 판단 셋 다수결 → 검수 → 23:00 제안 · 진행 상태 · 종목 상세에 표 수 · 18항목 · 검수 · 반대 사실 ·   // v7.15: 종목 지도 — 위쪽(관계도 · 매출 비중 · 최근 분기) 아래는 '영역별로 보기' 목록, 누르면 그 자리에 펼침(이력 포함) ·   // v7.14: 종목 지도 — 칸마다 다른 화면을 열지 않고 한 페이지에 모두 펼침(시안 묶음을 누르면 그 칸으로 내려감) · '한눈에' 칸으로 시안(관계도 · 매출 막대 · 최근 분기) ·   // v7.13: AI 매니저 › 거시 판단 — 종목별 오늘 날씨(우호 · 중립 · 비우호 · 근거 · 기댄 소식) · 종목 지도 초안 · 확정 구분 없앰(고치기만) · v7.12: 종목 지도 — 시안 모양(관계도 · 매출 구성 막대 · 최근 분기 · 주가가 따라가는 것 · 민감한 흐름 · 누르면 상세 · 줄마다 출처) · 맨 아래 '크게 움직였을 때' · v7.11: 종목 지도 — 줄마다 검수 표시(원문과 다름 · 확인 못 함) ·v7.10: 종목 상세 '종목 지도' 탭 (AI 보고서와 내 주식 사이) · v7.09: 넓은 화면 2단 — 가운데 경계선을 끌어 왼쪽 칸 폭 조정 · v7.08: 태블릿 가로 전환 (설치 앱 세로 묶음 해제 · 휴대폰은 세로 유지) · v7.07: 미국 AI 매니저도 멈춤 — '개발 중' 표시 · v7.06: 한국 AI 매니저 멈춤 — '개발 중' 표시 · v7.05: 일반 사용자에게 — 종목 이력 카드(크게 내렸을 때 · 올랐을 때) · AI 리포트 › 매매 분석 읽기(관리자 포지션 · 수량 · 현금은 뺌) · v7.04: 세로 2단 · v7.03: 데칼코마니 차트 · v7.02: 신호 자동 연계 · v7.01: 매수심사 승인 주문 · v7.00: 새 체계
 // v6.41: 배경 되돌림 · AI 보고서·매매심사 목록을 앱 룩앤필로(발견식 로고 줄: 로고·종목명·의견, 앱 카드 200 고정) · 심사 후 주가 빠지던 것(서버 마지막 종가 보강) · 종목명 통일
 // v6.40: 메인 화면 순검정 · AI 보고서·AI 매매심사 목록 한 포맷(로고 무대 · 알약 · 글로 된 카드 208 · 두 열) · 팔로우 체크(보유·관심 자동, 서버 추적·다시 볼 날 알림) · 채점·성적은 맨 아래
@@ -1691,45 +1691,106 @@ body.modal-map-mode #chartModal .modal-report-banner, body.modal-map-mode #chart
 .sm2-l { font-size: 16px; line-height: 1.6; color: var(--text-hi, #fff); word-break: keep-all; overflow-wrap: anywhere; } .sm2-l + .sm2-l { margin-top: 22px; } .sm2-l small { display: block; margin-top: 4px; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .sm2-l small a { color: inherit; text-decoration: underline; }
 /* v7.13: AI 매니저 › 거시 판단 카드 */
 .mj { margin: 6px 4px 0; display: flex; flex-direction: column; gap: 12px; }
+/* ============ v9.01: 뉴스 › 일간 이슈 — 움직임 개편(모양 · 정보는 그대로) ============ */
+.di2-strip { position: relative; display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin: 2px 0 6px; touch-action: pan-y; }
+.di2-sel { position: absolute; top: 26px; left: 0; width: 0; height: 36px; border-radius: var(--radius-pill, 999px); background: var(--accent); pointer-events: none; will-change: transform, width; z-index: 0; }
+.di2-strip .di2-d { position: relative; z-index: 1; background: none; border: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 0 2px; cursor: pointer; color: var(--text-hi); min-height: 44px; font: inherit; -webkit-tap-highlight-color: transparent; }
+.di2-strip .di2-d .di2-w { font-size: var(--text-xs, 11px); color: var(--text-mute); }
+.di2-strip .di2-d .di2-n { font-size: var(--text-xl, 18px); font-weight: 700; width: 36px; height: 36px; line-height: 36px; text-align: center; border-radius: 50%; font-variant-numeric: tabular-nums; transition: color var(--t-base, .2s) var(--ease-out); will-change: transform; }
+.di2-strip .di2-d.on .di2-n { color: #0b1620; }
+.di2-strip .di2-d.today:not(.on) .di2-n { color: var(--accent); }
+.di2-strip .di2-d .di2-dots { display: flex; gap: 2px; height: 7px; }
+.di2-strip .di2-d .di2-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--text-mute); opacity: .6; will-change: transform; }
+.di2-strip .di2-d .di2-td { font-size: var(--text-xs, 11px); color: var(--accent); font-weight: 700; margin-top: -2px; height: 14px; }
+.di2-chips { position: relative; display: flex; height: 40px; border-radius: var(--radius-pill, 999px); background: var(--fill-1); margin: 10px 0 8px; overflow: hidden; }
+.di2-chips > .xtab-btn { flex: 1 1 0; min-width: 0; height: 40px; padding: 0; font-size: var(--text-base, 13px); }
+.di2-chips > .xtab-btn em { font-style: normal; font-size: var(--text-sm, 12px); opacity: .8; font-variant-numeric: tabular-nums; margin-left: 2px; }
+.di2-sum { margin: 6px 4px 2px; font-size: var(--text-base, 13px); color: var(--text); line-height: 1.5; font-variant-numeric: tabular-nums; min-height: 20px; }
+.di2-sum b { color: var(--text-hi); }
+.di2-sum .up { color: var(--kr-up); } .di2-sum .down { color: var(--kr-down); }
+.di2-mood { display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: var(--fill-1); margin: 8px 4px 0; gap: 2px; }
+.di2-mood i { display: block; height: 100%; min-width: 0; width: 0; will-change: width; }
+.di2-mood .u { background: var(--kr-up); } .di2-mood .f { background: var(--text-mute); opacity: .55; } .di2-mood .d { background: var(--kr-down); }
+.di2-tlw { position: relative; margin-top: 18px; overflow: hidden; touch-action: pan-y; }
+.di2-tl { position: relative; will-change: transform; }
+.di2-empty { text-align: center; color: var(--text-mute); padding: 44px 12px; font-size: var(--text-base, 13px); will-change: transform, opacity; }
+.di2-it { display: grid; grid-template-columns: 46px 46px minmax(0, 1fr) 22px; gap: 10px; align-items: start; position: relative; padding-bottom: 30px; will-change: transform, opacity; }
+.di2-tm { font-size: var(--text-sm, 12px); color: var(--text-mute); text-align: right; line-height: 1.35; padding-top: 14px; font-variant-numeric: tabular-nums; }
+.di2-rail { position: relative; display: flex; justify-content: center; align-self: stretch; }
+.di2-rail::after { content: ""; position: absolute; top: 46px; bottom: -30px; left: 50%; width: 2px; margin-left: -1px; background: var(--fill-3); border-radius: 1px; transform: scaleY(var(--rl, 1)); transform-origin: 50% 0; }
+.di2-it.last .di2-rail::after { display: none; }
+.di2-ic { width: 44px; height: 44px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--aq-lg-bg, var(--surface)); outline: 3px solid var(--c); position: relative; z-index: 1; cursor: pointer; will-change: transform; flex: none; overflow: visible; }
+.di2-ic .di2-logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+.di2-body { padding-top: 4px; min-width: 0; cursor: pointer; }
+.di2-sub { font-size: var(--text-sm, 12px); color: var(--text-mute); margin-bottom: 4px; line-height: 1.5; }
+.di2-tk { color: var(--text-dim); font-weight: 700; cursor: pointer; }
+.di2-tt { font-size: var(--text-md, 15px); font-weight: 700; color: var(--text-hi); line-height: 1.45; overflow-wrap: anywhere; }
+.di2-chev { align-self: start; justify-self: center; margin-top: 14px; width: 8px; height: 8px; border-right: 1.6px solid var(--text-mute); border-bottom: 1.6px solid var(--text-mute); transform: rotate(45deg); will-change: transform; cursor: pointer; position: relative; }
+.di2-chev::before { content: ""; position: absolute; inset: -18px; }
+.di2-det { overflow: hidden; height: 0; }
+.di2-in { margin-top: 10px; background: var(--fill-1); border-radius: 12px; padding: 12px 14px; font-size: var(--text-base, 13px); line-height: 1.6; color: var(--text); }
+.di2-in .di2-st + .di2-st { margin-top: 8px; }
+.di2-in b { color: var(--text-hi); font-weight: 700; margin-right: 4px; }
+.di2-lk { display: inline-flex; align-items: center; min-height: 44px; margin-top: 2px; }
+.aqw { opacity: 0; transition: opacity .18s var(--ease-out); } .aqw.on { opacity: 1; }
+.aq-car { display: inline-block; width: 2px; height: 1em; background: var(--accent); margin-left: 2px; vertical-align: -2px; border-radius: 1px; }
+@media (prefers-reduced-motion: reduce) { .aqw { opacity: 1; transition: none; } .aq-car { display: none; } }
 .di-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 32px 4px 6px; } .di-h b { font-size: 15px; font-weight: 600; color: var(--text-hi, #fff); } .di-h small { font-size: 12px; color: var(--text-mute, #85858a); }   /* v8.51: 일간 이슈 · 종목별 날씨 머리 */
-#diBox .gd-ic.logo { cursor: pointer; }
-.di-chips { margin: 14px 0 6px; padding: 4px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: #1c1c1f; border-radius: 999px; }
-.di-chips button { all: unset; position: relative; z-index: 1; cursor: pointer; box-sizing: border-box; height: 36px; line-height: 36px; text-align: center; font-size: 13px; color: var(--text-dim, #9d9d9d); border-radius: 999px; background: transparent; }
-.di-chips button.on { background: var(--accent-soft, #22303d); color: var(--accent-text, #8fc0ec); font-weight: 500; } .di-chips em { font-style: normal; font-size: 12px; opacity: .75; font-variant-numeric: tabular-nums; } #diBox .gd-det .nw-link { display: inline-block; margin-top: 2px; }
 /* v7.52: 뉴스 › 기관 13F */
 #f13Card .card-body { padding: 0 0 40px; }
-.f13-h { margin: 22px 4px 18px; display: flex; flex-direction: column; gap: 6px; } .f13-h h2 { margin: 0; font-size: 18px; font-weight: 800; color: #fff; } .f13-h span { font-size: 12.5px; color: #8a8a8a; }
-.f13-list { display: flex; flex-direction: column; gap: 12px; }
-.f13-c { background: rgba(255,255,255,.04); border-radius: 16px; padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; cursor: pointer; }
-.f13-top { display: flex; align-items: center; gap: 12px; } .f13-top > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .f13-top b { font-size: 15.5px; color: #fff; } .f13-top span { font-size: 12px; color: #8a8a8a; }
-.f13-lg { width: 40px; height: 40px; flex: none; border-radius: 50%; background: #2d2d30; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #b8b8b8; } .f13-lg.big { width: 44px; height: 44px; font-size: 11.5px; }
-.f13-mine { font-size: 11.5px; color: #e4e4e4; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
-.f13-k { font-size: 11.5px; color: #8a8a8a; } .f13-dir { display: flex; flex-direction: column; gap: 6px; } .f13-dir p { margin: 0; font-size: 15px; line-height: 1.6; color: #fff; word-break: keep-all; overflow-wrap: anywhere; } .f13-dir p.wait { color: #8a8a8a; font-size: 13.5px; }
-.f13-ev { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.06); }
-.f13-er { display: grid; grid-template-columns: minmax(0,1fr) 40px 74px; align-items: center; gap: 10px; font-size: 13px; min-height: 26px; } .f13-er > span:first-child { color: #b8b8b8; }
-.f13-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; } .f13-bars i { width: 7px; border-radius: 2px; background: rgba(255,255,255,.22); }
-.f13-v { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; } .f13-v b { font-size: 13.5px; color: #fff; font-weight: 600; } .f13-v small { font-size: 11.5px; color: #8a8a8a; } .f13-v small.up { color: #5eead4; } .f13-v small.dn { color: #f0a4a4; }
-.f13-cnt { font-size: 12px; color: #6a6a6a; }
-.f13-back { width: 44px; height: 44px; display: flex; align-items: center; color: #9d9d9d; background: none; border: 0; padding: 0; cursor: pointer; margin-top: 6px; }
-.f13-dh { display: flex; align-items: center; gap: 12px; margin: 6px 4px 0; } .f13-dh > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; } .f13-dh b { font-size: 19px; color: #fff; } .f13-dh span { font-size: 12.5px; color: #8a8a8a; }
-.f13-qs { display: flex; gap: 8px; margin: 24px 4px 0; flex-wrap: wrap; } .f13-qs button { font-size: 12.5px; padding: 7px 12px; border-radius: 999px; color: #8a8a8a; border: 1px solid rgba(255,255,255,.08); background: none; cursor: pointer; } .f13-qs button.on { background: rgba(255,255,255,.12); color: #fff; font-weight: 700; border-color: transparent; }
-.f13-num { margin: 24px 4px 0; background: rgba(255,255,255,.04); border-radius: 16px; padding: 16px; display: grid; text-align: center; gap: 6px; } .f13-num > div { display: flex; flex-direction: column; gap: 4px; } .f13-num b { font-size: 18px; color: #e4e4e4; } .f13-num b.up { color: #5eead4; } .f13-num b.dn { color: #f0a4a4; } .f13-num span { font-size: 11.5px; color: #8a8a8a; }
-.f13-sec { margin: 36px 4px 0; display: flex; flex-direction: column; } .f13-sec.near { margin-top: 20px; } .f13-st { font-size: 12px; color: #9d9d9d; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; } .f13-st.sp { justify-content: space-between; } .f13-st small { font-size: 11.5px; color: #6a6a6a; }
-.f13-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; } .f13-dot.up { background: #5eead4; } .f13-dot.dn { background: #f0a4a4; }
-.f13-grp { display: flex; flex-direction: column; padding: 10px 0 6px; border-top: 1px solid rgba(255,255,255,.06); } .f13-grp > .f13-st { font-size: 12.5px; color: #8a8a8a; margin-bottom: 4px; }
-.f13-row { display: flex; align-items: center; justify-content: space-between; min-height: 40px; gap: 10px; } .f13-row.bd { min-height: 48px; border-top: 1px solid rgba(255,255,255,.06); }
-.f13-tk { font-size: 15px; color: #fff; display: flex; align-items: center; gap: 8px; } .f13-tag { flex-shrink: 0; font-size: 10px; font-weight: 700; color: #9a9aa0; background: rgba(255,255,255,0.06); border-radius: 999px; padding: 1px 7px; line-height: 16px; } .f13-tag + .f13-tag { margin-left: -4px; } .f13-tag.on { color: #e4e4e4; background: rgba(255,255,255,0.13); } .f13-tk i { width: 6px; height: 6px; border-radius: 50%; background: #fff; display: inline-block; }
-.f13-rv { font-size: 13px; color: #b8b8b8; text-align: right; } .f13-sub { font-size: 11.5px; color: #8a8a8a; } .f13-row > div { display: flex; flex-direction: column; gap: 2px; }
-.f13-box { margin: 36px 4px 0; background: rgba(255,255,255,.04); border-radius: 16px; padding: 20px 16px; display: flex; flex-direction: column; gap: 18px; } .f13-box .f13-dir p { font-size: 15.5px; line-height: 1.65; } .f13-box .f13-ev { padding-top: 14px; gap: 9px; }
-.f13-say { display: flex; flex-direction: column; gap: 6px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); } .f13-say p { margin: 0; font-size: 14px; line-height: 1.6; color: #e4e4e4; word-break: keep-all; overflow-wrap: anywhere; } .f13-say small, .f13-say small a { font-size: 11.5px; color: #6a6a6a; }
-.f13-pty { margin: 18px 4px 0; display: flex; flex-direction: column; gap: 8px; } .f13-pty > div:first-child { display: flex; height: 10px; border-radius: 5px; overflow: hidden; gap: 3px; } .f13-pty > div:last-child { display: flex; justify-content: space-between; font-size: 12px; color: #9d9d9d; }
-.f13-t10 { display: grid; grid-template-columns: 22px minmax(0,1fr) 56px 64px; align-items: center; gap: 8px; min-height: 46px; border-top: 1px solid rgba(255,255,255,.06); } .f13-t10 > span:first-child { font-size: 12px; color: #6a6a6a; } .f13-t10 .f13-rv { color: #d4d4d4; }
-.f13-t10 .f13-bars { gap: 4px; height: 22px; justify-content: flex-end; } .f13-t10 .f13-bars i { width: 9px; background: rgba(255,255,255,.28); } .f13-t10 .f13-bars i.on { background: #fff; }
-.f13-lk { cursor: pointer; text-decoration: underline; text-decoration-color: rgba(255,255,255,.28); text-underline-offset: 3px; }
+.f13-h { margin: 22px 4px 12px; display: flex; flex-direction: column; gap: 6px; } .f13-h h2 { margin: 0; font-size: var(--text-xl, 18px); font-weight: 800; color: var(--text-hi); } .f13-h span { font-size: var(--text-sm, 12px); color: var(--text-mute); }
+/* v9.01: 뉴스 › 기관 13F 움직임 개편 — 색 · 글자는 앱 토큰(상승 · 하락 두 색 · 글자 11/12/13/15/18) */
+.f13-flt { position: relative; display: flex; height: 36px; width: max-content; max-width: 100%; border-radius: var(--radius-pill, 999px); background: var(--fill-1); margin: 4px 4px 12px; overflow: hidden; }
+.f13-flt > .xtab-btn { flex: 0 0 auto; height: 36px; min-width: 72px; padding: 0 16px; font-size: var(--text-base, 13px); }
+.f13-list { display: flex; flex-direction: column; gap: 12px; position: relative; }
+.f13-c { background: var(--fill-1); border-radius: 16px; padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; cursor: pointer; will-change: transform, opacity; -webkit-tap-highlight-color: transparent; }
+.f13-c[hidden] { display: none; }
+.f13-c:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.f13-top { display: flex; align-items: center; gap: 12px; } .f13-top > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .f13-top b { font-size: var(--text-md, 15px); font-weight: 600; color: var(--text-hi); } .f13-top span { font-size: var(--text-sm, 12px); color: var(--text-mute); }
+.f13-lg { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--fill-3); display: flex; align-items: center; justify-content: center; font-size: var(--text-xs, 11px); font-weight: 700; color: var(--text-dim); will-change: transform; } .f13-lg.big { width: 48px; height: 48px; }
+.f13-top .f13-mine { font-size: var(--text-sm, 12px); color: var(--accent-text); background: var(--accent-soft); border-radius: var(--radius-pill, 999px); padding: 4px 10px; white-space: nowrap; }
+.f13-k { font-size: var(--text-sm, 12px); color: var(--text-mute); } .f13-dir { display: flex; flex-direction: column; gap: 6px; } .f13-dir p { margin: 0; font-size: var(--text-md, 15px); line-height: 1.6; color: var(--text-hi); font-weight: 600; word-break: keep-all; overflow-wrap: anywhere; } .f13-dir p.wait { color: var(--text-mute); font-size: var(--text-base, 13px); font-weight: 400; }
+.f13-ev { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--fill-1); }
+.f13-er { display: grid; grid-template-columns: minmax(0, 1fr) 44px 78px; align-items: center; gap: 10px; font-size: var(--text-base, 13px); min-height: 28px; } .f13-er > span:first-child { color: var(--text-dim); }
+.f13-bars { display: flex; align-items: flex-end; gap: 3px; height: 22px; } .f13-bars i { width: 7px; border-radius: 2px; background: var(--fill-3); transform-origin: 50% 100%; will-change: transform; }
+.f13-bars i.l.u { background: var(--kr-up); } .f13-bars i.l.d { background: var(--kr-down); }
+.f13-v { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; font-variant-numeric: tabular-nums; } .f13-v b { font-size: var(--text-base, 13px); color: var(--text-hi); font-weight: 600; } .f13-v small { font-size: var(--text-sm, 12px); color: var(--text-mute); } .f13-v small.up { color: var(--kr-up); } .f13-v small.dn { color: var(--kr-down); }
+.f13-cnt { font-size: var(--text-sm, 12px); color: var(--text-mute); }
+.f13-back { width: 44px; height: 44px; display: flex; align-items: center; color: var(--text-dim); background: none; border: 0; padding: 0; cursor: pointer; margin: 0 0 0 -6px; }
+.f13-dh { display: flex; align-items: center; gap: 12px; margin: 2px 4px 0; } .f13-dh > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .f13-dh b { font-size: var(--text-xl, 18px); font-weight: 800; color: var(--text-hi); } .f13-dh span { font-size: var(--text-sm, 12px); color: var(--text-mute); }
+.f13-qs { margin: 18px 4px 0; } .f13-qh { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--text-sm, 12px); color: var(--text-mute); margin-bottom: -6px; } .f13-qh b { font-size: var(--text-xl, 18px); font-weight: 700; color: var(--text-hi); font-variant-numeric: tabular-nums; }
+.f13-num { margin: 12px 4px 0; background: var(--fill-1); border-radius: 16px; padding: 16px; display: grid; text-align: center; gap: 6px; } .f13-num > div { display: flex; flex-direction: column; gap: 4px; } .f13-num b { font-size: var(--text-xl, 18px); font-weight: 700; color: var(--text-hi); font-variant-numeric: tabular-nums; } .f13-num b.up { color: var(--kr-up); } .f13-num b.dn { color: var(--kr-down); } .f13-num span { font-size: var(--text-sm, 12px); color: var(--text-mute); }
+.f13-flow { display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: var(--fill-1); gap: 2px; margin: 10px 4px 0; } .f13-flow i { display: block; height: 100%; width: 0; will-change: width; } .f13-flow .u { background: var(--kr-up); } .f13-flow .d { background: var(--kr-down); }
+.f13-sec { margin: 28px 4px 0; display: flex; flex-direction: column; } .f13-sec.near { margin-top: 20px; } .f13-st { font-size: var(--text-base, 13px); color: var(--text-dim); display: flex; align-items: center; gap: 6px; margin-bottom: 8px; } .f13-st.sp { justify-content: space-between; } .f13-st small { font-size: var(--text-sm, 12px); color: var(--text-mute); }
+.f13-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; } .f13-dot.up { background: var(--kr-up); } .f13-dot.dn { background: var(--kr-down); }
+.f13-grp { display: flex; flex-direction: column; padding: 10px 0 6px; border-top: 1px solid var(--fill-1); } .f13-grp > .f13-st { color: var(--text-dim); margin-bottom: 4px; }
+.f13-row { display: flex; align-items: center; justify-content: space-between; min-height: 44px; gap: 10px; will-change: transform, opacity; } .f13-row.bd { min-height: 48px; border-top: 1px solid var(--fill-1); }
+.f13-tk { font-size: var(--text-md, 15px); color: var(--text-hi); display: flex; align-items: center; gap: 8px; } .f13-tag { flex-shrink: 0; font-size: var(--text-xs, 11px); font-weight: 700; color: var(--text-dim); background: var(--fill-2); border-radius: var(--radius-pill, 999px); padding: 1px 8px; line-height: 16px; } .f13-tag.on { color: var(--accent-text); background: var(--accent-soft); }
+.f13-rv { font-size: var(--text-base, 13px); color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums; } .f13-sub { font-size: var(--text-sm, 12px); color: var(--text-mute); } .f13-row > div { display: flex; flex-direction: column; gap: 2px; }
+.f13-box { margin: 28px 4px 0; background: var(--fill-1); border-radius: 16px; padding: 18px 16px; display: flex; flex-direction: column; gap: 16px; transition: opacity .2s var(--ease-out); } .f13-box .f13-dir p { font-size: var(--text-md, 15px); line-height: 1.65; } .f13-box .f13-ev { padding-top: 14px; gap: 9px; }
+.f13-say { display: flex; flex-direction: column; gap: 6px; padding-top: 14px; border-top: 1px solid var(--fill-1); } .f13-say p { margin: 0; font-size: var(--text-base, 13px); line-height: 1.65; color: var(--text); word-break: keep-all; overflow-wrap: anywhere; } .f13-say p.wait { color: var(--text-mute); } .f13-say small, .f13-say small a { font-size: var(--text-sm, 12px); color: var(--text-mute); }
+.f13-pty { margin: 16px 4px 0; display: flex; flex-direction: column; gap: 8px; } .f13-pty > div:first-child { display: flex; height: 10px; border-radius: 5px; overflow: hidden; gap: 2px; background: var(--fill-1); } .f13-pty i { display: block; height: 100%; width: 0; will-change: width; } .f13-pty i.d { background: var(--text-hi); } .f13-pty i.r { background: var(--text-mute); } .f13-pty > div:last-child { display: flex; justify-content: space-between; font-size: var(--text-sm, 12px); color: var(--text-mute); }
+.f13-t10 { display: grid; grid-template-columns: 22px minmax(0, 1fr) 52px 60px; align-items: center; gap: 8px; min-height: 52px; border-top: 1px solid var(--fill-1); will-change: transform, opacity; } .f13-t10 > .n { font-size: var(--text-sm, 12px); color: var(--text-mute); text-align: center; } .f13-t10 .f13-rv { color: var(--text); }
+.f13-t10 .bw { display: flex; flex-direction: column; gap: 5px; min-width: 0; } .f13-t10 .tr { height: 6px; border-radius: 3px; background: var(--fill-1); position: relative; } .f13-t10 .tr b { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: var(--fill-3); will-change: width; }
+.f13-t10 .f13-bars { gap: 3px; height: 22px; justify-content: flex-end; } .f13-t10 .f13-bars i { width: 8px; background: var(--fill-3); } .f13-t10 .f13-bars i.l { background: var(--text-hi); }
+.f13-lk { cursor: pointer; text-decoration: underline; text-decoration-color: var(--fill-3); text-underline-offset: 3px; }
 .f13-lg.ph { background: var(--aq-lg-bg); overflow: hidden; } .f13-lg.ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.f13-th { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; } .f13-th > div { display: flex; flex-direction: column; gap: 4px; } .f13-th p { margin: 0; font-size: 14.5px; line-height: 1.65; color: #e4e4e4; word-break: keep-all; overflow-wrap: anywhere; }
-.f13-im { display: flex; flex-direction: column; gap: 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); } .f13-im > div { display: flex; flex-direction: column; gap: 3px; } .f13-im small { font-size: 11.5px; color: #8a8a8a; } .f13-im p { margin: 0; font-size: 14.5px; line-height: 1.6; color: #fff; word-break: keep-all; overflow-wrap: anywhere; }
-.f13-note { display: flex; flex-direction: column; gap: 3px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.06); } .f13-note > span:first-child { font-size: 14.5px; color: #fff; }
+.f13-th { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; } .f13-th > div { display: flex; flex-direction: column; gap: 4px; } .f13-th p { margin: 0; font-size: var(--text-base, 13px); line-height: 1.65; color: var(--text); word-break: keep-all; overflow-wrap: anywhere; }
+.f13-im { display: flex; flex-direction: column; gap: 12px; padding-top: 14px; border-top: 1px solid var(--fill-1); } .f13-im > div { display: flex; flex-direction: column; gap: 3px; } .f13-im small { font-size: var(--text-sm, 12px); color: var(--text-mute); } .f13-im p { margin: 0; font-size: var(--text-base, 13px); line-height: 1.6; color: var(--text-hi); word-break: keep-all; overflow-wrap: anywhere; }
+.f13-note { display: flex; flex-direction: column; gap: 3px; padding: 12px 0; border-top: 1px solid var(--fill-1); } .f13-note > span:first-child { font-size: var(--text-md, 15px); color: var(--text-hi); }
+.aq-f13-page.open { animation: none !important; }
+/* 젤리 슬라이더(공용 aqJelly) */
+.aqj { position: relative; margin: 0 14px; touch-action: pan-y; cursor: grab; outline-offset: 4px; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+.aqj.drag { cursor: grabbing; } .aqj:focus-visible { outline: 2px solid var(--accent); }
+.aqj-t { position: absolute; left: 0; right: 0; height: 6px; border-radius: 3px; background: var(--fill-3); }
+.aqj-t.back { transition: transform .45s cubic-bezier(0.34, 1.4, 0.64, 1); }
+.aqj-f { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 3px; background: var(--accent); }
+.aqj-goo { position: absolute; left: -24px; right: -24px; top: 0; bottom: 0; filter: url(#aqGoo); pointer-events: none; }
+.aqj-th, .aqj-b { position: absolute; left: 24px; top: 0; border-radius: 50%; background: var(--accent); will-change: transform; }
+.aqj-th { width: 26px; height: 26px; margin: -13px 0 0 -13px; } .aqj-b { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+.aqj-lab { position: absolute; left: 0; top: 0; width: 44px; margin: -9px 0 0 -22px; text-align: center; font-size: var(--text-sm, 12px); line-height: 18px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; pointer-events: none; will-change: transform, opacity; white-space: nowrap; opacity: 0; }
+.aqj-tk { position: absolute; width: 1px; height: 6px; background: var(--fill-3); } .aqj-tl { position: absolute; font-size: var(--text-xs, 11px); color: var(--text-mute); transform: translateX(-50%); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .aqj-t.back, .f13-box { transition: none !important; } }
 .mj-hd { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-dim, #9d9d9d); } .mj-hd b { font-size: 15px; font-weight: 700; color: var(--text-hi, #fff); margin-right: 2px; }
 .mj-top { display: flex; flex-direction: column; gap: 10px; width: 100%; cursor: pointer; padding: 20px 18px; }
 .insider-archive-item.ml-row { grid-template-columns: 42px minmax(0, 1fr) 92px; }   /* v7.43: 연구 › 종목 지도 오른쪽 */
@@ -4670,33 +4731,7 @@ html:not([data-theme="light"]) body { background: var(--bg); }
   /* v6.22: 장후/장전은 첫 줄 전체, 날짜·그만 보기는 둘째 줄 */
 /* v5.57: AI 가이드 */
 body:not([data-role="admin"]) #aiSubtabs .xtab-btn[data-atab="manager"] { display: none !important; }   /* v6.82: AI 매니저 관리자 · AI 가이드는 비서 모듈이 있어 모두에게 */
-.gd-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin: 2px 0 10px; }
-.gd-d { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 0; cursor: pointer; color: var(--text-hi); }
-.gd-w { font-size: 11.5px; color: var(--text-mute); } .gd-n { font-size: 17px; font-weight: 700; width: 36px; height: 36px; line-height: 36px; border-radius: 50%; text-align: center; }
-.gd-d.today .gd-n { color: #f4877d; } .gd-d.sel .gd-n { background: #f4877d; color: #fff; } 
-.gd-dots { display: flex; gap: 2px; height: 8px; } .gd-dots i { width: 7px; height: 7px; border-radius: 50%; }
-.gd-tl { position: relative; }
-.gd-it { display: grid; grid-template-columns: 44px 52px 1fr 30px; gap: 8px; align-items: start; position: relative; padding-bottom: 18px; }
-.gd-it.off .gd-tt { text-decoration: line-through; color: var(--text-mute); } .gd-it.off .gd-ic { opacity: .45; }
-.gd-tm { font-size: 11.5px; color: var(--text-mute); text-align: right; line-height: 1.35; padding-top: 14px; font-variant-numeric: tabular-nums; } .gd-tm small { display: block; font-size: 10px; color: #f4877d; }
-.gd-rail { position: relative; display: flex; justify-content: center; align-self: stretch; }
-.gd-rail::after { content: ""; position: absolute; top: 48px; bottom: -18px; left: 50%; width: 3px; margin-left: -1.5px; background: rgba(244,135,125,.45); border-radius: 2px; }
-.gd-it.last .gd-rail::after { display: none; }
-.gd-ic { width: 48px; height: 48px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 21px; background: color-mix(in srgb, var(--c) 28%, #1a1a1d); position: relative; z-index: 1; flex: none; }
-.gd-ic.logo { background: var(--aq-lg-bg); padding: 0; overflow: visible; } .gd-ic .gd-logo { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
-.gd-badge { position: absolute; right: -4px; bottom: -4px; width: 22px; height: 22px; border-radius: 50%; background: #1a1a1d; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 400; border: 2px solid var(--c); }
-.gd-body { padding-top: 4px; min-width: 0; cursor: pointer; } .gd-sub { font-size: 12px; color: var(--text-mute); margin-bottom: 3px; line-height: 1.5; } .gd-tk { color: var(--text-dim); font-weight: 700; }
-.gd-tt { font-size: 15px; font-weight: 700; color: var(--text-hi); line-height: 1.4; overflow-wrap: anywhere; }
-.gd-det { margin-top: 8px; background: rgba(255,255,255,.05); border-radius: 12px; padding: 10px 12px; font-size: 13px; line-height: 1.6; color: var(--text); } .gd-det > div + div { margin-top: 4px; } .gd-det b { color: var(--text-hi); font-weight: 700; margin-right: 4px; }
-.gd-empty { text-align: center; color: var(--text-mute); padding: 40px 12px; font-size: 13px; }
 /* v5.58: AI 가이드 다듬기 */
-.gd-today { font-size: 10px; color: #f4877d; font-weight: 700; margin-top: -2px; }
-.gd-sum { font-size: 13px; color: var(--text); margin: 6px 4px 2px; line-height: 1.5; } .gd-sum b { color: var(--text-hi); }
-.gd-it { padding-bottom: 34px !important; grid-template-columns: 46px 52px 1fr 26px !important; gap: 10px !important; }
-.gd-rail::after { background: rgba(255,255,255,.14) !important; width: 2px !important; margin-left: -1px !important; bottom: -34px !important; }
-.gd-ic.logo { box-shadow: 0 0 0 3px var(--c); }
-.gd-det { margin-top: 10px !important; padding: 12px 14px !important; } .gd-det > div + div { margin-top: 8px !important; }
-.gd-sub { margin-bottom: 5px !important; } .gd-tt { line-height: 1.45 !important; }
 body[data-mtab="auto"][data-atab="guide"] footer, body[data-mtab="auto"][data-atab="assist"] footer, body[data-mtab="schedule"] footer { display: none !important; }
 /* v6.49: AI 비서 탭 배지 · AI 리포트 [기업 분석 | 매매 분석] */
 #aiSubtabs .xtab-btn em { font-style: normal; display: inline-block; min-width: 16px; height: 16px; line-height: 16px; padding: 0 4px; margin-left: 4px; border-radius: 8px; background: #569cd6; color: #06101f; font-size: 10.5px; font-weight: 800; vertical-align: 1px; box-sizing: border-box; }
@@ -4719,18 +4754,9 @@ body[data-mtab="auto"][data-atab="guide"] footer, body[data-mtab="auto"][data-at
 .mc-sheet .gm-b:disabled { opacity: .45; }
 /* AI 비서 브레인 */
 /* v5.59 */
-.gd-it.past .gd-body, .gd-it.past .gd-tm { opacity: .45; } .gd-it.past .gd-ic { opacity: .55; }
 /* v5.60: 일일 브리핑 숨 쉴 공간 */
 .br-more { border-top: 1px solid rgba(255,255,255,.06); } .br-more summary { list-style: none; cursor: pointer; padding: 13px 16px; font-size: 12.5px; color: #4dabf7; } .br-more summary::-webkit-details-marker { display: none; } .br-more[open] summary { color: var(--text-mute); }
 /* v5.60: AI 가이드 */
-.gd-strip { margin-top: 0 !important; }
-.gd-d.sel .gd-n { background: #4dabf7 !important; color: #0b1a26 !important; } .gd-d.today .gd-n { color: #4dabf7; } .gd-d.sel.today .gd-n { color: #0b1a26; }
-.gd-today { color: #4dabf7 !important; } .gd-dots i { background: #5c5c64 !important; width: 5px !important; height: 5px !important; }
-.gd-it { grid-template-columns: 42px 42px 1fr 22px !important; }
-.gd-ic { width: 40px !important; height: 40px !important; font-size: 18px !important; } .gd-ic .gd-logo { width: 40px !important; height: 40px !important; } .gd-ic.logo { box-shadow: 0 0 0 2px var(--c) !important; }
-.gd-rail::after { top: 42px !important; }
-.gd-tm { padding-top: 11px !important; } 
-.gd-it.done .gd-tt, .gd-it.done .gd-sub { color: var(--text-mute) !important; }
 /* v5.62: 종목 검색 전체 화면 */
 #aqSearchModal.open { align-items: stretch !important; justify-content: stretch !important; padding: 0 !important; }
 #aqSearchModal .search-modal-content { width: 100% !important; max-width: 640px !important; height: 100% !important; max-height: none !important; margin: 0 auto !important; border-radius: 0 !important; display: flex; flex-direction: column; background: var(--bg) !important; padding-top: env(safe-area-inset-top, 0px); }
@@ -9167,12 +9193,7 @@ body:not([data-role="admin"]) #autoSignalCard, body:not([data-role="admin"]) #au
 .rv-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; } .rv-kv > div { background: rgba(255,255,255,.04); border-radius: 12px; padding: 9px 11px; min-width: 0; } .rv-kv span { display: block; font-size: 11px; color: var(--text-mute); } .rv-kv b { display: block; font-size: 15.5px; font-weight: 800; margin-top: 2px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; } .rv-kv b.up { color: var(--kr-up); } .rv-kv b.down { color: var(--kr-down); } .rv-kv b.rv-nx { font-size: 14px; } .rv-kv small { display: block; font-size: 11px; color: var(--text-mute); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .rv-again.off { opacity: .5; }
-.gd-top { display: block; margin: 0 0 16px; }
-.gd-tog { display: flex !important; width: 100%; box-sizing: border-box; background: rgba(255,255,255,.05); border: none !important; border-radius: 12px; padding: 3px; gap: 2px; overflow: visible; flex: 1 0 100% !important; }
-.gd-tog button { flex: 1; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: none; border: none; border-radius: 9px; color: var(--text-dim); font-size: 13.5px; font-weight: 700; padding: 0 8px; cursor: pointer; font-family: inherit; }
-.gd-tog button.on { background: #38383e; color: var(--text-hi); }
 [data-theme="light"] .gd-tog { background: rgba(0,0,0,.05); } [data-theme="light"] .gd-tog button.on { background: #fffdf6; }
-.gd-tog em { font-style: normal; font-size: 11px; min-width: 18px; padding: 0 5px; height: 18px; line-height: 18px; border-radius: 9px; background: rgba(255,255,255,.1); color: var(--text); text-align: center; } .gd-tog em.hot { background: #569cd6; color: #0b0b0d; }
 .gdm-qbox { background: rgba(77,171,247,.06); border: 1px solid rgba(77,171,247,.2); border-radius: 14px; padding: 4px 12px 8px; margin-bottom: 10px; } .gdm-qh { display: flex; align-items: center; gap: 8px; padding: 8px 0 4px; cursor: pointer; } .gdm-qh b { font-size: 13px; color: var(--text-hi); } .gdm-qh span { font-size: 11.5px; color: var(--text-mute); } .gdm-qh i { margin-left: auto; font-style: normal; color: var(--text-mute); font-size: 12px; }
 .gdm-q { display: flex; align-items: center; gap: 8px; font-size: 12.5px; padding: 7px 0; border-top: 1px solid rgba(255,255,255,.05); } .gdm-q .t { flex: 1; min-width: 0; color: var(--text-hi); } .gdm-q .t small { display: block; font-size: 10.5px; color: var(--text-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .gdm-q .ok { color: #63e6be; } .gdm-q .no { color: #ff8787; } .gdm-q .w { color: var(--text-mute); } .gdm-q > span:not(.t) { white-space: nowrap; font-size: 11.5px; } .gdm-q a { color: #4dabf7; font-size: 11px; cursor: pointer; }
 .gdm-gate { display: block; font-size: 10.5px; color: #ffa94d; margin-top: 3px; } .gdm-pk { background: rgba(99,230,190,.05); border-color: rgba(99,230,190,.2); }
@@ -9460,8 +9481,6 @@ body[data-mtab="auto"][data-atab="report"] #analysisCard.gl-mode > .card-header,
 .gda-dup .gda-pick { padding: 10px 0 6px; } .gda-dup .gda-pick input[type=radio] { width: 18px; height: 18px; accent-color: #569cd6; }
 .gda-exp { display: block; margin-top: 4px; font-size: 13px; } .gda-exp input { background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 8px; color: var(--text-hi); padding: 3px 6px; font-family: inherit; color-scheme: dark; }
 .ms-chip.gd-tkchip { background: rgba(99,230,190,.12) !important; color: #63e6be !important; cursor: pointer; }
-.gd-runb { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px; border: 1px solid #2f4f6f; background: #1d2b3a; color: #74c0fc; font-family: inherit; cursor: pointer; white-space: nowrap; }
-.gd-runb:disabled { background: #1e1e22; color: #5c5c64; border-color: #29292e; } .gd-runf { font-size: 11px; color: #ffa94d; }
 .rv-again.x { background: rgba(86,156,214,.14); color: #569cd6; }
 .rv-lvrow { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; } .rv-lv { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--text-dim); }
 .rv-lv i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; } .rv-lv.g { color: #69db7c; background: rgba(64,192,87,.12); } .rv-lv.b { color: #74c0fc; background: rgba(116,192,252,.12); } .rv-lv.y { color: #ffd43b; background: rgba(250,176,5,.12); }
@@ -10580,13 +10599,29 @@ html.aq-wide .aq-rail-tg svg { width: 18px; height: 18px; fill: none; stroke: cu
       <div class="card-body"><div id="mgrBody"><div class="auto-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div></div></div>
     </section>
     <section class="card" id="macroWxCard" data-mtab="auto" data-atab="wx">   <!-- v7.42: 뉴스 › 거시 날씨 (AI 매니저에서 옮김) -->
-      <div class="card-body"><div id="diBox"></div><div id="mjBox"><div class="mg-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div></div></div>
+      <div class="card-body"><div id="diBox">
+        <div class="di-h" style="padding-top:4px"><b>일간 이슈</b><small>최근 7일</small></div>
+        <div class="di2-strip" id="diStrip"><i class="di2-sel" id="diSel"></i></div>
+        <div class="xtab-row di2-chips" id="diChips" role="group" aria-label="보기">
+          <button type="button" class="xtab-btn active" data-f="all" onclick="aqDiF('all')">전체 <em>0</em></button>
+          <button type="button" class="xtab-btn" data-f="held" onclick="aqDiF('held')">보유 <em>0</em></button>
+          <button type="button" class="xtab-btn" data-f="watch" onclick="aqDiF('watch')">관심 <em>0</em></button>
+        </div>
+        <div class="di2-sum" id="diSum"></div>
+        <div class="di2-mood" id="diMood" aria-hidden="true"><i class="u"></i><i class="f"></i><i class="d"></i></div>
+        <div class="di2-tlw" id="diTlw"><div class="di2-tl" id="diTl"></div></div>
+      </div></div>
     </section>
     <section class="card" id="fcCard" data-mtab="auto" data-atab="fc">   <!-- v7.69: AI › AI 예보 -->
       <div class="card-body" style="padding:0"><div id="fcBox"><div class="mg-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div></div></div>
     </section>
     <section class="card" id="f13Card" data-mtab="auto" data-atab="f13">   <!-- v7.52: 뉴스 › 기관 13F -->
-      <div class="card-body"><div id="f13Box"><div class="mg-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div></div></div>
+      <div class="card-body">
+      <div class="xtab-row f13-flt" id="f13Flt" style="display:none" role="group" aria-label="보기">
+        <button type="button" class="xtab-btn active" data-f="all" onclick="aqF13Filter('all')">전체</button>
+        <button type="button" class="xtab-btn" data-f="mine" onclick="aqF13Filter('mine')">내 종목 있는 곳</button>
+      </div>
+      <div id="f13Box"><div class="mg-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div></div></div>
     </section>
     <section class="card" id="analysisCard" data-mtab="auto" data-atab="report">
     <div class="card-header">
@@ -10750,6 +10785,13 @@ html.aq-wide .aq-rail-tg svg { width: 18px; height: 18px; fill: none; stroke: cu
       <div class="aqsp-sec"><h3>구성 종목 <small id="aqSpCnt"></small></h3><div class="dash-holdings-body auto-sheet-list" id="aqSectorList"></div></div>
       <button type="button" class="aqsp-close" onclick="aqCloseSectorSheet()">닫기</button>
     </div>
+    <!-- v9.01: 기관 13F 상세 — 목록 카드가 그대로 커져서 열리는 전체 화면(종목 페이지와 같은 틀) -->
+    <div class="ops-sheet-bg" id="aqF13Bg" onclick="aqF13Close()"></div>
+    <div class="ops-sheet aq-sec-sheet aq-sec-page aq-f13-page" id="aqF13Sheet">
+      <div class="ops-sheet-grip"></div>
+      <div id="aqF13Body"></div>
+    </div>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="aqGoo" x="-10%" y="-30%" width="120%" height="170%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/><feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8"/></filter></svg>
     <!-- v5.14: 누적 시그널 전체 화면 -->
     <div class="aq-archfull" id="aqArchFull">
       <div class="aq-uni-grip" aria-hidden="true"></div><div class="aq-archfull-h"><button class="aq-archfull-x aq-uni-x" onclick="aqCloseArchiveFull()" aria-label="닫기">←</button><div class="aq-archfull-t">누적 시그널</div></div>
@@ -27870,7 +27912,7 @@ window.moDrawerNav = moDrawerNav;
 
 // v7.38: 연구 · AI · 뉴스 메뉴는 모두 AI 탭(data-mtab=auto) 위에서 서브탭 묶음만 다름
 const _AQ_AGRP = { report: 'research', moat: 'research', sim: 'interest', cmp: 'interest', manager: 'ai', review: 'ai', fc: 'ai', force: 'ai', wx: 'news', f13: 'news' };   // v8.84: 9체계 — 관심(모의매수 · 비교분석) 신설 · 종목지도는 탐색 › 종목리스트로 합침 · 해자근거 · AI세력분석 자리(개발예정)
-function _aqAgrpDef(g) { const adm = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); return g === 'research' ? 'report' : g === 'interest' ? 'sim' : g === 'news' ? (adm ? 'wx' : 'f13') : (adm ? 'manager' : (AQ_BUYREVIEW_ON ? 'review' : 'fc')); }
+function _aqAgrpDef(g) { const adm = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin'); return g === 'research' ? 'report' : g === 'interest' ? 'sim' : g === 'news' ? 'wx' : (adm ? 'manager' : (AQ_BUYREVIEW_ON ? 'review' : 'fc')); }
 function _aqNavKey() { const m = document.body.getAttribute('data-mtab'); if (m !== 'auto') return m; return _AQ_AGRP[document.body.getAttribute('data-atab')] || 'news'; }
 function _aqNavPaint() { const k = _aqNavKey(); document.querySelectorAll('.mtab-btn').forEach(b => b.classList.toggle('active', b.dataset.mtab === k)); try { if (typeof aqDockSync === 'function') aqDockSync(); } catch (e) {} try { const nb = document.getElementById('mobileTabBar'); if (nb) requestAnimationFrame(() => aqSegSync(nb, nb.classList.contains('aq-seg-on'))); } catch (e) {} }   // v8.33: 선택 바탕 미끄럼
 function switchMobileTab(tab) {
@@ -28707,7 +28749,7 @@ function aqBtnDone(el, ok, label) {
   if (!el || !el.classList) return; el.classList.remove('aq-ld'); el.removeAttribute('aria-busy');
   if (ok && el.isConnected) { el.classList.add('aq-ok'); if (label) el.textContent = label; el.disabled = true; }
 }
-const AQ_SEG = '.tf-toggle, .feed-tf, .cmp-tf, .fj-chips, .fj2-sw, .di-chips, .rv-tabs, .mobile-tab-bar';   // v8.33: 하단 메뉴도
+const AQ_SEG = '.tf-toggle, .feed-tf, .cmp-tf, .fj-chips, .fj2-sw, .rv-tabs, .mobile-tab-bar';   // v8.33: 하단 메뉴도
 const _aqSegPos = {};
 function _aqSegKey(c) { const it = c.closest('.feed-item'); return (c.className.split(' ')[0] || '') + '|' + (c.dataset.target || '') + '|' + (it ? it.dataset.ticker || '' : ''); }
 function _aqSegPlace(ind, p, anim) { ind.style.transition = anim ? '' : 'none'; ind.style.width = p.w + 'px'; ind.style.height = p.h + 'px'; ind.style.transform = `translate(${p.x}px, ${p.y}px)`; }
@@ -31523,6 +31565,7 @@ const AQ_SHEETS = [
   { id: 'opsSheet',    root: () => document.getElementById('opsSheet'),    panel: r => r, isOpen: r => r.classList.contains('open'), close: () => window.aqOpsSheetClose && aqOpsSheetClose(), full: true },
   { id: 'aqSecSheet',  root: () => document.getElementById('aqSecSheet'),  panel: r => r, isOpen: r => r.classList.contains('open'), close: () => window.aqSecClose && aqSecClose(), full: true },
   { id: 'aqSectorSheet', root: () => document.getElementById('aqSectorSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => window.aqCloseSectorSheet && aqCloseSectorSheet(), full: false },   // v9.00: 이미 전체 화면
+  { id: 'aqF13Sheet', root: () => document.getElementById('aqF13Sheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => window.aqF13Close && aqF13Close(), full: false },   // v9.01: 기관 13F 상세 (전체 화면)
   { id: 'autoSheet',   root: () => document.getElementById('autoSheet'),   panel: r => r, isOpen: r => r.classList.contains('open'), close: () => window.aqAutoCloseSheet && aqAutoCloseSheet(), full: true },
   { id: 'autoCfgSheet', root: () => document.getElementById('autoCfgSheet'), panel: r => r, isOpen: r => r.classList.contains('open'), close: () => window.aqAutoCfgClose && aqAutoCfgClose(), full: true },
   { id: 'aqSearchModal', root: () => document.getElementById('aqSearchModal'), panel: r => r.querySelector('.search-modal-content'), isOpen: r => r.classList.contains('open'), close: () => window.closeSearchModal && closeSearchModal(), full: false },
@@ -32239,20 +32282,19 @@ Object.assign(window, { aqMarketGuards });
 function setAiSubtab(x) { aqHoldScroll();
   const isAdmin = document.body.getAttribute('data-role') === 'admin' || !!(_aqAuth.user && _aqAuth.user.role === 'admin');
   const _kr = getCurrentMarket() === 'KR';
-  if (x === 'auto') { if (isAdmin) { aqGoEngine(); return; } x = 'f13'; }   // v5.99: 자동매매는 햄버거 '자동'으로 이동 (예전 링크 호환)
+  if (x === 'auto') { if (isAdmin) { aqGoEngine(); return; } x = 'wx'; }   // v5.99: 자동매매는 햄버거 '자동'으로 이동 (예전 링크 호환)
   if (x === 'guide' || x === 'assist') { switchMobileTab('schedule'); return; }   // 예전 링크: AI 가이드 · 비서 → 일정 탭 (v8.75: 월간 일정만 남음)
   if (x === 'maps') { try { switchMobileTab('explore'); setExploreSubtab('list'); } catch (e) {} return; }   // v8.84: 종목 지도 = 탐색 › 종목리스트(예전 링크)
   const allowed = ['manager', 'report', 'review', 'moat', 'force', 'sim', 'cmp', 'wx', 'f13', 'fc'];   // v7.38: 연구(report · maps · sim · cmp) · AI(manager · review · fc) · 뉴스(wx · f13) — v8.75: AI 브리핑 · 주간 이슈 삭제
-  const newsDef = isAdmin ? 'wx' : 'f13';   // 뉴스 첫 탭 (관리자 = 일간 이슈 · 일반 = 기관 13F)
+  const newsDef = 'wx';   // 뉴스 첫 탭 = 일간 이슈 (v9.01: 일반 회원에게도)
   if (!allowed.includes(x)) x = newsDef;
   if (x === 'manager' && !isAdmin) x = 'review';
   if (x === 'review' && !AQ_BUYREVIEW_ON) x = isAdmin ? 'manager' : 'fc'; if (!isAdmin && _AQ_AGRP[x] === 'ai') x = newsDef; // v8.72: AI 메뉴(매니저 · 매수분석 · 예보)는 관리자만 — 베타 · 비관리자는 예전 링크로 와도 뉴스로   // 2026-11-16 (본부장님: "AI매수심사 영역을 다 비공개로"): 매수분석 탭 닫음 — 예전 링크는 AI 매니저 · 예보로
-  if (x === 'wx' && !isAdmin) x = 'f13';   // v7.42: 거시 날씨는 관리자 계좌 종목 기준   // v6.82: AI 매니저는 관리자 계좌 기준
   document.body.setAttribute('data-atab', x);
   if (x === 'report') { try { const R = _state.reports || {}; if (!Object.keys(R.US || {}).length && !Object.keys(R.KR || {}).length) { _aqRepRetry = 0; fetchReportsIndex().catch(() => {}); } } catch (e) {} }   // v8.15: 목록이 비어 있으면 탭을 열 때 다시 받음
   try {   // v7.38: 메뉴 묶음별 서브탭
     const g = _AQ_AGRP[x]; localStorage.setItem('aq_agrp_' + g, x);
-    const T = { research: [['report', 'AI리포트'], ['moat', '해자근거']], interest: [['sim', '모의매수'], ['cmp', '비교분석']], ai: (isAdmin ? [['manager', 'AI매니저']] : []).concat((AQ_BUYREVIEW_ON ? [['review', 'AI 매수분석']] : []).concat([['fc', 'AI예보'], ['force', 'AI세력분석']])), news: (isAdmin ? [['wx', '일간 이슈']] : []).concat([['f13', '기관13F']]) }[g];
+    const T = { research: [['report', 'AI리포트'], ['moat', '해자근거']], interest: [['sim', '모의매수'], ['cmp', '비교분석']], ai: (isAdmin ? [['manager', 'AI매니저']] : []).concat((AQ_BUYREVIEW_ON ? [['review', 'AI 매수분석']] : []).concat([['fc', 'AI예보'], ['force', 'AI세력분석']])), news: [['wx', '일간 이슈'], ['f13', '기관13F']] }[g];
     const row = document.getElementById('aiSubRow'); if (row) row.innerHTML = T.map(([v, t]) => `<button class="xtab-btn${v === x ? ' active' : ''}" data-atab="${v}" onclick="setAiSubtab('${v}')">${t}</button>`).join('');
     const _sec = document.getElementById('aiSubtabs'); if (_sec) _sec.classList.toggle('aq-tab-solo', T.length < 2);   // v8.75: 탭이 하나뿐이면 줄을 숨김
     _aqNavPaint();
@@ -32260,7 +32302,7 @@ function setAiSubtab(x) { aqHoldScroll();
   try { document.querySelectorAll('.rpt-togw').forEach(el => { el.innerHTML = ''; }); } catch (e) {}   // v7.38: 거시 · 기업 · 매매 분석 토글 없앰 (각각 뉴스 · 연구 · AI 메뉴로)
   // CSS 규칙에만 기대지 않고 카드 표시를 직접 지정 (모바일)
   try { document.querySelectorAll('section.card[data-atab]').forEach(c => c.style.setProperty('display', c.dataset.atab === x ? 'block' : 'none', 'important')); } catch (e) {}
-  try { if (x === 'sim') { aqWatchSub('sim'); if (typeof buildWatchKanban === 'function') buildWatchKanban(); } else if (x === 'cmp') { aqWatchSub('cmp'); if (typeof buildCompare === 'function') buildCompare(); } else if (x === 'wx') { aqDailyIssueRender(); if (getCurrentMarket() === 'KR') { const b0 = document.getElementById('mjBox'); if (b0) b0.innerHTML = ''; } else _mjLoad(true).then(() => { const b = document.getElementById('mjBox'); if (b && document.body.getAttribute('data-atab') === 'wx' && getCurrentMarket() !== 'KR') b.innerHTML = _mjHtml(); }); } } catch (e) { console.warn('[연구]', e); }   // v7.38
+  try { if (x === 'sim') { aqWatchSub('sim'); if (typeof buildWatchKanban === 'function') buildWatchKanban(); } else if (x === 'cmp') { aqWatchSub('cmp'); if (typeof buildCompare === 'function') buildCompare(); } else if (x === 'wx') { aqDailyIssueRender(); } } catch (e) { console.warn('[연구]', e); }   // v7.38
   try { if (x === 'review') aqReviewRender(); else if (x === 'manager') aqMgrRender(); else if (x === 'f13') aqF13Render(); else if (x === 'fc') aqFcRender(); else if (x !== 'moat' && x !== 'force' && typeof buildAnalysisGrid === 'function') buildAnalysisGrid(); } catch (e) {}
 }
 window.setAiSubtab = setAiSubtab;
@@ -33503,67 +33545,191 @@ function _diTks(mk) {
   try { if (mk === 'US') Object.keys(((_mj.d || {}).last || {}).stocks || {}).forEach(t => S.add(String(t).toUpperCase())); } catch (e) {}
   return [...S];
 }
-const _diC = fx => /^\s*좋음/.test(fx || '') ? '#40c057' : /^\s*나쁨/.test(fx || '') ? '#ff6b6b' : '#5c5c64';
+// ===========================================================================================================
+// v9.01: 뉴스 › 일간 이슈 — 움직임 개편(가안 승인 · claude.ai/artifact/1dyYR96om2mwTGR3NR4NBh). 모양과 정보는 그대로(7일 띠 · 보유/관심 칩 · 요약 · 시간줄 · 펼침) 위에 움직임만:
+//   날짜 선택 원이 앞 620/40 · 뒤 170/19로 늘어났다 따라옴(Tab pill과 같은 값) · 누른 숫자 톡(520/16) · 점 차례로 · 숫자 0에서 올라감(280/22) · 분위기 막대(260/24)
+//   시간줄: 이슈가 45ms 간격으로 올라오고(420/32) 로고 톡 · 이어진 선이 위에서 아래로 · 옆으로 쓸어 날짜 넘기기(손가락 900/50 · 놓으면 300/14 또는 다음 날이 쓸어 온 쪽에서)
+//   펼침: 높이 240/21 · 글 260/28(0.16초 뒤) · 화살표 520/16 · 글이 AI 리포트 피드처럼 쭈르륵(초당 40단어) · 로고 누름 900/50 → 300/14
+//   「종목별 날씨」는 이 페이지에서 뺌(일반 회원에게도 보이는 페이지) — AI 매니저가 쓰는 함수는 그대로
+// ===========================================================================================================
+// 공용: 글이 쭈르륵 써지는 효과 (AI 리포트 피드의 Streaming reply와 같은 속도 · 단어 조각이 이어서 나타나고 끝에 닿은 자리에 깜빡이지 않는 커서)
+function aqWordsHtml(t) { return String(t == null ? '' : t).split(/\s+/).filter(Boolean).map(w => '<span class="aqw">' + escapeHtml(w) + '</span>').join(' '); }
+function aqStream(root, o) {
+  o = o || {}; const ws = [...root.querySelectorAll('.aqw:not(.on)')], rate = o.rate || 40;
+  const done = () => { try { o.done && o.done(); } catch (e) {} };
+  if (_aqRM() || !ws.length) { ws.forEach(w => w.classList.add('on')); done(); return { finish() {} }; }
+  const car = document.createElement('i'); car.className = 'aq-car'; car.setAttribute('aria-hidden', 'true');
+  let t = -(o.delay || 0) / 1000, shown = 0, endT = 0, dead = false, stop = null;
+  const finish = () => { if (dead) return; dead = true; ws.forEach(w => w.classList.add('on')); car.remove(); if (stop) stop(); done(); };
+  stop = AQMotion.register({
+    frame(dt) {
+      if (dead) return; t += dt; const n = Math.min(ws.length, Math.max(0, Math.floor(t * rate)));
+      while (shown < n) { ws[shown].classList.add('on'); shown++; }
+      if (shown > 0 && shown < ws.length) ws[shown - 1].after(car);
+      if (shown >= ws.length) { endT += dt; if (endT > 0.35) finish(); }
+    },
+    render() {}, idle() { return dead; }
+  });
+  return { finish };
+}
+window.aqWordsHtml = aqWordsHtml; window.aqStream = aqStream;
+
+const _diC = fx => /^\s*좋음/.test(fx || '') ? 'up' : /^\s*나쁨/.test(fx || '') ? 'down' : 'flat';   // 영향 → 색 이름 (로고 테두리 · 막대)
+const _diCv = c => c === 'up' ? 'var(--kr-up)' : c === 'down' ? 'var(--kr-down)' : 'var(--text-mute)';
+const _diUi = { A: null, B: null, init: false, moodS: null, stream: {}, hist: 0, first: true, drag: null, X: null };
 async function aqDailyIssueRender(force) {
   const box = document.getElementById('diBox'); if (!box) return;
+  const tl = document.getElementById('diTl');
   const mk = getCurrentMarket() === 'KR' ? 'KR' : 'US', today = _kstToday();
   if (!_di.sel || _di.mk !== mk) _di.sel = today;
   if (force || !_di.d || _di.mk !== mk || Date.now() - _di.ts > 5 * 60e3) {
-    if (!_di.d || _di.mk !== mk) box.innerHTML = '<div class="gd-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div>';
+    if (!_di.d || _di.mk !== mk) tl.innerHTML = '<div class="di2-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div>';
     let r = null;
-    try { r = await apiCall('leadGet', { mode: 'newsDay', mk, all: 1 }); } catch (e) {}   // v8.52: 카드가 있는 모든 종목 (본부장님) — 보유 · 관심은 앱에서 거름
+    try { r = await apiCall('leadGet', { mode: 'newsDay', mk, all: 1 }); } catch (e) {}   // v8.52: 카드가 있는 모든 종목 — 보유 · 관심은 앱에서 거름
     if (document.body.getAttribute('data-atab') !== 'wx') return;
-    if (!r || !r.ok) { box.innerHTML = '<div class="gd-empty">뉴스를 불러오지 못했어요</div>'; return; }
+    if (!r || !r.ok) { tl.innerHTML = '<div class="di2-empty">뉴스를 불러오지 못했어요</div>'; return; }
     _di.d = r.items || []; _di.ts = Date.now(); _di.mk = mk;
   }
-  _diDraw();
+  _diDraw({ anim: 'up', dir: 1, first: true });
 }
-function _diDraw() {
-  const box = document.getElementById('diBox'); if (!box || !_di.d) return;
-  const today = _kstToday(), days = [-6, -5, -4, -3, -2, -1, 0].map(n => _gdAdd(today, n)), I = _di.d;
-  const H = _diHeld(_di.mk), W = _diWatch(_di.mk), keep = x => _di.f === 'held' ? H.has(String(x.tk).toUpperCase()) : _di.f === 'watch' ? W.has(String(x.tk).toUpperCase()) : true;
+function _diCount(el, to) {   // 숫자가 0에서 올라감(280/22)
+  const s = el._s || (el._s = AQMotion.S(0, 280, 22)), f = v => String(Math.max(0, Math.round(v)));
+  if (_aqRM()) { s.x = s.t = to; el.textContent = f(to); return; }
+  _saGo(s, to, 280, 22, () => { el.textContent = f(s.x); });
+}
+function _diSelPaint() { const sel = document.getElementById('diSel'); if (!sel || !_diUi.A) return; sel.style.width = Math.max(0, _diUi.B.x - _diUi.A.x).toFixed(2) + 'px'; sel.style.transform = 'translateX(' + _diUi.A.x.toFixed(2) + 'px)'; }
+function _diSelSync(anim, dir) {   // 선택 원: 가는 쪽 끝이 빠르게(620/40) · 뒤쪽 끝이 느리게(170/19) → 늘어났다가 따라옴
+  const strip = document.getElementById('diStrip'), b = strip && strip.querySelector('.di2-d.on'); if (!b || !strip.offsetWidth) return;
+  const c = b.offsetLeft + b.offsetWidth / 2, l = c - 18, r = c + 18;
+  if (!_diUi.A) { _diUi.A = AQMotion.S(l, 170, 19); _diUi.B = AQMotion.S(r, 620, 40); }
+  if (!_diUi.init || !anim || _aqRM()) { _diUi.A.x = _diUi.A.t = l; _diUi.B.x = _diUi.B.t = r; _diUi.A.v = _diUi.B.v = 0; _diUi.init = true; _diSelPaint(); return; }
+  AQMotion.tune(_diUi.B, dir > 0 ? 620 : 170, dir > 0 ? 40 : 19); AQMotion.tune(_diUi.A, dir > 0 ? 170 : 620, dir > 0 ? 19 : 40);
+  _saGo(_diUi.A, l, 0, 0, _diSelPaint); _saGo(_diUi.B, r, 0, 0, _diSelPaint);
+}
+function _diPop(el, k0) {   // 톡 튀어 오름(520/16)
+  const s = AQMotion.S(_aqRM() ? 1 : (k0 || 0), 520, 16); el.style.transform = 'scale(' + s.x + ')';
+  _saGo(s, 1, 520, 16, () => { el.style.transform = 'scale(' + Math.max(s.x, 0).toFixed(3) + ')'; });
+}
+function _diDraw(opt) {
+  opt = opt || {}; const box = document.getElementById('diBox'); if (!box || !_di.d) return;
+  const $ = id => document.getElementById(id), rm = _aqRM();
+  const today = _kstToday(), days = [-6, -5, -4, -3, -2, -1, 0].map(n => _gdAdd(today, n)), I = _di.d, WD = '일월화수목금토';
+  const H = _diHeld(_di.mk), W = _diWatch(_di.mk), isH = x => H.has(String(x.tk).toUpperCase()), isW = x => W.has(String(x.tk).toUpperCase());
+  const keep = x => _di.f === 'held' ? isH(x) : _di.f === 'watch' ? isW(x) : true;
   const by = {}; I.filter(keep).forEach(x => { (by[x.d] = by[x.d] || []).push(x); });
-  const dayAll = I.filter(x => x.d === _di.sel), fc = k => k === 'all' ? dayAll.length : dayAll.filter(x => (k === 'held' ? H : W).has(String(x.tk).toUpperCase())).length;
-  const chips = `<div class="di-chips">${[['all', '전체'], ['held', '보유'], ['watch', '관심']].map(([k, t]) => `<button type="button" class="${_di.f === k ? 'on' : ''}" onclick="aqDiF('${k}')">${t} <em>${fc(k)}</em></button>`).join('')}</div>`;
-  const strip = days.map(d => { const dd = new Date(d + 'T00:00:00'); const dots = (by[d] || []).slice(0, 4).map(() => '<i></i>').join('');
-    return `<button class="gd-d ${d === _di.sel ? 'sel' : ''} ${d === today ? 'today' : ''}" onclick="aqDiSel('${d}')"><span class="gd-w">${'일월화수목금토'[dd.getDay()]}</span><span class="gd-n">${dd.getDate()}</span><span class="gd-dots">${dots}</span>${d === today ? '<span class="gd-today">오늘</span>' : ''}</button>`; }).join('');
-  const L = (by[_di.sel] || []).slice().sort((a, b) => (b.t || '').localeCompare(a.t || '') || String(a.tk).localeCompare(String(b.tk)));   // v8.53: 최신이 위 (시각 없는 카드는 그날 맨 아래)
-  const sd = new Date(_di.sel + 'T00:00:00'), cnt = c => L.filter(x => _diC(x.fx) === c).length;
-  const sum = `<div class="gd-sum"><b>${sd.getMonth() + 1}/${sd.getDate()} (${'일월화수목금토'[sd.getDay()]})</b>${L.length ? ` · 뉴스 ${L.length}건 · 좋음 ${cnt('#40c057')} · 나쁨 ${cnt('#ff6b6b')}` : ''}</div>`;
-  let tl = '', prevT = null;
-  if (!L.length) tl = '<div class="gd-empty">이 날은 뉴스가 없어요</div>';
-  else L.forEach((x, i) => {
-    const key = x.tk + '|' + x.u, op = !!_di.open[key], showT = x.t !== prevT; prevT = x.t;
-    const kind = /^이 종목/.test(x.kind || '') ? '' : ' · ' + _smEsc(String(x.kind || '').replace(/^상대\s*·\s*/, '').replace(/^요인\s*·\s*/, ''));
-    const det = op ? `<div class="gd-det"><div><b>요약</b> ${_smEsc(x.s || '')}</div><div><b>이 종목에 미치는 영향</b> ${_smEsc(x.fx || '')}</div>${x.u ? `<div><a class="nw-link" href="${escapeAttr(x.u)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">원문 보기 ›</a></div>` : ''}</div>` : '';
-    tl += `<div class="gd-it ${i === L.length - 1 ? 'last' : ''}">
-      <div class="gd-tm">${showT ? _smEsc(x.t || '') : ''}</div>
-      <div class="gd-rail"><span class="gd-ic logo" style="--c:${_diC(x.fx)}" onclick="openChart('${escapeAttr(x.tk)}')">${aqLogoHtml(x.tk, '', 'gd-logo')}</span></div>
-      <div class="gd-body" onclick="aqDiToggle('${escapeAttr(key)}')"><div class="gd-sub"><span class="gd-tk" onclick="event.stopPropagation(); openChart('${escapeAttr(x.tk)}')">${escapeHtml(displayName(x.tk) || x.tk)}</span>${kind}</div><div class="gd-tt">${_smEsc(x.h || '')}</div>${det}</div>
-      <span aria-hidden="true"></span></div>`;
+  const dayAll = I.filter(x => x.d === _di.sel), fc = k => k === 'all' ? dayAll.length : dayAll.filter(x => (k === 'held' ? isH(x) : isW(x))).length;
+  // ── 7일 띠
+  const strip = $('diStrip'), sel = $('diSel');
+  if (strip.dataset.days !== days.join()) {
+    [...strip.querySelectorAll('.di2-d')].forEach(e => e.remove()); strip.dataset.days = days.join(); _diUi.init = false;
+    days.forEach(d => { const dd = new Date(d + 'T00:00:00'), b = document.createElement('button'); b.type = 'button'; b.className = 'di2-d' + (d === today ? ' today' : ''); b.dataset.d = d; b.setAttribute('onclick', `aqDiSel('${d}')`);
+      b.innerHTML = '<span class="di2-w">' + WD[dd.getDay()] + '</span><span class="di2-n">' + dd.getDate() + '</span><span class="di2-dots"></span><span class="di2-td">' + (d === today ? '오늘' : '') + '</span>'; strip.appendChild(b); });
+  }
+  const prevSel = strip.querySelector('.di2-d.on'), changed = !prevSel || prevSel.dataset.d !== _di.sel;
+  strip.querySelectorAll('.di2-d').forEach(b => {
+    const d = b.dataset.d, n = Math.min((by[d] || []).length, 4), dots = b.querySelector('.di2-dots'), had = dots.children.length;
+    b.classList.toggle('on', d === _di.sel);
+    if (had !== n || opt.first) { dots.innerHTML = '<i></i>'.repeat(n); if (!rm) [...dots.children].forEach((i, k) => { i.style.transform = 'scale(0)'; setTimeout(() => _diPop(i, 0), (opt.first ? 120 : 0) + k * 45); }); }
   });
-  box.innerHTML = `<div class="di-h" style="padding-top:4px"><b>일간 이슈</b><small>최근 7일</small></div><div class="gd-strip">${strip}</div>${chips}${sum}<div class="gd-tl" style="margin-top:18px">${tl}</div>`;
-  try { box.querySelectorAll('.di-chips').forEach(c => aqSegSync(c, true)); } catch (e) {}
+  _diSelSync(!opt.first && changed, opt.dir || 1);
+  if (changed && !opt.first) { const n = strip.querySelector('.di2-d.on .di2-n'); if (n) _diPop(n, 0.7); }
+  // ── 칩 (Tab pill — 줄 안의 .active가 바뀌면 알약이 늘어나며 옮겨 감)
+  document.querySelectorAll('#diChips .xtab-btn').forEach(b => { const k = b.dataset.f; b.classList.toggle('active', _di.f === k); const em = b.querySelector('em'); if (em) _diCount(em, fc(k)); });
+  // ── 요약 · 분위기 막대
+  const L = (by[_di.sel] || []).slice().sort((a, b) => (b.t || '').localeCompare(a.t || '') || String(a.tk).localeCompare(String(b.tk)));   // v8.53: 최신이 위
+  const sd = new Date(_di.sel + 'T00:00:00'), cn = L.reduce((a, x) => { a[_diC(x.fx)]++; return a; }, { up: 0, flat: 0, down: 0 });
+  const sum = $('diSum'), hd = `<b>${sd.getMonth() + 1}/${sd.getDate()} (${WD[sd.getDay()]})</b>`;
+  if (L.length) { sum.innerHTML = hd + ' · 뉴스 <b class="v">0</b>건 · 좋음 <span class="up v">0</span> · 나쁨 <span class="down v">0</span>'; const v = [L.length, cn.up, cn.down]; sum.querySelectorAll('.v').forEach((e, i) => _diCount(e, v[i])); } else sum.innerHTML = hd;
+  const tot = Math.max(1, L.length), ms = _diUi.moodS || (_diUi.moodS = [AQMotion.S(0, 260, 24), AQMotion.S(0, 260, 24), AQMotion.S(0, 260, 24)]), me = $('diMood').children;
+  [cn.up, cn.flat, cn.down].forEach((c, i) => _saGo(ms[i], L.length ? c / tot * 100 : 0, 260, 24, () => { me[i].style.width = Math.max(0, ms[i].x).toFixed(2) + '%'; }));
+  // ── 시간줄
+  _diBuild(L, opt);
 }
-function aqDiSel(d) { _di.sel = d; _diDraw(); }
-function aqDiF(f) { _di.f = f; _diDraw(); }
-function aqDiToggle(k) { _di.open[k] = !_di.open[k]; _diDraw(); }
+function _diBuild(L, opt) {
+  const tl = document.getElementById('diTl'); Object.values(_diUi.stream).forEach(s => { try { s.finish(); } catch (e) {} }); _diUi.stream = {};
+  tl.style.transform = ''; tl.innerHTML = '';
+  const dir = opt.dir || 1, side = opt.anim === 'side', rm = _aqRM();
+  if (!L.length) { const e = document.createElement('div'); e.className = 'di2-empty'; e.textContent = '이 날은 뉴스가 없어요'; tl.appendChild(e);
+    if (!rm) { const s = AQMotion.S(0, 420, 32); e.style.opacity = 0; _saGo(s, 1, 420, 32, () => { const o = AQMotion.clamp(s.x, 0, 1); e.style.opacity = o; e.style.transform = 'translateX(' + ((1 - o) * dir * (side ? 24 : 0)) + 'px)'; }); } return; }
+  let prevT = null;
+  L.forEach((x, i) => {
+    const key = x.tk + '|' + x.u, showT = x.t !== prevT; prevT = x.t;
+    const kind = /^이 종목/.test(x.kind || '') ? '' : ' · ' + _smEsc(String(x.kind || '').replace(/^상대\s*·\s*/, '').replace(/^요인\s*·\s*/, ''));
+    const el = document.createElement('div'); el.className = 'di2-it' + (i === L.length - 1 ? ' last' : ''); el.dataset.k = key; el.style.setProperty('--c', _diCv(_diC(x.fx)));
+    el.innerHTML = `<div class="di2-tm">${showT ? _smEsc(x.t || '') : ''}</div>
+      <div class="di2-rail"><span class="di2-ic" role="button" tabindex="0" aria-label="${escapeAttr(displayName(x.tk) || x.tk)} 종목 페이지">${aqLogoHtml(x.tk, '', 'di2-logo')}</span></div>
+      <div class="di2-body" role="button" tabindex="0" aria-expanded="false"><div class="di2-sub"><span class="di2-tk">${escapeHtml(displayName(x.tk) || x.tk)}</span>${kind}</div><div class="di2-tt">${_smEsc(x.h || '')}</div>
+        <div class="di2-det"><div class="di2-in"><div class="di2-st"><b>요약</b> ${aqWordsHtml(x.s || '')}</div><div class="di2-st"><b>이 종목에 미치는 영향</b> ${aqWordsHtml(x.fx || '')}</div>${x.u ? `<a class="nw-link di2-lk" href="${escapeAttr(x.u)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">원문 보기 ›</a>` : ''}</div></div></div>
+      <i class="di2-chev" aria-hidden="true"></i>`;
+    tl.appendChild(el);
+    const ic = el.querySelector('.di2-ic'), rail = el.querySelector('.di2-rail');
+    const so = AQMotion.S(rm ? 1 : 0, 420, 32), sp = AQMotion.S(rm ? 1 : 0.5, 520, 16), sl = AQMotion.S(rm ? 1 : 0, 260, 24), pr = AQMotion.S(1, 900, 50);
+    const paint = () => { const o = AQMotion.clamp(so.x, 0, 1); el.style.opacity = o; el.style.transform = 'translate(' + ((1 - o) * (side ? dir * 28 : 0)).toFixed(1) + 'px,' + ((1 - o) * (side ? 0 : 16)).toFixed(1) + 'px)'; ic.style.transform = 'scale(' + (Math.max(sp.x, 0) * pr.x).toFixed(3) + ')'; rail.style.setProperty('--rl', AQMotion.clamp(sl.x, 0, 1.02)); };
+    if (!rm) { el.style.opacity = 0; ic.style.transform = 'scale(.5)'; rail.style.setProperty('--rl', 0); setTimeout(() => { _saGo(so, 1, 420, 32, paint); _saGo(sp, 1, 520, 16, paint); setTimeout(() => _saGo(sl, 1, 260, 24, paint), 120); }, i * 45); }
+    ic.addEventListener('pointerdown', () => _saGo(pr, 0.88, 900, 50, paint)); const rel = () => _saGo(pr, 1, 300, 14, paint);
+    ic.addEventListener('pointerup', rel); ic.addEventListener('pointerleave', rel); ic.addEventListener('pointercancel', rel);
+    ic.addEventListener('click', e => { e.stopPropagation(); openChart(x.tk); });
+    ic.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChart(x.tk); } });
+    const tk = el.querySelector('.di2-tk'); tk.addEventListener('click', e => { e.stopPropagation(); openChart(x.tk); });
+    const bd = el.querySelector('.di2-body'); bd.addEventListener('click', () => aqDiToggle(key)); bd.addEventListener('keydown', e => { if (e.target === bd && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); aqDiToggle(key); } });
+    el.querySelector('.di2-det').addEventListener('click', e => { const st = _diUi.stream[key]; if (st && st.live) { st.finish(); e.stopPropagation(); } });   // 써지는 중에 글을 누르면 바로 끝까지
+    el.querySelector('.di2-chev').addEventListener('click', () => aqDiToggle(key));
+    if (_di.open[key]) { const d = el.querySelector('.di2-det'); d.style.height = 'auto'; el.dataset.open = '1'; bd.setAttribute('aria-expanded', 'true'); el.querySelector('.di2-chev').style.transform = 'rotate(-135deg)'; el.querySelectorAll('.aqw').forEach(w => w.classList.add('on')); }
+  });
+}
+function aqDiToggle(k) {   // 높이가 스프링으로 열리고(240/21) 글이 조금 늦게 떠오르고(260/28) 화살표가 돎(520/16) → 글이 쭈르륵 · 아래 이슈는 같이 밀려 내려옴
+  const el = [...document.querySelectorAll('#diTl .di2-it')].find(e => e.dataset.k === k); if (!el) { _di.open[k] = !_di.open[k]; return; }
+  const d = el.querySelector('.di2-det'), inn = d.firstElementChild, ch = el.querySelector('.di2-chev'), bd = el.querySelector('.di2-body'), isOpen = el.dataset.open === '1', rm = _aqRM();
+  _di.open[k] = !isOpen; el.dataset.open = isOpen ? '' : '1'; bd.setAttribute('aria-expanded', String(!isOpen));
+  if (!el._h) {
+    el._h = AQMotion.S(0, 240, 21); el._o = AQMotion.S(0, 260, 28); el._r = AQMotion.S(0, 520, 16);
+    el._pH = () => { d.style.height = Math.max(0, el._h.x).toFixed(1) + 'px'; if (el.dataset.open === '1' && Math.abs(el._h.x - el._h.t) < 0.5) d.style.height = 'auto'; };
+    el._pO = () => { const o = AQMotion.clamp(el._o.x, 0, 1); inn.style.opacity = o; inn.style.transform = 'translateY(' + ((1 - o) * 6).toFixed(1) + 'px)'; };
+    el._pR = () => { ch.style.transform = 'rotate(' + (45 - 180 * AQMotion.clamp(el._r.x, 0, 1.15)).toFixed(1) + 'deg)'; };
+  }
+  const prev = _diUi.stream[k]; if (prev) { prev.finish(); delete _diUi.stream[k]; }
+  el._h.x = d.getBoundingClientRect().height; const full = inn.scrollHeight + 10;
+  _saGo(el._h, isOpen ? 0 : full, 240, 21, el._pH); _saGo(el._r, isOpen ? 0 : 1, 520, 16, el._pR);
+  if (isOpen) { _saGo(el._o, 0, 260, 28, el._pO); el.querySelectorAll('.aqw').forEach(w => w.classList.remove('on')); }
+  else {
+    el.querySelectorAll('.aqw').forEach(w => w.classList.remove('on'));
+    const go = () => { _saGo(el._o, 1, 260, 28, el._pO); const st = aqStream(inn, { delay: 100, done: () => { if (_diUi.stream[k]) _diUi.stream[k].live = false; } }); st.live = true; _diUi.stream[k] = st; };
+    if (rm) { el.querySelectorAll('.aqw').forEach(w => w.classList.add('on')); } else setTimeout(go, 160);
+  }
+}
+function aqDiSel(d) {
+  if (d === _di.sel) return; const days = [...document.querySelectorAll('#diStrip .di2-d')].map(b => b.dataset.d), dir = days.indexOf(d) > days.indexOf(_di.sel) ? 1 : -1;
+  _di.sel = d; _diDraw({ anim: _diUi.swipe ? 'side' : 'up', dir }); _diUi.swipe = false;
+}
+function aqDiF(f) { _di.f = f; _diDraw({ anim: 'up', dir: 1 }); }
+// 시간줄을 옆으로 쓸기: 손가락을 따라오다(900/50) 놓으면 다음 날이 쓸어 온 쪽에서 들어오거나(70px 넘게 · 빠르게) 제자리로 돌아옴(300/14)
+(function () {
+  const wire = () => {
+    const w = document.getElementById('diTlw'); if (!w || w._diW) return; w._diW = true;
+    const X = _diUi.X = AQMotion.S(0, 900, 50), tl = () => document.getElementById('diTl'), paint = () => { const t = tl(); if (t) t.style.transform = 'translateX(' + X.x.toFixed(1) + 'px)'; };
+    w.addEventListener('pointerdown', e => { if (e.button > 0 || e.target.closest('a, .di2-det')) return; _diUi.drag = { x0: e.clientX, y0: e.clientY, t0: performance.now(), lock: null, id: e.pointerId }; });
+    w.addEventListener('pointermove', e => {
+      const g = _diUi.drag; if (!g) return; const dx = e.clientX - g.x0, dy = e.clientY - g.y0;
+      if (!g.lock) { if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) { g.lock = 'x'; try { w.setPointerCapture(g.id); } catch (x) {} } else if (Math.abs(dy) > 10) { _diUi.drag = null; return; } }
+      if (g.lock === 'x') { X.x = X.t = dx * 0.55; X.v = 0; paint(); }
+    });
+    const end = e => {
+      const g = _diUi.drag; if (!g) return; _diUi.drag = null; if (g.lock !== 'x') return;
+      const dx = e.clientX - g.x0, v = dx / Math.max(1, performance.now() - g.t0), days = [...document.querySelectorAll('#diStrip .di2-d')].map(b => b.dataset.d), i = days.indexOf(_di.sel), n = dx < 0 ? i + 1 : i - 1;
+      if ((Math.abs(dx) > 70 || Math.abs(v) > 0.5) && n >= 0 && n < days.length) { X.x = X.t = 0; paint(); _diUi.swipe = true; aqDiSel(days[n]); }
+      else { X.t = 0; _saGo(X, 0, 300, 14, paint); }
+    };
+    w.addEventListener('pointerup', end); w.addEventListener('pointercancel', end);
+    window.addEventListener('resize', () => { try { _diSelSync(false, 1); } catch (e) {} });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
+})();
 Object.assign(window, { aqDailyIssueRender, aqDiSel, aqDiToggle, aqDiF });
 // v7.52: 뉴스 › 기관 13F — 카드(방향 · 근거 4분기 · 이번 분기 개수) · 누르면 기관 상세 (server f13Get · jobs/inst13f.py)
 const _f13 = { key: null, q: null, list: null, ts: 0 };
 const _F13LG = { m1067983: 'BRK', m1536411: 'DFO', m1656456: 'APP', m1135730: 'CTU', m1336528: 'PSH', congress: '의회' };
 const _f13Q = p => { const m = /^(\d{4})-(\d{2})/.exec(p || ''); return m ? m[1].slice(2) + 'Q' + Math.ceil(+m[2] / 3) : (p || ''); };
 const _f13E = s => escapeHtml(String(s == null ? '' : s));
-function _f13Ev(e) {
-  const v = (e.vals || []).map(Number), u = e.u, n = v.length; if (!n) return '';
-  const mx = Math.max.apply(null, v.map(Math.abs).concat([1e-9])), last = v[n - 1], prev = n > 1 ? v[n - 2] : last;
-  let d = u === 'usd' ? (prev ? (last / prev - 1) * 100 : 0) : last - prev; d = Math.round(d * 10) / 10;
-  const fv = u === 'usd' ? '$' + (Math.round(last * 10) / 10) + 'B' : u === 'n' ? String(Math.round(last)) : (Math.round(last * 10) / 10) + '%';
-  const dt = d === 0 ? '그대로' : (d > 0 ? '+' : '−') + Math.abs(d) + (u === 'n' ? '' : u === 'usd' ? '%' : '%p');
-  const UP = '#5eead4', DN = '#f0a4a4';
-  const bars = v.map((x, j) => `<i style="height:${Math.max(2, Math.round(Math.abs(x) / mx * 20))}px${j === n - 1 ? ';background:' + (d >= 0 ? UP : DN) : ''}"></i>`).join('');
-  return `<div class="f13-er"><span>${_f13E(e.k)}</span><span class="f13-bars">${bars}</span><span class="f13-v"><b>${fv}</b><small class="${d > 0 ? 'up' : d < 0 ? 'dn' : ''}">${dt}</small></span></div>`;
-}
 // v7.97: 종목 옆 딱지 — 보유중 · KJP500(원래 목록) · 13F(13F로 편입) · ETF
 function _f13Tags(tk, r) {
   const t = String(tk || '').toUpperCase(), g = _f13To(t) || t, a = [];
@@ -33637,50 +33803,254 @@ function _f13Im(dir) {   // v7.67: 시사점 — 내 계좌와 견줘 (관리자
   const im = (dir && dir.im) || {}; const K = ['같은 점', '다른 점', '볼 것'].filter(k => im[k]);
   return K.length ? `<div class="f13-im"><span class="f13-k">시사점 · 내 계좌와 견줘</span>${K.map(k => `<div><small>${k}</small><p>${_f13Txt(im[k])}</p></div>`).join('')}</div>` : '';
 }
+// ===========================================================================================================
+// v9.01: 뉴스 › 기관 13F — 움직임 · 읽는 흐름 개편(가안 승인 · claude.ai/artifact/7QfXPgbTFirymicAe2C6na). 정보 체계(기관 카드 · 방향 · 근거 4분기 · 내 종목 · 분기별 한 일 · 비중 상위 10 · 의회 거래)는 그대로.
+//   목록: 카드가 45ms 간격으로 올라옴(420/32) · 로고 톡(520/16) · 처음 보는 카드의 방향 글이 쭈르륵(초당 40단어) · 근거 막대가 차례로 자라고 값이 올라감(280/22) · 「내 종목 있는 곳」 알약(Tab pill) · 카드가 미끄러져 자리를 바꿈
+//   카드 → 상세: 누른 카드가 그대로 커져서 상세가 됨(펼침 카드 300/26 · 나머지 카드 0.94배 · 24px 물러남) · 상세는 종목 페이지와 같은 전체 화면 틀(aqF13Sheet · 쓸어 닫기 · 뒤로가기 · 넓은 화면은 오른쪽 칸)
+//   상세: 분기 젤리 슬라이더(900/50 · 420/22 · 300/14) · 숫자 올라감 · 새로 삼/다 팖 비율 막대 · 한 일/비중 상위 10은 분기가 바뀔 때 미끄러지거나 나타남 · 비중 가로 막대(280/22) · 방향 → 사상 → 기관의 말 → 시사점이 차례로 쭈르륵
+// ===========================================================================================================
+// 공용: 글 속(링크 span 포함) 낱말을 .aqw 조각으로 감쌈 — aqStream이 이어서 보여 줌
+function aqWrapWords(root) {
+  const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = []; let n;
+  while ((n = tw.nextNode())) { if (n.nodeValue && n.nodeValue.trim()) nodes.push(n); }
+  nodes.forEach(t => {
+    const frag = document.createDocumentFragment(), parts = t.nodeValue.split(/(\s+)/);
+    parts.forEach(p => { if (!p) return; if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(p)); return; } const s = document.createElement('span'); s.className = 'aqw'; s.textContent = p; frag.appendChild(s); });
+    t.parentNode.replaceChild(frag, t);
+  });
+  return root;
+}
+window.aqWrapWords = aqWrapWords;
+// 공용: 젤리 슬라이더(칸이 n개인 이산 값) — 손가락 900/50 · 방울 420/22 · 놓았을 때 300/14 · 끝을 넘겨 당기면 줄이 최대 18px 늘었다 450ms에 돌아옴
+function aqJelly(el, cfg) {
+  const n = cfg.n, H = cfg.h || 78, TY = H - 26;
+  el.classList.add('aqj'); el.style.height = H + 'px';
+  el.innerHTML = '<div class="aqj-t"><div class="aqj-f"></div></div><div class="aqj-goo"><i class="aqj-b"></i><i class="aqj-th"></i></div><div class="aqj-lab"></div>';
+  el.setAttribute('role', 'slider'); el.tabIndex = 0; el.setAttribute('aria-valuemin', 0); el.setAttribute('aria-valuemax', n - 1);
+  const tr = el.querySelector('.aqj-t'), fl = el.querySelector('.aqj-f'), th = el.querySelector('.aqj-th'), bu = el.querySelector('.aqj-b'), lab = el.querySelector('.aqj-lab');
+  tr.style.top = TY + 'px';
+  const S = AQMotion.S, st = { th: S(0, 900, 50), bub: S(0, 260, 24), rise: S(0, 420, 22), W: 1, idx: cfg.index || 0, drag: false, on: false, stop: null, over: 0 };
+  const x = i => n > 1 ? i / (n - 1) * st.W : 0;
+  (cfg.labels || []).forEach((t, i) => { if (!t) return; const tk = document.createElement('i'); tk.className = 'aqj-tk'; tk.style.left = (n > 1 ? i / (n - 1) * 100 : 0) + '%'; tk.style.top = (TY + 10) + 'px'; el.appendChild(tk); const l = document.createElement('span'); l.className = 'aqj-tl'; l.style.left = (n > 1 ? i / (n - 1) * 100 : 0) + '%'; l.style.top = (TY + 14) + 'px'; l.textContent = t; el.appendChild(l); });
+  const render = () => {
+    const sx = 1 + Math.min(Math.abs(st.th.v) / 2400, 0.45), sy = 1 / Math.sqrt(sx);
+    th.style.transform = 'translate(' + st.th.x.toFixed(2) + 'px,' + (TY + 3) + 'px) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')';
+    const rs = AQMotion.clamp(st.rise.x, -0.2, 1.25), by = TY + 3 - 42 * rs, bs = 0.3 + 0.7 * AQMotion.clamp(rs, 0, 1.25), stc = 1 + Math.min(Math.abs(st.bub.x - st.th.x) / 160, 0.35);
+    bu.style.transform = 'translate(' + st.bub.x.toFixed(2) + 'px,' + by.toFixed(2) + 'px) scale(' + (bs * stc).toFixed(3) + ',' + (bs / Math.sqrt(stc)).toFixed(3) + ')';
+    lab.style.transform = 'translate(' + st.bub.x.toFixed(2) + 'px,' + by.toFixed(2) + 'px)'; lab.style.opacity = AQMotion.clamp((rs - 0.55) / 0.45, 0, 1);
+    fl.style.width = AQMotion.clamp(st.th.x, 0, st.W) + 'px';
+  };
+  const kick = () => {
+    if (_aqRM()) { st.th.x = st.th.t; st.bub.x = st.th.t; st.rise.x = st.rise.t; st.th.v = st.bub.v = st.rise.v = 0; render(); return; }
+    if (st.on) { AQMotion.kick(); return; } st.on = true;
+    st.stop = AQMotion.register({
+      frame(dt) { AQMotion.step(st.th, dt); st.bub.t = st.th.x; AQMotion.step(st.bub, dt); AQMotion.step(st.rise, dt); }, render,
+      idle() { const r = s => Math.abs(s.x - s.t) < 0.002 && Math.abs(s.v) < 0.02; if (r(st.th) && r(st.bub) && r(st.rise) && Math.abs(st.bub.x - st.th.x) < 0.05) { st.th.x = st.th.t; st.th.v = 0; st.bub.x = st.th.x; st.bub.v = 0; st.rise.x = st.rise.t; st.rise.v = 0; render(); st.on = false; if (st.stop) st.stop(); return true; } return false; }
+    });
+  };
+  const measure = () => { st.W = Math.max(el.clientWidth, 1); };
+  const rise = v => { AQMotion.tune(st.rise, 420, 22); st.rise.t = v; kick(); };
+  const setText = i => { lab.textContent = (cfg.bubble || cfg.labels || [])[i] || ''; el.setAttribute('aria-valuenow', i); el.setAttribute('aria-valuetext', (cfg.bubble || cfg.labels || [])[i] || ''); };
+  const api = {
+    set(i, instant) { measure(); st.idx = i; setText(i); st.th.t = x(i); if (instant) { st.th.x = st.th.t; st.th.v = 0; st.bub.x = st.th.t; st.bub.v = 0; } kick(); render(); },
+    remeasure() { measure(); st.th.t = x(st.idx); st.th.x = st.th.t; st.bub.x = st.th.t; kick(); render(); },
+    index() { return st.idx; }
+  };
+  const drag = e => {
+    const r = el.getBoundingClientRect(), px = e.clientX - r.left, cl = AQMotion.clamp(px, 0, st.W), o = px - cl, over = Math.sign(o) * Math.min(18, Math.abs(o) * 0.4);
+    AQMotion.tune(st.th, 900, 50); st.th.t = cl + over;
+    tr.style.transformOrigin = over < 0 ? '100% 50%' : '0% 50%'; tr.style.transform = 'scale(' + (1 + Math.abs(over) / st.W).toFixed(4) + ',' + (1 - 0.35 * Math.abs(over) / 18).toFixed(3) + ')';
+    kick(); const i = n > 1 ? Math.round(cl / st.W * (n - 1)) : 0; if (i !== st.idx) { st.idx = i; setText(i); cfg.onChange && cfg.onChange(i, 'drag'); }
+  };
+  el.addEventListener('pointerdown', e => { if (e.button > 0) return; measure(); st.drag = true; el.classList.add('drag'); tr.classList.remove('back'); try { el.setPointerCapture(e.pointerId); } catch (x) {} rise(1); drag(e); e.preventDefault(); });
+  el.addEventListener('pointermove', e => { if (st.drag) drag(e); });
+  const up = () => { if (!st.drag) return; st.drag = false; el.classList.remove('drag'); tr.classList.add('back'); tr.style.transform = 'none'; AQMotion.tune(st.th, 300, 14); st.th.t = x(st.idx); rise(0); kick(); cfg.onChange && cfg.onChange(st.idx, 'release'); };
+  el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+  let kt = 0;
+  el.addEventListener('keydown', e => { const dv = e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : e.key === 'Home' ? -99 : e.key === 'End' ? 99 : 0; if (!dv) return; e.preventDefault(); const i = AQMotion.clamp(st.idx + dv, 0, n - 1); if (i === st.idx) return; st.idx = i; setText(i); AQMotion.tune(st.th, 300, 14); st.th.t = x(i); kick(); rise(1); clearTimeout(kt); kt = setTimeout(() => rise(0), 700); cfg.onChange && cfg.onChange(i, 'key'); });
+  api.set(st.idx, true); return api;
+}
+window.aqJelly = aqJelly;
+
+const _f13s = { seen: {}, cache: {}, flt: 'all', morph: null, jelly: null, stream: null, qs: [], swr: 0 };
+const _f13Cv = (c) => c === 'up' ? 'var(--kr-up)' : 'var(--kr-down)';
+function _f13Ev(e) {
+  const v = (e.vals || []).map(Number), u = e.u, n = v.length; if (!n) return '';
+  const mx = Math.max.apply(null, v.map(Math.abs).concat([1e-9])), last = v[n - 1], prev = n > 1 ? v[n - 2] : last;
+  let d = u === 'usd' ? (prev ? (last / prev - 1) * 100 : 0) : last - prev; d = Math.round(d * 10) / 10;
+  const fv = u === 'usd' ? '$' + (Math.round(last * 10) / 10) + 'B' : u === 'n' ? String(Math.round(last)) : (Math.round(last * 10) / 10) + '%';
+  const dt = d === 0 ? '그대로' : (d > 0 ? '+' : '−') + Math.abs(d) + (u === 'n' ? '' : u === 'usd' ? '%' : '%p');
+  const bars = v.map((x, j) => `<i${j === n - 1 ? ` class="l ${d >= 0 ? 'u' : 'd'}"` : ''} style="height:${Math.max(2, Math.round(Math.abs(x) / mx * 20))}px"></i>`).join('');
+  return `<div class="f13-er"><span>${_f13E(e.k)}</span><span class="f13-bars">${bars}</span><span class="f13-v"><b data-u="${u}" data-to="${last}" data-t="${_f13E(fv)}">${fv}</b><small class="${d > 0 ? 'up' : d < 0 ? 'dn' : ''}">${dt}</small></span></div>`;
+}
 function _f13List(r) {
   const cards = r.cards || [];
   if (!cards.length) return '<div class="mg-empty">첫 수집 중이에요 · 매일 10:00 뒤 한 번 모아요</div>';
   const per = cards.find(c => c.key !== 'congress') || cards[0];
   const m = /^\d{4}-(\d{2})-(\d{2})/.exec(per.period || '');
   const head = `<div class="f13-h"><h2>기관 13F</h2><span>${m ? Math.ceil(+m[1] / 3) + '분기 · ' + (+m[1]) + '/' + (+m[2]) + ' 기준 · ' : ''}막대 = 최근 4분기</span></div>`;
-  return head + '<div class="f13-list">' + cards.map(c => `<div class="f13-c" onclick="aqF13Open('${c.key}')">
+  return head + '<div class="f13-list" id="f13ListBox">' + cards.map(c => `<div class="f13-c" data-k="${escapeAttr(c.key)}" data-mine="${c.mine ? 1 : 0}" role="button" tabindex="0" onclick="aqF13Open('${c.key}', this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();aqF13Open('${c.key}', this)}">
     <div class="f13-top">${_f13Logo(c.key, c.logo)}<div><b>${_f13E(c.nm)}</b><span>${_f13E(c.who)}</span></div>${c.mine ? `<span class="f13-mine">내 종목 ${c.mine}</span>` : ''}</div>
-    <div class="f13-dir"><span class="f13-k">방향</span>${c.card ? `<p>${_f13Txt(c.card)}</p>` : '<p class="wait">방향을 쓰는 중이에요</p>'}</div>
+    <div class="f13-dir"><span class="f13-k">방향</span>${c.card ? `<p class="f13-dp">${_f13Txt(c.card)}</p>` : '<p class="wait">방향을 쓰는 중이에요</p>'}</div>
     ${(c.ev || []).length ? `<div class="f13-ev">${c.ev.map(_f13Ev).join('')}</div>` : ''}
     <span class="f13-cnt">${_f13E(c.cnt)}</span></div>`).join('') + '</div>';
 }
-function _f13Detail(r) {
-  const back = `<button class="f13-back" aria-label="뒤로" onclick="aqF13Open(null)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"></path></svg></button>`;
-  const qs = `<div class="f13-qs">${(r.qs || []).map(q => `<button class="${q === r.q ? 'on' : ''}" onclick="aqF13Q('${q}')">${_f13Q(q)}</button>`).join('')}</div>`;
-  const ev = (r.ev || []).length ? `<div class="f13-ev"><span class="f13-k">근거</span>${r.ev.map(_f13Ev).join('')}</div>` : '';
-  const dir = r.dir || {};
-  let say = '';
-  if (r.key !== 'congress' && dir.dir) {
-    const s = dir.say;
-    say = `<div class="f13-say"><span class="f13-k">기관의 말</span>` + (s && s.t ? `<p>${_f13Txt(s.t)}</p>${s.u || s.s ? `<small>${s.u ? `<a href="${escapeAttr(s.u)}" target="_blank" rel="noopener">${_f13E(s.s || '출처')}</a>` : _f13E(s.s)}</small>` : ''}` : '<p class="wait" style="color:#8a8a8a;font-size:13.5px">이번 분기에 찾은 공개 발언이 없어요</p>') + '</div>';
-  }
-  const box = `<div class="f13-box"><div class="f13-dir"><span class="f13-k">방향</span>${_f13Dir(dir)}</div>${ev}${say}${_f13Im(dir)}</div>`;
-  if (r.key === 'congress') {
-    const o = r.o || {}; const pt = o.party || {}; const D = pt.D || pt.Democrat || 0, R = pt.R || pt.Republican || 0;
-    const L = (k, cls, rows) => rows.length ? `<div class="f13-sec"><span class="f13-st"><i class="f13-dot ${cls}"></i>${k}</span>${rows.map(x => `<div class="f13-row bd"><div><span class="f13-tk">${_f13Lk(x.tk)}${_f13Tags(x.tk, r)}</span><span class="f13-sub">${x.n}건 · 의원 ${x.m}명</span></div><span class="f13-rv">${_f13Amt(x.lo, x.hi)}</span></div>`).join('')}</div>` : '';
-    const notes = (o.notable || []).length ? `<div class="f13-sec"><span class="f13-st">눈에 띄는 거래</span>${o.notable.map(n => `<div class="f13-note"><span>${_f13E(n.who)} · ${_f13Lk(n.tk)} ${n.side === 'buy' ? '매수' : '매도'}</span><span class="f13-sub">${_f13Amt(n.lo, n.hi)} · 거래 ${_f13D(n.td)} → 공시 ${_f13D(n.fd)} · ${_f13Own(n.own)}</span></div>`).join('')}</div>` : '';
-    return back + `<div class="f13-dh"${_gdAdm() ? ` onclick="aqF13LogoPick('congress')" style="cursor:pointer"` : ''}>${r.logo ? _f13Logo('congress', r.logo, true) : `<span class="f13-lg big"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M2 10l10-6 10 6z"></path></svg></span>`}<div><b>의회</b><span>상 · 하원 의원 거래 · 공시일 기준</span></div></div>` + qs
-      + `<div class="f13-num" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div><b class="up">${o.buy || 0}</b><span>매수 건</span></div><div><b class="dn">${o.sell || 0}</b><span>매도 건</span></div><div><b>${o.members || 0}</b><span>의원</span></div></div>`
-      + (D + R ? `<div class="f13-pty"><div><i style="flex:${D} 0 0;background:#e4e4e4"></i><i style="flex:${R} 0 0;background:#5a5a5e"></i></div><div><span>매수 중 민주 ${D}%</span><span>공화 ${R}%</span></div></div>` : '')
-      + L('많이 산 종목', 'up', o.top_buy || []) + L('많이 판 종목', 'dn', (o.top_sell || []).slice(0, 5)) + box + notes;
-  }
-  const c = r.cnt || [0, 0, 0, 0];
-  const G = (k, cls, rows, fv) => rows.length ? `<div class="f13-grp"><span class="f13-st"><i class="f13-dot ${cls}"></i>${k}</span>${rows.map(x => `<div class="f13-row"><span class="f13-tk">${_f13Lk(x.tk)}${_f13Tags(x.tk, r)}</span><span class="f13-rv">${fv(x)}</span></div>`).join('')}</div>` : '';
-  const pct = v => (Math.round(v * 10) / 10).toFixed(1) + '%';
-  const sg = v => (v > 0 ? '+' : '−') + Math.abs(Math.round(v)) + '%';
-  const acts = G('새로 삼', 'up', r.new || [], x => '비중 ' + pct(x.w)) + G('다 팖', 'dn', r.exit || [], x => '직전 비중 ' + pct(x.w0)) + G('크게 늘림', 'up', r.up || [], x => '주식 수 ' + sg(x.chg)) + G('크게 줄임', 'dn', r.down || [], x => '주식 수 ' + sg(x.chg));
-  const qn = /^\d{4}-(\d{2})/.exec(r.q || ''); const mx = Math.max.apply(null, (r.top || []).flatMap(t => t.hist || []).concat([1e-9]));
-  const top = (r.top || []).length ? `<div class="f13-sec"><span class="f13-st sp"><span>비중 상위 10</span><small>막대 = 최근 4분기 비중</small></span>${r.top.map((t, i) => `<div class="f13-t10"><span>${i + 1}</span><span class="f13-tk">${_f13Lk(t.tk)}${_f13Tags(t.tk, r)}</span><span class="f13-rv">${pct(t.w)}</span><span class="f13-bars">${(t.hist || []).map((v, j, a) => `<i class="${j === a.length - 1 ? 'on' : ''}" style="height:${Math.max(2, Math.round(v / mx * 22))}px"></i>`).join('')}</span></div>`).join('')}</div>` : '';
-  const lg = _gdAdm() ? `<span style="display:flex;cursor:pointer" onclick="aqF13LogoPick('${r.key}')">${_f13Logo(r.key, r.logo, true)}</span>` : _f13Logo(r.key, r.logo, true);
-  return back + `<div class="f13-dh">${lg}<div><b>${_f13E(r.nm)}</b><span>${_f13E(r.who)} · 보유 ${r.n || 0}종목 · 신고 총액 $${(Math.round((r.total || 0) / 1e8) / 10)}B</span></div></div>` + qs
-    + `<div class="f13-num" style="grid-template-columns:repeat(4,minmax(0,1fr))"><div><b class="up">${c[0]}</b><span>새로 삼</span></div><div><b class="dn">${c[1]}</b><span>다 팖</span></div><div><b>${c[2]}</b><span>늘림</span></div><div><b>${c[3]}</b><span>줄임</span></div></div>`
-    + (acts ? `<div class="f13-sec near"><span class="f13-st" style="margin-bottom:6px">${qn ? Math.ceil(+qn[1] / 3) + '분기에 ' : ''}한 일</span>${acts}</div>` : '') + box + top;
+function _f13Fill(c) {   // 카드 하나: 막대가 차례로 자라고 · 값이 올라가고 · 방향 글이 쭈르륵(처음 보는 카드만)
+  const rm = _aqRM(); c.querySelectorAll('.f13-bars').forEach((bs, r) => { bs.querySelectorAll('i').forEach((i, j) => { const s = AQMotion.S(rm ? 1 : 0, 520, 16); i.style.transformOrigin = '50% 100%'; i.style.transform = 'scaleY(' + s.x + ')'; setTimeout(() => _saGo(s, 1, 520, 16, () => { i.style.transform = 'scaleY(' + Math.max(s.x, 0).toFixed(3) + ')'; }), r * 90 + j * 45); }); });
+  c.querySelectorAll('.f13-v b').forEach(e => { const u = e.dataset.u, to = +e.dataset.to, fin = e.dataset.t; const s = AQMotion.S(0, 280, 22); const f = v => u === 'usd' ? '$' + (Math.round(v * 10) / 10) + 'B' : u === 'n' ? String(Math.max(0, Math.round(v))) : (Math.round(v * 10) / 10) + '%';
+    if (rm) { e.textContent = fin; return; } e.textContent = f(0); setTimeout(() => _saGo(s, to, 280, 22, () => { e.textContent = Math.abs(s.x - s.t) < 0.002 ? fin : f(s.x); }), 200); });
+  const p = c.querySelector('.f13-dp'), k = c.dataset.k; if (!p) return;
+  aqWrapWords(p); if (_f13s.seen[k]) p.querySelectorAll('.aqw').forEach(w => w.classList.add('on')); else { _f13s.seen[k] = 1; aqStream(p, { delay: 200 }); }
 }
+function _f13ListEnter() {
+  const cs = [...document.querySelectorAll('#f13ListBox .f13-c')].filter(c => !c.hidden), rm = _aqRM();
+  cs.forEach((c, i) => {
+    const lg = c.querySelector('.f13-lg'), so = AQMotion.S(rm ? 1 : 0, 420, 32), sp = AQMotion.S(rm ? 1 : 0.5, 520, 16), pr = AQMotion.S(1, 900, 50);
+    const paint = () => { const o = AQMotion.clamp(so.x, 0, 1); c.style.opacity = o; c.style.transform = 'translateY(' + ((1 - o) * 16).toFixed(1) + 'px) scale(' + pr.x.toFixed(3) + ')'; if (lg) lg.style.transform = 'scale(' + Math.max(sp.x, 0).toFixed(3) + ')'; };
+    if (!rm) { c.style.opacity = 0; if (lg) lg.style.transform = 'scale(.5)'; }
+    setTimeout(() => { _saGo(so, 1, 420, 32, paint); _saGo(sp, 1, 520, 16, paint); setTimeout(() => _f13Fill(c), 120); }, rm ? 0 : i * 45);
+    if (!c._pr) { c._pr = 1; c.addEventListener('pointerdown', () => _saGo(pr, 0.97, 900, 50, paint)); const rel = () => _saGo(pr, 1, 300, 14, paint); c.addEventListener('pointerup', rel); c.addEventListener('pointerleave', rel); c.addEventListener('pointercancel', rel); }
+  });
+}
+function aqF13Filter(f) {   // 「내 종목 있는 곳」: 카드가 미끄러져 자리를 바꿈
+  _f13s.flt = f; document.querySelectorAll('#f13Flt .xtab-btn').forEach(b => b.classList.toggle('active', b.dataset.f === f));
+  const cs = [...document.querySelectorAll('#f13ListBox .f13-c')], before = new Map(); cs.forEach(c => { if (!c.hidden) before.set(c, c.getBoundingClientRect().top); });
+  cs.forEach(c => { c.hidden = f === 'mine' && c.dataset.mine !== '1'; });
+  if (_aqRM()) return;
+  cs.forEach(c => { if (c.hidden) return; c.getAnimations().forEach(a => a.cancel()); const b = before.get(c); if (b == null) { c.animate([{ opacity: 0, transform: 'scale(.94)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'cubic-bezier(0.22,1,0.36,1)' }); return; } const dy = b - c.getBoundingClientRect().top; if (Math.abs(dy) > 1) c.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: 380, easing: 'cubic-bezier(0.22,1,0.36,1)' }); });
+}
+
+// ───── 상세 틀: 카드가 그대로 커져서 상세가 됨 ─────
+function _f13Clip() { const m = _f13s.morph; if (!m) return; const sh = document.getElementById('aqF13Sheet'), b = document.getElementById('aqF13Body'); sh.style.clipPath = 'inset(' + m.t.x.toFixed(1) + 'px ' + m.r.x.toFixed(1) + 'px ' + m.b.x.toFixed(1) + 'px ' + m.l.x.toFixed(1) + 'px round ' + Math.max(0, m.rad.x).toFixed(1) + 'px)'; if (b) b.style.opacity = AQMotion.clamp(m.ct.x, 0, 1); }
+function _f13Morph(card, opening) {
+  const sh = document.getElementById('aqF13Sheet'), sr = sh.getBoundingClientRect(); let m = _f13s.morph;
+  const S = AQMotion.S;
+  if (!m) m = _f13s.morph = { t: S(0, 300, 26), r: S(0, 300, 26), b: S(0, 300, 26), l: S(0, 300, 26), rad: S(0, 300, 26), ct: S(1, 300, 30), others: [] };
+  const hasCard = card && card.isConnected && card.offsetParent !== null && !document.documentElement.classList.contains('aq-wide');   // 넓은 화면은 상세가 오른쪽 칸이라 커지는 움직임 없이 바로
+  if (opening) {
+    if (!hasCard || _aqRM()) { m.t.x = m.r.x = m.b.x = m.l.x = m.rad.x = 0; _f13Clip(); sh.style.clipPath = ''; const b = document.getElementById('aqF13Body'); if (b) b.style.opacity = ''; _f13s.morph = null; return; }
+    const cr = card.getBoundingClientRect(), f = { t: cr.top - sr.top, l: cr.left - sr.left, r: sr.right - cr.right, b: sr.bottom - cr.bottom };
+    ['t', 'r', 'b', 'l'].forEach(k => { m[k].x = f[k]; m[k].v = 0; m[k].t = f[k]; }); m.rad.x = 16; m.rad.t = 16; m.rad.v = 0; m.ct.x = 0; m.ct.t = 0; m.ct.v = 0; _f13Clip();
+    ['t', 'r', 'b', 'l'].forEach(k => _saGo(m[k], 0, 300, 26, _f13Clip)); _saGo(m.rad, 0, 300, 26, _f13Clip); setTimeout(() => _saGo(m.ct, 1, 300, 30, _f13Clip), 160);
+    const list = [...document.querySelectorAll('#f13ListBox .f13-c')].filter(c => !c.hidden), mid = list.indexOf(card);
+    m.others = list.filter(c => c !== card).map(o => { const s = S(0, 300, 30), idx = list.indexOf(o); _saGo(s, 1, 300, 30, () => { o.style.opacity = 1 - s.x; o.style.transform = 'translateY(' + (s.x * 24 * (idx < mid ? -1 : 1)).toFixed(1) + 'px) scale(' + (1 - 0.06 * s.x).toFixed(3) + ')'; }); return { o, s, idx, mid }; });
+  } else {
+    const done = () => { sh.classList.remove('open'); document.getElementById('aqF13Bg').classList.remove('open'); sh.style.clipPath = ''; const b = document.getElementById('aqF13Body'); if (b) b.style.opacity = ''; (m.others || []).forEach(x => { x.o.style.opacity = ''; x.o.style.transform = ''; }); _f13s.morph = null; };
+    if (!hasCard || _aqRM() || !m) { done(); return; }
+    const cr = card.getBoundingClientRect(), f = { t: cr.top - sr.top, l: cr.left - sr.left, r: sr.right - cr.right, b: sr.bottom - cr.bottom };
+    _saGo(m.ct, 0, 300, 30, _f13Clip); ['t', 'r', 'b', 'l'].forEach(k => _saGo(m[k], f[k], 300, 26, _f13Clip)); _saGo(m.rad, 16, 300, 26, _f13Clip);
+    (m.others || []).forEach(x => _saGo(x.s, 0, 300, 30, () => { x.o.style.opacity = 1 - x.s.x; x.o.style.transform = x.s.x < 0.001 ? '' : 'translateY(' + (x.s.x * 24 * (x.idx < x.mid ? -1 : 1)).toFixed(1) + 'px) scale(' + (1 - 0.06 * x.s.x).toFixed(3) + ')'; }));
+    setTimeout(done, 520);
+  }
+}
+const _f13Back = '<button class="f13-back" type="button" aria-label="뒤로" onclick="aqF13Open(null)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"></path></svg></button>';
+function aqF13Open(k, card) {
+  if (!k) { aqF13Close(); return; }
+  _f13.key = k; _f13.q = null; _f13s.card = card || document.querySelector('#f13ListBox .f13-c[data-k="' + k + '"]');
+  const sh = document.getElementById('aqF13Sheet'), body = document.getElementById('aqF13Body'), c = ((_f13.list || {}).cards || []).find(x => x.key === k) || {};
+  body.innerHTML = _f13Back + `<div class="f13-dh">${_f13Logo(k, c.logo, true)}<div><b>${_f13E(c.nm || '')}</b><span>${_f13E(c.who || '')}</span></div></div><div class="mg-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div>`;
+  sh.scrollTop = 0; sh.classList.add('open'); document.getElementById('aqF13Bg').classList.add('open');
+  _f13Morph(_f13s.card, true); _f13Load(k, '', true);
+}
+function aqF13Close() {
+  const sh = document.getElementById('aqF13Sheet'); if (!sh || !sh.classList.contains('open')) { _f13.key = null; return; }
+  if (_f13s.stream) { try { _f13s.stream.finish(); } catch (e) {} _f13s.stream = null; }
+  _f13.key = null; _f13.q = null; _f13Morph(_f13s.card, false);
+}
+function aqF13Q(q) { _f13.q = q; _f13Load(_f13.key, q, false); }
+async function _f13Load(k, q, first) {
+  if (!k) return; const ck = k + '|' + (q || ''); let r = _f13s.cache[ck];
+  if (!r) { try { r = await apiCall('f13Get', { key: k, q: q || '' }); } catch (e) {} if (r && r.ok) { _f13s.cache[ck] = r; if (r.q) _f13s.cache[k + '|' + r.q] = r; } }
+  const body = document.getElementById('aqF13Body'); if (!body || _f13.key !== k || (_f13.q || '') !== (q || '')) return;
+  if (!r || !r.ok) { const e = body.querySelector('.mg-empty'); if (e) e.textContent = (r && r.error) || '불러오지 못했어요'; return; }
+  if (first || !body.querySelector('.f13-detail')) _f13Build(r); else _f13Update(r);
+}
+function _f13Qs(r) { return (r.qs || []).slice().sort(); }
+function _f13Build(r) {
+  const body = document.getElementById('aqF13Body');
+  if (r.key === 'congress') { body.innerHTML = _f13Back + _f13Congress(r); _f13CongressAnim(body); return; }
+  const lg = _gdAdm() ? `<span style="display:flex;cursor:pointer" onclick="aqF13LogoPick('${r.key}')">${_f13Logo(r.key, r.logo, true)}</span>` : _f13Logo(r.key, r.logo, true), qs = _f13Qs(r);
+  body.innerHTML = _f13Back + `<div class="f13-detail"><div class="f13-dh">${lg}<div><b>${_f13E(r.nm)}</b><span id="f13Sub"></span></div></div>`
+    + (qs.length > 1 ? `<div class="f13-qs"><div class="f13-qh"><span>분기 고르기</span><b id="f13Qv"></b></div><div id="f13Jl"></div></div>` : '')
+    + `<div class="f13-num" id="f13Nums" style="grid-template-columns:repeat(4,minmax(0,1fr))"><div><b class="up" data-i="0">0</b><span>새로 삼</span></div><div><b class="dn" data-i="1">0</b><span>다 팖</span></div><div><b data-i="2">0</b><span>늘림</span></div><div><b data-i="3">0</b><span>줄임</span></div></div>`
+    + `<div class="f13-flow" id="f13Flow" aria-hidden="true"><i class="u"></i><i class="d"></i></div><div class="f13-sec near" id="f13Acts"></div><div class="f13-box" id="f13Bx"></div><div class="f13-sec" id="f13Top"></div></div>`;
+  if (qs.length > 1) _f13s.jelly = aqJelly(document.getElementById('f13Jl'), { n: qs.length, index: Math.max(0, qs.indexOf(r.q)), labels: qs.map((q, i) => (i === 0 || i === qs.length - 1 || qs.length <= 5 || i % 2 === 0) ? _f13Q(q) : ''), bubble: qs.map(_f13Q), onChange: (i, how) => { const q = qs[i]; document.getElementById('f13Qv').textContent = _f13Q(q); clearTimeout(_f13s.qt); if (how === 'drag') _f13s.qt = setTimeout(() => aqF13Q(q), 160); else aqF13Q(q); } });
+  _f13Fill2(r, true);
+}
+function _f13Update(r) { _f13Fill2(r, false); }
+function _f13FlipRows(box, build) {   // 줄이 미끄러져 자리를 바꾸거나(같은 종목) 나타남(새 종목)
+  const before = {}; [...box.querySelectorAll('[data-tk]')].forEach(e => { before[e.dataset.tk + '|' + (e.dataset.g || '')] = e.getBoundingClientRect().top; });
+  build(); if (_aqRM()) return;
+  [...box.querySelectorAll('[data-tk]')].forEach((e, i) => { e.getAnimations().forEach(a => a.cancel()); const k = e.dataset.tk + '|' + (e.dataset.g || ''), b = before[k];
+    if (b == null) e.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 360, delay: Math.min(i, 8) * 30, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'backwards' });
+    else { const dy = b - e.getBoundingClientRect().top; if (Math.abs(dy) > 1) e.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: 380, easing: 'cubic-bezier(0.22,1,0.36,1)' }); } });
+}
+function _f13Fill2(r, first) {
+  const $ = id => document.getElementById(id), rm = _aqRM(), c = r.cnt || [0, 0, 0, 0], qs = _f13Qs(r);
+  $('f13Sub').textContent = `${r.who || ''} · 보유 ${r.n || 0}종목 · 신고 총액 $${(Math.round((r.total || 0) / 1e8) / 10)}B`;
+  if ($('f13Qv')) { $('f13Qv').textContent = _f13Q(r.q); if (_f13s.jelly && _f13s.jelly.index() !== qs.indexOf(r.q)) _f13s.jelly.set(qs.indexOf(r.q)); }
+  $('f13Bx').classList.remove('loading'); $('f13Bx').style.opacity = '';
+  $('f13Nums').querySelectorAll('b').forEach((e, i) => { const s = e._s || (e._s = AQMotion.S(0, 280, 22)); if (rm) { s.x = s.t = c[i]; e.textContent = String(c[i]); return; } _saGo(s, c[i], 280, 22, () => { e.textContent = String(Math.max(0, Math.round(s.x))); }); });
+  const buy = c[0] + c[2], sell = c[1] + c[3], tt = Math.max(1, buy + sell), fl = $('f13Flow').children;
+  [buy / tt * 100, sell / tt * 100].forEach((w, i) => { const s = fl[i]._s || (fl[i]._s = AQMotion.S(0, 260, 24)); _saGo(s, w, 260, 24, () => { fl[i].style.width = Math.max(0, s.x).toFixed(2) + '%'; }); });
+  // 한 일
+  const pct = v => (Math.round(v * 10) / 10).toFixed(1) + '%', sg = v => (v > 0 ? '+' : '−') + Math.abs(Math.round(v)) + '%';
+  const G = (k, cls, rows, fv) => rows.length ? `<div class="f13-grp"><span class="f13-st"><i class="f13-dot ${cls}"></i>${k}</span>${rows.map(x => `<div class="f13-row" data-tk="${escapeAttr(x.tk)}" data-g="${escapeAttr(k)}"><span class="f13-tk">${_f13Lk(x.tk)}${_f13Tags(x.tk, r)}</span><span class="f13-rv">${fv(x)}</span></div>`).join('')}</div>` : '';
+  const qn = /^\d{4}-(\d{2})/.exec(r.q || '');
+  const acts = G('새로 삼', 'up', r.new || [], x => '비중 ' + pct(x.w)) + G('다 팖', 'dn', r.exit || [], x => '직전 비중 ' + pct(x.w0)) + G('크게 늘림', 'up', r.up || [], x => '주식 수 ' + sg(x.chg)) + G('크게 줄임', 'dn', r.down || [], x => '주식 수 ' + sg(x.chg));
+  _f13FlipRows($('f13Acts'), () => { $('f13Acts').innerHTML = acts ? `<span class="f13-st" style="margin-bottom:6px">${qn ? Math.ceil(+qn[1] / 3) + '분기에 ' : ''}한 일</span>${acts}` : ''; });
+  // 비중 상위 10
+  const mx = Math.max.apply(null, (r.top || []).map(t => t.w).concat([1e-9])), hmx = Math.max.apply(null, (r.top || []).flatMap(t => t.hist || []).concat([1e-9]));
+  _f13s.tw = _f13s.tw || {};
+  _f13FlipRows($('f13Top'), () => { $('f13Top').innerHTML = (r.top || []).length ? `<span class="f13-st sp"><span>비중 상위 10</span><small>막대 = 이 분기 비중 · 오른쪽 = 최근 4분기</small></span>` + r.top.map((t, i) => `<div class="f13-t10" data-tk="${escapeAttr(t.tk)}"><span class="n">${i + 1}</span><div class="bw"><span class="f13-tk">${_f13Lk(t.tk)}${_f13Tags(t.tk, r)}</span><div class="tr"><b data-w="${(t.w / mx * 100).toFixed(1)}" style="width:${_f13s.tw[t.tk] != null ? _f13s.tw[t.tk] : 0}%"></b></div></div><span class="f13-rv">${pct(t.w)}</span><span class="f13-bars">${(t.hist || []).map((h, j, a) => `<i${j === a.length - 1 ? ' class="l"' : ''} style="height:${Math.max(3, Math.round(h / hmx * 22))}px"></i>`).join('')}</span></div>`).join('') : ''; });
+  [...$('f13Top').querySelectorAll('.f13-t10')].forEach((row, i) => { const b = row.querySelector('.tr b'), to = +b.dataset.w, tk = row.dataset.tk, s = AQMotion.S(_f13s.tw[tk] != null ? _f13s.tw[tk] : 0, 280, 22); setTimeout(() => _saGo(s, to, 280, 22, () => { b.style.width = Math.max(0, s.x).toFixed(2) + '%'; _f13s.tw[tk] = s.x; }), (first ? 300 : 0) + (first ? i * 45 : 0)); });
+  // 방향 · 근거 · 기관의 말 · 시사점 (처음 열면 차례로 쭈르륵 · 분기를 바꾸면 그 분기의 사상만 다시)
+  const dir = r.dir || {}, ev = (r.ev || []).length ? `<div class="f13-ev"><span class="f13-k">근거</span>${r.ev.map(_f13Ev).join('')}</div>` : '';
+  let say = ''; if (dir.dir) { const s = dir.say; say = `<div class="f13-say"><span class="f13-k">기관의 말</span>` + (s && s.t ? `<p>${_f13Txt(s.t)}</p>${s.u || s.s ? `<small>${s.u ? `<a href="${escapeAttr(s.u)}" target="_blank" rel="noopener">${_f13E(s.s || '출처')}</a>` : _f13E(s.s)}</small>` : ''}` : '<p class="wait">이번 분기에 찾은 공개 발언이 없어요</p>') + '</div>'; }
+  const bx = $('f13Bx'); bx.innerHTML = `<div class="f13-dir" data-s="dir"><span class="f13-k">방향</span>${_f13Dir(dir)}</div>${ev}${say.replace('<div class="f13-say">', '<div class="f13-say" data-s="say">')}${_f13Im(dir).replace('<div class="f13-im">', '<div class="f13-im" data-s="im">')}`;
+  bx.querySelectorAll('.f13-bars i').forEach((i, j) => { const s = AQMotion.S(rm ? 1 : 0, 520, 16); i.style.transformOrigin = '50% 100%'; i.style.transform = 'scaleY(' + s.x + ')'; setTimeout(() => _saGo(s, 1, 520, 16, () => { i.style.transform = 'scaleY(' + Math.max(s.x, 0).toFixed(3) + ')'; }), 300 + j * 30); });
+  if (_f13s.stream) { try { _f13s.stream.finish(); } catch (e) {} _f13s.stream = null; }
+  const blocks = ['dir', 'say', 'im'].map(k => bx.querySelector('[data-s="' + k + '"]')).filter(Boolean); blocks.forEach(b => aqWrapWords(b));
+  if (first) { let i = 0; const next = () => { if (i >= blocks.length || !document.getElementById('aqF13Sheet').classList.contains('open')) return; _f13s.stream = aqStream(blocks[i++], { delay: i === 1 ? 700 : 0, done: next }); }; next(); }
+  else { bx.querySelectorAll('.aqw').forEach(w => w.classList.add('on')); const th = [...bx.querySelectorAll('.f13-th > div')].find(d => (d.querySelector('.f13-k') || {}).textContent && d.querySelector('.f13-k').textContent.indexOf(_f13Q(r.q)) === 0); if (th) { th.querySelectorAll('.aqw').forEach(w => w.classList.remove('on')); _f13s.stream = aqStream(th, { delay: 60 }); } }
+  bx.querySelectorAll('.wait').forEach(w => { w.classList.add('wait'); });
+}
+function _f13Congress(r) {
+  const o = r.o || {}, pt = o.party || {}, D = pt.D || pt.Democrat || 0, R = pt.R || pt.Republican || 0, dir = r.dir || {};
+  const ev = (r.ev || []).length ? `<div class="f13-ev"><span class="f13-k">근거</span>${r.ev.map(_f13Ev).join('')}</div>` : '';
+  const box = `<div class="f13-box"><div class="f13-dir"><span class="f13-k">방향</span>${_f13Dir(dir)}</div>${ev}${_f13Im(dir)}</div>`;
+  const L = (k, cls, rows) => rows.length ? `<div class="f13-sec"><span class="f13-st"><i class="f13-dot ${cls}"></i>${k}</span>${rows.map(x => `<div class="f13-row bd"><div><span class="f13-tk">${_f13Lk(x.tk)}${_f13Tags(x.tk, r)}</span><span class="f13-sub">${x.n}건 · 의원 ${x.m}명</span></div><span class="f13-rv">${_f13Amt(x.lo, x.hi)}</span></div>`).join('')}</div>` : '';
+  const notes = (o.notable || []).length ? `<div class="f13-sec"><span class="f13-st">눈에 띄는 거래</span>${o.notable.map(n => `<div class="f13-note"><span>${_f13E(n.who)} · ${_f13Lk(n.tk)} ${n.side === 'buy' ? '매수' : '매도'}</span><span class="f13-sub">${_f13Amt(n.lo, n.hi)} · 거래 ${_f13D(n.td)} → 공시 ${_f13D(n.fd)} · ${_f13Own(n.own)}</span></div>`).join('')}</div>` : '';
+  return `<div class="f13-detail"><div class="f13-dh"${_gdAdm() ? ` onclick="aqF13LogoPick('congress')" style="cursor:pointer"` : ''}>${r.logo ? _f13Logo('congress', r.logo, true) : `<span class="f13-lg big"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 21h18M5 21V10m4 11V10m6 11V10m4 11V10M12 3l9 5H3z"/></svg></span>`}<div><b>${_f13E(r.nm)}</b><span>${_f13E(r.who)}</span></div></div>`
+    + `<div class="f13-num" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div><b class="up" data-c="${o.buy || 0}">0</b><span>매수 건</span></div><div><b class="dn" data-c="${o.sell || 0}">0</b><span>매도 건</span></div><div><b data-c="${o.members || 0}">0</b><span>의원</span></div></div>`
+    + (D + R ? `<div class="f13-pty"><div><i class="d" data-w="${D}"></i><i class="r" data-w="${R}"></i></div><div><span>매수 중 민주 ${D}%</span><span>공화 ${R}%</span></div></div>` : '')
+    + L('많이 산 종목', 'up', o.top_buy || []) + L('많이 판 종목', 'dn', (o.top_sell || []).slice(0, 5)) + box + notes + '</div>';
+}
+function _f13CongressAnim(root) {
+  const rm = _aqRM(); root.querySelectorAll('[data-c]').forEach(e => { const to = +e.dataset.c, s = AQMotion.S(0, 280, 22); if (rm) { e.textContent = String(to); return; } setTimeout(() => _saGo(s, to, 280, 22, () => { e.textContent = String(Math.max(0, Math.round(s.x))); }), 300); });
+  root.querySelectorAll('.f13-pty i').forEach(i => { const s = AQMotion.S(0, 260, 24), to = +i.dataset.w; i.style.width = '0'; setTimeout(() => _saGo(s, to, 260, 24, () => { i.style.width = Math.max(0, s.x).toFixed(2) + '%'; }), rm ? 0 : 350); });
+  if (!rm) root.querySelectorAll('.f13-row, .f13-note').forEach((r, i) => r.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 360, delay: 500 + Math.min(i, 10) * 45, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'backwards' }));
+  const d = root.querySelector('.f13-dir'); if (d) { aqWrapWords(d); aqStream(d, { delay: 900 }); }
+}
+async function aqF13Render() {
+  const box = document.getElementById('f13Box'); if (!box) return;
+  const flt = document.getElementById('f13Flt'); if (flt) flt.style.display = 'none';
+  if (getCurrentMarket() === 'KR') { box.innerHTML = '<div class="mg-empty">기관 13F는 미국 시장만 있어요</div>'; return; }
+  const draw = r => {
+    if (flt && flt.parentNode !== box.parentNode) box.parentNode.insertBefore(flt, box);   // 다시 그리기 전에 알약 줄을 빼 둠
+    box.innerHTML = _f13List(r); const cards = r.cards || [], mine = cards.filter(c => c.mine).length;
+    if (flt) { flt.style.display = cards.length && mine ? '' : 'none'; const bs = flt.querySelectorAll('.xtab-btn'); bs[0].textContent = '전체 ' + cards.length; bs[1].textContent = '내 종목 있는 곳 ' + mine; _f13s.flt = 'all'; bs.forEach(b => b.classList.toggle('active', b.dataset.f === 'all')); const h = box.querySelector('.f13-h'); if (h && flt.style.display !== 'none') h.after(flt); }   // 머리글 바로 아래로
+    _f13ListEnter();
+  };
+  if (_f13.list && Date.now() - _f13.ts < 60e3) { draw(_f13.list); return; }
+  if (!box.innerHTML.trim() || !_f13.list) box.innerHTML = '<div class="mg-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div>';
+  let r = null; try { r = await apiCall('f13Get', {}); } catch (e) {}
+  if (document.body.getAttribute('data-atab') !== 'f13') return;
+  if (!r || !r.ok) { box.innerHTML = `<div class="mg-empty">${_f13E((r && r.error) || '불러오지 못했어요')}</div>`; return; }
+  _f13.list = r; _f13.ts = Date.now(); draw(r);
+}
+Object.assign(window, { aqF13Render, aqF13Open, aqF13Close, aqF13Q, aqF13Filter, aqF13LogoPick, aqF13LogoClear });
+
 // ---------- v7.69: AI › AI 예보 (시안 승인 2026-11-14) ----------
 const _fc = { d: null, ts: 0 };
 const _fcE = s => escapeHtml(String(s == null ? '' : s));
@@ -34061,20 +34431,6 @@ async function aqKjpqApply() {
 }
 Object.assign(window, { aqKjpqRender, aqKjpqOpen, aqKjpqPick, aqKjpqSet, aqKjpqApply });
 
-async function aqF13Render() {
-  const box = document.getElementById('f13Box'); if (!box) return;
-  if (getCurrentMarket() === 'KR') { box.innerHTML = '<div class="mg-empty">기관 13F는 미국 시장만 있어요</div>'; return; }
-  const k = _f13.key, q = _f13.q;
-  if (!k && _f13.list && Date.now() - _f13.ts < 60e3) { box.innerHTML = _f13List(_f13.list); return; }
-  if (!box.innerHTML.trim() || k) box.innerHTML = '<div class="mg-empty"><span class="aq-tt" data-tt="init">불러오는 중…</span></div>';
-  let r = null; try { r = await apiCall('f13Get', k ? { key: k, q: q || '' } : {}); } catch (e) {}
-  if (_f13.key !== k || _f13.q !== q || document.body.getAttribute('data-atab') !== 'f13') return;
-  if (!r || !r.ok) { box.innerHTML = `<div class="mg-empty">${_f13E((r && r.error) || '불러오지 못했어요')}</div>`; return; }
-  if (!k) { _f13.list = r; _f13.ts = Date.now(); box.innerHTML = _f13List(r); } else box.innerHTML = _f13Detail(r);
-}
-function aqF13Open(k) { _f13.key = k || null; _f13.q = null; aqF13Render(); try { window.scrollTo({ top: 0, behavior: 'instant' }); } catch (e) {} }
-function aqF13Q(q) { _f13.q = q; aqF13Render(); }
-Object.assign(window, { aqF13Render, aqF13Open, aqF13Q, aqF13LogoPick, aqF13LogoClear });
 async function _mjLoad(force) {
   if (!force && _mj.d && Date.now() - _mj.ts < 55e3) return;
   let r = null; try { r = await apiCall('macroJudgeGet', {}); } catch (e) {}

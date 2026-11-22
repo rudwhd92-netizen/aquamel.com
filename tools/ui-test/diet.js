@@ -63,11 +63,11 @@ const shown = p => p.evaluate(() => Array.from(document.querySelectorAll('sectio
   // 6) 일반 사용자 — 뉴스는 기관 13F 하나 · 탭 줄 숨김 · 빈 화면 아님
   p = await prep(b, 'user'); await p.evaluate(() => switchMobileTab('news')); await p.waitForTimeout(1500);
   t = await p.evaluate(() => Array.from(document.querySelectorAll('#aiSubRow .xtab-btn')).map(b => b.textContent.trim())); const solo = await p.evaluate(() => ({ atab: document.body.dataset.atab, hidden: document.getElementById('aiSubtabs').classList.contains('aq-tab-solo') && getComputedStyle(document.getElementById('aiSubtabs')).display === 'none' }));
-  ok('뉴스(일반): 기관13F 하나 · 탭 줄 숨김', t.length === 1 && t[0] === '기관13F' && solo.atab === 'f13' && solo.hidden, JSON.stringify(solo) + ' ' + t.join(','));
-  const vs2 = await shown(p); ok('뉴스(일반): 보이는 카드가 있음(빈 화면 아님)', vs2.includes('f13Card'), vs2.join(','));
+  ok('뉴스(일반): 일간 이슈 · 기관13F 두 탭 · 첫 탭 = 일간 이슈 · 탭 줄이 보임(v9.01: 일반 회원에게도 일간 이슈)', t.length === 2 && t[0] === '일간 이슈' && t[1] === '기관13F' && solo.atab === 'wx' && !solo.hidden, JSON.stringify(solo) + ' ' + t.join(','));
+  const vs2 = await shown(p); ok('뉴스(일반): 보이는 카드가 있음(빈 화면 아님)', vs2.includes('macroWxCard'), vs2.join(','));
   await p.screenshot({ path: path.join(OUT, 'diet_news_user.png') });
   const leg2 = await p.evaluate(() => { const r = {}; for (const k of ['wx', 'brief', 'macro', 'manager', 'fc']) { setAiSubtab(k); r[k] = document.body.dataset.atab; } return r; });
-  ok('일반: 일간 이슈 · 브리핑 · 주간 이슈 · AI 링크 → 모두 기관 13F', Object.values(leg2).every(v => v === 'f13'), JSON.stringify(leg2)); await p.close();
+  ok('일반: 브리핑 · 주간 이슈 · AI 링크 → 모두 뉴스 첫 탭(일간 이슈) · 일간 이슈는 그대로', Object.values(leg2).every(v => v === 'wx'), JSON.stringify(leg2)); await p.close();
 
   console.log(fails ? '\n실패 ' + fails + '건' : '\n전부 통과'); console.log('캡처:', OUT); await b.close(); process.exit(fails ? 1 : 0);
 })();
