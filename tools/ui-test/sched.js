@@ -120,6 +120,7 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     await p.evaluate(() => aqCalToggleFilter('macro'));
 
     /* ───── 실적시즌 (v9.14 시안) ───── */
+    await p.evaluate(() => { window.__pvCalls = []; window.__pvRows = []; const o = window.apiCall; window.apiCall = async (n, q) => { if (n === 'userDataGet') { window.__pvCalls.push(q && q.dataType); return { ok: true, rows: window.__pvRows }; } return o ? o(n, q) : { ok: false }; }; });   // 관리자 전용 검증 자료를 시험용 응답으로
     await p.evaluate(() => setScheduleSubtab('earn')); await p.waitForTimeout(700);
     const T = s => p.evaluate(s => { const e = document.querySelector(s); return e ? e.innerText.replace(/\s+/g, ' ').trim() : null; }, s);
     const rowsI = () => p.evaluate(() => [...document.querySelectorAll('#earList .ear-r')].map(r => ({ d: r.querySelector('.ear-d').innerText.replace(/\s+/g, ' ').trim(), filed: r.querySelector('.ear-d').classList.contains('filed'), nm: r.querySelector('.ear-nm').textContent, my: !!r.querySelector('.ear-my'), notes: [...r.querySelectorAll('.ear-note')].map(x => x.textContent), v: [...r.querySelectorAll('.ear-v > *')].map(x => x.textContent), vc: (r.querySelector('.ear-v > b:last-child') || {}).className || '', va: (r.querySelector('.ear-v > b:last-child') || { getAttribute() {} }).getAttribute('aria-label') || '', pend: (r.querySelector('.ear-p') || {}).innerText ? r.querySelector('.ear-p').innerText.replace(/\s+/g, ' ').trim() : '', first: r.classList.contains('first'), today: r.classList.contains('today') })));
@@ -201,6 +202,32 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('한국 모드: 줄마다 「한국」 딱지를 달지 않음(시장은 앱 토글 하나로만 구분)', !(await p.evaluate(() => /한국/.test([...document.querySelectorAll('#earList .ear-chip')].map(c => c.textContent).join('')))));
     ok('한국 블록: 예상 대비는 영업이익 기준(이번 분기 1개) · 지난 분기는 비교 자료 없음 → 「비교 자료가 아직 없어요.」', /^이번 분기 서프라이즈 1개/.test(bs[1].h) && bk(bs, 'c-beat').colh === '종목 영업이익 · 예상 대비' && bk(bs, 'c-beat').rows[0].a === '4,857억' && bk(bs, 'p-beat').empty === '비교 자료가 아직 없어요.', JSON.stringify(bs.map(b => b.h + ' ' + b.empty)));
     ok('한국 흑자전환: 지난 분기 1개(영업이익 KRW) · 이번 분기 1개(한화오션 −10억 → 4,857억)', /흑자전환 1개/.test(bs[2].h) && bk(bs, 'p-turn').rows[0].b === '50억' && bk(bs, 'c-turn').rows[0].a === '−10억 →' && bk(bs, 'c-turn').rows[0].b === '4,857억', JSON.stringify(bs.map(b => b.h)));
+    // 관리자 전용 검증 자료(KR_EARNINGS_REVIEW): 공개 쌍이 없는 한국 종목에만 겹쳐 씀 · 공개 쌍이 있으면 공개가 이김
+    await p.evaluate(() => {
+      const row = (quarter, tk, o) => ({ quarter, instrument_id: 'KR:' + tk, market: 'KR', ticker: tk, metrics: { operating_income: Object.assign({ unit: 'KRW' }, o) } });
+      window.__pvRows = [
+        row('2026q3', '055550', { actual: 1234500000000, expected: 1000000000000, surprise_pct: 23.46, estimate_as_of: '2026-11-10' }),
+        row('2026q3', '042660', { actual: 485689713072, expected: 1, surprise_pct: 99999, estimate_as_of: '2026-11-01' }),
+        row('2026q2', 'K1', { actual: 5e9, expected: 4e9, surprise_pct: 25, expected_kind: 'announcement_quoted' })
+      ];
+      window.__pvCalls = []; AqSch._priv.reset(); setMarket('US'); setMarket('KR');
+    });
+    await p.waitForTimeout(900); bs = await blks(); r2 = await rowsI();
+    const pvc = await p.evaluate(() => window.__pvCalls.slice());
+    ok('관리자 + 한국: userDataGet({dataType:KR_EARNINGS_REVIEW})를 한 번 부름', pvc.length === 1 && pvc[0] === 'KR_EARNINGS_REVIEW', JSON.stringify(pvc));
+    ok('겹쳐 쓰기: 이번 분기 서프라이즈 2개 — 신한지주(검증 자료 +23.5%, 점선 밑줄)가 앞 · 한화오션은 공개 쌍(+21.4%)이 이김', /^이번 분기 서프라이즈 2개/.test(bs[1].h) && JSON.stringify(bk(bs, 'c-beat').rows.map(r => [r.nm, r.b, /\bpv\b/.test(r.cls)])) === JSON.stringify([['신한지주', '+23.5%', true], ['한화오션', '+21.4%', false]]), JSON.stringify(bk(bs, 'c-beat').rows));
+    ok('발표문 기준(expected_kind)은 별표 · 지난 분기 서프라이즈 1개(지난한국턴 +25.0%*)', /^지난 분기 서프라이즈 1개/.test(bs[0].h) && bk(bs, 'p-beat').rows[0].b === '+25.0%*' && /pv/.test(bk(bs, 'p-beat').rows[0].cls), JSON.stringify(bk(bs, 'p-beat').rows));
+    const sh = r2.find(r => r.nm === '신한지주') || { v: [], vc: '' }, hw = r2.find(r => r.nm === '한화오션') || { v: [], vc: '' };
+    ok('일정 줄에도: 신한지주 영업이익 컨센대비 +23.5%(점선 밑줄) · 공개 쌍 한화오션은 그대로', sh.v[2] === '+23.5%' && /pv/.test(sh.vc) && !/pv/.test(hw.vc), JSON.stringify([sh, hw]));
+    ok('설명: 「점선 밑줄 숫자는 관리자 전용 검증 자료」(블록 · 일정 둘 다) + 별표 설명', /관리자 전용 검증 자료예요/.test(await T('#earBlocks')) && /관리자 전용 검증 자료예요/.test(await T('#earList')) && /발표문에 적힌 기준값/.test(await T('#earBlocks')));
+    const pvu = await p.evaluate(() => {
+      const ev = (act, local) => ({ q: '2026q3', mk: 'KR', raw: { instrument_id: 'KR:X', local_date: local || '2026-11-25', metrics: { operating_income: { actual: act } } } });
+      const t = (o, e) => { AqSch._priv.set(new Map([['2026q3|KR:X', { quarter: '2026q3', instrument_id: 'KR:X', metrics: { operating_income: Object.assign({ unit: 'KRW', actual: 100, expected: 80, surprise_pct: 25, estimate_as_of: '2026-11-01' }, o) } }]])); return AqSch._priv.pair(e || ev(100)); };
+      const q = r => r && { quoted: r.quoted, pct: r.pct };
+      return { dated: q(t({})), after: q(t({ estimate_as_of: '2026-11-26' })), calendar: t({ expected_kind: 'calendar_unnamed' }), untimed: t({ expected_kind: 'untimed' }), nodate: t({ estimate_as_of: '' }), mismatch: t({}, ev(200)), usd: t({ unit: 'USD' }), zero: t({ expected: 0 }), nopct: t({ surprise_pct: null }), consensus: q(t({ expected_kind: 'consensus_dated', estimate_as_of: '' })) };
+    });
+    ok('검증 자료 규칙: 기록일<발표일=발표 전(표시 없음) · 발표일 이후=별표 · 집계기관 미명시 · 기록 시점 미확인 · 실제값 불일치 · 단위 다름 · 예상 0 · 비율 없음은 쓰지 않음', !!pvu.dated && pvu.dated.quoted === false && !!pvu.after && pvu.after.quoted === true && pvu.calendar === null && pvu.untimed === null && pvu.nodate === null && pvu.mismatch === null && pvu.usd === null && pvu.zero === null && pvu.nopct === null && !!pvu.consensus && pvu.consensus.quoted === false, JSON.stringify(pvu));
+    await p.evaluate(() => { window.__pvRows = []; AqSch._priv.reset(); });
     await p.evaluate(() => setMarket('US')); await p.waitForTimeout(500);
     const back = { meta: await T('#earMeta'), n: (await blks()).length, mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]), b0: (await blks())[1].h };
     ok('미국으로 돌아오면 일정 · 블록이 모두 미국으로', /21건 · 21종목/.test(back.meta) && back.mk.length === 1 && back.mk[0] === 'US' && /서프라이즈 2개/.test(back.b0), JSON.stringify(back));
@@ -245,6 +272,17 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('종목명 폴백: name_ko → 앱 한글 사전 → (코드와 다른) name → 코드', nm.a === '한글이름' && nm.b === '사전한글' && nm.c === '서버한글' && nm.d === 'ZZD' && nm.e === '서버이름E' && nm.f === 'ZZF', JSON.stringify(nm));
     const bm = await p.evaluate(() => [AqSch.beatMiss({ result: 'beat', metrics: { eps: {} } }), AqSch.beatMiss({ result: 'unknown', metrics: { eps: {} } }), AqSch.beatMiss({ result: 'pending', metrics: {} }), AqSch.beatMiss({ metrics: {} }), AqSch.beatMiss({ result: 'unknown', metrics: { eps: { provider_comparison: { result: 'miss', surprise_pct: -3 } } } })]);
     ok('Beat/Miss 분기: provider_comparison.result 우선 → 상위 result · unknown/pending/없음은 null', bm[0] && bm[0].r === 'beat' && bm[1] === null && bm[2] === null && bm[3] === null && bm[4] && bm[4].r === 'miss' && bm[4].pct === -3, JSON.stringify(bm));
+    await p.context().close();
+  }
+
+  /* ───────── 관리자가 아니면 검증 자료를 부르지도 쓰지도 않음 ───────── */
+  {
+    const p = await open({ width: 360, height: 780 });
+    await p.evaluate(() => { window.__pvCalls = []; const o = window.apiCall; window.apiCall = async (n, q) => { if (n === 'userDataGet') { window.__pvCalls.push(q && q.dataType); return { ok: true, rows: [] }; } return o ? o(n, q) : { ok: false }; }; switchMobileTab('schedule'); setScheduleSubtab('earn'); setMarket('KR'); });
+    await until(p, () => window.AqSch && AqSch.ready()); await p.waitForTimeout(900);
+    await p.evaluate(() => { AqSch._priv.set(new Map([['2026q3|KR:055550', { quarter: '2026q3', instrument_id: 'KR:055550', metrics: { operating_income: { unit: 'KRW', actual: 1234500000000, expected: 1e12, surprise_pct: 23.46, estimate_as_of: '2026-11-10' } } }]])); setMarket('US'); setMarket('KR'); }); await p.waitForTimeout(600);
+    const na = await p.evaluate(() => ({ role: document.body.getAttribute('data-role'), calls: window.__pvCalls.length, pv: document.querySelectorAll('#earBody .pv').length, c: [...document.querySelectorAll('#earBlocks .ear-blk')][1].querySelector('.cnt').textContent }));
+    ok('관리자가 아니면: userDataGet을 부르지 않고 · 검증 자료가 있어도 쓰지 않음(이번 분기 서프라이즈 1개 그대로)', na.role !== 'admin' && na.calls === 0 && na.pv === 0 && na.c === '1개', JSON.stringify(na));
     await p.context().close();
   }
 
