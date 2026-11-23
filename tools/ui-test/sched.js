@@ -45,19 +45,22 @@ const EARN = { schema_version: 2, quarter: '2026q3', revision: 'r1', generated_a
   US('REV', '정정회사', 5, { status: 'revised', session: 'BMO', date_kst: '2026-11-27', local_date: '2026-11-27', starts_at_kst: '2026-11-27T22:00:00+09:00', metrics: m({ actual: 1 }) }),
 ] };
 const mac = (id, title, d, t, mk, kind) => ({ id, kind: kind || 'macro', market: mk, instrument_ids: [], title, local_date: d, date_kst: d, starts_at_kst: t ? d + 'T' + t + ':00+09:00' : null, time_precision: t ? 'minute' : 'date', session: t ? 'INTRADAY' : 'TIME_TBD', category: kind === 'market_holiday' || kind === 'expiry' ? (kind === 'market_holiday' ? 'holiday' : 'expiry_filing') : 'macro', metrics: kind ? {} : { CPI: { unit: 'percent_yoy', actual: null, expected: null, previous: 3.1 } } });
+const gap = (tk, name, pe) => ({ id: 'earnings:US:' + tk + ':2026-09-30', kind: 'earnings', market: 'US', instrument_ids: ['US:' + tk], ticker: tk, name, title: name + ' 실적', status: 'estimated', period_end: pe, local_date: '2026-11-18', date_kst: '2026-11-19', starts_at_kst: '2026-11-19T06:00:00+09:00', time_precision: 'minute', session: 'AMC', metrics: {} });   // 분기 파일에서 빠진 실적(달력 파일에만 있음)
 const CAL = { schema_version: 2, month: '2026-11', revision: 'c1', items: [
   mac('macro:US:CPI:2026-11-10', '미국 소비자물가(CPI)', '2026-11-10', '22:30', 'US'),
   mac('macro:KR:CSI:2026-11-24', 'Consumer Survey Index (CSI) for November 2026', '2026-11-24', '06:00', 'KR'),
   mac('expiry:US:2026-11-20', '미국 월간 옵션 만기', '2026-11-20', null, 'US', 'expiry'),
   mac('holiday:US:2026-11-26', '미국 증시 휴장', '2026-11-26', null, 'US', 'market_holiday'),
+  gap('GAP1', '수집공백일', '2026-09-30'),
+  gap('GAP2', '수집공백이'),   // period_end가 없는 경우(실제 달력 파일) — 발표일로 분기를 추정
 ] };
-const INDEX = { schema_version: 2, status: 'partial', calendar: { '2026-11': 'calendar_2026-11.json' }, earnings_season: { '2026q3': 'earnings_2026q3.json', '2026q2': 'earnings_2026q2.json' }, file_revisions: { 'calendar_2026-11.json': 'c1', 'earnings_2026q3.json': 'r1', 'earnings_2026q2.json': 'r2' }, revision: 'i1' };
+const INDEX = { schema_version: 2, generated_at: '2026-11-22T00:00:00Z', status: 'partial', calendar: { '2026-11': 'calendar_2026-11.json' }, earnings_season: { '2026q3': 'earnings_2026q3.json', '2026q2': 'earnings_2026q2.json' }, file_revisions: { 'calendar_2026-11.json': 'c1', 'earnings_2026q3.json': 'r1', 'earnings_2026q2.json': 'r2' }, revision: 'i1' };
 const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'earnings_2026q3.json': EARN, 'earnings_2026q2.json': EARN2 };
 
 (async () => {
   const b = await chromium.launch({ channel: process.env.CHANNEL || undefined, executablePath: process.env.CHROMIUM_BIN || undefined });
   async function open(vp, mode) {
-    const ctx = await b.newContext({ viewport: vp, deviceScaleFactor: 1, timezoneId: 'Asia/Seoul', locale: 'ko-KR' }); const p = await ctx.newPage();
+    const ctx = await b.newContext({ viewport: vp, deviceScaleFactor: 1, timezoneId: 'Asia/Seoul', locale: 'ko-KR', reducedMotion: 'reduce' }); const p = await ctx.newPage();   // 기본은 움직임 줄이기(바로 완성) — 움직임 시험은 아래에서 따로 풀어서
     p.on('pageerror', e => { console.log('PAGEERR ' + e.message); fails++; });
     await p.route('**/*', r => (new globalThis.URL(r.request().url()).origin === new globalThis.URL(URL).origin || r.request().url().startsWith('https://cdn.jsdelivr.net/npm/chart')) ? r.continue() : r.abort());
     if (process.env.CHART_JS) await p.route('**/chart.umd.min.js', r => r.fulfill({path: process.env.CHART_JS, contentType:'text/javascript'}));
@@ -128,10 +131,15 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     const bk = (bs, k) => bs.find(b => b.key === k) || { rows: [] };
     const st = await p.evaluate(() => ({ card: getComputedStyle(document.getElementById('earnSeasonCard')).display, cal: getComputedStyle(document.getElementById('scheduleCard')).display }));
     ok('실적시즌 탭: 실적시즌 카드만(달력 숨김)', st.card !== 'none' && st.cal === 'none', JSON.stringify(st));
-    const hd = { title: await T('#earTitle'), asof: await T('#earAsOf'), colh: await T('#earColh'), all: await T('#earAll'), gone: await p.evaluate(() => !document.getElementById('earDesc') && !document.getElementById('earMeta')), q: await p.evaluate(() => [document.getElementById('earPrevQ').disabled, document.getElementById('earNextQ').disabled]) };
-    ok('머리: 「2026년 3분기 실적」 · 파일 시각(한국시간) 「11월 22일 01:51 기준」 · 이전 분기만 눌림', hd.title === '2026년 3분기 실적' && hd.asof === '11월 22일 01:51 기준' && hd.q[0] === false && hd.q[1] === true, JSON.stringify(hd));
+    const hd = { title: await T('#earTitle'), asof: await T('#earAsOf'), asofTitle: await p.evaluate(() => document.getElementById('earAsOf').title), colh: await T('#earColh'), gone: await p.evaluate(() => !document.getElementById('earDesc') && !document.getElementById('earMeta') && !document.getElementById('earAll')), q: await p.evaluate(() => [document.getElementById('earPrevQ').disabled, document.getElementById('earNextQ').disabled]) };
+    ok('머리: 「2026년 3분기 실적」 · 갱신은 인덱스 시각 기준 「3시간 전 갱신」(분기 파일 시각 아님 · 눌러 보면 정확한 시각) · 이전 분기만 눌림', hd.title === '2026년 3분기 실적' && hd.asof === '3시간 전 갱신' && /11월 22일 09:00 기준/.test(hd.asofTitle) && hd.q[0] === false && hd.q[1] === true, JSON.stringify(hd));
     ok('글은 최소: 설명 문장 · 날짜 범위 줄이 없음', hd.gone, '');
-    ok('개수는 「전체 일정 보기 · 21건」 단추에(발표 횟수는 건)', /^전체 일정 보기 · 21건$/.test(hd.all), hd.all);
+    const sd = await p.evaluate(() => { const bs = [...document.querySelectorAll('#earDays .ear-day')]; return { n: bs.length, act: (document.querySelector('#earDays .ear-day.active') || {}).dataset.day, none: bs.filter(b => b.classList.contains('none')).map(b => b.dataset.day.slice(5)), c: Object.fromEntries(bs.map(b => [b.dataset.day.slice(5), b.querySelector('.c').textContent])), mo: [...document.querySelectorAll('#earDays .ear-mo')].map(x => x.textContent), h: Math.round(document.getElementById('earDays').getBoundingClientRect().height), pill: !!document.querySelector('#earDays > .aq-tp-ind'), shown: !document.getElementById('earDays').hidden, w: [...bs].slice(0, 2).map(b => Math.round(b.getBoundingClientRect().width)) }; });
+    ok('일정 날짜 스트립(Tab pill): 평일을 이어서 8일 · 오늘(토)에 발표가 없으니 가장 가까운 예정일 11/24 선택 · 높이 68 · 알약 표시자 · 「11월」 표시', sd.shown && sd.n === 8 && sd.act === '2026-11-24' && JSON.stringify(sd.mo) === JSON.stringify(['11월']) && sd.pill && sd.h === 68 && sd.w[0] === 48, JSON.stringify(sd));
+    ok('날짜마다 건수: 11/18 2건(달력 파일로 채운 수집 공백) · 11/24 7 · 11/25 3 · 11/26 2 · 11/27 9 · 발표 없는 날(11/19 · 11/20 · 11/23)은 흐리게', sd.c['11-18'] === '2' && sd.c['11-24'] === '7' && sd.c['11-25'] === '3' && sd.c['11-26'] === '2' && sd.c['11-27'] === '9' && JSON.stringify(sd.none) === JSON.stringify(['11-19', '11-20', '11-23']), JSON.stringify(sd));
+    const dh = await T('#earDayH');
+    ok('고른 날 머리: 「11/24 화 · 한국 11/25  7건」(미국 현지 날짜 + 한국 날짜 병기 · 건수)', /^11\/24 화 · 한국 11\/25\s*7건$/.test(dh), dh);
+    ok('글은 최소: 「전체 일정 보기」 단추 · 「외 N건」 꼬리말이 없음', await p.evaluate(() => !document.getElementById('earAll') && !document.querySelector('#earList .ear-more')));
     ok('컬럼 설명(미국): 한 줄 「EPS · 컨센 대비」', hd.colh === 'EPS · 컨센 대비', hd.colh);
     const ord = await p.evaluate(() => { const y = s => document.querySelector(s).getBoundingClientRect().top; return [y('#earTitle'), y('#earAsOf'), y('#earBoard'), y('#earBody .ear-sep'), y('#season-calendar')]; });
     ok('폰 읽는 순서: 분기 이동 → 그 아래 기준 시각 → 분기 실적 → 구분 띠 → 일정', ord.every((v, i) => i === 0 || v > ord[i - 1]), JSON.stringify(ord.map(Math.round)));
@@ -140,16 +148,16 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
 
     // 요약본: 직전 발표일 · 오늘이 없으니 예정 3일
     let r2 = await rowsI();
-    const heads = r2.filter(r => r.first).map(r => r.d);
-    ok('요약본: 예정 날짜 3개(11/24 화 · 11/25 수 · 11/26 목) — 날짜는 한 번만', JSON.stringify(heads) === JSON.stringify(['11/24 화', '11/25 수', '11/26 목']) && r2.filter(r => r.d).length === 3, JSON.stringify(heads));
+    const so0 = await p.evaluate(() => { const b = document.getElementById('earSearchBox').getBoundingClientRect(); return { w: Math.round(b.width), h: Math.round(b.height), open: document.getElementById('earH').classList.contains('open') }; });
+    ok('종목 찾기는 평소 돋보기 원(40x40) 하나 — 큰 입력칸이 상시로 떠 있지 않음', so0.w === 40 && so0.h === 40 && !so0.open, JSON.stringify(so0));
     ok('요약본: 내 종목(ADI) 먼저 + 작은 점 · 앞으로의 줄에는 「발표 예정」만(한국시간은 오늘 줄에만)', r2[0].nm === '아날로그 디바이시스' && r2[0].my && r2[0].pend === '발표 예정', JSON.stringify(r2[0]));
     const unv = r2.find(r => r.nm === '미확정회사');
     const unvU = await p.evaluate(() => { const rs = [...document.querySelectorAll('#earList .ear-r')], r = rs.find(x => x.querySelector('.ear-nm').textContent === '미확정회사'), u = r.querySelector('.ear-p .unv'); return { u: !!u, title: u && u.title, aria: r.querySelector('.ear-p').getAttribute('aria-label'), others: rs.filter(x => x !== r).some(x => x.querySelector('.ear-p .unv')) }; });
     ok('분기 미확정(period_unverified): 줄마다 글자를 붙이지 않고 「발표 예정」 점선 밑줄 + 읽어 주는 글 · 해당 종목만', !!unv && unv.notes.length === 0 && unvU.u && unvU.title === '분기 미확정' && /분기 미확정/.test(unvU.aria) && !unvU.others && unv.pend === '발표 예정', JSON.stringify([unv, unvU]));
     ok('목록 아래 점선 안내는 한 줄 · 짧게(발표 예정 = 분기 미확정)', /^점선 밑줄: .*발표 예정 = 분기 미확정/.test(await T('#earList .ear-foot')) && (await p.evaluate(() => document.querySelectorAll('#earList .ear-foot').length)) === 1, await T('#earList .ear-foot'));
     ok('앞으로의 미국 줄에는 한국 날짜 · 시간 · 「시간 미정」을 붙이지 않음(글이 많아지지 않게)', r2.filter(r => /필러|미확정/.test(r.nm) || r.nm === '아날로그 디바이시스').every(r => r.pend === '발표 예정'), JSON.stringify(r2.slice(0, 6).map(r => r.pend)));
-    const g1 = r2.findIndex((r, i) => i > 0 && r.first);
-    ok('한 날짜는 5줄까지 + 「외 N건」 안내(11/24는 7건)', g1 === 5 && await p.evaluate(() => /^외 2건/.test(document.querySelector('#earList .ear-more').textContent)), 'g1=' + g1);
+
+    ok('고른 날(11/24)의 7건이 모두 보임(5줄 제한 없음)', r2.length === 7 && r2.every(r => r.d === ''), r2.length + '건');
     ok('종목명: 서버 name이 코드뿐(ZJ)이면 코드, name_ko 있으면 name_ko', await p.evaluate(() => { const n = [...document.querySelectorAll('#earList .ear-nm')].map(x => x.textContent); return n.includes('ZJ') && n.includes('이름있는회사') && !n.includes('영문사전회사'); }));
     const ch = await p.evaluate(() => { const c = document.querySelector('#earList .ear-chip').getBoundingClientRect(), r = document.querySelector('#earList .ear-r').getBoundingClientRect(); return { chip: Math.round(c.height), row: Math.round(r.height), ow: document.documentElement.scrollWidth <= document.documentElement.clientWidth }; });
     ok('앱 종목 줄과 같은 높이 56(누르는 영역도 56) · 가로 넘침 없음', ch.chip === 56 && ch.row === 56 && ch.ow, JSON.stringify(ch));
@@ -167,18 +175,25 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     const tnum = await p.evaluate(() => [...document.querySelectorAll('#earTiles .ear-tile .n b')].map(b => b.textContent.replace(/,/g, '')));
     const cnts = await p.evaluate(() => ['c-beat', 'c-miss', 'c-turn'].map(k => { const b = document.querySelector('#earBlocks [data-blk="' + k + '"] .cnt'); return b ? b.textContent.replace(/[^0-9]/g, '') : null; }));
     ok('타일 숫자 = 이번 분기 서프라이즈 블록의 개수(움직임이 끝나면 정확한 값)', tnum[0] === cnts[0], JSON.stringify([tnum, cnts]));
+    await p.emulateMedia({ reducedMotion: 'no-preference' });
     const hb = await p.evaluate(() => { const r = document.querySelector('#earBlocks .ear-br'), a = getComputedStyle(r, '::before'); return { w: r.style.getPropertyValue('--w'), an: a.animationName, h: Math.round(r.getBoundingClientRect().height) }; });
     ok('분기 실적 줄: 뒤 막대 길이(--w) 있음 · 자라나는 움직임 · 줄 높이 56', parseFloat(hb.w) > 0 && parseFloat(hb.w) <= 1 && hb.an === 'earGrow' && hb.h === 56, JSON.stringify(hb));
+    await p.emulateMedia({ reducedMotion: 'reduce' });
     // 오늘 줄에만 한국 날짜 · 시간: 시계를 미국 현지 11/24 새벽으로
     await p.clock.setFixedTime(new Date('2026-11-24T18:00:00+09:00')); await p.evaluate(() => { setMarket('KR'); setMarket('US'); }); await p.waitForTimeout(700);
     const tdy = (await rowsI()).filter(r => r.today);
-    ok('오늘(미국 현지) 줄에만 한국 날짜 · 시간 — 「오늘 발표 한국 11/24 22:00」 · 시각 없는 줄은 「시간 미정」', tdy.some(r => r.nm === '아날로그 디바이시스' && r.pend === '오늘 발표 한국 11/24 22:00') && tdy.some(r => /필러/.test(r.nm) && r.pend === '오늘 발표 시간 미정'), JSON.stringify(tdy.slice(0, 4).map(r => [r.nm, r.pend])));
+    ok('오늘(미국 현지) 줄: 「4시간 후」 + 한국 날짜 · 시간 — 「4시간 후 한국 11/24 22:00」 · 시각 없는 줄은 「오늘 발표 시간 미정」', tdy.some(r => r.nm === '아날로그 디바이시스' && r.pend === '4시간 후 한국 11/24 22:00') && tdy.some(r => /필러/.test(r.nm) && r.pend === '오늘 발표 시간 미정'), JSON.stringify(tdy.slice(0, 4).map(r => [r.nm, r.pend])));
     await p.clock.setFixedTime(new Date('2026-11-22T12:00:00+09:00')); await p.evaluate(() => { setMarket('KR'); setMarket('US'); }); await p.waitForTimeout(500);
 
-    // 전체 일정 보기
-    ok('「전체 일정 보기」 버튼이 보임', await p.evaluate(() => !document.getElementById('earAll').hidden));
-    await p.click('#earAll'); await p.waitForTimeout(300); r2 = await rowsI();
-    ok('전체 일정: 21건이 날짜순으로 모두 · 버튼은 「요약만 보기」', r2.length === 21 && /요약만 보기/.test(await T('#earAll')), r2.length + '건');
+    // 날짜 스트립으로 날짜를 바꿔 가며 읽기
+    const dayRows = async d => { await p.click('#earDays .ear-day[data-day="' + d + '"]'); await p.waitForTimeout(350); return rowsI(); };
+    const r18 = await dayRows('2026-11-18'); const dh18 = await T('#earDayH');
+    ok('수집 공백(11/17~22)은 달력 파일의 같은 분기 실적으로 채움: 11/18에 2건(상태 estimated와 무관) · 이미 지난 날이라 「발표 대기」 · 한국 날짜 병기', r18.length === 2 && r18.every(r => /수집공백/.test(r.nm) && r.pend === '발표 대기') && /한국 11\/19/.test(dh18), JSON.stringify([r18.map(r => [r.nm, r.pend]), dh18]));
+    const r24 = await dayRows('2026-11-24'), r25 = await dayRows('2026-11-25'), r26 = await dayRows('2026-11-26'), r27 = await dayRows('2026-11-27');
+    r2 = r24.concat(r25, r26, r27);
+
+
+    ok('날짜별 줄 수: 11/24 7 · 11/25 3 · 11/26 2 · 11/27 9 = 분기 파일 21건', r24.length === 7 && r25.length === 3 && r26.length === 2 && r27.length === 9, [r24, r25, r26, r27].map(r => r.length).join(' '));
     const by = n => r2.find(r => r.nm === n) || {};
     ok('발표 완료 줄: 오른쪽 EPS + 컨센대비(상회 초록 · 하회 빨강 · 컨센 없으면 「-」) · 매출은 이름 아래 작은 줄', JSON.stringify(by('비트회사').v) === JSON.stringify(['1.10', '+10.0%']) && by('비트회사').sub === '매출 244억' && by('비트회사').vc === 'up' && by('미스회사').v[1] === '−5.2%' && by('미스회사').vc === 'dn' && JSON.stringify(by('언노운회사').v) === JSON.stringify(['4.56', '-']) && by('언노운회사').sub === '매출 1,127억', JSON.stringify([by('비트회사'), by('미스회사'), by('언노운회사')]));
     ok('같은 숫자로: 공급자 EPS 1.10(= 계산에 쓴 실제값)을 보여줌', by('비트회사').v[0] === '1.10');
@@ -186,15 +201,20 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('공시 접수일(sec_filing_date)은 날짜에 점선 밑줄', by('접수일회사').filed === true && by('비트회사').filed === false, JSON.stringify([by('접수일회사').filed, by('비트회사').filed]));
     ok('정정 공시(status revised)는 발표 완료 숫자 + 「정정 공시」 딱지', by('정정회사').notes.includes('정정 공시') && by('정정회사').v.length === 2, JSON.stringify(by('정정회사')));
     ok('날짜 없던 내 종목(MYTBD)은 요일로 계산한 날짜(11/26 목)에', r2.some(r => r.nm === '내날짜없는회사') && r2.find(r => r.nm === '내날짜없는회사').my === true);
-    await p.click('#earAll'); await p.waitForTimeout(250);
-    ok('「요약만 보기」로 돌아옴', (await rowsI()).length < 21 && /전체 일정 보기/.test(await T('#earAll')));
+    await p.click('#earDays .ear-day[data-day="2026-11-24"]'); await p.waitForTimeout(300);
+    ok('다시 11/24를 누르면 그 날 7건으로 돌아옴(알약이 11/24에)', (await rowsI()).length === 7 && /^11\/24 화/.test(await T('#earDayH')) && await p.evaluate(() => document.querySelector('#earDays .ear-day.active').dataset.day === '2026-11-24'));
 
     // 검색
+    await p.click('#earSearchBtn'); await p.waitForTimeout(700);
+    const so1 = await p.evaluate(() => ({ open: document.getElementById('earH').classList.contains('open'), w: Math.round(document.getElementById('earSearchBox').getBoundingClientRect().width), foc: document.activeElement && document.activeElement.id }));
+    ok('종목 찾기: 돋보기 원을 누르면 가로로 늘어나 입력칸이 되고 바로 입력할 수 있음', so1.open && so1.w > 250 && so1.foc === 'earSearch', JSON.stringify(so1));
     await p.fill('#earSearch', '비트'); await p.waitForTimeout(250); r2 = await rowsI();
-    ok('종목 찾기: 이름이 맞는 종목만(전체 일정으로 찾음)', r2.length === 1 && r2[0].nm === '비트회사', JSON.stringify(r2.map(r => r.nm)));
+    ok('종목 찾기: 이름이 맞는 종목만(전체 날짜에서 찾음) · 날짜 스트립은 숨고 「검색 결과 1건」', r2.length === 1 && r2[0].nm === '비트회사' && await p.evaluate(() => document.getElementById('earDays').hidden) && (await T('#earSr')) === '검색 결과 1건', JSON.stringify(r2.map(r => r.nm)));
     await p.fill('#earSearch', '없는이름zz'); await p.waitForTimeout(250);
     ok('종목 찾기: 없으면 「찾는 종목이 없어요.」', /찾는 종목이 없어요/.test(await T('#earList')));
-    await p.fill('#earSearch', ''); await p.waitForTimeout(250);
+    await p.click('#earSearchX'); await p.waitForTimeout(700);
+    const so2 = await p.evaluate(() => ({ open: document.getElementById('earH').classList.contains('open'), w: Math.round(document.getElementById('earSearchBox').getBoundingClientRect().width), v: document.getElementById('earSearch').value, days: !document.getElementById('earDays').hidden }));
+    ok('찾기 닫기(×): 입력이 비워지고 다시 돋보기 원으로 줄어들며 날짜 스트립이 돌아옴', !so2.open && so2.w === 40 && so2.v === '' && so2.days, JSON.stringify(so2));
 
     // 분기 실적 — 미국
     let bs = await blks();
@@ -223,12 +243,51 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     await p.keyboard.press('ArrowRight'); await p.waitForTimeout(700);
     const kb2 = await p.evaluate(() => document.getElementById('earTitle').textContent);
     ok('키보드: ← 이전 분기 · → 다음 분기', kb === '2026년 2분기 실적' && kb2 === '2026년 3분기 실적', kb + ' / ' + kb2);
+    await p.emulateMedia({ reducedMotion: 'no-preference' });
     const mid = await p.evaluate(() => { document.getElementById('earPrevQ').click(); const re = document.getElementById('earReel'); return { outs: re.querySelectorAll('.ear-lbl.out').length, an: getComputedStyle(document.getElementById('earTitle')).animationName }; });
     ok('분기를 바꾸는 순간: 나가는 글자 + 들어오는 글자가 함께 옆으로 밀림(earIn · earOut)', mid.outs === 1 && /earIn-prev/.test(mid.an), JSON.stringify(mid));
     await p.waitForTimeout(700); await p.click('#earNextQ'); await p.waitForTimeout(700);
+    await p.emulateMedia({ reducedMotion: 'reduce' });
+    /* ───── 상단 미니 분기 알약 ───── */
+    await p.evaluate(() => window.scrollTo(0, 1200)); await p.waitForTimeout(600);
+    const mn = await p.evaluate(() => { const m = document.getElementById('earMini'), b = m.querySelectorAll('button'); return { on: m.classList.contains('on'), l: document.getElementById('earMiniL').textContent, title: document.getElementById('earTitle').textContent, top: Math.round(m.getBoundingClientRect().top), pos: getComputedStyle(m).position, prev: b[0].disabled, next: b[1].disabled }; });
+    ok('미니 알약: 큰 알약이 화면 위로 지나가면 상단에 작게 따라옴(고정 · 같은 분기 글자 · 최근 분기라 다음은 막힘)', mn.on && mn.pos === 'fixed' && mn.top >= 0 && mn.top < 20 && mn.l === mn.title && !mn.prev && mn.next, JSON.stringify(mn));
+    await p.click('#earMini button[data-step="-1"]'); await p.waitForTimeout(500);
+    const mn2 = await p.evaluate(() => ({ title: document.getElementById('earTitle').textContent, l: document.getElementById('earMiniL').textContent, prev: document.getElementById('earMini').querySelectorAll('button')[0].disabled }));
+    ok('미니 알약의 ‹ 로 이전 분기(2026년 2분기) · 글자 · 막힘이 같이 바뀜', mn2.title === '2026년 2분기 실적' && mn2.l === mn2.title && mn2.prev, JSON.stringify(mn2));
+    await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(500);
+    ok('맨 위로 올라오면 미니 알약은 사라짐', await p.evaluate(() => !document.getElementById('earMini').classList.contains('on')));
+    await p.click('#earNow'); await p.waitForTimeout(500);
+
+    /* ───── 움직임(움직임 줄이기 해제) ───── */
+    await p.emulateMedia({ reducedMotion: 'no-preference' });
+    await p.evaluate(() => { setScheduleSubtab('cal'); }); await p.waitForTimeout(300);
+    await p.evaluate(() => { setScheduleSubtab('earn'); window.scrollTo(0, 0); }); await p.waitForTimeout(170);
+    const tm = await p.evaluate(() => { const ts = [...document.querySelectorAll('#earTiles .ear-tile')]; return { op: ts.map(x => x.style.opacity), sc: [...ts[0].querySelectorAll('.bars i')].map(i => i.style.transform), cu: [...document.querySelectorAll('#earBlocks .ear-br .ear-bv b')].slice(0, 2).map(b => b.textContent) }; });
+    await p.waitForTimeout(2600);
+    const te = await p.evaluate(() => { const ts = [...document.querySelectorAll('#earTiles .ear-tile')]; return { op: ts.map(x => x.style.opacity + '|' + x.style.transform), n: ts.map(x => x.querySelector('.n b').textContent), bars: ts.map(x => [...x.querySelectorAll('.bars i')].map(i => i.style.transform).join('')), cu: [...document.querySelectorAll('#earBlocks .ear-br .ear-bv b')].slice(0, 2).map(b => b.textContent) }; });
+    ok('타일: 탭에 들어올 때마다 아래에서 올라오고 막대가 하나씩 솟음 — 도중엔 덜 올라온 상태 · 끝나면 스타일이 치워지고 숫자가 최종값(서프라이즈 2 · 쇼크 1 · 흑자전환 2)', tm.op.some(o => o !== '' && parseFloat(o) < 1) && tm.sc.some(x => /scaleY\(/.test(x)) && te.op.every(o => o === '|') && te.bars.every(b => b === '') && JSON.stringify(te.n) === JSON.stringify(['2개', '1개', '2개'].map(x => x.replace('개', ''))), JSON.stringify([tm, te]));
+    ok('분기 실적 줄의 숫자가 0에서 올라와 최종값이 됨(도중 값 ≠ 최종 값)', tm.cu[0] !== te.cu[0] && /^[+−]\d/.test(te.cu[0]), JSON.stringify([tm.cu, te.cu]));
+    await p.click('#earBoard .ear-tone button[data-tone="miss"]'); await p.waitForTimeout(60);
+    const ex = await p.evaluate(() => [...document.querySelectorAll('#earBlocks .ear-br')].filter(r => r.getAnimations().length > 0).length);
+    await p.waitForTimeout(1200);
+    ok('서프라이즈 → 쇼크: 줄이 아래로 빠지는 움직임이 먼저 돌고 · 뒤에 쇼크 블록으로 바뀜', ex > 0 && /^이번 분기 쇼크/.test((await blks())[1].h), ex + ' / ' + (await blks())[1].h);
+    await p.click('#earBoard .ear-tone button[data-tone="beat"]'); await p.waitForTimeout(1200);
+    await p.click('#earPrevQ'); await p.waitForTimeout(60);
+    const qa = await p.evaluate(() => ['earTiles', 'earBlocks', 'earList'].map(id => document.getElementById(id).getAnimations().length));
+    await p.waitForTimeout(1200);
+    const qt = await p.evaluate(() => document.getElementById('earTitle').textContent);
+    ok('분기 이동: 타일 · 분기 실적 · 일정이 함께 옛 내용은 빠지고 새 내용이 들어오는 움직임 · 글자는 바로 바뀜', qa.every(n => n > 0) && qt === '2026년 2분기 실적', JSON.stringify([qa, qt]));
+    await p.click('#earNow'); await p.waitForTimeout(1200);
+    await p.click('#earDays .ear-day[data-day="2026-11-25"]'); await p.waitForTimeout(60);
+    const dsw = await p.evaluate(() => document.getElementById('earList').getAnimations().length);
+    await p.waitForTimeout(600);
+    ok('날짜를 바꾸면 줄 목록이 가는 방향으로 밀려 들어옴', dsw > 0 && (await rowsI()).length === 3, dsw + ' / ' + (await rowsI()).length);
+    await p.click('#earDays .ear-day[data-day="2026-11-24"]'); await p.waitForTimeout(600);
+    await p.emulateMedia({ reducedMotion: 'reduce' });
     // 한국
     await p.evaluate(() => setMarket('KR')); await p.waitForTimeout(500); bs = await blks(); r2 = await rowsI();
-    const kr = { colh: await T('#earColh'), all: await T('#earAll'), mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]) };
+    const kr = { colh: await T('#earColh'), mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]) };
     ok('앱 시장 KR: 일정 · 컬럼 머리가 한국만(영업이익) · 설명 없음', kr.colh === '영업이익 · 컨센 대비' && kr.mk.length === 1 && kr.mk[0] === 'KR' && !(await p.evaluate(() => document.getElementById('earDesc'))), JSON.stringify(kr));
     const k = n => r2.find(r => r.nm === n) || {};
     ok('한국 줄: 오른쪽 영업이익 + 컨센대비 · 매출(조 · 억)은 작은 줄 · 매출이 없으면 종목 코드', JSON.stringify(k('한화오션').v) === JSON.stringify(['4,857억', '+21.4%']) && k('한화오션').sub === '매출 3.4조' && k('한화오션').vc === 'up' && JSON.stringify(k('신한지주').v) === JSON.stringify(['1.2조', '-']) && !/^매출/.test(k('신한지주').sub), JSON.stringify([k('한화오션'), k('신한지주')]));
@@ -267,8 +326,8 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('검증 자료 규칙: 기록일<발표일=발표 전(표시 없음) · 발표일 이후=별표 · 집계기관 미명시 · 기록 시점 미확인 · 실제값 불일치 · 단위 다름 · 예상 0 · 비율 없음은 쓰지 않음', !!pvu.dated && pvu.dated.quoted === false && !!pvu.after && pvu.after.quoted === true && pvu.calendar === null && pvu.untimed === null && pvu.nodate === null && pvu.mismatch === null && pvu.usd === null && pvu.zero === null && pvu.nopct === null && !!pvu.consensus && pvu.consensus.quoted === false, JSON.stringify(pvu));
     await p.evaluate(() => { window.__pvRows = []; AqSch._priv.reset(); });
     await p.evaluate(() => setMarket('US')); await p.waitForTimeout(500);
-    const back = { all: await T('#earAll'), n: (await blks()).length, mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]), b0: (await blks())[1].h };
-    ok('미국으로 돌아오면 일정 · 블록이 모두 미국으로', /전체 일정 보기 · 21건/.test(back.all) && back.mk.length === 1 && back.mk[0] === 'US' && /서프라이즈 2개/.test(back.b0), JSON.stringify(back));
+    const back = { act: await p.evaluate(() => (document.querySelector('#earDays .ear-day.active') || {}).dataset.day), n: (await blks()).length, mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]), b0: (await blks())[1].h };
+    ok('미국으로 돌아오면 일정 · 블록이 모두 미국으로(날짜는 다시 11/24)', back.act === '2026-11-24' && back.mk.length === 1 && back.mk[0] === 'US' && /서프라이즈 2개/.test(back.b0), JSON.stringify(back));
 
     // 블록 안에서
     await p.click('#earBlocks .ear-bn[data-tk="BEAT"]'); let op = await p.evaluate(() => window.__opened);
@@ -280,19 +339,19 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     // 하트 = 관심(모의매수) 담기 · 빼기는 한 번 물음
     await p.evaluate(() => { window.__asked = 0; window.aqAskSimPrice = async () => 100; window.aqConfirm = async () => { window.__asked++; return window.__yes; }; try { localStorage.removeItem('aq_watchlist_v1'); } catch (e) {} });
     await p.click('#earBlocks .ear-heart[data-heart="BEAT"]'); await p.waitForTimeout(300);
-    const h1 = await p.evaluate(() => ({ has: AqWatchStore.has('US', 'BEAT'), on: document.querySelector('#earBlocks .ear-heart[data-heart="BEAT"]').classList.contains('on') }));
+    const h1 = await p.evaluate(() => ({ has: AqWatchStore.has('US', 'BEAT'), on: document.querySelector('#earBlocks .ear-heart[data-heart="BEAT"]').classList.contains('on'), pop: document.querySelector('#earBlocks .ear-heart[data-heart="BEAT"]').classList.contains('pop') }));
     await p.evaluate(() => { window.__yes = false; }); await p.click('#earBlocks .ear-heart[data-heart="BEAT"]'); await p.waitForTimeout(300);
     const h2 = await p.evaluate(() => ({ has: AqWatchStore.has('US', 'BEAT'), asked: window.__asked }));
     await p.evaluate(() => { window.__yes = true; }); await p.click('#earBlocks .ear-heart[data-heart="BEAT"]'); await p.waitForTimeout(300);
     const h3 = await p.evaluate(() => ({ has: AqWatchStore.has('US', 'BEAT'), asked: window.__asked, on: document.querySelector('#earBlocks .ear-heart[data-heart="BEAT"]').classList.contains('on') }));
-    ok('하트: 누르면 담김(색이 채워짐) · 다시 누르면 한 번 묻고 · 아니오면 그대로 · 예면 빠짐', h1.has && h1.on && h2.has && h2.asked === 1 && !h3.has && h3.asked === 2 && !h3.on, JSON.stringify({ h1, h2, h3 }));
+    ok('하트: 누르면 담김(색이 채워지고 통통 튐 — pop)  · 다시 누르면 한 번 묻고 · 아니오면 그대로 · 예면 빠짐', h1.has && h1.on && h1.pop && h2.has && h2.asked === 1 && !h3.has && h3.asked === 2 && !h3.on, JSON.stringify({ h1, h2, h3 }));
 
     // 달력 → 실적시즌
     await p.evaluate(() => { setScheduleSubtab('cal'); }); await p.waitForTimeout(300);
     await p.evaluate(() => { aqCalendarSelectDate('2026-11-25'); }); await p.waitForTimeout(250);
     await p.evaluate(() => { const r = [...document.querySelectorAll('#calSelectedList .tl-row')].find(x => /내 종목 외/.test(x.textContent)); r.click(); }); await p.waitForTimeout(600);
-    const go = await p.evaluate(() => ({ ctab: document.body.getAttribute('data-ctab'), g: !!document.querySelector('#earList [data-date="2026-11-25"]'), all: document.getElementById('earAll').textContent.trim(), q: document.getElementById('earTitle').textContent }));
-    ok('달력의 「실적 발표 N건」을 누르면 실적시즌의 전체 일정이 열리고 그 날짜(11/25)가 있음 · 같은 시장', go.ctab === 'earn' && go.g && /요약만 보기/.test(go.all) && go.q === '2026년 3분기 실적', JSON.stringify(go));
+    const go = await p.evaluate(() => ({ ctab: document.body.getAttribute('data-ctab'), g: !!document.querySelector('#earList [data-date="2026-11-25"]'), day: (document.querySelector('#earDays .ear-day.active') || {}).dataset.day, q: document.getElementById('earTitle').textContent }));
+    ok('달력의 「실적 발표 N건」을 누르면 실적시즌이 열리고 그 날짜(11/25)가 스트립에서 골라진 채 · 같은 시장', go.ctab === 'earn' && go.g && go.day === '2026-11-25' && go.q === '2026년 3분기 실적', JSON.stringify(go));
     await p.screenshot({ path: path.join(OUT, 'sched_phone_earn.png') });
     await p.evaluate(() => { setScheduleSubtab('cal'); aqCal.selected = '2026-11-24'; aqCalendarRender(); }); await p.waitForTimeout(400);
     await p.screenshot({ path: path.join(OUT, 'sched_phone_cal.png') });
