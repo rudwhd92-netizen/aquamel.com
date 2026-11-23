@@ -133,8 +133,8 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('글은 최소: 설명 문장 · 날짜 범위 줄이 없음', hd.gone, '');
     ok('개수는 「전체 일정 보기 · 21건」 단추에(발표 횟수는 건)', /^전체 일정 보기 · 21건$/.test(hd.all), hd.all);
     ok('컬럼 설명(미국): 한 줄 「EPS · 컨센 대비」', hd.colh === 'EPS · 컨센 대비', hd.colh);
-    const ord = await p.evaluate(() => { const y = s => document.querySelector(s).getBoundingClientRect().top; return [y('#earTitle'), y('#earAsOf'), y('#season-calendar'), y('#earBody .ear-sep'), y('#earBoard')]; });
-    ok('폰 읽는 순서: 분기 이름 → 그 아래 기준 시각 → 일정 → 구분 띠 → 분기 실적', ord.every((v, i) => i === 0 || v > ord[i - 1]), JSON.stringify(ord.map(Math.round)));
+    const ord = await p.evaluate(() => { const y = s => document.querySelector(s).getBoundingClientRect().top; return [y('#earTitle'), y('#earAsOf'), y('#earBoard'), y('#earBody .ear-sep'), y('#season-calendar')]; });
+    ok('폰 읽는 순서: 분기 이동 → 그 아래 기준 시각 → 분기 실적 → 구분 띠 → 일정', ord.every((v, i) => i === 0 || v > ord[i - 1]), JSON.stringify(ord.map(Math.round)));
     const bleed = await p.evaluate(() => { const s = document.querySelector('#earBody .ear-sep').getBoundingClientRect(); return { l: Math.round(s.left), w: Math.round(s.width), vw: innerWidth }; });
     ok('구분 띠가 화면 좌우 끝까지', bleed.l === 0 && bleed.w === bleed.vw, JSON.stringify(bleed));
 
@@ -154,6 +154,7 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     const ch = await p.evaluate(() => { const c = document.querySelector('#earList .ear-chip').getBoundingClientRect(), r = document.querySelector('#earList .ear-r').getBoundingClientRect(); return { chip: Math.round(c.height), row: Math.round(r.height), ow: document.documentElement.scrollWidth <= document.documentElement.clientWidth }; });
     ok('앱 종목 줄과 같은 높이 56(누르는 영역도 56) · 가로 넘침 없음', ch.chip === 56 && ch.row === 56 && ch.ow, JSON.stringify(ch));
     await p.waitForTimeout(900);   // 줄이 떠오르는 움직임이 끝난 뒤에 재기
+    await p.evaluate(() => document.querySelector('#earList .ear-chip').scrollIntoView({ block: 'center' })); await p.waitForTimeout(200);
     const hit = await p.evaluate(() => { const c = document.querySelector('#earList .ear-chip'), r = c.getBoundingClientRect(); const x = r.left + 10, y = r.top + 50; const el = document.elementFromPoint(x, y); return !!el && (el === c || c.contains(el)); });
     ok('종목 줄 아래쪽 끝까지 눌림(줄 전체가 버튼)', hit);
     const ln = await p.evaluate(() => ({ r: getComputedStyle(document.querySelector('#earList .ear-r')).borderBottomWidth, last: getComputedStyle(document.querySelector('#earList .ear-r.last')).borderBottomWidth, b: getComputedStyle(document.querySelector('#earBlocks .ear-br')).borderBottomWidth }));
@@ -210,7 +211,21 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     const q2 = { title: await T('#earTitle'), q: await p.evaluate(() => [document.getElementById('earPrevQ').disabled, document.getElementById('earNextQ').disabled]) };
     ok('분기 이동: 2026년 2분기(이전 분기 막힘 · 다음 분기 열림)', q2.title === '2026년 2분기 실적' && q2.q[0] === true && q2.q[1] === false, JSON.stringify(q2));
     ok('그 앞 분기 파일이 없으면 지난 분기 블록은 「이전 분기 자료가 없어요.」', bk(bs, 'p-beat').empty === '이전 분기 자료가 없어요.' && /—/.test(bk(bs, 'p-beat').cnt) && /^이번 분기 서프라이즈 2개 2026년 2분기/.test(bs[1].h), JSON.stringify(bs.map(b => b.h + ' ' + b.empty)));
-    await p.click('#earNextQ'); await p.waitForTimeout(300);
+    await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(600);
+    const pg = await p.evaluate(() => { const r = document.getElementById('earPager').getBoundingClientRect(), b = document.getElementById('earPrevQ').getBoundingClientRect(), re = document.getElementById('earReel'); return { h: Math.round(r.height), btn: Math.round(b.width) + 'x' + Math.round(b.height), role: re.getAttribute('role'), now: !document.getElementById('earNow').hidden, outs: re.querySelectorAll('.ear-lbl.out').length, ow: document.documentElement.scrollWidth <= document.documentElement.clientWidth }; });
+    ok('분기 이동 알약(MonthPager): 알약 안 ‹ 글자 › · 둥근 단추 40x40 · spinbutton · 이번 분기가 아니면 「이번 분기」 단추 · 글자 교체가 끝나면 나가는 글자는 치워짐', pg.h === 52 && pg.btn === '40x40' && pg.role === 'spinbutton' && pg.now && pg.outs === 0 && pg.ow, JSON.stringify(pg));
+    await p.waitForTimeout(100);
+    await p.click('#earNow'); await p.waitForTimeout(700);
+    const nw = await p.evaluate(() => ({ title: document.getElementById('earTitle').textContent, now: document.getElementById('earNow').hidden, next: document.getElementById('earNextQ').disabled }));
+    ok('「이번 분기」를 누르면 가장 최근 분기로 돌아가고 단추는 사라짐', nw.title === '2026년 3분기 실적' && nw.now && nw.next, JSON.stringify(nw));
+    await p.focus('#earReel'); await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(700);
+    const kb = await p.evaluate(() => document.getElementById('earTitle').textContent);
+    await p.keyboard.press('ArrowRight'); await p.waitForTimeout(700);
+    const kb2 = await p.evaluate(() => document.getElementById('earTitle').textContent);
+    ok('키보드: ← 이전 분기 · → 다음 분기', kb === '2026년 2분기 실적' && kb2 === '2026년 3분기 실적', kb + ' / ' + kb2);
+    const mid = await p.evaluate(() => { document.getElementById('earPrevQ').click(); const re = document.getElementById('earReel'); return { outs: re.querySelectorAll('.ear-lbl.out').length, an: getComputedStyle(document.getElementById('earTitle')).animationName }; });
+    ok('분기를 바꾸는 순간: 나가는 글자 + 들어오는 글자가 함께 옆으로 밀림(earIn · earOut)', mid.outs === 1 && /earIn-prev/.test(mid.an), JSON.stringify(mid));
+    await p.waitForTimeout(700); await p.click('#earNextQ'); await p.waitForTimeout(700);
     // 한국
     await p.evaluate(() => setMarket('KR')); await p.waitForTimeout(500); bs = await blks(); r2 = await rowsI();
     const kr = { colh: await T('#earColh'), all: await T('#earAll'), mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]) };
