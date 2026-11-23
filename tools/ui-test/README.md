@@ -12,6 +12,7 @@ node tools/ui-test/tabpill.js           # 탭 메뉴 Tab pill — 알약이 늘�
 node tools/ui-test/tokens.js            # 토큰 관리 화면 — 설정 행 · 큰 숫자 · 막대 · 초기화 지난 창 · 빨강 · 동작 호출 · 좁은 화면 · 넓은 화면 (가짜 서버 · 지어낸 값)
 node tools/ui-test/diet.js              # 기능 다이어트(v8.75) — 지운 함수 · 카드 · 탭 줄 없음 · 일정 · 뉴스 구성 · 옛 링크 · 알림 이동 · 일반 사용자 뉴스 · 다른 메뉴 그대로
 node tools/ui-test/discover.js          # 발견 차트(v8.78) — 3M/6M/1Y 알약 크기 · 기간 전환 중/뒤 선이 틀 밖으로 안 나감
+node tools/ui-test/enter.js          # 발견 처음 들어올 때 움직임(v9.05) — 금주의 발견 로고가 차례로 떠오름 · 피드 차트 선이 그어짐 + 변화율 숫자 · 끝나면 인라인 스타일 · 클립 없음 · 움직임 줄이기면 없음
 node tools/ui-test/livechart.js         # 마이 › 실시간 현황 · 종목 차트(v8.81) — 작은 알약 · 기간 전환 중/뒤 선이 틀 밖으로 안 나감 · 멈춘 뒤 실제 값 자리로
 node tools/ui-test/stocklist.js         # 탐색 › 종목리스트 행(v8.92) — 로고 · 종목명 · 티커 / 섹터 · 지도 딱지 없음 · 긴 이름도 섹터 보임 · 폭 560 이상 한 줄 열 맞춤 · 행 높이 44 이상 (서버 없이 file:// · 지어낸 종목)
 node tools/ui-test/thinking.js          # 로딩 문구 Thinking text(v8.93) — 표식(.aq-tt)이 붙으면 돌고 · 1.5초마다 문구가 바뀌고 · 데이터로 교체되면 0.25초 안에 정리(새는 것 0) · 안 보이는 자리는 시작 안 함 · 움직임 줄이기 · .aq-think 그라데이션 없음
