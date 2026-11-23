@@ -40598,7 +40598,7 @@ window._rpFeed = function (area, mkt, list, secOf) {
   /* ── 실적발표 일정 ── */
   function chipHtml(e) {
     const nm = nameOf(e), my = myKind(e), lg = logoOf(e);
-    return '<button type="button" class="ear-chip" data-tk="' + esc(e.tk) + '" data-mk="' + e.mk + '"><span class="ear-lg"><i>' + esc(nm.slice(0, 1)) + '</i>' + lg + '</span><span class="ear-nm">' + esc(nm) + '</span>' +
+    return '<button type="button" class="ear-chip" data-tk="' + esc(e.tk) + '" data-mk="' + e.mk + '"><span class="ear-lg" aria-hidden="true"><i>' + esc(nm.slice(0, 1)) + '</i>' + lg + '</span><span class="ear-nm">' + esc(nm) + '</span>' +
       (my ? '<span class="ear-my" role="img" aria-label="' + (my === 'hold' ? '보유' : '관심') + '"></span>' : '') + '</button>';
   }
   function schedRow(e, d, first, last, todayStr) {
@@ -40679,7 +40679,7 @@ window._rpFeed = function (area, mkt, list, secOf) {
   const HEART = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 19.5 12 21l-7-7c-1.5-1.45-3-3.2-3-5.5A5.5 5.5 0 0 1 7.5 3c1.76 0 3 .5 4.5 2 1.5-1.5 2.74-2 4.5-2a5.5 5.5 0 0 1 5.5 5.5c0 2.3-1.5 4.05-3 5.5 M15 15h6 M18 12v6"/></svg>';
   function blockRow(x) {
     const e = x.e, nm = nameOf(e), lg = logoOf(e), nt = notesOf(e).filter(t => t === '정정 공시').map(t => '<em class="ear-note">' + t + '</em>').join('');
-    return '<div class="ear-br"><span class="ear-lg"><i>' + esc(nm.slice(0, 1)) + '</i>' + lg + '</span><button type="button" class="ear-bn ear-chip-x" data-tk="' + esc(e.tk) + '" data-mk="' + e.mk + '"><b>' + esc(nm) + '</b>' + nt + '</button>' +
+    return '<div class="ear-br"><span class="ear-lg" aria-hidden="true"><i>' + esc(nm.slice(0, 1)) + '</i>' + lg + '</span><button type="button" class="ear-bn ear-chip-x" data-tk="' + esc(e.tk) + '" data-mk="' + e.mk + '"><b>' + esc(nm) + '</b>' + nt + '</button>' +
       '<span class="ear-bv' + (x.arrow ? ' arrow' : '') + '"><span>' + esc(x.a) + '</span><b class="' + x.cls + '"' + (x.aria ? ' aria-label="' + esc(x.aria) + '"' : '') + '>' + esc(x.b) + '</b></span>' +
       '<button type="button" class="ear-heart" data-heart="' + esc(e.tk) + '" aria-label="관심 담기" aria-pressed="false">' + HEART + '</button></div>';
   }
