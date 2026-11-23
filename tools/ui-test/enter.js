@@ -33,19 +33,30 @@ async function run(reduce) {
   const SEL = ['#buyPointsScroll > .buy-point-item:not(.bp-more)', '.stock-list-row', '.archive-mobile-item', '.insider-archive-item', '.m4-strip > .m4-lg', '.gl-strip .buy-points-scroll > .buy-point-item:not(.bp-more)'];
   const items0 = await p.evaluate(() => [...document.querySelectorAll('#buyPointsScroll .buy-point-item')].filter(e => e.offsetParent && e.getBoundingClientRect().right <= innerWidth - 40).map(e => e.style.cssText));   // 발견 탭이 보일 때 화면 안 칸(오른쪽 끝에 걸친 칸은 빼고)
   // 발견에 다시 들어올 때마다 통통 (두 번)
-  const RE = [];
+  let RB = 1; const RE = [];
   for (let n = 0; n < 2; n++) {
     await p.evaluate(() => switchMobileTab('explore')); await p.waitForTimeout(500);
     await p.evaluate(() => { window.__RE = []; window.__REi && clearInterval(window.__REi); window.__REi = setInterval(() => { const it = [...document.querySelectorAll('#buyPointsScroll .buy-point-item:not(.bp-more)')].filter(e => e.offsetParent).slice(0, 4); if (it.length) window.__RE.push(it.map(e => +(+getComputedStyle(e).opacity).toFixed(2))); }, 40); switchMobileTab('discover'); });
     await p.waitForTimeout(3500);
     RE.push(await p.evaluate(() => { clearInterval(window.__REi); return window.__RE; }));
   }
+  // 발견에 머무는 동안 목록이 다시 만들어져도 로고가 숨지 않음
+  const rb = await p.evaluate(async () => { switchMobileTab('discover'); await new Promise(r => setTimeout(r, 3500)); let mn = 1; const iv = setInterval(() => { document.querySelectorAll('#buyPointsScroll .buy-point-item:not(.bp-more)').forEach((e, i) => { if (i < 4) mn = Math.min(mn, +getComputedStyle(e).opacity); }); }, 30); try { buildBuyPointsCard(); } catch (e) {} await new Promise(r => setTimeout(r, 450)); mn = 1; await new Promise(r => setTimeout(r, 900)); clearInterval(iv); return mn; });   // 옛 CSS 페이드(0.26초)가 끝난 뒤부터 잼
+  RB = rb;
+  // 탐색 하위메뉴(종목리스트 · 내부자 매수 · 밸런스 종목): 들어올 때마다 줄이 통통
+  const XR = {};
+  for (const sub of ['list', 'insider', 'balance', 'list']) {
+    await p.evaluate(() => switchMobileTab('discover')); await p.waitForTimeout(400);
+    await p.evaluate(sub => { window.__XR = []; window.__XRi && clearInterval(window.__XRi); window.__XRi = setInterval(() => { const it = [...document.querySelectorAll('.stock-list-row, .archive-mobile-item, .insider-archive-item')].filter(e => e.offsetParent && e.getBoundingClientRect().top < innerHeight).slice(0, 4); if (it.length) window.__XR.push(it.map(e => +(+getComputedStyle(e).opacity).toFixed(2))); }, 40); switchMobileTab('explore'); setExploreSubtab(sub); }, sub);
+    await p.waitForTimeout(3800);
+    (XR[sub] = XR[sub] || []).push(await p.evaluate(() => { clearInterval(window.__XRi); return window.__XR; }));
+  }
   await p.evaluate(() => { window.__M = []; setInterval(() => { const c = document.getElementById('chartCanvas'), ch = c && c._aqChart || (c && window.Chart && Chart.getChart(c)); if (ch && ch.$rv) window.__M.push(+ch.$rv.x.toFixed(2)); }, 40); switchMobileTab('explore'); });
   await p.waitForTimeout(3500);
   await p.evaluate(() => { try { openChart('NVDA'); } catch (e) {} });
   await p.waitForTimeout(3000);
   const other = await p.evaluate(S => ({ stuck: S.map(s => [...document.querySelectorAll(s)].filter(e => { const r = e.getBoundingClientRect(); return e.offsetParent && r.bottom > 0 && r.top < innerHeight && +getComputedStyle(e).opacity < .05; }).length).reduce((a, b) => a + b, 0), rows: document.querySelectorAll('.stock-list-row').length, modal: window.__M }), SEL);
-  const S = await p.evaluate(() => window.__S); S.other = other; S.items0 = items0; S.re = RE;
+  const S = await p.evaluate(() => window.__S); S.other = other; S.items0 = items0; S.xr = XR; S.rb = RB; S.re = RE;
   await p.screenshot({ path: path.join(OUT, 'enter_c_' + (reduce ? 'rm' : 'mo') + '.png') });
   const fin = await p.evaluate(() => ({ items: [...document.querySelectorAll('#buyPointsScroll .buy-point-item')].filter(e => e.getBoundingClientRect().right <= innerWidth).map(e => e.style.cssText), charts: [...document.querySelectorAll('#feedScroll canvas')].map(c => !!c._aqChart && !!c._aqChart.$rv), nCharts: document.querySelectorAll('#feedScroll canvas').length, nDrawn: [...document.querySelectorAll('#feedScroll canvas')].filter(c => c._aqChart).length }));
   await b.close();
@@ -72,6 +83,14 @@ async function run(reduce) {
       re.some(x => x.some(o => o < 0.2)) && re.some(x => x.some(o => o > 0.05 && o < 0.95)) && re.some(x => x[0] > 0.5 && x[2] < 0.3) && last.length && last.every(o => o > 0.95),
       re.filter((_, k) => k % 6 === 0).slice(0, 12).map(x => x.join('/')).join(' '));
   });
+  ok('발견에 머무는 중 목록이 다시 만들어져도 로고가 숨지 않음', m.S.rb >= 0.95, 'min opacity ' + m.S.rb);
+  Object.keys(m.S.xr).forEach(sub => m.S.xr[sub].forEach((re, i) => {
+    const last = re.at(-1) || [];
+    if (!re.length) { console.log('SKIP 탐색 ' + sub + ' ' + (i + 1) + '번째: 줄이 없음(데이터 없음)'); return; }
+    ok('탐색 › ' + sub + ' 들어올 때 통통 ' + (i + 1) + '번째: 투명에서 시작 · 중간 단계 · 차례로 · 끝에는 모두 보임',
+      re.some(x => x.some(o => o < 0.2)) && re.some(x => x.some(o => o > 0.05 && o < 0.95)) && re.some(x => x[0] > 0.5 && (x.length < 3 || x[2] < 0.3)) && last.every(o => o > 0.95),
+      re.filter((_, k) => k % 6 === 0).slice(0, 10).map(x => x.join('/')).join(' '));
+  }));
   const r = await run(true);
   ok('움직임 줄이기: 로고에 내 움직임(인라인 투명)이 없음', r.S.logo.every(x => x.inl.every(o => o === '')) , 'samples ' + r.S.logo.length);
   ok('움직임 줄이기: 차트 클립 없음', r.S.chart.every(x => x.rv == null) , 'samples ' + r.S.chart.length);
