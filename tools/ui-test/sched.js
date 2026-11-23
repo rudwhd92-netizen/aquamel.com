@@ -128,13 +128,13 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     const bk = (bs, k) => bs.find(b => b.key === k) || { rows: [] };
     const st = await p.evaluate(() => ({ card: getComputedStyle(document.getElementById('earnSeasonCard')).display, cal: getComputedStyle(document.getElementById('scheduleCard')).display }));
     ok('실적시즌 탭: 실적시즌 카드만(달력 숨김)', st.card !== 'none' && st.cal === 'none', JSON.stringify(st));
-    const hd = { title: await T('#earTitle'), asof: await T('#earAsOf'), desc: await T('#earDesc'), meta: await T('#earMeta'), colh: await T('#earColh'), q: await p.evaluate(() => [document.getElementById('earPrevQ').disabled, document.getElementById('earNextQ').disabled]) };
+    const hd = { title: await T('#earTitle'), asof: await T('#earAsOf'), colh: await T('#earColh'), all: await T('#earAll'), gone: await p.evaluate(() => !document.getElementById('earDesc') && !document.getElementById('earMeta')), q: await p.evaluate(() => [document.getElementById('earPrevQ').disabled, document.getElementById('earNextQ').disabled]) };
     ok('머리: 「2026년 3분기 실적」 · 파일 시각(한국시간) 「11월 22일 01:51 기준」 · 이전 분기만 눌림', hd.title === '2026년 3분기 실적' && hd.asof === '11월 22일 01:51 기준' && hd.q[0] === false && hd.q[1] === true, JSON.stringify(hd));
-    ok('설명(미국): EPS · 억 달러', /^EPS가 예상보다 많으면 서프라이즈/.test(hd.desc) && /억 달러예요\.$/.test(hd.desc), hd.desc);
-    ok('일정 머리줄: 발표 횟수는 건 · 회사 수는 종목 · 미국 현지 거래일', /· 21건 · 21종목 · 미국 현지 거래일 기준$/.test(hd.meta), hd.meta);
+    ok('글은 최소: 설명 문장 · 날짜 범위 줄이 없음', hd.gone, '');
+    ok('개수는 「전체 일정 보기 · 21건」 단추에(발표 횟수는 건)', /^전체 일정 보기 · 21건$/.test(hd.all), hd.all);
     ok('컬럼 머리(미국): 날짜 종목 매출 EPS EPS 컨센대비', hd.colh === '날짜 종목 매출 EPS EPS 컨센대비', hd.colh);
-    const ord = await p.evaluate(() => { const y = s => document.querySelector(s).getBoundingClientRect().top; return [y('#earAsOf'), y('#earTitle'), y('#earDesc'), y('#season-calendar'), y('#earBody .ear-sep'), y('#earBoard')]; });
-    ok('폰 읽는 순서: 기준 시각 → 분기 이동 → 설명 → 일정 → 구분 띠 → 분기 실적', ord.every((v, i) => i === 0 || v > ord[i - 1]), JSON.stringify(ord.map(Math.round)));
+    const ord = await p.evaluate(() => { const y = s => document.querySelector(s).getBoundingClientRect().top; return [y('#earTitle'), y('#earAsOf'), y('#season-calendar'), y('#earBody .ear-sep'), y('#earBoard')]; });
+    ok('폰 읽는 순서: 분기 이름 → 그 아래 기준 시각 → 일정 → 구분 띠 → 분기 실적', ord.every((v, i) => i === 0 || v > ord[i - 1]), JSON.stringify(ord.map(Math.round)));
     const bleed = await p.evaluate(() => { const s = document.querySelector('#earBody .ear-sep').getBoundingClientRect(); return { l: Math.round(s.left), w: Math.round(s.width), vw: innerWidth }; });
     ok('구분 띠가 화면 좌우 끝까지', bleed.l === 0 && bleed.w === bleed.vw, JSON.stringify(bleed));
 
@@ -142,19 +142,29 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     let r2 = await rowsI();
     const heads = r2.filter(r => r.first).map(r => r.d);
     ok('요약본: 예정 날짜 3개(11/24 화 · 11/25 수 · 11/26 목) — 날짜는 한 번만', JSON.stringify(heads) === JSON.stringify(['11/24 화', '11/25 수', '11/26 목']) && r2.filter(r => r.d).length === 3, JSON.stringify(heads));
-    ok('요약본: 내 종목(ADI) 먼저 + 작은 점 · 발표 전은 「발표 예정」과 한국 날짜 · 시간', r2[0].nm === '아날로그 디바이시스' && r2[0].my && /^발표 예정 한국 11\/24 22:00$/.test(r2[0].pend), JSON.stringify(r2[0]));
+    ok('요약본: 내 종목(ADI) 먼저 + 작은 점 · 앞으로의 줄에는 「발표 예정」만(한국시간은 오늘 줄에만)', r2[0].nm === '아날로그 디바이시스' && r2[0].my && r2[0].pend === '발표 예정', JSON.stringify(r2[0]));
     const unv = r2.find(r => r.nm === '미확정회사');
     const unvU = await p.evaluate(() => { const rs = [...document.querySelectorAll('#earList .ear-r')], r = rs.find(x => x.querySelector('.ear-nm').textContent === '미확정회사'), u = r.querySelector('.ear-p .unv'); return { u: !!u, title: u && u.title, aria: r.querySelector('.ear-p').getAttribute('aria-label'), others: rs.filter(x => x !== r).some(x => x.querySelector('.ear-p .unv')) }; });
-    ok('분기 미확정(period_unverified): 줄마다 글자를 붙이지 않고 「발표 예정」 점선 밑줄 + 읽어 주는 글 · 해당 종목만', !!unv && unv.notes.length === 0 && unvU.u && unvU.title === '분기 미확정' && /분기 미확정/.test(unvU.aria) && !unvU.others && /한국 11\/24 22:30/.test(unv.pend), JSON.stringify([unv, unvU]));
-    ok('목록 아래 설명 한 줄: 「점선 밑줄 「발표 예정」은 분기 미확정이에요」', /점선 밑줄 「발표 예정」은 분기 미확정이에요/.test(await T('#earList .ear-foot')), await T('#earList .ear-foot'));
-    ok('시간이 없는 미국 줄은 임의 시각 없이 「시간 미정」', r2.filter(r => /필러/.test(r.nm)).every(r => /^발표 예정 시간 미정$/.test(r.pend)), JSON.stringify(r2.filter(r => /필러/.test(r.nm)).map(r => r.pend)));
+    ok('분기 미확정(period_unverified): 줄마다 글자를 붙이지 않고 「발표 예정」 점선 밑줄 + 읽어 주는 글 · 해당 종목만', !!unv && unv.notes.length === 0 && unvU.u && unvU.title === '분기 미확정' && /분기 미확정/.test(unvU.aria) && !unvU.others && unv.pend === '발표 예정', JSON.stringify([unv, unvU]));
+    ok('목록 아래 점선 안내는 한 줄 · 짧게(발표 예정 = 분기 미확정)', /^점선 밑줄: .*발표 예정 = 분기 미확정/.test(await T('#earList .ear-foot')) && (await p.evaluate(() => document.querySelectorAll('#earList .ear-foot').length)) === 1, await T('#earList .ear-foot'));
+    ok('앞으로의 미국 줄에는 한국 날짜 · 시간 · 「시간 미정」을 붙이지 않음(글이 많아지지 않게)', r2.filter(r => /필러|미확정/.test(r.nm) || r.nm === '아날로그 디바이시스').every(r => r.pend === '발표 예정'), JSON.stringify(r2.slice(0, 6).map(r => r.pend)));
     const g1 = r2.findIndex((r, i) => i > 0 && r.first);
     ok('한 날짜는 5줄까지 + 「외 N건」 안내(11/24는 7건)', g1 === 5 && await p.evaluate(() => /^외 2건/.test(document.querySelector('#earList .ear-more').textContent)), 'g1=' + g1);
     ok('종목명: 서버 name이 코드뿐(ZJ)이면 코드, name_ko 있으면 name_ko', await p.evaluate(() => { const n = [...document.querySelectorAll('#earList .ear-nm')].map(x => x.textContent); return n.includes('ZJ') && n.includes('이름있는회사') && !n.includes('영문사전회사'); }));
     const ch = await p.evaluate(() => { const c = document.querySelector('#earList .ear-chip').getBoundingClientRect(), r = document.querySelector('#earList .ear-r').getBoundingClientRect(); return { chip: Math.round(c.height), row: Math.round(r.height), ow: document.documentElement.scrollWidth <= document.documentElement.clientWidth }; });
-    ok('줄은 촘촘하게: 알약 높이 24 · 줄 32 이상(누르는 영역은 투명하게 44) · 가로 넘침 없음', ch.chip === 24 && ch.row >= 32 && ch.row <= 60 && ch.ow, JSON.stringify(ch));
-    const hit = await p.evaluate(() => { const c = document.querySelector('#earList .ear-chip'), r = c.getBoundingClientRect(); const x = r.left + 10, y = r.top - 8; const el = document.elementFromPoint(x, y); return !!el && (el === c || c.contains(el)); });
-    ok('알약 위쪽 8px 밖도 눌림(투명 확장)', hit);
+    ok('줄 높이 44 이상(진짜 터치 영역) · 알약 28 · 가로 넘침 없음', ch.chip === 28 && ch.row >= 44 && ch.row <= 70 && ch.ow, JSON.stringify(ch));
+    await p.waitForTimeout(900);   // 줄이 떠오르는 움직임이 끝난 뒤에 재기
+    const hit = await p.evaluate(() => { const c = document.querySelector('#earList .ear-chip'), r = c.getBoundingClientRect(); const x = r.left + 10, y = r.top - 6; const el = document.elementFromPoint(x, y); return !!el && (el === c || c.contains(el)); });
+    ok('알약 위쪽 6px 밖도 눌림(투명 확장 · 줄 44)', hit);
+    const ln = await p.evaluate(() => ({ r: getComputedStyle(document.querySelector('#earList .ear-r')).borderBottomWidth, last: getComputedStyle(document.querySelector('#earList .ear-r.last')).borderBottomWidth, b: getComputedStyle(document.querySelector('#earBlocks .ear-br')).borderBottomWidth }));
+    ok('선 대신 간격: 일정 줄 · 분기 실적 줄 사이에 가는 선이 없음', ln.r === '0px' && ln.last === '0px' && ln.b === '0px', JSON.stringify(ln));
+    const tone = await p.evaluate(() => { const b = document.querySelector('#earBoard .ear-tone button'), r = b.getBoundingClientRect(), a = getComputedStyle(b, '::after'); return { h: Math.round(r.height), ext: parseInt(a.top) + parseInt(a.bottom) }; });
+    ok('서프라이즈 | 쇼크 알약: 눈에 보이는 높이 32 + 투명 확장으로 누르는 영역 44 이상', tone.h + Math.abs(tone.ext) >= 44, JSON.stringify(tone));
+    // 오늘 줄에만 한국 날짜 · 시간: 시계를 미국 현지 11/24 새벽으로
+    await p.clock.setFixedTime(new Date('2026-11-24T18:00:00+09:00')); await p.evaluate(() => { setMarket('KR'); setMarket('US'); }); await p.waitForTimeout(700);
+    const tdy = (await rowsI()).filter(r => r.today);
+    ok('오늘(미국 현지) 줄에만 한국 날짜 · 시간 — 「오늘 발표 한국 11/24 22:00」 · 시각 없는 줄은 「시간 미정」', tdy.some(r => r.nm === '아날로그 디바이시스' && r.pend === '오늘 발표 한국 11/24 22:00') && tdy.some(r => /필러/.test(r.nm) && r.pend === '오늘 발표 시간 미정'), JSON.stringify(tdy.slice(0, 4).map(r => [r.nm, r.pend])));
+    await p.clock.setFixedTime(new Date('2026-11-22T12:00:00+09:00')); await p.evaluate(() => { setMarket('KR'); setMarket('US'); }); await p.waitForTimeout(500);
 
     // 전체 일정 보기
     ok('「전체 일정 보기」 버튼이 보임', await p.evaluate(() => !document.getElementById('earAll').hidden));
@@ -183,7 +193,7 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('서프라이즈 줄: EPS 실제 + 굵은 예상 대비 — 큰 순서(+100%* → +10.0%)', JSON.stringify(bk(bs, 'c-beat').rows.map(r => [r.nm, r.a, r.b])) === JSON.stringify([['별표회사', '2.00', '+100%*'], ['비트회사', '1.10', '+10.0%']]), JSON.stringify(bk(bs, 'c-beat').rows));
     ok('흑자전환: 이전 < 0 < 이번만(0→양수 · 전년 비교 · 기준 없음은 제외) — 개선 폭 큰 순서', JSON.stringify(bk(bs, 'c-turn').rows.map(r => [r.nm, r.a, r.b])) === JSON.stringify([['턴어라운드1', '−3억 →', '5억'], ['턴어라운드2', '−1억 →', '2억']]), JSON.stringify(bk(bs, 'c-turn').rows));
     ok('컬럼 머리: 「EPS · 예상 대비」 · 「2분기 실적 → 3분기 실적」 · 「1분기 실적 → 2분기 실적」 · 흑자전환에만 ⓘ', bk(bs, 'c-beat').colh === '종목 EPS · 예상 대비' && bk(bs, 'c-turn').colh === '종목 2분기 실적 → 3분기 실적' && bk(bs, 'p-turn').colh === '종목 1분기 실적 → 2분기 실적' && bk(bs, 'c-turn').tip && !bk(bs, 'c-beat').tip);
-    ok('별표 설명 한 줄이 블록 아래에', /발표문에 적힌 기준값/.test(await T('#earBlocks .ear-foot')));
+    ok('별표 설명은 짧게 한 줄(* 발표문 인용 기준)이 블록 아래에', /^\* 발표문 인용 기준$/.test(await T('#earBlocks .ear-foot')), await T('#earBlocks .ear-foot'));
     await p.click('#earBoard .ear-tone button[data-tone="miss"]'); await p.waitForTimeout(250); bs = await blks();
     ok('쇼크로 바꾸면 앞 두 블록만 바뀜(이번 분기 1개 · 지난 분기 「해당 종목이 없어요」)', /^지난 분기 쇼크 0개/.test(bs[0].h) && bk(bs, 'p-miss').empty === '해당 종목이 없어요.' && /^이번 분기 쇼크 1개/.test(bs[1].h) && bk(bs, 'c-miss').rows[0].b === '−5.2%' && bk(bs, 'c-miss').rows[0].cls === 'dn' && /흑자전환 2개/.test(bs[3].h), JSON.stringify(bs.map(b => b.h + ' ' + b.empty)));
     await p.click('#earBoard .ear-tone button[data-tone="beat"]'); await p.waitForTimeout(200);
@@ -195,8 +205,8 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     await p.click('#earNextQ'); await p.waitForTimeout(300);
     // 한국
     await p.evaluate(() => setMarket('KR')); await p.waitForTimeout(500); bs = await blks(); r2 = await rowsI();
-    const kr = { meta: await T('#earMeta'), colh: await T('#earColh'), desc: await T('#earDesc'), mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]) };
-    ok('앱 시장 KR: 일정 · 머리줄 · 설명이 한국만(2건 · 2종목 · 영업이익 · 억원)', /· 2건 · 2종목 · 한국 날짜 기준$/.test(kr.meta) && kr.colh === '날짜 종목 매출 영업이익 영업이익 컨센대비' && /^영업이익이 예상보다/.test(kr.desc) && /억원이에요\.$/.test(kr.desc) && kr.mk.length === 1 && kr.mk[0] === 'KR', JSON.stringify(kr));
+    const kr = { colh: await T('#earColh'), all: await T('#earAll'), mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]) };
+    ok('앱 시장 KR: 일정 · 컬럼 머리가 한국만(영업이익) · 설명 없음', kr.colh === '날짜 종목 매출 영업이익 영업이익 컨센대비' && kr.mk.length === 1 && kr.mk[0] === 'KR' && !(await p.evaluate(() => document.getElementById('earDesc'))), JSON.stringify(kr));
     const k = n => r2.find(r => r.nm === n) || {};
     ok('한국 줄: 매출(조 · 억) | 영업이익 | 영업이익 컨센대비 · 매출이 없으면 「-」', JSON.stringify(k('한화오션').v) === JSON.stringify(['3.4조', '4,857억', '+21.4%']) && k('한화오션').vc === 'up' && JSON.stringify(k('신한지주').v) === JSON.stringify(['-', '1.2조', '-']), JSON.stringify([k('한화오션').v, k('신한지주').v]));
     ok('한국 모드: 줄마다 「한국」 딱지를 달지 않음(시장은 앱 토글 하나로만 구분)', !(await p.evaluate(() => /한국/.test([...document.querySelectorAll('#earList .ear-chip')].map(c => c.textContent).join('')))));
@@ -219,7 +229,7 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('발표문 기준(expected_kind)은 별표 · 지난 분기 서프라이즈 1개(지난한국턴 +25.0%*)', /^지난 분기 서프라이즈 1개/.test(bs[0].h) && bk(bs, 'p-beat').rows[0].b === '+25.0%*' && /pv/.test(bk(bs, 'p-beat').rows[0].cls), JSON.stringify(bk(bs, 'p-beat').rows));
     const sh = r2.find(r => r.nm === '신한지주') || { v: [], vc: '' }, hw = r2.find(r => r.nm === '한화오션') || { v: [], vc: '' };
     ok('일정 줄에도: 신한지주 영업이익 컨센대비 +23.5%(점선 밑줄) · 공개 쌍 한화오션은 그대로', sh.v[2] === '+23.5%' && /pv/.test(sh.vc) && !/pv/.test(hw.vc), JSON.stringify([sh, hw]));
-    ok('설명: 「점선 밑줄 숫자는 관리자 전용 검증 자료」(블록 · 일정 둘 다) + 별표 설명', /관리자 전용 검증 자료예요/.test(await T('#earBlocks')) && /관리자 전용 검증 자료예요/.test(await T('#earList')) && /발표문에 적힌 기준값/.test(await T('#earBlocks')));
+    ok('점선 안내: 「숫자 = 관리자 전용 자료」(블록 · 일정 둘 다) + 별표 설명은 짧게', /관리자 전용 자료/.test(await T('#earBlocks')) && /관리자 전용 자료/.test(await T('#earList')) && /발표문 인용 기준/.test(await T('#earBlocks')));
     await p.evaluate(() => { document.body.setAttribute('data-role', 'guest'); window.dispatchEvent(new Event('aq:logout')); }); await p.waitForTimeout(500);
     const lo = await p.evaluate(() => ({ pv: document.querySelectorAll('#earBody .pv').length, c: [...document.querySelectorAll('#earBlocks .ear-blk')][1].querySelector('.cnt').textContent }));
     ok('로그아웃(aq:logout) 하면 검증 자료를 비우고 공개 데이터만(이번 분기 서프라이즈 1개)', lo.pv === 0 && lo.c === '1개', JSON.stringify(lo));
@@ -234,8 +244,8 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('검증 자료 규칙: 기록일<발표일=발표 전(표시 없음) · 발표일 이후=별표 · 집계기관 미명시 · 기록 시점 미확인 · 실제값 불일치 · 단위 다름 · 예상 0 · 비율 없음은 쓰지 않음', !!pvu.dated && pvu.dated.quoted === false && !!pvu.after && pvu.after.quoted === true && pvu.calendar === null && pvu.untimed === null && pvu.nodate === null && pvu.mismatch === null && pvu.usd === null && pvu.zero === null && pvu.nopct === null && !!pvu.consensus && pvu.consensus.quoted === false, JSON.stringify(pvu));
     await p.evaluate(() => { window.__pvRows = []; AqSch._priv.reset(); });
     await p.evaluate(() => setMarket('US')); await p.waitForTimeout(500);
-    const back = { meta: await T('#earMeta'), n: (await blks()).length, mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]), b0: (await blks())[1].h };
-    ok('미국으로 돌아오면 일정 · 블록이 모두 미국으로', /21건 · 21종목/.test(back.meta) && back.mk.length === 1 && back.mk[0] === 'US' && /서프라이즈 2개/.test(back.b0), JSON.stringify(back));
+    const back = { all: await T('#earAll'), n: (await blks()).length, mk: await p.evaluate(() => [...new Set([...document.querySelectorAll('#earList .ear-chip')].map(c => c.dataset.mk))]), b0: (await blks())[1].h };
+    ok('미국으로 돌아오면 일정 · 블록이 모두 미국으로', /전체 일정 보기 · 21건/.test(back.all) && back.mk.length === 1 && back.mk[0] === 'US' && /서프라이즈 2개/.test(back.b0), JSON.stringify(back));
 
     // 블록 안에서
     await p.click('#earBlocks .ear-bn[data-tk="BEAT"]'); let op = await p.evaluate(() => window.__opened);
