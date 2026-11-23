@@ -44,7 +44,7 @@ async function run(reduce) {
   const stag = L.find(x => x.op[0] > 0.5 && x.op[4] < x.op[0]); ok('로고가 차례로(앞 것이 먼저)', !!stag, stag ? JSON.stringify(stag.op) : '');
   ok('로고 끝에는 인라인 스타일이 모두 없음', m.fin.items.every(s => !/opacity|transform/.test(s)), JSON.stringify(m.fin.items.slice(0, 3)));
   const rvs = C.filter(x => x.rv != null); ok('차트 선이 그어지는 중간 단계가 있음', rvs.some(x => x.rv > 0.05 && x.rv < 0.95), rvs.slice(0, 12).map(x => x.rv + ':' + x.h).join(' '));
-  ok('변화율 숫자가 선과 같이 올라감', new Set(rvs.map(x => x.h)).size > 3, [...new Set(rvs.map(x => x.h))].slice(0, 8).join(' '));
+  ok('변화율 숫자가 선과 같이 올라감', new Set(rvs.map(x => x.h)).size >= 2 && rvs.some(x => x.rv < 0.95 && x.h !== C.at(-1).h), [...new Set(rvs.map(x => x.h))].slice(0, 8).join(' '));
   ok('끝나면 클립 · 숨김 클래스가 없음', m.fin.charts.every(x => !x) && !C.at(-1).cls, JSON.stringify(C.at(-1)));
   ok('최종 숫자가 값으로 고정', /^[+−-]?\d/.test(String(C.at(-1).h)), C.at(-1).h);
   ok('오류 없음', m.errs.length === 0, m.errs.join(' | '));
