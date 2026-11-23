@@ -203,18 +203,35 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('날짜 없던 내 종목(MYTBD)은 요일로 계산한 날짜(11/26 목)에', r2.some(r => r.nm === '내날짜없는회사') && r2.find(r => r.nm === '내날짜없는회사').my === true);
     await p.click('#earDays .ear-day[data-day="2026-11-24"]'); await p.waitForTimeout(300);
     ok('다시 11/24를 누르면 그 날 7건으로 돌아옴(알약이 11/24에)', (await rowsI()).length === 7 && /^11\/24 화/.test(await T('#earDayH')) && await p.evaluate(() => document.querySelector('#earDays .ear-day.active').dataset.day === '2026-11-24'));
+    await p.evaluate(() => document.getElementById('earJl').scrollIntoView({ block: 'center' })); await p.waitForTimeout(300);
+    const jl0 = await p.evaluate(() => { const e = document.getElementById('earJl'); return { cls: !!e && e.classList.contains('aqj'), role: e && e.getAttribute('role'), min: e && e.getAttribute('aria-valuemin'), max: e && e.getAttribute('aria-valuemax'), now: e && e.getAttribute('aria-valuenow'), tl: [...document.querySelectorAll('#earJl .aqj-tl')].map(x => x.textContent), h: e && Math.round(e.getBoundingClientRect().height), strip: !document.getElementById('earDays').hidden, goo: !!document.querySelector('#earJl .aqj-goo'), th: !!document.querySelector('#earJl .aqj-th') && !!document.querySelector('#earJl .aqj-b') }; });
+    ok('젤리 슬라이더(공용 aqJelly · 섹터동향 날짜별 σ와 같은 부품): 날짜 스트립은 그대로 두고 그 아래에 · 8칸(0~7) · 지금 11/24 = 4 · 양 끝 날짜 표시(11/18 · 11/27) · 높이 84 · 손잡이 + 방울(goo)', jl0.cls && jl0.role === 'slider' && jl0.min === '0' && jl0.max === '7' && jl0.now === '4' && JSON.stringify(jl0.tl) === JSON.stringify(['11/18', '11/27']) && jl0.h === 84 && jl0.strip && jl0.goo && jl0.th, JSON.stringify(jl0));
+    await p.focus('#earJl'); await p.keyboard.press('ArrowRight'); await p.waitForTimeout(500);
+    const jk = await p.evaluate(() => ({ day: document.querySelector('#earDays .ear-day.active').dataset.day, now: document.getElementById('earJl').getAttribute('aria-valuenow'), rows: document.querySelectorAll('#earList .ear-r').length, txt: document.getElementById('earJl').getAttribute('aria-valuetext') }));
+    ok('젤리 키보드 →: 다음 날(11/25)로 — 스트립 · 목록(3건) · 손잡이 값이 함께', jk.day === '2026-11-25' && jk.now === '5' && jk.rows === 3 && jk.txt === '11/25', JSON.stringify(jk));
+    const jb = await (await p.$('#earJl')).boundingBox();
+    await p.mouse.move(jb.x + 20, jb.y + 60); await p.mouse.down(); await p.mouse.move(jb.x + jb.width / 2, jb.y + 60, { steps: 6 }); await p.mouse.move(jb.x + jb.width + 40, jb.y + 60, { steps: 6 }); await p.waitForTimeout(250);
+    const jdrag = await p.evaluate(() => ({ drag: document.getElementById('earJl').classList.contains('drag'), lab: Number(getComputedStyle(document.querySelector('#earJl .aqj-lab')).opacity) }));
+    await p.mouse.up(); await p.waitForTimeout(800);
+    const jr = await p.evaluate(() => ({ day: document.querySelector('#earDays .ear-day.active').dataset.day, now: document.getElementById('earJl').getAttribute('aria-valuenow'), rows: document.querySelectorAll('#earList .ear-r').length, drag: document.getElementById('earJl').classList.contains('drag') }));
+    ok('젤리 끌기: 누르면 방울이 위로 솟고(날짜 글자) · 오른쪽 끝까지 끌고 놓으면 마지막 날(11/27 · 9건)이 골라지고 스트립도 따라감', jdrag.drag && jr.day === '2026-11-27' && jr.now === '7' && jr.rows === 9 && !jr.drag, JSON.stringify([jdrag, jr]));
+    await p.mouse.move(jb.x + jb.width - 20, jb.y + 60); await p.mouse.down(); await p.mouse.move(jb.x - 40, jb.y + 60, { steps: 10 }); await p.mouse.up(); await p.waitForTimeout(800);
+    const jl2 = await p.evaluate(() => ({ day: document.querySelector('#earDays .ear-day.active').dataset.day, rows: document.querySelectorAll('#earList .ear-r').length }));
+    ok('왼쪽 끝까지 끌고 놓으면 첫 날(11/18 · 수집 공백 채움 2건)', jl2.day === '2026-11-18' && jl2.rows === 2, JSON.stringify(jl2));
+    await p.evaluate(() => document.querySelector('#earDays .ear-day[data-day="2026-11-24"]').click()); await p.waitForTimeout(700);
+    ok('스트립의 날짜를 누르면 젤리 손잡이가 그 날짜로 따라감(11/24 = 4)', await p.evaluate(() => document.getElementById('earJl').getAttribute('aria-valuenow') === '4'));
 
     // 검색
     await p.click('#earSearchBtn'); await p.waitForTimeout(700);
     const so1 = await p.evaluate(() => ({ open: document.getElementById('earH').classList.contains('open'), w: Math.round(document.getElementById('earSearchBox').getBoundingClientRect().width), foc: document.activeElement && document.activeElement.id }));
     ok('종목 찾기: 돋보기 원을 누르면 가로로 늘어나 입력칸이 되고 바로 입력할 수 있음', so1.open && so1.w > 250 && so1.foc === 'earSearch', JSON.stringify(so1));
     await p.fill('#earSearch', '비트'); await p.waitForTimeout(250); r2 = await rowsI();
-    ok('종목 찾기: 이름이 맞는 종목만(전체 날짜에서 찾음) · 날짜 스트립은 숨고 「검색 결과 1건」', r2.length === 1 && r2[0].nm === '비트회사' && await p.evaluate(() => document.getElementById('earDays').hidden) && (await T('#earSr')) === '검색 결과 1건', JSON.stringify(r2.map(r => r.nm)));
+    ok('종목 찾기: 이름이 맞는 종목만(전체 날짜에서 찾음) · 날짜 스트립은 숨고 「검색 결과 1건」', r2.length === 1 && r2[0].nm === '비트회사' && await p.evaluate(() => document.getElementById('earDays').hidden) && (await T('#earSr')) === '검색 결과 1건' && await p.evaluate(() => document.getElementById('earJlw').hidden), JSON.stringify(r2.map(r => r.nm)));
     await p.fill('#earSearch', '없는이름zz'); await p.waitForTimeout(250);
     ok('종목 찾기: 없으면 「찾는 종목이 없어요.」', /찾는 종목이 없어요/.test(await T('#earList')));
     await p.click('#earSearchX'); await p.waitForTimeout(700);
-    const so2 = await p.evaluate(() => ({ open: document.getElementById('earH').classList.contains('open'), w: Math.round(document.getElementById('earSearchBox').getBoundingClientRect().width), v: document.getElementById('earSearch').value, days: !document.getElementById('earDays').hidden }));
-    ok('찾기 닫기(×): 입력이 비워지고 다시 돋보기 원으로 줄어들며 날짜 스트립이 돌아옴', !so2.open && so2.w === 40 && so2.v === '' && so2.days, JSON.stringify(so2));
+    const so2 = await p.evaluate(() => ({ open: document.getElementById('earH').classList.contains('open'), w: Math.round(document.getElementById('earSearchBox').getBoundingClientRect().width), v: document.getElementById('earSearch').value, days: !document.getElementById('earDays').hidden, jl: !document.getElementById('earJlw').hidden }));
+    ok('찾기 닫기(×): 입력이 비워지고 다시 돋보기 원으로 줄어들며 날짜 스트립이 돌아옴', !so2.open && so2.w === 40 && so2.v === '' && so2.days && so2.jl, JSON.stringify(so2));
 
     // 분기 실적 — 미국
     let bs = await blks();
@@ -231,6 +248,7 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     const q2 = { title: await T('#earTitle'), q: await p.evaluate(() => [document.getElementById('earPrevQ').disabled, document.getElementById('earNextQ').disabled]) };
     ok('분기 이동: 2026년 2분기(이전 분기 막힘 · 다음 분기 열림)', q2.title === '2026년 2분기 실적' && q2.q[0] === true && q2.q[1] === false, JSON.stringify(q2));
     ok('그 앞 분기 파일이 없으면 지난 분기 블록은 「이전 분기 자료가 없어요.」', bk(bs, 'p-beat').empty === '이전 분기 자료가 없어요.' && /—/.test(bk(bs, 'p-beat').cnt) && /^이번 분기 서프라이즈 2개 2026년 2분기/.test(bs[1].h), JSON.stringify(bs.map(b => b.h + ' ' + b.empty)));
+    ok('분기를 옮기면 젤리 슬라이더도 그 분기의 날짜 수로 다시 만들어짐(2분기 · 10칸 넘음)', await p.evaluate(() => Number(document.getElementById('earJl').getAttribute('aria-valuemax')) > 10));
     await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(600);
     const pg = await p.evaluate(() => { const r = document.getElementById('earPager').getBoundingClientRect(), b = document.getElementById('earPrevQ').getBoundingClientRect(), re = document.getElementById('earReel'); return { h: Math.round(r.height), btn: Math.round(b.width) + 'x' + Math.round(b.height), role: re.getAttribute('role'), now: !document.getElementById('earNow').hidden, outs: re.querySelectorAll('.ear-lbl.out').length, ow: document.documentElement.scrollWidth <= document.documentElement.clientWidth }; });
     ok('분기 이동 알약(MonthPager): 알약 안 ‹ 글자 › · 둥근 단추 40x40 · spinbutton · 이번 분기가 아니면 「이번 분기」 단추 · 글자 교체가 끝나면 나가는 글자는 치워짐', pg.h === 52 && pg.btn === '40x40' && pg.role === 'spinbutton' && pg.now && pg.outs === 0 && pg.ow, JSON.stringify(pg));
