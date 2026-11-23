@@ -40348,7 +40348,7 @@ window._rpFeed = function (area, mkt, list, secOf) {
       const got = (await Promise.all(jobs)).filter(Boolean);
       if (got.length) { rebuild(); rerender(); }
       S.fail = !S.items.length;
-    } finally { S.loading = false; if (S.fail || !S.items.length) { try { EAR.render(); } catch (e) {} } }
+    } finally { S.loading = false; if (S.fail || !Object.keys(S.earn).length) { try { EAR.render(); } catch (e) {} } }
   }
   function need(y, m) {
     const key = y + '-' + pad(m + 1);
@@ -40625,6 +40625,13 @@ window._rpFeed = function (area, mkt, list, secOf) {
             SESS_ORDER.filter(k => g[k]).map(k => '<div class="sch-grp"><span>' + SESS[k] + '</span><span>' + g[k].length + '건</span></div>' + g[k].sort(sortRows).map(rowHtml).join('')).join(''));
       }
       const selectedDate = addDays(E.week, E.day - 1);
+      if (E.calendarDate && E.calendarFocus === selectedDate) {
+        const extra = (S.byDate.get(E.calendarDate) || []).filter(e =>
+          e.cat === 'earn' && !e.q && e.mk === getCurrentMarket() && matchesBoard(e));
+        if (extra.length) {
+          list.insertAdjacentHTML('beforeend', '<div class="sch-grp">달력 일정 · 분기 미확정</div>' + extra.sort(sortRows).map(rowHtml).join(''));
+        }
+      }
       const dates = new Map();
       for (const e of any) {
         if (!e.wkS || !matchesBoard(e)) continue;
@@ -40649,7 +40656,7 @@ window._rpFeed = function (area, mkt, list, secOf) {
       group.insertAdjacentHTML('beforeend', events.sort(sortRows).map(rowHtml).join(''));
     }, true);
     $('earSearch').oninput = () => EAR.render();
-    $('earQuarter').onchange = ev => { E.quarter = ev.target.value; E.inited = false; EAR.render(); };
+    $('earQuarter').onchange = ev => { E.quarter = ev.target.value; E.calendarDate = ''; E.inited = false; EAR.render(); };
     body.addEventListener('click', ev => {
       const t = ev.target.closest('button'); if (!t) return;
 
@@ -40665,6 +40672,8 @@ window._rpFeed = function (area, mkt, list, secOf) {
     initState(); const matches = (S.byDate.get(ds) || []).filter(x => x.mk === getCurrentMarket() && x.cat === 'earn' && x.wkS && x.wd >= 1 && x.wd <= 5);
     const e = matches.find(x => encodeURIComponent(x.id).replace(/'/g, '%27') === eventId) || matches[0];
     $('earSearch').value = ''; if (e?.q) E.quarter = e.q; E.mine = false; if (e) { E.week = e.wkS; E.day = e.wd; } else { E.week = mondayOf(ds); E.day = Math.min(5, Math.max(1, ((dowOf(ds) + 6) % 7) + 1)); }
+    E.calendarDate = ds;
+    E.calendarFocus = addDays(E.week, E.day - 1);
     try { setScheduleSubtab('earn'); } catch (x) {}
     EAR.render();
   };
@@ -40681,7 +40690,7 @@ window._rpFeed = function (area, mkt, list, secOf) {
   if (document.readyState !== 'loading') bindEar();
   window.AqSch = {
     ready, need, cellEvents, timeline,
-    marketChanged() { E.inited = false; if (!$('earSearch')) return; $('earSearch').value = ''; if (document.body.dataset.mtab === 'schedule') rerender(); },
+    marketChanged() { E.calendarDate = ''; E.inited = false; if (!$('earSearch')) return; $('earSearch').value = ''; if (document.body.dataset.mtab === 'schedule') rerender(); },
     pre(y, m) { S.myOk = false; try { document.querySelectorAll('.cal-filter-chip[data-filter]').forEach(c => c.classList.toggle('off', !aqCalFilters[c.dataset.filter])); } catch (e) {} need(y, m); },
     _s: S, _e: E, nameOf, koTitle, beatMiss, money
   };
