@@ -220,6 +220,11 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     const sh = r2.find(r => r.nm === '신한지주') || { v: [], vc: '' }, hw = r2.find(r => r.nm === '한화오션') || { v: [], vc: '' };
     ok('일정 줄에도: 신한지주 영업이익 컨센대비 +23.5%(점선 밑줄) · 공개 쌍 한화오션은 그대로', sh.v[2] === '+23.5%' && /pv/.test(sh.vc) && !/pv/.test(hw.vc), JSON.stringify([sh, hw]));
     ok('설명: 「점선 밑줄 숫자는 관리자 전용 검증 자료」(블록 · 일정 둘 다) + 별표 설명', /관리자 전용 검증 자료예요/.test(await T('#earBlocks')) && /관리자 전용 검증 자료예요/.test(await T('#earList')) && /발표문에 적힌 기준값/.test(await T('#earBlocks')));
+    await p.evaluate(() => { document.body.setAttribute('data-role', 'guest'); window.dispatchEvent(new Event('aq:logout')); }); await p.waitForTimeout(500);
+    const lo = await p.evaluate(() => ({ pv: document.querySelectorAll('#earBody .pv').length, c: [...document.querySelectorAll('#earBlocks .ear-blk')][1].querySelector('.cnt').textContent }));
+    ok('로그아웃(aq:logout) 하면 검증 자료를 비우고 공개 데이터만(이번 분기 서프라이즈 1개)', lo.pv === 0 && lo.c === '1개', JSON.stringify(lo));
+    await p.evaluate(() => { document.body.setAttribute('data-role', 'admin'); window.dispatchEvent(new Event('aq:login')); }); await p.waitForTimeout(900);
+    ok('다시 로그인(aq:login)하면 다시 읽어서 채움(이번 분기 서프라이즈 2개)', /이번 분기 서프라이즈 2개/.test((await blks())[1].h), (await blks())[1].h);
     const pvu = await p.evaluate(() => {
       const ev = (act, local) => ({ q: '2026q3', mk: 'KR', raw: { instrument_id: 'KR:X', local_date: local || '2026-11-25', metrics: { operating_income: { actual: act } } } });
       const t = (o, e) => { AqSch._priv.set(new Map([['2026q3|KR:X', { quarter: '2026q3', instrument_id: 'KR:X', metrics: { operating_income: Object.assign({ unit: 'KRW', actual: 100, expected: 80, surprise_pct: 25, estimate_as_of: '2026-11-01' }, o) } }]])); return AqSch._priv.pair(e || ev(100)); };
