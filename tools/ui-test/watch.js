@@ -23,8 +23,8 @@ async function run(reduce) {
     // ① 들어옴 — 로고 줄 + 피드 + 움직임 표본
     switchMobileTab('discover'); await wait(400);
     const runEnter = async () => {
-      const smp = []; let iv = setInterval(() => { const els = [...document.querySelectorAll('#wlStrip .buy-point-item')]; smp.push(els.map(e => [+(+e.style.opacity || (e.style.opacity === '' ? 1 : 0)).toFixed(2), e.style.transform])); }, 30);
-      switchMobileTab('interest'); await wait(2600); clearInterval(iv);
+      const smp = []; let iv = setInterval(() => { const els = [...document.querySelectorAll('#wlStrip .buy-point-item')]; smp.push({ t: performance.now(), f: els.map(e => [+(+e.style.opacity || (e.style.opacity === '' ? 1 : 0)).toFixed(2), e.style.transform]) }); }, 30);   // 표본마다 시각도 적음(화면 그리기가 몰리면 표본 간격이 늘어나서 개수로 세면 틀림)
+      switchMobileTab('interest'); await wait(3800); clearInterval(iv);   // 네 번째 로고는 0.5초 늦게 시작하고 스프링 꼬리가 길어 넉넉히 기다림
       return smp;
     };
     out.enter1 = await runEnter();
@@ -73,17 +73,17 @@ const num = s => parseFloat(String(s).replace(/[^\d.\-+]/g, ''));
   ok('발견 피드 차트에는 모의매수 선이 없음(관심 피드만)', R.discoverSim === false || R.discoverSim === null, String(R.discoverSim));
   const rvs = Object.values(R.rv); if (rvs.length) ok('피드 차트 선이 왼쪽에서 그어짐', rvs.some(a => a.some(x => x > 0.05 && x < 0.95)), rvs.map(a => a.slice(0, 6).join(',')).join(' | ')); else console.log('SKIP 그어짐 표본 없음');
   // 로고: 처음 숨었다가 · 차례로 · 끝에 제자리
-  const col = (smp, i) => smp.map(f => f[i] && f[i][0]).filter(x => x != null);
-  const first = (smp, i, th) => smp.findIndex(f => f[i] && f[i][0] >= th);
+  const col = (smp, i) => smp.map(x => x.f[i] && x.f[i][0]).filter(x => x != null);
+  const first = (smp, i, th) => { const x = smp.find(q => q.f[i] && q.f[i][0] >= th); return x ? x.t : -1; };   // 처음 th 이상이 된 시각(ms)
   for (const [nm, smp] of [['첫 들어옴', R.enter1], ['다시 들어옴', R.enter2]]) {
-    ok('로고 ' + nm + ': 처음엔 숨음 · 끝엔 제자리', col(smp, 0).some(x => x < 0.2) && smp.at(-1).every(f => f[0] === 1) && R.strip.every(x => x.op === '' && x.tr === ''), 'min ' + Math.min(...col(smp, 0)) + ' · 끝 ' + JSON.stringify(smp.at(-1).map(f => f[0])));
-    const a = first(smp, 0, .5), c = first(smp, 2, .5); ok('로고 ' + nm + ': 하나씩 차례로(첫째가 셋째보다 확실히 먼저)', a >= 0 && c >= 0 && c - a >= 6, '첫째 ' + a + ' · 셋째 ' + c + ' (30ms 단위)');
+    ok('로고 ' + nm + ': 처음엔 숨음 · 끝엔 제자리', col(smp, 0).some(x => x < 0.2) && smp.at(-1).f.every(v => v[0] === 1) && R.strip.every(x => x.op === '' && x.tr === ''), 'min ' + Math.min(...col(smp, 0)) + ' · 끝 ' + JSON.stringify(smp.at(-1).f.map(v => v[0])));
+    const a = first(smp, 0, .5), c = first(smp, 2, .5); ok('로고 ' + nm + ': 하나씩 차례로(첫째가 셋째보다 확실히 먼저)', a >= 0 && c >= 0 && c - a >= 200, '첫째와 셋째 사이 ' + Math.round(c - a) + 'ms (간격 160ms × 2 = 320ms 기대)');
   }
   ok('비교분석으로 가면 피드 · 로고 줄은 숨고 비교분석이 보임', !R.cmpShown.feed && !R.cmpShown.strip && R.cmpShown.cmp, JSON.stringify(R.cmpShown));
-  ok('비교분석에서 모의 매수로 돌아와도 로고가 다시 통통', col(R.enter3, 0).some(x => x < 0.2) && R.enter3.at(-1).every(v => v === 1), 'min ' + Math.min(...col(R.enter3, 0)));
+  ok('비교분석에서 모의 매수로 돌아와도 로고가 다시 통통', R.enter3.map(f => f[0]).some(x => x < 0.2) && R.enter3.at(-1).every(v => v === 1), 'min ' + Math.min(...R.enter3.map(f => f[0])));
   ok('피드 ♥를 눌러 빼기 — 한 번 묻고 · 아니오면 그대로 · 예면 빠짐(줄 · 피드 모두)', R.heart.asked === 2 && R.heart.n0 === 4 && R.heart.n1 === 4 && R.heart.n2 === 3 && R.heart.strip === 3 && R.heart.feed === 3, JSON.stringify(R.heart));
   ok('오류 없음', m.errs.length === 0, m.errs.join(' | '));
   const r = await run(true);
-  ok('움직임 줄이기: 로고가 처음부터 제자리(숨김 없음) · 오류 없음', r.R.enter1.every(f => f.every(v => v[0] === 1 && v[1] === '')) && r.errs.length === 0, '');
+  ok('움직임 줄이기: 로고가 처음부터 제자리(숨김 없음) · 오류 없음', r.R.enter1.every(x => x.f.every(v => v[0] === 1 && v[1] === '')) && r.errs.length === 0, '');
   console.log(fails ? 'FAILS ' + fails : 'ALL PASS'); process.exit(fails ? 1 : 0);
 })();
