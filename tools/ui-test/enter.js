@@ -43,6 +43,22 @@ async function run(reduce) {
   // 발견에 머무는 동안 목록이 다시 만들어져도 로고가 숨지 않음
   const rb = await p.evaluate(async () => { switchMobileTab('discover'); await new Promise(r => setTimeout(r, 3500)); let mn = 1; const iv = setInterval(() => { document.querySelectorAll('#buyPointsScroll .buy-point-item:not(.bp-more)').forEach((e, i) => { if (i < 4) mn = Math.min(mn, +getComputedStyle(e).opacity); }); }, 30); try { buildBuyPointsCard(); } catch (e) {} await new Promise(r => setTimeout(r, 450)); mn = 1; await new Promise(r => setTimeout(r, 900)); clearInterval(iv); return mn; });   // 옛 CSS 페이드(0.26초)가 끝난 뒤부터 잼
   RB = rb;
+  // 발견 안에서 유형(V시그널 · 내부자매수 · 전체보기)을 바꿀 때마다: 로고가 처음처럼 통통 · 아래 차트 선도 다시 그어짐
+  const TG = [];
+  for (const kind of ['signal', 'all', 'insider', 'all']) {
+    TG.push({ kind, ...(await p.evaluate(async kind => {
+      const q = () => [...document.querySelectorAll('#buyPointsScroll .buy-point-item:not(.bp-more)')].slice(0, 4);
+      document.querySelector('#aqDiscoverCategories button[data-kind="' + kind + '"]').click();
+      const lg = [], rv = [], hd = new Set();
+      for (let i = 0; i < 90; i++) {
+        await new Promise(r => setTimeout(r, 25));
+        const it = q(); if (it.length) lg.push(it.map(e => +(+getComputedStyle(e).opacity).toFixed(2)));
+        const f = document.querySelector('#feedScroll .feed-item'), cv = f && f.querySelector('canvas'), ch = cv && cv._aqChart; if (ch && ch.$rv) { rv.push(ch.$rv.x); hd.add((f.querySelector('.aq-discover-range') || {}).textContent); }
+      }
+      return { lg, rv: rv.map(x => +x.toFixed(2)), hd: [...hd] };
+    }, kind)) });
+    await p.waitForTimeout(1500);
+  }
   // 탐색 하위메뉴(종목리스트 · 내부자 매수 · 밸런스 종목): 들어올 때마다 줄이 통통
   const XR = {};
   for (const sub of ['list', 'insider', 'balance', 'list']) {
@@ -56,7 +72,7 @@ async function run(reduce) {
   await p.evaluate(() => { try { openChart('NVDA'); } catch (e) {} });
   await p.waitForTimeout(3000);
   const other = await p.evaluate(S => ({ stuck: S.map(s => [...document.querySelectorAll(s)].filter(e => { const r = e.getBoundingClientRect(); return e.offsetParent && r.bottom > 0 && r.top < innerHeight && +getComputedStyle(e).opacity < .05; }).length).reduce((a, b) => a + b, 0), rows: document.querySelectorAll('.stock-list-row').length, modal: window.__M }), SEL);
-  const S = await p.evaluate(() => window.__S); S.other = other; S.items0 = items0; S.xr = XR; S.rb = RB; S.re = RE;
+  const S = await p.evaluate(() => window.__S); S.other = other; S.items0 = items0; S.xr = XR; S.tg = TG; S.rb = RB; S.re = RE;
   await p.screenshot({ path: path.join(OUT, 'enter_c_' + (reduce ? 'rm' : 'mo') + '.png') });
   const fin = await p.evaluate(() => ({ items: [...document.querySelectorAll('#buyPointsScroll .buy-point-item')].filter(e => e.getBoundingClientRect().right <= innerWidth).map(e => e.style.cssText), charts: [...document.querySelectorAll('#feedScroll canvas')].map(c => !!c._aqChart && !!c._aqChart.$rv), nCharts: document.querySelectorAll('#feedScroll canvas').length, nDrawn: [...document.querySelectorAll('#feedScroll canvas')].filter(c => c._aqChart).length }));
   await b.close();
@@ -84,6 +100,14 @@ async function run(reduce) {
       re.filter((_, k) => k % 6 === 0).slice(0, 12).map(x => x.join('/')).join(' '));
   });
   ok('발견에 머무는 중 목록이 다시 만들어져도 로고가 숨지 않음', m.S.rb >= 0.95, 'min opacity ' + m.S.rb);
+  m.S.tg.forEach(g => {
+    const n = (g.lg[0] || []).length;
+    if (!n) { console.log('SKIP 유형 ' + g.kind + ': 항목 없음(빈 화면)'); return; }
+    ok('발견 유형 바꾸기 (' + g.kind + '): 로고가 투명에서 시작 · 중간 단계 · 차례로 · 끝에는 보임',
+      g.lg.some(x => x.some(o => o < 0.2)) && g.lg.some(x => x.some(o => o > 0.05 && o < 0.95)) && (n < 3 || g.lg.some(x => x[0] > 0.5 && x[2] < 0.3)) && g.lg.at(-1).every(o => o > 0.95),
+      g.lg.filter((_, k) => k % 8 === 0).slice(0, 8).map(x => x.join('/')).join(' '));
+    ok('발견 유형 바꾸기 (' + g.kind + '): 아래 피드 차트 선도 다시 그어짐', g.rv.some(x => x < 0.9) && g.rv.some(x => x > 0.05), 'rv ' + g.rv.slice(0, 10).join(' ') + ' · ' + g.hd.slice(0, 4).join(' '));
+  });
   Object.keys(m.S.xr).forEach(sub => m.S.xr[sub].forEach((re, i) => {
     const last = re.at(-1) || [];
     if (!re.length) { console.log('SKIP 탐색 ' + sub + ' ' + (i + 1) + '번째: 줄이 없음(데이터 없음)'); return; }
