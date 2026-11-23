@@ -84,7 +84,7 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     ok('11/24: 한국 경제지표 영문 제목이 한글로(소비자심리지수)', t24.some(r => /한국 11월 소비자심리지수/.test(r.ti)) && !t24.some(r => /Consumer Survey/.test(r.ti)), JSON.stringify(t24.map(r => r.ti)));
     ok('11/24: 내 종목(ADI)은 한 줄씩 — 보유 · 장 시작 전 · EPS 예상', t24.some(r => /아날로그 디바이시스 실적 발표/.test(r.ti) && /보유/.test(r.de) && /장 시작 전/.test(r.de) && /EPS 예상 3\.88/.test(r.de)), JSON.stringify(t24.filter(r => /아날로그/.test(r.ti))));
     const t25 = await tl('2026-11-25');
-    ok('11/25: 남의 종목 실적은 한 줄로 요약(5곳) → 실적시즌으로 이동', t25.some(r => /실적 발표 5곳 \(내 종목 외\)/.test(r.ti) && /aqSchGoEarn/.test(r.onclick)), JSON.stringify(t25.map(r => r.ti)));
+    ok('11/25: 남의 종목 실적은 한 줄로 요약(5건) → 실적시즌으로 이동', t25.some(r => /실적 발표 5건 \(내 종목 외\)/.test(r.ti) && /aqSchGoEarn/.test(r.onclick)), JSON.stringify(t25.map(r => r.ti)));
     const t26 = await tl('2026-11-26');
     ok('11/26: 날짜 없던 내 종목(MYTBD)은 월요일+요일로 계산해 (시간 미정) 꼬리표', t26.some(r => /내날짜없는회사 실적 발표 \(시간 미정\)/.test(r.ti)), JSON.stringify(t26.map(r => r.ti)));
     ok('11/26: 날짜 없던 남의 종목(OTHTBD)은 달력 목록에 안 나옴(요약 줄에도 안 셈)', !t26.some(r => /남날짜없는회사/.test(r.ti)) && !t26.some(r => /실적 발표 \d+곳/.test(r.ti)), JSON.stringify(t26.map(r => r.ti)));
@@ -103,7 +103,7 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     const st = await p.evaluate(() => ({ card: getComputedStyle(document.getElementById('earnSeasonCard')).display, cal: getComputedStyle(document.getElementById('scheduleCard')).display, wk: document.getElementById('earWkT').textContent, strip: [...document.querySelectorAll('#earStrip button')].map(x => x.textContent.replace(/\s+/g, '')), on: document.querySelector('#earStrip .on') && document.querySelector('#earStrip .on').textContent.slice(0, 1), sum: document.getElementById('earSum').textContent.replace(/\s+/g, ' ').trim() }));
     ok('실적시즌 탭: 실적시즌 카드만(달력 숨김)', st.card !== 'none' && st.cal === 'none', JSON.stringify(st));
     ok('일요일(11/22)이면 곧 시작하는 주(11/23 ~ 11/27) · 월~금 5칸 · 발표가 있는 첫 날(화) 선택', st.wk === '11/23 ~ 11/27' && st.strip.length === 5 && st.on === '화', JSON.stringify(st));
-    ok('시즌 요약: 발표 · 예정 · 내 종목 숫자', /2026년 3분기 실적시즌/.test(st.sum) && /발표 5 · 예정 3 · 내 종목 2/.test(st.sum), st.sum);
+    ok('시즌 요약: 발표 · 예정 · 내 종목 숫자', /2026년 3분기 실적시즌/.test(st.sum) && /발표 5건 · 예정 3건 · 내 종목 2/.test(st.sum) && /미국 · 8종목/.test(st.sum), st.sum);   // 발표 횟수는 건 · 중복을 뺀 회사 수는 종목
     const hs = await p.evaluate(() => { const r = s => [...document.querySelectorAll(s)].map(x => Math.round(x.getBoundingClientRect().height)); return { strip: r('#earStrip button'), nav: r('.sch-nav'), chip: r('#earMine'), row: r('.sch-row'), pill: r('#earMk .xtab-btn'), ow: document.documentElement.scrollWidth <= document.documentElement.clientWidth }; });
     ok('터치 영역 44px 이상(요일 칸 · 주 이동 · 내 종목만 · 줄)', hs.strip.every(h => h >= 44) && hs.nav.every(h => h >= 44) && hs.chip[0] >= 44 && hs.row.every(h => h >= 44) && hs.ow, JSON.stringify(hs));
 
@@ -112,7 +112,7 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     const day = async d => { await p.click('#earStrip button[data-day="' + d + '"]'); await p.waitForTimeout(250); };
     let r2 = await rows(), g2 = await grp();
     ok('화: 장 시작 전(내 종목 ADI 먼저) → 장 마감 후 묶음', /장 시작 전/.test(g2[0]) && /장 마감 후/.test(g2[1]) && r2[0].nm === '아날로그 디바이시스' && r2[0].chips.includes('보유'), JSON.stringify({ g2, r: r2.map(r => r.nm) }));
-    ok('발표 전: 한국시간 · 예상 EPS만(「-」 없음)', /한국시간 22:00/.test(r2[0].sub) && /3\.88예상 EPS/.test(r2[0].rt) && !/^-|\s-\s/.test(r2[0].rt), JSON.stringify(r2[0]));
+    ok('발표 전: 한국시간 · 예상 EPS만(「-」 없음)', /한국시간 11\/24\(화\) 22:00/.test(r2[0].sub) && /3\.88예상 EPS/.test(r2[0].rt) && !/^-|\s-\s/.test(r2[0].rt), JSON.stringify(r2[0]));
     ok('종목명: 서버 name이 코드뿐(ZJ)이면 코드, name_ko 있으면 name_ko', r2.some(r => r.nm === 'ZJ') && r2.some(r => r.nm === '이름있는회사') && !r2.some(r => r.nm === '영문사전회사'), JSON.stringify(r2.map(r => r.nm)));
     await day(3); r2 = await rows();
     const by = n => r2.find(r => r.nm === n) || {};
@@ -124,8 +124,8 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     await p.evaluate(() => setMarket('KR')); await day(3); r2 = await rows();
     ok('한국: 영업이익 크게 · 매출 작게(조·억 원)', /4,857억 원영업이익/.test(by('한화오션').rt) && /매출 3\.4조 원/.test(by('한화오션').sub), JSON.stringify(by('한화오션')));
     ok('한국 금융지주: 매출이 없으면 매출 줄 자체를 감춤', by('신한지주').sub === '' && /영업이익/.test(by('신한지주').rt), JSON.stringify(by('신한지주')));
-    ok('한국 종목에 「한국」 꼬리표', by('한화오션').chips.includes('한국'));
-    ok('앱 시장 KR: 목록과 요약이 한국만 표시', r2.length === 2 && /발표 2 · 예정 0/.test(await p.locator('#earSum').innerText()));
+    ok('한국 모드: 줄마다 「한국」 딱지를 달지 않음(시장은 앱 토글 하나로만 구분)', !by('한화오션').chips.includes('한국'));
+    ok('앱 시장 KR: 목록과 요약이 한국만 표시', r2.length === 2 && /발표 2건 · 예정 0건/.test(await p.locator('#earSum').innerText()) && /한국 · 2종목/.test(await p.locator('#earSum').innerText()));
     ok('한국 DART 영업이익 전분기 흑자전환', /흑자전환 · 1건/.test(await p.locator('#earComparisons').innerText()));
     ok('한국 예상 대비는 영업이익 기준', /예상 상회 · 1건/.test(await p.locator('#earComparisons').innerText()));
     await p.evaluate(() => setMarket('US'));
@@ -136,7 +136,7 @@ const FILES = { 'schedule_index.json': INDEX, 'calendar_2026-11.json': CAL, 'ear
     await p.click('#earMine'); await p.waitForTimeout(250); r2 = await rows();
     ok('내 종목만: 목요일엔 내날짜없는회사만', r2.length === 1 && r2[0].nm === '내날짜없는회사', JSON.stringify(r2.map(r => r.nm)));
     const sd = await p.evaluate(() => [...document.querySelectorAll('#earStrip button')].map(b => b.textContent.replace(/\s+/g, '')));
-    ok('내 종목만: 요일 칸 건수도 따라서 바뀜', sd[1] === '화1곳' && sd[2] === '수0곳' && sd[3] === '목1곳', JSON.stringify(sd));
+    ok('내 종목만: 요일 칸 건수도 따라서 바뀜', sd[1] === '화1건' && sd[2] === '수0건' && sd[3] === '목1건', JSON.stringify(sd));
     await p.click('#earMine'); await day(2);
     // 주 이동
     const wk2 = await p.evaluate(() => ({ t: document.getElementById('earWkT').textContent, prev: document.getElementById('earPrev').disabled, next: document.getElementById('earNext').disabled, now: document.getElementById('earNow').disabled }));
