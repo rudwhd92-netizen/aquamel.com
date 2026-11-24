@@ -55,6 +55,16 @@ async function open(b, motion) {
   ok('공매도: 게이지 2개(업계 안 위치 · Days to Cover)가 차오름', await p.evaluate(() => [...document.querySelectorAll('#shortHistoryArea .ss-gauge')].every(g => parseFloat(g.querySelector('i').style.width) > 1) && document.querySelectorAll('#shortHistoryArea .ss-gauge').length === 2));
   await click('뉴스');
   ok('뉴스: 처음 칸으로 돌아오면 뉴스 카드가 보임', await p.evaluate(() => getComputedStyle(document.getElementById('newsWrap')).display !== 'none' && document.querySelectorAll('#newsArea .nw-row').length >= 1));
+  // 장중 가격은 자릿수 롤링(aqRoll) — 그 상태에서 위쪽 움직임이 돌아도 가격이 $60123456789… 로 깨지면 안 됨(v9.26)
+  const roll = await p.evaluate(async () => {
+    const mp = document.getElementById('modalPrice'), pv = mp.querySelector('.mp-v'), pc = mp.querySelector('.price-chg');
+    aqRoll(pv, '$60.12'); if (pc) aqRoll(pc, '+1.23%');
+    const rolled = pv.textContent.length > 8;   // 롤링 칸이 실제로 붙었는지
+    AQ_SP.topPlay(); await new Promise(r => setTimeout(r, 2600));
+    const mini = document.getElementById('spMini');
+    return { rolled, px: pv.textContent, pc: pc ? pc.textContent : '' };
+  });
+  ok('위쪽: 장중(자릿수 롤링) 가격에서도 움직임 뒤 값이 안 깨짐', roll.rolled && roll.px === '$60.12' && !/0123456789/.test(roll.px + roll.pc), JSON.stringify(roll));
   await p.evaluate(tk => { closeModal(); }, TK); await p.waitForTimeout(400);
   ok('닫으면 미니 머리 · 차트 가림이 정리됨', await p.evaluate(() => !document.getElementById('spMini').classList.contains('on') && document.getElementById('chartCanvas').style.clipPath === ''));
   ok('오류 없음(미국)', errs.length === 0, errs.join(' | ').slice(0, 300));
