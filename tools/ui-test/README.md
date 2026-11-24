@@ -20,6 +20,7 @@ node tools/ui-test/stocklist.js         # 탐색 › 종목리스트 행(v8.92) 
 node tools/ui-test/thinking.js          # 로딩 문구 Thinking text(v8.93) — 표식(.aq-tt)이 붙으면 돌고 · 1.5초마다 문구가 바뀌고 · 데이터로 교체되면 0.25초 안에 정리(새는 것 0) · 안 보이는 자리는 시작 안 함 · 움직임 줄이기 · .aq-think 그라데이션 없음
 node tools/ui-test/markers.js           # 발견 피드 차트 마커(v8.91) — 3M/6M/1Y 모두 시그널 · 내부자 매수/매도 점이 하나도 안 빠짐 (서버 없이 file:// 로 열림 · 지어낸 시세)
 node tools/ui-test/reportflip.js        # 종목 카드 뒤집기 · AI리포트(v8.83) — 핵심 3블록 · 길게 누르기 · 8px 취소 · 뒷면 차트 지연 렌더링 · 거르기 · 검색 · 발견 · 실시간 현황 · 카드 폭 600 이상(가상 보고서 fixtures/)
+node tools/ui-test/swipe.js           # AI리포트 슬라이드 터치 스와이프(v9.24) — 실제 터치 입력으로 좌우로 밀어 슬라이드가 넘어가고 카드가 안 뒤집힘(느리게 · 손을 댔다가 밀어도)
 node tools/ui-test/navbar.js            # 하단 메뉴(v8.80) — 선택 바탕이 선택 버튼 폭과 같음(관리자로 확인돼 버튼 수가 바뀌어도)
 node tools/ui-test/menu7.js             # 좁은 화면 하단 메뉴 7개(v8.97) — 관심 · 일정은 ☰ 메뉴로 · ☰ 강조 · 일반 사용자 6개 · 폭 600은 9개 그대로 · 와이드 그대로 · 돌려도 맞게 돌아옴
 node tools/ui-test/sector.js         # 항해 › 섹터동향(v8.98) — 한 줄 행 · 이모지 없음 · Tab pill 토글(섹터/메가 · 정렬) · 날짜 되감기 플레이어(젤리 슬라이더 끌기 · 끝 넘겨 당김 · 재생 · 키보드 · 띠 누르기) · 통통 연속 기록 · 상세 창 · 글자 6단계 · 넓은 화면 열 맞춤 · 움직임 줄이기 (서버 없이 file:// · 지어낸 섹터 · 실제 computeSectorAnalysis 결과와 같은 모양)
