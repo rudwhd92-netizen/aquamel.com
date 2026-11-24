@@ -40,7 +40,7 @@ async function hold(p, sel, ms, dx) {
   await p.evaluate(() => { switchMobileTab('research'); setAiSubtab('report'); buildAnalysisGrid(); });
   await p.waitForSelector('#rpFeed .feed-item', { timeout: 15000 }).catch(() => {}); await p.waitForTimeout(1500);
   const bar = await p.evaluate(() => { const bar = document.getElementById('rpBar'), s = bar.querySelector('.rp-srch'), rs = s.getBoundingClientRect(); return { flt: bar.querySelectorAll('.rp-flt, [data-rf]').length, sub: (bar.querySelector('.rp-sub') || {}).textContent || '', srchH: Math.round(rs.height), srchW: Math.round(rs.width) }; });
-  ok('AI리포트(v8.89): 전체 · 보유 · 관심 · 매수의견 알약이 없음 · 검색 단추만 남음', bar.flt === 0 && /내 종목 먼저/.test(bar.sub) && bar.srchH === 44 && bar.srchW === 44, JSON.stringify(bar));
+  ok('AI리포트(v8.89): 전체 · 보유 · 관심 · 매수의견 알약이 없음 · 검색 단추만 남음', bar.flt === 0 && /최신순/.test(bar.sub) && !/내 종목 먼저/.test(bar.sub) && bar.srchH === 44 && bar.srchW === 44, JSON.stringify(bar));
   const n = await p.evaluate(() => document.querySelectorAll('#rpFeed .feed-item').length);
   ok('AI리포트: 보고서 있는 종목 4개가 발견과 같은 카드(.feed-item)로 나옴', n === 4, String(n));
   await p.evaluate(() => document.querySelectorAll('#rpFeed .feed-item').forEach(i => i.scrollIntoView())); await p.waitForTimeout(1500);
@@ -77,6 +77,25 @@ async function hold(p, sel, ms, dx) {
   // 순서(알약 없음) · 검색
   const order = await p.evaluate(() => [...document.querySelectorAll('#rpFeed .feed-item')].map(i => i.dataset.ticker));
   ok('AI리포트(v8.89): 카드 4장이 그대로 나옴(알약으로 거르지 않음)', order.length === 4, order.join(','));
+  // v9.23: 순서 = 최신 리포트순(내 종목 먼저 아님) · 위 로고 줄도 같은 순서
+  ok('AI리포트(v9.23): 카드 순서는 최신 리포트순', order.join(',') === 'CL,ELV,WMB,PLD', order.join(','));
+  await p.evaluate(() => { window.__gh = _glHeld; _glHeld = () => new Set(['PLD']); buildAnalysisGrid(); }); await p.waitForTimeout(600);   // 가장 오래된 PLD를 보유 종목으로 만들어도
+  ok('AI리포트(v9.23): 보유 종목이어도 앞으로 오지 않음', (await p.evaluate(() => [...document.querySelectorAll('#rpFeed .feed-item')].map(i => i.dataset.ticker).join(','))) === 'CL,ELV,WMB,PLD');
+  await p.evaluate(() => { _glHeld = window.__gh; buildAnalysisGrid(); }); await p.waitForTimeout(600);
+  const strip = await p.evaluate(() => { const s = document.getElementById('rpStrip'), h = document.getElementById('rpHead'), items = [...s.querySelectorAll('.buy-point-item')], r = s.getBoundingClientRect(), ir = items.map(i => i.getBoundingClientRect()); return { vis: !s.hidden && !h.hidden && r.height > 0, tks: items.map(i => i.dataset.ticker).join(','), dates: items.map(i => (i.querySelector('.bp-date') || {}).textContent).join(','), logo: items.every(i => i.querySelector('.bp-logo,img,.aq-logo-fb')), lr: ir.every((b, k) => k === 0 || b.left > ir[k - 1].left + 20), below: r.top > h.getBoundingClientRect().top, aboveBar: r.bottom <= document.getElementById('rpBar').getBoundingClientRect().top + 24, ttl: h.textContent.trim() }; });
+  ok('AI리포트(v9.23): 위 로고 줄 — 최신 리포트순(좌 → 우)', strip.vis && strip.tks === 'CL,ELV,WMB,PLD' && strip.lr, JSON.stringify(strip));
+  ok('AI리포트(v9.23): 로고 줄 — 로고 · 날짜 · 제목 · 카드 위', strip.logo && strip.dates === '11/20,11/19,11/18,11/17' && strip.below && strip.aboveBar && strip.ttl === '최신 리포트');
+  // 들어올 때마다 로고가 통통(발견과 같은 부품) — 다른 메뉴에 갔다 오면 처음부터 다시 · 크기가 1을 넘었다 내려앉음
+  await p.evaluate(() => { switchMobileTab('discover'); }); await p.waitForTimeout(1500);
+  await p.evaluate(() => { window.__sc = []; window.__op = []; switchMobileTab('research'); const t0 = performance.now(); (function s() { const el = document.querySelector('#rpStrip .buy-point-item'); if (el) { const m = /scale\(([\d.]+)\)/.exec(el.style.transform || ''); window.__sc.push(m ? +m[1] : 1); window.__op.push(el.style.opacity === '' ? 1 : +el.style.opacity); } if (performance.now() - t0 < 2600) requestAnimationFrame(s); })(); });
+  await p.waitForTimeout(150);
+  const early = await p.evaluate(() => [...document.querySelectorAll('#rpStrip .buy-point-item')].map(i => i.style.opacity === '' ? 1 : +i.style.opacity));
+  await p.waitForTimeout(3000);
+  const mv = await p.evaluate(() => ({ max: Math.max(...window.__sc), minOp: Math.min(...window.__op), end: [...document.querySelectorAll('#rpStrip .buy-point-item')].every(i => i.style.opacity === '' && i.style.transform === '') }));
+  ok('AI리포트(v9.23): 들어올 때 로고가 차례로 떠오름(뒤쪽 로고는 아직 숨음)', early.length === 4 && early[early.length - 1] < 0.5, early.join(','));
+  ok('AI리포트(v9.23): 로고가 통통(1배를 넘겼다 내려앉음) · 끝나면 스타일 정리', mv.max > 1.02 && mv.minOp < 0.5 && mv.end, JSON.stringify(mv));
+  await p.evaluate(() => { switchMobileTab('research'); }); await p.waitForTimeout(400);
+  ok('AI리포트(v9.23): 같은 메뉴를 다시 눌러도 로고가 다시 숨지 않음', await p.evaluate(() => [...document.querySelectorAll('#rpStrip .buy-point-item')].every(i => i.style.opacity === '')));
   await p.evaluate(() => document.querySelector('#rpBar .rp-srch').click()); await p.waitForTimeout(300);
   await p.fill('#rpQi', 'cl'); await p.waitForTimeout(900);
   ok('검색: 입력한 종목만 남음', await p.evaluate(() => [...document.querySelectorAll('#rpFeed .feed-item')].map(i => i.dataset.ticker).join(',')) === 'CL');
