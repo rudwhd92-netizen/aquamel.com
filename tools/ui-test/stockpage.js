@@ -32,6 +32,16 @@ async function open(b, motion) {
   ok('차트 아래: 데이터 없는 칸은 안 나옴(NVDA는 시그널 이력 없음)', !tabs.some(t => /시그널/.test(t)));
   ok('차트 아래: 앱 공용 Tab pill 부품(aqTpSync 알약)', await p.evaluate(() => !!document.querySelector('#spTabs .aq-tp-ind')));
   ok('차트 아래: 접이식 머리(▶ 줄)는 안 보임 · 한 칸만 보임', await p.evaluate(() => { const on = [...document.querySelectorAll('#chartModal .sp-wrap')].filter(w => getComputedStyle(w).display !== 'none'); const hd = document.querySelector('#newsWrap > .aq-coll-head'); return on.length === 1 && getComputedStyle(hd).display === 'none'; }));
+  // 탭 알약이 앱 표준처럼 움직임(v9.27) — 앞쪽 가장자리가 먼저 늘어났다 뒤가 따라옴(폭이 커졌다 돌아옴) · 한 프레임에 순간이동하지 않음
+  const mv = await p.evaluate(async () => {
+    const row = document.getElementById('spTabs'), btns = [...row.querySelectorAll('.xtab-btn')], ind = row.querySelector('.aq-tp-ind'), out = [];
+    const from = btns.findIndex(b => b.classList.contains('active')), to = from === 0 ? 1 : 0; const t0 = performance.now(); btns[to].click();
+    await new Promise(res => { const f = () => { const m = new DOMMatrix(getComputedStyle(ind).transform); out.push([performance.now() - t0, m.m41, parseFloat(ind.style.width)]); if (performance.now() - t0 < 800) requestAnimationFrame(f); else res(); }; f(); });
+    const w = out.map(x => x[2]), fin = out[out.length - 1], start = out[0], mid = out.find(x => x[0] > 60) || fin;
+    return { wMax: Math.max(...w), wEnd: fin[2], wStart: start[2], midLeft: Math.round(mid[1]), startLeft: Math.round(start[1]), endLeft: Math.round(fin[1]) };
+  });
+  ok('탭 알약: 앱 표준처럼 늘어났다 모이며 움직임(순간이동 아님)', mv.wMax > mv.wEnd + 8 && mv.midLeft > Math.min(mv.startLeft, mv.endLeft) + 4 && mv.midLeft < Math.max(mv.startLeft, mv.endLeft) - 4, JSON.stringify(mv));
+  await p.evaluate(() => { document.querySelector('#spTabs .xtab-btn').click(); }); await p.waitForTimeout(900);
   const top = await p.evaluate(() => ({ px: document.querySelector('#modalPrice .mp-v').textContent, op: document.querySelector('#modalPrice .mp-v').style.opacity, desc: !document.querySelector('#modalDesc .sp-w'), clip: document.getElementById('chartCanvas').style.clipPath, chip: document.querySelector('#modalSubtitle .ms-chip').style.opacity, val: document.querySelector('#modalValuation .mv-v') && document.querySelector('#modalValuation .mv-v').textContent }));
   ok('위쪽: 움직임이 끝나면 일반 글자 · 값으로 돌아옴(가격 · 설명 · 차트 · 칩 · PER)', /^\$\d/.test(top.px) && top.op === '' && top.desc && top.clip === '' && top.chip === '' && /\d/.test(top.val || ''), JSON.stringify(top));
   const mc = '#chartModal .modal-content';
@@ -65,6 +75,15 @@ async function open(b, motion) {
     return { rolled, px: pv.textContent, pc: pc ? pc.textContent : '' };
   });
   ok('위쪽: 장중(자릿수 롤링) 가격에서도 움직임 뒤 값이 안 깨짐', roll.rolled && roll.px === '$60.12' && !/0123456789/.test(roll.px + roll.pc), JSON.stringify(roll));
+  // 종목 지도 · AI 보고서 · 내 주식 화면에서는 차트 아래 알약 · 칸이 보이면 안 됨(v9.27) — 버튼을 실제로 눌러 봄
+  const modes = await p.evaluate(async () => {
+    const vis = () => { const d = id => { const e = document.getElementById(id); return !!e && getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().height > 0; }; return d('spBar') || [...document.querySelectorAll('#chartModal .sp-wrap')].some(w => getComputedStyle(w).display !== 'none'); };
+    const out = {}; document.body.setAttribute('data-broker', 'linked'); const btns = [...document.querySelectorAll('#modalViewTabs .xtab-btn')];
+    for (const v of ['report', 'map', 'position']) { const b = btns.find(x => x.dataset.view === v); if (!b) { out[v] = 'nobtn'; continue; } b.click(); await new Promise(r => setTimeout(r, 900)); out[v] = vis(); }
+    aqSetModalView('chart'); await new Promise(r => setTimeout(r, 900)); out.back = vis();
+    return out;
+  });
+  ok('AI 보고서 · 종목 지도 · 내 주식 화면: 차트 아래 알약 · 칸이 숨음 · 차트로 돌아오면 다시 보임', modes.report === false && modes.map === false && modes.position === false && modes.back === true, JSON.stringify(modes));
   await p.evaluate(tk => { closeModal(); }, TK); await p.waitForTimeout(400);
   ok('닫으면 미니 머리 · 차트 가림이 정리됨', await p.evaluate(() => !document.getElementById('spMini').classList.contains('on') && document.getElementById('chartCanvas').style.clipPath === ''));
   ok('오류 없음(미국)', errs.length === 0, errs.join(' | ').slice(0, 300));
