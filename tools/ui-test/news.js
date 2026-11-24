@@ -27,6 +27,10 @@ async function open(b, vw, vh, role, rm) {
   for (const [role, vw, vh] of [['user', 390, 1100], ['admin', 1000, 900]]) {
     const L = (role === 'user' ? '일반 회원 ' : '관리자 ') + vw + ': ';
     const p = await open(b, vw, vh, role);
+    const upd = await p.evaluate(() => { const sm = document.querySelector('#diBox .di-h small'), td = _kstToday().slice(5).replace('-', '/'); return { txt: sm ? sm.textContent : '', td }; });
+    ok(L + '머리에 업데이트 시점(가장 최근 이슈의 날짜 · 시각)', upd.txt === '최근 7일 · 업데이트 ' + upd.td + ' 09:12', JSON.stringify(upd));
+    const upd2 = await p.evaluate(() => { _di.at = '2026-11-23T08:10:00'; _diUpd(document.getElementById('diBox')); const a = document.querySelector('#diBox .di-h small').textContent; _di.at = ''; _diUpd(document.getElementById('diBox')); return a; });
+    ok(L + '서버가 at을 주면 그 시각을 씀', upd2 === '최근 7일 · 업데이트 11/23 08:10', upd2);
     const t = await p.evaluate(() => ({ tabs: [...document.querySelectorAll('#aiSubRow .xtab-btn')].map(x => x.textContent.trim()), act: document.body.dataset.atab, mj: !!document.getElementById('mjBox'), txt: document.getElementById('macroWxCard').innerText, solo: document.getElementById('aiSubtabs').classList.contains('aq-tab-solo') }));
     ok(L + '뉴스 탭 = 일간 이슈 · 기관13F · 첫 탭이 일간 이슈', JSON.stringify(t.tabs) === JSON.stringify(['일간 이슈', '기관13F']) && t.act === 'wx' && !t.solo, JSON.stringify(t.tabs) + ' ' + t.act);
     ok(L + '「종목별 날씨」 없음(칸 · 글 모두)', !t.mj && !/종목별 날씨/.test(t.txt));
