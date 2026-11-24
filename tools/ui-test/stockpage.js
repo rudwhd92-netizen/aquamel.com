@@ -63,6 +63,10 @@ async function open(b, motion) {
   ok('내부자: 카드를 누르면 날짜별 거래가 펼쳐짐(스프링 높이)', await p.evaluate(() => { const b = document.querySelector('#insiderSellHistoryArea .sp-px'); return b.getBoundingClientRect().height > 40; }));
   await click('공매도');
   ok('공매도: 게이지 2개(업계 안 위치 · Days to Cover)가 차오름', await p.evaluate(() => [...document.querySelectorAll('#shortHistoryArea .ss-gauge')].every(g => parseFloat(g.querySelector('i').style.width) > 1) && document.querySelectorAll('#shortHistoryArea .ss-gauge').length === 2));
+  // 공매도 아래에 업데이트 일자(시트의 SI_Settle_Date) — 날짜 형식이 달라도 읽힘 · 값이 없으면 줄 없음(v9.28)
+  const up = await p.evaluate(tk => { const rec = _aqCrowdingList.find(r => r.ticker === tk); if (!rec) return { none: true }; const keep = rec.siDate, out = {}; const t = v => { rec.siDate = v; renderShortHistory(tk); const e = document.querySelector('#shortHistoryArea .ss-up'); return e ? e.textContent : ''; };
+    out.iso = t('2026-11-14'); out.dt = t('2026-11-14T00:00:00.000Z'); out.slash = t('2026/11/14'); out.num = t('20261114'); out.serial = t('46340'); out.none = t(''); rec.siDate = keep; renderShortHistory(tk); return out; }, TK);
+  ok('공매도: 아래에 「업데이트 YYYY.MM.DD 기준」 · 값이 없으면 줄이 안 나옴', up.iso === '업데이트 2026.11.14 기준' && up.slash === up.iso && up.num === up.iso && up.dt.startsWith('업데이트 2026.11.1') && up.serial === up.iso && up.none === '', JSON.stringify(up));
   await click('뉴스');
   ok('뉴스: 처음 칸으로 돌아오면 뉴스 카드가 보임', await p.evaluate(() => getComputedStyle(document.getElementById('newsWrap')).display !== 'none' && document.querySelectorAll('#newsArea .nw-row').length >= 1));
   // 장중 가격은 자릿수 롤링(aqRoll) — 그 상태에서 위쪽 움직임이 돌아도 가격이 $60123456789… 로 깨지면 안 됨(v9.26)
