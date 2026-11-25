@@ -82,7 +82,7 @@ async function hold(p, sel, ms, dx) {
   await p.evaluate(() => { window.__gh = _glHeld; _glHeld = () => new Set(['PLD']); buildAnalysisGrid(); }); await p.waitForTimeout(600);   // 가장 오래된 PLD를 보유 종목으로 만들어도
   ok('AI리포트(v9.23): 보유 종목이어도 앞으로 오지 않음', (await p.evaluate(() => [...document.querySelectorAll('#rpFeed .feed-item')].map(i => i.dataset.ticker).join(','))) === 'CL,ELV,WMB,PLD');
   await p.evaluate(() => { _glHeld = window.__gh; buildAnalysisGrid(); }); await p.waitForTimeout(600);
-  const strip = await p.evaluate(() => { const s = document.getElementById('rpStrip'), h = document.getElementById('rpHead'), items = [...s.querySelectorAll('.buy-point-item')], r = s.getBoundingClientRect(), ir = items.map(i => i.getBoundingClientRect()); return { vis: !s.hidden && !h.hidden && r.height > 0, tks: items.map(i => i.dataset.ticker).join(','), dates: items.map(i => (i.querySelector('.bp-date') || {}).textContent).join(','), logo: items.every(i => i.querySelector('.bp-logo,img,.aq-logo-fb')), lr: ir.every((b, k) => k === 0 || b.left > ir[k - 1].left + 20), below: r.top > h.getBoundingClientRect().top, aboveBar: r.bottom <= document.getElementById('rpBar').getBoundingClientRect().top + 24, ttl: h.textContent.trim() }; });
+  const strip = await p.evaluate(() => { const s = document.getElementById('rpStrip'), h = document.getElementById('rpHead'), items = [...s.querySelectorAll('.buy-point-item')], r = s.getBoundingClientRect(), ir = items.map(i => i.getBoundingClientRect()); return { vis: !s.hidden && !h.hidden && r.height > 0, tks: items.map(i => i.dataset.ticker).join(','), dates: items.map(i => (i.querySelector('.bp-date') || {}).textContent).join(','), logo: items.every(i => i.querySelector('.bp-logo,img,.aq-logo-fb')), lr: ir.every((b, k) => k === 0 || b.left > ir[k - 1].left + 20), below: r.top > h.getBoundingClientRect().top, aboveBar: r.bottom <= document.getElementById('rpBar').getBoundingClientRect().top + 24, ttl: h.querySelector('h2').textContent.trim() }; });
   ok('AI리포트(v9.23): 위 로고 줄 — 최신 리포트순(좌 → 우)', strip.vis && strip.tks === 'CL,ELV,WMB,PLD' && strip.lr, JSON.stringify(strip));
   ok('AI리포트(v9.23): 로고 줄 — 로고 · 날짜 · 제목 · 카드 위', strip.logo && strip.dates === '11/20,11/19,11/18,11/17' && strip.below && strip.aboveBar && strip.ttl === '최신 리포트');
   // 들어올 때마다 로고가 통통(발견과 같은 부품) — 다른 메뉴에 갔다 오면 처음부터 다시 · 크기가 1을 넘었다 내려앉음
@@ -96,6 +96,20 @@ async function hold(p, sel, ms, dx) {
   ok('AI리포트(v9.23): 로고가 통통(1배를 넘겼다 내려앉음) · 끝나면 스타일 정리', mv.max > 1.02 && mv.minOp < 0.5 && mv.end, JSON.stringify(mv));
   await p.evaluate(() => { switchMobileTab('research'); }); await p.waitForTimeout(400);
   ok('AI리포트(v9.23): 같은 메뉴를 다시 눌러도 로고가 다시 숨지 않음', await p.evaluate(() => [...document.querySelectorAll('#rpStrip .buy-point-item')].every(i => i.style.opacity === '')));
+  // v9.31: 최신 리포트 머리줄 = 발견의 「금주의 발견」과 같은 부품(.card-header h2 + .st-more) · 전체보기 → 전체 화면 시트(최신순 전체 목록)
+  const hd = await p.evaluate(() => { const g = s => { const e = document.querySelector(s); if (!e) return null; const cs = getComputedStyle(e), r = e.getBoundingClientRect(); return { fs: cs.fontSize, fw: cs.fontWeight, ls: cs.letterSpacing, x: Math.round(r.x), y: Math.round(r.y), txt: e.textContent.trim() }; };
+    const a = g('#rpHead h2'), b = g('#rpHead .st-more'), logo = g('#rpStrip .bp-logo'), h = g('#rpHead'); return { a, b, dy: logo.y - h.y }; });
+  ok('최신 리포트 머리줄: 발견과 같은 모양(글자 13/700 · 전체보기 12/700 · 머리 → 로고 48px)', hd.a.fs === '13px' && hd.a.fw === '700' && hd.a.ls === '-0.4px' && hd.b.fs === '12px' && hd.b.fw === '700' && hd.b.txt === '전체보기 ›' && hd.dy === 48, JSON.stringify(hd));
+  await p.evaluate(() => { window.__opened = []; });
+  await p.click('#rpHead .st-more'); await p.waitForTimeout(500);
+  const full = await p.evaluate(() => { const ov = document.getElementById('aqRpFull'), rows = [...ov.querySelectorAll('.rpf-row')]; return { open: ov.classList.contains('open') && getComputedStyle(ov).display !== 'none', title: ov.querySelector('.aq-archfull-t').textContent, n: document.getElementById('aqRpFullN').textContent, tks: rows.map(r => r.dataset.ticker).join(','), dates: rows.map(r => r.querySelector('.rpf-d').textContent).join(','), bodyLock: document.body.classList.contains('aq-archfull-open') }; });
+  ok('전체보기: 전체 화면 시트가 열리고 최신 리포트순 전체 목록', full.open && full.title === '최신 리포트' && full.tks === 'CL,ELV,WMB,PLD' && full.dates === '11/20,11/19,11/18,11/17' && full.n === '4종목' && full.bodyLock, JSON.stringify(full));
+  await p.evaluate(() => document.querySelector('#aqRpFull .aq-archfull-x').click()); await p.waitForTimeout(700);   // 폰에서는 ← 가 숨고 쓸어서 닫음(발견의 누적 시그널과 같음) — 버튼 함수를 직접 누름
+  ok('전체보기: ← 로 닫힘', await p.evaluate(() => !document.getElementById('aqRpFull').classList.contains('open') && !document.body.classList.contains('aq-archfull-open')));
+  await p.click('#rpHead .st-more'); await p.waitForTimeout(700); await p.click('#aqRpFull .rpf-row[data-ticker="WMB"]'); await p.waitForTimeout(300);
+  ok('전체보기: 종목을 누르면 그 종목 리포트가 열림(목록은 그대로 남아 있다가 리포트를 닫으면 돌아옴)', await p.evaluate(() => document.getElementById('aqRpFull').classList.contains('open') && document.getElementById('chartModal').classList.contains('active') && String(_state.openTicker).toUpperCase() === 'WMB'));
+  await p.evaluate(() => closeModal()); await p.waitForTimeout(700);
+  await p.evaluate(() => document.querySelector('#aqRpFull .aq-archfull-x').click()); await p.waitForTimeout(700);
   await p.evaluate(() => document.querySelector('#rpBar .rp-srch').click()); await p.waitForTimeout(300);
   await p.fill('#rpQi', 'cl'); await p.waitForTimeout(900);
   ok('검색: 입력한 종목만 남음', await p.evaluate(() => [...document.querySelectorAll('#rpFeed .feed-item')].map(i => i.dataset.ticker).join(',')) === 'CL');
