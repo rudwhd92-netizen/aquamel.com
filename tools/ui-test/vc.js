@@ -1,4 +1,4 @@
-// 항해 › 밸류체인 시험 — node tools/ui-test/vc.js   (v9.03: 메뉴 위치 · 관리자만 · 심사 대기 덱이 먼저 · 승인/거절/되돌리기 · 돈의 지도 · 지금/작년/불황 때 물높이 · 종목 관계 · 사슬 이동 · 직접 지정 · 넓은 화면)
+// AI › 밸류체인(v9.35: 항해에서 이사) 시험 — node tools/ui-test/vc.js   (v9.03: 메뉴 위치 · 관리자만 · 심사 대기 덱이 먼저 · 승인/거절/되돌리기 · 돈의 지도 · 지금/작년/불황 때 물높이 · 종목 관계 · 사슬 이동 · 직접 지정 · 넓은 화면)
 //   서버 없이 file:// 로 열린다(URL=로 바꿀 수 있음) · CHANNEL=msedge · 데이터는 앱 안의 샘플(출고본 값) · 상태는 localStorage(aqVcState1)라 시험마다 새 컨텍스트
 const { chromium } = require('playwright');
 const path = require('path');
@@ -10,7 +10,7 @@ const SETUP = role => {
   window.aqPrompt = async (t, d, o) => { window.__prompts = (window.__prompts || []); window.__prompts.push(t.split('\n')[0]); const q = window.__answers || []; return q.length ? q.shift() : null; };
   window.aqConfirm = async () => true;
   window.__toasts = []; window.aqToast = m => { window.__toasts.push(m); };
-  switchMobileTab('voyage'); setVoyageSubtab('vc');
+  switchMobileTab('auto'); setAiSubtab('vc');   // v9.35: 밸류체인 = AI 메뉴(관리자)로 이사
 };
 async function open(b, vw, vh, role, rm) {
   const ctx = await b.newContext({ viewport: { width: vw, height: vh }, reducedMotion: rm ? 'reduce' : 'no-preference' }); const p = await ctx.newPage();
@@ -23,13 +23,13 @@ const lanes = p => p.evaluate(() => Array.from(document.querySelectorAll('#vcLan
   const b = await chromium.launch({ channel: process.env.CHANNEL || undefined });
   /* 일반 회원: 탭도 카드도 없음 */
   { const p = await open(b, 390, 900, 'user', false);
-    ok('일반 회원: 밸류체인 탭 숨김', await p.evaluate(() => getComputedStyle(document.querySelector('.xtab-btn[data-vtab="vc"]')).display === 'none'));
-    ok('일반 회원: 밸류체인 카드 숨김 · 섹터동향으로', await p.evaluate(() => getComputedStyle(document.getElementById('vcCard')).display === 'none' && document.body.getAttribute('data-vtab') === 'trend'));
+    ok('일반 회원: 밸류체인 탭 없음(AI 메뉴는 관리자만)', await p.evaluate(() => !document.querySelector('#aiSubRow .xtab-btn[data-atab="vc"]')));
+    ok('일반 회원: 밸류체인 카드 숨김 · 뉴스로', await p.evaluate(() => getComputedStyle(document.getElementById('vcCard')).display === 'none' && document.body.getAttribute('data-atab') !== 'vc'));
     await p.context().close(); }
   for (const [vw, vh, rm, tag] of [[390, 900, false, '관리자 390'], [1000, 900, false, '관리자 1000(넓은 화면)'], [390, 900, true, '관리자 390 · 움직임 줄이기']]) {
     const p = await open(b, vw, vh, 'admin', rm), L = tag + ': ';
-    const tabs = await p.evaluate(() => Array.from(document.querySelectorAll('#voyageSubtabs .xtab-btn')).filter(x => getComputedStyle(x).display !== 'none').map(x => x.textContent.trim()));
-    ok(L + '항해 탭 줄 = 섹터동향 · 밸류체인 · AS-IS 포트폴리오 · TO-BE 포트폴리오', tabs.join(',') === '섹터동향,밸류체인,AS-IS 포트폴리오,TO-BE 포트폴리오', tabs.join(','));
+    const tabs = await p.evaluate(() => Array.from(document.querySelectorAll('#aiSubRow .xtab-btn')).filter(x => getComputedStyle(x).display !== 'none').map(x => x.textContent.trim()));
+    ok(L + 'AI 탭 줄 = AI매니저 · AI예보 · AI세력분석 · 밸류체인', tabs.join(',') === 'AI매니저,AI예보,AI세력분석,밸류체인', tabs.join(','));
     ok(L + '심사 대기가 있어 덱이 지도보다 먼저(전체 화면 틀)', await p.evaluate(() => document.getElementById('aqVcDeck').classList.contains('open') && /1 \/ 6/.test(document.getElementById('vcCnt').textContent)));
     ok(L + '덱 버튼 「나중에 하기」', (await p.locator('#vcDkx').innerText()) === '나중에 하기');
     await p.screenshot({ path: path.join(OUT, 'vc-deck-' + vw + (rm ? '-rm' : '') + '.png') });

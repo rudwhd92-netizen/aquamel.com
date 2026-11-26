@@ -50,7 +50,7 @@ const hashOf = p =>p.evaluate(() => document.getElementById('aqAiCv').toDataURL(
   const th3 = await hashOf(p); await p.waitForTimeout(500); const th4 = await hashOf(p);
   ok('생각 중에만 계속 돌고 끝나면 멈춤', th1 !== th2 && th3 === th4);
   // 스크롤 숨김
-  await p.evaluate(() => { const l = [...document.querySelectorAll('.mtab-label')].find(x => x.textContent.trim() === '탐색'); (l.closest('button,a,[onclick]') || l).click(); }); await p.waitForTimeout(3000);
+  await p.evaluate(() => { switchMobileTab('explore'); setExploreSubtab('list'); }); await p.waitForTimeout(3000);   // v9.35: 탐색 메뉴가 없어져 탐색 페이지(종목리스트)로 직접 들어감
   await p.mouse.move(200, 400); for (let i = 0; i < 10; i++) { await p.mouse.wheel(0, 80); await p.waitForTimeout(60); } await p.waitForTimeout(1300);
   const hid = await p.evaluate(() => { const m = new DOMMatrix(getComputedStyle(document.getElementById('aqAi')).transform); return Math.round(m.m41); });
   ok('목록을 내리면 오른쪽으로 숨음', hid >= 60, 'translateX ' + hid);

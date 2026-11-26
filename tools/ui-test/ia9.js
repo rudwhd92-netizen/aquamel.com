@@ -1,14 +1,15 @@
-// 메뉴 9체계 시험 — node tools/ui-test/ia9.js   (v8.84: 하단 메뉴 9개 전부 · 아코디언 독 · 와이드 세로 메뉴 12칸 · 하위 탭 구성 · 종목리스트 + 종목지도 병합)
+// 메뉴 7체계 시험 — node tools/ui-test/ia9.js   (v8.84 9체계 → v9.35 7체계: 하단 메뉴 7개 전부 · 아코디언 독 · 와이드 세로 메뉴 10칸 · 하위 탭 구성 · 탐색 페이지(발견 › 전체보기) · 종목리스트 + 종목지도 병합)
 //   앱을 먼저 띄운다: python3 -m http.server 8773 &   · CHANNEL=msedge 로 설치된 브라우저를 쓸 수 있다 · 종목리스트가 그려지려면 저장소의 data 폴더가 같이 서빙돼야 한다
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
 const OUT = process.env.OUT || path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 let fails = 0; const ok = (n, c, x) => { console.log((c ? 'PASS ' : 'FAIL ') + n + (x ? '  · ' + x : '')); if (!c) fails++; };
 const URL = process.env.URL || 'http://localhost:8773/index.html';
-const MENUS = ['발견', '탐색', '관심', '연구', 'AI', '뉴스', '일정', '항해', '마이'];
-const SUBS = { discover: null, explore: ['종목리스트', '내부자 매수', '밸런스 종목'], interest: ['모의매수', '비교분석'], research: ['AI리포트', '해자근거'], ai: ['AI매니저', 'AI예보', 'AI세력분석'], news: ['일간 이슈', '기관13F'], schedule: ['통합캘린더', '실적시즌'], voyage: ['섹터동향', '밸류체인', 'AS-IS 포트폴리오', 'TO-BE 포트폴리오'], board: ['실시간 현황', '누적 성과', '운영 통계'] };
-const KEYS = ['discover', 'explore', 'interest', 'research', 'ai', 'news', 'schedule', 'voyage', 'board'];
-const DOCK7 = MENUS.filter(n => n !== '관심' && n !== '일정');   // v8.97: 좁은 화면(독)은 관심 · 일정을 ☰ 메뉴로 — 하단 7개
+const MENUS = ['발견', '관심', '연구', 'AI', '뉴스', '일정', '마이'];   // v9.35: 탐색 · 항해 없앰
+const SUBS = { discover: null, interest: ['모의매수', '비교분석'], research: ['AI리포트', '해자근거'], ai: ['AI매니저', 'AI예보', 'AI세력분석', '밸류체인'], news: ['일간 이슈', '기관13F'], schedule: ['통합캘린더', '실적시즌'], board: ['실시간 현황', '포트폴리오', '누적 성과', '운영 통계'] };
+const EXPLORE = ['섹터동향', '종목리스트', '내부자 매수', '밸런스 종목', 'V시그널'];   // 탐색 페이지(발견 › 전체보기) 하위 5칸
+const KEYS = ['discover', 'interest', 'research', 'ai', 'news', 'schedule', 'board'];
+const DOCK7 = MENUS;   // v9.35: 7개 전부(관심 · 일정을 ☰로 보내지 않음)
 (async () => {
   const b = await chromium.launch({ channel: process.env.CHANNEL || undefined });
   async function open(vp) {
@@ -26,14 +27,14 @@ const DOCK7 = MENUS.filter(n => n !== '관심' && n !== '일정');   // v8.97: �
     if (process.env.ONLY) continue;
     const p = await open(vp);
     const st = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), br = bar.getBoundingClientRect(); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); return { dock: bar.classList.contains('aq-dock'), n: bt.length, names: bt.map(x => x.getAttribute('aria-label')), inside: bt.every(x => { const r = x.getBoundingClientRect(); return r.left >= br.left - 0.5 && r.right <= br.right + 0.5 && r.width > 20; }), minW: Math.min(...bt.map(x => x.getBoundingClientRect().width)), h: Math.round(bt[0].getBoundingClientRect().height), barW: Math.round(br.width) }; });
-    ok(label + ': 하단 메뉴 7개(관심 · 일정은 ☰ 메뉴로 · v8.97)', st.dock && st.n === 7 && st.inside && JSON.stringify(st.names) === JSON.stringify(DOCK7), JSON.stringify(st));
+    ok(label + ': 하단 메뉴 7개 전부(탐색 · 항해 없음 · 관심 · 일정도 하단 바에)', st.dock && st.n === 7 && st.inside && JSON.stringify(st.names) === JSON.stringify(DOCK7), JSON.stringify(st));
     ok(label + ': 칸이 붙어 있어 빈틈 없이 누를 수 있음(높이 56 · 칸 폭 28 이상)', st.h >= 56 && st.minW >= 28, 'min ' + st.minW.toFixed(1) + 'px × ' + st.h);
     // 눌러 보기 — 켜진 칸만 글자가 펼쳐지고, 바탕은 켜진 칸과 같은 자리·폭으로 멈춤
     for (let i = 0; i < KEYS.length; i++) {
       await p.evaluate(k => switchMobileTab(k), KEYS[i]); await p.waitForTimeout(600);
       let r = null; for (let t = 0; t < 14; t++) { r = await dockState(p); if (r && Math.abs(r.dl) <= 1 && Math.abs(r.dw) <= 1 && r.othersLab < .05) break; await p.waitForTimeout(300); }
 
-      if (MENUS[i] === '관심' || MENUS[i] === '일정') { const hm = await p.evaluate(() => ({ ham: document.getElementById('mobileMenuBtn').classList.contains('aq-hasact'), bar: [...document.querySelectorAll('#mobileTabBar > .mtab-btn')].filter(x => x.classList.contains('active') && getComputedStyle(x).display !== 'none').length })); ok(label + ': ' + MENUS[i] + ' 선택 — 하단 바에는 없고 ☰ 메뉴가 강조됨', hm.ham && hm.bar === 0, JSON.stringify(hm)); continue; }
+      // (v9.35: 관심 · 일정도 하단 바에 있어 ☰ 강조 시험은 없음)
       ok(label + ': ' + MENUS[i] + ' 선택 — 바탕 = 켜진 칸 · 글자는 켜진 칸만', !!r && r.n === MENUS[i] && Math.abs(r.dl) <= 1 && Math.abs(r.dw) <= 1 && r.lab > .95 && r.othersLab < .05, JSON.stringify(r));
     }
     // 하위 탭 구성
@@ -44,16 +45,15 @@ const DOCK7 = MENUS.filter(n => n !== '관심' && n !== '일정');   // v8.97: �
         const got = rows.find(r => want && r.length === want.length && want.every((w, j) => r[j] === w));
         ok(MENUS[i] + ' 하위 탭 = ' + (want ? want.join(' / ') : '없음'), want ? !!got : rows.length === 0 || rows.every(r => r.length === 0), JSON.stringify(rows));
       }
-      // 이관: 섹터동향 카드는 항해, 포트폴리오는 항해 › AS-IS, 마이에는 포트폴리오 탭 없음
-      await p.evaluate(() => { switchMobileTab('voyage'); setVoyageSubtab('trend'); }); await p.waitForTimeout(500);
-      let v = await p.evaluate(() => ({ sa: getComputedStyle(document.getElementById('sectorAnalysisCard')).display, pf: getComputedStyle(document.getElementById('boardHoldingsCard')).display, tobe: getComputedStyle(document.getElementById('voyageTobeCard')).display }));
-      ok('항해 › 섹터동향: 섹터 동향 카드만', v.sa !== 'none' && v.pf === 'none' && v.tobe === 'none', JSON.stringify(v));
-      await p.evaluate(() => setVoyageSubtab('asis')); await p.waitForTimeout(400);
-      v = await p.evaluate(() => ({ sa: getComputedStyle(document.getElementById('sectorAnalysisCard')).display, pf: getComputedStyle(document.getElementById('boardHoldingsCard')).display, dash: !!document.querySelector('#boardHoldingsCard #dashPortfolioCard') }));
-      ok('항해 › AS-IS 포트폴리오: 포트폴리오 카드(기존 카드가 그 안으로)', v.sa === 'none' && v.pf !== 'none' && v.dash, JSON.stringify(v));
-      await p.evaluate(() => setVoyageSubtab('tobe')); await p.waitForTimeout(400);
-      v = await p.evaluate(() => ({ tobe: getComputedStyle(document.getElementById('voyageTobeCard')).display, txt: document.getElementById('voyageTobeCard').innerText }));
-      ok('항해 › TO-BE 포트폴리오: 준비 중 안내', v.tobe !== 'none' && /준비 중/.test(v.txt), v.txt.replace(/\s+/g, ' '));
+      // v9.35 이사: 탐색 페이지(발견 › 전체보기) 하위 5칸 · 섹터동향 = 탐색 › 섹터동향 · 포트폴리오 = 마이 › 포트폴리오 · 밸류체인 = AI · TO-BE 없음
+      await p.evaluate(() => { switchMobileTab('explore'); }); await p.waitForTimeout(600);
+      { const rows = await rowsOf(p); ok('탐색 페이지(발견 › 전체보기) 하위 탭 = ' + EXPLORE.join(' / '), rows.some(r => r.length === 5 && EXPLORE.every((w, j) => r[j] === w)), JSON.stringify(rows)); }
+      await p.evaluate(() => { setExploreSubtab('trend'); }); await p.waitForTimeout(500);
+      let v = await p.evaluate(() => ({ sa: getComputedStyle(document.getElementById('sectorAnalysisCard')).display, sl: getComputedStyle(document.getElementById('stockListCard')).display, nav: document.querySelector('#mobileTabBar > .mtab-btn.active').getAttribute('aria-label') }));
+      ok('탐색 › 섹터동향: 섹터 동향 카드만 · 아래 메뉴는 발견', v.sa !== 'none' && v.sl === 'none' && v.nav === '발견', JSON.stringify(v));
+      await p.evaluate(() => { switchMobileTab('board'); setBoardSubtab('portfolio'); }); await p.waitForTimeout(500);
+      v = await p.evaluate(() => ({ pf: getComputedStyle(document.getElementById('boardHoldingsCard')).display, live: getComputedStyle(document.getElementById('boardLiveCard')).display, dash: !!document.querySelector('#boardHoldingsCard #dashPortfolioCard'), tobe: !!document.getElementById('voyageTobeCard') }));
+      ok('마이 › 포트폴리오: 포트폴리오 카드(기존 카드가 그 안으로) · TO-BE 없음', v.pf !== 'none' && v.live === 'none' && v.dash && !v.tobe, JSON.stringify(v));
       for (const [k, a, id, name] of [['research', 'moat', 'moatCard', '연구 › 해자근거'], ['ai', 'force', 'forceCard', 'AI › AI세력분석']]) {
         await p.evaluate(([k, a]) => { switchMobileTab(k); setAiSubtab(a); }, [k, a]); await p.waitForTimeout(500);
         const t = await p.evaluate(id => ({ d: getComputedStyle(document.getElementById(id)).display, txt: document.getElementById(id).innerText }), id);
@@ -66,11 +66,11 @@ const DOCK7 = MENUS.filter(n => n !== '관심' && n !== '일정');   // v8.97: �
       sc = await p.evaluate(() => ({ earn: getComputedStyle(document.getElementById('earnSeasonCard')).display, cal: getComputedStyle(document.getElementById('scheduleCard')).display }));
       ok('일정 › 통합캘린더: 달력 복귀', sc.earn === 'none' && sc.cal !== 'none', JSON.stringify(sc));
       // 예전 링크
-      const old = await p.evaluate(() => { const r = {}; try { switchMobileTab('explore'); setExploreSubtab('trend'); r.trend = document.body.dataset.mtab + '/' + document.body.dataset.vtab; } catch (e) { r.trend = 'ERR ' + e.message; } try { switchMobileTab('news'); setAiSubtab('maps'); r.maps = document.body.dataset.mtab + '/' + document.body.dataset.xtab; } catch (e) { r.maps = 'ERR ' + e.message; } try { switchMobileTab('sector'); r.sector = document.body.dataset.mtab + '/' + document.body.dataset.atab; } catch (e) { r.sector = 'ERR ' + e.message; } try { switchMobileTab('board'); setBoardSubtab('holdings'); r.hold = document.body.dataset.mtab + '/' + document.body.dataset.btab; } catch (e) { r.hold = 'ERR ' + e.message; } return r; });
-      ok('예전 링크: 섹터 동향 → 항해', old.trend === 'voyage/trend', old.trend);
+      const old = await p.evaluate(() => { const r = {}; try { switchMobileTab('voyage'); r.trend = document.body.dataset.mtab + '/' + document.body.dataset.xtab; } catch (e) { r.trend = 'ERR ' + e.message; } try { switchMobileTab('news'); setAiSubtab('maps'); r.maps = document.body.dataset.mtab + '/' + document.body.dataset.xtab; } catch (e) { r.maps = 'ERR ' + e.message; } try { switchMobileTab('sector'); r.sector = document.body.dataset.mtab + '/' + document.body.dataset.atab; } catch (e) { r.sector = 'ERR ' + e.message; } try { switchMobileTab('board'); setBoardSubtab('holdings'); r.hold = document.body.dataset.mtab + '/' + document.body.dataset.btab; } catch (e) { r.hold = 'ERR ' + e.message; } return r; });
+      ok('예전 링크: 항해 → 탐색 › 섹터동향', old.trend === 'explore/trend', old.trend);
       ok('예전 링크: 종목 지도 → 탐색 › 종목리스트', old.maps === 'explore/list', old.maps);
       ok('예전 링크: 관심(sector) → 관심 › 모의매수', old.sector === 'auto/sim', old.sector);
-      ok('예전 링크: 마이 › 포트폴리오 → 실시간 현황', old.hold === 'board/live', old.hold);
+      ok('예전 링크: 마이 › 포트폴리오(holdings) → 마이 › 포트폴리오', old.hold === 'board/portfolio', old.hold);
       // 화면이 와이드로 바뀌었다 돌아와도(돌려 놓기) 독 ↔ 세로 메뉴가 따라 바뀜
       const tg = await p.evaluate(async () => { const r = document.documentElement, bar = document.getElementById('mobileTabBar'), w = ms => new Promise(x => setTimeout(x, ms)); r.classList.add('aq-wide'); await w(400); const a = { dock: bar.classList.contains('aq-dock'), ind: !!bar.querySelector(':scope > .aq-dk-ind'), inl: bar.querySelector('.mtab-btn').style.width }; r.classList.remove('aq-wide'); await w(900); const b = { dock: bar.classList.contains('aq-dock'), ind: !!bar.querySelector(':scope > .aq-dk-ind') }; return { a, b }; });
       ok('와이드로 바뀌면 독이 풀리고(세로 메뉴) 돌아오면 다시 독', !tg.a.dock && !tg.a.ind && tg.a.inl === '' && tg.b.dock && tg.b.ind, JSON.stringify(tg));
@@ -82,7 +82,7 @@ const DOCK7 = MENUS.filter(n => n !== '관심' && n !== '일정');   // v8.97: �
   /* ── 비관리자: AI 숨김 → 8개, 켜진 칸 · 바탕 정상 ── */
   { const p = await open({ width: 360, height: 780 }); await p.evaluate(() => document.body.setAttribute('data-role', 'user')); await p.waitForTimeout(900);
     const r = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); const a = bar.querySelector(':scope > .mtab-btn.active'), ind = bar.querySelector(':scope > .aq-dk-ind'); const ar = a.getBoundingClientRect(), ir = ind.getBoundingClientRect(); return { n: bt.length, dl: +(ir.left - ar.left).toFixed(1), dw: +(ir.width - ar.width).toFixed(1) }; });
-    ok('일반 사용자: 하단 메뉴 6개(AI 숨김 · 관심 · 일정은 ☰) · 바탕 = 켜진 칸', r.n === 6 && Math.abs(r.dl) <= 1 && Math.abs(r.dw) <= 1, JSON.stringify(r));
+    ok('일반 사용자: 하단 메뉴 6개(AI만 숨김) · 바탕 = 켜진 칸', r.n === 6 && Math.abs(r.dl) <= 1 && Math.abs(r.dw) <= 1, JSON.stringify(r));
     await p.context().close(); }
 
   /* ── v8.86: 넓은 화면(폰이 아닌 폭)은 예전 균등 메뉴 · 좁은 화면만 독 ── */
@@ -90,14 +90,14 @@ const DOCK7 = MENUS.filter(n => n !== '관심' && n !== '일정');   // v8.97: �
     const p = await open(vp);
     const r = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); const a = bar.querySelector(':scope > .mtab-btn.active'), ind = bar.querySelector(':scope > .aq-seg-ind'), ar = a.getBoundingClientRect(), ir = ind ? ind.getBoundingClientRect() : null; const ws = bt.map(x => x.getBoundingClientRect().width); return { wide: document.documentElement.classList.contains('aq-wide'), dock: bar.classList.contains('aq-dock'), dk: !!bar.querySelector(':scope > .aq-dk-ind'), n: bt.length, min: +Math.min(...ws).toFixed(1), max: +Math.max(...ws).toFixed(1), seg: ir ? { dl: +(ir.left - ar.left).toFixed(1), dw: +(ir.width - ar.width).toFixed(1) } : null, labelBelow: getComputedStyle(bt[0]).flexDirection, fs: getComputedStyle(bt[0].querySelector('.mtab-label')).fontSize }; });
     if (wantDock) ok(label + ': 좁은 화면 = 아코디언 독(7개)', !r.wide && r.dock && r.dk && r.n === 7, JSON.stringify(r));
-    else ok(label + ': 넓은 화면(폰 아님) = 예전 균등 메뉴(글자 아래 · 칸 44 이상 · 바탕 = 켜진 칸)', !r.wide && !r.dock && !r.dk && r.n === 9 && r.min >= 44 && r.max - r.min < 1 && r.labelBelow === 'column' && r.seg && Math.abs(r.seg.dl) <= 1 && Math.abs(r.seg.dw) <= 1, JSON.stringify(r));
-    if (!wantDock) { await p.evaluate(() => switchMobileTab('voyage')); const segNow = () => p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), a = bar.querySelector(':scope > .mtab-btn.active'), ind = bar.querySelector(':scope > .aq-seg-ind'), ar = a.getBoundingClientRect(), ir = ind.getBoundingClientRect(); return { n: a.getAttribute('aria-label'), dl: +(ir.left - ar.left).toFixed(1), dw: +(ir.width - ar.width).toFixed(1) }; }); await p.waitForTimeout(600); let q = await segNow(); for (let i = 0; i < 10 && !(Math.abs(q.dl) <= 1.5 && Math.abs(q.dw) <= 1.5); i++) { await p.waitForTimeout(300); q = await segNow(); } ok(label + ': 메뉴를 눌러도 예전 방식 바탕이 따라감', q.n === '항해' && Math.abs(q.dl) <= 1.5 && Math.abs(q.dw) <= 1.5, JSON.stringify(q)); }
+    else ok(label + ': 넓은 화면(폰 아님) = 예전 균등 메뉴(글자 아래 · 칸 44 이상 · 바탕 = 켜진 칸)', !r.wide && !r.dock && !r.dk && r.n === 7 && r.min >= 44 && r.max - r.min < 1 && r.labelBelow === 'column' && r.seg && Math.abs(r.seg.dl) <= 1 && Math.abs(r.seg.dw) <= 1, JSON.stringify(r));
+    if (!wantDock) { await p.evaluate(() => switchMobileTab('board')); const segNow = () => p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), a = bar.querySelector(':scope > .mtab-btn.active'), ind = bar.querySelector(':scope > .aq-seg-ind'), ar = a.getBoundingClientRect(), ir = ind.getBoundingClientRect(); return { n: a.getAttribute('aria-label'), dl: +(ir.left - ar.left).toFixed(1), dw: +(ir.width - ar.width).toFixed(1) }; }); await p.waitForTimeout(600); let q = await segNow(); for (let i = 0; i < 10 && !(Math.abs(q.dl) <= 1.5 && Math.abs(q.dw) <= 1.5); i++) { await p.waitForTimeout(300); q = await segNow(); } ok(label + ': 메뉴를 눌러도 예전 방식 바탕이 따라감', q.n === '마이' && Math.abs(q.dl) <= 1.5 && Math.abs(q.dw) <= 1.5, JSON.stringify(q)); }
     await p.context().close();
   }
 
-  /* ── v8.86: 항해 › AS-IS 포트폴리오 — 종목 추가 없음 · 보유 종목 전부 한 번에 ── */
+  /* ── v8.86 → v9.35: 마이 › 포트폴리오(항해 › AS-IS에서 이사) — 종목 추가 없음 · 보유 종목 전부 한 번에 ── */
   { const p = await open({ width: 390, height: 844 });
-    await p.evaluate(() => { switchMobileTab('voyage'); setVoyageSubtab('asis'); }); await p.waitForTimeout(800);
+    await p.evaluate(() => { document.body.setAttribute('data-broker', 'linked'); switchMobileTab('board'); setBoardSubtab('portfolio'); }); await p.waitForTimeout(800);
     const mk = (n) => p.evaluate(n => { const tk = Object.keys(_state.tickerSectorMap || {}).slice(0, n); return tk.map((t, i) => ({ ticker: t, sector: _state.tickerSectorMap[t], qty: 1, evalVal: 1000 + i * 10, cost: 900 + i * 10, roi: 5 })); }, n);
     for (let i = 0; i < 40; i++) { if (await p.evaluate(() => Object.keys(_state.tickerSectorMap || {}).length >= 40)) break; await p.waitForTimeout(500); }   // 데이터가 늦게 들어와도 기다림
     const hs = await mk(40); ok('AS-IS 시험 자료: 가짜 보유 40종목', hs.length === 40);
@@ -118,13 +118,13 @@ const DOCK7 = MENUS.filter(n => n !== '관심' && n !== '일정');   // v8.97: �
 
   /* ── 와이드 1000×700 ── */
   { const p = await open({ width: 1000, height: 700 });
-    const w = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), br = bar.getBoundingClientRect(); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); return { wide: document.documentElement.classList.contains('aq-wide'), dock: bar.classList.contains('aq-dock'), n: bt.length, order: bt.slice(0, 9).map(x => x.getAttribute('aria-label')), fit: bar.scrollHeight <= bar.clientHeight + 1, last: Math.round(bt[bt.length - 1].getBoundingClientRect().bottom), vh: innerHeight, h: Math.round(bt[0].getBoundingClientRect().height) }; });
-    ok('와이드: 세로 메뉴(독 아님) · 9개 + 관리자 3개 = 12칸이 스크롤 없이 700 안에', w.wide && !w.dock && w.n === 12 && w.fit && w.last <= w.vh, JSON.stringify(w));
-    ok('와이드: 순서 = 발견 · 탐색 · 관심 · 연구 · AI · 뉴스 · 일정 · 항해 · 마이', JSON.stringify(w.order) === JSON.stringify(MENUS), JSON.stringify(w.order));
+    const w = await p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), br = bar.getBoundingClientRect(); const bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); return { wide: document.documentElement.classList.contains('aq-wide'), dock: bar.classList.contains('aq-dock'), n: bt.length, order: bt.slice(0, 7).map(x => x.getAttribute('aria-label')), fit: bar.scrollHeight <= bar.clientHeight + 1, last: Math.round(bt[bt.length - 1].getBoundingClientRect().bottom), vh: innerHeight, h: Math.round(bt[0].getBoundingClientRect().height) }; });
+    ok('와이드: 세로 메뉴(독 아님) · 7개 + 관리자 3개 = 10칸이 스크롤 없이 700 안에', w.wide && !w.dock && w.n === 10 && w.fit && w.last <= w.vh, JSON.stringify(w));
+    ok('와이드: 순서 = 발견 · 관심 · 연구 · AI · 뉴스 · 일정 · 마이', JSON.stringify(w.order) === JSON.stringify(MENUS), JSON.stringify(w.order));
     // v8.85 왼쪽 메뉴 접기 — 펼침 90 ↔ 접힘 56 · 아이콘 자리 그대로 · 오른쪽 열림 칸이 따라 넓어짐 · 접힘 기억
     const rail = () => p.evaluate(() => { const bar = document.getElementById('mobileTabBar'), br = bar.getBoundingClientRect(), bt = [...bar.querySelectorAll(':scope > .mtab-btn')].filter(x => getComputedStyle(x).display !== 'none'); const ic = bt[0].querySelector('.mtab-icon').getBoundingClientRect(), lb = bt[0].querySelector('.mtab-label'); const lr = lb.getBoundingClientRect(); return { w: Math.round(br.width), ic: Math.round(ic.left - br.left), lab: +parseFloat(getComputedStyle(lb).opacity).toFixed(2), labIn: lr.right <= br.right + 0.5, n: bt.length, h: Math.round(bt[0].getBoundingClientRect().height), last: Math.round(bt[bt.length - 1].getBoundingClientRect().bottom), col: Math.round(document.querySelector('.container').getBoundingClientRect().left), after: parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--aqL')) || null, aqR: getComputedStyle(document.documentElement).getPropertyValue('--aqR').trim(), tg: !!bar.querySelector(':scope > .aq-rail-tg') }; });
     const settle = async () => { let r = null; for (let i = 0; i < 12; i++) { await p.waitForTimeout(250); const n = await rail(); if (r && n.w === r.w && n.lab === r.lab) return n; r = n; } return r; };
-    let r0 = await rail(); ok('와이드: 펼친 왼쪽 메뉴 90px · 아이콘 옆 두 글자(칸 높이 44) · 12칸이 700 안에', r0.tg && r0.w === 90 && r0.lab === 1 && r0.labIn && r0.h === 44 && r0.n === 12 && r0.last <= 700, JSON.stringify(r0));
+    let r0 = await rail(); ok('와이드: 펼친 왼쪽 메뉴 90px · 아이콘 옆 두 글자(칸 높이 44) · 10칸이 700 안에', r0.tg && r0.w === 90 && r0.lab === 1 && r0.labIn && r0.h === 44 && r0.n === 10 && r0.last <= 700, JSON.stringify(r0));
     await p.click('.aq-rail-tg'); const r1 = await settle();
     ok('접기: 56px · 글자 숨김 · 아이콘 자리 그대로 · 폰 화면 칸이 같이 왼쪽으로', r1.w === 56 && r1.lab === 0 && Math.abs(r1.ic - r0.ic) <= 1 && r1.col === r0.col - 34, JSON.stringify(r1));
     ok('접기: 접으면 title(툴팁) · aria-expanded=false', await p.evaluate(() => document.querySelector('#mobileTabBar .mtab-btn').title.length > 0 && document.querySelector('.aq-rail-tg').getAttribute('aria-expanded') === 'false'));

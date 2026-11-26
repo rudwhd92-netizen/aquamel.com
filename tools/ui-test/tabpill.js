@@ -36,10 +36,10 @@ const prep = async (b, opts, role) => {
   const b = await chromium.launch({ channel: process.env.CHANNEL || undefined });
   let p = await prep(b, null, 'admin');
 
-  // 1) 탐색 — 탭 3개(종목리스트 · 내부자 매수 · 밸런스 종목 — v8.84: 섹터동향은 항해로)
+  // 1) 탐색 페이지(발견 › 전체보기) — 탭 5개(섹터동향 · 종목리스트 · 내부자 매수 · 밸런스 종목 · V시그널 — v9.35: 넘치면 밀어서)
   await p.evaluate(() => switchMobileTab('explore')); await p.waitForTimeout(900);
   let s = await state(p, '#exploreSubtabs .xtab-row');
-  ok('탐색: 알약이 고른 탭 자리 · 탭 3개 · 밀 필요 없음(흐림 0)', s.op === '' && at(s) && s.n === 3 && s.sw <= s.cw + 2 && s.fl === '0px' && s.fr === '0px', JSON.stringify(s));
+  ok('탐색: 알약이 고른 탭 자리 · 탭 5개', s.op === '' && at(s) && s.n === 5, JSON.stringify(s));
   await shot(p, '#exploreSubtabs .xtab-row', 'tabpill_explore_1.png');
   let R = await run(p, '#exploreSubtabs .xtab-row', "document.querySelector('#exploreSubtabs .xtab-btn[data-xtab=\"balance\"]').click()", 1300); await p.waitForTimeout(100);
   s = await waitSettled(p, '#exploreSubtabs .xtab-row'); const W = R.map(r => r[2]), w0 = W[0], wMax = Math.max(...W), fin = R[R.length - 1];
@@ -49,10 +49,10 @@ const prep = async (b, opts, role) => {
   await shot(p, '#exploreSubtabs .xtab-row', 'tabpill_explore_4.png');
   R = await run(p, '#exploreSubtabs .xtab-row', "document.querySelector('#exploreSubtabs .xtab-btn[data-xtab=\"list\"]').click()", 1300); s = await waitSettled(p, '#exploreSubtabs .xtab-row'); ok('탐색: 반대(왼쪽) 이동도 늘어났다 정확히 멈춤', at(s) && Math.max(...R.map(r => r[2])) > R[0][2] + 30, JSON.stringify(s) + ' 폭 ' + R[0][2] + '→' + Math.max(...R.map(r => r[2])));
 
-  // 2) 마이 — 탭 3개(v8.84: 포트폴리오는 항해로)
+  // 2) 마이 — 탭 4개(실시간 현황 · 포트폴리오 · 누적 성과 · 운영 통계 — v9.35: 포트폴리오가 항해에서 이사)
   await p.evaluate(() => switchMobileTab('board')); await p.waitForTimeout(900);
   R = await run(p, '#boardSubtabs .xtab-row', "document.querySelector('#boardSubtabs .xtab-btn[data-btab=\"performance\"]').click()", 1200); s = await waitSettled(p, '#boardSubtabs .xtab-row');
-  ok('마이: 3개 줄 · 알약이 고른 탭 자리', at(s) && s.n === 3 && Math.max(...R.map(r => r[2])) > R[0][2] + 20, `${s.label} · 탭 ${s.n}개`); await shot(p, '#boardSubtabs .xtab-row', 'tabpill_board.png');
+  ok('마이: 4개 줄 · 알약이 고른 탭 자리', at(s) && s.n === 4 && Math.max(...R.map(r => r[2])) > R[0][2] + 20, `${s.label} · 탭 ${s.n}개`); await shot(p, '#boardSubtabs .xtab-row', 'tabpill_board.png');
 
   // 3) AI (관리자) — 줄을 innerHTML로 다시 그려도 알약이 이어서 움직임
   await p.evaluate(() => switchMobileTab('ai')); await p.waitForTimeout(900);
@@ -69,11 +69,11 @@ const prep = async (b, opts, role) => {
   await p.close();
 
   // 5) 좁은 화면 — 넘치면 가로로 밀기 + 고른 탭을 가운데로 + 양끝 흐림
-  p = await prep(b, { viewport: { width: 320, height: 800 } }, 'admin'); await p.evaluate(() => switchMobileTab('voyage')); await p.waitForTimeout(900);
-  s = await state(p, '#voyageSubtabs .xtab-row'); ok('좁은 화면(320): 항해 3개 줄이 넘쳐 가로로 밀림 · 오른쪽만 흐림', s.sw > s.cw + 2 && s.fl === '0px' && s.fr === '20px', `scrollWidth ${s.sw} / ${s.cw} · l=${s.fl} r=${s.fr}`); await shot(p, '#voyageSubtabs .xtab-row', 'tabpill_narrow_1.png');
-  const last = await p.evaluate(() => Array.from(document.querySelectorAll('#voyageSubtabs .xtab-btn')).pop().dataset.vtab);
-  R = await run(p, '#voyageSubtabs .xtab-row', `setVoyageSubtab('${last}')`, 1300); s = await state(p, '#voyageSubtabs .xtab-row');
-  ok('좁은 화면: 마지막 탭 선택 → 줄이 밀려 탭이 보이고 알약이 멈춤 · 왼쪽 흐림', at(s) && s.sl > 5 && s.fl === '20px', `scrollLeft ${s.sl.toFixed(0)} · ${s.label}`); await shot(p, '#voyageSubtabs .xtab-row', 'tabpill_narrow_2.png'); await p.close();
+  p = await prep(b, { viewport: { width: 320, height: 800 } }, 'admin'); await p.evaluate(() => switchMobileTab('explore')); await p.waitForTimeout(900);
+  s = await state(p, '#exploreSubtabs .xtab-row'); ok('좁은 화면(320): 탐색 5개 줄이 넘쳐 가로로 밀림 · 오른쪽만 흐림', s.sw > s.cw + 2 && s.fl === '0px' && s.fr === '20px', `scrollWidth ${s.sw} / ${s.cw} · l=${s.fl} r=${s.fr}`); await shot(p, '#exploreSubtabs .xtab-row', 'tabpill_narrow_1.png');
+  const last = await p.evaluate(() => Array.from(document.querySelectorAll('#exploreSubtabs .xtab-btn')).pop().dataset.xtab);
+  R = await run(p, '#exploreSubtabs .xtab-row', `setExploreSubtab('${last}')`, 1300); s = await state(p, '#exploreSubtabs .xtab-row');
+  ok('좁은 화면: 마지막 탭 선택 → 줄이 밀려 탭이 보이고 알약이 멈춤 · 왼쪽 흐림', at(s) && s.sl > 5 && s.fl === '20px', `scrollLeft ${s.sl.toFixed(0)} · ${s.label}`); await shot(p, '#exploreSubtabs .xtab-row', 'tabpill_narrow_2.png'); await p.close();
 
   // 6) 움직임 줄이기 — 튕김 없이 (오른쪽 가장자리가 목표를 넘지 않음)
   p = await prep(b, { reducedMotion: 'reduce' }, 'admin'); await p.evaluate(() => switchMobileTab('board')); await p.waitForTimeout(900);
@@ -97,14 +97,14 @@ const prep = async (b, opts, role) => {
   ok('뉴스(2개): 알약이 고른 탭 자리(안쪽 3)', Math.abs(g.x - g.tl) < 0.6 && Math.abs(g.right - g.tr) < 0.6, JSON.stringify({ x: g.x, tl: g.tl, right: g.right, tr: g.tr }));
   const minw = await p.evaluate(() => Math.min(...Array.from(document.querySelectorAll('#aiSubRow .xtab-btn')).filter(b => b.offsetWidth > 0).map(b => b.getBoundingClientRect().width)));
   ok('뉴스(2개): 탭 최소 폭 72 이상', minw >= 71.5, String(minw));
-  g = await geo('ai', '#aiSubRow'); ok('AI(3개): 글자 폭 알약 · 높이 36', g.fit && g.rh === 36 && g.rw < 300, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
-  g = await geo('explore', '.explore-subtabs#exploreSubtabs .xtab-row'); ok('탐색(3개): 글자 폭 알약 · 높이 36 · fit', g.fit && g.rh === 36 && g.rw < 300, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
-  ok('탐색(3개): 알약이 고른 탭 자리(안쪽 3)', Math.abs(g.x - g.tl) < 0.6 && Math.abs(g.right - g.tr) < 0.6, JSON.stringify({ x: g.x, tl: g.tl, right: g.right, tr: g.tr }));
+  g = await geo('ai', '#aiSubRow'); ok('AI(4개: 밸류체인이 이사 · 관리자): 꽉 채운 줄 · 높이 40', !g.fit && g.rh === 40, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
+  g = await geo('explore', '.explore-subtabs#exploreSubtabs .xtab-row'); ok('탐색(5개): 꽉 채운 줄 · 높이 40(글자 폭 알약은 3개 이하만)', !g.fit && g.rh === 40, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
+  ok('탐색(5개): 알약이 고른 탭 자리(안쪽 3)', Math.abs(g.x - g.tl) < 0.6 && Math.abs(g.right - g.tr) < 0.6, JSON.stringify({ x: g.x, tl: g.tl, right: g.right, tr: g.tr }));
   await p.evaluate(() => switchMobileTab('research')); await p.waitForTimeout(700); ok('AI리포트(v8.89): 거르기 알약 줄이 없음(검색 단추만)', await p.evaluate(() => !document.querySelector('#rpBar .xtab-row') && !!document.querySelector('#rpBar .rp-srch')));
-  g = await geo('board', '#boardSubtabs .xtab-row'); ok('마이(3개): 글자 폭 알약 · 높이 36', g.fit && g.rh === 36 && g.rw < 300, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
+  g = await geo('board', '#boardSubtabs .xtab-row'); ok('마이(4개): 꽉 채운 줄 · 높이 40', !g.fit && g.rh === 40, JSON.stringify({ fit: g.fit, h: g.rh, w: g.rw }));
   // 메뉴를 바꿔도(뉴스 2개 ↔ AI 3개 같은 줄) 줄 폭이 따라 바뀜
   g = await geo('news', '#aiSubRow'); const g2 = await geo('ai', '#aiSubRow'); const g3 = await geo('news', '#aiSubRow');
-  ok('같은 줄(#aiSubRow)이 뉴스 → AI → 뉴스로 바뀌어도 폭 규칙이 따라 바뀜', g.fit && g2.fit && g3.fit && g2.rw > g.rw + 20 && Math.abs(g3.rw - g.rw) < 2, JSON.stringify({ 뉴스: g.rw, AI: g2.rw, 다시뉴스: g3.rw }));
+  ok('같은 줄(#aiSubRow)이 뉴스(2개: 글자 폭) → AI(4개: 꽉 채움) → 뉴스로 바뀌어도 폭 규칙이 따라 바뀜', g.fit && !g2.fit && g3.fit && g2.rw > g.rw + 20 && Math.abs(g3.rw - g.rw) < 2, JSON.stringify({ 뉴스: g.rw, AI: g2.rw, 다시뉴스: g3.rw }));
   await p.screenshot({ path: path.join(OUT, 'tabpill_v82_news.png') });
   console.log(fails ? '\n실패 ' + fails + '건' : '\n전부 통과'); console.log('캡처:', OUT); await b.close(); process.exit(fails ? 1 : 0);
 })();

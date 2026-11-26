@@ -54,9 +54,9 @@ const shown = p => p.evaluate(() => Array.from(document.querySelectorAll('sectio
 
   // 5) 다른 메뉴는 그대로 — 연구 · AI · 탐색 · 마이 · 설정 토큰 관리
   await p.evaluate(() => switchMobileTab('research')); await p.waitForTimeout(900); t = await tabs(p, '#aiSubRow'); ok('연구: AI리포트 · 해자근거 (종목지도 · 모의매수 · 비교분석은 탐색 · 관심으로)', JSON.stringify(t) === JSON.stringify(['AI리포트', '해자근거']), t.join(' · '));
-  await p.evaluate(() => switchMobileTab('ai')); await p.waitForTimeout(900); t = await tabs(p, '#aiSubRow'); ok('AI(관리자): AI매니저 · AI예보 · AI세력분석', JSON.stringify(t) === JSON.stringify(['AI매니저', 'AI예보', 'AI세력분석']), t.join(' · '));
-  await p.evaluate(() => switchMobileTab('explore')); await p.waitForTimeout(900); ok('탐색: 탭 줄 그대로', (await tabs(p, '#exploreSubtabs')).length >= 3);
-  await p.evaluate(() => switchMobileTab('board')); await p.waitForTimeout(900); ok('마이: 실시간 현황 · 누적 성과 · 운영 통계 (포트폴리오는 항해로)', (await tabs(p, '#boardSubtabs')).length === 3);
+  await p.evaluate(() => switchMobileTab('ai')); await p.waitForTimeout(900); t = await tabs(p, '#aiSubRow'); ok('AI(관리자): AI매니저 · AI예보 · AI세력분석 · 밸류체인(항해에서 이사 · v9.35)', JSON.stringify(t) === JSON.stringify(['AI매니저', 'AI예보', 'AI세력분석', '밸류체인']), t.join(' · '));
+  await p.evaluate(() => switchMobileTab('explore')); await p.waitForTimeout(900); ok('탐색 페이지: 탭 줄 5칸(섹터동향 · 종목리스트 · 내부자 매수 · 밸런스 종목 · V시그널 · v9.35)', (await tabs(p, '#exploreSubtabs')).length === 5);
+  await p.evaluate(() => switchMobileTab('board')); await p.waitForTimeout(900); ok('마이: 실시간 현황 · 포트폴리오 · 누적 성과 · 운영 통계 (포트폴리오가 항해에서 이사 · v9.35)', (await tabs(p, '#boardSubtabs')).length === 4);
   await p.evaluate(() => { switchMobileTab('settings'); }); await p.waitForTimeout(900); ok('설정: 토큰 관리 행 그대로', await p.evaluate(() => Array.from(document.querySelectorAll('.set-row .sr-l')).some(e => e.textContent.trim() === '토큰 관리')));
   await p.close();
 
