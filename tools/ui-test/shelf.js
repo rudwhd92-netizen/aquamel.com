@@ -132,5 +132,17 @@ const vis = (p, sel) => p.evaluate(s => { const e = document.querySelector(s); r
   o = await over(); ok('폭 360 라이브러리(모두 펼침): 가로 넘침 없음', o.sw <= o.cw + 1 && o.right <= o.vw && o.doc <= o.vw, JSON.stringify(o));
   await p.screenshot({ path: path.join(OUT, 'shelf_3_narrow.png') }); await p.close();
 
+  // v9.39: 넓은 화면(가로 2분할) 왼쪽 메뉴
+  for (const admin of [true, false]) {
+    p = await prep(b, { viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 }, admin);
+    const rail = await p.evaluate(() => { const L = [...document.querySelectorAll('#mobileTabBar > .mtab-wide')].filter(x => getComputedStyle(x).display !== 'none'); const bt = document.querySelector('#mobileTabBar .mtab-btn[data-mtab="shelf"]'); const r = bt.getBoundingClientRect(); return { wide: document.documentElement.classList.contains('aq-wide'), names: L.map(x => x.getAttribute('aria-label')).join(), inView: r.width > 0 && r.bottom <= innerHeight && r.top >= 0 }; });
+    if (admin) {
+      ok('넓은 화면 왼쪽 메뉴: 자동 · 운영 · 책장 · 설정 (화면 안)', rail.wide && rail.names === '자동,운영,책장,설정' && rail.inView, JSON.stringify(rail));
+      await p.click('#mobileTabBar .mtab-btn[data-mtab="shelf"]'); await p.waitForTimeout(1500);
+      const o = await p.evaluate(() => { const f = document.getElementById('shelfFull'), r = f.getBoundingClientRect(), bar = document.getElementById('mobileTabBar').getBoundingClientRect(); return { open: f.classList.contains('open'), left: Math.round(r.left), bar: Math.round(bar.right) }; });
+      ok('왼쪽 메뉴에서 책장이 열리고 왼쪽 메뉴를 덮지 않음', o.open && o.left >= o.bar, JSON.stringify(o));
+    } else ok('넓은 화면 · 일반 회원: 책장 없음', rail.wide && !rail.names.includes('책장'), rail.names);
+    await p.close();
+  }
   console.log(fails ? '\n실패 ' + fails + '건' : '\n전부 통과'); console.log('캡처:', OUT); await b.close(); process.exit(fails ? 1 : 0);
 })();
