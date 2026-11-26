@@ -51,6 +51,10 @@ async function hold(p, sel, ms, dx) {
   ok('AI리포트(v8.89): 전문 보기 = 작은 글자 버튼(바탕 없음 · 터치 높이 44)', core.moreTxt === '전문 보기 ›' && core.moreH >= 44 && /rgba\(0, 0, 0, 0\)|transparent/.test(core.moreBg), JSON.stringify({ h: core.moreH, bg: core.moreBg }));
   const legacy = await p.evaluate(() => { const it = document.querySelector('#rpFeed .feed-item[data-ticker="PLD"]'); const rc = it && it.querySelector('.fl-front .rc'); return rc ? rc.innerText : ''; });
   ok('AI리포트: 옛 양식 보고서는 안내 문구 + 전문 보기(깨지지 않음)', /옛 양식/.test(legacy) && /보고서 전문 보기/.test(legacy), legacy.replace(/\s+/g, ' ').slice(0, 60));
+  // v9.36: 보고서 기준일 — 슬라이드 아래 줄(세 장 어디서나) · 점 · 전문 보기와 겹치지 않음 · 옛 양식은 파일 날짜
+  const rd = await p.evaluate(() => { const it = document.querySelector('#rpFeed .feed-item[data-ticker="CL"]'), d = it.querySelector('.fl-front .rs-foot .rs-date'); if (!d) return null; const r = d.getBoundingClientRect(), a = it.querySelector('.fl-front .rs-dots').getBoundingClientRect(), m = it.querySelector('.fl-front .rs-more').getBoundingClientRect(), c = it.querySelector('.fl-front .rs').getBoundingClientRect(); const pl = document.querySelector('#rpFeed .feed-item[data-ticker="PLD"] .fl-front .rs-date'); return { txt: d.textContent, w: Math.round(r.width), noOverlap: a.right <= r.left + 0.5 && r.right <= m.left + 0.5, inCard: m.right <= c.right + 0.5, oneLine: r.height < 24, pld: pl ? pl.textContent : '' }; });
+  ok('AI리포트(v9.36): 뒤집기 면에 보고서 기준일 · 점 · 전문 보기와 안 겹침 · 한 줄', !!rd && rd.txt === '기준일 26.11.20' && rd.w > 40 && rd.noOverlap && rd.inCard && rd.oneLine, JSON.stringify(rd));
+  ok('AI리포트(v9.36): 옛 양식 면에도 날짜(보고서 파일 날짜)', !!rd && rd.pld === '기준일 26.11.17', rd && rd.pld);
   const noChart = await p.evaluate(() => [...document.querySelectorAll('#rpFeed .feed-item')].map(i => !!(i.querySelector('canvas') && i.querySelector('canvas')._aqChart)));
   ok('AI리포트(모바일): 뒷면 차트는 아직 안 그림(지연 렌더링)', noChart.every(x => !x), JSON.stringify(noChart));
   ok('AI리포트(모바일): 시그널 이력은 숨김(발견과 같음)', await p.evaluate(() => getComputedStyle(document.querySelector('#rpFeed .feed-side')).display) === 'none');
