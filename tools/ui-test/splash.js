@@ -27,7 +27,23 @@ const water = p => p.evaluate(() => { const d = document.getElementById('splashD
   await p.evaluate(() => { splashUpdate(100); splashHide(); }); await p.waitForTimeout(330); await shot('splash2');
   const mid = await p.evaluate(() => { const h = [...document.querySelectorAll('.hero h1 > span')]; return { out: document.getElementById('splashOverlay').classList.contains('fade-out'), plain: document.getElementById('splashOverlay').classList.contains('plain'), hidden: h.every(x => x.style.visibility === 'hidden') }; });
   ok('이름이 머리글로 날아가는 중(머리글은 잠시 가림)', mid.out && !mid.plain && mid.hidden, JSON.stringify(mid));
-  await p.waitForTimeout(1300); await shot('splash3');
+  // v9.47: 걷히기 직전의 날아온 글자 = 머리글 글자(튀지 않음) · 가는 길에 두 이름의 글자가 겹치지 않음
+  await p.evaluate(() => splashShow()); await p.waitForTimeout(300);
+  const path_ = await p.evaluate(() => new Promise(res => {
+    const mid = e => { const r = document.createRange(); r.selectNodeContents(e); const q = r.getBoundingClientRect(); return { x: q.left, y: q.top + q.height / 2, w: q.width }; };
+    const o = document.getElementById('splashOverlay'); let last = null, clash = 0, n = 0;
+    const look = () => {
+      if (o.style.display === 'none') return res({ n, clash, last, head: [...document.querySelectorAll('.hero h1 > span')].map(mid) });
+      if (o.classList.contains('fade-out')) { const [a, c] = [...document.getElementById('splashBrand').children].map(mid); last = [a, c]; n++; const size = a.w / 123.3 * 19;   // 글자 높이(대문자) ≈ 19px
+        if (c.x < a.x + a.w - 1 && c.x + c.w > a.x + 1 && Math.abs(c.y - a.y) < size) clash++; }
+      requestAnimationFrame(look);
+    };
+    splashUpdate(100); splashHide(); requestAnimationFrame(look);
+  }));
+  const gapPx = path_.last ? Math.max(...path_.last.map((q, i) => Math.max(Math.abs(q.x - path_.head[i].x), Math.abs(q.y - path_.head[i].y), Math.abs(q.w - path_.head[i].w)))) : 999;
+  ok('마지막 날던 글자 = 머리글 글자(2px 안)', gapPx <= 2, gapPx.toFixed(2) + 'px');
+  ok('가는 길에 AQUAMEL · INVESTMENT 글자가 겹치지 않음', path_.n > 3 && path_.clash === 0, path_.clash + ' / ' + path_.n + '장면');
+  await p.waitForTimeout(300); await shot('splash3');
   ok('다 걷힘 · 머리글 다시 보임', await p.evaluate(() => document.getElementById('splashOverlay').style.display === 'none' && [...document.querySelectorAll('.hero h1 > span')].every(x => !x.style.visibility)));
   await p.evaluate(() => splashShow()); await p.waitForTimeout(300);
   ok('다시 띄우면 처음 상태', await p.evaluate(() => { const o = document.getElementById('splashOverlay'); return o.style.display === 'flex' && !o.classList.contains('fade-out') && !document.getElementById('splashDisc').style.transform && [...document.getElementById('splashBrand').children].every(x => !x.style.transform) && /^\d%$/.test(document.getElementById('splashProgressText').textContent); }));
