@@ -1,28 +1,25 @@
-// 상단 머리글 시험 — node tools/ui-test/header.js   (v9.44 · 실제 공개 data.json · 일정 파일을 읽기만 함)
+// 상단 머리글 시험 — node tools/ui-test/header.js   (v9.45 · 실제 공개 data.json · 일정 파일을 읽기만 함)
 //   앱을 먼저 띄운다: python3 -m http.server 8773 &   · CHANNEL=msedge 로 설치된 브라우저를 쓸 수 있다
 const { chromium } = require('playwright'); const path = require('path'), fs = require('fs');
 const OUT = process.env.OUT || path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const URL = process.env.URL || 'http://localhost:8773/index.html';
 let fails = 0; const ok = (n, c, x) => { console.log((c ? 'PASS ' : 'FAIL ') + n + (x ? '  · ' + x : '')); if (!c) fails++; };
-async function open(b, w, h) {
+async function open(b, w, h, at) {
   const ctx = await b.newContext({ viewport: { width: w, height: h }, serviceWorkers: 'block' }); await ctx.route('**/data/schedule/**', async r => { const res = await r.fetch(); await r.fulfill({ response: res, headers: { ...res.headers(), 'access-control-allow-origin': '*' } }); });   // 로컬 주소는 CORS 허용 목록 밖
-  const p = await ctx.newPage(); const errs = [];
+  const p = await ctx.newPage(); const errs = []; if (at) await p.clock.setFixedTime(new Date(at));
   p.on('pageerror', e => { if (!/discoverMotionView/.test(e.message)) errs.push(e.message); });
   await p.goto(URL, { timeout: 60000, waitUntil: 'domcontentloaded' }); await p.addStyleTag({ content: '.aq-auth{display:none!important}' });
   await p.evaluate(() => new MutationObserver(() => document.querySelectorAll('.aq-auth.open').forEach(x => x.classList.remove('open'))).observe(document.body, { subtree: true, attributes: true, childList: true }));
   await p.waitForFunction(() => document.getElementById('splashOverlay').style.display === 'none', null, { timeout: 90000, polling: 30 });
-  const water = await p.evaluate(() => document.querySelector('.hero h1 .hl').style.clipPath.slice(0, 8));
   await p.waitForFunction(() => !document.getElementById('aqMst').hidden && document.querySelector('.hero-marquee-track .macro-chip'), null, { timeout: 30000, polling: 200 }); await p.waitForTimeout(2500);
-  return { p, errs, ctx, water };
+  return { p, errs, ctx };
 }
 const rect = (p, s) => p.evaluate(s => { const e = document.querySelector(s); if (!e) return null; const r = e.getBoundingClientRect(); return { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height), r: Math.round(r.right), b: Math.round(r.bottom) }; }, s);
 const cross = (a, b) => a && b && a.x < b.r - 1 && b.x < a.r - 1 && a.y < b.b - 1 && b.y < a.b - 1;
 (async () => {
   const b = await chromium.launch({ channel: process.env.CHANNEL || undefined });
-  let { p, errs, ctx, water } = await open(b, 390, 844); const wait = ms => p.waitForTimeout(ms); const shot = n => p.screenshot({ path: path.join(OUT, n + '.png') });
-  ok('켤 때 AQUA에 물이 참(자름이 걸렸다가 풀림)', water === 'polygon(' || water === 'inset(10', water);
-  await p.waitForFunction(() => !document.querySelector('.hero h1 .hl').style.clipPath, null, { timeout: 6000, polling: 100 }).catch(() => {});
-  ok('다 차면 원래대로', await p.evaluate(() => !document.querySelector('.hero h1 .hl').style.clipPath && document.querySelectorAll('.hero h1 > span').length === 2 && document.querySelector('.hero h1').children.length === 2), await p.evaluate(() => { const h = document.querySelector('.hero h1'); return JSON.stringify([h.querySelector('.hl').style.clipPath.slice(0, 30), [...h.children].map(c => c.tagName + '.' + c.className)]); }));
+  let { p, errs, ctx } = await open(b, 390, 844); const wait = ms => p.waitForTimeout(ms); const shot = n => p.screenshot({ path: path.join(OUT, n + '.png') });
+  ok('머리글 AQUA는 가만히(물 차기 없음)', await p.evaluate(() => { const h = document.querySelector('.hero h1'); return !h.querySelector('.hl').style.clipPath && h.children.length === 2 && !window.aqHeadWater; }));
   const at = await p.evaluate(() => { const y = s => Math.round(document.querySelector(s).getBoundingClientRect().top); return [y('.hero h1 .brand-aquamel'), y('.hero .market-switch'), y('#heroMarquee'), y('#buyPointsCard h2')].join(); });
   ok('평소 위치 그대로(이름 · 전환 · MACRO · 아래 제목)', at === '78,117,171,240', at);
   /* 장 상태 */
@@ -77,5 +74,22 @@ const cross = (a, b) => a && b && a.x < b.r - 1 && b.x < a.r - 1 && a.y < b.b - 
   const q = await p.evaluate(() => { const bg = document.querySelector('#aqHeadBar.on .hb-bg'), col = document.querySelector('.hero').getBoundingClientRect(); if (!bg) return null; const r = bg.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.right), Math.round(col.left), Math.round(col.right)]; });
   ok('넓은 화면: 접힌 줄이 왼쪽 칸 안', !!q && q[0] >= q[2] - 19 && q[1] <= q[3] + 19, JSON.stringify(q));
   ok('넓은 화면 오류 없음', errs.length === 0, errs.join(' | ').slice(0, 200));
+  /* 장중(게이지가 있는 상태) — 게이지와 US|KR이 평소에도, 올리는 중에도 안 겹침 */
+  for (const [w, h] of [[360, 740], [390, 844], [1280, 720]]) {
+    ({ p, errs, ctx } = await open(b, w, h, '2026-11-30T12:00:00-05:00'));
+    const a = await rect(p, '#aqMst'), s = await rect(p, '.hero .market-switch');
+    ok(w + ' 장중: 게이지가 US|KR 위로 8px 이상', !!(await rect(p, '#aqMst u')) && s.y - a.b >= 8, 'mst ' + a.y + '~' + a.b + ' · switch ' + s.y);
+    await p.screenshot({ path: path.join(OUT, 'open' + w + '.png') });
+    const bad = [];
+    for (let y = 0; y <= 140; y += 3) {
+      await p.evaluate(y => { let e = document.querySelector('.hero').parentElement; while (e && !(e.scrollHeight > e.clientHeight + 50 && /auto|scroll/.test(getComputedStyle(e).overflowY))) e = e.parentElement; (e || document.scrollingElement).scrollTop = y; }, y); await p.waitForTimeout(90);
+      const hit = await p.evaluate(() => { const m = document.getElementById('aqMst'); if (+getComputedStyle(m).opacity < .02) return ''; const r = m.getBoundingClientRect();
+        const others = [...document.querySelectorAll('#aqHeadBar.on .hb-g.market-switch, #aqHeadBar.on button.hb-g'), ...[document.querySelector('.hero .market-switch'), ...document.querySelectorAll('.mobile-topbar .mobile-topbar-btn')].filter(e => getComputedStyle(e).visibility !== 'hidden' && e.getClientRects().length)];
+        return others.some(e => { const x = e.getBoundingClientRect(); return x.left < r.right - 1 && r.left < x.right - 1 && x.top < r.bottom - 1 && r.top < x.bottom - 1; }) ? 'op ' + getComputedStyle(m).opacity : ''; });
+      if (hit) bad.push(y + ' ' + hit);
+    }
+    ok(w + ' 장중: 올리는 중에도 안 겹침', bad.length === 0, bad.slice(0, 4).join(' | '));
+    ok(w + ' 장중: 오류 없음', errs.length === 0, errs.join(' | ').slice(0, 200)); await ctx.close();
+  }
   console.log(fails ? '\n실패 ' + fails + '건' : '\n모두 통과'); await b.close(); process.exit(fails ? 1 : 0);
 })();
