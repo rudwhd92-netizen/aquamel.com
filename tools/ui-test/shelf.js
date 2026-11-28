@@ -62,6 +62,18 @@ async function open(b, w, h, admin, draft) {
   ok('명부 좌석표', await p.locator('#seats i').count() === 30, String(await p.locator('#seats i').count()));
   ok('섹터 이름은 그림글자 없이 보임', !/💾/.test(await st()));
 
+  /* v9.49: 전체 · 주전 · 후보 거르기 (미국 30곳 = 주전 26 · 후보 4) */
+  const gr = () => p.evaluate(() => { const r = document.querySelector('.shelf-host').shadowRoot, seg = r.getElementById('grSeg'), b = [...seg.querySelectorAll('button')], pl = seg.querySelector('.pill').getBoundingClientRect(), on = b.find(x => x.getAttribute('aria-selected') === 'true'), o = on.getBoundingClientRect(); return { label: b.map(x => x.textContent).join(' '), on: on.textContent, under: Math.abs(pl.left - o.left) < 2 && Math.abs(pl.width - o.width) < 2, n: r.querySelector('#rlist .ln-n').textContent, grades: [...new Set([...r.querySelectorAll('#rlist .co .gr')].map(x => x.textContent))].join(), h: Math.round(seg.getBoundingClientRect().height) }; });
+  const g0 = await gr(); ok('거르기: 수 · 처음은 전체', g0.label === '전체30 주전26 후보4' && g0.on === '전체30' && g0.under && g0.h === 44, JSON.stringify(g0));
+  await click('#grSeg [data-gr="후보"]'); const gc = await gr(); ok('후보만', gc.n === '4곳' && gc.grades === '후보' && gc.under, JSON.stringify(gc));
+  await p.screenshot({ path: path.join(OUT, 'shelf_gr.png') });
+  await p.locator('#rq').fill('t9'); await wait(500); const gq = await gr(); ok('검색과 함께: 수가 따라감', gq.label === '전체1 주전0 후보1' && gq.n === '1곳', JSON.stringify(gq)); await p.locator('#rq').fill(''); await wait(400);
+  await click('[data-mk="KR"]'); const gk = await gr(); ok('시장을 바꿔도 고른 거르기 유지', gk.on.startsWith('후보') && gk.grades === '후보' && gk.under, JSON.stringify(gk)); await click('[data-mk="US"]');
+  await click('#grSeg [data-gr="주전"]'); const gj = await gr(); ok('주전만', gj.n === '26곳' && gj.grades === '주전', JSON.stringify(gj));
+  await click('[data-multi]'); await click('#rlist [data-co="T1"]', 300); await click('#grSeg [data-gr="후보"]', 500);
+  ok('거르기를 바꾸면 고른 것은 비움', await p.evaluate(() => /0곳 고름/.test(document.querySelector('.shelf-host').shadowRoot.textContent)));
+  await click('[data-multi]'); await click('#grSeg [data-gr=""]');
+
   /* 종목 고치기 → 저장 */
   await click('#rlist [data-co="T1"]', 1100);
   ok('티커는 고칠 수 없음 · 한 줄 정의 20자', await p.locator('#sheet [data-k="t"]').getAttribute('readonly') !== null && await p.locator('#sheet [data-k="brief"]').getAttribute('maxlength') === '20');
