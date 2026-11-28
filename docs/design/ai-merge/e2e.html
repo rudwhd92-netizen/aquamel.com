@@ -1,0 +1,513 @@
+<meta charset="utf-8">
+<title>AI 항해 시안</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap">
+<style>
+/* 구성: 머리 → [장면 목록 | 눌러 보는 폰 | 이 화면 설명] → 화면 모음(같은 코드로 그림) → 자료가 어디서 오나
+   폰 안: A 항로(세로 선 + 정거장) · 지금 단계만 펼침 · 자세한 것은 새 페이지 · 돈이 드는 동작은 확인 창 + 길게 누르기 + 5초 되돌리기 */
+:root {
+  --page-bg: #eef0f2; --page-fg: #16181b; --page-dim: #565b63; --page-line: #d5d9de; --page-card: #fafbfc; --page-tag: #2a6cb0;
+  --bg: #161618; --panel: #1c1c1f; --surface: #222226; --object: #2c2c2c; --f1: rgba(255,255,255,.05); --f2: rgba(255,255,255,.09); --f3: rgba(255,255,255,.14);
+  --hi: #fff; --text: #d4d4d4; --dim: #9d9d9d; --mute: #85858a; --accent: #569cd6; --soft: #22303d; --soft-t: #8fc0ec; --deep: #2f6aa8; --up: #40c057; --down: #ff6b6b; --warn: #dcdcaa;
+  --font: 'Pretendard Variable', Pretendard, 'Noto Sans KR', -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page-bg: #0c0d0f; --page-fg: #eceef0; --page-dim: #9aa0a8; --page-line: #272a2f; --page-card: #15171a; --page-tag: #8fc0ec; color-scheme: dark; } }
+:root[data-theme="dark"] { --page-bg: #0c0d0f; --page-fg: #eceef0; --page-dim: #9aa0a8; --page-line: #272a2f; --page-card: #15171a; --page-tag: #8fc0ec; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; word-break: keep-all; overflow-wrap: anywhere; background: var(--page-bg); color: var(--page-fg); font: 400 13px/1.6 var(--font); font-variant-numeric: tabular-nums; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px; }
+button, input { font: inherit; color: inherit; }
+button { border: 0; background: none; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; text-align: inherit; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1180px; margin: 0 auto; }
+h1 { font-size: 26px; line-height: 1.3; margin: 0 0 6px; text-wrap: balance; }
+h2 { font-size: 18px; margin: 40px 0 4px; }
+.lead { margin: 0; color: var(--page-dim); }
+.stage { display: grid; grid-template-columns: 250px 390px minmax(0, 1fr); gap: 28px; margin-top: 22px; align-items: start; }
+.scenes { display: flex; flex-direction: column; gap: 4px; }
+.scenes h3 { font-size: 11px; letter-spacing: .06em; color: var(--page-dim); margin: 10px 0 2px; }
+.scenes h3:first-child { margin-top: 0; }
+.scenes button { min-height: 44px; padding: 4px 14px; border-radius: 12px; display: flex; gap: 10px; align-items: center; text-align: left; font-weight: 600; }
+.scenes button small { color: var(--page-dim); font-weight: 500; width: 42px; flex: none; }
+.scenes button[aria-pressed="true"] { background: var(--page-fg); color: var(--page-bg); }
+.scenes button[aria-pressed="true"] small { color: inherit; opacity: .7; }
+.note { background: var(--page-card); border: 1px solid var(--page-line); border-radius: 18px; padding: 18px 20px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.note h3 { margin: 0 0 8px; font-size: 15px; }
+.note dt { color: var(--page-dim); font-size: 11px; font-weight: 700; letter-spacing: .06em; margin-top: 12px; }
+.note dd { margin: 2px 0 0; }
+.note ul { margin: 2px 0 0; padding-left: 18px; }
+@media (max-width: 1100px) { .stage { grid-template-columns: 230px minmax(0, 390px); justify-content: center; } .note { grid-column: 1 / -1; position: static; } }
+@media (max-width: 720px) { .stage { grid-template-columns: minmax(0, 1fr); } .scenes { flex-direction: row; flex-wrap: wrap; } .scenes h3 { width: 100%; } .scenes button { border: 1px solid var(--page-line); background: var(--page-card); } .scenes button small { width: auto; } }
+
+/* ───── 폰 ───── */
+.phone { position: relative; width: 390px; max-width: 100%; height: 780px; border-radius: 40px; overflow: hidden; background: var(--bg); color: var(--text); border: 1px solid var(--page-line); color-scheme: dark; user-select: none; -webkit-user-select: none; font-size: 13px; line-height: 1.55; text-align: left; justify-self: center; }
+.pg { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.pg::-webkit-scrollbar { display: none; }
+svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.meta { color: var(--mute); font-size: 12px; }
+.k { display: block; color: var(--mute); font-size: 11px; font-weight: 700; letter-spacing: .06em; margin-bottom: 6px; }
+.up { color: var(--up); } .down { color: var(--down); } .warn { color: var(--warn); }
+.hd { padding: 22px 20px 10px; }
+.hd .r { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.hd h4 { margin: 0; font-size: 26px; font-weight: 900; color: var(--hi); letter-spacing: -.01em; }
+.hd p { margin: 6px 0 0; font-size: 15px; color: var(--text); }
+.ico { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; position: relative; flex: none; }
+.ico i { position: absolute; top: 8px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--down); }
+.nav { position: sticky; top: 0; z-index: 3; background: var(--bg); display: flex; align-items: center; gap: 4px; padding: 10px 10px 6px; }
+.nav b { font-size: 15px; color: var(--hi); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav .meta { padding-right: 12px; white-space: nowrap; }
+.body { padding: 4px 20px 32px; }
+.card { background: var(--panel); border-radius: 24px; padding: 18px; margin-top: 8px; }
+.card + .card { margin-top: 8px; }
+.sec { margin: 22px 0 0; font-size: 15px; font-weight: 700; color: var(--hi); display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.sec span { font-size: 12px; font-weight: 500; color: var(--mute); }
+.more { min-height: 44px; margin: 6px 0 -12px; color: var(--soft-t); font-weight: 700; display: inline-block; }
+.big { font-size: 44px; font-weight: 900; color: var(--hi); line-height: 1.15; letter-spacing: -.02em; }
+.big small { font-size: 18px; font-weight: 700; color: var(--dim); margin-left: 8px; letter-spacing: 0; }
+.row { display: flex; align-items: center; gap: 12px; min-height: 54px; width: 100%; text-align: left; }
+.row > div { flex: 1; min-width: 0; }
+.row b { display: block; color: var(--hi); font-weight: 600; font-size: 15px; }
+.row .meta { display: block; }
+.lg { width: 40px; height: 40px; border-radius: 50%; background: var(--f2); display: inline-grid; place-items: center; font-weight: 800; font-size: 15px; color: var(--hi); border: 2px solid var(--rg, transparent); flex: none; }
+.tag { flex: none; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: var(--f2); color: var(--dim); white-space: nowrap; }
+.tag.on { background: var(--soft); color: var(--soft-t); }
+.tag.bad { color: var(--down); } .tag.good { color: var(--up); }
+.btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 52px; padding: 0 16px; border-radius: 999px; background: rgba(127,127,127,.16); color: var(--text); font-weight: 700; text-align: center; white-space: nowrap; position: relative; overflow: hidden; }
+.btn.pri { background: var(--deep); color: #fff; }
+.btn.sm { min-height: 44px; width: auto; flex: none; }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn.hold { touch-action: none; background: var(--soft); color: #fff; }
+.btn.hold i { position: absolute; inset: 0; background: var(--deep); transform-origin: left; transform: scaleX(0); }
+.btn.hold span { position: relative; }
+.btns { display: flex; gap: 8px; margin-top: 12px; }
+.kv { display: flex; justify-content: space-between; gap: 14px; padding: 5px 0; }
+.kv span { color: var(--mute); flex: none; }
+.kv b { color: var(--text); font-weight: 600; text-align: right; min-width: 0; }
+
+/* 항로 */
+.route { position: relative; padding: 6px 14px 40px 52px; }
+.route .card { padding: 16px 14px; }
+.route .row { gap: 10px; padding: 6px 0; }
+.route .lg { width: 36px; height: 36px; }
+.route .row b { font-size: 14px; line-height: 1.4; }
+.st { position: relative; padding-bottom: 10px; }
+.st::before { content: ''; position: absolute; left: -26px; top: 0; bottom: 0; width: 3px; background: var(--f2); }
+.st:first-child::before { top: 24px; }
+.st:last-child::before { bottom: auto; height: 24px; }
+.st.past::before { background: var(--accent); }
+.st.now::before { background: linear-gradient(var(--accent) 24px, var(--f2) 24px); }
+.st > .dot { position: absolute; left: -32px; top: 16px; width: 15px; height: 15px; border-radius: 50%; background: var(--bg); border: 2px solid var(--mute); }
+.st.past > .dot { background: var(--accent); border-color: var(--accent); }
+.st.now > .dot { width: 23px; height: 23px; left: -36px; top: 12px; background: var(--hi); border: 5px solid var(--accent); }
+.st.alert > .dot { border-color: var(--warn); }
+.sth { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 50px; text-align: left; }
+.sth .t { width: 40px; flex: none; color: var(--mute); font-size: 12px; font-weight: 600; }
+.sth > span:nth-child(2) { flex: 1; min-width: 0; }
+.sth b { display: block; color: var(--hi); font-size: 15px; }
+.sth small { display: block; color: var(--mute); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st.future .sth b { color: var(--dim); }
+.sth svg { color: var(--mute); transition: transform .2s; }
+.st.open .sth svg { transform: rotate(180deg); }
+
+/* 그림 */
+.axis { position: relative; height: 20px; margin: 4px 7px 0; }
+.axis::before { content: ''; position: absolute; left: 0; right: 0; top: 9px; height: 2px; background: var(--f2); }
+.axis i { position: absolute; top: 8px; height: 4px; background: var(--accent); border-radius: 2px; }
+.axis b, .axis u { position: absolute; top: 4px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--hi); }
+.axis u { border: 2px solid var(--accent); background: var(--panel); }
+.legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--mute); margin-top: 4px; }
+.gapbtn { display: block; width: 100%; padding: 8px 0; text-align: left; }
+.gapbtn .n { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; color: var(--hi); font-weight: 600; }
+.gapbtn .n .meta { flex: none; white-space: nowrap; font-weight: 500; }
+.prob { display: flex; gap: 3px; height: 8px; margin-top: 12px; }
+.prob i { border-radius: 4px; background: var(--f2); } .prob i.on { background: var(--accent); }
+.prob-l { display: flex; justify-content: space-between; font-size: 11px; color: var(--mute); margin-top: 4px; }
+.ladder { position: relative; height: 46px; margin: 14px 8px 0; }
+.ladder i { position: absolute; left: 0; right: 0; top: 14px; height: 2px; background: var(--f2); }
+.ladder span { position: absolute; top: 9px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--mute); }
+.ladder span.l { background: var(--hi); width: 16px; height: 16px; top: 7px; margin-left: -8px; }
+.ladder em { position: absolute; top: 25px; transform: translateX(-50%); font-style: normal; font-size: 11px; color: var(--mute); white-space: nowrap; }
+.chart { display: block; width: 100%; height: 110px; margin-top: 10px; border-radius: 14px; background: var(--f1); }
+.chart path { stroke: var(--hi); stroke-width: 2; }
+.chart line { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.judges { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--dim); }
+.judges i { width: 9px; height: 9px; border-radius: 50%; background: var(--hi); } .judges i.o { background: transparent; border: 1.5px solid var(--mute); }
+.abc { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+.abc div { background: var(--surface); border-radius: 14px; padding: 10px 8px; }
+.abc div.pick { background: var(--soft); }
+.abc b { display: block; color: var(--hi); } .abc span { font-size: 11px; color: var(--mute); }
+.stg { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin-top: 12px; }
+.stg span { font-size: 11px; color: var(--mute); text-align: center; border-top: 3px solid var(--f2); padding-top: 4px; }
+.stg span.on { color: var(--hi); border-color: var(--accent); font-weight: 700; }
+.map { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 56px; gap: 4px; margin-top: 10px; }
+.map button { border-radius: 6px; background: var(--surface); display: grid; place-items: center; align-content: center; color: var(--hi); font-weight: 700; border: 2px solid transparent; text-align: center; line-height: 1.3; }
+.map button small { font-weight: 500; font-size: 11px; color: var(--mute); }
+.map .w-up { border-color: var(--up); } .map .w-down { border-color: var(--down); }
+.steps li { display: flex; gap: 12px; align-items: center; min-height: 36px; color: var(--mute); }
+.steps { list-style: none; padding: 0; margin: 10px 0 0; }
+.steps i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--f3); flex: none; }
+.steps .done { color: var(--text); } .steps .done i { background: var(--accent); border-color: var(--accent); }
+.steps .cur { color: var(--hi); font-weight: 700; } .steps .cur i { border: 4px solid var(--accent); background: var(--hi); }
+.banner { border-radius: 14px; background: var(--f2); padding: 12px 14px; margin-top: 8px; color: var(--hi); }
+.banner .meta { display: block; }
+.empty { text-align: center; padding: 28px 12px; color: var(--dim); }
+.empty b { display: block; color: var(--hi); font-size: 18px; margin-bottom: 4px; }
+.tabs { display: flex; gap: 4px; background: var(--f1); border-radius: 999px; padding: 3px; margin-top: 4px; }
+.tabs button { flex: 1; min-height: 38px; border-radius: 999px; font-weight: 600; color: var(--dim); text-align: center; white-space: nowrap; position: relative; }
+.tabs button::before { content: ''; position: absolute; inset: -3px 0; }
+.tabs button[aria-selected="true"] { background: var(--f3); color: var(--hi); }
+.nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+.nums div { background: var(--panel); border-radius: 14px; padding: 12px 6px; text-align: center; }
+.nums b { display: block; font-size: 18px; color: var(--hi); } .nums span { font-size: 11px; color: var(--mute); }
+.act { position: sticky; bottom: 0; z-index: 3; background: var(--bg); padding: 10px 20px 20px; display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 8px; }
+.dots { display: flex; gap: 5px; align-items: center; padding-right: 14px; }
+.dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--f3); } .dots i.on { width: 20px; border-radius: 999px; background: var(--hi); } .dots i.done { background: var(--accent); }
+.veil { position: absolute; inset: 0; background: rgba(0,0,0,.55); z-index: 5; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; max-height: 86%; overflow-y: auto; background: var(--panel); border-radius: 28px 28px 0 0; z-index: 6; padding: 8px 22px 24px; scrollbar-width: none; }
+.sheet .grip { display: block; width: 36px; height: 4px; border-radius: 2px; background: var(--f3); margin: 4px auto 14px; }
+.sheet h5 { margin: 0 0 10px; font-size: 18px; color: var(--hi); line-height: 1.4; }
+.sheet input[type="text"] { width: 100%; height: 52px; border-radius: 14px; border: 0; background: var(--f1); padding: 0 14px; font-size: 16px; color: var(--hi); user-select: text; -webkit-user-select: text; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chips button { min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--f2); }
+.chips button[aria-pressed="true"] { background: var(--soft); color: var(--soft-t); font-weight: 700; }
+.sw { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; }
+.sw b { display: block; color: var(--hi); }
+.sw input { width: 44px; height: 26px; accent-color: var(--deep); flex: none; }
+.toast { position: absolute; left: 14px; right: 14px; bottom: 98px; z-index: 7; background: var(--object); border-radius: 14px; padding: 6px 6px 6px 16px; display: flex; align-items: center; gap: 10px; color: var(--hi); font-weight: 600; min-height: 56px; }
+.toast span { flex: 1; min-width: 0; }
+.toast i { position: absolute; left: 16px; right: 16px; bottom: 4px; height: 2px; border-radius: 2px; background: var(--accent); transform-origin: left; }
+
+/* ───── 화면 모음 ───── */
+.board h3 { font-size: 15px; margin: 22px 0 10px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px 14px; }
+.shot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.frame { position: relative; width: 190px; height: 380px; overflow: hidden; border-radius: 20px; }
+.frame .phone { width: 390px; max-width: none; transform: scale(.4872); transform-origin: top left; position: absolute; top: 0; left: 0; pointer-events: none; }
+.cover { position: absolute; inset: 0; z-index: 10; border-radius: 20px; width: 100%; }
+.shot b { font-size: 12px; text-align: center; font-weight: 600; max-width: 190px; }
+.data { margin-top: 36px; background: var(--page-card); border: 1px solid var(--page-line); border-radius: 18px; padding: 18px 20px; }
+.data h2 { margin-top: 0; font-size: 15px; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 520px; }
+td, th { padding: 6px 12px 6px 0; text-align: left; vertical-align: top; border-top: 1px solid var(--page-line); }
+th { font-size: 12px; color: var(--page-dim); border-top: 0; }
+</style>
+
+<div class="wrap">
+  <h1>AI 항해, 처음부터 끝까지</h1>
+  <p class="lead">AI 예보와 AI 매니저를 한 화면 흐름으로 합쳤어요. 왼쪽에서 장면을 고르고 폰을 눌러 보세요. [ ] 칸은 실제 값 자리예요.</p>
+  <div class="stage">
+    <nav class="scenes" aria-label="장면"></nav>
+    <div class="phone" id="live"></div>
+    <aside class="note" aria-live="polite"></aside>
+  </div>
+  <section class="board"><h2>화면 모음</h2><p class="lead">모든 화면과 상태예요. 누르면 위 폰에서 열려요.</p><div id="board"></div></section>
+  <section class="data"><h2>화면의 자료는 어디서 오나</h2><div class="tbl"><table>
+    <tr><th>화면에 보이는 것</th><th>지금 서버가 주는 곳</th><th>지금 앱</th></tr>
+    <tr><td>시장 결론 · 올리는/내리는 압력 · 뒤집힐 신호</td><td>forecastGet 의 close</td><td>예보 화면에 안 보임</td></tr>
+    <tr><td>주제(시장 vs AI) · 지켜보는 일 · 주제 상세</td><td>forecastGet 의 j</td><td>AI 예보</td></tr>
+    <tr><td>갈림길의 경우 · 내 계좌 손익 · 경제 일정</td><td>forecastGet 의 cards · cal</td><td>안 보임</td></tr>
+    <tr><td>종목 날씨</td><td>macroJudgeGet</td><td>일부</td></tr>
+    <tr><td>단계 진행 · 제안 · 결정 · 주문 상태 · 주시</td><td>macroJudgeGet · managerToday</td><td>AI 매니저</td></tr>
+    <tr><td>판단 근거 전체</td><td>managerStock</td><td>AI 매니저</td></tr>
+    <tr><td>신뢰 기록 · 통합 성적 · 다르게 한 것</td><td>managerTrack · scoreGet · mgrDiffList</td><td>AI 매니저</td></tr>
+  </table></div><p class="lead" style="margin-top:12px">서버 코드를 읽고 적었어요. 실제 응답은 로그인해서 확인하지 않았어요.</p></section>
+</div>
+
+<script>
+(() => {
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const I = {
+  back: '<svg width="22" height="22" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>',
+  x: '<svg width="22" height="22" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  down: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>',
+  bell: '<svg width="22" height="22" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7M10 20h4"/></svg>',
+  chart: '<svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>',
+};
+const lg = (k, ring) => `<span class="lg"${ring ? ` style="--rg:var(--${ring})"` : ''}>${k}</span>`;
+const kv = (k, v) => `<div class="kv"><span>${k}</span><b>${v}</b></div>`;
+const sec = (t, r) => `<div class="sec">${t}${r ? `<span>${r}</span>` : ''}</div>`;
+const nav = (title, right, close) => `<div class="nav"><button type="button" class="ico" data-back aria-label="${close ? '닫기' : '뒤로'}">${close ? I.x : I.back}</button><b>${title}</b>${right || ''}</div>`;
+const gap = (n, m, a, g, go) => `<button type="button" class="gapbtn"${go ? ` data-go="${go}"` : ''}><span class="n"><span>${n}</span><span class="meta">${g || '간격 [N]'}</span></span><span class="axis" style="display:block"><i style="left:${Math.min(m, a)}%;width:${Math.abs(a - m)}%"></i><b style="left:${m}%"></b><u style="left:${a}%"></u></span></button>`;
+const legend = '<div class="legend"><span>비관</span><span>● 시장 · ○ AI</span><span>낙관</span></div>';
+const judges = (y, n) => `<div class="judges">${'<i></i>'.repeat(y)}${'<i class="o"></i>'.repeat(n)}<span>판단 셋 ${y}:${n}</span></div>`;
+const chart = '<svg class="chart" viewBox="0 0 320 110" preserveAspectRatio="none" aria-label="3개월 가격 모양 예시"><line x1="0" y1="34" x2="320" y2="34"/><path d="M8 82 40 74 70 90 100 62 132 66 160 44 194 58 226 40 260 52 312 38"/></svg>';
+
+/* ── 자리 값 ── */
+const DEC = [
+  { id: 1, k: 'A', side: 'sell', title: '[종목 A] [수량]주 매도', price: '지정가 $[ ]', when: '개장부터 · 당일', y: 3, n: 0 },
+  { id: 2, k: 'C', side: 'buy', title: '[종목 C] [수량]주 매수', price: '지정가 $[ ]', when: '00:00 확인 뒤 · 당일', y: 2, n: 1 },
+  { id: 3, k: 'B', side: 'set', title: '[종목 B] 매도 → [종목 D] 매수', price: '매도가 다 체결되면 매수', when: '00:00 확인 뒤 · 당일', y: 3, n: 0 },
+];
+const ring = d => d.side === 'sell' ? 'down' : d.side === 'buy' ? 'up' : 'mute';
+const TOP = [['[주제 1]', 34, 72], ['[주제 2]', 66, 38], ['[주제 3]', 52, 60]];
+
+/* ── 장면 (하루 흐름 + 예외) ── */
+const SCENES = [
+  ['낮 · 읽기', [['day', '07:30', '예보가 나왔어요'], ['judging', '20:40', '판단하는 중']]],
+  ['밤 · 결정', [['alert', '23:00', '알림이 왔어요'], ['proposal', '23:00', '제안 도착'], ['queued', '23:30', '다 정함 · 확인 대기'], ['held', '00:00', '보류 · 다시 판단'], ['changed', '00:30', '바뀐 제안']]],
+  ['새벽 · 이후', [['night', '새벽', '주문 · 주시'], ['morning', '아침', '결과 · 이유 남기기'], ['scored', '20일', '채점']]],
+  ['예외', [['none', '', '할 일 없음'], ['fail', '', '판단 실패'], ['stuck', '', '주문 확인 필요'], ['kr', '', '한국 시장']]],
+];
+const OPEN = { day: 1, judging: 3, proposal: 3, queued: 3, held: 3, changed: 3, night: 4, morning: 5, scored: 5, none: 3, fail: 3, stuck: 3 };
+const STATE = {   // 장면별 결정 상태
+  proposal: {}, queued: { 1: 'ok', 2: 'paper', 3: 'no' }, held: { 1: 'working', 2: 'held', 3: 'no' }, changed: { 1: 'working', 2: 'redo', 3: 'no' }, night: { 1: 'done', 2: 'partial', 3: 'no' }, morning: { 1: 'done', 2: 'expired', 3: 'no' }, scored: { 1: 'done', 2: 'expired', 3: 'no' }, stuck: { 1: 'check', 2: 'done', 3: 'no' } };
+const CHIP = { '': ['결정 전', 'on'], ok: ['승인 · 대기', 'on'], paper: ['모의', ''], no: ['거부', ''], working: ['주문 중', 'on'], held: ['보류 · 다시 판단 중', ''], redo: ['바뀜 · 다시 승인', 'on'], done: ['체결', 'good'], cancel: ['취소', ''], check: ['확인 필요', 'bad'], closed: ['확인 후 닫음', ''], partial: ['일부 체결', 'on'], expired: ['미체결', 'bad'] };
+const left = c => DEC.filter(d => !c.dec[d.id]).length;
+
+/* ── 항로 홈 ── */
+const HEAD = {
+  day: () => ['시장은 [방향]으로 봐요', '[날짜] · 다음 판단 19:30'], judging: () => ['23:00에 제안이 와요', 'AI 셋이 따로 판단하는 중'],
+  proposal: c => left(c) ? [`결정 ${left(c)}건 남았어요`, '00:00까지 [남은 시간]'] : ['다 정했어요', '00:00 확인을 기다려요'],
+  queued: () => ['다 정했어요', '00:00 확인 뒤 주문해요'], held: () => ['1건을 다시 판단해요', '가격이 크게 벌어졌어요'], changed: () => ['바뀐 제안 1건', '다시 승인해야 주문해요'],
+  night: () => ['3종목을 지켜보고 있어요', '신호가 오면 승인한 범위에서만'], morning: () => ['어젯밤 결과예요', '다르게 한 1건의 이유를 남겨 주세요'], scored: () => ['20거래일이 지났어요', '[날짜] 제안의 채점'],
+  stuck: () => ['주문 1건을 확인해 주세요', '넣는 도중 멈췄어요 · 토스에서 확인이 필요해요'],
+  none: () => ['오늘은 할 일이 없어요', '[왜 없는지 한 줄]'], fail: () => ['오늘 판단을 끝내지 못했어요', '[까닭] · 주문은 나가지 않아요'],
+};
+function summary(i, c) {
+  const s = c.scene;
+  if (i === 1) return '[방향] [확률]% · 갈림길 D-[N]';
+  if (i === 2) return s === 'day' ? '20:40에 나와요' : '우호 [N] · 중립 [N] · 비우호 [N]';
+  if (i === 3) return s === 'day' ? '23:00' : s === 'judging' ? '판단 중' : s === 'none' ? '제안 없음' : s === 'fail' ? '실패' : s === 'held' ? '보류 1 · 주문 중 1' : s === 'changed' ? '다시 승인 1' : s === 'stuck' ? '확인 필요 1' : s === 'night' || s === 'morning' || s === 'scored' ? '[체결 N] · 미체결 [N]' : left(c) ? `${left(c)}건 남음` : '모두 정함';
+  if (i === 4) return s === 'day' || s === 'judging' ? '00:15부터' : s === 'proposal' ? '3종목 · 승인 전' : s === 'morning' || s === 'scored' ? '[신호 N번]' : '3종목';
+  return s === 'morning' ? '이유 남기기 1' : s === 'scored' ? '채점 [N]건' : '20거래일 뒤 채점';
+}
+const rows = (c, extra) => DEC.map(d => { const v = c.dec[d.id] || '', [t, cls] = CHIP[v];
+  return `<button type="button" class="row" data-go="${v === '' || v === 'redo' ? 'decide:' + d.id : 'why:' + d.k}">${lg(d.k, ring(d))}<div><b>${d.title}</b><span class="meta">${d.price}</span></div><span class="tag ${cls}">${t}</span></button>${extra && extra(d, v) || ''}`; }).join('');
+function station(i, c) {
+  const s = c.scene;
+  if (i === 1) return `<div class="card"><span class="k">나스닥 20거래일</span><div class="big">[방향]<small>[확률]%</small></div><div style="margin-top:6px">[전제 한 줄]</div>${kv('뒤집힐 신호', '[한 줄]')}<button type="button" class="more" data-go="market">전망 자세히 ›</button></div>
+    <div class="card"><span class="k">AI가 시장과 가장 다르게 보는 것</span>${gap(TOP[0][0], TOP[0][1], TOP[0][2], '', 'topic')}${legend}<button type="button" class="more" data-go="topics">주제 전체 ›</button></div>
+    <div class="card"><button type="button" class="row" data-go="fork"><div><b>[갈림길 일정]</b><span class="meta">경우마다 내 계좌 [±N%]</span></div><span class="tag on">D-[N]</span></button></div>`;
+  if (i === 2) return s === 'day' ? '<div class="card meta">거시 판단이 끝나면 종목마다 우호 · 중립 · 비우호가 붙어요</div>' :
+    `<div class="card">${[['A', 'down', '비우호'], ['F', 'down', '비우호'], ['C', 'up', '우호']].map(([k, r, w]) => `<button type="button" class="row" data-go="why:${k}">${lg(k, r)}<div><b>[종목 ${k}]</b><span class="meta">[왜 ${w}인지 한 줄]</span></div><span class="tag ${r === 'up' ? 'good' : 'bad'}">${w}</span></button>`).join('')}<button type="button" class="more" data-go="account">내 계좌 · 관심 전체 ›</button></div>`;
+  if (i === 3) {
+    if (s === 'day') return '<div class="card meta">미국 거래일 23:00(여름 22:00)에 제안이 와요</div>';
+    if (s === 'judging') return `<div class="card"><span class="k">진행</span><ol class="steps">${['종목마다 오늘 소식 조사', '조사 검수', '판단 셋이 따로 판단', '고른 판단 검수', '계좌 전체로 다시 보기'].map((t, j) => `<li class="${j < 2 ? 'done' : j === 2 ? 'cur' : ''}"><i></i>${t}</li>`).join('')}</ol></div>`;
+    if (s === 'none') return `<div class="card"><div class="empty"><b>제안이 없어요</b>보유와 관심 종목 모두 그대로 두기로 했어요</div><button type="button" class="btn" data-go="account">종목별 의견 보기</button></div>`;
+    if (s === 'fail') return `<div class="card"><div class="empty"><b>판단 실패</b>[어느 단계에서 멈췄는지]<br>주문은 나가지 않아요</div><button type="button" class="btn" data-go="account">어제 의견 보기</button></div>`;
+    if (s === 'proposal') return `<div class="card"><span class="k">오늘 밤 결론</span><div style="font-size:15px;color:var(--hi);font-weight:700">[오늘 밤 결론 한 줄]</div><span class="meta">전제: [방향] [확률]%</span><div style="margin-top:8px">${rows(c)}</div>${left(c) ? `<button type="button" class="btn pri" style="margin-top:10px" data-go="decide:${DEC.find(d => !c.dec[d.id]).id}">하나씩 결정하기 · ${left(c)}건</button>` : ''}${!c.dec[1] && !c.dec[2] ? '<button type="button" class="more" style="width:100%;text-align:center;margin-bottom:-6px" data-sheet="bulk:0">어제와 같은 2건 한 번에 ›</button>' : ''}</div>
+      <div class="card"><span class="k">AI가 묻는 것</span><div class="row"><div><b>[종목 E] 보고서를 받을까요</b><span class="meta">[왜 필요한지]</span></div><button type="button" class="btn sm" data-ask>받기</button></div></div>`;
+    if (s === 'queued') return `<div class="card">${rows(c, (d, v) => v === 'ok' || v === 'paper' ? `<div style="text-align:right;margin:-6px 0 4px"><button type="button" class="more" style="margin:0" data-sheet="cancel:${d.id}">거두기</button></div>` : '')}</div>`;
+    if (s === 'held') return `<div class="banner">[종목 C] 보류<span class="meta">어제 종가에서 [N]% 벌어짐 · 승인은 보관하고 AI 셋이 다시 판단해요</span></div><div class="card">${rows(c)}</div>`;
+    if (s === 'changed') return `<div class="banner">다시 판단했더니 바뀌었어요<span class="meta">[종목 C] [수량]주 → [수량]주 · 지정가 $[ ] → $[ ]</span></div><div class="card">${rows(c)}<button type="button" class="btn pri" style="margin-top:10px" data-go="decide:2">바뀐 제안 다시 보기</button></div>`;
+    if (s === 'stuck') return `<div class="banner">[종목 A] 주문 확인 필요<span class="meta">토스 앱에서 주문이 살아 있는지 본 뒤 닫아 주세요. 닫아도 주문을 넣거나 취소하지 않아요.</span></div><div class="card">${rows(c)}${c.dec[1] === 'check' ? '<button type="button" class="btn" style="margin-top:10px" data-checked>토스에서 확인했어요 · 닫기</button>' : ''}</div>`;
+    return `<div class="card">${rows(c)}${s === 'night' ? '<div class="btns"><button type="button" class="btn" data-sheet="cancel:2">남은 주문 취소</button></div>' : ''}</div>`;
+  }
+  if (i === 4) {
+    if (s === 'day' || s === 'judging') return '<div class="card meta">제안이 나오면 지켜볼 3종목이 함께 와요</div>';
+    const st = s === 'night' ? [['조건부 승인', 'on'], ['[수량]주 주문함', 'good'], ['결정 전', '']] : s === 'morning' || s === 'scored' ? [['신호 없음', ''], ['[수량]주 체결', 'good'], ['신호 · 승인 안 함', '']] : [['결정 전', ''], ['결정 전', ''], ['결정 전', '']];
+    return `<div class="card">${['B', 'D', 'G'].map((k, j) => `<button type="button" class="row" data-sheet="watch:${k}">${lg(k, j === 2 ? 'up' : 'down')}<div><b>[종목 ${k}] ${j === 2 ? '매수' : '매도'}</b><span class="meta">[가격 조건]이 오면</span></div><span class="tag ${st[j][1]}">${st[j][0]}</span></button>`).join('')}</div>`;
+  }
+  return `${s === 'morning' ? `<div class="card"><span class="k">AI와 다르게 한 것 · 1</span><div class="row">${lg('B', 'down')}<div><b>[종목 B] 제안을 거부</b><span class="meta">왜 그랬는지 한 줄 남기면 20일 뒤 함께 봐요</span></div></div><button type="button" class="btn" data-sheet="diff:B">이유 남기기</button></div>` : ''}
+    <div class="nums"><div><b>[N/N]</b><span>예보 적중</span></div><div><b>[±N%]</b><span>제안 20일</span></div><div><b>[N]건</b><span>채점</span></div></div>
+    <div class="card">${s === 'scored' ? DEC.map(d => `<button type="button" class="row" data-go="why:${d.k}">${lg(d.k, ring(d))}<div><b>${d.title}</b><span class="meta">${d.id === 3 ? '거부함' : '승인함'} · 나스닥 대비 [±N%]</span></div><span class="tag">[맞음 · 놓침]</span></button>`).join('') : '<span class="meta">제안마다 20거래일 뒤 나스닥과 견줘 채점해요</span>'}<button type="button" class="more" data-go="records">기록 전체 ›</button></div>`;
+}
+const ST = [['07:30', '시장은 어디로'], ['20:40', '내 종목 날씨'], ['23:00', '결정'], ['00:15', '주시'], ['다음날', '결과 · 채점']];
+function home(c) {
+  if (c.scene === 'kr') return `<div class="hd"><div class="r"><h4>오늘의 항로</h4></div><p>한국 시장은 준비 중이에요</p></div><div class="body"><div class="card"><div class="empty"><b>AI 예보 · 매니저는 미국만 돼요</b>위쪽 시장 전환에서 미국을 고르면 볼 수 있어요</div><button type="button" class="btn pri" data-scene="day">미국으로 보기</button></div></div>`;
+  const [t, s] = HEAD[c.scene](c), now = OPEN[c.scene];
+  return `<div class="hd"><div class="r"><h4>오늘의 항로</h4><span style="display:flex"><button type="button" class="ico" data-go="records" aria-label="기록">${I.chart}</button><button type="button" class="ico" data-go="alerts" aria-label="알림">${I.bell}${c.scene === 'proposal' || c.scene === 'changed' ? '<i></i>' : ''}</button></span></div><p><b style="color:var(--hi)">${t}</b><br><span class="meta">${s}</span></p></div>
+  <div class="route">${ST.map(([time, name], j) => { const i = j + 1, open = c.open.has(i), cls = i < now ? 'past' : i === now ? 'now' : 'future', alert = (c.scene === 'held' || c.scene === 'changed' || c.scene === 'fail' || c.scene === 'stuck') && i === 3;
+    return `<section class="st ${cls}${open ? ' open' : ''}${alert ? ' alert' : ''}"><i class="dot"></i><button type="button" class="sth" data-st="${i}" aria-expanded="${open}"><span class="t">${time}</span><span><b>${name}</b><small>${summary(i, c)}</small></span>${I.down}</button>${open ? `<div class="stb">${station(i, c)}</div>` : ''}</section>`; }).join('')}</div>`;
+}
+
+/* ── 페이지 ── */
+const PAGES = {
+  alerts: () => nav('알림') + `<div class="body"><button type="button" class="card row" data-scene="proposal">${lg('AI')}<div><b>AI 매니저 · 제안 3건</b><span class="meta">00:00 확인 전에 결정하세요</span></div><span class="tag on">지금</span></button><button type="button" class="card row" data-go="market">${lg('예')}<div><b>예보가 새로 나왔어요</b><span class="meta">[방향] [확률]%</span></div><span class="meta">[시각]</span></button></div>`,
+  market: () => nav('시장 전망', '<span class="meta">[판단 시각]</span>') + `<div class="body"><div class="card"><span class="k">나스닥 20거래일</span><div class="big">[방향]<small>확신 [높음]</small></div><div class="prob"><i style="flex:2.5"></i><i class="on" style="flex:5.5"></i><i style="flex:2"></i></div><div class="prob-l"><span>오름 [N]%</span><span>다지기 [N]%</span><span>내림 [N]%</span></div><div style="margin-top:12px">[한 줄 요약]</div></div>
+    ${sec('올리는 압력')}<div class="card">${kv('①', '[근거]')}${kv('②', '[근거]')}</div>${sec('내리는 압력')}<div class="card">${kv('①', '[근거]')}${kv('②', '[근거]')}</div>
+    ${sec('판단')}<div class="card">${kv('더 강한 쪽', '[어느 쪽 · 까닭]')}${kv('이미 값에 든 정도', '[얼마나]')}${kv('뒤집힐 신호', '<span class="warn">[신호]</span>')}${kv('종목에 쓰는 법', '[한 줄]')}</div>
+    ${sec('지난 예보', '[N]번 중 [N]번 맞음')}<div class="card">${kv('[날짜] [결론]', '[맞음 · 빗나감]')}${kv('[날짜] [결론]', '[채점 중]')}</div>
+    <div class="btns"><button type="button" class="btn" data-go="topics">주제</button><button type="button" class="btn" data-go="fork">갈림길</button></div></div>`,
+  topics: c => nav('주제와 일정') + `<div class="body"><div class="tabs" role="tablist">${['시장 vs AI', '지켜보는 일', '경제 일정'].map((t, i) => `<button type="button" role="tab" data-tab="${i}" aria-selected="${c.tab === i}">${t}</button>`).join('')}</div>
+    ${c.tab === 0 ? `<div class="chips">${['전체', '내 종목', '괴리 큰'].map((t, i) => `<button type="button" data-filter="${i}" aria-pressed="${!i}">${t}</button>`).join('')}</div><div class="card"><span class="k">오늘의 인사이트</span>[가장 눈여겨볼 한 줄]</div><div class="card">${TOP.map(t => gap(t[0], t[1], t[2], '', 'topic')).join('')}${legend}</div>`
+      : c.tab === 1 ? `<div class="card">${['[일 1]', '[일 2]', '[일 3]'].map((t, i) => `<button type="button" class="row" data-go="${i ? 'topic' : 'fork'}"><span class="tag ${i ? '' : 'on'}">D-[N]</span><div><b>${t}</b><span class="meta">[단계] · [판단]</span></div></button>`).join('')}</div>`
+      : `<div class="card">${['[지표 1]', '[지표 2]', '[지표 3]'].map(t => `<div class="row"><div><b>${t}</b><span class="meta">[날짜 · 시각]</span></div><span class="meta" style="text-align:right">예상 [ ]<br>이전 [ ]</span></div>`).join('')}</div>`}</div>`,
+  topic: () => nav('[주제 1]', '<span class="meta">상시 주제</span>') + `<div class="body"><div class="stg">${['말 · 신호', '공식화', '결정일', '시행 · 소화', '종결'].map((t, i) => `<span class="${i === 1 ? 'on' : ''}">${t}</span>`).join('')}</div>
+    <div class="card"><span class="k">인사이트</span>[이 주제에서 지금 중요한 것]</div><div class="card"><span class="k">앞으로 2주</span>${gap('[질문]', 34, 72)}${legend}</div>
+    ${sec('AI 판단 셋', '고른 것: B')}<div class="abc">${['A', 'B', 'C'].map(k => `<div class="${k === 'B' ? 'pick' : ''}"><span>판단 ${k}</span><b>[그렇다]</b><span>[확률]% · [확신]</span></div>`).join('')}</div>
+    ${sec('괴리와 대응')}<div class="card">${kv('시장 생각', '[ ]')}${kv('AI 생각', '[ ]')}${kv('시장 반응', '[처음 · 소화 중 · 피로]')}${kv('대응', '[방어 · 미리 담기 · 관망]')}${kv('반대 논거', '[ ]')}${kv('틀렸다고 볼 신호', '<span class="warn">[ ]</span>')}${kv('이정표', '[일정] D-[N]')}</div>
+    ${sec('걸린 내 종목')}<div class="card"><button type="button" class="row" data-go="why:A">${lg('A', 'down')}<div><b>[종목 A]</b><span class="meta">[어떻게 걸리는지]</span></div></button></div></div>`,
+  fork: c => nav('갈림길', '<span class="meta">D-[N]</span>') + `<div class="body"><div class="card"><span class="k">[일정]</span><div style="font-size:18px;color:var(--hi);font-weight:700">[무엇이 갈리나]</div><span class="meta">시장이 매긴 확률 [N]% (예측시장)</span></div>
+    <div class="tabs" role="tablist" style="margin-top:12px">${[0, 1, 2].map(i => `<button type="button" role="tab" data-tab="${i}" aria-selected="${c.tab === i}">경우 ${i + 1}</button>`).join('')}</div>
+    <div class="card"><span class="k">확률 [N]% · [출처]</span><div style="color:var(--hi);font-weight:700;font-size:15px">[경우 ${c.tab + 1} 내용]</div><div class="big ${c.tab === 2 ? 'down' : c.tab === 0 ? 'up' : ''}" style="margin-top:10px">${c.tab === 2 ? '−' : c.tab === 0 ? '+' : '±'}[N]%<small>내 계좌</small></div></div>
+    ${sec('걸린 종목')}<div class="card">${['A', 'C'].map(k => `<button type="button" class="row" data-go="why:${k}">${lg(k)}<div><b>[종목 ${k}]</b><span class="meta">비중 [N]% · 예상 [±N]%</span></div></button>`).join('')}</div>
+    <div class="card">${kv('방어', '[방법]')}${kv('덕 보는 곳', '[ ]')}${kv('지켜볼 것', '[ ]')}</div></div>`,
+  account: () => nav('내 계좌 · 관심', '<span class="meta">현금 $[ ]</span>') + `<div class="body"><div class="map">${[['A', 3, 2, 'down'], ['B', 3, 1, ''], ['C', 2, 1, 'up'], ['D', 1, 1, 'up'], ['E', 3, 1, ''], ['F', 2, 1, 'down'], ['현금', 1, 1, '']].map(([k, w, h, r]) => `<button type="button" class="${r ? 'w-' + r : ''}" style="grid-column:span ${w};grid-row:span ${h}" data-go="${k === '현금' ? 'account' : 'why:' + k}">${k}<small>[±%]</small></button>`).join('')}</div><span class="meta">칸 크기 = 비중 · 테두리 = 오늘 날씨</span>
+    ${sec('관심 종목', '2')}<div class="card">${['G', 'H'].map(k => `<button type="button" class="row" data-go="why:${k}">${lg(k)}<div><b>[종목 ${k}]</b><span class="meta">[아직 안 사는 까닭]</span></div><span class="tag">대기</span></button>`).join('')}</div></div>`,
+  why: (c, k) => nav(`[종목 ${k}] 판단 근거`) + `<div class="body"><div class="card"><div class="row">${lg(k)}<div><b>[AI 의견]</b><span class="meta">어제 [의견]에서 [바뀜 · 그대로]</span></div></div>${judges(2, 1)}<div style="margin-top:8px">[한 마디]</div></div>${chart}
+    ${sec('결론까지 온 길')}<div class="card">${kv('조사', '[오늘 새 사실]')}${kv('고민', '[결론을 가른 질문]')}${kv('설득', '[왜 이렇게]')}${kv('반대 사실', '[ ]')}${kv('검수', '[통과 · 확인할 점]')}</div>
+    ${sec('이 종목의 계획')}<div class="card">${kv('방향 · 단계', '[ ]')}${kv('도착', '[ ]')}${kv('그만두는 조건', '[ ]')}<button type="button" class="more" data-sheet="plan:${k}">계획 끝내기</button></div>
+    ${sec('지난 의견', '10일')}<div class="card">${kv('[날짜]', '[의견]')}${kv('[날짜]', '[의견]')}</div><button type="button" class="btn" style="margin-top:14px" data-stock>종목 페이지로 가기</button></div>`,
+  decide: (c, id) => { const d = DEC.find(x => x.id === +id), set = d.side === 'set', sell = d.side === 'sell', changed = c.scene === 'changed' && d.id === 2;
+    return nav('결정', `<span class="dots" aria-label="${d.id} / ${DEC.length}">${DEC.map(x => `<i class="${x.id === d.id ? 'on' : c.dec[x.id] && c.dec[x.id] !== 'redo' ? 'done' : ''}"></i>`).join('')}</span>`, true) + `<div class="body">
+      ${changed ? '<div class="banner">다시 판단해 바뀐 제안이에요<span class="meta">[무엇이 바뀌었고 왜]</span></div>' : ''}
+      <div class="row" style="margin-top:6px">${lg(d.k, ring(d))}<div><span class="meta">${set ? '세트 · 매도가 다 체결되면 매수' : sell ? '[보유 수량] 보유 · 평단 대비 [±N%]' : '관심 종목'}</span><b style="font-size:18px">${d.title}</b></div></div>
+      ${set ? `<div class="card">${kv('① [종목 B] 매도', '[수량]주 · $[ ]')}${kv('② [종목 D] 매수', '[수량]주 · $[ ]')}</div>` : `<div class="ladder"><i></i>${sell ? '<span style="left:22%"></span><em style="left:22%">평단</em>' : ''}<span style="left:58%"></span><em style="left:58%">지금</em><span class="l" style="left:${sell ? 80 : 36}%"></span><em style="left:${sell ? 80 : 36}%">지정가</em></div>`}
+      ${chart}
+      <div class="card">${kv(sell ? '받을 돈' : set ? '오가는 돈' : '쓸 돈', '$[금액]')}${sell ? kv('확정 수익', '[±$]') : ''}${kv('계좌 비중', '[전]% → [후]%')}${kv('넣는 때', d.when)}</div>
+      ${sec('왜')}<div class="card"><div style="color:var(--hi);font-weight:700;font-size:15px">[AI가 내린 결론 한 줄]</div><div style="margin:6px 0 10px">[설득 · 반대 사실부터 짚고, 그래도 이렇게 하는 까닭]</div>${judges(d.y, d.n)}${kv('전제와의 관계', '[따름 · 어긋남]')}${kv('틀렸다는 신호', '<span class="warn">[ ]</span>')}${d.id === 1 ? kv('계획', '[2단계 중 1단계]') : ''}<button type="button" class="more" data-go="why:${d.k}">판단 근거 전체 ›</button><button type="button" class="more" style="margin-left:18px" data-stock>종목 페이지 ›</button></div></div>
+      <div class="act"><button type="button" class="btn" data-sheet="reject:${d.id}">거부</button><button type="button" class="btn" data-paper="${d.id}">모의</button><button type="button" class="btn pri" data-sheet="confirm:${d.id}">승인</button></div>`; },
+  records: c => nav('기록') + `<div class="body"><div class="tabs" role="tablist">${['신뢰 기록', '통합 성적', '다르게 한 것'].map((t, i) => `<button type="button" role="tab" data-tab="${i}" aria-selected="${c.tab === i}">${t}</button>`).join('')}</div>
+    ${c.tab === 0 ? `<div class="nums"><div><b>[±N%]</b><span>승인한 것</span></div><div><b>[±N%]</b><span>모의</span></div><div><b>[±N%]</b><span>거부한 것</span></div></div><div class="card">${kv('그냥 두었을 때보다', '[±$]')}${kv('AI 의견 적중', '[N/N]')}</div>${sec('거부 노트')}<div class="card">${kv('[날짜] [종목]', '[내 이유] → [20일 뒤]')}</div><div class="card">${kv('주문 방식', '모의 · 실제')}<button type="button" class="btn" data-mode>실제 주문으로 바꾸기</button></div>`
+      : c.tab === 1 ? `<span class="meta">20거래일 · 같은 구간 나스닥 대비</span><div class="card">${['AI 매니저 제안', '선제안', '예보 결론', '장중 주시'].map(t => `<div class="kv"><span>${t}</span><b>[N]건 · [±N%p]</b></div>`).join('')}</div><div class="card">${kv('채점 중', '[N]건')}${kv('첫 결과까지', '[날짜]')}</div>`
+      : `<div class="card"><button type="button" class="row" data-sheet="diff:B">${lg('B', 'down')}<div><b>[종목 B] 거부</b><span class="meta">이유를 아직 안 남겼어요</span></div><span class="tag on">남기기</span></button><div class="row">${lg('C', 'up')}<div><b>[종목 C] 혼자 매수</b><span class="meta">[남긴 이유]</span></div></div></div>`}</div>`,
+};
+
+/* ── 아래에서 올라오는 창 ── */
+const SHEETS = {
+  confirm: id => { const d = DEC.find(x => x.id === +id); return `<span class="k">실제 주문</span><h5>${d.title}</h5>${kv(d.side === 'sell' ? '받을 돈' : d.side === 'buy' ? '쓸 돈' : '오가는 돈', '$[금액]')}${d.side === 'sell' ? kv('확정 수익', '[±$]') : ''}${kv('넣는 때', d.when)}<label class="sw"><span><b>맡기기</b><span class="meta">00:00에 다시 판단돼도 방향이 같으면 묻지 않기</span></span><input type="checkbox"></label><div class="btns"><button type="button" class="btn" style="flex:1" data-close>돌아가기</button><button type="button" class="btn hold" style="flex:1.6" data-hold="${d.id}"><i></i><span>길게 눌러 승인</span></button></div>`; },
+  reject: id => { const d = DEC.find(x => x.id === +id); return `<span class="k">거부 · 주문 없음</span><h5>${d.title}</h5><input type="text" maxlength="80" placeholder="왜 거부하나요 — 한 줄" aria-label="거부 이유" data-reason><div class="chips">${['[지난 이유 1]', '[지난 이유 2]'].map(t => `<button type="button" data-chip>${t}</button>`).join('')}</div><span class="meta" style="display:block;margin-top:10px">20거래일 뒤 결과와 함께 거부 노트에 남아요</span><div class="btns"><button type="button" class="btn" style="flex:1" data-close>돌아가기</button><button type="button" class="btn pri" style="flex:1.6" data-reject="${id}" disabled>거부</button></div>`; },
+  watch: k => `<span class="k">오늘 주시 · 조건부 승인</span><h5>[종목 ${k}] 최대 [수량]주</h5>${kv('가격 범위', '$[ ] ~ $[ ]')}${kv('신호', '[가격 조건]')}${kv('까닭', '[한 줄]')}<span class="meta" style="display:block;margin-top:8px">신호가 오면 짧게 한 번 더 확인하고, 이 범위 안에서만 한 번 주문해요</span><div class="btns" style="display:grid;grid-template-columns:1fr 1fr 1.7fr"><button type="button" class="btn" data-close>거부</button><button type="button" class="btn" data-close>모의</button><button type="button" class="btn pri" data-close>조건부 승인</button></div>`,
+  cancel: id => { const d = DEC.find(x => x.id === +id); return `<span class="k">거두기</span><h5>${d.title}</h5><div class="meta">아직 넣지 않은 승인은 주문 없이 끝나요. 이미 넣은 주문은 남은 수량만 취소해요.</div><div class="btns"><button type="button" class="btn" style="flex:1" data-close>돌아가기</button><button type="button" class="btn" style="flex:1.4;color:#f0a08d;background:#3a2422" data-withdraw="${id}">거두기</button></div>`; },
+  bulk: () => `<span class="k">실제 주문 · 어제와 같은 제안</span><h5>2건을 한 번에 승인해요</h5>${DEC.slice(0, 2).map(d => kv(d.title, d.price)).join('')}${kv('넣는 때', '매도는 개장부터 · 매수는 00:00 확인 뒤')}<div class="btns"><button type="button" class="btn" style="flex:1" data-close>돌아가기</button><button type="button" class="btn hold" style="flex:1.6" data-hold="bulk"><i></i><span>길게 눌러 2건 승인</span></button></div>`,
+  plan: k => `<span class="k">계획 끝내기</span><h5>[종목 ${k}]의 계획을 끝내요</h5><div class="meta">주문은 건드리지 않아요. 다음 밤 판단에 "본인이 끝냄"으로 전해져요.</div><input type="text" maxlength="80" placeholder="까닭 (없어도 돼요)" aria-label="까닭" style="margin-top:12px"><div class="btns"><button type="button" class="btn" style="flex:1" data-close>돌아가기</button><button type="button" class="btn" style="flex:1.4;color:#f0a08d;background:#3a2422" data-close>계획 끝내기</button></div>`,
+  diff: k => `<span class="k">AI와 다르게 한 것</span><h5>[종목 ${k}] 제안을 거부했어요</h5><input type="text" maxlength="80" placeholder="왜 그랬는지 한 줄" aria-label="이유"><div class="chips">${['[이유 딱지 1]', '[이유 딱지 2]'].map(t => `<button type="button" data-chip>${t}</button>`).join('')}</div><div class="btns"><button type="button" class="btn pri" data-close>남기기</button></div>`,
+};
+
+/* ── 설명 ── */
+const NOTE = {
+  day: ['낮 · 예보 읽기', '시장이 어디로 갈지 먼저 봐요. 결론 → 시장과 다른 점 → 갈림길 순서예요.', ['「전망 자세히」로 압력과 뒤집힐 신호', '주제를 누르면 AI 셋의 판단', '갈림길에서 경우를 바꾸면 내 계좌 손익']],
+  judging: ['판단하는 중', '기다리는 동안 어디까지 왔는지 보여요. 날씨는 먼저 끝나서 볼 수 있어요.', ['다른 정거장은 눌러서 열기']],
+  alert: ['알림에서 들어오기', '종 알림이나 AI 비서 말풍선에서 바로 결정 화면으로 와요.', ['알림을 누르면 제안 장면으로']],
+  proposal: ['제안 도착', '맨 위 한 문장이 할 일이에요. 목록에서 전체를 보고 하나씩 결정해요.', ['「하나씩 결정하기」', '승인: 확인 창 → 길게 누르기 → 5초 되돌리기', '거부: 이유를 적어야 켜짐', '다 정하면 홈이 「확인 대기」로']],
+  queued: ['다 정함', '23:00에 승인한 것은 바로 넣지 않아요. 00:00 확인 뒤에 주문해요(매도만이면 개장부터).', ['「거두기」로 승인 취소']],
+  held: ['보류', '개장 뒤 가격이 크게 벌어지거나 새 공시 · 실적이 나오면 그 종목만 보류하고 다시 판단해요.', ['걸리지 않은 승인은 그대로 주문']],
+  changed: ['바뀐 제안', '다시 판단해 주문이 달라지면 다시 승인해야 해요. 맡기기를 켰고 방향이 같으면 바로 주문해요.', ['「바뀐 제안 다시 보기」']],
+  night: ['새벽', '주문 상태와 주시 3종목을 봐요.', ['주시 종목을 눌러 조건부 승인', '남은 주문 취소']],
+  morning: ['아침', '결과를 보고, AI와 다르게 한 것에 이유를 남겨요.', ['「이유 남기기」']],
+  scored: ['20거래일 뒤', '제안마다 나스닥과 견줘 맞았는지 보여요.', ['「기록 전체」']],
+  none: ['할 일 없음', '제안이 없는 날도 왜 없는지와 종목별 의견은 볼 수 있어요.', []],
+  fail: ['판단 실패', '실패를 분명히 알리고, 주문이 나가지 않는다고 말해요.', []],
+  stuck: ['주문 확인 필요', '주문을 넣는 도중 멈추면 자동으로 다시 넣지 않고, 본인이 확인하게 해요. 두 번 주문되는 일을 막아요.', ['「확인했어요 · 닫기」']],
+  kr: ['한국 시장', '지금은 미국만 돼요. 빈 화면 대신 갈 곳을 줘요.', []],
+  alerts: ['알림', '하루 중 이 화면으로 들어오는 길이에요.', []],
+  market: ['시장 전망', '예보의 최종 결론이에요. 지금 앱에는 이 화면이 없어요.', ['주제 · 갈림길로 이동']],
+  topics: ['주제와 일정', '시장 vs AI, 지켜보는 일, 경제 일정을 탭으로 나눴어요.', []],
+  topic: ['주제 상세', '단계 → 인사이트 → 판단 셋 → 대응 → 내 종목 순서예요.', []],
+  fork: ['갈림길', '경우를 바꾸면 내 계좌 손익과 걸린 종목이 바뀌어요.', []],
+  account: ['내 계좌 · 관심', '칸을 누르면 그 종목의 판단 근거예요.', []],
+  why: ['판단 근거 전체', '결론까지 온 길을 위에서 아래로 읽어요.', []],
+  decide: ['하나씩 결정', '무엇을 → 얼마에 → 돈이 얼마 → 왜 순서예요. 단추는 아래에 붙어 있어요.', ['거부 · 모의 · 승인', '× 로 닫으면 홈']],
+  records: ['기록', '신뢰 기록, 통합 성적, 다르게 한 것을 한곳에 모았어요.', ['모의 → 실제 전환']],
+  's:confirm': ['승인 확인', '돈이 얼마이고 언제 넣는지 확인하고 1.2초 길게 눌러요. 맡기기는 00:00 전에만 보여요.', []],
+  's:reject': ['거부 이유', '이유 한 줄이 있어야 거부할 수 있어요.', []],
+  's:watch': ['주시 조건부 승인', '범위와 최대 수량을 보고 정해요.', []],
+  's:cancel': ['거두기', '위험한 동작은 색을 달리하고 한 번 더 물어요.', []],
+  's:bulk': ['한 번에 승인', '어제와 같은 제안만 묶여요. 여기도 길게 눌러야 하고 5초 안에 되돌릴 수 있어요.', []],
+  's:plan': ['계획 끝내기', '며칠 이어지는 계획을 본인이 끝낼 수 있어요.', []],
+  's:diff': ['이유 남기기', '20일 뒤 결과와 함께 남아요.', []],
+};
+
+/* ── 화면 하나를 그림 (살아 있는 폰과 모음이 같은 코드) ── */
+const ctxFor = scene => ({ scene, dec: Object.assign({}, STATE[scene] || {}), open: new Set([OPEN[scene] || 1]), tab: 0 });
+function pageHtml(key, c) {
+  if (key === 'home') return home(c.scene === 'alert' ? Object.assign({}, c, { scene: 'proposal' }) : c);
+  const [name, arg] = key.split(':'); return PAGES[name](c, arg);
+}
+const sheetHtml = key => { const [n, a] = key.split(':'); return `<div class="veil" data-close></div><div class="sheet" role="dialog" aria-modal="true"><i class="grip"></i>${SHEETS[n](a)}</div>`; };
+
+/* ── 살아 있는 폰 ── */
+const live = document.getElementById('live'), noteEl = document.querySelector('.note'), scenesEl = document.querySelector('.scenes');
+let c, stack, sheet, toastTimer = 0, toast = null;
+scenesEl.innerHTML = SCENES.map(([g, L]) => `<h3>${g}</h3>` + L.map(([id, t, n]) => `<button type="button" data-pick="${id}" aria-pressed="false">${t ? `<small>${t}</small>` : ''}${n}</button>`).join('')).join('');
+function note() {
+  const top = stack[stack.length - 1];
+  const key = sheet ? 's:' + sheet.split(':')[0] : top === 'home' ? c.scene : top.split(':')[0];
+  const [t, d, L] = NOTE[key] || NOTE.proposal;
+  noteEl.innerHTML = `<h3>${t}</h3><dl><dt>이 화면이 하는 일</dt><dd>${d}</dd>${L.length ? `<dt>눌러 볼 것</dt><dd><ul>${L.map(x => `<li>${x}</li>`).join('')}</ul></dd>` : ''}</dl>`;
+}
+function render(anim) {
+  const old = live.querySelector('.pg'), key = stack[stack.length - 1], y = old && old.dataset.key === key ? old.scrollTop : 0;
+  const oldSheet = live.querySelector('.sheet'), sy = oldSheet ? oldSheet.scrollTop : 0;
+  live.innerHTML = `<div class="pg" data-key="${key}">${pageHtml(key, c)}</div>${sheet ? sheetHtml(sheet) : ''}${toast ? `<div class="toast" role="status"><span>${toast.msg}</span><button type="button" class="btn sm" data-undo>되돌리기 ${toast.n}</button></div>` : ''}`;
+  const pg = live.querySelector('.pg'); pg.scrollTop = y;
+  const sh = live.querySelector('.sheet'); if (sh) { sh.scrollTop = sy; if (anim === 'sheet' && !RM) sh.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.22,1,.36,1)' }); }
+  if (!RM && (anim === 'push' || anim === 'back')) pg.animate([{ transform: `translateX(${anim === 'push' ? 40 : -40}px)`, opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 320, easing: 'cubic-bezier(.22,1,.36,1)' });
+  bindHold(); note();
+  scenesEl.querySelectorAll('[data-pick]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pick === c.scene)));
+}
+function stopToast() { clearInterval(toastTimer); toast = null; }
+function setScene(id, key) {
+  stopToast(); c = ctxFor(id); stack = ['home']; sheet = null;
+  if (id === 'alert') stack = ['alerts'];
+  if (key) { if (key.startsWith('s:')) { const s = key.slice(2); stack = ['home', 'decide:' + (s.split(':')[1] || 1)]; if (!/^(confirm|reject)/.test(s)) stack = ['home']; sheet = s; } else if (key !== 'home') stack = ['home', key]; }
+  render();
+}
+/* 결정 → 5초 되돌리기 → 다음 건. 다 정하면 홈 */
+function decideDone(id, v, msg) {
+  const was = c.scene, before = c.dec[id]; c.dec[id] = v; sheet = null; stopToast();
+  if (was === 'changed') { c = Object.assign(ctxFor('night'), { dec: Object.assign(c.dec, { [id]: v === 'ok' ? 'working' : v }) }); stack = ['home']; }
+  else { const nx = DEC.find(d => !c.dec[d.id]); if (!nx) c.scene = 'queued'; stack = nx ? ['home', 'decide:' + nx.id] : ['home']; }
+  toast = { msg, n: 5, undo: () => {
+    if (was === 'changed') { c = ctxFor('changed'); stack = ['home']; return; }
+    c.scene = was; if (before) c.dec[id] = before; else delete c.dec[id]; stack = ['home', 'decide:' + id];
+  } };
+  toastTimer = setInterval(() => { toast.n--; if (toast.n <= 0) { stopToast(); render(); return; } const b = live.querySelector('[data-undo]'); if (b) b.textContent = '되돌리기 ' + toast.n; }, 1000);
+  render('push');
+}
+function bulkDone() {
+  c.dec[1] = 'ok'; c.dec[2] = 'ok'; sheet = null; stopToast();
+  toast = { msg: '2건 승인 · 정한 때에 주문', n: 5, undo: () => { delete c.dec[1]; delete c.dec[2]; c.scene = 'proposal'; stack = ['home']; } };
+  if (!left(c)) c.scene = 'queued';
+  toastTimer = setInterval(() => { toast.n--; if (toast.n <= 0) { stopToast(); render(); return; } const b = live.querySelector('[data-undo]'); if (b) b.textContent = '되돌리기 ' + toast.n; }, 1000);
+  render();
+}
+function bindHold() {
+  const h = live.querySelector('[data-hold]'); if (!h) return;
+  const fill = h.querySelector('i'); let raf = 0, t0 = 0;
+  const stop = () => { cancelAnimationFrame(raf); raf = 0; fill.style.transform = 'scaleX(0)'; };
+  const tick = t => { const p = Math.min(1, Math.max(0, (t - t0) / 1200)); fill.style.transform = `scaleX(${p})`; if (p >= 1) { raf = 0; if (h.dataset.hold === 'bulk') { bulkDone(); return; } const id = +h.dataset.hold, d = DEC.find(x => x.id === id); decideDone(id, 'ok', d.when.startsWith('개장') ? '승인 · 개장부터 주문' : '승인 · 00:00 확인 뒤 주문'); return; } raf = requestAnimationFrame(tick); };
+  const start = () => { if (!raf) { t0 = performance.now(); raf = requestAnimationFrame(tick); } };
+  h.addEventListener('pointerdown', start); ['pointerup', 'pointerleave', 'pointercancel'].forEach(e => h.addEventListener(e, stop));
+  h.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); start(); } }); h.addEventListener('keyup', stop);
+  h.addEventListener('contextmenu', e => e.preventDefault());
+}
+live.addEventListener('click', e => {
+  const b = e.target.closest('button, [data-close]'); if (!b || b.disabled) return;
+  const d = b.dataset;
+  if (d.hold) return;
+  if (d.st) { const i = +d.st; if (c.open.has(i)) c.open.delete(i); else c.open.add(i); render(); }
+  else if (d.go) { stack.push(d.go); c.tab = 0; render('push'); }
+  else if (b.hasAttribute('data-back')) { const k = stack[stack.length - 1]; stack = k.startsWith('decide') || stack.length < 2 ? ['home'] : stack.slice(0, -1); c.tab = 0; render('back'); }
+  else if (d.sheet) { sheet = d.sheet; render('sheet'); }
+  else if (b.hasAttribute('data-close')) { sheet = null; render(); }
+  else if (d.paper) decideDone(+d.paper, 'paper', '모의로 기록했어요');
+  else if (d.reject) decideDone(+d.reject, 'no', '거부를 기록했어요');
+  else if (d.withdraw) { sheet = null; if (c.scene === 'queued') { delete c.dec[+d.withdraw]; c.scene = 'proposal'; } else c.dec[+d.withdraw] = 'cancel'; render(); }
+  else if (b.hasAttribute('data-undo')) { const u = toast && toast.undo; stopToast(); if (u) u(); render('back'); }
+  else if (d.tab != null) { c.tab = +d.tab; render(); }
+  else if (d.scene) setScene(d.scene);
+  else if (b.hasAttribute('data-chip')) { const inp = live.querySelector('.sheet input[type="text"]'); inp.value = b.textContent; inp.dispatchEvent(new Event('input', { bubbles: true })); }
+  else if (d.filter != null) { live.querySelectorAll('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); }
+  else if (b.hasAttribute('data-checked')) { c.dec[1] = 'closed'; render(); }
+  else if (b.hasAttribute('data-stock')) { b.textContent = '[종목 페이지가 열려요]'; }
+  else if (b.hasAttribute('data-ask')) { b.textContent = '요청함'; b.disabled = true; }
+  else if (b.hasAttribute('data-mode')) { b.textContent = '길게 눌러 확인해요'; b.disabled = true; }
+});
+live.addEventListener('input', e => { if (e.target.matches('[data-reason]')) { const r = live.querySelector('[data-reject]'); if (r) r.disabled = !e.target.value.trim(); } });
+live.addEventListener('keydown', e => { if (e.key === 'Escape') { if (sheet) { sheet = null; render(); } else if (stack.length > 1) { stack.pop(); render('back'); } } });
+scenesEl.addEventListener('click', e => { const b = e.target.closest('[data-pick]'); if (b) setScene(b.dataset.pick); });
+
+/* ── 화면 모음 ── */
+const BOARD = [
+  ['① 낮 · 시장 읽기', [['항로 · 낮', 'day'], ['시장 전망', 'day', 'market'], ['주제 · 시장 vs AI', 'day', 'topics'], ['주제 상세', 'day', 'topic'], ['갈림길 · 내 계좌', 'day', 'fork']]],
+  ['② 판단 중', [['판단하는 중', 'judging'], ['내 계좌 · 관심', 'judging', 'account'], ['판단 근거 전체', 'judging', 'why:A'], ['계획 끝내기', 'judging', 's:plan:A']]],
+  ['③ 23:00 · 결정', [['알림', 'alert', 'alerts'], ['제안 도착', 'proposal'], ['결정 · 매도', 'proposal', 'decide:1'], ['결정 · 매수', 'proposal', 'decide:2'], ['결정 · 세트', 'proposal', 'decide:3'], ['승인 확인', 'proposal', 's:confirm:1'], ['어제와 같은 건 한 번에', 'proposal', 's:bulk:0'], ['거부 이유', 'proposal', 's:reject:2']]],
+  ['④ 00:00 이후', [['다 정함 · 대기', 'queued'], ['거두기', 'queued', 's:cancel:1'], ['보류 · 다시 판단', 'held'], ['바뀐 제안', 'changed'], ['바뀐 제안 결정', 'changed', 'decide:2']]],
+  ['⑤ 새벽 · 아침 · 20일', [['주문 · 주시', 'night'], ['주시 조건부 승인', 'night', 's:watch:B'], ['아침 결과', 'morning'], ['이유 남기기', 'morning', 's:diff:B'], ['채점', 'scored'], ['신뢰 기록', 'scored', 'records']]],
+  ['⑥ 예외', [['할 일 없음', 'none'], ['판단 실패', 'fail'], ['주문 확인 필요', 'stuck'], ['한국 시장', 'kr']]],
+];
+const boardEl = document.getElementById('board');
+boardEl.innerHTML = BOARD.map(([g, L]) => `<h3>${g}</h3><div class="grid">${L.map(([name, scene, key]) => {
+  const x = ctxFor(scene); const isSheet = key && key.startsWith('s:'); const s = isSheet ? key.slice(2) : null;
+  const pk = isSheet ? (/^(confirm|reject)/.test(s) ? 'decide:' + s.split(':')[1] : 'home') : key || 'home';
+  return `<div class="shot"><div class="frame"><div class="phone" inert aria-hidden="true"><div class="pg">${pageHtml(pk, x)}</div>${isSheet ? sheetHtml(s) : ''}</div><button type="button" class="cover" data-open="${scene}|${key || ''}" aria-label="${name} 열기"></button></div><b>${name}</b></div>`;
+}).join('')}</div>`).join('');
+boardEl.addEventListener('click', e => { const b = e.target.closest('[data-open]'); if (!b) return; const [scene, key] = b.dataset.open.split('|'); setScene(scene, key || null); live.scrollIntoView({ block: 'center', behavior: RM ? 'auto' : 'smooth' }); });
+
+setScene('proposal');
+})();
+</script>
