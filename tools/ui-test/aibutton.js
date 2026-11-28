@@ -12,7 +12,7 @@ async function open(b, o) {
   await p.goto(URL, { timeout: 60000, waitUntil: 'domcontentloaded' });
   return { p, errs };
 }
-const prep = p => p.evaluate(() => { document.querySelectorAll('#aqAuth, #splashOverlay').forEach(x => x.style.display = 'none'); document.body.setAttribute('data-role', 'admin'); });
+const prep = p => p.evaluate(() => { document.querySelectorAll('#aqAuth, #splashOverlay').forEach(x => x.style.display = 'none'); });   // 관리자가 아닌 상태 — 구슬 자체의 시험 (관리자 비서 화면은 aiassist.js)
 const SETTLED = () => { const s = AQ_AI.state; return Math.abs(s.yawV) < .03 && [s.pop, s.live, s.wob, s.sq, s.hop].every(x => Math.abs(x.x - x.t) < .02 && Math.abs(x.v) < .5); };
 const hashOf = p =>p.evaluate(() => document.getElementById('aqAiCv').toDataURL().length + ':' + document.getElementById('aqAiCv').toDataURL().slice(-40));
 (async () => {
