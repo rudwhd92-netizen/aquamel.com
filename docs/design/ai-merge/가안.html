@@ -1,0 +1,442 @@
+<meta charset="utf-8">
+<title>AI 항해 시안</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap">
+<style>
+/* 구성: 머리(한 줄) → 같은 자료의 폰 세 대(A 시간 · B 공간 · C 순서) → 무엇이 어디에 있는지 표 */
+:root {
+  --page-bg: #eef0f2; --page-fg: #16181b; --page-dim: #565b63; --page-line: #d5d9de; --page-card: #fafbfc; --page-tag: #2a6cb0;
+  /* 폰 안 = 앱 다크 토큰 */
+  --bg: #161618; --panel: #1c1c1f; --surface: #222226; --object: #2c2c2c; --f1: rgba(255,255,255,.05); --f2: rgba(255,255,255,.09); --f3: rgba(255,255,255,.14);
+  --hi: #fff; --text: #d4d4d4; --dim: #9d9d9d; --mute: #85858a; --accent: #569cd6; --soft: #22303d; --soft-t: #8fc0ec; --deep: #2f6aa8; --up: #40c057; --down: #ff6b6b;
+  --font: 'Pretendard Variable', Pretendard, 'Noto Sans KR', -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page-bg: #0c0d0f; --page-fg: #eceef0; --page-dim: #9aa0a8; --page-line: #272a2f; --page-card: #15171a; --page-tag: #8fc0ec; color-scheme: dark; } }
+:root[data-theme="dark"] { --page-bg: #0c0d0f; --page-fg: #eceef0; --page-dim: #9aa0a8; --page-line: #272a2f; --page-card: #15171a; --page-tag: #8fc0ec; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; word-break: keep-all; overflow-wrap: anywhere; background: var(--page-bg); color: var(--page-fg); font: 400 13px/1.6 var(--font); font-variant-numeric: tabular-nums; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.top { max-width: 1238px; margin: 0 auto 24px; }
+h1 { font-size: 26px; line-height: 1.3; margin: 0 0 6px; text-wrap: balance; }
+.top p { margin: 0; color: var(--page-dim); }
+.jump { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.jump a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 16px; border-radius: 999px; border: 1px solid var(--page-line); background: var(--page-card); color: var(--page-fg); text-decoration: none; font-weight: 600; }
+.trio { display: flex; flex-wrap: wrap; gap: 32px 24px; justify-content: center; }
+.col { flex: 0 1 390px; width: 100%; min-width: 0; scroll-margin-top: 12px; }
+.col h2 { font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px; }
+.col h2 em { font-style: normal; font-size: 11px; font-weight: 700; color: var(--page-tag); border: 1px solid currentColor; border-radius: 999px; padding: 0 8px; }
+.col > p { margin: 2px 0 12px; color: var(--page-dim); min-height: 42px; }
+.phone { position: relative; width: 100%; height: 780px; border-radius: 40px; overflow: hidden; background: var(--bg); color: var(--text); border: 1px solid var(--page-line); color-scheme: dark; user-select: none; -webkit-user-select: none; }
+.sc { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.sc::-webkit-scrollbar { display: none; }
+svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.k { color: var(--mute); font-size: 11px; font-weight: 600; letter-spacing: .06em; }
+.up { color: var(--up); } .down { color: var(--down); }
+.chip { height: 36px; padding: 0 14px; border-radius: 999px; background: var(--f1); color: var(--dim); font-weight: 600; white-space: nowrap; position: relative; }
+.chip::before { content: ''; position: absolute; inset: -4px 0; }
+.chip[aria-pressed="true"] { background: var(--f3); color: var(--hi); }
+.lg { width: 40px; height: 40px; border-radius: 50%; background: var(--f2); display: inline-grid; place-items: center; font-weight: 800; color: var(--hi); border: 2px solid var(--rg, transparent); flex: none; }
+
+/* 공통: 결정 카드 */
+.dec { background: var(--panel); border-radius: 24px; padding: 18px; }
+.dec .who { display: flex; gap: 12px; align-items: center; }
+.dec .who div { min-width: 0; flex: 1; }
+.dec .who b { display: block; color: var(--hi); font-size: 18px; line-height: 1.35; }
+.dec .who small { color: var(--mute); font-size: 12px; }
+.ladder { position: relative; height: 46px; margin: 14px 6px 4px; }
+.ladder i { position: absolute; left: 0; right: 0; top: 14px; height: 2px; background: var(--f2); }
+.ladder span { position: absolute; top: 9px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--mute); }
+.ladder span.l { background: var(--hi); width: 16px; height: 16px; top: 7px; margin-left: -8px; }
+.ladder em { position: absolute; top: 25px; transform: translateX(-50%); font-style: normal; font-size: 11px; color: var(--mute); white-space: nowrap; }
+.dec p { margin: 8px 0 0; }
+.kv { display: flex; justify-content: space-between; gap: 12px; margin-top: 6px; font-size: 12px; color: var(--mute); }
+.kv b { color: var(--text); font-weight: 600; }
+.judges { display: flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 12px; color: var(--dim); }
+.judges i { width: 9px; height: 9px; border-radius: 50%; background: var(--hi); }
+.judges i.o { background: transparent; border: 1.5px solid var(--mute); }
+.judges button { margin-left: auto; min-height: 44px; margin-block: -10px; color: var(--soft-t); font-weight: 600; }
+.why { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s cubic-bezier(.22,1,.36,1); }
+.why > div { overflow: hidden; min-height: 0; }
+.why.open { grid-template-rows: 1fr; }
+.why dl { display: grid; grid-template-columns: 84px 1fr; gap: 6px 10px; margin: 10px 0 0; font-size: 12px; }
+.why dt { color: var(--mute); } .why dd { margin: 0; }
+.acts { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 8px; margin-top: 14px; }
+.btn { height: 52px; border-radius: 999px; background: rgba(127,127,127,.16); color: var(--text); font-weight: 600; position: relative; overflow: hidden; white-space: nowrap; }
+.btn.hold { background: var(--soft); color: #fff; touch-action: none; }
+.btn.hold i { position: absolute; inset: 0; background: var(--deep); transform-origin: left; transform: scaleX(0); }
+.btn.hold span { position: relative; }
+.done { margin-top: 14px; height: 52px; border-radius: 999px; display: flex; align-items: center; justify-content: space-between; padding: 0 6px 0 20px; background: var(--f1); font-weight: 600; color: var(--hi); }
+.done button { height: 40px; padding: 0 14px; border-radius: 999px; background: var(--f2); }
+
+/* 시장 vs AI 간격 */
+.gap { padding: 10px 0; }
+.gap .n { display: flex; justify-content: space-between; gap: 8px; font-weight: 600; color: var(--hi); }
+.gap .n small { color: var(--mute); font-weight: 500; font-size: 12px; white-space: nowrap; }
+.axis { position: relative; height: 20px; margin: 4px 8px 0; }
+.axis::before { content: ''; position: absolute; left: 0; right: 0; top: 9px; height: 2px; background: var(--f2); }
+.axis i { position: absolute; top: 8px; height: 4px; background: var(--accent); border-radius: 2px; }
+.axis b { position: absolute; top: 4px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--hi); }
+.axis u { position: absolute; top: 4px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; border: 2px solid var(--accent); background: var(--bg); }
+.legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--mute); }
+
+/* ── A 항로 ── */
+.a-head { position: sticky; top: 0; z-index: 3; background: var(--bg); padding: 20px 20px 10px; }
+.a-title { display: flex; justify-content: space-between; align-items: baseline; }
+.a-title b { font-size: 26px; font-weight: 900; color: var(--hi); letter-spacing: -.01em; }
+.a-times { display: flex; gap: 6px; margin-top: 12px; }
+.a-times .chip { flex: 1; padding: 0; }
+.route { position: relative; padding: 8px 20px 40px 56px; }
+.route .rail { position: absolute; left: 29px; top: 26px; width: 3px; border-radius: 2px; background: var(--f2); bottom: 60px; }
+.route .fill { position: absolute; left: 29px; top: 26px; width: 3px; border-radius: 2px; background: var(--accent); height: 0; }
+.st { position: relative; padding-bottom: 14px; }
+.st .dot { position: absolute; left: -33px; top: 15px; width: 15px; height: 15px; border-radius: 50%; background: var(--bg); border: 2px solid var(--mute); }
+.st.past .dot { background: var(--accent); border-color: var(--accent); }
+.st.now .dot { width: 23px; height: 23px; left: -37px; top: 11px; background: var(--hi); border: 5px solid var(--accent); }
+.st > button { width: 100%; text-align: left; display: flex; align-items: center; gap: 10px; min-height: 48px; }
+.st > button .t { width: 42px; flex: none; color: var(--mute); font-size: 12px; font-weight: 600; }
+.st > button .n { flex: 1; min-width: 0; }
+.st > button .n b { display: block; color: var(--hi); font-size: 15px; }
+.st > button .n small { display: block; color: var(--mute); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st.future > button .n b { color: var(--dim); }
+.st .body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s cubic-bezier(.22,1,.36,1), visibility .32s; visibility: hidden; }
+.st .body > div { overflow: hidden; min-height: 0; }
+.st.open .body { grid-template-rows: 1fr; visibility: visible; }
+.big { font-size: 44px; font-weight: 900; color: var(--hi); line-height: 1.15; letter-spacing: -.02em; }
+.big small { font-size: 18px; font-weight: 700; color: var(--dim); margin-left: 8px; }
+.sheetbox { background: var(--panel); border-radius: 24px; padding: 18px; margin-top: 8px; }
+.sheetbox + .sheetbox { margin-top: 8px; }
+.wx-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+.wx-grid div { background: var(--panel); border-radius: 14px; padding: 10px 4px; display: grid; justify-items: center; gap: 4px; font-size: 11px; color: var(--dim); }
+.wx-grid b { color: var(--hi); font-size: 13px; }
+.row { display: flex; align-items: center; gap: 12px; min-height: 52px; }
+.row div { flex: 1; min-width: 0; }
+.row b { display: block; color: var(--hi); font-weight: 600; }
+.row small { color: var(--mute); font-size: 12px; }
+.row u { text-decoration: none; font-size: 12px; color: var(--mute); white-space: nowrap; }
+.scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+.scores div { background: var(--panel); border-radius: 14px; padding: 12px 8px; text-align: center; }
+.scores b { display: block; font-size: 18px; color: var(--hi); }
+.scores span { font-size: 11px; color: var(--mute); }
+
+/* ── B 해도 ── */
+.b-top { padding: 22px 20px 8px; }
+.b-verdict { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.b-verdict .big { font-size: 56px; }
+.b-verdict .r { text-align: right; font-size: 12px; color: var(--mute); }
+.b-verdict .r b { display: block; font-size: 26px; color: var(--hi); line-height: 1.2; }
+.prob { display: flex; gap: 3px; height: 8px; margin-top: 10px; }
+.prob i { border-radius: 4px; background: var(--f2); }
+.prob i.on { background: var(--accent); }
+.prob-l { display: flex; justify-content: space-between; font-size: 11px; color: var(--mute); margin-top: 4px; }
+.sea { position: relative; margin: 0 16px; height: 372px; }
+.sea > svg { position: absolute; inset: 0; width: 100%; height: 100%; stroke: rgba(255,255,255,.07); stroke-width: 1; }
+.bub { position: absolute; border-radius: 50%; border: 2.5px solid var(--f3); background: var(--surface); display: grid; place-items: center; align-content: center; color: var(--hi); line-height: 1.2; }
+.bub.w-up { border-color: var(--up); } .bub.w-down { border-color: var(--down); }
+.bub.watch { border-style: dashed; border-width: 1.5px; background: transparent; }
+.bub.cash { border: 1.5px dashed var(--accent); background: transparent; color: var(--soft-t); }
+.bub b { font-size: 13px; } .bub small { font-size: 11px; color: var(--dim); }
+.bub .pin { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 700; padding: 0 8px; border-radius: 999px; background: var(--down); color: #161618; white-space: nowrap; }
+.bub .pin.buy { background: var(--up); }
+.mine { position: absolute; right: 4px; top: 0; text-align: right; pointer-events: none; }
+.mine b { display: block; font-size: 26px; font-weight: 900; line-height: 1.2; }
+.cases { padding: 4px 20px 0; }
+.cases .h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.cases .h b { color: var(--hi); font-size: 15px; }
+.cases .row-c { display: flex; gap: 6px; }
+.cases .chip { flex: 1; min-width: 0; padding: 0 4px; overflow: hidden; text-overflow: ellipsis; }
+.cases p { margin: 8px 0 0; font-size: 12px; color: var(--dim); min-height: 40px; line-height: 1.6; }
+.b-dock { position: absolute; left: 16px; right: 16px; bottom: 16px; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 6px; }
+.b-dock button { height: 52px; border-radius: 999px; background: var(--object); font-weight: 600; color: var(--text); white-space: nowrap; }
+.b-dock button.pri { background: var(--deep); color: #fff; }
+.veil { position: absolute; inset: 0; background: rgba(0,0,0,.45); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 4; }
+.veil.on { opacity: 1; pointer-events: auto; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; max-height: 82%; background: var(--panel); border-radius: 28px 28px 0 0; z-index: 5; transform: translateY(105%); display: flex; flex-direction: column; visibility: hidden; }
+.sheet .grip { height: 28px; flex: none; display: grid; place-items: center; touch-action: none; cursor: grab; }
+.sheet .grip::before { content: ''; width: 36px; height: 4px; border-radius: 2px; background: var(--f3); }
+.sheet .in { overflow-y: auto; padding: 0 20px 24px; scrollbar-width: none; }
+.sheet .in .dec { background: transparent; padding: 0; }
+.sheet h3 { margin: 0 0 8px; color: var(--hi); font-size: 18px; }
+
+/* ── C 항해일지 ── */
+.c-prog { position: absolute; left: 20px; right: 20px; top: 18px; display: flex; gap: 4px; z-index: 3; }
+.c-prog button { flex: 1; height: 24px; position: relative; }
+.c-prog button::after { content: ''; position: absolute; left: 0; right: 0; top: 10px; height: 4px; border-radius: 2px; background: var(--f2); }
+.c-prog button.past::after { background: var(--mute); }
+.c-prog button.on::after { background: var(--hi); }
+.pages { position: absolute; inset: 0; touch-action: pan-y; }
+.pg { position: absolute; inset: 0; padding: 60px 24px 84px; overflow-y: auto; scrollbar-width: none; visibility: hidden; }
+.pg::-webkit-scrollbar { display: none; }
+.pg .k { display: block; margin-bottom: 8px; }
+.pg h3 { margin: 0; color: var(--hi); font-size: 26px; font-weight: 800; line-height: 1.35; text-wrap: balance; }
+.pg .huge { font-size: 76px; font-weight: 900; color: var(--hi); line-height: 1.05; letter-spacing: -.03em; margin: 8px 0 0; }
+.pg .pct { font-size: 56px; font-weight: 900; color: var(--accent); line-height: 1.1; }
+.pg .line { margin-top: 16px; font-size: 15px; }
+.pg .dec { background: transparent; padding: 0; margin-top: 18px; }
+.case { display: block; width: 100%; text-align: left; background: var(--panel); border-radius: 18px; padding: 14px 16px; margin-top: 8px; }
+.case .n { display: flex; justify-content: space-between; gap: 8px; color: var(--hi); font-weight: 600; }
+.case .m { height: 8px; border-radius: 4px; background: var(--f1); margin-top: 10px; position: relative; }
+.case .m i { position: absolute; top: 0; height: 8px; border-radius: 4px; }
+.case .m s { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; background: var(--f3); }
+.case small { display: block; color: var(--mute); font-size: 12px; margin-top: 8px; }
+.case[aria-pressed="true"] { background: var(--object); }
+.c-foot { position: absolute; left: 20px; right: 20px; bottom: 20px; display: flex; gap: 8px; z-index: 3; }
+.c-foot button { height: 52px; border-radius: 999px; background: var(--object); font-weight: 600; }
+.c-foot .prev { width: 52px; flex: none; display: grid; place-items: center; }
+.c-foot .next { flex: 1; }
+
+.map { max-width: 1238px; margin: 36px auto 0; background: var(--page-card); border: 1px solid var(--page-line); border-radius: 18px; padding: 18px 20px; }
+.map h2 { font-size: 15px; margin: 0 0 8px; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 560px; }
+td, th { padding: 6px 12px 6px 0; text-align: left; vertical-align: top; border-top: 1px solid var(--page-line); }
+th { font-size: 12px; color: var(--page-dim); border-top: 0; }
+.map p { margin: 12px 0 0; color: var(--page-dim); }
+@media (prefers-reduced-motion: reduce) { .why, .st .body, .veil { transition: none; } }
+</style>
+
+<div class="top">
+  <h1>AI 매니저 + AI 예보, 세 가지 방향</h1>
+  <p>직접 눌러 보세요. [ ] 칸은 실제 값 자리이고, 그림의 크기와 위치는 모양을 보여 주는 예시예요.</p>
+  <nav class="jump" aria-label="가안으로 가기"><a href="#a">A 항로</a><a href="#b">B 해도</a><a href="#c">C 항해일지</a></nav>
+</div>
+<div class="trio">
+  <section class="col" id="a"><h2>A 항로 <em>추천</em></h2><p>하루를 위에서 아래로 한 줄로. 지금 할 일이 저절로 펼쳐져요.</p><div class="phone" id="pa"></div></section>
+  <section class="col" id="b"><h2>B 해도</h2><p>내 계좌가 바다 위 지도. 갈림길의 경우를 바꾸면 계좌가 어떻게 되는지 보여요.</p><div class="phone" id="pb"></div></section>
+  <section class="col" id="c"><h2>C 항해일지</h2><p>AI가 한 장씩 설명해요. 결론부터 결정까지 순서대로 넘겨요.</p><div class="phone" id="pc"></div></section>
+</div>
+<div class="map">
+  <h2>같은 기능이 어디에 있나</h2>
+  <div class="tbl"><table>
+    <tr><th></th><th>A 항로</th><th>B 해도</th><th>C 항해일지</th></tr>
+    <tr><td>최종 결론 · 전제</td><td>첫 정거장</td><td>맨 위 큰 글자</td><td>1쪽</td></tr>
+    <tr><td>시장 vs AI (상시 주제)</td><td>첫 정거장 안</td><td>「주제」</td><td>2쪽</td></tr>
+    <tr><td>갈림길 · 경우별 계좌 손익</td><td>첫 정거장 안</td><td>지도 아래 (중심 기능)</td><td>3쪽</td></tr>
+    <tr><td>종목 날씨 · 계좌 · 관심</td><td>둘째 정거장</td><td>지도 자체</td><td>6쪽</td></tr>
+    <tr><td>결정 (거부 · 모의 · 승인)</td><td>23:00 정거장</td><td>「결정」 · 종목 원</td><td>4 · 5쪽</td></tr>
+    <tr><td>AI 셋의 판단 · 반대 논거</td><td colspan="3">결정 카드의 「왜」</td></tr>
+    <tr><td>오늘 주시</td><td>새벽 정거장</td><td>「주시」</td><td>마지막 쪽</td></tr>
+    <tr><td>성적 · 다르게 한 것</td><td>마지막 정거장</td><td>「기록」</td><td>마지막 쪽</td></tr>
+  </table></div>
+  <p>승인은 지금 앱처럼 길게 눌러야 실행돼요. 화면 규칙 중 색과 돈 관련 안전 장치는 지키고, 글자 크기와 배치 규칙은 새로 짰어요. 갈림길의 계좌 손익은 서버가 이미 계산하지만 지금 앱에는 안 보이는 값이에요.</p>
+</div>
+
+<script>
+(() => {
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const S = (x, k, c) => ({ x, t: x, v: 0, k, c: RM ? 2 * Math.sqrt(k) : c });
+const live = new Set(); let raf = 0, last = 0;
+function loop(now) { const dt = Math.min((now - last) / 1000, 1 / 30); last = now; live.forEach(a => { if (a(dt)) live.delete(a); }); raf = live.size ? requestAnimationFrame(loop) : 0; }
+function run(springs, paint, done) {
+  if (RM) { springs.forEach(s => { s.x = s.t; s.v = 0; }); paint(); if (done) done(); return; }
+  const a = dt => { for (let i = 0; i < 4; i++) springs.forEach(s => { const h = dt / 4; s.v += (-s.k * (s.x - s.t) - s.c * s.v) * h; s.x += s.v * h; });
+    const ok = springs.every(s => Math.abs(s.x - s.t) < .002 && Math.abs(s.v) < .02); if (ok) springs.forEach(s => { s.x = s.t; s.v = 0; }); paint(); if (ok && done) done(); return ok; };
+  live.add(a); if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); }
+}
+const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
+const I = {
+  sun: '<svg width="20" height="20" viewBox="0 0 24 24" style="color:var(--up)" aria-label="우호"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></svg>',
+  cloud: '<svg width="20" height="20" viewBox="0 0 24 24" style="color:var(--mute)" aria-label="중립"><path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11.5 1.5A3.5 3.5 0 0 0 7 18z"/></svg>',
+  rain: '<svg width="20" height="20" viewBox="0 0 24 24" style="color:var(--down)" aria-label="비우호"><path d="M7 14h10a4 4 0 0 0 0-8 6 6 0 0 0-11.5 1.5A3.5 3.5 0 0 0 7 14zM8 17l-1 3M13 17l-1 3M18 17l-1 3"/></svg>',
+  left: '<svg width="20" height="20" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>',
+};
+const WX = { up: I.sun, mid: I.cloud, down: I.rain };
+
+/* ── 같은 자료 (자리 값) ── */
+const STOCK = { A: { w: 'down' }, B: { w: 'mid' }, C: { w: 'up' }, D: { w: 'up' }, E: { w: 'mid' }, F: { w: 'down' }, G: { w: 'up', watch: 1 }, H: { w: 'mid', watch: 1 } };
+const DECS = [{ k: 'A', side: 'sell' }, { k: 'C', side: 'buy' }];
+const TOPICS = [{ n: '[주제 1]', m: .34, a: .72 }, { n: '[주제 2]', m: .66, a: .38 }, { n: '[주제 3]', m: .52, a: .60 }];
+const CASES = [
+  { n: '[경우 1]', total: .55, p: '[확률]', v: { A: -.7, B: .4, C: .9, D: .6, E: .2, F: -.4, G: .5, H: 0 } },
+  { n: '[경우 2]', total: .1, p: '[확률]', v: { A: -.1, B: .1, C: .1, D: 0, E: .1, F: 0, G: 0, H: 0 } },
+  { n: '[경우 3]', total: -.65, p: '[확률]', v: { A: -.3, B: -.6, C: -.9, D: -.7, E: -.2, F: .5, G: -.5, H: -.1 } },
+];
+const gapRow = t => `<div class="gap"><div class="n"><span>${t.n}</span><small>간격 [N]</small></div><div class="axis"><i style="left:${Math.min(t.m, t.a) * 100}%;width:${Math.abs(t.a - t.m) * 100}%"></i><b style="left:${t.m * 100}%" aria-label="시장"></b><u style="left:${t.a * 100}%" aria-label="AI"></u></div></div>`;
+const gaps = () => TOPICS.map(gapRow).join('') + '<div class="legend"><span>비관</span><span>● 시장 · ○ AI</span><span>낙관</span></div>';
+
+/* ── 결정 카드 (세 가안 공통) ── */
+function decision(d, state, onChange) {
+  const sell = d.side === 'sell', word = sell ? '매도' : '매수';
+  const box = el(`<div class="dec">
+    <div class="who"><span class="lg" style="--rg:var(--${sell ? 'down' : 'up'})">${d.k}</span><div><small>[종목 ${d.k}] · ${sell ? '[보유 수량] 보유' : '관심 종목'}</small><b>[수량]주 <span class="${sell ? 'down' : 'up'}">${word}</span> · $[지정가]</b></div></div>
+    <div class="ladder"><i></i>${sell ? '<span style="left:22%"></span><em style="left:22%">평단</em>' : ''}<span style="left:58%"></span><em style="left:58%">지금</em><span class="l" style="left:${sell ? 78 : 38}%"></span><em style="left:${sell ? 78 : 38}%">지정가</em></div>
+    <p>[AI가 내린 결론 한 줄]</p>
+    <div class="kv"><span>${sell ? '받을 돈' : '쓸 돈'}</span><b>$[금액]</b></div>
+    <div class="kv"><span>전제와의 관계</span><b>[따름 · 어긋남]</b></div>
+    <div class="judges"><i></i><i></i><i class="o"></i><span>판단 셋 [N:N]</span><button type="button" data-why aria-expanded="false">왜 ›</button></div>
+    <div class="why"><div><dl><dt>설득</dt><dd>[왜 이렇게 하는지]</dd><dt>반대 논거</dt><dd>[반대 쪽 사실]</dd><dt>틀렸다는 신호</dt><dd>[이러면 생각을 바꿔요]</dd><dt>계획</dt><dd>[지금 단계 · 그만두는 조건]</dd></dl></div></div>
+    <div class="end"></div></div>`);
+  const end = box.querySelector('.end');
+  function paint() {
+    const v = state[d.k];
+    if (v) { end.innerHTML = `<div class="done"><span>${v}</span><button type="button" data-undo>되돌리기</button></div>`; return; }
+    end.innerHTML = '<div class="acts"><button type="button" class="btn" data-v="거부함">거부</button><button type="button" class="btn" data-v="모의로 기록">모의</button><button type="button" class="btn hold" aria-label="길게 눌러 승인"><i></i><span>길게 눌러 승인</span></button></div>';
+    const h = end.querySelector('.hold'), fill = h.querySelector('i'); let id = 0, t0 = 0;
+    const stop = () => { cancelAnimationFrame(id); id = 0; fill.style.transform = 'scaleX(0)'; };
+    const tick = now => { const p = Math.min(1, (now - t0) / 1200); fill.style.transform = `scaleX(${p})`; if (p >= 1) { id = 0; set('승인함 · 개장 확인 뒤 주문'); return; } id = requestAnimationFrame(tick); };
+    const start = () => { if (id) return; t0 = performance.now(); id = requestAnimationFrame(tick); };
+    h.addEventListener('pointerdown', start); ['pointerup', 'pointerleave', 'pointercancel'].forEach(e => h.addEventListener(e, stop));
+    h.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); start(); } }); h.addEventListener('keyup', stop);
+    h.addEventListener('contextmenu', e => e.preventDefault());
+  }
+  function set(v) { if (v) state[d.k] = v; else delete state[d.k]; paint(); if (onChange) onChange(!!v); }
+  box.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.v) set(b.dataset.v);
+    else if (b.hasAttribute('data-undo')) set('');
+    else if (b.hasAttribute('data-why')) { const w = box.querySelector('.why'), o = w.classList.toggle('open'); b.setAttribute('aria-expanded', String(o)); b.textContent = o ? '접기' : '왜 ›'; }
+  });
+  paint(); return box;
+}
+const left = st => DECS.filter(d => !st[d.k]).length;
+const watchRows = () => ['B', 'D', 'G'].map((k, i) => `<div class="row"><span class="lg">${k}</span><div><b>[종목 ${k}] ${i === 2 ? '매수' : '매도'}</b><small>[가격 조건]이 오면 승인 범위 안에서</small></div><u>${i === 0 ? '조건부 승인' : '승인 전'}</u></div>`).join('');
+const scoreHtml = '<div class="scores"><div><b>[N/N]</b><span>예보 적중</span></div><div><b>[±N%]</b><span>제안 20일 뒤</span></div><div><b>[N]건</b><span>다르게 한 것</span></div></div>';
+
+/* ══ A 항로 ══ */
+(function A() {
+  const root = document.getElementById('pa'), state = {};
+  const TIMES = [['낮', 0], ['23:00', 2], ['새벽', 3], ['20일 뒤', 4]];
+  root.innerHTML = `<div class="sc"><div class="a-head"><div class="a-title"><b>오늘의 항로</b><span class="k">[날짜]</span></div><div class="a-times" role="group" aria-label="시각을 바꿔 보기">${TIMES.map(([t, i]) => `<button type="button" class="chip" data-now="${i}">${t}</button>`).join('')}</div></div><div class="route"><i class="rail"></i><i class="fill"></i></div></div>`;
+  const sc = root.querySelector('.sc'), route = root.querySelector('.route'), fill = root.querySelector('.fill');
+  const STN = [
+    { t: '07:30', n: '시장은 어디로', s: () => '[방향] [확률]% · 갈림길 D-[N]', body: () => `<div class="sheetbox"><span class="k">나스닥 20거래일</span><div class="big">[방향]<small>[확률]%</small></div><p style="margin:8px 0 0">[전제 한 줄]</p><div class="kv"><span>뒤집히는 조건</span><b>[조건 한 줄]</b></div></div><div class="sheetbox"><span class="k">AI가 시장과 다르게 보는 것</span>${gaps()}</div><div class="sheetbox"><span class="k">다음 갈림길 · D-[N]</span><div class="row"><div><b>[일정]</b><small>경우마다 내 계좌 [±N%]</small></div><u>[경우 3개]</u></div></div>` },
+    { t: '20:40', n: '내 종목 날씨', s: () => '우호 [N] · 중립 [N] · 비우호 [N]', body: () => `<div class="wx-grid">${Object.entries(STOCK).map(([k, v]) => `<div>${WX[v.w]}<b>[${k}]</b><span>${v.watch ? '관심' : '보유'}</span></div>`).join('')}</div>` },
+    { t: '23:00', n: '결정', s: () => left(state) ? `${left(state)}건 남음 · 00:00까지 [남은 시간]` : '모두 정했어요', body: () => '<div class="decs"></div>' },
+    { t: '00:15', n: '오늘 주시', s: () => '3종목 · 신호가 오면 알려 줘요', body: () => `<div class="sheetbox">${watchRows()}</div>` },
+    { t: '+20일', n: '맞았나', s: () => '예보 · 제안 · 다르게 한 것', body: () => scoreHtml },
+  ];
+  const nodes = STN.map((s, i) => {
+    const n = el(`<section class="st"><i class="dot"></i><button type="button" aria-expanded="false"><span class="t">${s.t}</span><span class="n"><b>${s.n}</b><small></small></span></button><div class="body"><div>${s.body()}</div></div></section>`);
+    route.appendChild(n);
+    n.querySelector(':scope > button').addEventListener('click', () => { open(i, !n.classList.contains('open')); follow(); });
+    return n;
+  });
+  const summaries = () => nodes.forEach((n, i) => { n.querySelector('small').textContent = STN[i].s(); });
+  const decs = nodes[2].querySelector('.decs');
+  DECS.forEach((d, i) => { const c = decision(d, state, () => { summaries(); follow(); }); if (i) c.style.marginTop = '8px'; decs.appendChild(c); });
+  function open(i, on) { nodes[i].classList.toggle('open', on); nodes[i].querySelector(':scope > button').setAttribute('aria-expanded', String(on)); }
+  const H = S(0, 260, 24); let now = 2, until = 0;
+  /* 정거장이 펼쳐지며 자리가 바뀌는 동안 선이 따라감 */
+  function follow() {
+    until = performance.now() + 450;
+    const step = () => { H.t = Math.max(0, nodes[now].offsetTop - 8); run([H], () => { fill.style.height = Math.max(0, H.x) + 'px'; }); if (performance.now() < until) setTimeout(step, 60); };
+    step();
+  }
+  function go(i, scroll) {
+    now = i;
+    nodes.forEach((n, j) => { n.classList.toggle('past', j < i); n.classList.toggle('now', j === i); n.classList.toggle('future', j > i); open(j, j === i); });
+    root.querySelectorAll('[data-now]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.now === i)));
+    follow();
+    if (scroll) setTimeout(() => sc.scrollTo({ top: Math.max(0, nodes[i].offsetTop + route.offsetTop - root.querySelector('.a-head').offsetHeight - 4), behavior: RM ? 'auto' : 'smooth' }), 340);
+  }
+  root.querySelectorAll('[data-now]').forEach(b => b.addEventListener('click', () => go(+b.dataset.now, true)));
+  summaries(); go(2, false);
+})();
+
+/* ══ B 해도 ══ */
+(function B() {
+  const root = document.getElementById('pb'), state = {};
+  const POS = { A: [95, 100, 60], B: [244, 84, 48], C: [202, 204, 46], D: [300, 196, 38], E: [76, 232, 34], F: [140, 306, 28], G: [40, 330, 22], H: [326, 296, 22], cash: [238, 312, 30] };
+  const rings = [60, 120, 180, 240].map(r => `<circle cx="95" cy="100" r="${r}"/>`).join('');
+  root.innerHTML = `<div class="b-top"><span class="k">나스닥 20거래일 · [판단 시각]</span><div class="b-verdict"><div class="big">[방향]</div><div class="r"><b>[확률]%</b>확신 [높음 · 보통]</div></div>
+      <div class="prob" aria-hidden="true"><i style="flex:2.5"></i><i class="on" style="flex:5.5"></i><i style="flex:2"></i></div><div class="prob-l"><span>오름</span><span>다지기</span><span>내림</span></div></div>
+    <div class="sea"><svg viewBox="0 0 358 372" preserveAspectRatio="none" aria-hidden="true">${rings}</svg><div class="mine"><span class="k">이 경우 내 계좌</span><b></b></div></div>
+    <div class="cases"><div class="h"><b>[갈림길 일정]</b><span class="k">D-[N]</span></div><div class="row-c" role="group" aria-label="경우 바꿔 보기"><button type="button" class="chip" data-c="-1">지금</button>${CASES.map((c, i) => `<button type="button" class="chip" data-c="${i}">${c.n}</button>`).join('')}</div><p></p></div>
+    <div class="b-dock"><button type="button" class="pri" data-s="dec"></button><button type="button" data-s="topic">주제</button><button type="button" data-s="watch">주시</button><button type="button" data-s="score">기록</button></div>
+    <div class="veil"></div><div class="sheet" role="dialog" aria-label="자세히"><div class="grip"></div><div class="in"></div></div>`;
+  const sea = root.querySelector('.sea'), mine = root.querySelector('.mine'), mineB = mine.querySelector('b'), note = root.querySelector('.cases p');
+  const bubbles = Object.keys(POS).map(k => {
+    const cash = k === 'cash', st = STOCK[k] || {}, d = DECS.find(x => x.k === k);
+    const b = el(cash ? '<div class="bub cash"><small>현금</small></div>' : `<button type="button" class="bub w-${st.w}${st.watch ? ' watch' : ''}" aria-label="종목 ${k}"><b>[${k}]</b>${st.watch ? '' : '<small>[±%]</small>'}${d ? `<span class="pin ${d.side === 'buy' ? 'buy' : ''}">${d.side === 'buy' ? '매수' : '매도'}</span>` : ''}</button>`);
+    sea.appendChild(b);
+    if (!cash) b.addEventListener('click', () => openSheet('stock', k));
+    return { k, b, s: S(1, 280, 22), tint: 0 };
+  });
+  const place = () => { const f = sea.clientWidth / 358; bubbles.forEach(o => { const [x, y, r] = POS[o.k], rr = r * f * o.s.x; o.b.style.cssText = `left:${x * f - rr}px;top:${y - rr}px;width:${rr * 2}px;height:${rr * 2}px;` + (o.tint ? `background:rgba(${o.tint > 0 ? '64,192,87' : '255,107,107'},${(Math.abs(o.tint) * .34).toFixed(2)})` : ''); }); };
+  let cur = -1;
+  function pick(i) {
+    cur = i; const c = CASES[i];
+    bubbles.forEach(o => { const v = c ? (c.v[o.k] || 0) : 0; o.s.t = 1 + v * .2; o.tint = v; });
+    run(bubbles.map(o => o.s), place);
+    root.querySelectorAll('[data-c]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.c === i)));
+    mine.hidden = !c; if (c) { mineB.textContent = (c.total >= 0 ? '+' : '−') + '[N]%'; mineB.className = c.total >= 0 ? 'up' : 'down'; }
+    note.textContent = c ? `확률 ${c.p} · 크게 흔들리는 종목 [${Object.entries(c.v).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])).slice(0, 2).map(e => e[0]).join('] [')}] · 채움 = 이 경우의 손익` : '경우를 눌러 보세요. 크기 = 비중, 테두리 = 오늘 날씨(초록 우호 · 빨강 비우호), 점선 = 관심 종목';
+  }
+  root.querySelectorAll('[data-c]').forEach(b => b.addEventListener('click', () => pick(+b.dataset.c)));
+  const dockDec = root.querySelector('[data-s="dec"]');
+  const dockPaint = () => {
+    dockDec.textContent = left(state) ? `결정 ${left(state)}건` : '결정 끝';
+    DECS.forEach(d => { const p = bubbles.find(o => o.k === d.k).b.querySelector('.pin'); if (p) p.textContent = state[d.k] ? '정함' : (d.side === 'buy' ? '매수' : '매도'); });
+  };
+  const keepPins = () => { dockPaint(); };
+  const sheet = root.querySelector('.sheet'), veil = root.querySelector('.veil'), inner = sheet.querySelector('.in'), Y = S(105, 260, 24);
+  const paintY = () => { sheet.style.transform = `translateY(${Math.max(0, Y.x)}%)`; };
+  function openSheet(kind, k) {
+    inner.innerHTML = ''; inner.scrollTop = 0;
+    const add = h => inner.appendChild(el(`<div>${h}</div>`));
+    if (kind === 'dec') { add(`<h3>결정 · 00:00까지 [남은 시간]</h3>`); DECS.forEach((d, i) => { const c = decision(d, state, keepPins); if (i) c.style.marginTop = '28px'; inner.appendChild(c); }); }
+    else if (kind === 'topic') add(`<h3>AI가 시장과 다르게 보는 것</h3>${gaps()}`);
+    else if (kind === 'watch') add(`<h3>오늘 주시</h3>${watchRows()}`);
+    else if (kind === 'score') add(`<h3>맞았나</h3>${scoreHtml}`);
+    else {
+      const d = DECS.find(x => x.k === k), st = STOCK[k];
+      add(`<div class="row">${WX[st.w]}<div><b>[종목 ${k}] · 오늘 날씨</b><small>[왜 우호 · 비우호인지 한 줄]</small></div><u>${st.watch ? '관심' : '보유'}</u></div>`);
+      if (d) inner.appendChild(decision(d, state, keepPins));
+      else add(`<p>AI 의견 [보유 · 대기] — [한 줄]</p><div class="judges"><i></i><i></i><i></i><span>판단 셋 [N:N]</span></div>`);
+    }
+    sheet.style.visibility = 'visible'; veil.classList.add('on'); Y.t = 0; run([Y], paintY);
+  }
+  function closeSheet() { veil.classList.remove('on'); Y.t = 105; run([Y], paintY, () => { if (Y.t === 105) sheet.style.visibility = 'hidden'; }); }
+  root.querySelectorAll('[data-s]').forEach(b => b.addEventListener('click', () => openSheet(b.dataset.s)));
+  veil.addEventListener('click', closeSheet);
+  sheet.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+  const grip = sheet.querySelector('.grip'); let drag = null;
+  grip.addEventListener('pointerdown', e => { drag = { y: e.clientY, h: sheet.offsetHeight }; grip.setPointerCapture(e.pointerId); });
+  grip.addEventListener('pointermove', e => { if (!drag) return; Y.x = Y.t = Math.max(0, (e.clientY - drag.y) / drag.h * 100); paintY(); });
+  const up = e => { if (!drag) return; const d = e.clientY - drag.y; drag = null; if (d > 90 || d < 4) closeSheet(); else { Y.t = 0; run([Y], paintY); } };
+  grip.addEventListener('pointerup', up); grip.addEventListener('pointercancel', up);
+  new ResizeObserver(place).observe(sea);
+  dockPaint(); pick(-1);
+})();
+
+/* ══ C 항해일지 ══ */
+(function C() {
+  const root = document.getElementById('pc'), state = {};
+  const caseCard = (c, i) => `<button type="button" class="case" data-case="${i}" aria-pressed="false"><span class="n"><span>${c.n} · ${c.p}</span><span class="${c.total >= 0 ? 'up' : 'down'}">내 계좌 ${c.total >= 0 ? '+' : '−'}[N]%</span></span><span class="m" style="display:block"><s></s><i style="${c.total >= 0 ? 'left:50%' : 'right:50%'};width:${Math.abs(c.total) * 46}%;background:var(--${c.total >= 0 ? 'up' : 'down'})"></i></span><small hidden>걸린 종목 [종목] · [방어 · 역이용 방법]</small></button>`;
+  const PAGES = [
+    { h: () => `<span class="k">[날짜] · 나스닥 20거래일</span><div class="huge">[방향]</div><div class="pct">[확률]%</div><p class="line">[전제 한 줄]</p><div class="kv"><span>뒤집히는 조건</span><b>[조건]</b></div><div class="kv"><span>이미 가격에 반영</span><b>[얼마나]</b></div>` },
+    { h: () => `<span class="k">시장 vs AI</span><h3>[주제 1]에서 시장보다 낙관해요</h3><div style="margin-top:24px">${gaps()}</div><p class="line">[왜 다르게 보는지 한 줄]</p>` },
+    { h: () => `<span class="k">다음 갈림길 · D-[N]</span><h3>[일정]에서 갈려요</h3><div style="margin-top:20px">${CASES.map(caseCard).join('')}</div>` },
+    { h: () => '<span class="k">결정 1 / 2 · 00:00까지 [남은 시간]</span><h3>[종목 A]는 덜어 낼 때예요</h3><div class="slot" data-d="0"></div>' },
+    { h: () => '<span class="k">결정 2 / 2</span><h3>[종목 C]는 담아 볼 만해요</h3><div class="slot" data-d="1"></div>' },
+    { h: () => `<span class="k">내 계좌 · 오늘 날씨</span><h3>비우호 [N]종목이 있어요</h3><div style="margin-top:14px">${Object.entries(STOCK).map(([k, v]) => `<div class="row">${WX[v.w]}<div><b>[종목 ${k}]</b><small>[한 줄]</small></div><u>${v.watch ? '관심' : '[비중]%'}</u></div>`).join('')}</div>` },
+    { h: () => `<span class="k">마무리</span><h3 class="sum"></h3><div class="sheetbox" style="margin-top:18px"><span class="k">오늘 주시</span>${watchRows()}</div>${scoreHtml}` },
+  ];
+  root.innerHTML = `<div class="c-prog" role="group" aria-label="쪽">${PAGES.map((_, i) => `<button type="button" data-go="${i}" aria-label="${i + 1}쪽"></button>`).join('')}</div><div class="pages">${PAGES.map(p => `<article class="pg">${p.h()}</article>`).join('')}</div><div class="c-foot"><button type="button" class="prev" aria-label="앞 쪽">${I.left}</button><button type="button" class="next"></button></div>`;
+  const pages = [...root.querySelectorAll('.pg')], next = root.querySelector('.next'), prev = root.querySelector('.prev');
+  let at = 0; const X = S(0, 260, 24);
+  const paint = () => pages.forEach((p, i) => { const d = i - X.x; p.style.visibility = Math.abs(d) < .98 ? 'visible' : 'hidden'; p.style.transform = `translateX(${d * 100}%)`; p.style.opacity = Math.max(0, 1 - Math.abs(d)); });
+  function go(i) {
+    at = Math.max(0, Math.min(PAGES.length - 1, i)); X.t = at; run([X], paint);
+    root.querySelectorAll('[data-go]').forEach((b, j) => { b.classList.toggle('on', j === at); b.classList.toggle('past', j < at); });
+    prev.disabled = at === 0; prev.style.opacity = at ? 1 : .4;
+    next.textContent = at === PAGES.length - 1 ? '처음부터' : at === 0 ? '왜 그런지 보기' : at === 2 ? '결정하러 가기' : '다음';
+    const l = left(state); root.querySelector('.sum').textContent = l ? `아직 ${l}건을 안 정했어요` : '오늘 결정을 다 했어요';
+  }
+  DECS.forEach((d, i) => root.querySelector(`.slot[data-d="${i}"]`).appendChild(decision(d, state, done => { const here = at; go(at); if (done) setTimeout(() => { if (at === here) go(here + 1); }, 900); })));
+  root.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
+  root.querySelectorAll('[data-case]').forEach(b => b.addEventListener('click', () => root.querySelectorAll('[data-case]').forEach(x => { const on = x === b && x.getAttribute('aria-pressed') !== 'true'; x.setAttribute('aria-pressed', String(on)); x.querySelector('small').hidden = !on; })));
+  next.addEventListener('click', () => go(at === PAGES.length - 1 ? 0 : at + 1));
+  prev.addEventListener('click', () => go(at - 1));
+  const box = root.querySelector('.pages'); let d = null;
+  box.addEventListener('pointerdown', e => { d = e.target.closest('button') ? null : { x: e.clientX, y: e.clientY, on: false }; });
+  box.addEventListener('pointermove', e => { if (!d) return; const dx = e.clientX - d.x, dy = e.clientY - d.y; if (!d.on) { if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return; if (Math.abs(dy) > Math.abs(dx)) { d = null; return; } d.on = true; box.setPointerCapture(e.pointerId); } X.x = X.t = at - dx / box.clientWidth * (((at === 0 && dx > 0) || (at === PAGES.length - 1 && dx < 0)) ? .3 : 1); paint(); });
+  const up = e => { if (!d) return; const dx = e.clientX - d.x, on = d.on; d = null; if (on) go(Math.abs(dx) > 50 ? at + (dx < 0 ? 1 : -1) : at); };
+  box.addEventListener('pointerup', up); box.addEventListener('pointercancel', up);
+  root.addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(at + 1); else if (e.key === 'ArrowLeft') go(at - 1); });
+  go(0); paint();
+})();
+})();
+</script>
